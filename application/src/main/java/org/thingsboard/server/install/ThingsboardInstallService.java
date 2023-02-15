@@ -75,7 +75,7 @@ public class ThingsboardInstallService {
 
     public void performInstall() {
         try {
-            if (isUpgrade) {
+            if (Boolean.TRUE.equals(isUpgrade)) {
                 log.info("Starting ThingsBoard Upgrade from version {} ...", upgradeFromVersion);
 
                 cacheCleanupService.clearCache(upgradeFromVersion);
@@ -90,17 +90,20 @@ public class ThingsboardInstallService {
                     latestMigrateService.migrate();
                 } else {
                     switch (upgradeFromVersion) {
-                        case "1.2.3": //NOSONAR, Need to execute gradual upgrade starting from upgradeFromVersion
+                        case "1.2.3":
+                            //NOSONAR, Need to execute gradual upgrade starting from upgradeFromVersion
                             log.info("Upgrading ThingsBoard from version 1.2.3 to 1.3.0 ...");
 
                             databaseEntitiesUpgradeService.upgradeDatabase("1.2.3");
 
-                        case "1.3.0":  //NOSONAR, Need to execute gradual upgrade starting from upgradeFromVersion
+                        case "1.3.0":
+                            //NOSONAR, Need to execute gradual upgrade starting from upgradeFromVersion
                             log.info("Upgrading ThingsBoard from version 1.3.0 to 1.3.1 ...");
 
                             databaseEntitiesUpgradeService.upgradeDatabase("1.3.0");
 
-                        case "1.3.1": //NOSONAR, Need to execute gradual upgrade starting from upgradeFromVersion
+                        case "1.3.1":
+                            //NOSONAR, Need to execute gradual upgrade starting from upgradeFromVersion
                             log.info("Upgrading ThingsBoard from version 1.3.1 to 1.4.0 ...");
 
                             databaseEntitiesUpgradeService.upgradeDatabase("1.3.1");
