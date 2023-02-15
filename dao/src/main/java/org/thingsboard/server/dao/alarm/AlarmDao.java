@@ -23,7 +23,7 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * Created by ashvayka on 11.05.17.
+ * Created by Echo on 11.05.17.
  */
 public interface AlarmDao extends Dao<Alarm> {
 

@@ -87,7 +87,7 @@ import static org.thingsboard.server.common.data.DataConstants.INACTIVITY_EVENT;
 import static org.thingsboard.server.common.data.DataConstants.SERVER_SCOPE;
 
 /**
- * Created by ashvayka on 01.05.18.
+ * Created by Echo on 01.05.18.
  */
 @Service
 @TbCoreComponent

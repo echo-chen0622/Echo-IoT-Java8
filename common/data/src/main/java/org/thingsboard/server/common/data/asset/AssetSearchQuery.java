@@ -12,7 +12,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Created by ashvayka on 03.05.17.
+ * Created by Echo on 03.05.17.
  */
 @Data
 public class AssetSearchQuery {

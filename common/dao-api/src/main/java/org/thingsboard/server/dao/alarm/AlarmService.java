@@ -19,7 +19,7 @@ import org.thingsboard.server.common.data.query.AlarmDataQuery;
 import java.util.Collection;
 
 /**
- * Created by ashvayka on 11.05.17.
+ * Created by Echo on 11.05.17.
  */
 public interface AlarmService {
 

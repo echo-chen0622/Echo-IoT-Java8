@@ -10,7 +10,7 @@ import org.thingsboard.server.common.msg.MsgType;
 import org.thingsboard.server.common.msg.rpc.ToDeviceRpcRequest;
 
 /**
- * Created by ashvayka on 16.04.18.
+ * Created by Echo on 16.04.18.
  */
 @ToString
 @RequiredArgsConstructor

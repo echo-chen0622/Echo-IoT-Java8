@@ -1,7 +1,7 @@
 package org.thingsboard.server.service.security;
 
 /**
- * Created by ashvayka on 17.05.18.
+ * Created by Echo on 17.05.18.
  */
 public enum ValidationResultCode {
     OK,

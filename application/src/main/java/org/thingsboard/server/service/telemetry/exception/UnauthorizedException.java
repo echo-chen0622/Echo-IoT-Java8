@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 /**
- * Created by ashvayka on 21.02.17.
+ * Created by Echo on 21.02.17.
  */
 public class UnauthorizedException extends Exception implements ToErrorResponseEntity {
 

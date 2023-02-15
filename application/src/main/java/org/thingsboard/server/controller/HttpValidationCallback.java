@@ -6,7 +6,7 @@ import org.springframework.web.context.request.async.DeferredResult;
 import org.thingsboard.server.service.security.ValidationCallback;
 
 /**
- * Created by ashvayka on 21.02.17.
+ * Created by Echo on 21.02.17.
  */
 public class HttpValidationCallback extends ValidationCallback<DeferredResult<ResponseEntity>> {
 

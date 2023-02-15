@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 
 /**
- * Created by ashvayka on 24.09.18.
+ * Created by Echo on 24.09.18.
  */
 @Slf4j
 public class TbKafkaAdmin implements TbQueueAdmin {

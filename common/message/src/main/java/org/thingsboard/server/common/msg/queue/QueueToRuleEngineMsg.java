@@ -12,7 +12,7 @@ import org.thingsboard.server.common.msg.TbRuleEngineActorMsg;
 import java.util.Set;
 
 /**
- * Created by ashvayka on 15.03.18.
+ * Created by Echo on 15.03.18.
  */
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)

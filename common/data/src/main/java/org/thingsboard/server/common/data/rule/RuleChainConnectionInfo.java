@@ -7,7 +7,7 @@ import lombok.Data;
 import org.thingsboard.server.common.data.id.RuleChainId;
 
 /**
- * Created by ashvayka on 21.03.18.
+ * Created by Echo on 21.03.18.
  */
 @ApiModel
 @Data

@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.util.function.Predicate;
 
 /**
- * Created by ashvayka on 20.03.18.
+ * Created by Echo on 20.03.18.
  */
 @TestPropertySource(properties = {
         "js.evaluator=mock",

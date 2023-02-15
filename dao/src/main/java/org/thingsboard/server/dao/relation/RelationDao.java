@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Created by ashvayka on 25.04.17.
+ * Created by Echo on 25.04.17.
  */
 public interface RelationDao {
 

@@ -4,7 +4,7 @@ import org.thingsboard.server.common.data.id.DeviceId;
 import org.thingsboard.server.gen.transport.TransportProtos.DeviceSessionsCacheEntry;
 
 /**
- * Created by ashvayka on 29.10.18.
+ * Created by Echo on 29.10.18.
  */
 public interface DeviceSessionCacheService {
 

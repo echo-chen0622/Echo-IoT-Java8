@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import java.io.IOException;
 
 /**
- * Created by ashvayka on 11.05.17.
+ * Created by Echo on 11.05.17.
  */
 public class EntityIdSerializer extends JsonSerializer<EntityId> {
 

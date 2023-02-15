@@ -8,7 +8,7 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 /**
- * Created by ashvayka on 02.04.18.
+ * Created by Echo on 02.04.18.
  */
 public interface RuleEngineRpcService {
 

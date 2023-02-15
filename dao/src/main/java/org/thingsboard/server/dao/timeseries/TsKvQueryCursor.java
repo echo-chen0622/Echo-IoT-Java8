@@ -11,7 +11,7 @@ import java.util.UUID;
 import static org.thingsboard.server.dao.timeseries.CassandraBaseTimeseriesDao.DESC_ORDER;
 
 /**
- * Created by ashvayka on 21.02.17.
+ * Created by Echo on 21.02.17.
  */
 public class TsKvQueryCursor extends QueryCursor {
 

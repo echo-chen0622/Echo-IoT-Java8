@@ -16,7 +16,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Created by ashvayka on 27.04.17.
+ * Created by Echo on 27.04.17.
  */
 public interface RelationService {
 

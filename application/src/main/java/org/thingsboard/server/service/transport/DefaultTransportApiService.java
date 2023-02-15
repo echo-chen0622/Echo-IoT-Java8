@@ -99,7 +99,7 @@ import static org.thingsboard.server.service.transport.BasicCredentialsValidatio
 import static org.thingsboard.server.service.transport.BasicCredentialsValidationResult.VALID;
 
 /**
- * Created by ashvayka on 05.10.18.
+ * Created by Echo on 05.10.18.
  */
 @Slf4j
 @Service

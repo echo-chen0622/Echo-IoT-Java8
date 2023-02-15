@@ -17,7 +17,7 @@ import org.thingsboard.server.dao.util.NoSqlAnyDao;
 import javax.annotation.PreDestroy;
 
 /**
- * Created by ashvayka on 24.10.18.
+ * Created by Echo on 24.10.18.
  */
 @Component
 @Slf4j

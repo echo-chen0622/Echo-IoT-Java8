@@ -22,7 +22,7 @@ import java.io.Serializable;
 import java.util.UUID;
 
 /**
- * Created by ashvayka on 13.01.18.
+ * Created by Echo on 13.01.18.
  */
 @Data
 @Slf4j

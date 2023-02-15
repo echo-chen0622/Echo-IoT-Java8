@@ -128,7 +128,7 @@ public class DefaultTbClusterService implements TbClusterService {
         TopicPartitionInfo tpi = partitionService.resolve(ServiceType.TB_VC_EXECUTOR, tenantId, tenantId);
         log.trace("PUSHING msg: {} to:{}", msg, tpi);
         producerProvider.getTbVersionControlMsgProducer().send(tpi, new TbProtoQueueMsg<>(tenantId.getId(), msg), callback);
-        //TODO: ashvayka
+        //TODO: Echo
         toCoreMsgs.incrementAndGet();
     }
 

@@ -4,7 +4,7 @@ import org.thingsboard.server.common.msg.MsgType;
 import org.thingsboard.server.common.msg.TbActorMsg;
 
 /**
- * Created by ashvayka on 29.10.18.
+ * Created by Echo on 29.10.18.
  */
 public class SessionTimeoutCheckMsg implements TbActorMsg {
 

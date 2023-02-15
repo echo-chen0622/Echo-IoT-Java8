@@ -16,7 +16,7 @@ import java.util.function.Supplier;
 import java.util.function.Consumer;
 
 /**
- * Created by ashvayka on 19.02.18.
+ * Created by Echo on 19.02.18.
  */
 @Slf4j
 public abstract class SearchTextBasedWithAdditionalInfo<I extends UUIDBased> extends SearchTextBased<I> implements HasAdditionalInfo {

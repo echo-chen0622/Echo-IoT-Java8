@@ -10,7 +10,7 @@ import org.thingsboard.server.common.msg.TbRuleEngineActorMsg;
 import org.thingsboard.server.common.msg.queue.RuleNodeException;
 
 /**
- * Created by ashvayka on 19.03.18.
+ * Created by Echo on 19.03.18.
  */
 @EqualsAndHashCode(callSuper = true)
 @ToString

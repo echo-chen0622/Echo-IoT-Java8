@@ -8,7 +8,7 @@ import org.thingsboard.server.common.msg.TbMsg;
 import javax.annotation.Nullable;
 
 /**
- * Created by ashvayka on 02.04.18.
+ * Created by Echo on 02.04.18.
  */
 @Data
 class TelemetryNodeCallback implements FutureCallback<Void> {

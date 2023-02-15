@@ -31,7 +31,7 @@ import java.util.Optional;
 import static org.thingsboard.server.service.install.DatabaseHelper.objectMapper;
 
 /**
- * Created by ashvayka on 18.04.18.
+ * Created by Echo on 18.04.18.
  */
 @Component
 @Slf4j

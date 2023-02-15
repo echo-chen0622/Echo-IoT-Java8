@@ -6,7 +6,7 @@ import java.util.concurrent.ConcurrentNavigableMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
- * Created by ashvayka on 23.09.18.
+ * Created by Echo on 23.09.18.
  */
 @Slf4j
 public class ConsistentHashCircle<T> {

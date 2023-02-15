@@ -12,7 +12,7 @@ import org.thingsboard.server.dao.util.AsyncTask;
 import java.util.function.Function;
 
 /**
- * Created by ashvayka on 24.10.18.
+ * Created by Echo on 24.10.18.
  */
 @Data
 public class CassandraStatementTask implements AsyncTask {

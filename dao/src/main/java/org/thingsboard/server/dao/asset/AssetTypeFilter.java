@@ -6,7 +6,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * Created by ashvayka on 02.05.17.
+ * Created by Echo on 02.05.17.
  */
 @Data
 public class AssetTypeFilter {

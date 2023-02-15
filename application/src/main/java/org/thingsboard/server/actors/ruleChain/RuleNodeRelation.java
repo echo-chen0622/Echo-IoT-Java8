@@ -4,7 +4,7 @@ import lombok.Data;
 import org.thingsboard.server.common.data.id.EntityId;
 
 /**
- * Created by ashvayka on 19.03.18.
+ * Created by Echo on 19.03.18.
  */
 
 @Data

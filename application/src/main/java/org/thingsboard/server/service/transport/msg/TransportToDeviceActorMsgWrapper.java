@@ -14,7 +14,7 @@ import java.io.Serializable;
 import java.util.UUID;
 
 /**
- * Created by ashvayka on 09.10.18.
+ * Created by Echo on 09.10.18.
  */
 @Data
 public class TransportToDeviceActorMsgWrapper implements TbActorMsg, DeviceAwareMsg, TenantAwareMsg, Serializable {

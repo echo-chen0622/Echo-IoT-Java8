@@ -13,7 +13,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
- * Created by ashvayka on 14.07.17.
+ * Created by Echo on 14.07.17.
  */
 @RunWith(MockitoJUnitRunner.class)
 public class UUIDConverterTest {

@@ -17,7 +17,7 @@ import java.util.Collections;
 import static org.thingsboard.server.common.data.CacheConstants.SESSIONS_CACHE;
 
 /**
- * Created by ashvayka on 29.10.18.
+ * Created by Echo on 29.10.18.
  */
 @Service
 @TbCoreComponent

@@ -6,7 +6,7 @@ import org.thingsboard.server.common.msg.queue.PartitionChangeMsg;
 import java.util.concurrent.ExecutionException;
 
 /**
- * Created by ashvayka on 19.01.18.
+ * Created by Echo on 19.01.18.
  */
 public interface TbNode {
 

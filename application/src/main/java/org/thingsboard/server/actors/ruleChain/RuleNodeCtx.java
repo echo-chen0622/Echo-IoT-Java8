@@ -7,7 +7,7 @@ import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.common.data.rule.RuleNode;
 
 /**
- * Created by ashvayka on 19.03.18.
+ * Created by Echo on 19.03.18.
  */
 @Data
 @AllArgsConstructor

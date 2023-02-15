@@ -19,7 +19,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Created by ashvayka on 26.09.18.
+ * Created by Echo on 26.09.18.
  */
 @Slf4j
 public abstract class AbstractJsInvokeService extends AbstractScriptInvokeService implements JsInvokeService {

@@ -58,7 +58,7 @@ import static org.thingsboard.server.common.transport.service.DefaultTransportSe
 import static org.thingsboard.server.common.transport.service.DefaultTransportService.SUBSCRIBE_TO_RPC_ASYNC_MSG;
 
 /**
- * Created by ashvayka on 19.01.17.
+ * Created by Echo on 19.01.17.
  */
 @Slf4j
 public class GatewaySessionHandler {

@@ -19,7 +19,7 @@ import static org.thingsboard.common.util.DonAsynchron.withCallback;
 import static org.thingsboard.rule.engine.api.TbRelationTypes.FAILURE;
 
 /**
- * Created by ashvayka on 19.01.18.
+ * Created by Echo on 19.01.18.
  */
 @Slf4j
 public abstract class TbAbstractTransformNode implements TbNode {

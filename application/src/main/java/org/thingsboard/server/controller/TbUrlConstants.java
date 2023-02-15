@@ -1,7 +1,7 @@
 package org.thingsboard.server.controller;
 
 /**
- * Created by ashvayka on 17.05.18.
+ * Created by Echo on 17.05.18.
  */
 public class TbUrlConstants {
     public static final String TELEMETRY_URL_PREFIX = "/api/plugins/telemetry";

@@ -6,7 +6,7 @@ import org.thingsboard.server.common.data.edge.EdgeEventType;
 import java.util.UUID;
 
 /**
- * Created by ashvayka on 25.04.17.
+ * Created by Echo on 25.04.17.
  */
 public class EntityIdFactory {
 

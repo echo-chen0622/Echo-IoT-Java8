@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 /**
- * Created by ashvayka on 19.01.18.
+ * Created by Echo on 19.01.18.
  */
 @Slf4j
 @RuleNode(

@@ -4,7 +4,7 @@ import lombok.Data;
 import org.thingsboard.rule.engine.api.NodeConfiguration;
 
 /**
- * Created by ashvayka on 19.01.18.
+ * Created by Echo on 19.01.18.
  */
 @Data
 public class TbGpsGeofencingFilterNodeConfiguration implements NodeConfiguration<TbGpsGeofencingFilterNodeConfiguration> {

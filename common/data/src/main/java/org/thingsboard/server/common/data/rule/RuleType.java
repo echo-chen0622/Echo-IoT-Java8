@@ -3,7 +3,7 @@ package org.thingsboard.server.common.data.rule;
 /**
  * Defines origin of the rule.
  *
- * @author ashvayka
+ * @author Echo
  *
  */
 public enum RuleType {

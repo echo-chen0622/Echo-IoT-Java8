@@ -15,7 +15,7 @@ import java.io.Serializable;
 import java.util.Set;
 
 /**
- * Created by ashvayka on 19.03.18.
+ * Created by Echo on 19.03.18.
  */
 @EqualsAndHashCode(callSuper = true)
 @ToString

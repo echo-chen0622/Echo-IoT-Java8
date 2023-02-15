@@ -25,7 +25,7 @@ import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
 /**
- * Created by ashvayka on 27.03.18.
+ * Created by Echo on 27.03.18.
  */
 @Slf4j
 public abstract class AbstractSubscriptionService extends TbApplicationEventListener<PartitionChangeEvent>{

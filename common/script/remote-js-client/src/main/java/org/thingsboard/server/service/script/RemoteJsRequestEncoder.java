@@ -9,7 +9,7 @@ import org.thingsboard.server.queue.kafka.TbKafkaEncoder;
 import java.nio.charset.StandardCharsets;
 
 /**
- * Created by ashvayka on 25.09.18.
+ * Created by Echo on 25.09.18.
  */
 public class RemoteJsRequestEncoder implements TbKafkaEncoder<TbProtoQueueMsg<JsInvokeProtos.RemoteJsRequest>> {
     @Override

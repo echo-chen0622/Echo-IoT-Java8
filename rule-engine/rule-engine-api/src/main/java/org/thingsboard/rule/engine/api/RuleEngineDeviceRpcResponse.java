@@ -8,7 +8,7 @@ import org.thingsboard.server.common.data.rpc.RpcError;
 import java.util.Optional;
 
 /**
- * Created by ashvayka on 02.04.18.
+ * Created by Echo on 02.04.18.
  */
 @Data
 @Builder

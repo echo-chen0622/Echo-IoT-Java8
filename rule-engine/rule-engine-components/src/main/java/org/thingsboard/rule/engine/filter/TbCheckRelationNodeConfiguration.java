@@ -5,7 +5,7 @@ import org.thingsboard.rule.engine.api.NodeConfiguration;
 import org.thingsboard.server.common.data.relation.EntitySearchDirection;
 
 /**
- * Created by ashvayka on 19.01.18.
+ * Created by Echo on 19.01.18.
  */
 @Data
 public class TbCheckRelationNodeConfiguration implements NodeConfiguration<TbCheckRelationNodeConfiguration> {

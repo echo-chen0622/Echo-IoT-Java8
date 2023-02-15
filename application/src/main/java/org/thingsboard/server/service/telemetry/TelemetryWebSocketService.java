@@ -6,7 +6,7 @@ import org.thingsboard.server.service.telemetry.cmd.v2.DataUpdate;
 import org.thingsboard.server.service.telemetry.sub.TelemetrySubscriptionUpdate;
 
 /**
- * Created by ashvayka on 27.03.18.
+ * Created by Echo on 27.03.18.
  */
 public interface TelemetryWebSocketService {
 

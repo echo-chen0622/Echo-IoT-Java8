@@ -10,7 +10,7 @@ import org.thingsboard.server.common.data.kv.TsKvEntry;
 import java.util.List;
 
 /**
- * Created by ashvayka on 27.03.18.
+ * Created by Echo on 27.03.18.
  */
 public interface InternalTelemetryService extends RuleEngineTelemetryService {
 

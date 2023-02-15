@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 /**
- * Created by ashvayka on 05.10.18.
+ * Created by Echo on 05.10.18.
  */
 public class AsyncCallbackTemplate {
 

@@ -13,7 +13,7 @@ import org.thingsboard.server.common.data.id.EntityId;
 import java.io.IOException;
 
 /**
- * Created by ashvayka on 01.06.18.
+ * Created by Echo on 01.06.18.
  */
 @Data
 @AllArgsConstructor

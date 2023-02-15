@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Properties;
 
 /**
- * Created by ashvayka on 24.09.18.
+ * Created by Echo on 24.09.18.
  */
 @Slf4j
 public class TbKafkaConsumerTemplate<T extends TbQueueMsg> extends AbstractTbQueueConsumerTemplate<ConsumerRecord<String, byte[]>, T> {

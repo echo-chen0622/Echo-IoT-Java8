@@ -10,7 +10,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /**
- * Created by ashvayka on 02.04.18.
+ * Created by Echo on 02.04.18.
  */
 public interface RuleEngineAssetProfileCache {
 

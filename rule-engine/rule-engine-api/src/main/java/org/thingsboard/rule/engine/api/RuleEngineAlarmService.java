@@ -20,7 +20,7 @@ import org.thingsboard.server.dao.alarm.AlarmOperationResult;
 import java.util.Collection;
 
 /**
- * Created by ashvayka on 02.04.18.
+ * Created by Echo on 02.04.18.
  */
 public interface RuleEngineAlarmService {
 

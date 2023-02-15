@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- * Created by ashvayka on 25.09.18.
+ * Created by Echo on 25.09.18.
  */
 @Slf4j
 @ConditionalOnProperty(prefix = "queue", value = "type", havingValue = "kafka")

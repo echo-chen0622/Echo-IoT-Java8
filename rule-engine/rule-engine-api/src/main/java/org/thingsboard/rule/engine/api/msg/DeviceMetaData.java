@@ -6,7 +6,7 @@ import org.thingsboard.server.common.data.id.DeviceId;
 /**
  * Contains basic device metadata;
  *
- * @author ashvayka
+ * @author Echo
  */
 @Data
 public final class DeviceMetaData {

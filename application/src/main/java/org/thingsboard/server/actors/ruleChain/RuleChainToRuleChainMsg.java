@@ -12,7 +12,7 @@ import org.thingsboard.server.common.msg.aware.RuleChainAwareMsg;
 import org.thingsboard.server.common.msg.queue.RuleEngineException;
 
 /**
- * Created by ashvayka on 19.03.18.
+ * Created by Echo on 19.03.18.
  */
 @EqualsAndHashCode(callSuper = true)
 @ToString

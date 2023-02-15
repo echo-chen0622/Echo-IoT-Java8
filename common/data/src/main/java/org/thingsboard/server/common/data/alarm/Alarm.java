@@ -21,7 +21,7 @@ import org.thingsboard.server.common.data.validation.NoXss;
 import java.util.List;
 
 /**
- * Created by ashvayka on 11.05.17.
+ * Created by Echo on 11.05.17.
  */
 @ApiModel
 @Data

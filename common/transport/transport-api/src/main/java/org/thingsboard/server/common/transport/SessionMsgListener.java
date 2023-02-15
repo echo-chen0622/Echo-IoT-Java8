@@ -16,7 +16,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Created by ashvayka on 04.10.18.
+ * Created by Echo on 04.10.18.
  */
 public interface SessionMsgListener {
 

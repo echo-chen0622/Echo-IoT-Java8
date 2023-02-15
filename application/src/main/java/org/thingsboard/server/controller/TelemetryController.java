@@ -124,7 +124,7 @@ import static org.thingsboard.server.controller.ControllerConstants.TS_STRICT_DA
 
 
 /**
- * Created by ashvayka on 22.03.18.
+ * Created by Echo on 22.03.18.
  */
 @RestController
 @TbCoreComponent

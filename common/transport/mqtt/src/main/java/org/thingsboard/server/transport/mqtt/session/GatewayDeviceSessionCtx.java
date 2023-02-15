@@ -17,7 +17,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentMap;
 
 /**
- * Created by ashvayka on 19.01.17.
+ * Created by Echo on 19.01.17.
  */
 @Slf4j
 public class GatewayDeviceSessionCtx extends MqttDeviceAwareSessionContext implements SessionMsgListener {

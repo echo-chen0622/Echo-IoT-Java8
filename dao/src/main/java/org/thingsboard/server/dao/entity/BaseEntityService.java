@@ -49,7 +49,7 @@ import static org.thingsboard.server.dao.service.Validator.validateEntityDataPag
 import static org.thingsboard.server.dao.service.Validator.validateId;
 
 /**
- * Created by ashvayka on 04.05.17.
+ * Created by Echo on 04.05.17.
  */
 @Service
 @Slf4j

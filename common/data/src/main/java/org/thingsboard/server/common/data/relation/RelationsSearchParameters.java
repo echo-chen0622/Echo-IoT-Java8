@@ -12,7 +12,7 @@ import org.thingsboard.server.common.data.id.EntityIdFactory;
 import java.util.UUID;
 
 /**
- * Created by ashvayka on 03.05.17.
+ * Created by Echo on 03.05.17.
  */
 @ApiModel
 @Data

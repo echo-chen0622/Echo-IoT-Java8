@@ -4,7 +4,7 @@ import org.thingsboard.rule.engine.api.RuleEngineRpcService;
 import org.thingsboard.server.common.msg.rpc.FromDeviceRpcResponse;
 
 /**
- * Created by ashvayka on 16.04.18.
+ * Created by Echo on 16.04.18.
  */
 public interface TbRuleEngineDeviceRpcService extends RuleEngineRpcService {
 

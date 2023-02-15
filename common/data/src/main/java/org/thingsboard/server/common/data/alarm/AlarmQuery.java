@@ -7,7 +7,7 @@ import org.thingsboard.server.common.data.id.EntityId;
 import org.thingsboard.server.common.data.page.TimePageLink;
 
 /**
- * Created by ashvayka on 11.05.17.
+ * Created by Echo on 11.05.17.
  */
 @Data
 @Builder

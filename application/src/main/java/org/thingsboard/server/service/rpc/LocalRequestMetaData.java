@@ -7,7 +7,7 @@ import org.thingsboard.server.common.msg.rpc.ToDeviceRpcRequest;
 import org.thingsboard.server.service.security.model.SecurityUser;
 
 /**
- * Created by ashvayka on 16.04.18.
+ * Created by Echo on 16.04.18.
  */
 @Data
 public class LocalRequestMetaData {

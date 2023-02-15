@@ -24,7 +24,7 @@ import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
 
 /**
- * Created by ashvayka on 20.02.17.
+ * Created by Echo on 20.02.17.
  */
 @Slf4j
 public class AggregatePartitionsFunction implements com.google.common.util.concurrent.AsyncFunction<List<TbResultSet>, Optional<TsKvEntryAggWrapper>> {

@@ -7,7 +7,7 @@ import org.thingsboard.server.queue.kafka.TbKafkaDecoder;
 import java.io.IOException;
 
 /**
- * Created by ashvayka on 05.10.18.
+ * Created by Echo on 05.10.18.
  */
 public class ToTransportMsgResponseDecoder implements TbKafkaDecoder<ToTransportMsg> {
 

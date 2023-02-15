@@ -1,7 +1,7 @@
 package org.thingsboard.server.common.data.device.profile;
 
 /**
- * Created by ashvayka on 19.01.17.
+ * Created by Echo on 19.01.17.
  */
 public class MqttTopics {
 

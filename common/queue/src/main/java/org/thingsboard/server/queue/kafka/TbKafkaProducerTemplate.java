@@ -21,7 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
- * Created by ashvayka on 24.09.18.
+ * Created by Echo on 24.09.18.
  */
 @Slf4j
 public class TbKafkaProducerTemplate<T extends TbQueueMsg> implements TbQueueProducer<T> {

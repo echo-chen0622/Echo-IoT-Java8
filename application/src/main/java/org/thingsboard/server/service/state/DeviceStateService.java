@@ -9,7 +9,7 @@ import org.thingsboard.server.gen.transport.TransportProtos;
 import org.thingsboard.server.common.msg.queue.TbCallback;
 
 /**
- * Created by ashvayka on 01.05.18.
+ * Created by Echo on 01.05.18.
  */
 public interface DeviceStateService extends ApplicationListener<PartitionChangeEvent> {
 

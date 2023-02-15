@@ -1,7 +1,7 @@
 package org.thingsboard.server.service.telemetry;
 
 /**
- * Created by ashvayka on 08.05.17.
+ * Created by Echo on 08.05.17.
  */
 public enum TelemetryFeature {
 

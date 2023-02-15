@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 /**
- * Created by ashvayka on 24.10.18.
+ * Created by Echo on 24.10.18.
  */
 public class TbResultSetFuture implements ListenableFuture<TbResultSet> {
 

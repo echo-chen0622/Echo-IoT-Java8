@@ -5,7 +5,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
- * Created by ashvayka on 13.07.17.
+ * Created by Echo on 13.07.17.
  */
 public class UUIDConverter {
 

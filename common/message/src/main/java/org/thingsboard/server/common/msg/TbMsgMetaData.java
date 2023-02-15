@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Created by ashvayka on 13.01.18.
+ * Created by Echo on 13.01.18.
  */
 @Data
 public final class TbMsgMetaData implements Serializable {

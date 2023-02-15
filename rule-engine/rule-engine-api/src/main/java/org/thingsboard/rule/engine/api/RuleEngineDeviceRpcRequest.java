@@ -8,7 +8,7 @@ import org.thingsboard.server.common.data.id.TenantId;
 import java.util.UUID;
 
 /**
- * Created by ashvayka on 02.04.18.
+ * Created by Echo on 02.04.18.
  */
 @Data
 @Builder

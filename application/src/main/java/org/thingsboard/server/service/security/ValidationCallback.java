@@ -7,7 +7,7 @@ import org.thingsboard.server.service.telemetry.exception.InternalErrorException
 import org.thingsboard.server.service.telemetry.exception.UnauthorizedException;
 
 /**
- * Created by ashvayka on 31.03.18.
+ * Created by Echo on 31.03.18.
  */
 public class ValidationCallback<T> implements FutureCallback<ValidationResult> {
 

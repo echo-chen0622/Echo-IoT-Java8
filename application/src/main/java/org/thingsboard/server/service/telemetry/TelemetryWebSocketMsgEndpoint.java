@@ -5,7 +5,7 @@ import org.springframework.web.socket.CloseStatus;
 import java.io.IOException;
 
 /**
- * Created by ashvayka on 27.03.18.
+ * Created by Echo on 27.03.18.
  */
 public interface TelemetryWebSocketMsgEndpoint {
 

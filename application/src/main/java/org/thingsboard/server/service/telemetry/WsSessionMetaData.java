@@ -2,7 +2,7 @@ package org.thingsboard.server.service.telemetry;
 
 
 /**
- * Created by ashvayka on 27.03.18.
+ * Created by Echo on 27.03.18.
  */
 public class WsSessionMetaData {
     private TelemetryWebSocketSessionRef sessionRef;

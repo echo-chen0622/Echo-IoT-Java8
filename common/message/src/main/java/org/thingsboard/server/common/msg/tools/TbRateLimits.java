@@ -10,7 +10,7 @@ import lombok.Getter;
 import java.time.Duration;
 
 /**
- * Created by ashvayka on 22.10.18.
+ * Created by Echo on 22.10.18.
  */
 public class TbRateLimits {
     private final LocalBucket bucket;

@@ -54,7 +54,7 @@ import java.util.function.BiConsumer;
 import static org.thingsboard.server.dao.service.Validator.validateId;
 
 /**
- * Created by ashvayka on 28.04.17.
+ * Created by Echo on 28.04.17.
  */
 @Service
 @Slf4j

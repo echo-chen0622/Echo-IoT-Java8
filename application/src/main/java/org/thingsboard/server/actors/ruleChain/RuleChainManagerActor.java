@@ -21,7 +21,7 @@ import org.thingsboard.server.dao.rule.RuleChainService;
 import java.util.function.Function;
 
 /**
- * Created by ashvayka on 15.03.18.
+ * Created by Echo on 15.03.18.
  */
 @Slf4j
 public abstract class RuleChainManagerActor extends ContextAwareActor {

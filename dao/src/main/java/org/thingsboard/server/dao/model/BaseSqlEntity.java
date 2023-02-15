@@ -8,7 +8,7 @@ import javax.persistence.MappedSuperclass;
 import java.util.UUID;
 
 /**
- * Created by ashvayka on 13.07.17.
+ * Created by Echo on 13.07.17.
  */
 @Data
 @MappedSuperclass

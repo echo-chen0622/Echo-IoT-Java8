@@ -6,7 +6,7 @@ import org.thingsboard.server.common.data.query.TsValue;
 /**
  * Represents time series KV data entry
  *
- * @author ashvayka
+ * @author Echo
  *
  */
 public interface TsKvEntry extends KvEntry {

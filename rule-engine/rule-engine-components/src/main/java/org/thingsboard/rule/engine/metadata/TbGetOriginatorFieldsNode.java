@@ -18,7 +18,7 @@ import org.thingsboard.server.common.msg.TbMsg;
 import static org.thingsboard.common.util.DonAsynchron.withCallback;
 
 /**
- * Created by ashvayka on 19.01.18.
+ * Created by Echo on 19.01.18.
  */
 @Slf4j
 @RuleNode(type = ComponentType.ENRICHMENT,

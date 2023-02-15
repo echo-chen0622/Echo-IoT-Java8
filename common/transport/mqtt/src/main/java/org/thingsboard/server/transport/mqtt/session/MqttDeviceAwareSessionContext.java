@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
 /**
- * Created by ashvayka on 30.08.18.
+ * Created by Echo on 30.08.18.
  */
 public abstract class MqttDeviceAwareSessionContext extends DeviceAwareSessionContext {
 

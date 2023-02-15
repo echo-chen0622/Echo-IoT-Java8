@@ -3,7 +3,7 @@ name: Question
 about: Describe your questions in details
 title: "[Question] your title here"
 labels: question
-assignees: ashvayka
+assignees: Echo
 
 ---
 

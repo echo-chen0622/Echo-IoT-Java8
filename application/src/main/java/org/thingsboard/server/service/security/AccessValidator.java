@@ -74,7 +74,7 @@ import java.util.concurrent.Executors;
 import java.util.function.BiConsumer;
 
 /**
- * Created by ashvayka on 27.03.18.
+ * Created by Echo on 27.03.18.
  */
 @Component
 public class AccessValidator {
