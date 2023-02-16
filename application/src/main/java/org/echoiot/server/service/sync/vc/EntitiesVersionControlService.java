@@ -3,7 +3,7 @@ package org.echoiot.server.service.sync.vc;
 import com.google.common.util.concurrent.ListenableFuture;
 import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.User;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.page.PageData;
@@ -26,7 +26,7 @@ public interface EntitiesVersionControlService {
 
     ListenableFuture<UUID> saveEntitiesVersion(User user, VersionCreateRequest request) throws Exception;
 
-    VersionCreationResult getVersionCreateStatus(User user, UUID requestId) throws ThingsboardException;
+    VersionCreationResult getVersionCreateStatus(User user, UUID requestId) throws EchoiotException;
 
     ListenableFuture<PageData<EntityVersion>> listEntityVersions(TenantId tenantId, String branch, EntityId externalId, PageLink pageLink) throws Exception;
 
@@ -40,7 +40,7 @@ public interface EntitiesVersionControlService {
 
     UUID loadEntitiesVersion(User user, VersionLoadRequest request) throws Exception;
 
-    VersionLoadResult getVersionLoadStatus(User user, UUID requestId) throws ThingsboardException;
+    VersionLoadResult getVersionLoadStatus(User user, UUID requestId) throws EchoiotException;
 
     ListenableFuture<EntityDataDiff> compareEntityDataToVersion(User user, EntityId entityId, String versionId) throws Exception;
 

@@ -3,18 +3,13 @@ package org.echoiot.server.controller;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.echoiot.server.common.data.StringUtils;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.plugin.ComponentDescriptor;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.data.rule.RuleChainType;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
 import java.util.List;
@@ -38,7 +33,7 @@ public class ComponentDescriptorController extends BaseController {
     @ResponseBody
     public ComponentDescriptor getComponentDescriptorByClazz(
             @ApiParam(value = "Component Descriptor class name", required = true)
-            @PathVariable("componentDescriptorClazz") String strComponentDescriptorClazz) throws ThingsboardException {
+            @PathVariable("componentDescriptorClazz") String strComponentDescriptorClazz) throws EchoiotException {
         checkParameter("strComponentDescriptorClazz", strComponentDescriptorClazz);
         try {
             return checkComponentDescriptorByClazz(strComponentDescriptorClazz);
@@ -57,7 +52,7 @@ public class ComponentDescriptorController extends BaseController {
             @ApiParam(value = "Type of the Rule Node", allowableValues = "ENRICHMENT,FILTER,TRANSFORMATION,ACTION,EXTERNAL", required = true)
             @PathVariable("componentType") String strComponentType,
             @ApiParam(value = "Type of the Rule Chain", allowableValues = "CORE,EDGE")
-            @RequestParam(value = "ruleChainType", required = false) String strRuleChainType) throws ThingsboardException {
+            @RequestParam(value = "ruleChainType", required = false) String strRuleChainType) throws EchoiotException {
         checkParameter("componentType", strComponentType);
         try {
             return checkComponentDescriptorsByType(ComponentType.valueOf(strComponentType), getRuleChainType(strRuleChainType));
@@ -76,7 +71,7 @@ public class ComponentDescriptorController extends BaseController {
             @ApiParam(value = "List of types of the Rule Nodes, (ENRICHMENT, FILTER, TRANSFORMATION, ACTION or EXTERNAL)", required = true)
             @RequestParam("componentTypes") String[] strComponentTypes,
             @ApiParam(value = "Type of the Rule Chain", allowableValues = "CORE,EDGE")
-            @RequestParam(value = "ruleChainType", required = false) String strRuleChainType) throws ThingsboardException {
+            @RequestParam(value = "ruleChainType", required = false) String strRuleChainType) throws EchoiotException {
         checkArrayParameter("componentTypes", strComponentTypes);
         try {
             Set<ComponentType> componentTypes = new HashSet<>();

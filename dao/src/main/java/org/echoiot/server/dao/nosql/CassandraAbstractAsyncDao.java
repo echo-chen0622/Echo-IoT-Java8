@@ -4,7 +4,7 @@ import com.google.common.base.Function;
 import com.google.common.util.concurrent.AsyncFunction;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
-import org.thingsboard.common.util.ThingsBoardThreadFactory;
+import org.echoiot.common.util.EchoiotThreadFactory;
 
 import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
@@ -21,7 +21,7 @@ public abstract class CassandraAbstractAsyncDao extends CassandraAbstractDao {
 
     @PostConstruct
     public void startExecutor() {
-        readResultsProcessingExecutor = Executors.newCachedThreadPool(ThingsBoardThreadFactory.forName("cassandra-callback"));
+        readResultsProcessingExecutor = Executors.newCachedThreadPool(EchoiotThreadFactory.forName("cassandra-callback"));
     }
 
     @PreDestroy

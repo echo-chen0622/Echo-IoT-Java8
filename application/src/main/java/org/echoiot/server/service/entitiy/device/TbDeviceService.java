@@ -6,7 +6,7 @@ import org.echoiot.server.common.data.Device;
 import org.echoiot.server.common.data.Tenant;
 import org.echoiot.server.common.data.User;
 import org.echoiot.server.common.data.edge.Edge;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.data.id.TenantId;
@@ -18,19 +18,19 @@ public interface TbDeviceService {
 
     Device save(Device device, Device oldDevice, String accessToken, User user) throws Exception;
 
-    Device saveDeviceWithCredentials(Device device, DeviceCredentials deviceCredentials, User user) throws ThingsboardException;
+    Device saveDeviceWithCredentials(Device device, DeviceCredentials deviceCredentials, User user) throws EchoiotException;
 
     ListenableFuture<Void> delete(Device device, User user);
 
-    Device assignDeviceToCustomer(TenantId tenantId, DeviceId deviceId, Customer customer, User user) throws ThingsboardException;
+    Device assignDeviceToCustomer(TenantId tenantId, DeviceId deviceId, Customer customer, User user) throws EchoiotException;
 
-    Device unassignDeviceFromCustomer(Device device, Customer customer, User user) throws ThingsboardException;
+    Device unassignDeviceFromCustomer(Device device, Customer customer, User user) throws EchoiotException;
 
-    Device assignDeviceToPublicCustomer(TenantId tenantId, DeviceId deviceId, User user) throws ThingsboardException;
+    Device assignDeviceToPublicCustomer(TenantId tenantId, DeviceId deviceId, User user) throws EchoiotException;
 
-    DeviceCredentials getDeviceCredentialsByDeviceId(Device device, User user) throws ThingsboardException;
+    DeviceCredentials getDeviceCredentialsByDeviceId(Device device, User user) throws EchoiotException;
 
-    DeviceCredentials updateDeviceCredentials(Device device, DeviceCredentials deviceCredentials, User user) throws ThingsboardException;
+    DeviceCredentials updateDeviceCredentials(Device device, DeviceCredentials deviceCredentials, User user) throws EchoiotException;
 
     ListenableFuture<ClaimResult> claimDevice(TenantId tenantId, Device device, CustomerId customerId, String secretKey, User user);
 
@@ -38,7 +38,7 @@ public interface TbDeviceService {
 
     Device assignDeviceToTenant(Device device, Tenant newTenant, User user);
 
-    Device assignDeviceToEdge(TenantId tenantId, DeviceId deviceId, Edge edge, User user) throws ThingsboardException;
+    Device assignDeviceToEdge(TenantId tenantId, DeviceId deviceId, Edge edge, User user) throws EchoiotException;
 
-    Device unassignDeviceFromEdge(Device device, Edge edge, User user) throws ThingsboardException;
+    Device unassignDeviceFromEdge(Device device, Edge edge, User user) throws EchoiotException;
 }

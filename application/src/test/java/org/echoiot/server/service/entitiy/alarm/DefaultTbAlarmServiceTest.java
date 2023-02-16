@@ -3,17 +3,10 @@ package org.echoiot.server.service.entitiy.alarm;
 import com.google.common.util.concurrent.Futures;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.cluster.TbClusterService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.echoiot.server.common.data.User;
 import org.echoiot.server.common.data.alarm.Alarm;
 import org.echoiot.server.common.data.alarm.AlarmStatus;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.dao.alarm.AlarmService;
 import org.echoiot.server.dao.customer.CustomerService;
 import org.echoiot.server.dao.edge.EdgeService;
@@ -21,14 +14,16 @@ import org.echoiot.server.service.entitiy.TbNotificationEntityService;
 import org.echoiot.server.service.executors.DbCallbackExecutorService;
 import org.echoiot.server.service.sync.vc.EntitiesVersionControlService;
 import org.echoiot.server.service.telemetry.AlarmSubscriptionService;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 @Slf4j
 @RunWith(SpringRunner.class)
@@ -59,7 +54,7 @@ public class DefaultTbAlarmServiceTest {
     DefaultTbAlarmService service;
 
     @Test
-    public void testSave() throws ThingsboardException {
+    public void testSave() throws EchoiotException {
         var alarm = new Alarm();
         when(alarmSubscriptionService.createOrUpdateAlarm(alarm)).thenReturn(alarm);
         service.save(alarm, new User());

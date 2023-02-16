@@ -21,7 +21,7 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.test.context.ContextConfiguration;
-import org.thingsboard.common.util.ThingsBoardExecutors;
+import org.echoiot.common.util.EchoiotExecutors;
 import org.echoiot.server.common.data.Customer;
 import org.echoiot.server.common.data.Device;
 import org.echoiot.server.common.data.DeviceProfile;
@@ -91,7 +91,7 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
 
     @Before
     public void beforeTest() throws Exception {
-        executor = MoreExecutors.listeningDecorator(ThingsBoardExecutors.newWorkStealingPool(8, getClass()));
+        executor = MoreExecutors.listeningDecorator(EchoiotExecutors.newWorkStealingPool(8, getClass()));
 
         loginSysAdmin();
 
@@ -103,7 +103,7 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
         tenantAdmin = new User();
         tenantAdmin.setAuthority(Authority.TENANT_ADMIN);
         tenantAdmin.setTenantId(savedTenant.getId());
-        tenantAdmin.setEmail("tenant2@thingsboard.org");
+        tenantAdmin.setEmail("tenant2@echoiot.org");
         tenantAdmin.setFirstName("Joe");
         tenantAdmin.setLastName("Downs");
 
@@ -536,7 +536,7 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
         User tenantAdmin2 = new User();
         tenantAdmin2.setAuthority(Authority.TENANT_ADMIN);
         tenantAdmin2.setTenantId(savedTenant2.getId());
-        tenantAdmin2.setEmail("tenant3@thingsboard.org");
+        tenantAdmin2.setEmail("tenant3@echoiot.org");
         tenantAdmin2.setFirstName("Joe");
         tenantAdmin2.setLastName("Downs");
 
@@ -1168,13 +1168,13 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
         User user = new User();
         user.setAuthority(Authority.TENANT_ADMIN);
         user.setTenantId(savedDifferentTenant.getId());
-        user.setEmail("tenant9@thingsboard.org");
+        user.setEmail("tenant9@echoiot.org");
         user.setFirstName("Sam");
         user.setLastName("Downs");
 
         createUserAndLogin(user, "testPassword1");
 
-        login("tenant2@thingsboard.org", "testPassword1");
+        login("tenant2@echoiot.org", "testPassword1");
 
         Mockito.reset(tbClusterService, auditLogService, gatewayNotificationsService);
 
@@ -1190,7 +1190,7 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
                 ActionType.ASSIGNED_TO_TENANT, savedDifferentTenant.getId().getId().toString(), savedDifferentTenant.getTitle());
         testNotificationUpdateGatewayNever();
 
-        login("tenant9@thingsboard.org", "testPassword1");
+        login("tenant9@echoiot.org", "testPassword1");
 
         Device foundDevice1 = doGet("/api/device/" + assignedDevice.getId().getId(), Device.class);
         Assert.assertNotNull(foundDevice1);

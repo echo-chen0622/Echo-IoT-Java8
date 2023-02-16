@@ -3,16 +3,16 @@ package org.echoiot.server.controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 import org.echoiot.server.common.data.Tenant;
 import org.echoiot.server.common.data.User;
 import org.echoiot.server.common.data.security.Authority;
 import org.echoiot.server.common.data.widget.WidgetType;
 import org.echoiot.server.common.data.widget.WidgetTypeDetails;
 import org.echoiot.server.common.data.widget.WidgetsBundle;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,7 +41,7 @@ public abstract class BaseWidgetTypeControllerTest extends AbstractControllerTes
         tenantAdmin = new User();
         tenantAdmin.setAuthority(Authority.TENANT_ADMIN);
         tenantAdmin.setTenantId(savedTenant.getId());
-        tenantAdmin.setEmail("tenant2@thingsboard.org");
+        tenantAdmin.setEmail("tenant2@echoiot.org");
         tenantAdmin.setFirstName("Joe");
         tenantAdmin.setLastName("Downs");
 

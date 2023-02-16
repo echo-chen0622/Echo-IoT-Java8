@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,20 +14,19 @@
 /// limitations under the License.
 ///
 
-import { MapProviders } from '@home/components/widget/lib/maps/map-models';
 import {
-  createLabelFromDatasource,
-  hashCode,
-  isDefined,
-  isDefinedAndNotNull,
-  isFunction,
-  isNumber,
-  isUndefined,
-  padValue
+    createLabelFromDatasource,
+    hashCode,
+    isDefined,
+    isDefinedAndNotNull,
+    isFunction,
+    isNumber,
+    isUndefined,
+    padValue
 } from '@core/utils';
-import { Observable, Observer, of } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { FormattedData } from '@shared/models/widget.models';
+import {Observable, Observer, of} from 'rxjs';
+import {map} from 'rxjs/operators';
+import {FormattedData} from '@shared/models/widget.models';
 import L from 'leaflet';
 
 export function getRatio(firsMoment: number, secondMoment: number, intermediateMoment: number): number {

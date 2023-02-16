@@ -3,6 +3,7 @@ package org.echoiot.server.transport.coap;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.transport.TransportContext;
+import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.transport.coap.adaptors.JsonCoapAdaptor;
 import org.echoiot.server.transport.coap.adaptors.ProtoCoapAdaptor;
 import org.echoiot.server.transport.coap.client.CoapClientContext;
@@ -11,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Component;
-import org.thingsboard.server.gen.transport.TransportProtos;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;

@@ -2,25 +2,25 @@ package org.echoiot.server.transport.coap.provision;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.extern.slf4j.Slf4j;
-import org.echoiot.server.common.msg.EncryptionUtil;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.thingsboard.common.util.JacksonUtil;
-import org.echoiot.server.dao.service.DaoSqlTest;
-import org.echoiot.server.transport.coap.AbstractCoapIntegrationTest;
+import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.common.data.CoapDeviceType;
 import org.echoiot.server.common.data.Device;
 import org.echoiot.server.common.data.DeviceProfileProvisionType;
 import org.echoiot.server.common.data.TransportPayloadType;
 import org.echoiot.server.common.data.security.DeviceCredentials;
+import org.echoiot.server.common.msg.EncryptionUtil;
 import org.echoiot.server.common.msg.session.FeatureType;
 import org.echoiot.server.dao.device.DeviceCredentialsService;
 import org.echoiot.server.dao.device.DeviceService;
 import org.echoiot.server.dao.device.provision.ProvisionResponseStatus;
+import org.echoiot.server.dao.service.DaoSqlTest;
+import org.echoiot.server.transport.coap.AbstractCoapIntegrationTest;
 import org.echoiot.server.transport.coap.CoapTestClient;
 import org.echoiot.server.transport.coap.CoapTestConfigProperties;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Slf4j
 @DaoSqlTest

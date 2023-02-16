@@ -1,12 +1,10 @@
 package org.echoiot.server.service.device;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.MoreExecutors;
-import com.google.common.util.concurrent.SettableFuture;
+import com.google.common.util.concurrent.*;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.common.util.JacksonUtil;
+import org.echoiot.rule.engine.api.RuleEngineTelemetryService;
 import org.echoiot.server.cluster.TbClusterService;
 import org.echoiot.server.common.data.*;
 import org.echoiot.server.common.data.id.CustomerId;
@@ -31,12 +29,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
-import org.thingsboard.common.util.JacksonUtil;
-import org.thingsboard.rule.engine.api.RuleEngineTelemetryService;
-import org.echoiot.server.common.data.Customer;
-import org.echoiot.server.common.data.DataConstants;
-import org.echoiot.server.common.data.Device;
-import org.echoiot.server.common.data.StringUtils;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;

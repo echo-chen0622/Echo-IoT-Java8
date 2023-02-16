@@ -4,6 +4,7 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
+import org.echoiot.common.util.EchoiotThreadFactory;
 import org.echoiot.server.common.data.Tenant;
 import org.echoiot.server.common.data.asset.Asset;
 import org.echoiot.server.common.data.asset.AssetProfile;
@@ -16,7 +17,6 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.thingsboard.common.util.ThingsBoardThreadFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -100,7 +100,7 @@ public abstract class BaseAssetProfileServiceTest extends AbstractServiceTest {
 
     @Test
     public void testFindOrCreateAssetProfile() throws ExecutionException, InterruptedException {
-        ListeningExecutorService testExecutor = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(100, ThingsBoardThreadFactory.forName(getClass().getSimpleName() + "-test-scope")));
+        ListeningExecutorService testExecutor = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(100, EchoiotThreadFactory.forName(getClass().getSimpleName() + "-test-scope")));
         try {
             List<ListenableFuture<AssetProfile>> futures = new ArrayList<>();
             for (int i = 0; i < 50; i++) {

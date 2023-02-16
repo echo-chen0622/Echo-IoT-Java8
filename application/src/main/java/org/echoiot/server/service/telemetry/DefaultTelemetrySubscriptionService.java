@@ -1,11 +1,8 @@
 package org.echoiot.server.service.telemetry;
 
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.MoreExecutors;
-import com.google.common.util.concurrent.SettableFuture;
+import com.google.common.util.concurrent.*;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.common.util.EchoiotThreadFactory;
 import org.echoiot.server.cluster.TbClusterService;
 import org.echoiot.server.common.data.ApiUsageRecordKey;
 import org.echoiot.server.common.data.EntityType;
@@ -13,42 +10,25 @@ import org.echoiot.server.common.data.EntityView;
 import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.TenantId;
+import org.echoiot.server.common.data.kv.*;
+import org.echoiot.server.common.msg.queue.ServiceType;
+import org.echoiot.server.common.msg.queue.TbCallback;
+import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
 import org.echoiot.server.common.stats.TbApiUsageReportClient;
 import org.echoiot.server.dao.attributes.AttributesService;
 import org.echoiot.server.dao.timeseries.TimeseriesService;
+import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.queue.discovery.PartitionService;
+import org.echoiot.server.service.apiusage.TbApiUsageStateService;
 import org.echoiot.server.service.entitiy.entityview.TbEntityViewService;
 import org.echoiot.server.service.subscription.TbSubscriptionUtils;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-import org.thingsboard.common.util.ThingsBoardThreadFactory;
-import org.echoiot.server.common.data.kv.AttributeKvEntry;
-import org.echoiot.server.common.data.kv.BaseAttributeKvEntry;
-import org.echoiot.server.common.data.kv.BooleanDataEntry;
-import org.echoiot.server.common.data.kv.DeleteTsKvQuery;
-import org.echoiot.server.common.data.kv.DoubleDataEntry;
-import org.echoiot.server.common.data.kv.LongDataEntry;
-import org.echoiot.server.common.data.kv.StringDataEntry;
-import org.echoiot.server.common.data.kv.TsKvEntry;
-import org.echoiot.server.common.data.kv.TsKvLatestRemovingResult;
-import org.echoiot.server.common.msg.queue.ServiceType;
-import org.echoiot.server.common.msg.queue.TbCallback;
-import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
-import org.thingsboard.server.gen.transport.TransportProtos;
-import org.echoiot.server.service.apiusage.TbApiUsageStateService;
 
 import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -85,7 +65,7 @@ public class DefaultTelemetrySubscriptionService extends AbstractSubscriptionSer
     @PostConstruct
     public void initExecutor() {
         super.initExecutor();
-        tsCallBackExecutor = Executors.newSingleThreadExecutor(ThingsBoardThreadFactory.forName("ts-service-ts-callback"));
+        tsCallBackExecutor = Executors.newSingleThreadExecutor(EchoiotThreadFactory.forName("ts-service-ts-callback"));
     }
 
     @Override

@@ -3,7 +3,7 @@ package org.echoiot.server.transport.lwm2m.rpc.sql;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.eclipse.leshan.core.ResponseCode;
 import org.junit.Test;
-import org.thingsboard.common.util.JacksonUtil;
+import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.transport.lwm2m.rpc.AbstractRpcLwM2MIntegrationTest;
 
 import static org.junit.Assert.assertEquals;

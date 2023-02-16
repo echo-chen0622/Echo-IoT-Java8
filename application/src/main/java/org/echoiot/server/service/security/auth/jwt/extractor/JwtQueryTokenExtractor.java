@@ -1,9 +1,9 @@
 package org.echoiot.server.service.security.auth.jwt.extractor;
 
 import org.echoiot.server.common.data.StringUtils;
+import org.echoiot.server.config.EchoiotSecurityConfiguration;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.stereotype.Component;
-import org.echoiot.server.config.ThingsboardSecurityConfiguration;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -14,7 +14,7 @@ public class JwtQueryTokenExtractor implements TokenExtractor {
     public String extract(HttpServletRequest request) {
         String token = null;
         if (request.getParameterMap() != null && !request.getParameterMap().isEmpty()) {
-            String[] tokenParamValue = request.getParameterMap().get(ThingsboardSecurityConfiguration.JWT_TOKEN_QUERY_PARAM);
+            String[] tokenParamValue = request.getParameterMap().get(EchoiotSecurityConfiguration.JWT_TOKEN_QUERY_PARAM);
             if (tokenParamValue != null && tokenParamValue.length == 1) {
                 token = tokenParamValue[0];
             }

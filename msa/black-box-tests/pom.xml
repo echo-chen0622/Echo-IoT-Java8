@@ -3,16 +3,15 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.thingsboard</groupId>
+        <groupId>org.echoiot</groupId>
         <version>3.4.4</version>
         <artifactId>msa</artifactId>
     </parent>
-    <groupId>org.thingsboard.msa</groupId>
+    <groupId>org.echoiot.msa</groupId>
     <artifactId>black-box-tests</artifactId>
 
-    <name>ThingsBoard Black Box Tests</name>
-    <url>https://thingsboard.io</url>
-    <description>Project for ThingsBoard black box testing with using Docker</description>
+    <name>Echoiot Black Box Tests</name>
+    <description>Project for Echoiot black box testing with using Docker</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -97,59 +96,59 @@
             <artifactId>guava</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard</groupId>
+            <groupId>org.echoiot</groupId>
             <artifactId>netty-mqtt</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard</groupId>
+            <groupId>org.echoiot</groupId>
             <artifactId>tools</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard</groupId>
+            <groupId>org.echoiot</groupId>
             <artifactId>rest-client</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard.msa</groupId>
+            <groupId>org.echoiot.msa</groupId>
             <artifactId>js-executor</artifactId>
             <type>docker-info</type>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard.msa</groupId>
+            <groupId>org.echoiot.msa</groupId>
             <artifactId>web-ui</artifactId>
             <type>docker-info</type>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard.msa</groupId>
+            <groupId>org.echoiot.msa</groupId>
             <artifactId>tb-node</artifactId>
             <type>docker-info</type>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard.msa.transport</groupId>
+            <groupId>org.echoiot.msa.transport</groupId>
             <artifactId>coap</artifactId>
             <type>docker-info</type>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard.msa.transport</groupId>
+            <groupId>org.echoiot.msa.transport</groupId>
             <artifactId>http</artifactId>
             <type>docker-info</type>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard.msa.transport</groupId>
+            <groupId>org.echoiot.msa.transport</groupId>
             <artifactId>mqtt</artifactId>
             <type>docker-info</type>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard.msa.transport</groupId>
+            <groupId>org.echoiot.msa.transport</groupId>
             <artifactId>lwm2m</artifactId>
             <type>docker-info</type>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard.msa.transport</groupId>
+            <groupId>org.echoiot.msa.transport</groupId>
             <artifactId>snmp</artifactId>
             <type>docker-info</type>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard.common</groupId>
+            <groupId>org.echoiot.common</groupId>
             <artifactId>message</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>

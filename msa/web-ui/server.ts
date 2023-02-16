@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -31,23 +31,23 @@ let connections: Socket[] = [];
 
 (async() => {
     try {
-        logger.info('Starting ThingsBoard Web UI Microservice...');
+        logger.info('Starting Echoiot Web UI Microservice...');
 
         const bindAddress: string = config.get('server.address');
         const bindPort = Number(config.get('server.port'));
 
-        const thingsboardEnableProxy: string = config.get('thingsboard.enableProxy');
+        const echoiotEnableProxy: string = config.get('echoiot.enableProxy');
 
-        const thingsboardHost: string = config.get('thingsboard.host');
-        const thingsboardPort = Number(config.get('thingsboard.port'));
+        const echoiotHost: string = config.get('echoiot.host');
+        const echoiotPort = Number(config.get('echoiot.port'));
 
         logger.info('Bind address: %s', bindAddress);
         logger.info('Bind port: %s', bindPort);
-        logger.info('ThingsBoard Enable Proxy: %s', thingsboardEnableProxy);
-        logger.info('ThingsBoard host: %s', thingsboardHost);
-        logger.info('ThingsBoard port: %s', thingsboardPort);
+        logger.info('Echoiot Enable Proxy: %s', echoiotEnableProxy);
+        logger.info('Echoiot host: %s', echoiotHost);
+        logger.info('Echoiot port: %s', echoiotPort);
 
-        const useApiProxy = thingsboardEnableProxy === "true";
+        const useApiProxy = echoiotEnableProxy === "true";
 
         let webDir = path.join(__dirname, 'web');
 
@@ -63,8 +63,8 @@ let connections: Socket[] = [];
         if (useApiProxy) {
             apiProxy = httpProxy.createProxyServer({
                 target: {
-                    host: thingsboardHost,
-                    port: thingsboardPort
+                    host: echoiotHost,
+                    port: echoiotPort
                 }
             });
 
@@ -74,9 +74,9 @@ let connections: Socket[] = [];
                     res.writeHead(500);
                     const error = err as any;
                     if (error.code && error.code === 'ECONNREFUSED') {
-                        res.end('Unable to connect to ThingsBoard server.');
+                        res.end('Unable to connect to Echoiot server.');
                     } else {
-                        res.end('ThingsBoard server connection error: ' + error.code ? error.code : '');
+                        res.end('Echoiot server connection error: ' + error.code ? error.code : '');
                     }
                 }
             });
@@ -103,9 +103,9 @@ let connections: Socket[] = [];
 
         server.listen(bindPort, bindAddress, () => {
             logger.info('==> 🌎  Listening on port %s.', bindPort);
-            logger.info('Started ThingsBoard Web UI Microservice.');
+            logger.info('Started Echoiot Web UI Microservice.');
         }).on('error', async (error) => {
-            logger.error('Failed to start ThingsBoard Web UI Microservice: %s', error.message);
+            logger.error('Failed to start Echoiot Web UI Microservice: %s', error.message);
             logger.error(error.stack);
             await exit(-1);
         });
@@ -116,7 +116,7 @@ let connections: Socket[] = [];
         });
 
     } catch (e: any) {
-        logger.error('Failed to start ThingsBoard Web UI Microservice: %s', e.message);
+        logger.error('Failed to start Echoiot Web UI Microservice: %s', e.message);
         logger.error(e.stack);
         await exit(-1);
     }
@@ -130,7 +130,7 @@ let connections: Socket[] = [];
 })
 
 process.on('exit', async (code: number) => {
-    logger.info(`ThingsBoard Web UI Microservice has been stopped. Exit code: ${code}.`);
+    logger.info(`Echoiot Web UI Microservice has been stopped. Exit code: ${code}.`);
 });
 
 async function exit(status: number) {

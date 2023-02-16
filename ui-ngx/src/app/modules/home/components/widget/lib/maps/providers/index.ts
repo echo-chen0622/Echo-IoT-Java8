@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,12 +14,12 @@
 /// limitations under the License.
 ///
 
-import { OpenStreetMap } from './openstreet-map';
-import { TencentMap } from './tencent-map';
-import { GoogleMap } from './google-map';
-import { HEREMap } from './here-map';
-import { ImageMap } from './image-map';
-import { Type } from '@angular/core';
+import {OpenStreetMap} from './openstreet-map';
+import {TencentMap} from './tencent-map';
+import {GoogleMap} from './google-map';
+import {HEREMap} from './here-map';
+import {ImageMap} from './image-map';
+import {Type} from '@angular/core';
 import LeafletMap from '@home/components/widget/lib/maps/leaflet-map';
 
 export const providerClass: { [key: string]: Type<LeafletMap> } = {

@@ -5,15 +5,15 @@ import org.echoiot.server.common.data.Device;
 import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.User;
 import org.echoiot.server.common.data.audit.ActionType;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.sync.ie.DeviceExportData;
 import org.echoiot.server.dao.device.DeviceCredentialsService;
 import org.echoiot.server.dao.device.DeviceService;
-import org.springframework.stereotype.Service;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.sync.vc.data.EntitiesImportCtx;
+import org.springframework.stereotype.Service;
 
 @Service
 @TbCoreComponent
@@ -78,7 +78,7 @@ public class DeviceImportService extends BaseEntityImportService<DeviceId, Devic
     }
 
     @Override
-    protected void onEntitySaved(User user, Device savedDevice, Device oldDevice) throws ThingsboardException {
+    protected void onEntitySaved(User user, Device savedDevice, Device oldDevice) throws EchoiotException {
         entityNotificationService.notifyCreateOrUpdateDevice(user.getTenantId(), savedDevice.getId(), savedDevice.getCustomerId(),
                                                              savedDevice, oldDevice, oldDevice == null ? ActionType.ADDED : ActionType.UPDATED, user);
     }

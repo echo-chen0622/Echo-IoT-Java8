@@ -1,6 +1,17 @@
 package org.echoiot.server.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import org.echoiot.server.common.data.*;
+import org.echoiot.server.common.data.asset.Asset;
+import org.echoiot.server.common.data.asset.AssetProfile;
+import org.echoiot.server.common.data.asset.AssetProfileInfo;
+import org.echoiot.server.common.data.audit.ActionType;
+import org.echoiot.server.common.data.id.AssetProfileId;
+import org.echoiot.server.common.data.page.PageData;
+import org.echoiot.server.common.data.page.PageLink;
+import org.echoiot.server.common.data.rule.RuleChain;
+import org.echoiot.server.common.data.security.Authority;
+import org.echoiot.server.dao.asset.AssetProfileDao;
 import org.echoiot.server.dao.exception.DataValidationException;
 import org.junit.After;
 import org.junit.Assert;
@@ -12,21 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.test.context.ContextConfiguration;
-import org.echoiot.server.common.data.Customer;
-import org.echoiot.server.common.data.Dashboard;
-import org.echoiot.server.common.data.StringUtils;
-import org.echoiot.server.common.data.Tenant;
-import org.echoiot.server.common.data.User;
-import org.echoiot.server.common.data.asset.Asset;
-import org.echoiot.server.common.data.asset.AssetProfile;
-import org.echoiot.server.common.data.asset.AssetProfileInfo;
-import org.echoiot.server.common.data.audit.ActionType;
-import org.echoiot.server.common.data.id.AssetProfileId;
-import org.echoiot.server.common.data.page.PageData;
-import org.echoiot.server.common.data.page.PageLink;
-import org.echoiot.server.common.data.rule.RuleChain;
-import org.echoiot.server.common.data.security.Authority;
-import org.echoiot.server.dao.asset.AssetProfileDao;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -68,7 +64,7 @@ public abstract class BaseAssetProfileControllerTest extends AbstractControllerT
         tenantAdmin = new User();
         tenantAdmin.setAuthority(Authority.TENANT_ADMIN);
         tenantAdmin.setTenantId(savedTenant.getId());
-        tenantAdmin.setEmail("tenant2@thingsboard.org");
+        tenantAdmin.setEmail("tenant2@echoiot.org");
         tenantAdmin.setFirstName("Joe");
         tenantAdmin.setLastName("Downs");
 
@@ -166,7 +162,7 @@ public abstract class BaseAssetProfileControllerTest extends AbstractControllerT
         customerUser.setAuthority(Authority.CUSTOMER_USER);
         customerUser.setTenantId(savedTenant.getId());
         customerUser.setCustomerId(savedCustomer.getId());
-        customerUser.setEmail("customer2@thingsboard.org");
+        customerUser.setEmail("customer2@echoiot.org");
 
         createUserAndLogin(customerUser, "customer");
 

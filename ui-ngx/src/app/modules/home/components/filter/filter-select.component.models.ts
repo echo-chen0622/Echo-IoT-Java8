@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,8 +14,8 @@
 /// limitations under the License.
 ///
 
-import { Observable } from 'rxjs';
-import { Filter } from '@shared/models/query/query.models';
+import {Observable} from 'rxjs';
+import {Filter} from '@shared/models/query/query.models';
 
 export interface FilterSelectCallbacks {
   createFilter: (filter: string) => Observable<Filter>;

@@ -1,6 +1,8 @@
 package org.echoiot.server.dao.service;
 
 import com.datastax.oss.driver.api.core.uuid.Uuids;
+import org.echoiot.common.util.JacksonUtil;
+import org.echoiot.server.common.data.*;
 import org.echoiot.server.common.data.id.DeviceProfileId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.ota.ChecksumAlgorithm;
@@ -9,20 +11,8 @@ import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.common.data.tenant.profile.DefaultTenantProfileConfiguration;
 import org.echoiot.server.dao.exception.DataValidationException;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.ExpectedException;
-import org.thingsboard.common.util.JacksonUtil;
-import org.echoiot.server.common.data.Device;
-import org.echoiot.server.common.data.DeviceProfile;
-import org.echoiot.server.common.data.OtaPackage;
-import org.echoiot.server.common.data.OtaPackageInfo;
-import org.echoiot.server.common.data.StringUtils;
-import org.echoiot.server.common.data.Tenant;
-import org.echoiot.server.common.data.TenantProfile;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;

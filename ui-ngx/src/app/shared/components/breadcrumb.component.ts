@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,14 +14,14 @@
 /// limitations under the License.
 ///
 
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { BehaviorSubject, Subject, Subscription } from 'rxjs';
-import { BreadCrumb, BreadCrumbConfig } from './breadcrumb';
-import { ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router } from '@angular/router';
-import { distinctUntilChanged, filter, map } from 'rxjs/operators';
-import { TranslateService } from '@ngx-translate/core';
-import { guid } from '@core/utils';
-import { BroadcastService } from '@core/services/broadcast.service';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {BehaviorSubject, Subject, Subscription} from 'rxjs';
+import {BreadCrumb, BreadCrumbConfig} from './breadcrumb';
+import {ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router} from '@angular/router';
+import {distinctUntilChanged, filter, map} from 'rxjs/operators';
+import {TranslateService} from '@ngx-translate/core';
+import {guid} from '@core/utils';
+import {BroadcastService} from '@core/services/broadcast.service';
 
 @Component({
   selector: 'tb-breadcrumb',

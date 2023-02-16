@@ -1,13 +1,6 @@
 package org.echoiot.server.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.echoiot.server.common.data.Device;
 import org.echoiot.server.common.data.Tenant;
 import org.echoiot.server.common.data.User;
@@ -21,6 +14,13 @@ import org.echoiot.server.dao.audit.AuditLogDao;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.sqlts.insert.sql.SqlPartitioningRepository;
 import org.echoiot.server.service.ttl.AuditLogsCleanUpService;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 
 import java.time.LocalDate;
 import java.time.ZoneOffset;
@@ -64,7 +64,7 @@ public abstract class BaseAuditLogControllerTest extends AbstractControllerTest 
         tenantAdmin = new User();
         tenantAdmin.setAuthority(Authority.TENANT_ADMIN);
         tenantAdmin.setTenantId(savedTenant.getId());
-        tenantAdmin.setEmail("tenant2@thingsboard.org");
+        tenantAdmin.setEmail("tenant2@echoiot.org");
         tenantAdmin.setFirstName("Joe");
         tenantAdmin.setLastName("Downs");
 

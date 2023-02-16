@@ -4,12 +4,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.common.util.EchoiotThreadFactory;
 import org.echoiot.server.common.data.UpdateMessage;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.thingsboard.common.util.ThingsBoardThreadFactory;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
 public class DefaultUpdateService implements UpdateService {
 
     private static final String INSTANCE_ID_FILE = ".instance_id";
-    private static final String UPDATE_SERVER_BASE_URL = "https://updates.thingsboard.io";
+    private static final String UPDATE_SERVER_BASE_URL = "https://updates.echoiot.io";
 
     private static final String PLATFORM_PARAM = "platform";
     private static final String VERSION_PARAM = "version";
@@ -38,7 +38,7 @@ public class DefaultUpdateService implements UpdateService {
     @Value("${updates.enabled}")
     private boolean updatesEnabled;
 
-    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1, ThingsBoardThreadFactory.forName("tb-update-service"));
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1, EchoiotThreadFactory.forName("tb-update-service"));
 
     private ScheduledFuture checkUpdatesFuture = null;
     private RestTemplate restClient = new RestTemplate();
@@ -106,7 +106,7 @@ public class DefaultUpdateService implements UpdateService {
             request.put(PLATFORM_PARAM, platform);
             request.put(VERSION_PARAM, version);
             request.put(INSTANCE_ID_PARAM, instanceId.toString());
-            JsonNode response = restClient.postForObject(UPDATE_SERVER_BASE_URL+"/api/thingsboard/updates", request, JsonNode.class);
+            JsonNode response = restClient.postForObject(UPDATE_SERVER_BASE_URL+"/api/echoiot/updates", request, JsonNode.class);
             updateMessage = new UpdateMessage(
                     response.get("message").asText(),
                     response.get("updateAvailable").asBoolean()

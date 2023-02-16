@@ -1,19 +1,8 @@
 package org.echoiot.server.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import org.echoiot.server.dao.exception.DataValidationException;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.AdditionalAnswers;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Primary;
-import org.springframework.test.context.ContextConfiguration;
-import org.thingsboard.rule.engine.action.TbCreateAlarmNode;
-import org.thingsboard.rule.engine.action.TbCreateAlarmNodeConfiguration;
+import org.echoiot.rule.engine.action.TbCreateAlarmNode;
+import org.echoiot.rule.engine.action.TbCreateAlarmNodeConfiguration;
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.Tenant;
 import org.echoiot.server.common.data.User;
@@ -27,7 +16,18 @@ import org.echoiot.server.common.data.rule.RuleChainMetaData;
 import org.echoiot.server.common.data.rule.RuleChainType;
 import org.echoiot.server.common.data.rule.RuleNode;
 import org.echoiot.server.common.data.security.Authority;
+import org.echoiot.server.dao.exception.DataValidationException;
 import org.echoiot.server.dao.rule.RuleChainDao;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.AdditionalAnswers;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
+import org.springframework.test.context.ContextConfiguration;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -68,7 +68,7 @@ public abstract class BaseRuleChainControllerTest extends AbstractControllerTest
         tenantAdmin = new User();
         tenantAdmin.setAuthority(Authority.TENANT_ADMIN);
         tenantAdmin.setTenantId(savedTenant.getId());
-        tenantAdmin.setEmail("tenant2@thingsboard.org");
+        tenantAdmin.setEmail("tenant2@echoiot.org");
         tenantAdmin.setFirstName("Joe");
         tenantAdmin.setLastName("Downs");
 

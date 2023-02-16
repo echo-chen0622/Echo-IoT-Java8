@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,21 +14,21 @@
 /// limitations under the License.
 ///
 
-import { Inject, Injectable, Type } from '@angular/core';
-import { Observable } from 'rxjs';
-import { MatDialog } from '@angular/material/dialog';
-import { TranslateService } from '@ngx-translate/core';
-import { AuthService } from '@core/auth/auth.service';
-import { DynamicComponentFactoryService } from '@core/services/dynamic-component-factory.service';
-import { CommonModule } from '@angular/common';
-import { mergeMap, tap } from 'rxjs/operators';
-import { CustomDialogComponent } from './custom-dialog.component';
+import {Inject, Injectable, Type} from '@angular/core';
+import {Observable} from 'rxjs';
+import {MatDialog} from '@angular/material/dialog';
+import {TranslateService} from '@ngx-translate/core';
+import {AuthService} from '@core/auth/auth.service';
+import {DynamicComponentFactoryService} from '@core/services/dynamic-component-factory.service';
+import {CommonModule} from '@angular/common';
+import {mergeMap, tap} from 'rxjs/operators';
+import {CustomDialogComponent} from './custom-dialog.component';
 import {
-  CustomDialogContainerComponent,
-  CustomDialogContainerData
+    CustomDialogContainerComponent,
+    CustomDialogContainerData
 } from '@home/components/widget/dialog/custom-dialog-container.component';
-import { SHARED_MODULE_TOKEN } from '@shared/components/tokens';
-import { HOME_COMPONENTS_MODULE_TOKEN, SHARED_HOME_COMPONENTS_MODULE_TOKEN } from '@home/components/tokens';
+import {SHARED_MODULE_TOKEN} from '@shared/components/tokens';
+import {HOME_COMPONENTS_MODULE_TOKEN, SHARED_HOME_COMPONENTS_MODULE_TOKEN} from '@home/components/tokens';
 
 @Injectable()
 export class CustomDialogService {
@@ -71,4 +71,3 @@ export class CustomDialogService {
   }
 
 }
-

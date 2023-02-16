@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,24 +14,25 @@
 /// limitations under the License.
 ///
 
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {
-  Component,
-  ComponentFactory,
-  ComponentRef, HostBinding,
-  Inject,
-  Injector,
-  OnDestroy,
-  ViewContainerRef
+    Component,
+    ComponentFactory,
+    ComponentRef,
+    HostBinding,
+    Inject,
+    Injector,
+    OnDestroy,
+    ViewContainerRef
 } from '@angular/core';
-import { DialogComponent } from '@shared/components/dialog.component';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { Router } from '@angular/router';
+import {DialogComponent} from '@shared/components/dialog.component';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {Router} from '@angular/router';
 import {
-  CUSTOM_DIALOG_DATA,
-  CustomDialogComponent,
-  CustomDialogData
+    CUSTOM_DIALOG_DATA,
+    CustomDialogComponent,
+    CustomDialogData
 } from '@home/components/widget/dialog/custom-dialog.component';
 
 export interface CustomDialogContainerData {

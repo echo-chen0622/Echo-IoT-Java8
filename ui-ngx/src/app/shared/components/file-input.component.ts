@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -15,27 +15,27 @@
 ///
 
 import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  EventEmitter,
-  forwardRef,
-  Input,
-  OnChanges,
-  OnDestroy,
-  Output,
-  SimpleChanges,
-  ViewChild
+    AfterViewInit,
+    Component,
+    ElementRef,
+    EventEmitter,
+    forwardRef,
+    Input,
+    OnChanges,
+    OnDestroy,
+    Output,
+    SimpleChanges,
+    ViewChild
 } from '@angular/core';
-import { PageComponent } from '@shared/components/page.component';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Subscription } from 'rxjs';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { FlowDirective } from '@flowjs/ngx-flow';
-import { TranslateService } from '@ngx-translate/core';
-import { UtilsService } from '@core/services/utils.service';
+import {PageComponent} from '@shared/components/page.component';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {Subscription} from 'rxjs';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {FlowDirective} from '@flowjs/ngx-flow';
+import {TranslateService} from '@ngx-translate/core';
+import {UtilsService} from '@core/services/utils.service';
 
 @Component({
   selector: 'tb-file-input',

@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,13 +14,13 @@
 /// limitations under the License.
 ///
 
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { MenuService } from '@core/services/menu.service';
-import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
-import { MediaBreakpoints } from '@shared/models/constants';
-import { HomeSection } from '@core/services/menu.models';
-import { ActivatedRoute } from '@angular/router';
-import { HomeDashboard } from '@shared/models/dashboard.models';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {MenuService} from '@core/services/menu.service';
+import {BreakpointObserver, BreakpointState} from '@angular/cdk/layout';
+import {MediaBreakpoints} from '@shared/models/constants';
+import {HomeSection} from '@core/services/menu.models';
+import {ActivatedRoute} from '@angular/router';
+import {HomeDashboard} from '@shared/models/dashboard.models';
 
 @Component({
   selector: 'tb-home-links',

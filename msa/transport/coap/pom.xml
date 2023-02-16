@@ -10,8 +10,8 @@
     <artifactId>coap</artifactId>
     <packaging>pom</packaging>
 
-    <name>ThingsBoard COAP Transport Microservice</name>
-    <description>ThingsBoard COAP Transport Microservice</description>
+    <name>Echoiot COAP Transport Microservice</name>
+    <description>Echoiot COAP Transport Microservice</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

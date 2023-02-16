@@ -5,7 +5,7 @@ import org.echoiot.server.common.data.DeviceProfile;
 import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.User;
 import org.echoiot.server.common.data.audit.ActionType;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.DeviceProfileId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.plugin.ComponentLifecycleEvent;
@@ -46,7 +46,7 @@ public class DeviceProfileImportService extends BaseEntityImportService<DevicePr
     }
 
     @Override
-    protected void onEntitySaved(User user, DeviceProfile savedDeviceProfile, DeviceProfile oldDeviceProfile) throws ThingsboardException {
+    protected void onEntitySaved(User user, DeviceProfile savedDeviceProfile, DeviceProfile oldDeviceProfile) throws EchoiotException {
         clusterService.onDeviceProfileChange(savedDeviceProfile, null);
         clusterService.broadcastEntityStateChangeEvent(user.getTenantId(), savedDeviceProfile.getId(),
                 oldDeviceProfile == null ? ComponentLifecycleEvent.CREATED : ComponentLifecycleEvent.UPDATED);

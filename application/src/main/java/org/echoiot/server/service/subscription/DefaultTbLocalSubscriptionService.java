@@ -13,8 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
-import org.thingsboard.common.util.ThingsBoardExecutors;
-import org.thingsboard.server.gen.transport.TransportProtos;
+import org.echoiot.common.util.EchoiotExecutors;
+import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.common.msg.queue.ServiceType;
 import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
 import org.echoiot.server.common.msg.queue.TbCallback;
@@ -78,7 +78,7 @@ public class DefaultTbLocalSubscriptionService implements TbLocalSubscriptionSer
 
     @PostConstruct
     public void initExecutor() {
-        subscriptionUpdateExecutor = ThingsBoardExecutors.newWorkStealingPool(20, getClass());
+        subscriptionUpdateExecutor = EchoiotExecutors.newWorkStealingPool(20, getClass());
     }
 
     @PreDestroy

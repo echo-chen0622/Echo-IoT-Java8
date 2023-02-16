@@ -1,5 +1,6 @@
 package org.echoiot.server.dao.sql.entityview;
 
+import org.echoiot.server.dao.ExportableEntityRepository;
 import org.echoiot.server.dao.model.sql.EntityViewEntity;
 import org.echoiot.server.dao.model.sql.EntityViewInfoEntity;
 import org.springframework.data.domain.Page;
@@ -7,7 +8,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.echoiot.server.dao.ExportableEntityRepository;
 
 import java.util.List;
 import java.util.UUID;
@@ -17,7 +17,7 @@ import java.util.UUID;
  */
 public interface EntityViewRepository extends JpaRepository<EntityViewEntity, UUID>, ExportableEntityRepository<EntityViewEntity> {
 
-    @Query("SELECT new org.thingsboard.server.dao.model.sql.EntityViewInfoEntity(e, c.title, c.additionalInfo) " +
+    @Query("SELECT new org.echoiot.server.dao.model.sql.EntityViewInfoEntity(e, c.title, c.additionalInfo) " +
             "FROM EntityViewEntity e " +
             "LEFT JOIN CustomerEntity c on c.id = e.customerId " +
             "WHERE e.id = :entityViewId")
@@ -29,7 +29,7 @@ public interface EntityViewRepository extends JpaRepository<EntityViewEntity, UU
                                           @Param("textSearch") String textSearch,
                                           Pageable pageable);
 
-    @Query("SELECT new org.thingsboard.server.dao.model.sql.EntityViewInfoEntity(e, c.title, c.additionalInfo) " +
+    @Query("SELECT new org.echoiot.server.dao.model.sql.EntityViewInfoEntity(e, c.title, c.additionalInfo) " +
             "FROM EntityViewEntity e " +
             "LEFT JOIN CustomerEntity c on c.id = e.customerId " +
             "WHERE e.tenantId = :tenantId " +
@@ -46,7 +46,7 @@ public interface EntityViewRepository extends JpaRepository<EntityViewEntity, UU
                                                  @Param("textSearch") String textSearch,
                                                  Pageable pageable);
 
-    @Query("SELECT new org.thingsboard.server.dao.model.sql.EntityViewInfoEntity(e, c.title, c.additionalInfo) " +
+    @Query("SELECT new org.echoiot.server.dao.model.sql.EntityViewInfoEntity(e, c.title, c.additionalInfo) " +
             "FROM EntityViewEntity e " +
             "LEFT JOIN CustomerEntity c on c.id = e.customerId " +
             "WHERE e.tenantId = :tenantId " +
@@ -65,7 +65,7 @@ public interface EntityViewRepository extends JpaRepository<EntityViewEntity, UU
                                                        @Param("searchText") String searchText,
                                                        Pageable pageable);
 
-    @Query("SELECT new org.thingsboard.server.dao.model.sql.EntityViewInfoEntity(e, c.title, c.additionalInfo) " +
+    @Query("SELECT new org.echoiot.server.dao.model.sql.EntityViewInfoEntity(e, c.title, c.additionalInfo) " +
             "FROM EntityViewEntity e " +
             "LEFT JOIN CustomerEntity c on c.id = e.customerId " +
             "WHERE e.tenantId = :tenantId " +
@@ -86,7 +86,7 @@ public interface EntityViewRepository extends JpaRepository<EntityViewEntity, UU
                                                               @Param("searchText") String searchText,
                                                               Pageable pageable);
 
-    @Query("SELECT new org.thingsboard.server.dao.model.sql.EntityViewInfoEntity(e, c.title, c.additionalInfo) " +
+    @Query("SELECT new org.echoiot.server.dao.model.sql.EntityViewInfoEntity(e, c.title, c.additionalInfo) " +
             "FROM EntityViewEntity e " +
             "LEFT JOIN CustomerEntity c on c.id = e.customerId " +
             "WHERE e.tenantId = :tenantId " +

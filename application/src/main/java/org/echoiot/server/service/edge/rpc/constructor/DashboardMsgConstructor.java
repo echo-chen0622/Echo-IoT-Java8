@@ -1,12 +1,12 @@
 package org.echoiot.server.service.edge.rpc.constructor;
 
+import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.common.data.Dashboard;
 import org.echoiot.server.common.data.id.DashboardId;
+import org.echoiot.server.gen.edge.v1.DashboardUpdateMsg;
+import org.echoiot.server.gen.edge.v1.UpdateMsgType;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.springframework.stereotype.Component;
-import org.thingsboard.common.util.JacksonUtil;
-import org.thingsboard.server.gen.edge.v1.DashboardUpdateMsg;
-import org.thingsboard.server.gen.edge.v1.UpdateMsgType;
 
 @Component
 @TbCoreComponent

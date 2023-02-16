@@ -1,6 +1,6 @@
 package org.echoiot.server.common.transport.service;
 
-import org.thingsboard.server.gen.transport.TransportProtos.TransportApiRequestMsg;
+import org.echoiot.server.gen.transport.TransportProtos.TransportApiRequestMsg;
 import org.echoiot.server.queue.kafka.TbKafkaEncoder;
 
 /**

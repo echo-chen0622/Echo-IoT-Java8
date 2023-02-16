@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016-2023 The Thingsboard Authors
+ * Copyright © 2016-2023 The Echoiot Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 import * as React from 'react';
-import { JsonFormFieldProps, JsonFormFieldState } from '@shared/components/json-form/react/json-form.models';
+import {JsonFormFieldProps, JsonFormFieldState} from '@shared/components/json-form/react/json-form.models';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { FormLabel, Radio, RadioGroup } from '@material-ui/core';
+import {FormLabel, Radio, RadioGroup} from '@material-ui/core';
 import FormControl from '@material-ui/core/FormControl';
-import ThingsboardBaseComponent from '@shared/components/json-form/react/json-form-base-component';
+import EchoiotBaseComponent from '@shared/components/json-form/react/json-form-base-component';
 
-class ThingsboardRadios extends React.Component<JsonFormFieldProps, JsonFormFieldState> {
+class EchoiotRadios extends React.Component<JsonFormFieldProps, JsonFormFieldState> {
   render() {
     const items = this.props.form.titleMap.map((item, index) => {
       return (
@@ -48,4 +48,4 @@ class ThingsboardRadios extends React.Component<JsonFormFieldProps, JsonFormFiel
   }
 }
 
-export default ThingsboardBaseComponent(ThingsboardRadios);
+export default EchoiotBaseComponent(EchoiotRadios);

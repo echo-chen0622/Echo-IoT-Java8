@@ -10,36 +10,26 @@ import com.nimbusds.jose.util.StandardCharset;
 import com.squareup.wire.schema.internal.parser.ProtoFileElement;
 import io.netty.handler.codec.mqtt.MqttQoS;
 import lombok.extern.slf4j.Slf4j;
-import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.thingsboard.common.util.JacksonUtil;
-import org.echoiot.server.common.data.Device;
-import org.echoiot.server.common.data.DynamicProtoUtils;
-import org.echoiot.server.common.data.DeviceTransportType;
-import org.echoiot.server.common.data.StringUtils;
-import org.echoiot.server.common.data.TransportPayloadType;
+import org.echoiot.common.util.JacksonUtil;
+import org.echoiot.server.common.data.*;
 import org.echoiot.server.common.data.device.profile.DeviceProfileTransportConfiguration;
 import org.echoiot.server.common.data.device.profile.MqttDeviceProfileTransportConfiguration;
 import org.echoiot.server.common.data.device.profile.ProtoTransportPayloadConfiguration;
 import org.echoiot.server.common.data.device.profile.TransportPayloadTypeConfiguration;
-import org.thingsboard.server.gen.transport.TransportApiProtos;
+import org.echoiot.server.gen.transport.TransportApiProtos;
 import org.echoiot.server.transport.mqtt.AbstractMqttIntegrationTest;
 import org.echoiot.server.transport.mqtt.MqttTestCallback;
 import org.echoiot.server.transport.mqtt.MqttTestClient;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.echoiot.server.common.data.device.profile.MqttTopics.*;
+import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.echoiot.server.common.data.device.profile.MqttTopics.BASE_DEVICE_API_TOPIC;
-import static org.echoiot.server.common.data.device.profile.MqttTopics.BASE_DEVICE_API_TOPIC_V2;
-import static org.echoiot.server.common.data.device.profile.MqttTopics.DEVICE_RPC_REQUESTS_SUB_TOPIC;
-import static org.echoiot.server.common.data.device.profile.MqttTopics.GATEWAY_CONNECT_TOPIC;
-import static org.echoiot.server.common.data.device.profile.MqttTopics.GATEWAY_RPC_TOPIC;
 
 @Slf4j
 public abstract class AbstractMqttServerSideRpcIntegrationTest extends AbstractMqttIntegrationTest {

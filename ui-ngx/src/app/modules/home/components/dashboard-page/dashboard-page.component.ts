@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -15,142 +15,142 @@
 ///
 
 import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  EventEmitter,
-  HostBinding,
-  Inject,
-  Injector,
-  Input,
-  NgZone,
-  OnDestroy,
-  OnInit,
-  Optional,
-  Renderer2,
-  StaticProvider,
-  ViewChild,
-  ViewContainerRef,
-  ViewEncapsulation
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    EventEmitter,
+    HostBinding,
+    Inject,
+    Injector,
+    Input,
+    NgZone,
+    OnDestroy,
+    OnInit,
+    Optional,
+    Renderer2,
+    StaticProvider,
+    ViewChild,
+    ViewContainerRef,
+    ViewEncapsulation
 } from '@angular/core';
-import { PageComponent } from '@shared/components/page.component';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { ActivatedRoute, Router } from '@angular/router';
-import { UtilsService } from '@core/services/utils.service';
-import { AuthService } from '@core/auth/auth.service';
+import {PageComponent} from '@shared/components/page.component';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {ActivatedRoute, Router} from '@angular/router';
+import {UtilsService} from '@core/services/utils.service';
+import {AuthService} from '@core/auth/auth.service';
 import {
-  Dashboard,
-  DashboardConfiguration,
-  DashboardLayoutId,
-  DashboardLayoutInfo,
-  DashboardLayoutsInfo,
-  DashboardState,
-  DashboardStateLayouts,
-  GridSettings,
-  LayoutDimension,
-  WidgetLayout
+    Dashboard,
+    DashboardConfiguration,
+    DashboardLayoutId,
+    DashboardLayoutInfo,
+    DashboardLayoutsInfo,
+    DashboardState,
+    DashboardStateLayouts,
+    GridSettings,
+    LayoutDimension,
+    WidgetLayout
 } from '@app/shared/models/dashboard.models';
-import { WINDOW } from '@core/services/window.service';
-import { WindowMessage } from '@shared/models/window-message.model';
-import { deepClone, guid, isDefined, isDefinedAndNotNull, isNotEmptyStr } from '@app/core/utils';
+import {WINDOW} from '@core/services/window.service';
+import {WindowMessage} from '@shared/models/window-message.model';
+import {deepClone, guid, isDefined, isDefinedAndNotNull, isNotEmptyStr} from '@app/core/utils';
 import {
-  DashboardContext,
-  DashboardPageInitData,
-  DashboardPageLayout,
-  DashboardPageLayoutContext,
-  DashboardPageLayouts,
-  DashboardPageScope,
-  IDashboardController,
-  LayoutWidgetsArray
+    DashboardContext,
+    DashboardPageInitData,
+    DashboardPageLayout,
+    DashboardPageLayoutContext,
+    DashboardPageLayouts,
+    DashboardPageScope,
+    IDashboardController,
+    LayoutWidgetsArray
 } from './dashboard-page.models';
-import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
-import { MediaBreakpoints } from '@shared/models/constants';
-import { AuthUser } from '@shared/models/user.model';
-import { getCurrentAuthState } from '@core/auth/auth.selectors';
+import {BreakpointObserver, BreakpointState} from '@angular/cdk/layout';
+import {MediaBreakpoints} from '@shared/models/constants';
+import {AuthUser} from '@shared/models/user.model';
+import {getCurrentAuthState} from '@core/auth/auth.selectors';
 import {
-  DatasourceType,
-  Widget,
-  WidgetConfig,
-  WidgetInfo,
-  WidgetPosition,
-  widgetType,
-  widgetTypesData
+    DatasourceType,
+    Widget,
+    WidgetConfig,
+    WidgetInfo,
+    WidgetPosition,
+    widgetType,
+    widgetTypesData
 } from '@shared/models/widget.models';
-import { environment as env } from '@env/environment';
-import { Authority } from '@shared/models/authority.enum';
-import { DialogService } from '@core/services/dialog.service';
-import { EntityService } from '@core/http/entity.service';
-import { AliasController } from '@core/api/alias-controller';
-import { Observable, of, Subscription } from 'rxjs';
-import { FooterFabButtons } from '@shared/components/footer-fab-buttons.component';
-import { DashboardUtilsService } from '@core/services/dashboard-utils.service';
-import { DashboardService } from '@core/http/dashboard.service';
+import {environment as env} from '@env/environment';
+import {Authority} from '@shared/models/authority.enum';
+import {DialogService} from '@core/services/dialog.service';
+import {EntityService} from '@core/http/entity.service';
+import {AliasController} from '@core/api/alias-controller';
+import {Observable, of, Subscription} from 'rxjs';
+import {FooterFabButtons} from '@shared/components/footer-fab-buttons.component';
+import {DashboardUtilsService} from '@core/services/dashboard-utils.service';
+import {DashboardService} from '@core/http/dashboard.service';
 import {
-  DashboardContextMenuItem,
-  IDashboardComponent,
-  WidgetContextMenuItem
+    DashboardContextMenuItem,
+    IDashboardComponent,
+    WidgetContextMenuItem
 } from '../../models/dashboard-component.models';
-import { WidgetComponentService } from '../../components/widget/widget-component.service';
-import { FormBuilder } from '@angular/forms';
-import { ItemBufferService } from '@core/services/item-buffer.service';
-import { MatDialog } from '@angular/material/dialog';
+import {WidgetComponentService} from '../../components/widget/widget-component.service';
+import {FormBuilder} from '@angular/forms';
+import {ItemBufferService} from '@core/services/item-buffer.service';
+import {MatDialog} from '@angular/material/dialog';
 import {
-  EntityAliasesDialogComponent,
-  EntityAliasesDialogData
+    EntityAliasesDialogComponent,
+    EntityAliasesDialogData
 } from '@home/components/alias/entity-aliases-dialog.component';
-import { EntityAliases } from '@app/shared/models/alias.models';
-import { EditWidgetComponent } from '@home/components/dashboard-page/edit-widget.component';
+import {EntityAliases} from '@app/shared/models/alias.models';
+import {EditWidgetComponent} from '@home/components/dashboard-page/edit-widget.component';
 import {
-  AddWidgetDialogComponent,
-  AddWidgetDialogData
+    AddWidgetDialogComponent,
+    AddWidgetDialogData
 } from '@home/components/dashboard-page/add-widget-dialog.component';
-import { TranslateService } from '@ngx-translate/core';
+import {TranslateService} from '@ngx-translate/core';
 import {
-  ManageDashboardLayoutsDialogComponent,
-  ManageDashboardLayoutsDialogData
+    ManageDashboardLayoutsDialogComponent,
+    ManageDashboardLayoutsDialogData
 } from '@home/components/dashboard-page/layout/manage-dashboard-layouts-dialog.component';
-import { SelectTargetLayoutDialogComponent } from '@home/components/dashboard/select-target-layout-dialog.component';
+import {SelectTargetLayoutDialogComponent} from '@home/components/dashboard/select-target-layout-dialog.component';
 import {
-  DashboardSettingsDialogComponent,
-  DashboardSettingsDialogData
+    DashboardSettingsDialogComponent,
+    DashboardSettingsDialogData
 } from '@home/components/dashboard-page/dashboard-settings-dialog.component';
 import {
-  ManageDashboardStatesDialogComponent,
-  ManageDashboardStatesDialogData
+    ManageDashboardStatesDialogComponent,
+    ManageDashboardStatesDialogData
 } from '@home/components/dashboard-page/states/manage-dashboard-states-dialog.component';
-import { ImportExportService } from '@home/components/import-export/import-export.service';
-import { AuthState } from '@app/core/auth/auth.models';
-import { FiltersDialogComponent, FiltersDialogData } from '@home/components/filter/filters-dialog.component';
-import { Filters } from '@shared/models/query/query.models';
-import { ConnectedPosition, Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
-import { ComponentPortal } from '@angular/cdk/portal';
+import {ImportExportService} from '@home/components/import-export/import-export.service';
+import {AuthState} from '@app/core/auth/auth.models';
+import {FiltersDialogComponent, FiltersDialogData} from '@home/components/filter/filters-dialog.component';
+import {Filters} from '@shared/models/query/query.models';
+import {ConnectedPosition, Overlay, OverlayConfig, OverlayRef} from '@angular/cdk/overlay';
+import {ComponentPortal} from '@angular/cdk/portal';
 import {
-  DISPLAY_WIDGET_TYPES_PANEL_DATA,
-  DisplayWidgetTypesPanelComponent,
-  DisplayWidgetTypesPanelData
+    DISPLAY_WIDGET_TYPES_PANEL_DATA,
+    DisplayWidgetTypesPanelComponent,
+    DisplayWidgetTypesPanelData
 } from '@home/components/dashboard-page/widget-types-panel.component';
-import { DashboardWidgetSelectComponent } from '@home/components/dashboard-page/dashboard-widget-select.component';
-import { MobileService } from '@core/services/mobile.service';
+import {DashboardWidgetSelectComponent} from '@home/components/dashboard-page/dashboard-widget-select.component';
+import {MobileService} from '@core/services/mobile.service';
 
 import {
-  DashboardImageDialogComponent,
-  DashboardImageDialogData,
-  DashboardImageDialogResult
+    DashboardImageDialogComponent,
+    DashboardImageDialogData,
+    DashboardImageDialogResult
 } from '@home/components/dashboard-page/dashboard-image-dialog.component';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import cssjs from '@core/css/css';
-import { DOCUMENT } from '@angular/common';
-import { IAliasController } from '@core/api/widget-api.models';
-import { MatButton } from '@angular/material/button';
-import { VersionControlComponent } from '@home/components/vc/version-control.component';
-import { TbPopoverService } from '@shared/components/popover.service';
-import { tap } from 'rxjs/operators';
-import { LayoutFixedSize, LayoutWidthType } from '@home/components/dashboard-page/layout/layout.models';
-import { TbPopoverComponent } from '@shared/components/popover.component';
-import { ResizeObserver } from '@juggle/resize-observer';
+import {DOCUMENT} from '@angular/common';
+import {IAliasController} from '@core/api/widget-api.models';
+import {MatButton} from '@angular/material/button';
+import {VersionControlComponent} from '@home/components/vc/version-control.component';
+import {TbPopoverService} from '@shared/components/popover.service';
+import {tap} from 'rxjs/operators';
+import {LayoutFixedSize, LayoutWidthType} from '@home/components/dashboard-page/layout/layout.models';
+import {TbPopoverComponent} from '@shared/components/popover.component';
+import {ResizeObserver} from '@juggle/resize-observer';
 
 // @dynamic
 @Component({
@@ -235,7 +235,7 @@ export class DashboardPageComponent extends PageComponent implements IDashboardC
   editingWidgetSubtitle: string = null;
   editingLayoutCtx: DashboardPageLayoutContext = null;
 
-  thingsboardVersion: string = env.tbVersion;
+  echoiotVersion: string = env.tbVersion;
 
   translatedDashboardTitle: string;
 

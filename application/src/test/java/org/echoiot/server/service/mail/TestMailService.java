@@ -7,8 +7,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
-import org.thingsboard.rule.engine.api.MailService;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.rule.engine.api.MailService;
+import org.echoiot.server.common.data.exception.EchoiotException;
 
 @Profile("test")
 @Configuration
@@ -19,7 +19,7 @@ public class TestMailService {
 
     @Bean
     @Primary
-    public MailService mailService() throws ThingsboardException {
+    public MailService mailService() throws EchoiotException {
         MailService mailService = Mockito.mock(MailService.class);
         Mockito.doAnswer(new Answer<Void>() {
             public Void answer(InvocationOnMock invocation) {

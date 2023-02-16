@@ -1,13 +1,7 @@
 package org.echoiot.server.service.apiusage;
 
+import org.echoiot.rule.engine.api.MailService;
 import org.echoiot.server.cluster.TbClusterService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
-import org.thingsboard.rule.engine.api.MailService;
 import org.echoiot.server.common.data.ApiUsageState;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.dao.tenant.TbTenantProfileCache;
@@ -16,14 +10,18 @@ import org.echoiot.server.dao.timeseries.TimeseriesService;
 import org.echoiot.server.dao.usagerecord.ApiUsageStateService;
 import org.echoiot.server.queue.discovery.PartitionService;
 import org.echoiot.server.service.executors.DbCallbackExecutorService;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.UUID;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.spy;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DefaultTbApiUsageStateServiceTest {

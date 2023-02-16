@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiParam;
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.audit.ActionType;
 import org.echoiot.server.common.data.audit.AuditLog;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.id.EntityIdFactory;
 import org.echoiot.server.common.data.id.TenantId;
@@ -15,30 +15,14 @@ import org.echoiot.server.common.data.page.TimePageLink;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static org.echoiot.server.controller.ControllerConstants.AUDIT_LOG_SORT_PROPERTY_ALLOWABLE_VALUES;
-import static org.echoiot.server.controller.ControllerConstants.AUDIT_LOG_TEXT_SEARCH_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.CUSTOMER_ID_PARAM_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.ENTITY_TYPE_PARAM_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.PAGE_DATA_PARAMETERS;
-import static org.echoiot.server.controller.ControllerConstants.PAGE_NUMBER_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.PAGE_SIZE_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES;
-import static org.echoiot.server.controller.ControllerConstants.SORT_ORDER_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.TENANT_AUTHORITY_PARAGRAPH;
-import static org.echoiot.server.controller.ControllerConstants.USER_ID_PARAM_DESCRIPTION;
+import static org.echoiot.server.controller.ControllerConstants.*;
 
 @RestController
 @TbCoreComponent
@@ -81,7 +65,7 @@ public class AuditLogController extends BaseController {
             @ApiParam(value = AUDIT_LOG_QUERY_END_TIME_DESCRIPTION)
             @RequestParam(required = false) Long endTime,
             @ApiParam(value = AUDIT_LOG_QUERY_ACTION_TYPES_DESCRIPTION)
-            @RequestParam(name = "actionTypes", required = false) String actionTypesStr) throws ThingsboardException {
+            @RequestParam(name = "actionTypes", required = false) String actionTypesStr) throws EchoiotException {
         try {
             checkParameter("CustomerId", strCustomerId);
             TenantId tenantId = getCurrentUser().getTenantId();
@@ -119,7 +103,7 @@ public class AuditLogController extends BaseController {
             @ApiParam(value = AUDIT_LOG_QUERY_END_TIME_DESCRIPTION)
             @RequestParam(required = false) Long endTime,
             @ApiParam(value = AUDIT_LOG_QUERY_ACTION_TYPES_DESCRIPTION)
-            @RequestParam(name = "actionTypes", required = false) String actionTypesStr) throws ThingsboardException {
+            @RequestParam(name = "actionTypes", required = false) String actionTypesStr) throws EchoiotException {
         try {
             checkParameter("UserId", strUserId);
             TenantId tenantId = getCurrentUser().getTenantId();
@@ -160,7 +144,7 @@ public class AuditLogController extends BaseController {
             @ApiParam(value = AUDIT_LOG_QUERY_END_TIME_DESCRIPTION)
             @RequestParam(required = false) Long endTime,
             @ApiParam(value = AUDIT_LOG_QUERY_ACTION_TYPES_DESCRIPTION)
-            @RequestParam(name = "actionTypes", required = false) String actionTypesStr) throws ThingsboardException {
+            @RequestParam(name = "actionTypes", required = false) String actionTypesStr) throws EchoiotException {
         try {
             checkParameter("EntityId", strEntityId);
             checkParameter("EntityType", strEntityType);
@@ -196,7 +180,7 @@ public class AuditLogController extends BaseController {
             @ApiParam(value = AUDIT_LOG_QUERY_END_TIME_DESCRIPTION)
             @RequestParam(required = false) Long endTime,
             @ApiParam(value = AUDIT_LOG_QUERY_ACTION_TYPES_DESCRIPTION)
-            @RequestParam(name = "actionTypes", required = false) String actionTypesStr) throws ThingsboardException {
+            @RequestParam(name = "actionTypes", required = false) String actionTypesStr) throws EchoiotException {
         try {
             TenantId tenantId = getCurrentUser().getTenantId();
             List<ActionType> actionTypes = parseActionTypesStr(actionTypesStr);

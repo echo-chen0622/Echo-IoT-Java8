@@ -1,13 +1,13 @@
 package org.echoiot.server.edge;
 
 import com.google.protobuf.AbstractMessage;
-import org.junit.Assert;
-import org.junit.Test;
 import org.echoiot.server.common.data.Customer;
 import org.echoiot.server.common.data.edge.Edge;
-import org.thingsboard.server.gen.edge.v1.CustomerUpdateMsg;
-import org.thingsboard.server.gen.edge.v1.EdgeConfiguration;
-import org.thingsboard.server.gen.edge.v1.UpdateMsgType;
+import org.echoiot.server.gen.edge.v1.CustomerUpdateMsg;
+import org.echoiot.server.gen.edge.v1.EdgeConfiguration;
+import org.echoiot.server.gen.edge.v1.UpdateMsgType;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.util.Optional;
 

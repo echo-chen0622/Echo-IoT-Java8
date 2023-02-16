@@ -7,7 +7,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import com.squareup.wire.schema.internal.parser.ProtoFileElement;
 import io.netty.handler.codec.mqtt.MqttQoS;
 import lombok.extern.slf4j.Slf4j;
-import org.thingsboard.common.util.JacksonUtil;
+import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.common.data.Device;
 import org.echoiot.server.common.data.DynamicProtoUtils;
 import org.echoiot.server.common.data.TransportPayloadType;
@@ -16,13 +16,9 @@ import org.echoiot.server.common.data.device.profile.MqttDeviceProfileTransportC
 import org.echoiot.server.common.data.device.profile.ProtoTransportPayloadConfiguration;
 import org.echoiot.server.common.data.device.profile.TransportPayloadTypeConfiguration;
 import org.echoiot.server.common.data.page.PageData;
-import org.echoiot.server.common.data.query.DeviceTypeFilter;
-import org.echoiot.server.common.data.query.EntityData;
-import org.echoiot.server.common.data.query.EntityKey;
-import org.echoiot.server.common.data.query.EntityKeyType;
-import org.echoiot.server.common.data.query.SingleEntityFilter;
-import org.thingsboard.server.gen.transport.TransportApiProtos;
-import org.thingsboard.server.gen.transport.TransportProtos;
+import org.echoiot.server.common.data.query.*;
+import org.echoiot.server.gen.transport.TransportApiProtos;
+import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.service.telemetry.cmd.v2.EntityDataUpdate;
 import org.echoiot.server.transport.mqtt.AbstractMqttIntegrationTest;
 import org.echoiot.server.transport.mqtt.MqttTestCallback;
@@ -34,17 +30,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.echoiot.server.common.data.device.profile.MqttTopics.GATEWAY_ATTRIBUTES_REQUEST_TOPIC;
-import static org.echoiot.server.common.data.device.profile.MqttTopics.GATEWAY_ATTRIBUTES_RESPONSE_TOPIC;
-import static org.echoiot.server.common.data.device.profile.MqttTopics.GATEWAY_ATTRIBUTES_TOPIC;
-import static org.echoiot.server.common.data.device.profile.MqttTopics.GATEWAY_CONNECT_TOPIC;
+import static org.echoiot.server.common.data.device.profile.MqttTopics.*;
 import static org.echoiot.server.common.data.query.EntityKeyType.CLIENT_ATTRIBUTE;
 import static org.echoiot.server.common.data.query.EntityKeyType.SHARED_ATTRIBUTE;
+import static org.junit.Assert.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Slf4j
 public abstract class AbstractMqttAttributesIntegrationTest extends AbstractMqttIntegrationTest {

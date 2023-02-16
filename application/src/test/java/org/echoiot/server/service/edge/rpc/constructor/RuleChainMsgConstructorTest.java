@@ -8,18 +8,18 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.thingsboard.common.util.JacksonUtil;
+import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.common.data.id.RuleChainId;
 import org.echoiot.server.common.data.id.RuleNodeId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.rule.NodeConnectionInfo;
 import org.echoiot.server.common.data.rule.RuleChainMetaData;
 import org.echoiot.server.common.data.rule.RuleNode;
-import org.thingsboard.server.gen.edge.v1.EdgeVersion;
-import org.thingsboard.server.gen.edge.v1.RuleChainConnectionInfoProto;
-import org.thingsboard.server.gen.edge.v1.RuleChainMetadataUpdateMsg;
-import org.thingsboard.server.gen.edge.v1.RuleNodeProto;
-import org.thingsboard.server.gen.edge.v1.UpdateMsgType;
+import org.echoiot.server.gen.edge.v1.EdgeVersion;
+import org.echoiot.server.gen.edge.v1.RuleChainConnectionInfoProto;
+import org.echoiot.server.gen.edge.v1.RuleChainMetadataUpdateMsg;
+import org.echoiot.server.gen.edge.v1.RuleNodeProto;
+import org.echoiot.server.gen.edge.v1.UpdateMsgType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -185,14 +185,14 @@ public class RuleChainMsgConstructorTest {
     private void assertCheckpointRuleNodeConfiguration(List<RuleNodeProto> nodesList,
                                                        String expectedConfiguration) {
         Optional<RuleNodeProto> checkpointRuleNodeOpt = nodesList.stream()
-                .filter(rn -> "org.thingsboard.rule.engine.flow.TbCheckpointNode".equals(rn.getType()))
+                .filter(rn -> "org.echoiot.rule.engine.flow.TbCheckpointNode".equals(rn.getType()))
                 .findFirst();
         Assert.assertTrue(checkpointRuleNodeOpt.isPresent());
         RuleNodeProto checkpointRuleNode = checkpointRuleNodeOpt.get();
         Assert.assertEquals(expectedConfiguration, checkpointRuleNode.getConfiguration());
     }
 
-    private void compareNodeConnectionInfoAndProto(NodeConnectionInfo expected, org.thingsboard.server.gen.edge.v1.NodeConnectionInfoProto actual) {
+    private void compareNodeConnectionInfoAndProto(NodeConnectionInfo expected, org.echoiot.server.gen.edge.v1.NodeConnectionInfoProto actual) {
         Assert.assertEquals(expected.getFromIndex(), actual.getFromIndex());
         Assert.assertEquals(expected.getToIndex(), actual.getToIndex());
         Assert.assertEquals(expected.getType(), actual.getType());
@@ -301,7 +301,7 @@ public class RuleChainMsgConstructorTest {
 
     private RuleNode getOutputNode(RuleChainId ruleChainId) throws JsonProcessingException {
         return createRuleNode(ruleChainId,
-                "org.thingsboard.rule.engine.flow.TbRuleChainOutputNode",
+                "org.echoiot.rule.engine.flow.TbRuleChainOutputNode",
                 "Output node",
                 JacksonUtil.OBJECT_MAPPER.readTree("{\"version\":0}"),
                 JacksonUtil.OBJECT_MAPPER.readTree("{\"description\":\"\",\"layoutX\":178,\"layoutY\":592}"));
@@ -309,7 +309,7 @@ public class RuleChainMsgConstructorTest {
 
     private RuleNode getCheckpointNode(RuleChainId ruleChainId) throws JsonProcessingException {
         return createRuleNode(ruleChainId,
-                "org.thingsboard.rule.engine.flow.TbCheckpointNode",
+                "org.echoiot.rule.engine.flow.TbCheckpointNode",
                 "Checkpoint node",
                 JacksonUtil.OBJECT_MAPPER.readTree("{\"queueName\":\"HighPriority\"}"),
                 JacksonUtil.OBJECT_MAPPER.readTree("{\"description\":\"\",\"layoutX\":178,\"layoutY\":647}"));
@@ -317,7 +317,7 @@ public class RuleChainMsgConstructorTest {
 
     private RuleNode getSaveTimeSeriesNode(RuleChainId ruleChainId) throws JsonProcessingException {
         return createRuleNode(ruleChainId,
-                "org.thingsboard.rule.engine.telemetry.TbMsgTimeseriesNode",
+                "org.echoiot.rule.engine.telemetry.TbMsgTimeseriesNode",
                 "Save Timeseries",
                 JacksonUtil.OBJECT_MAPPER.readTree("{\"defaultTTL\":0}"),
                 JacksonUtil.OBJECT_MAPPER.readTree("{\"layoutX\":823,\"layoutY\":157}"));
@@ -325,7 +325,7 @@ public class RuleChainMsgConstructorTest {
 
     private RuleNode getMessageTypeSwitchNode(RuleChainId ruleChainId) throws JsonProcessingException {
         return createRuleNode(ruleChainId,
-                "org.thingsboard.rule.engine.filter.TbMsgTypeSwitchNode",
+                "org.echoiot.rule.engine.filter.TbMsgTypeSwitchNode",
                 "Message Type Switch",
                 JacksonUtil.OBJECT_MAPPER.readTree("{\"version\":0}"),
                 JacksonUtil.OBJECT_MAPPER.readTree("{\"layoutX\":347,\"layoutY\":149}"));
@@ -333,7 +333,7 @@ public class RuleChainMsgConstructorTest {
 
     private RuleNode getLogOtherNode(RuleChainId ruleChainId) throws JsonProcessingException {
         return createRuleNode(ruleChainId,
-                "org.thingsboard.rule.engine.action.TbLogNode",
+                "org.echoiot.rule.engine.action.TbLogNode",
                 "Log Other",
                 JacksonUtil.OBJECT_MAPPER.readTree("{\"jsScript\":\"return '\\\\nIncoming message:\\\\n' + JSON.stringify(msg) + '\\\\nIncoming metadata:\\\\n' + JSON.stringify(metadata);\"}"),
                 JacksonUtil.OBJECT_MAPPER.readTree("{\"layoutX\":824,\"layoutY\":378}"));
@@ -341,7 +341,7 @@ public class RuleChainMsgConstructorTest {
 
     private RuleNode getPushToCloudNode(RuleChainId ruleChainId) throws JsonProcessingException {
         return createRuleNode(ruleChainId,
-                "org.thingsboard.rule.engine.edge.TbMsgPushToCloudNode",
+                "org.echoiot.rule.engine.edge.TbMsgPushToCloudNode",
                 "Push to cloud",
                 JacksonUtil.OBJECT_MAPPER.readTree("{\"scope\":\"SERVER_SCOPE\"}"),
                 JacksonUtil.OBJECT_MAPPER.readTree("{\"layoutX\":1129,\"layoutY\":52}"));
@@ -349,7 +349,7 @@ public class RuleChainMsgConstructorTest {
 
     private RuleNode getAcknowledgeNode(RuleChainId ruleChainId) throws JsonProcessingException {
         return createRuleNode(ruleChainId,
-                "org.thingsboard.rule.engine.flow.TbAckNode",
+                "org.echoiot.rule.engine.flow.TbAckNode",
                 "Acknowledge node",
                 JacksonUtil.OBJECT_MAPPER.readTree("{\"version\":0}"),
                 JacksonUtil.OBJECT_MAPPER.readTree("{\"description\":\"\",\"layoutX\":177,\"layoutY\":703}"));
@@ -357,7 +357,7 @@ public class RuleChainMsgConstructorTest {
 
     private RuleNode getDeviceProfileNode(RuleChainId ruleChainId) throws JsonProcessingException {
         return createRuleNode(ruleChainId,
-                "org.thingsboard.rule.engine.profile.TbDeviceProfileNode",
+                "org.echoiot.rule.engine.profile.TbDeviceProfileNode",
                 "Device Profile Node",
                 JacksonUtil.OBJECT_MAPPER.readTree("{\"persistAlarmRulesState\":false,\"fetchAlarmRulesStateOnStart\":false}"),
                 JacksonUtil.OBJECT_MAPPER.readTree("{\"description\":\"Process incoming messages from devices with the alarm rules defined in the device profile. Dispatch all incoming messages with \\\"Success\\\" relation type.\",\"layoutX\":187,\"layoutY\":468}"));
@@ -365,7 +365,7 @@ public class RuleChainMsgConstructorTest {
 
     private RuleNode getSaveClientAttributesNode(RuleChainId ruleChainId) throws JsonProcessingException {
         return createRuleNode(ruleChainId,
-                "org.thingsboard.rule.engine.telemetry.TbMsgAttributesNode",
+                "org.echoiot.rule.engine.telemetry.TbMsgAttributesNode",
                 "Save Client Attributes",
                 JacksonUtil.OBJECT_MAPPER.readTree("{\"scope\":\"CLIENT_SCOPE\"}"),
                 JacksonUtil.OBJECT_MAPPER.readTree("{\"layoutX\":824,\"layoutY\":52}"));
@@ -373,7 +373,7 @@ public class RuleChainMsgConstructorTest {
 
     private RuleNode getLogRpcFromDeviceNode(RuleChainId ruleChainId) throws JsonProcessingException {
         return createRuleNode(ruleChainId,
-                "org.thingsboard.rule.engine.action.TbLogNode",
+                "org.echoiot.rule.engine.action.TbLogNode",
                 "Log RPC from Device",
                 JacksonUtil.OBJECT_MAPPER.readTree("{\"jsScript\":\"return '\\\\nIncoming message:\\\\n' + JSON.stringify(msg) + '\\\\nIncoming metadata:\\\\n' + JSON.stringify(metadata);\"}"),
                 JacksonUtil.OBJECT_MAPPER.readTree("{\"layoutX\":825,\"layoutY\":266}"));
@@ -381,7 +381,7 @@ public class RuleChainMsgConstructorTest {
 
     private RuleNode getRpcCallRequestNode(RuleChainId ruleChainId) throws JsonProcessingException {
         return createRuleNode(ruleChainId,
-                "org.thingsboard.rule.engine.rpc.TbSendRPCRequestNode",
+                "org.echoiot.rule.engine.rpc.TbSendRPCRequestNode",
                 "RPC Call Request",
                 JacksonUtil.OBJECT_MAPPER.readTree("{\"timeoutInSeconds\":60}"),
                 JacksonUtil.OBJECT_MAPPER.readTree("{\"layoutX\":824,\"layoutY\":466}"));
@@ -389,7 +389,7 @@ public class RuleChainMsgConstructorTest {
 
     private RuleNode getPushToAnalyticsNode(RuleChainId ruleChainId) throws JsonProcessingException {
         return createRuleNode(ruleChainId,
-                "org.thingsboard.rule.engine.flow.TbRuleChainInputNode",
+                "org.echoiot.rule.engine.flow.TbRuleChainInputNode",
                 "Push to Analytics",
                 JacksonUtil.OBJECT_MAPPER.readTree("{\"ruleChainId\":\"af588000-6c7c-11ec-bafd-c9a47a5c8d99\"}"),
                 JacksonUtil.OBJECT_MAPPER.readTree("{\"description\":\"\",\"layoutX\":477,\"layoutY\":560}"));

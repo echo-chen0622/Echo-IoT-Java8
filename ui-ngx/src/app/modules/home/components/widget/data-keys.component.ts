@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,56 +14,56 @@
 /// limitations under the License.
 ///
 
-import { COMMA, ENTER, SEMICOLON } from '@angular/cdk/keycodes';
+import {COMMA, ENTER, SEMICOLON} from '@angular/cdk/keycodes';
 import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  forwardRef,
-  Input,
-  OnChanges,
-  OnInit,
-  SimpleChanges,
-  SkipSelf,
-  ViewChild
+    AfterViewInit,
+    Component,
+    ElementRef,
+    forwardRef,
+    Input,
+    OnChanges,
+    OnInit,
+    SimpleChanges,
+    SkipSelf,
+    ViewChild
 } from '@angular/core';
 import {
-  ControlValueAccessor,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  FormGroupDirective,
-  NG_VALUE_ACCESSOR,
-  NgForm,
-  Validators
+    ControlValueAccessor,
+    FormBuilder,
+    FormControl,
+    FormGroup,
+    FormGroupDirective,
+    NG_VALUE_ACCESSOR,
+    NgForm,
+    Validators
 } from '@angular/forms';
-import { Observable, of } from 'rxjs';
-import { filter, map, mergeMap, publishReplay, refCount, share, tap } from 'rxjs/operators';
-import { Store } from '@ngrx/store';
-import { AppState } from '@app/core/core.state';
-import { TranslateService } from '@ngx-translate/core';
-import { MatAutocomplete } from '@angular/material/autocomplete';
-import { MatChipInputEvent, MatChipList } from '@angular/material/chips';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { DataKeyType } from '@shared/models/telemetry/telemetry.models';
-import { DataKey, DatasourceType, JsonSettingsSchema, Widget, widgetType } from '@shared/models/widget.models';
-import { IAliasController } from '@core/api/widget-api.models';
-import { DataKeysCallbacks } from './data-keys.component.models';
-import { alarmFields } from '@shared/models/alarm.models';
-import { UtilsService } from '@core/services/utils.service';
-import { ErrorStateMatcher } from '@angular/material/core';
-import { TruncatePipe } from '@shared/pipe/truncate.pipe';
-import { DialogService } from '@core/services/dialog.service';
-import { MatDialog } from '@angular/material/dialog';
+import {Observable, of} from 'rxjs';
+import {filter, map, mergeMap, publishReplay, refCount, share, tap} from 'rxjs/operators';
+import {Store} from '@ngrx/store';
+import {AppState} from '@app/core/core.state';
+import {TranslateService} from '@ngx-translate/core';
+import {MatAutocomplete} from '@angular/material/autocomplete';
+import {MatChipInputEvent, MatChipList} from '@angular/material/chips';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {DataKeyType} from '@shared/models/telemetry/telemetry.models';
+import {DataKey, DatasourceType, JsonSettingsSchema, Widget, widgetType} from '@shared/models/widget.models';
+import {IAliasController} from '@core/api/widget-api.models';
+import {DataKeysCallbacks} from './data-keys.component.models';
+import {alarmFields} from '@shared/models/alarm.models';
+import {UtilsService} from '@core/services/utils.service';
+import {ErrorStateMatcher} from '@angular/material/core';
+import {TruncatePipe} from '@shared/pipe/truncate.pipe';
+import {DialogService} from '@core/services/dialog.service';
+import {MatDialog} from '@angular/material/dialog';
 import {
-  DataKeyConfigDialogComponent,
-  DataKeyConfigDialogData
+    DataKeyConfigDialogComponent,
+    DataKeyConfigDialogData
 } from '@home/components/widget/data-key-config-dialog.component';
-import { deepClone } from '@core/utils';
-import { MatChipDropEvent } from '@app/shared/components/mat-chip-draggable.directive';
-import { Dashboard } from '@shared/models/dashboard.models';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { AggregationType } from '@shared/models/time/time.models';
+import {deepClone} from '@core/utils';
+import {MatChipDropEvent} from '@app/shared/components/mat-chip-draggable.directive';
+import {Dashboard} from '@shared/models/dashboard.models';
+import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
+import {AggregationType} from '@shared/models/time/time.models';
 
 @Component({
   selector: 'tb-data-keys',

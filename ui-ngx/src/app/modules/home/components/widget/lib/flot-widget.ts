@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -15,50 +15,51 @@
 ///
 
 
-import { WidgetContext } from '@home/models/widget-component.models';
+import {WidgetContext} from '@home/models/widget-component.models';
 import {
-  createLabelFromDatasource,
-  deepClone, formattedDataFormDatasourceData,
-  insertVariable,
-  isDefined,
-  isDefinedAndNotNull,
-  isEqual,
-  isNumber,
-  isNumeric,
-  isUndefined
+    createLabelFromDatasource,
+    deepClone,
+    formattedDataFormDatasourceData,
+    insertVariable,
+    isDefined,
+    isDefinedAndNotNull,
+    isEqual,
+    isNumber,
+    isNumeric,
+    isUndefined
 } from '@app/core/utils';
-import { IWidgetSubscription, WidgetSubscriptionOptions } from '@core/api/widget-api.models';
+import {IWidgetSubscription, WidgetSubscriptionOptions} from '@core/api/widget-api.models';
 import {
-  DataKey,
-  Datasource,
-  DatasourceData,
-  DatasourceType,
-  FormattedData,
-  widgetType
+    DataKey,
+    Datasource,
+    DatasourceData,
+    DatasourceType,
+    FormattedData,
+    widgetType
 } from '@app/shared/models/widget.models';
 import {
-  ChartType,
-  TbFlotAxisOptions,
-  TbFlotHoverInfo,
-  TbFlotKeySettings,
-  TbFlotLatestKeySettings,
-  TbFlotPlotAxis,
-  TbFlotPlotDataSeries,
-  TbFlotPlotItem,
-  TbFlotSeries,
-  TbFlotSeriesHoverInfo,
-  TbFlotSettings,
-  TbFlotThresholdKeySettings,
-  TbFlotThresholdMarking,
-  TbFlotTicksFormatterFunction,
-  TooltipValueFormatFunction
+    ChartType,
+    TbFlotAxisOptions,
+    TbFlotHoverInfo,
+    TbFlotKeySettings,
+    TbFlotLatestKeySettings,
+    TbFlotPlotAxis,
+    TbFlotPlotDataSeries,
+    TbFlotPlotItem,
+    TbFlotSeries,
+    TbFlotSeriesHoverInfo,
+    TbFlotSettings,
+    TbFlotThresholdKeySettings,
+    TbFlotThresholdMarking,
+    TbFlotTicksFormatterFunction,
+    TooltipValueFormatFunction
 } from './flot-widget.models';
 import * as moment_ from 'moment';
 import * as tinycolor_ from 'tinycolor2';
-import { AggregationType } from '@shared/models/time/time.models';
-import { CancelAnimationFrame } from '@core/services/raf.service';
-import { UtilsService } from '@core/services/utils.service';
-import { DataKeyType } from '@shared/models/telemetry/telemetry.models';
+import {AggregationType} from '@shared/models/time/time.models';
+import {CancelAnimationFrame} from '@core/services/raf.service';
+import {UtilsService} from '@core/services/utils.service';
+import {DataKeyType} from '@shared/models/telemetry/telemetry.models';
 import Timeout = NodeJS.Timeout;
 
 const tinycolor = tinycolor_;

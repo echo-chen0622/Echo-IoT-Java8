@@ -10,7 +10,7 @@ import java.util.Arrays;
 
 @RunWith(ClasspathSuite.class)
 @ClassnameFilters({
-        "org.thingsboard.server.dao.service.*.nosql.*ServiceNoSqlTest",
+        "org.echoiot.server.dao.service.*.nosql.*ServiceNoSqlTest",
 })
 public class NoSqlDaoServiceTestSuite {
 

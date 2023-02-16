@@ -2,16 +2,16 @@ package org.echoiot.server.common.transport.service;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Component;
 import org.echoiot.server.common.data.ResourceType;
 import org.echoiot.server.common.data.TbResource;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.transport.TransportResourceCache;
 import org.echoiot.server.common.transport.TransportService;
+import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.queue.util.DataDecodingEncodingService;
-import org.thingsboard.server.gen.transport.TransportProtos;
 import org.echoiot.server.queue.util.TbTransportComponent;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 import java.util.Set;

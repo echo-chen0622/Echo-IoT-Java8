@@ -6,7 +6,7 @@ import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import org.thingsboard.common.util.JacksonUtil;
+import org.echoiot.common.util.JacksonUtil;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

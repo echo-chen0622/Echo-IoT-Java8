@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,13 +14,13 @@
 /// limitations under the License.
 ///
 
-import { Component } from '@angular/core';
-import { WidgetSettings } from '@shared/models/widget.models';
-import { FormBuilder, Validators } from '@angular/forms';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
+import {Component} from '@angular/core';
+import {WidgetSettings} from '@shared/models/widget.models';
+import {FormBuilder, Validators} from '@angular/forms';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
 import {
-  AnalogueGaugeWidgetSettingsComponent
+    AnalogueGaugeWidgetSettingsComponent
 } from '@home/components/widget/lib/settings/gauge/analogue-gauge-widget-settings.component';
 
 @Component({

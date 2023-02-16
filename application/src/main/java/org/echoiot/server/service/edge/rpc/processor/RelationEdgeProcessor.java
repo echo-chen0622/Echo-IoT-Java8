@@ -9,13 +9,13 @@ import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.edge.EdgeEvent;
 import org.echoiot.server.common.data.edge.EdgeEventActionType;
 import org.echoiot.server.common.data.edge.EdgeEventType;
-import org.echoiot.server.common.data.exception.ThingsboardErrorCode;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotErrorCode;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.relation.EntityRelation;
 import org.echoiot.server.common.data.relation.RelationTypeGroup;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.springframework.stereotype.Component;
-import org.thingsboard.common.util.JacksonUtil;
+import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.common.data.id.AssetId;
 import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.id.DashboardId;
@@ -26,10 +26,10 @@ import org.echoiot.server.common.data.id.EntityIdFactory;
 import org.echoiot.server.common.data.id.EntityViewId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.id.UserId;
-import org.thingsboard.server.gen.edge.v1.DownlinkMsg;
-import org.thingsboard.server.gen.edge.v1.RelationUpdateMsg;
-import org.thingsboard.server.gen.edge.v1.UpdateMsgType;
-import org.thingsboard.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.edge.v1.DownlinkMsg;
+import org.echoiot.server.gen.edge.v1.RelationUpdateMsg;
+import org.echoiot.server.gen.edge.v1.UpdateMsgType;
+import org.echoiot.server.gen.transport.TransportProtos;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -82,22 +82,22 @@ public class RelationEdgeProcessor extends BaseEdgeProcessor {
     }
 
 
-    private boolean isEntityExists(TenantId tenantId, EntityId entityId) throws ThingsboardException {
+    private boolean isEntityExists(TenantId tenantId, EntityId entityId) throws EchoiotException {
         switch (entityId.getEntityType()) {
-            case EntityType.DEVICE:
+            case DEVICE:
                 return deviceService.findDeviceById(tenantId, new DeviceId(entityId.getId())) != null;
-            case EntityType.ASSET:
+            case ASSET:
                 return assetService.findAssetById(tenantId, new AssetId(entityId.getId())) != null;
-            case EntityType.ENTITY_VIEW:
+            case ENTITY_VIEW:
                 return entityViewService.findEntityViewById(tenantId, new EntityViewId(entityId.getId())) != null;
-            case EntityType.CUSTOMER:
+            case CUSTOMER:
                 return customerService.findCustomerById(tenantId, new CustomerId(entityId.getId())) != null;
-            case EntityType.USER:
+            case USER:
                 return userService.findUserById(tenantId, new UserId(entityId.getId())) != null;
-            case EntityType.DASHBOARD:
+            case DASHBOARD:
                 return dashboardService.findDashboardById(tenantId, new DashboardId(entityId.getId())) != null;
             default:
-                throw new ThingsboardException("Unsupported entity type " + entityId.getEntityType(), ThingsboardErrorCode.INVALID_ARGUMENTS);
+                throw new EchoiotException("Unsupported entity type " + entityId.getEntityType(), EchoiotErrorCode.INVALID_ARGUMENTS);
         }
     }
 

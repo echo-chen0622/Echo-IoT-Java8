@@ -1,10 +1,10 @@
 package org.echoiot.server.transport;
 
 import lombok.extern.slf4j.Slf4j;
-import org.echoiot.server.controller.AbstractControllerTest;
 import org.echoiot.server.common.data.Device;
 import org.echoiot.server.common.data.DeviceProfile;
-import org.thingsboard.server.gen.transport.TransportProtos;
+import org.echoiot.server.controller.AbstractControllerTest;
+import org.echoiot.server.gen.transport.TransportProtos;
 
 import java.util.ArrayList;
 import java.util.List;

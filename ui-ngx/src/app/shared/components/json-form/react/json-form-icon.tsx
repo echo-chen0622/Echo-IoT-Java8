@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016-2023 The Thingsboard Authors
+ * Copyright © 2016-2023 The Echoiot Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,21 +15,21 @@
  */
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import ThingsboardBaseComponent from './json-form-base-component';
+import EchoiotBaseComponent from './json-form-base-component';
 import reactCSS from 'reactcss';
 import TextField from '@material-ui/core/TextField';
 import IconButton from '@material-ui/core/IconButton';
-import { JsonFormFieldProps, JsonFormFieldState } from '@shared/components/json-form/react/json-form.models';
+import {JsonFormFieldProps, JsonFormFieldState} from '@shared/components/json-form/react/json-form.models';
 import Clear from '@material-ui/icons/Clear';
 import Icon from '@material-ui/core/Icon';
 import Tooltip from '@material-ui/core/Tooltip';
 
-interface ThingsboardIconState extends JsonFormFieldState {
+interface EchoiotIconState extends JsonFormFieldState {
   icon: string | null;
   focused: boolean;
 }
 
-class ThingsboardIcon extends React.Component<JsonFormFieldProps, ThingsboardIconState> {
+class EchoiotIcon extends React.Component<JsonFormFieldProps, EchoiotIconState> {
 
     constructor(props) {
         super(props);
@@ -156,4 +156,4 @@ class ThingsboardIcon extends React.Component<JsonFormFieldProps, ThingsboardIco
     }
 }
 
-export default ThingsboardBaseComponent(ThingsboardIcon);
+export default EchoiotBaseComponent(EchoiotIcon);

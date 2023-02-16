@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,17 +14,17 @@
 /// limitations under the License.
 ///
 
-import { Component, forwardRef, Input, OnDestroy, OnInit } from '@angular/core';
-import { ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { isDefined } from '@core/utils';
+import {Component, forwardRef, Input, OnDestroy, OnInit} from '@angular/core';
+import {ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {isDefined} from '@core/utils';
 import {
-  LegendConfig,
-  LegendDirection,
-  legendDirectionTranslationMap,
-  LegendPosition,
-  legendPositionTranslationMap
+    LegendConfig,
+    LegendDirection,
+    legendDirectionTranslationMap,
+    LegendPosition,
+    legendPositionTranslationMap
 } from '@shared/models/widget.models';
-import { Subscription } from 'rxjs';
+import {Subscription} from 'rxjs';
 
 // @dynamic
 @Component({

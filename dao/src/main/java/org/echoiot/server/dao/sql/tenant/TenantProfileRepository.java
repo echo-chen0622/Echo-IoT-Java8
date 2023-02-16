@@ -12,7 +12,7 @@ import java.util.UUID;
 
 public interface TenantProfileRepository extends JpaRepository<TenantProfileEntity, UUID> {
 
-    @Query("SELECT new org.thingsboard.server.common.data.EntityInfo(t.id, 'TENANT_PROFILE', t.name) " +
+    @Query("SELECT new org.echoiot.server.common.data.EntityInfo(t.id, 'TENANT_PROFILE', t.name) " +
             "FROM TenantProfileEntity t " +
             "WHERE t.id = :tenantProfileId")
     EntityInfo findTenantProfileInfoById(@Param("tenantProfileId") UUID tenantProfileId);
@@ -22,7 +22,7 @@ public interface TenantProfileRepository extends JpaRepository<TenantProfileEnti
     Page<TenantProfileEntity> findTenantProfiles(@Param("textSearch") String textSearch,
                                                  Pageable pageable);
 
-    @Query("SELECT new org.thingsboard.server.common.data.EntityInfo(t.id, 'TENANT_PROFILE', t.name) " +
+    @Query("SELECT new org.echoiot.server.common.data.EntityInfo(t.id, 'TENANT_PROFILE', t.name) " +
             "FROM TenantProfileEntity t " +
             "WHERE LOWER(t.searchText) LIKE LOWER(CONCAT('%', :textSearch, '%'))")
     Page<EntityInfo> findTenantProfileInfos(@Param("textSearch") String textSearch,
@@ -32,7 +32,7 @@ public interface TenantProfileRepository extends JpaRepository<TenantProfileEnti
             "WHERE t.isDefault = true")
     TenantProfileEntity findByDefaultTrue();
 
-    @Query("SELECT new org.thingsboard.server.common.data.EntityInfo(t.id, 'TENANT_PROFILE', t.name) " +
+    @Query("SELECT new org.echoiot.server.common.data.EntityInfo(t.id, 'TENANT_PROFILE', t.name) " +
             "FROM TenantProfileEntity t " +
             "WHERE t.isDefault = true")
     EntityInfo findDefaultTenantProfileInfo();

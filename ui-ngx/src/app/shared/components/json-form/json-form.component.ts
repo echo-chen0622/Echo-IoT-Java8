@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -15,38 +15,40 @@
 ///
 
 import {
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  forwardRef, Injector,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit, Renderer2,
-  SimpleChanges,
-  ViewChild, ViewContainerRef,
-  ViewEncapsulation
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    forwardRef,
+    Input,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    Renderer2,
+    SimpleChanges,
+    ViewChild,
+    ViewContainerRef,
+    ViewEncapsulation
 } from '@angular/core';
-import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { deepClone, isString } from '@app/core/utils';
-import { TranslateService } from '@ngx-translate/core';
-import { JsonFormProps } from './react/json-form.models';
+import {ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator} from '@angular/forms';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {deepClone, isString} from '@app/core/utils';
+import {TranslateService} from '@ngx-translate/core';
+import {JsonFormProps} from './react/json-form.models';
 import inspector from 'schema-inspector';
 import * as tinycolor_ from 'tinycolor2';
-import { DialogService } from '@app/core/services/dialog.service';
+import {DialogService} from '@app/core/services/dialog.service';
 // import * as React from 'react';
 // import * as ReactDOM from 'react-dom';
 // import ReactSchemaForm from './react/json-form-react';
 import JsonFormUtils from './react/json-form-utils';
-import { JsonFormComponentData } from './json-form-component.models';
-import { GroupInfo } from '@shared/models/widget.models';
-import { Observable } from 'rxjs/internal/Observable';
-import { forkJoin, from } from 'rxjs';
-import { MouseEvent } from 'react';
-import { TbPopoverService } from '@shared/components/popover.service';
+import {JsonFormComponentData} from './json-form-component.models';
+import {GroupInfo} from '@shared/models/widget.models';
+import {Observable} from 'rxjs/internal/Observable';
+import {forkJoin, from} from 'rxjs';
+import {MouseEvent} from 'react';
+import {TbPopoverService} from '@shared/components/popover.service';
 
 const tinycolor = tinycolor_;
 
@@ -307,4 +309,3 @@ export class JsonFormComponent implements OnInit, ControlValueAccessor, Validato
     return true;
   }
 }
-

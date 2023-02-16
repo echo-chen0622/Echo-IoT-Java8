@@ -1,30 +1,26 @@
 package org.echoiot.server.transport.lwm2m.bootstrap.store;
 
 import lombok.extern.slf4j.Slf4j;
-import org.echoiot.server.common.data.device.profile.lwm2m.bootstrap.AbstractLwM2MBootstrapServerCredential;
-import org.echoiot.server.transport.lwm2m.bootstrap.secure.LwM2MBootstrapConfig;
-import org.eclipse.leshan.server.bootstrap.BootstrapConfig;
-import org.eclipse.leshan.server.bootstrap.EditableBootstrapConfigStore;
-import org.eclipse.leshan.server.bootstrap.InvalidConfigurationException;
-import org.eclipse.leshan.server.security.BootstrapSecurityStore;
-import org.eclipse.leshan.server.security.SecurityInfo;
-import org.springframework.stereotype.Service;
 import org.echoiot.server.common.data.device.credentials.lwm2m.LwM2MSecurityMode;
 import org.echoiot.server.common.data.device.profile.Lwm2mDeviceProfileTransportConfiguration;
-import org.thingsboard.server.gen.transport.TransportProtos;
+import org.echoiot.server.common.data.device.profile.lwm2m.bootstrap.AbstractLwM2MBootstrapServerCredential;
+import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.queue.util.TbLwM2mBootstrapTransportComponent;
+import org.echoiot.server.transport.lwm2m.bootstrap.secure.LwM2MBootstrapConfig;
 import org.echoiot.server.transport.lwm2m.secure.LwM2mCredentialsSecurityInfoValidator;
 import org.echoiot.server.transport.lwm2m.secure.TbLwM2MSecurityInfo;
 import org.echoiot.server.transport.lwm2m.server.LwM2mSessionMsgListener;
 import org.echoiot.server.transport.lwm2m.server.LwM2mTransportContext;
 import org.echoiot.server.transport.lwm2m.server.LwM2mTransportServerHelper;
 import org.echoiot.server.transport.lwm2m.server.client.LwM2MAuthException;
+import org.eclipse.leshan.server.bootstrap.BootstrapConfig;
+import org.eclipse.leshan.server.bootstrap.EditableBootstrapConfigStore;
+import org.eclipse.leshan.server.bootstrap.InvalidConfigurationException;
+import org.eclipse.leshan.server.security.BootstrapSecurityStore;
+import org.eclipse.leshan.server.security.SecurityInfo;
+import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -112,7 +108,7 @@ public class LwM2MBootstrapSecurityStore implements BootstrapSecurityStore {
                 log.error(" [{}] Different values SecurityMode between of client and profile.", store.getEndpoint());
                 log.error("{} getParametersBootstrap: [{}] Different values SecurityMode between of client and profile.", LOG_LWM2M_ERROR, store.getEndpoint());
                 String logMsg = String.format("%s: Different values SecurityMode between of client and profile.", LOG_LWM2M_ERROR);
-                helper.sendParametersOnThingsboardTelemetry(helper.getKvStringtoThingsboard(LOG_LWM2M_TELEMETRY, logMsg), sessionInfo);
+                helper.sendParametersOnEchoiotTelemetry(helper.getKvStringtoEchoiot(LOG_LWM2M_TELEMETRY, logMsg), sessionInfo);
                 return null;
             }
         }

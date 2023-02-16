@@ -6,8 +6,8 @@ import org.eclipse.leshan.core.link.DefaultLinkSerializer;
 import org.eclipse.leshan.core.link.LinkSerializer;
 import org.eclipse.leshan.core.request.DiscoverRequest;
 import org.eclipse.leshan.core.response.DiscoverResponse;
-import org.thingsboard.server.gen.transport.TransportProtos;
-import org.thingsboard.server.transport.lwm2m.server.client.LwM2mClient;
+import org.echoiot.server.gen.transport.TransportProtos;
+import org.echoiot.server.transport.lwm2m.server.client.LwM2mClient;
 
 import java.util.Optional;
 

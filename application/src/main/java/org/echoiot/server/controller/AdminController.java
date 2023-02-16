@@ -6,9 +6,11 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.MoreExecutors;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.echoiot.rule.engine.api.MailService;
+import org.echoiot.rule.engine.api.SmsService;
 import org.echoiot.server.common.data.AdminSettings;
 import org.echoiot.server.common.data.UpdateMessage;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.security.model.JwtPair;
 import org.echoiot.server.common.data.security.model.JwtSettings;
@@ -35,8 +37,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
-import org.thingsboard.rule.engine.api.MailService;
-import org.thingsboard.rule.engine.api.SmsService;
 
 @RestController
 @TbCoreComponent
@@ -79,7 +79,7 @@ public class AdminController extends BaseController {
     @ResponseBody
     public AdminSettings getAdminSettings(
             @ApiParam(value = "A string value of the key (e.g. 'general' or 'mail').")
-            @PathVariable("key") String key) throws ThingsboardException {
+            @PathVariable("key") String key) throws EchoiotException {
         try {
             accessControlService.checkPermission(getCurrentUser(), Resource.ADMIN_SETTINGS, Operation.READ);
             AdminSettings adminSettings = checkNotNull(adminSettingsService.findAdminSettingsByKey(TenantId.SYS_TENANT_ID, key), "No Administration settings found for key: " + key);
@@ -102,7 +102,7 @@ public class AdminController extends BaseController {
     @ResponseBody
     public AdminSettings saveAdminSettings(
             @ApiParam(value = "A JSON value representing the Administration Settings.")
-            @RequestBody AdminSettings adminSettings) throws ThingsboardException {
+            @RequestBody AdminSettings adminSettings) throws EchoiotException {
         try {
             accessControlService.checkPermission(getCurrentUser(), Resource.ADMIN_SETTINGS, Operation.WRITE);
             adminSettings.setTenantId(getTenantId());
@@ -124,7 +124,7 @@ public class AdminController extends BaseController {
     @PreAuthorize("hasAuthority('SYS_ADMIN')")
     @RequestMapping(value = "/securitySettings", method = RequestMethod.GET)
     @ResponseBody
-    public SecuritySettings getSecuritySettings() throws ThingsboardException {
+    public SecuritySettings getSecuritySettings() throws EchoiotException {
         try {
             accessControlService.checkPermission(getCurrentUser(), Resource.ADMIN_SETTINGS, Operation.READ);
             return checkNotNull(systemSecurityService.getSecuritySettings(TenantId.SYS_TENANT_ID));
@@ -140,7 +140,7 @@ public class AdminController extends BaseController {
     @ResponseBody
     public SecuritySettings saveSecuritySettings(
             @ApiParam(value = "A JSON value representing the Security Settings.")
-            @RequestBody SecuritySettings securitySettings) throws ThingsboardException {
+            @RequestBody SecuritySettings securitySettings) throws EchoiotException {
         try {
             accessControlService.checkPermission(getCurrentUser(), Resource.ADMIN_SETTINGS, Operation.WRITE);
             securitySettings = checkNotNull(systemSecurityService.saveSecuritySettings(TenantId.SYS_TENANT_ID, securitySettings));
@@ -156,7 +156,7 @@ public class AdminController extends BaseController {
     @PreAuthorize("hasAuthority('SYS_ADMIN')")
     @RequestMapping(value = "/jwtSettings", method = RequestMethod.GET)
     @ResponseBody
-    public JwtSettings getJwtSettings() throws ThingsboardException {
+    public JwtSettings getJwtSettings() throws EchoiotException {
         try {
             accessControlService.checkPermission(getCurrentUser(), Resource.ADMIN_SETTINGS, Operation.READ);
             return checkNotNull(jwtSettingsService.getJwtSettings());
@@ -173,7 +173,7 @@ public class AdminController extends BaseController {
     @ResponseBody
     public JwtPair saveJwtSettings(
             @ApiParam(value = "A JSON value representing the JWT Settings.")
-            @RequestBody JwtSettings jwtSettings) throws ThingsboardException {
+            @RequestBody JwtSettings jwtSettings) throws EchoiotException {
         try {
             SecurityUser securityUser = getCurrentUser();
             accessControlService.checkPermission(securityUser, Resource.ADMIN_SETTINGS, Operation.WRITE);
@@ -191,7 +191,7 @@ public class AdminController extends BaseController {
     @RequestMapping(value = "/settings/testMail", method = RequestMethod.POST)
     public void sendTestMail(
             @ApiParam(value = "A JSON value representing the Mail Settings.")
-            @RequestBody AdminSettings adminSettings) throws ThingsboardException {
+            @RequestBody AdminSettings adminSettings) throws EchoiotException {
         try {
             accessControlService.checkPermission(getCurrentUser(), Resource.ADMIN_SETTINGS, Operation.READ);
             adminSettings = checkNotNull(adminSettings);
@@ -215,7 +215,7 @@ public class AdminController extends BaseController {
     @RequestMapping(value = "/settings/testSms", method = RequestMethod.POST)
     public void sendTestSms(
             @ApiParam(value = "A JSON value representing the Test SMS request.")
-            @RequestBody TestSmsRequest testSmsRequest) throws ThingsboardException {
+            @RequestBody TestSmsRequest testSmsRequest) throws EchoiotException {
         try {
             accessControlService.checkPermission(getCurrentUser(), Resource.ADMIN_SETTINGS, Operation.READ);
             smsService.sendTestSms(testSmsRequest);
@@ -228,7 +228,7 @@ public class AdminController extends BaseController {
             notes = "Get the repository settings object. " + ControllerConstants.TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
     @GetMapping("/repositorySettings")
-    public RepositorySettings getRepositorySettings() throws ThingsboardException {
+    public RepositorySettings getRepositorySettings() throws EchoiotException {
         try {
             accessControlService.checkPermission(getCurrentUser(), Resource.VERSION_CONTROL, Operation.READ);
             RepositorySettings versionControlSettings = checkNotNull(versionControlService.getVersionControlSettings(getTenantId()));
@@ -245,7 +245,7 @@ public class AdminController extends BaseController {
             notes = "Check whether the repository settings exists. " + ControllerConstants.TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
     @GetMapping("/repositorySettings/exists")
-    public Boolean repositorySettingsExists() throws ThingsboardException {
+    public Boolean repositorySettingsExists() throws EchoiotException {
         try {
             accessControlService.checkPermission(getCurrentUser(), Resource.VERSION_CONTROL, Operation.READ);
             return versionControlService.getVersionControlSettings(getTenantId()) != null;
@@ -275,7 +275,7 @@ public class AdminController extends BaseController {
             notes = "Creates or Updates the repository settings object. " + ControllerConstants.TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
     @PostMapping("/repositorySettings")
-    public DeferredResult<RepositorySettings> saveRepositorySettings(@RequestBody RepositorySettings settings) throws ThingsboardException {
+    public DeferredResult<RepositorySettings> saveRepositorySettings(@RequestBody RepositorySettings settings) throws EchoiotException {
         accessControlService.checkPermission(getCurrentUser(), Resource.VERSION_CONTROL, Operation.WRITE);
         ListenableFuture<RepositorySettings> future = versionControlService.saveVersionControlSettings(getTenantId(), settings);
         return wrapFuture(Futures.transform(future, savedSettings -> {
@@ -292,7 +292,7 @@ public class AdminController extends BaseController {
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
     @RequestMapping(value = "/repositorySettings", method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.OK)
-    public DeferredResult<Void> deleteRepositorySettings() throws ThingsboardException {
+    public DeferredResult<Void> deleteRepositorySettings() throws EchoiotException {
         try {
             accessControlService.checkPermission(getCurrentUser(), Resource.VERSION_CONTROL, Operation.DELETE);
             return wrapFuture(versionControlService.deleteVersionControlSettings(getTenantId()));
@@ -308,7 +308,7 @@ public class AdminController extends BaseController {
     @RequestMapping(value = "/repositorySettings/checkAccess", method = RequestMethod.POST)
     public DeferredResult<Void> checkRepositoryAccess(
             @ApiParam(value = "A JSON value representing the Repository Settings.")
-            @RequestBody RepositorySettings settings) throws ThingsboardException {
+            @RequestBody RepositorySettings settings) throws EchoiotException {
         try {
             accessControlService.checkPermission(getCurrentUser(), Resource.VERSION_CONTROL, Operation.READ);
             settings = checkNotNull(settings);
@@ -322,7 +322,7 @@ public class AdminController extends BaseController {
             notes = "Get the auto commit settings object. " + ControllerConstants.TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
     @GetMapping("/autoCommitSettings")
-    public AutoCommitSettings getAutoCommitSettings() throws ThingsboardException {
+    public AutoCommitSettings getAutoCommitSettings() throws EchoiotException {
         try {
             accessControlService.checkPermission(getCurrentUser(), Resource.VERSION_CONTROL, Operation.READ);
             return checkNotNull(autoCommitSettingsService.get(getTenantId()));
@@ -335,7 +335,7 @@ public class AdminController extends BaseController {
             notes = "Check whether the auto commit settings exists. " + ControllerConstants.TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
     @GetMapping("/autoCommitSettings/exists")
-    public Boolean autoCommitSettingsExists() throws ThingsboardException {
+    public Boolean autoCommitSettingsExists() throws EchoiotException {
         try {
             accessControlService.checkPermission(getCurrentUser(), Resource.VERSION_CONTROL, Operation.READ);
             return autoCommitSettingsService.get(getTenantId()) != null;
@@ -348,7 +348,7 @@ public class AdminController extends BaseController {
             notes = "Creates or Updates the auto commit settings object. " + ControllerConstants.TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
     @PostMapping("/autoCommitSettings")
-    public AutoCommitSettings saveAutoCommitSettings(@RequestBody AutoCommitSettings settings) throws ThingsboardException {
+    public AutoCommitSettings saveAutoCommitSettings(@RequestBody AutoCommitSettings settings) throws EchoiotException {
         accessControlService.checkPermission(getCurrentUser(), Resource.VERSION_CONTROL, Operation.WRITE);
         return autoCommitSettingsService.save(getTenantId(), settings);
     }
@@ -359,7 +359,7 @@ public class AdminController extends BaseController {
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
     @RequestMapping(value = "/autoCommitSettings", method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.OK)
-    public void deleteAutoCommitSettings() throws ThingsboardException {
+    public void deleteAutoCommitSettings() throws EchoiotException {
         try {
             accessControlService.checkPermission(getCurrentUser(), Resource.VERSION_CONTROL, Operation.DELETE);
             autoCommitSettingsService.delete(getTenantId());
@@ -374,7 +374,7 @@ public class AdminController extends BaseController {
     @PreAuthorize("hasAuthority('SYS_ADMIN')")
     @RequestMapping(value = "/updates", method = RequestMethod.GET)
     @ResponseBody
-    public UpdateMessage checkUpdates() throws ThingsboardException {
+    public UpdateMessage checkUpdates() throws EchoiotException {
         try {
             return updateService.checkUpdates();
         } catch (Exception e) {

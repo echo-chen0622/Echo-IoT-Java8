@@ -6,8 +6,8 @@ import io.swagger.annotations.ApiParam;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.echoiot.server.common.data.User;
-import org.echoiot.server.common.data.exception.ThingsboardErrorCode;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotErrorCode;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.id.UserId;
@@ -37,7 +37,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.thingsboard.rule.engine.api.MailService;
+import org.echoiot.rule.engine.api.MailService;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -92,7 +92,7 @@ public class UserController extends BaseController {
     @ResponseBody
     public User getUserById(
             @ApiParam(value = USER_ID_PARAM_DESCRIPTION)
-            @PathVariable(USER_ID) String strUserId) throws ThingsboardException {
+            @PathVariable(USER_ID) String strUserId) throws EchoiotException {
         checkParameter(USER_ID, strUserId);
         try {
             UserId userId = new UserId(toUUID(strUserId));
@@ -132,12 +132,12 @@ public class UserController extends BaseController {
     @ResponseBody
     public JwtPair getUserToken(
             @ApiParam(value = USER_ID_PARAM_DESCRIPTION)
-            @PathVariable(USER_ID) String strUserId) throws ThingsboardException {
+            @PathVariable(USER_ID) String strUserId) throws EchoiotException {
         checkParameter(USER_ID, strUserId);
         try {
             if (!userTokenAccessEnabled) {
-                throw new ThingsboardException(YOU_DON_T_HAVE_PERMISSION_TO_PERFORM_THIS_OPERATION,
-                                               ThingsboardErrorCode.PERMISSION_DENIED);
+                throw new EchoiotException(YOU_DON_T_HAVE_PERMISSION_TO_PERFORM_THIS_OPERATION,
+                                               EchoiotErrorCode.PERMISSION_DENIED);
             }
             UserId userId = new UserId(toUUID(strUserId));
             SecurityUser authUser = getCurrentUser();
@@ -166,7 +166,7 @@ public class UserController extends BaseController {
             @ApiParam(value = "A JSON value representing the User.", required = true)
             @RequestBody User user,
             @ApiParam(value = "Send activation email (or use activation link)", defaultValue = "true")
-            @RequestParam(required = false, defaultValue = "true") boolean sendActivationMail, HttpServletRequest request) throws ThingsboardException {
+            @RequestParam(required = false, defaultValue = "true") boolean sendActivationMail, HttpServletRequest request) throws EchoiotException {
         if (!Authority.SYS_ADMIN.equals(getCurrentUser().getAuthority())) {
             user.setTenantId(getCurrentUser().getTenantId());
         }
@@ -182,7 +182,7 @@ public class UserController extends BaseController {
     public void sendActivationEmail(
             @ApiParam(value = "Email of the user", required = true)
             @RequestParam(value = "email") String email,
-            HttpServletRequest request) throws ThingsboardException {
+            HttpServletRequest request) throws EchoiotException {
         try {
             User user = checkNotNull(userService.findUserByEmail(getCurrentUser().getTenantId(), email));
 
@@ -196,7 +196,7 @@ public class UserController extends BaseController {
                         userCredentials.getActivateToken());
                 mailService.sendActivationEmail(activateUrl, email);
             } else {
-                throw new ThingsboardException("User is already activated!", ThingsboardErrorCode.BAD_REQUEST_PARAMS);
+                throw new EchoiotException("User is already activated!", EchoiotErrorCode.BAD_REQUEST_PARAMS);
             }
         } catch (Exception e) {
             throw handleException(e);
@@ -212,7 +212,7 @@ public class UserController extends BaseController {
     public String getActivationLink(
             @ApiParam(value = USER_ID_PARAM_DESCRIPTION)
             @PathVariable(USER_ID) String strUserId,
-            HttpServletRequest request) throws ThingsboardException {
+            HttpServletRequest request) throws EchoiotException {
         checkParameter(USER_ID, strUserId);
         try {
             UserId userId = new UserId(toUUID(strUserId));
@@ -225,7 +225,7 @@ public class UserController extends BaseController {
                         userCredentials.getActivateToken());
                 return activateUrl;
             } else {
-                throw new ThingsboardException("User is already activated!", ThingsboardErrorCode.BAD_REQUEST_PARAMS);
+                throw new EchoiotException("User is already activated!", EchoiotErrorCode.BAD_REQUEST_PARAMS);
             }
         } catch (Exception e) {
             throw handleException(e);
@@ -240,12 +240,12 @@ public class UserController extends BaseController {
     @ResponseStatus(value = HttpStatus.OK)
     public void deleteUser(
             @ApiParam(value = USER_ID_PARAM_DESCRIPTION)
-            @PathVariable(USER_ID) String strUserId) throws ThingsboardException {
+            @PathVariable(USER_ID) String strUserId) throws EchoiotException {
         checkParameter(USER_ID, strUserId);
         UserId userId = new UserId(toUUID(strUserId));
         User user = checkUserId(userId, Operation.DELETE);
         if (user.getAuthority() == Authority.SYS_ADMIN && getCurrentUser().getId().equals(userId)) {
-            throw new ThingsboardException("Sysadmin is not allowed to delete himself", ThingsboardErrorCode.PERMISSION_DENIED);
+            throw new EchoiotException("Sysadmin is not allowed to delete himself", EchoiotErrorCode.PERMISSION_DENIED);
         }
         tbUserService.delete(getTenantId(), getCurrentUser().getCustomerId(), user, getCurrentUser());
     }
@@ -266,7 +266,7 @@ public class UserController extends BaseController {
             @ApiParam(value = SORT_PROPERTY_DESCRIPTION, allowableValues = USER_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
             @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
-            @RequestParam(required = false) String sortOrder) throws ThingsboardException {
+            @RequestParam(required = false) String sortOrder) throws EchoiotException {
         try {
             PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
             SecurityUser currentUser = getCurrentUser();
@@ -297,7 +297,7 @@ public class UserController extends BaseController {
             @ApiParam(value = SORT_PROPERTY_DESCRIPTION, allowableValues = USER_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
             @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
-            @RequestParam(required = false) String sortOrder) throws ThingsboardException {
+            @RequestParam(required = false) String sortOrder) throws EchoiotException {
         checkParameter("tenantId", strTenantId);
         try {
             TenantId tenantId = TenantId.fromUUID(toUUID(strTenantId));
@@ -325,7 +325,7 @@ public class UserController extends BaseController {
             @ApiParam(value = SORT_PROPERTY_DESCRIPTION, allowableValues = USER_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
             @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
-            @RequestParam(required = false) String sortOrder) throws ThingsboardException {
+            @RequestParam(required = false) String sortOrder) throws EchoiotException {
         checkParameter("customerId", strCustomerId);
         try {
             CustomerId customerId = new CustomerId(toUUID(strCustomerId));
@@ -347,7 +347,7 @@ public class UserController extends BaseController {
             @ApiParam(value = USER_ID_PARAM_DESCRIPTION)
             @PathVariable(USER_ID) String strUserId,
             @ApiParam(value = "Disable (\"true\") or enable (\"false\") the credentials.", defaultValue = "true")
-            @RequestParam(required = false, defaultValue = "true") boolean userCredentialsEnabled) throws ThingsboardException {
+            @RequestParam(required = false, defaultValue = "true") boolean userCredentialsEnabled) throws EchoiotException {
         checkParameter(USER_ID, strUserId);
         try {
             UserId userId = new UserId(toUUID(strUserId));

@@ -64,13 +64,13 @@ public abstract class SqlAbstractDatabaseSchemaService implements DatabaseSchema
         Path schemaIdxFile = Paths.get(installScripts.getDataDir(), SQL_DIR, schemaIdxSql);
         String sql = Files.readString(schemaIdxFile);
         try (Connection conn = DriverManager.getConnection(dbUrl, dbUserName, dbPassword)) {
-            conn.createStatement().execute(sql); //NOSONAR, ignoring because method used to load initial thingsboard database schema
+            conn.createStatement().execute(sql); //NOSONAR, ignoring because method used to load initial echoiot database schema
         }
     }
 
     protected void executeQuery(String query) {
         try (Connection conn = DriverManager.getConnection(dbUrl, dbUserName, dbPassword)) {
-            conn.createStatement().execute(query); //NOSONAR, ignoring because method used to execute thingsboard database upgrade script
+            conn.createStatement().execute(query); //NOSONAR, ignoring because method used to execute echoiot database upgrade script
             log.info("Successfully executed query: {}", query);
             Thread.sleep(5000);
         } catch (InterruptedException | SQLException e) {

@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.edge.EdgeEventActionType;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.id.WidgetTypeId;
 import org.echoiot.server.common.data.security.Authority;
@@ -48,7 +48,7 @@ public class WidgetTypeController extends AutoCommitController {
     @ResponseBody
     public WidgetTypeDetails getWidgetTypeById(
             @ApiParam(value = ControllerConstants.WIDGET_TYPE_ID_PARAM_DESCRIPTION, required = true)
-            @PathVariable("widgetTypeId") String strWidgetTypeId) throws ThingsboardException {
+            @PathVariable("widgetTypeId") String strWidgetTypeId) throws EchoiotException {
         checkParameter("widgetTypeId", strWidgetTypeId);
         try {
             WidgetTypeId widgetTypeId = new WidgetTypeId(toUUID(strWidgetTypeId));
@@ -73,7 +73,7 @@ public class WidgetTypeController extends AutoCommitController {
     @ResponseBody
     public WidgetTypeDetails saveWidgetType(
             @ApiParam(value = "A JSON value representing the Widget Type Details.", required = true)
-            @RequestBody WidgetTypeDetails widgetTypeDetails) throws ThingsboardException {
+            @RequestBody WidgetTypeDetails widgetTypeDetails) throws EchoiotException {
         try {
             var currentUser = getCurrentUser();
             if (Authority.SYS_ADMIN.equals(currentUser.getAuthority())) {
@@ -108,7 +108,7 @@ public class WidgetTypeController extends AutoCommitController {
     @ResponseStatus(value = HttpStatus.OK)
     public void deleteWidgetType(
             @ApiParam(value = ControllerConstants.WIDGET_TYPE_ID_PARAM_DESCRIPTION, required = true)
-            @PathVariable("widgetTypeId") String strWidgetTypeId) throws ThingsboardException {
+            @PathVariable("widgetTypeId") String strWidgetTypeId) throws EchoiotException {
         checkParameter("widgetTypeId", strWidgetTypeId);
         try {
             var currentUser = getCurrentUser();
@@ -139,7 +139,7 @@ public class WidgetTypeController extends AutoCommitController {
             @ApiParam(value = "System or Tenant", required = true)
             @RequestParam boolean isSystem,
             @ApiParam(value = "Widget Bundle alias", required = true)
-            @RequestParam String bundleAlias) throws ThingsboardException {
+            @RequestParam String bundleAlias) throws EchoiotException {
         try {
             TenantId tenantId;
             if (isSystem) {
@@ -162,7 +162,7 @@ public class WidgetTypeController extends AutoCommitController {
             @ApiParam(value = "System or Tenant", required = true)
             @RequestParam boolean isSystem,
             @ApiParam(value = "Widget Bundle alias", required = true)
-            @RequestParam String bundleAlias) throws ThingsboardException {
+            @RequestParam String bundleAlias) throws EchoiotException {
         try {
             TenantId tenantId;
             if (isSystem) {
@@ -185,7 +185,7 @@ public class WidgetTypeController extends AutoCommitController {
             @ApiParam(value = "System or Tenant", required = true)
             @RequestParam boolean isSystem,
             @ApiParam(value = "Widget Bundle alias", required = true)
-            @RequestParam String bundleAlias) throws ThingsboardException {
+            @RequestParam String bundleAlias) throws EchoiotException {
         try {
             TenantId tenantId;
             if (isSystem) {
@@ -210,7 +210,7 @@ public class WidgetTypeController extends AutoCommitController {
             @ApiParam(value = "Widget Bundle alias", required = true)
             @RequestParam String bundleAlias,
             @ApiParam(value = "Widget Type alias", required = true)
-            @RequestParam String alias) throws ThingsboardException {
+            @RequestParam String alias) throws EchoiotException {
         try {
             TenantId tenantId;
             if (isSystem) {

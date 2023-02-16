@@ -3,7 +3,7 @@ package org.echoiot.server.service.sync.ie.exporting.impl;
 import org.echoiot.server.common.data.DataConstants;
 import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.ExportableEntity;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.EntityIdFactory;
 import org.echoiot.server.common.data.relation.EntityRelation;
@@ -12,22 +12,16 @@ import org.echoiot.server.common.data.sync.ie.AttributeExportData;
 import org.echoiot.server.common.data.sync.ie.EntityExportData;
 import org.echoiot.server.dao.attributes.AttributesService;
 import org.echoiot.server.dao.relation.RelationDao;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Primary;
-import org.springframework.stereotype.Service;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.sync.ie.exporting.EntityExportService;
 import org.echoiot.server.service.sync.ie.exporting.ExportableEntitiesService;
 import org.echoiot.server.service.sync.vc.data.EntitiesExportCtx;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -45,7 +39,7 @@ public class DefaultEntityExportService<I extends EntityId, E extends Exportable
     private AttributesService attributesService;
 
     @Override
-    public final D getExportData(EntitiesExportCtx<?> ctx, I entityId) throws ThingsboardException {
+    public final D getExportData(EntitiesExportCtx<?> ctx, I entityId) throws EchoiotException {
         D exportData = newExportData();
 
         E entity = exportableEntitiesService.findEntityByTenantIdAndId(ctx.getTenantId(), entityId);
@@ -65,7 +59,7 @@ public class DefaultEntityExportService<I extends EntityId, E extends Exportable
         return exportData;
     }
 
-    protected void setAdditionalExportData(EntitiesExportCtx<?> ctx, E entity, D exportData) throws ThingsboardException {
+    protected void setAdditionalExportData(EntitiesExportCtx<?> ctx, E entity, D exportData) throws EchoiotException {
         var exportSettings = ctx.getSettings();
         if (exportSettings.isExportRelations()) {
             List<EntityRelation> relations = exportRelations(ctx, entity);
@@ -81,7 +75,7 @@ public class DefaultEntityExportService<I extends EntityId, E extends Exportable
         }
     }
 
-    private List<EntityRelation> exportRelations(EntitiesExportCtx<?> ctx, E entity) throws ThingsboardException {
+    private List<EntityRelation> exportRelations(EntitiesExportCtx<?> ctx, E entity) throws EchoiotException {
         List<EntityRelation> relations = new ArrayList<>();
 
         List<EntityRelation> inboundRelations = relationDao.findAllByTo(ctx.getTenantId(), entity.getId(), RelationTypeGroup.COMMON);
@@ -92,7 +86,7 @@ public class DefaultEntityExportService<I extends EntityId, E extends Exportable
         return relations;
     }
 
-    private Map<String, List<AttributeExportData>> exportAttributes(EntitiesExportCtx<?> ctx, E entity) throws ThingsboardException {
+    private Map<String, List<AttributeExportData>> exportAttributes(EntitiesExportCtx<?> ctx, E entity) throws EchoiotException {
         List<String> scopes;
         if (entity.getId().getEntityType() == EntityType.DEVICE) {
             scopes = List.of(DataConstants.SERVER_SCOPE, DataConstants.SHARED_SCOPE);

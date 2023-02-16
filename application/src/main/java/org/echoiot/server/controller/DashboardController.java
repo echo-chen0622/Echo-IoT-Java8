@@ -2,14 +2,12 @@ package org.echoiot.server.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.Example;
-import io.swagger.annotations.ExampleProperty;
+import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
+import org.echoiot.common.util.JacksonUtil;
+import org.echoiot.server.common.data.*;
 import org.echoiot.server.common.data.edge.Edge;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.id.DashboardId;
 import org.echoiot.server.common.data.id.EdgeId;
@@ -25,22 +23,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-import org.thingsboard.common.util.JacksonUtil;
-import org.echoiot.server.common.data.Customer;
-import org.echoiot.server.common.data.Dashboard;
-import org.echoiot.server.common.data.DashboardInfo;
-import org.echoiot.server.common.data.HomeDashboard;
-import org.echoiot.server.common.data.HomeDashboardInfo;
-import org.echoiot.server.common.data.Tenant;
-import org.echoiot.server.common.data.User;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
 import java.util.List;
@@ -73,7 +56,7 @@ public class DashboardController extends BaseController {
     @RequestMapping(value = "/dashboard/serverTime", method = RequestMethod.GET)
     @ResponseBody
     @ApiResponse(code = 200, message = "OK", examples = @Example(value = @ExampleProperty(value = "1636023857137", mediaType = "application/json")))
-    public long getServerTime() throws ThingsboardException {
+    public long getServerTime() throws EchoiotException {
         return System.currentTimeMillis();
     }
 
@@ -86,7 +69,7 @@ public class DashboardController extends BaseController {
     @RequestMapping(value = "/dashboard/maxDatapointsLimit", method = RequestMethod.GET)
     @ResponseBody
     @ApiResponse(code = 200, message = "OK", examples = @Example(value = @ExampleProperty(value = "5000", mediaType = "application/json")))
-    public long getMaxDatapointsLimit() throws ThingsboardException {
+    public long getMaxDatapointsLimit() throws EchoiotException {
         return maxDatapointsLimit;
     }
 
@@ -99,7 +82,7 @@ public class DashboardController extends BaseController {
     @ResponseBody
     public DashboardInfo getDashboardInfoById(
             @ApiParam(value = ControllerConstants.DASHBOARD_ID_PARAM_DESCRIPTION)
-            @PathVariable(DASHBOARD_ID) String strDashboardId) throws ThingsboardException {
+            @PathVariable(DASHBOARD_ID) String strDashboardId) throws EchoiotException {
         checkParameter(DASHBOARD_ID, strDashboardId);
         try {
             DashboardId dashboardId = new DashboardId(toUUID(strDashboardId));
@@ -118,7 +101,7 @@ public class DashboardController extends BaseController {
     @ResponseBody
     public Dashboard getDashboardById(
             @ApiParam(value = ControllerConstants.DASHBOARD_ID_PARAM_DESCRIPTION)
-            @PathVariable(DASHBOARD_ID) String strDashboardId) throws ThingsboardException {
+            @PathVariable(DASHBOARD_ID) String strDashboardId) throws EchoiotException {
         checkParameter(DASHBOARD_ID, strDashboardId);
         try {
             DashboardId dashboardId = new DashboardId(toUUID(strDashboardId));
@@ -155,7 +138,7 @@ public class DashboardController extends BaseController {
     @ResponseStatus(value = HttpStatus.OK)
     public void deleteDashboard(
             @ApiParam(value = ControllerConstants.DASHBOARD_ID_PARAM_DESCRIPTION)
-            @PathVariable(DASHBOARD_ID) String strDashboardId) throws ThingsboardException {
+            @PathVariable(DASHBOARD_ID) String strDashboardId) throws EchoiotException {
         checkParameter(DASHBOARD_ID, strDashboardId);
         DashboardId dashboardId = new DashboardId(toUUID(strDashboardId));
         Dashboard dashboard = checkDashboardId(dashboardId, Operation.DELETE);
@@ -173,7 +156,7 @@ public class DashboardController extends BaseController {
             @ApiParam(value = ControllerConstants.CUSTOMER_ID_PARAM_DESCRIPTION)
             @PathVariable(ControllerConstants.CUSTOMER_ID) String strCustomerId,
             @ApiParam(value = ControllerConstants.DASHBOARD_ID_PARAM_DESCRIPTION)
-            @PathVariable(DASHBOARD_ID) String strDashboardId) throws ThingsboardException {
+            @PathVariable(DASHBOARD_ID) String strDashboardId) throws EchoiotException {
         checkParameter(ControllerConstants.CUSTOMER_ID, strCustomerId);
         checkParameter(DASHBOARD_ID, strDashboardId);
 
@@ -196,7 +179,7 @@ public class DashboardController extends BaseController {
             @ApiParam(value = ControllerConstants.CUSTOMER_ID_PARAM_DESCRIPTION)
             @PathVariable(ControllerConstants.CUSTOMER_ID) String strCustomerId,
             @ApiParam(value = ControllerConstants.DASHBOARD_ID_PARAM_DESCRIPTION)
-            @PathVariable(DASHBOARD_ID) String strDashboardId) throws ThingsboardException {
+            @PathVariable(DASHBOARD_ID) String strDashboardId) throws EchoiotException {
         checkParameter("customerId", strCustomerId);
         checkParameter(DASHBOARD_ID, strDashboardId);
         CustomerId customerId = new CustomerId(toUUID(strCustomerId));
@@ -219,7 +202,7 @@ public class DashboardController extends BaseController {
             @ApiParam(value = ControllerConstants.DASHBOARD_ID_PARAM_DESCRIPTION)
             @PathVariable(DASHBOARD_ID) String strDashboardId,
             @ApiParam(value = "JSON array with the list of customer ids, or empty to remove all customers")
-            @RequestBody(required = false) String[] strCustomerIds) throws ThingsboardException {
+            @RequestBody(required = false) String[] strCustomerIds) throws EchoiotException {
         checkParameter(DASHBOARD_ID, strDashboardId);
         DashboardId dashboardId = new DashboardId(toUUID(strDashboardId));
         Dashboard dashboard = checkDashboardId(dashboardId, Operation.ASSIGN_TO_CUSTOMER);
@@ -239,7 +222,7 @@ public class DashboardController extends BaseController {
             @ApiParam(value = ControllerConstants.DASHBOARD_ID_PARAM_DESCRIPTION)
             @PathVariable(DASHBOARD_ID) String strDashboardId,
             @ApiParam(value = "JSON array with the list of customer ids")
-            @RequestBody String[] strCustomerIds) throws ThingsboardException {
+            @RequestBody String[] strCustomerIds) throws EchoiotException {
         checkParameter(DASHBOARD_ID, strDashboardId);
         DashboardId dashboardId = new DashboardId(toUUID(strDashboardId));
         Dashboard dashboard = checkDashboardId(dashboardId, Operation.ASSIGN_TO_CUSTOMER);
@@ -259,7 +242,7 @@ public class DashboardController extends BaseController {
             @ApiParam(value = ControllerConstants.DASHBOARD_ID_PARAM_DESCRIPTION)
             @PathVariable(DASHBOARD_ID) String strDashboardId,
             @ApiParam(value = "JSON array with the list of customer ids")
-            @RequestBody String[] strCustomerIds) throws ThingsboardException {
+            @RequestBody String[] strCustomerIds) throws EchoiotException {
         checkParameter(DASHBOARD_ID, strDashboardId);
         DashboardId dashboardId = new DashboardId(toUUID(strDashboardId));
         Dashboard dashboard = checkDashboardId(dashboardId, Operation.UNASSIGN_FROM_CUSTOMER);
@@ -280,7 +263,7 @@ public class DashboardController extends BaseController {
     @ResponseBody
     public Dashboard assignDashboardToPublicCustomer(
             @ApiParam(value = ControllerConstants.DASHBOARD_ID_PARAM_DESCRIPTION)
-            @PathVariable(DASHBOARD_ID) String strDashboardId) throws ThingsboardException {
+            @PathVariable(DASHBOARD_ID) String strDashboardId) throws EchoiotException {
         checkParameter(DASHBOARD_ID, strDashboardId);
         DashboardId dashboardId = new DashboardId(toUUID(strDashboardId));
         Dashboard dashboard = checkDashboardId(dashboardId, Operation.ASSIGN_TO_CUSTOMER);
@@ -296,7 +279,7 @@ public class DashboardController extends BaseController {
     @ResponseBody
     public Dashboard unassignDashboardFromPublicCustomer(
             @ApiParam(value = ControllerConstants.DASHBOARD_ID_PARAM_DESCRIPTION)
-            @PathVariable(DASHBOARD_ID) String strDashboardId) throws ThingsboardException {
+            @PathVariable(DASHBOARD_ID) String strDashboardId) throws EchoiotException {
         checkParameter(DASHBOARD_ID, strDashboardId);
         DashboardId dashboardId = new DashboardId(toUUID(strDashboardId));
         Dashboard dashboard = checkDashboardId(dashboardId, Operation.UNASSIGN_FROM_CUSTOMER);
@@ -322,7 +305,7 @@ public class DashboardController extends BaseController {
             @ApiParam(value = ControllerConstants.SORT_PROPERTY_DESCRIPTION, allowableValues = ControllerConstants.DASHBOARD_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
             @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
-            @RequestParam(required = false) String sortOrder) throws ThingsboardException {
+            @RequestParam(required = false) String sortOrder) throws EchoiotException {
         try {
             TenantId tenantId = TenantId.fromUUID(toUUID(strTenantId));
             checkTenantId(tenantId, Operation.READ);
@@ -352,7 +335,7 @@ public class DashboardController extends BaseController {
             @ApiParam(value = ControllerConstants.SORT_PROPERTY_DESCRIPTION, allowableValues = ControllerConstants.DASHBOARD_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
             @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
-            @RequestParam(required = false) String sortOrder) throws ThingsboardException {
+            @RequestParam(required = false) String sortOrder) throws EchoiotException {
         try {
             TenantId tenantId = getCurrentUser().getTenantId();
             PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
@@ -387,7 +370,7 @@ public class DashboardController extends BaseController {
             @ApiParam(value = ControllerConstants.SORT_PROPERTY_DESCRIPTION, allowableValues = ControllerConstants.DASHBOARD_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
             @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
-            @RequestParam(required = false) String sortOrder) throws ThingsboardException {
+            @RequestParam(required = false) String sortOrder) throws EchoiotException {
         checkParameter(ControllerConstants.CUSTOMER_ID, strCustomerId);
         try {
             TenantId tenantId = getCurrentUser().getTenantId();
@@ -413,7 +396,7 @@ public class DashboardController extends BaseController {
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/dashboard/home", method = RequestMethod.GET)
     @ResponseBody
-    public HomeDashboard getHomeDashboard() throws ThingsboardException {
+    public HomeDashboard getHomeDashboard() throws EchoiotException {
         try {
             SecurityUser securityUser = getCurrentUser();
             if (securityUser.isSystemAdmin()) {
@@ -450,7 +433,7 @@ public class DashboardController extends BaseController {
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/dashboard/home/info", method = RequestMethod.GET)
     @ResponseBody
-    public HomeDashboardInfo getHomeDashboardInfo() throws ThingsboardException {
+    public HomeDashboardInfo getHomeDashboardInfo() throws EchoiotException {
         try {
             SecurityUser securityUser = getCurrentUser();
             if (securityUser.isSystemAdmin()) {
@@ -485,7 +468,7 @@ public class DashboardController extends BaseController {
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
     @RequestMapping(value = "/tenant/dashboard/home/info", method = RequestMethod.GET)
     @ResponseBody
-    public HomeDashboardInfo getTenantHomeDashboardInfo() throws ThingsboardException {
+    public HomeDashboardInfo getTenantHomeDashboardInfo() throws EchoiotException {
         try {
             Tenant tenant = tenantService.findTenantById(getTenantId());
             JsonNode additionalInfo = tenant.getAdditionalInfo();
@@ -513,7 +496,7 @@ public class DashboardController extends BaseController {
     @ResponseStatus(value = HttpStatus.OK)
     public void setTenantHomeDashboardInfo(
             @ApiParam(value = "A JSON object that represents home dashboard id and other parameters", required = true)
-            @RequestBody HomeDashboardInfo homeDashboardInfo) throws ThingsboardException {
+            @RequestBody HomeDashboardInfo homeDashboardInfo) throws EchoiotException {
 
         try {
             if (homeDashboardInfo.getDashboardId() != null) {
@@ -584,7 +567,7 @@ public class DashboardController extends BaseController {
     @RequestMapping(value = "/edge/{edgeId}/dashboard/{dashboardId}", method = RequestMethod.POST)
     @ResponseBody
     public Dashboard assignDashboardToEdge(@PathVariable("edgeId") String strEdgeId,
-                                           @PathVariable(DASHBOARD_ID) String strDashboardId) throws ThingsboardException {
+                                           @PathVariable(DASHBOARD_ID) String strDashboardId) throws EchoiotException {
         checkParameter("edgeId", strEdgeId);
         checkParameter(DASHBOARD_ID, strDashboardId);
 
@@ -608,7 +591,7 @@ public class DashboardController extends BaseController {
     @RequestMapping(value = "/edge/{edgeId}/dashboard/{dashboardId}", method = RequestMethod.DELETE)
     @ResponseBody
     public Dashboard unassignDashboardFromEdge(@PathVariable("edgeId") String strEdgeId,
-                                               @PathVariable(DASHBOARD_ID) String strDashboardId) throws ThingsboardException {
+                                               @PathVariable(DASHBOARD_ID) String strDashboardId) throws EchoiotException {
         checkParameter(ControllerConstants.EDGE_ID, strEdgeId);
         checkParameter(DASHBOARD_ID, strDashboardId);
 
@@ -640,7 +623,7 @@ public class DashboardController extends BaseController {
             @ApiParam(value = ControllerConstants.SORT_PROPERTY_DESCRIPTION, allowableValues = ControllerConstants.DASHBOARD_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
             @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
-            @RequestParam(required = false) String sortOrder) throws ThingsboardException {
+            @RequestParam(required = false) String sortOrder) throws EchoiotException {
         checkParameter("edgeId", strEdgeId);
         try {
             TenantId tenantId = getCurrentUser().getTenantId();
@@ -652,7 +635,7 @@ public class DashboardController extends BaseController {
                 try {
                     accessControlService.checkPermission(getCurrentUser(), Resource.DASHBOARD, Operation.READ, dashboardInfo.getId(), dashboardInfo);
                     return true;
-                } catch (ThingsboardException e) {
+                } catch (EchoiotException e) {
                     return false;
                 }
             }).collect(Collectors.toList());

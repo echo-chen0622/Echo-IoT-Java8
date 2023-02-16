@@ -4,7 +4,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.util.JsonFormat;
 import org.echoiot.server.queue.common.TbProtoQueueMsg;
 import org.echoiot.server.queue.kafka.TbKafkaEncoder;
-import org.thingsboard.server.gen.js.JsInvokeProtos;
+import org.echoiot.server.gen.js.JsInvokeProtos;
 
 import java.nio.charset.StandardCharsets;
 

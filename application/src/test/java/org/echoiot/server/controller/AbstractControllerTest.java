@@ -26,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ContextConfiguration(classes = AbstractControllerTest.class, loader = SpringBootContextLoader.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @Configuration
-@ComponentScan({"org.thingsboard.server"})
+@ComponentScan({"org.echoiot.server"})
 @EnableWebSocket
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Slf4j

@@ -2,6 +2,7 @@ package org.echoiot.server.dao.service;
 
 import com.datastax.oss.driver.api.core.uuid.Uuids;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.common.data.Customer;
 import org.echoiot.server.common.data.EntitySubtype;
 import org.echoiot.server.common.data.StringUtils;
@@ -21,7 +22,6 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.thingsboard.common.util.JacksonUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -618,14 +618,14 @@ public abstract class BaseEdgeServiceTest extends AbstractServiceTest {
 
         RuleNode ruleNode1 = new RuleNode();
         ruleNode1.setName("Input rule node 1");
-        ruleNode1.setType("org.thingsboard.rule.engine.flow.TbRuleChainInputNode");
+        ruleNode1.setType("org.echoiot.rule.engine.flow.TbRuleChainInputNode");
         ObjectNode configuration = JacksonUtil.OBJECT_MAPPER.createObjectNode();
         configuration.put("ruleChainId", ruleChain1.getUuidId().toString());
         ruleNode1.setConfiguration(configuration);
 
         RuleNode ruleNode2 = new RuleNode();
         ruleNode2.setName("Input rule node 2");
-        ruleNode2.setType("org.thingsboard.rule.engine.flow.TbRuleChainInputNode");
+        ruleNode2.setType("org.echoiot.rule.engine.flow.TbRuleChainInputNode");
         configuration = JacksonUtil.OBJECT_MAPPER.createObjectNode();
         configuration.put("ruleChainId", ruleChain2.getUuidId().toString());
         ruleNode2.setConfiguration(configuration);
@@ -640,7 +640,7 @@ public abstract class BaseEdgeServiceTest extends AbstractServiceTest {
 
         String missingToRelatedRuleChains = edgeService.findMissingToRelatedRuleChains(tenantId,
                 savedEdge.getId(),
-                "org.thingsboard.rule.engine.flow.TbRuleChainInputNode");
+                "org.echoiot.rule.engine.flow.TbRuleChainInputNode");
         Assert.assertEquals("{\"Rule Chain #3\":[\"Rule Chain #1\",\"Rule Chain #2\"]}", missingToRelatedRuleChains);
     }
 

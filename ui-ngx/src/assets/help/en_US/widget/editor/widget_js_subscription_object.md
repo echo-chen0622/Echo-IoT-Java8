@@ -3,12 +3,12 @@
 <div class="divider"></div>
 <br/>
 
-The widget subscription object is instance of [IWidgetSubscription{:target="_blank"}](https://github.com/thingsboard/thingsboard/blob/2627fe51d491055d4140f16617ed543f7f5bd8f6/ui-ngx/src/app/core/api/widget-api.models.ts#L264") and contains all subscription information, including current data, according to the [widget type{:target="_blank"}](${siteBaseUrl}/docs/user-guide/ui/widget-library/#widget-types).
+The widget subscription object is instance of [IWidgetSubscription{:target="_blank"}](https://github.com/echoiot/echoiot/blob/2627fe51d491055d4140f16617ed543f7f5bd8f6/ui-ngx/src/app/core/api/widget-api.models.ts#L264") and contains all subscription information, including current data, according to the [widget type{:target="_blank"}](${siteBaseUrl}/docs/user-guide/ui/widget-library/#widget-types).
 
 Depending on widget type, subscription object provides different data structures.
 For [Latest values{:target="_blank"}](${siteBaseUrl}/docs/user-guide/ui/widget-library/#latest-values) and [Time-series{:target="_blank"}](${siteBaseUrl}/docs/user-guide/ui/widget-library/#time-series) widget types, it provides the following properties:
 
-- **datasources** - array of datasources (Array<[Datasource{:target="_blank"}](https://github.com/thingsboard/thingsboard/blob/2627fe51d491055d4140f16617ed543f7f5bd8f6/ui-ngx/src/app/shared/models/widget.models.ts#L279)>) used by this subscription, using the following structure:
+- **datasources** - array of datasources (Array<[Datasource{:target="_blank"}](https://github.com/echoiot/echoiot/blob/2627fe51d491055d4140f16617ed543f7f5bd8f6/ui-ngx/src/app/shared/models/widget.models.ts#L279)>) used by this subscription, using the following structure:
 
 ```javascript
     datasources = [
@@ -35,7 +35,7 @@ For [Latest values{:target="_blank"}](${siteBaseUrl}/docs/user-guide/ui/widget-l
     ]
 ```
 
-- **data** - array of latest data (Array<[DatasourceData{:target="_blank"}](https://github.com/thingsboard/thingsboard/blob/2627fe51d491055d4140f16617ed543f7f5bd8f6/ui-ngx/src/app/shared/models/widget.models.ts#L310)>) received in scope of this subscription, using the following structure:
+- **data** - array of latest data (Array<[DatasourceData{:target="_blank"}](https://github.com/echoiot/echoiot/blob/2627fe51d491055d4140f16617ed543f7f5bd8f6/ui-ngx/src/app/shared/models/widget.models.ts#L310)>) received in scope of this subscription, using the following structure:
 
 ```javascript
     data = [
@@ -56,7 +56,7 @@ For [Latest values{:target="_blank"}](${siteBaseUrl}/docs/user-guide/ui/widget-l
 
 For [Alarm widget{:target="_blank"}](${siteBaseUrl}/docs/user-guide/ui/widget-library/#alarm-widget) type it provides the following properties:
 
-- **alarmSource** - ([Datasource{:target="_blank"}](https://github.com/thingsboard/thingsboard/blob/2627fe51d491055d4140f16617ed543f7f5bd8f6/ui-ngx/src/app/shared/models/widget.models.ts#L279)) information about entity for which alarms are fetched, using the following structure:
+- **alarmSource** - ([Datasource{:target="_blank"}](https://github.com/echoiot/echoiot/blob/2627fe51d491055d4140f16617ed543f7f5bd8f6/ui-ngx/src/app/shared/models/widget.models.ts#L279)) information about entity for which alarms are fetched, using the following structure:
 
 ```javascript
     alarmSource = {
@@ -79,7 +79,7 @@ For [Alarm widget{:target="_blank"}](${siteBaseUrl}/docs/user-guide/ui/widget-li
     }
 ```
 
-- **alarms** - array of alarms (Array<[Alarm{:target="_blank"}](https://github.com/thingsboard/thingsboard/blob/2627fe51d491055d4140f16617ed543f7f5bd8f6/ui-ngx/src/app/shared/models/alarm.models.ts#L89)>) received in scope of this subscription, using the following structure:
+- **alarms** - array of alarms (Array<[Alarm{:target="_blank"}](https://github.com/echoiot/echoiot/blob/2627fe51d491055d4140f16617ed543f7f5bd8f6/ui-ngx/src/app/shared/models/alarm.models.ts#L89)>) received in scope of this subscription, using the following structure:
 
 ```javascript
     alarms = [

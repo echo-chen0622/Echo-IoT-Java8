@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
-import org.thingsboard.common.util.ThingsBoardThreadFactory;
+import org.echoiot.common.util.EchoiotThreadFactory;
 import org.echoiot.server.common.msg.queue.ServiceType;
 
 import javax.annotation.PostConstruct;
@@ -57,7 +57,7 @@ public class TbKafkaConsumerStatsService {
             return;
         }
         this.adminClient = AdminClient.create(kafkaSettings.toAdminProps());
-        this.statsPrintScheduler = Executors.newSingleThreadScheduledExecutor(ThingsBoardThreadFactory.forName("kafka-consumer-stats"));
+        this.statsPrintScheduler = Executors.newSingleThreadScheduledExecutor(EchoiotThreadFactory.forName("kafka-consumer-stats"));
 
         Properties consumerProps = kafkaSettings.toConsumerProps(null);
         consumerProps.put(ConsumerConfig.CLIENT_ID_CONFIG, "consumer-stats-loader-client");

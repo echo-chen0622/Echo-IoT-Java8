@@ -2,17 +2,16 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.thingsboard</groupId>
+        <groupId>org.echoiot</groupId>
         <version>3.4.4</version>
         <artifactId>msa</artifactId>
     </parent>
-    <groupId>org.thingsboard.msa</groupId>
+    <groupId>org.echoiot.msa</groupId>
     <artifactId>vc-executor-docker</artifactId>
     <packaging>pom</packaging>
 
-    <name>ThingsBoard Version Control Executor Microservice</name>
-    <url>https://thingsboard.io</url>
-    <description>ThingsBoard Version Control Executor Microservice</description>
+    <name>Echoiot Version Control Executor Microservice</name>
+    <description>Echoiot Version Control Executor Microservice</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -26,7 +25,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.thingsboard.msa</groupId>
+            <groupId>org.echoiot.msa</groupId>
             <artifactId>vc-executor</artifactId>
             <version>${project.version}</version>
             <classifier>deb</classifier>
@@ -50,7 +49,7 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.thingsboard.msa</groupId>
+                                    <groupId>org.echoiot.msa</groupId>
                                     <artifactId>vc-executor</artifactId>
                                     <classifier>deb</classifier>
                                     <type>deb</type>

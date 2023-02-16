@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.sync.vc.RepositorySettings;
-import org.thingsboard.server.gen.transport.TransportProtos.ToVersionControlServiceMsg;
+import org.echoiot.server.gen.transport.TransportProtos.ToVersionControlServiceMsg;
 
 import java.util.UUID;
 

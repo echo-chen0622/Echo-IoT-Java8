@@ -20,7 +20,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.thingsboard.common.util.ThingsBoardThreadFactory;
+import org.echoiot.common.util.EchoiotThreadFactory;
 
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
@@ -158,7 +158,7 @@ public class MqttTransportHandlerTest {
         List<MqttPublishMessage> messages = Stream.generate(this::getMqttPublishMessage).limit(MSG_QUEUE_LIMIT).collect(Collectors.toList());
         messages.forEach((msg) -> handler.enqueueRegularSessionMsg(ctx, msg));
         willDoNothing().given(handler).processRegularSessionMsg(any(), any());
-        executor = Executors.newCachedThreadPool(ThingsBoardThreadFactory.forName(getClass().getName()));
+        executor = Executors.newCachedThreadPool(EchoiotThreadFactory.forName(getClass().getName()));
 
         CountDownLatch readyLatch = new CountDownLatch(MSG_QUEUE_LIMIT);
         CountDownLatch startLatch = new CountDownLatch(1);

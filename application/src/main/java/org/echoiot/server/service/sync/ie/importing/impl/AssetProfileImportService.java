@@ -5,15 +5,15 @@ import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.User;
 import org.echoiot.server.common.data.asset.AssetProfile;
 import org.echoiot.server.common.data.audit.ActionType;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.AssetProfileId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.plugin.ComponentLifecycleEvent;
 import org.echoiot.server.common.data.sync.ie.EntityExportData;
 import org.echoiot.server.dao.asset.AssetProfileService;
-import org.springframework.stereotype.Service;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.sync.vc.data.EntitiesImportCtx;
+import org.springframework.stereotype.Service;
 
 @Service
 @TbCoreComponent
@@ -40,7 +40,7 @@ public class AssetProfileImportService extends BaseEntityImportService<AssetProf
     }
 
     @Override
-    protected void onEntitySaved(User user, AssetProfile savedAssetProfile, AssetProfile oldAssetProfile) throws ThingsboardException {
+    protected void onEntitySaved(User user, AssetProfile savedAssetProfile, AssetProfile oldAssetProfile) throws EchoiotException {
         clusterService.broadcastEntityStateChangeEvent(user.getTenantId(), savedAssetProfile.getId(),
                 oldAssetProfile == null ? ComponentLifecycleEvent.CREATED : ComponentLifecycleEvent.UPDATED);
         entityNotificationService.notifyCreateOrUpdateOrDelete(savedAssetProfile.getTenantId(), null,

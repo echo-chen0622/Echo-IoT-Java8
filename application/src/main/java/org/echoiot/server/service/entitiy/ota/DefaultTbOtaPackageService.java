@@ -2,21 +2,16 @@ package org.echoiot.server.service.entitiy.ota;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.server.common.data.*;
 import org.echoiot.server.common.data.audit.ActionType;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.OtaPackageId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.ota.ChecksumAlgorithm;
 import org.echoiot.server.dao.ota.OtaPackageService;
 import org.echoiot.server.queue.util.TbCoreComponent;
-import org.springframework.stereotype.Service;
-import org.echoiot.server.common.data.EntityType;
-import org.echoiot.server.common.data.OtaPackage;
-import org.echoiot.server.common.data.OtaPackageInfo;
-import org.echoiot.server.common.data.SaveOtaPackageInfoRequest;
-import org.echoiot.server.common.data.StringUtils;
-import org.echoiot.server.common.data.User;
 import org.echoiot.server.service.entitiy.AbstractTbEntityService;
+import org.springframework.stereotype.Service;
 
 import java.nio.ByteBuffer;
 
@@ -29,7 +24,7 @@ public class DefaultTbOtaPackageService extends AbstractTbEntityService implemen
     private final OtaPackageService otaPackageService;
 
     @Override
-    public OtaPackageInfo save(SaveOtaPackageInfoRequest saveOtaPackageInfoRequest, User user) throws ThingsboardException {
+    public OtaPackageInfo save(SaveOtaPackageInfoRequest saveOtaPackageInfoRequest, User user) throws EchoiotException {
         ActionType actionType = saveOtaPackageInfoRequest.getId() == null ? ActionType.ADDED : ActionType.UPDATED;
         TenantId tenantId = saveOtaPackageInfoRequest.getTenantId();
         try {
@@ -49,7 +44,7 @@ public class DefaultTbOtaPackageService extends AbstractTbEntityService implemen
 
     @Override
     public OtaPackageInfo saveOtaPackageData(OtaPackageInfo otaPackageInfo, String checksum, ChecksumAlgorithm checksumAlgorithm,
-                                             byte[] data, String filename, String contentType, User user) throws ThingsboardException {
+                                             byte[] data, String filename, String contentType, User user) throws EchoiotException {
         TenantId tenantId = otaPackageInfo.getTenantId();
         OtaPackageId otaPackageId = otaPackageInfo.getId();
         try {
@@ -83,7 +78,7 @@ public class DefaultTbOtaPackageService extends AbstractTbEntityService implemen
     }
 
     @Override
-    public void delete(OtaPackageInfo otaPackageInfo, User user) throws ThingsboardException {
+    public void delete(OtaPackageInfo otaPackageInfo, User user) throws EchoiotException {
         TenantId tenantId = otaPackageInfo.getTenantId();
         OtaPackageId otaPackageId = otaPackageInfo.getId();
         try {

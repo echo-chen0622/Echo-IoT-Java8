@@ -2,7 +2,7 @@ package org.echoiot.server.transport.lwm2m.server.adaptors;
 
 import com.google.gson.JsonElement;
 import org.echoiot.server.common.transport.adaptor.AdaptorException;
-import org.thingsboard.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.transport.TransportProtos;
 
 import java.util.Collection;
 

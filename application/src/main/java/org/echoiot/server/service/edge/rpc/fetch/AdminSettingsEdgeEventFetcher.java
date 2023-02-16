@@ -8,6 +8,7 @@ import freemarker.template.Template;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.text.WordUtils;
+import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.common.data.AdminSettings;
 import org.echoiot.server.common.data.EdgeUtils;
 import org.echoiot.server.common.data.StringUtils;
@@ -20,13 +21,8 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.dao.settings.AdminSettingsService;
-import org.thingsboard.common.util.JacksonUtil;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

@@ -18,7 +18,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-import org.thingsboard.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.transport.TransportProtos;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
@@ -102,15 +102,15 @@ public class MqttSslHandlerProvider {
                 break;
             }
         }
-        return new ThingsboardMqttX509TrustManager(x509Tm, transportService);
+        return new EchoiotMqttX509TrustManager(x509Tm, transportService);
     }
 
-    static class ThingsboardMqttX509TrustManager implements X509TrustManager {
+    static class EchoiotMqttX509TrustManager implements X509TrustManager {
 
         private final X509TrustManager trustManager;
         private TransportService transportService;
 
-        ThingsboardMqttX509TrustManager(X509TrustManager trustManager, TransportService transportService) {
+        EchoiotMqttX509TrustManager(X509TrustManager trustManager, TransportService transportService) {
             this.trustManager = trustManager;
             this.transportService = transportService;
         }

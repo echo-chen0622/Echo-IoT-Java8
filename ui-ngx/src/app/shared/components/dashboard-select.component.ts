@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -15,40 +15,40 @@
 ///
 
 import {
-  Component,
-  forwardRef,
-  Inject,
-  Injector,
-  Input,
-  OnInit,
-  StaticProvider,
-  ViewChild,
-  ViewContainerRef
+    Component,
+    forwardRef,
+    Inject,
+    Injector,
+    Input,
+    OnInit,
+    StaticProvider,
+    ViewChild,
+    ViewContainerRef
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Observable, of } from 'rxjs';
-import { PageLink } from '@shared/models/page/page-link';
-import { map, share } from 'rxjs/operators';
-import { emptyPageData, PageData } from '@shared/models/page/page-data';
-import { DashboardInfo } from '@app/shared/models/dashboard.models';
-import { DashboardService } from '@core/http/dashboard.service';
-import { Store } from '@ngrx/store';
-import { AppState } from '@app/core/core.state';
-import { getCurrentAuthUser } from '@app/core/auth/auth.selectors';
-import { Authority } from '@shared/models/authority.enum';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { TooltipPosition } from '@angular/material/tooltip';
-import { CdkOverlayOrigin, ConnectedPosition, Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
-import { BreakpointObserver } from '@angular/cdk/layout';
-import { DOCUMENT } from '@angular/common';
-import { WINDOW } from '@core/services/window.service';
-import { ComponentPortal } from '@angular/cdk/portal';
+import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {Observable, of} from 'rxjs';
+import {PageLink} from '@shared/models/page/page-link';
+import {map, share} from 'rxjs/operators';
+import {emptyPageData, PageData} from '@shared/models/page/page-data';
+import {DashboardInfo} from '@app/shared/models/dashboard.models';
+import {DashboardService} from '@core/http/dashboard.service';
+import {Store} from '@ngrx/store';
+import {AppState} from '@app/core/core.state';
+import {getCurrentAuthUser} from '@app/core/auth/auth.selectors';
+import {Authority} from '@shared/models/authority.enum';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {TooltipPosition} from '@angular/material/tooltip';
+import {CdkOverlayOrigin, ConnectedPosition, Overlay, OverlayConfig, OverlayRef} from '@angular/cdk/overlay';
+import {BreakpointObserver} from '@angular/cdk/layout';
+import {DOCUMENT} from '@angular/common';
+import {WINDOW} from '@core/services/window.service';
+import {ComponentPortal} from '@angular/cdk/portal';
 import {
-  DASHBOARD_SELECT_PANEL_DATA,
-  DashboardSelectPanelComponent,
-  DashboardSelectPanelData
+    DASHBOARD_SELECT_PANEL_DATA,
+    DashboardSelectPanelComponent,
+    DashboardSelectPanelData
 } from './dashboard-select-panel.component';
-import { NULL_UUID } from '@shared/models/id/has-uuid';
+import {NULL_UUID} from '@shared/models/id/has-uuid';
 
 // @dynamic
 @Component({

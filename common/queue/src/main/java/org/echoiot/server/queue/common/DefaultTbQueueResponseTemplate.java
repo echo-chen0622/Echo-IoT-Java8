@@ -1,26 +1,15 @@
-package org.thingsboard.server.queue.common;
+package org.echoiot.server.queue.common;
 
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
-import org.echoiot.server.common.stats.MessagesStats;
-import org.echoiot.server.queue.common.AbstractTbQueueTemplate;
-import org.echoiot.server.queue.common.AsyncCallbackTemplate;
-import org.thingsboard.common.util.ThingsBoardThreadFactory;
+import org.echoiot.common.util.EchoiotThreadFactory;
 import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
-import org.echoiot.server.queue.TbQueueConsumer;
-import org.echoiot.server.queue.TbQueueHandler;
-import org.echoiot.server.queue.TbQueueMsg;
-import org.echoiot.server.queue.TbQueueProducer;
-import org.echoiot.server.queue.TbQueueResponseTemplate;
+import org.echoiot.server.common.stats.MessagesStats;
+import org.echoiot.server.queue.*;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeoutException;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
@@ -58,8 +47,8 @@ public class DefaultTbQueueResponseTemplate<Request extends TbQueueMsg, Response
         this.requestTimeout = requestTimeout;
         this.callbackExecutor = executor;
         this.stats = stats;
-        this.timeoutExecutor = Executors.newSingleThreadScheduledExecutor(ThingsBoardThreadFactory.forName("tb-queue-response-template-timeout-" + requestTemplate.getTopic()));
-        this.loopExecutor = Executors.newSingleThreadExecutor(ThingsBoardThreadFactory.forName("tb-queue-response-template-loop-" + requestTemplate.getTopic()));
+        this.timeoutExecutor = Executors.newSingleThreadScheduledExecutor(EchoiotThreadFactory.forName("tb-queue-response-template-timeout-" + requestTemplate.getTopic()));
+        this.loopExecutor = Executors.newSingleThreadExecutor(EchoiotThreadFactory.forName("tb-queue-response-template-loop-" + requestTemplate.getTopic()));
     }
 
     @Override

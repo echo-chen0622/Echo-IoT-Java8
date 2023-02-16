@@ -19,7 +19,7 @@ public interface WidgetTypeRepository extends JpaRepository<WidgetTypeDetailsEnt
     List<WidgetTypeEntity> findWidgetTypesByTenantIdAndBundleAlias(@Param("tenantId") UUID tenantId,
                                                                    @Param("bundleAlias") String bundleAlias);
 
-    @Query("SELECT new org.thingsboard.server.dao.model.sql.WidgetTypeInfoEntity(wtd) FROM WidgetTypeDetailsEntity wtd " +
+    @Query("SELECT new org.echoiot.server.dao.model.sql.WidgetTypeInfoEntity(wtd) FROM WidgetTypeDetailsEntity wtd " +
             "WHERE wtd.tenantId = :tenantId AND wtd.bundleAlias = :bundleAlias")
     List<WidgetTypeInfoEntity> findWidgetTypesInfosByTenantIdAndBundleAlias(@Param("tenantId") UUID tenantId,
                                                                             @Param("bundleAlias") String bundleAlias);

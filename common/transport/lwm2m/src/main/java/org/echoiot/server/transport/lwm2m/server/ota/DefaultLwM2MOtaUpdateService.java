@@ -23,14 +23,14 @@ import org.eclipse.leshan.core.request.ContentFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-import org.thingsboard.common.util.DonAsynchron;
+import org.echoiot.common.util.DonAsynchron;
 import org.echoiot.server.cache.ota.OtaPackageDataCache;
 import org.echoiot.server.common.data.StringUtils;
-import org.thingsboard.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.queue.util.TbLwM2mTransportComponent;
 import org.echoiot.server.transport.lwm2m.config.LwM2MTransportServerConfig;
 import org.echoiot.server.transport.lwm2m.server.LwM2mTransportServerHelper;
-import org.thingsboard.server.transport.lwm2m.server.client.LwM2mClient;
+import org.echoiot.server.transport.lwm2m.server.client.LwM2mClient;
 import org.echoiot.server.transport.lwm2m.server.downlink.LwM2mDownlinkMsgHandler;
 import org.echoiot.server.transport.lwm2m.server.downlink.TbLwM2MExecuteCallback;
 import org.echoiot.server.transport.lwm2m.server.downlink.TbLwM2MExecuteRequest;
@@ -610,7 +610,7 @@ public class DefaultLwM2MOtaUpdateService extends LwM2MExecutorAwareService impl
         kvProto = TransportProtos.KeyValueProto.newBuilder().setKey(LOG_LWM2M_TELEMETRY);
         kvProto.setType(TransportProtos.KeyValueType.STRING_V).setStringV(log);
         result.add(kvProto.build());
-        helper.sendParametersOnThingsboardTelemetry(result, client.getSession(), client.getKeyTsLatestMap());
+        helper.sendParametersOnEchoiotTelemetry(result, client.getSession(), client.getKeyTsLatestMap());
     }
 
     private static Optional<OtaPackageUpdateStatus> toOtaPackageUpdateStatus(FirmwareUpdateResult fwUpdateResult) {

@@ -15,11 +15,11 @@ import org.echoiot.server.common.data.device.profile.DeviceProfileTransportConfi
 import org.echoiot.server.common.data.device.profile.MqttDeviceProfileTransportConfiguration;
 import org.echoiot.server.common.data.device.profile.ProtoTransportPayloadConfiguration;
 import org.echoiot.server.common.data.device.profile.TransportPayloadTypeConfiguration;
-import org.echoiot.server.transport.mqtt.adaptors.MqttTransportAdaptor;
-import org.thingsboard.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.transport.mqtt.MqttTransportContext;
 import org.echoiot.server.transport.mqtt.TopicType;
-import org.thingsboard.server.transport.mqtt.adaptors.BackwardCompatibilityAdaptor;
+import org.echoiot.server.transport.mqtt.adaptors.BackwardCompatibilityAdaptor;
+import org.echoiot.server.transport.mqtt.adaptors.MqttTransportAdaptor;
 import org.echoiot.server.transport.mqtt.util.MqttTopicFilter;
 import org.echoiot.server.transport.mqtt.util.MqttTopicFilterFactory;
 

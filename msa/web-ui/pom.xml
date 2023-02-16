@@ -2,17 +2,16 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.thingsboard</groupId>
+        <groupId>org.echoiot</groupId>
         <version>3.4.4</version>
         <artifactId>msa</artifactId>
     </parent>
-    <groupId>org.thingsboard.msa</groupId>
+    <groupId>org.echoiot.msa</groupId>
     <artifactId>web-ui</artifactId>
     <packaging>pom</packaging>
 
-    <name>ThingsBoard Web UI Microservice</name>
-    <url>https://thingsboard.io</url>
-    <description>Service for hosting ThingsBoard Web UI</description>
+    <name>Echoiot Web UI Microservice</name>
+    <description>Service for hosting Echoiot Web UI</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -32,7 +31,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.thingsboard</groupId>
+            <groupId>org.echoiot</groupId>
             <artifactId>ui-ngx</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
@@ -100,7 +99,7 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.thingsboard</groupId>
+                                    <groupId>org.echoiot</groupId>
                                     <artifactId>ui-ngx</artifactId>
                                     <type>jar</type>
                                     <overWrite>false</overWrite>

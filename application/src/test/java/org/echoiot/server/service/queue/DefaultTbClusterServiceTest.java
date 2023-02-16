@@ -3,19 +3,13 @@ package org.echoiot.server.service.queue;
 import com.google.common.collect.Sets;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.cluster.TbClusterService;
-import org.echoiot.server.queue.TbQueueProducer;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.echoiot.server.common.data.DataConstants;
 import org.echoiot.server.common.data.id.QueueId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.queue.Queue;
 import org.echoiot.server.common.msg.queue.ServiceType;
-import org.thingsboard.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.transport.TransportProtos;
+import org.echoiot.server.queue.TbQueueProducer;
 import org.echoiot.server.queue.common.TbProtoQueueMsg;
 import org.echoiot.server.queue.discovery.NotificationsTopicService;
 import org.echoiot.server.queue.discovery.PartitionService;
@@ -24,17 +18,17 @@ import org.echoiot.server.queue.util.DataDecodingEncodingService;
 import org.echoiot.server.service.gateway_device.GatewayNotificationsService;
 import org.echoiot.server.service.profile.TbAssetProfileCache;
 import org.echoiot.server.service.profile.TbDeviceProfileCache;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.UUID;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.isNull;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 @Slf4j
 @RunWith(SpringRunner.class)

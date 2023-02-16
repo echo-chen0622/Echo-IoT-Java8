@@ -2,20 +2,20 @@ package org.echoiot.server.service.entitiy.user;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.rule.engine.api.MailService;
 import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.User;
 import org.echoiot.server.common.data.audit.ActionType;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.id.UserId;
 import org.echoiot.server.common.data.security.UserCredentials;
 import org.echoiot.server.dao.user.UserService;
 import org.echoiot.server.queue.util.TbCoreComponent;
+import org.echoiot.server.service.entitiy.AbstractTbEntityService;
 import org.echoiot.server.service.security.system.SystemSecurityService;
 import org.springframework.stereotype.Service;
-import org.thingsboard.rule.engine.api.MailService;
-import org.echoiot.server.service.entitiy.AbstractTbEntityService;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -33,7 +33,7 @@ public class DefaultUserService extends AbstractTbEntityService implements TbUse
 
     @Override
     public User save(TenantId tenantId, CustomerId customerId, User tbUser, boolean sendActivationMail,
-                     HttpServletRequest request, User user) throws ThingsboardException {
+                     HttpServletRequest request, User user) throws EchoiotException {
         ActionType actionType = tbUser.getId() == null ? ActionType.ADDED : ActionType.UPDATED;
         try {
             boolean sendEmail = tbUser.getId() == null && sendActivationMail;
@@ -46,7 +46,7 @@ public class DefaultUserService extends AbstractTbEntityService implements TbUse
                 String email = savedUser.getEmail();
                 try {
                     mailService.sendActivationEmail(activateUrl, email);
-                } catch (ThingsboardException e) {
+                } catch (EchoiotException e) {
                     userService.deleteUser(tenantId, savedUser.getId());
                     throw e;
                 }
@@ -61,7 +61,7 @@ public class DefaultUserService extends AbstractTbEntityService implements TbUse
     }
 
     @Override
-    public void delete(TenantId tenantId, CustomerId customerId, User tbUser, User user) throws ThingsboardException {
+    public void delete(TenantId tenantId, CustomerId customerId, User tbUser, User user) throws EchoiotException {
         UserId userId = tbUser.getId();
 
         try {

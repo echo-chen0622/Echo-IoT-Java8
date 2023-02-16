@@ -10,9 +10,9 @@ import org.echoiot.server.dao.util.TimescaleDBTsDao;
 
 @Configuration
 @TbAutoConfiguration
-@ComponentScan({"org.thingsboard.server.dao.sqlts.timescale"})
-@EnableJpaRepositories({"org.thingsboard.server.dao.sqlts.timescale", "org.thingsboard.server.dao.sqlts.insert.timescale"})
-@EntityScan({"org.thingsboard.server.dao.model.sqlts.timescale"})
+@ComponentScan({"org.echoiot.server.dao.sqlts.timescale"})
+@EnableJpaRepositories({"org.echoiot.server.dao.sqlts.timescale", "org.echoiot.server.dao.sqlts.insert.timescale"})
+@EntityScan({"org.echoiot.server.dao.model.sqlts.timescale"})
 @EnableTransactionManagement
 @TimescaleDBTsDao
 public class TimescaleDaoConfig {

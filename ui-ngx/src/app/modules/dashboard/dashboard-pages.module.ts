@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,12 +14,12 @@
 /// limitations under the License.
 ///
 
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { SharedModule } from '@shared/shared.module';
-import { HomeComponentsModule } from '@modules/home/components/home-components.module';
-import { HomeDialogsModule } from '@app/modules/home/dialogs/home-dialogs.module';
-import { DashboardPagesRoutingModule } from './dashboard-pages.routing.module';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {SharedModule} from '@shared/shared.module';
+import {HomeComponentsModule} from '@modules/home/components/home-components.module';
+import {HomeDialogsModule} from '@app/modules/home/dialogs/home-dialogs.module';
+import {DashboardPagesRoutingModule} from './dashboard-pages.routing.module';
 
 @NgModule({
   imports: [

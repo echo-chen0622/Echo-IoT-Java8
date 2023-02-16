@@ -14,7 +14,7 @@ import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.EntityIdFactory;
 import org.echoiot.server.common.data.id.RuleChainId;
 import org.echoiot.server.common.data.id.RuleNodeId;
-import org.thingsboard.server.common.msg.gen.MsgProtos;
+import org.echoiot.server.common.msg.gen.MsgProtos;
 import org.echoiot.server.common.msg.queue.TbMsgCallback;
 
 import java.io.Serializable;

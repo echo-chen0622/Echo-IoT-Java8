@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,14 +14,14 @@
 /// limitations under the License.
 ///
 
-import { BaseData } from '@shared/models/base-data';
-import { TenantId } from '@shared/models/id/tenant-id';
-import { CustomerId } from '@shared/models/id/customer-id';
-import { EdgeId } from '@shared/models/id/edge-id';
-import { EntitySearchQuery } from '@shared/models/relation.models';
-import { RuleChainId } from '@shared/models/id/rule-chain-id';
-import { BaseEventBody } from '@shared/models/event.models';
-import { EventId } from '@shared/models/id/event-id';
+import {BaseData} from '@shared/models/base-data';
+import {TenantId} from '@shared/models/id/tenant-id';
+import {CustomerId} from '@shared/models/id/customer-id';
+import {EdgeId} from '@shared/models/id/edge-id';
+import {EntitySearchQuery} from '@shared/models/relation.models';
+import {RuleChainId} from '@shared/models/id/rule-chain-id';
+import {BaseEventBody} from '@shared/models/event.models';
+import {EventId} from '@shared/models/id/event-id';
 
 export interface Edge extends BaseData<EdgeId> {
   tenantId?: TenantId;

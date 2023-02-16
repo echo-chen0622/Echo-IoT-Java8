@@ -3,6 +3,7 @@ package org.echoiot.server.service.security.auth.jwt.settings;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.cluster.TbClusterService;
 import org.echoiot.server.common.data.AdminSettings;
 import org.echoiot.server.common.data.id.TenantId;
@@ -12,7 +13,6 @@ import org.echoiot.server.dao.settings.AdminSettingsService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-import org.thingsboard.common.util.JacksonUtil;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -34,9 +34,9 @@ public class DefaultJwtSettingsService implements JwtSettingsService {
     private Integer tokenExpirationTime;
     @Value("${security.jwt.refreshTokenExpTime:604800}")
     private Integer refreshTokenExpTime;
-    @Value("${security.jwt.tokenIssuer:thingsboard.io}")
+    @Value("${security.jwt.tokenIssuer:echoiot.io}")
     private String tokenIssuer;
-    @Value("${security.jwt.tokenSigningKey:thingsboardDefaultSigningKey}")
+    @Value("${security.jwt.tokenSigningKey:echoiotDefaultSigningKey}")
     private String tokenSigningKey;
 
     private volatile JwtSettings jwtSettings = null; //lazy init

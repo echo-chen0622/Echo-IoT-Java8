@@ -1,4 +1,4 @@
-package org.thingsboard.server.transport.mqtt;
+package org.echoiot.server.transport.mqtt;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.gson.JsonParseException;
@@ -56,9 +56,9 @@ import org.echoiot.server.common.data.DeviceProfile;
 import org.echoiot.server.common.data.DeviceTransportType;
 import org.echoiot.server.common.data.TransportPayloadType;
 import org.echoiot.server.common.msg.tools.TbRateLimitsException;
-import org.thingsboard.server.gen.transport.TransportProtos;
-import org.thingsboard.server.gen.transport.TransportProtos.ProvisionDeviceResponseMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.ValidateDeviceX509CertRequestMsg;
+import org.echoiot.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.transport.TransportProtos.ProvisionDeviceResponseMsg;
+import org.echoiot.server.gen.transport.TransportProtos.ValidateDeviceX509CertRequestMsg;
 
 import javax.net.ssl.SSLPeerUnverifiedException;
 import java.io.IOException;

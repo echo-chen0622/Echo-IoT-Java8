@@ -1,6 +1,6 @@
 package org.echoiot.server.transport.lwm2m.server.common;
 
-import org.thingsboard.common.util.ThingsBoardExecutors;
+import org.echoiot.common.util.EchoiotExecutors;
 
 import java.util.concurrent.ExecutorService;
 
@@ -13,7 +13,7 @@ public abstract class LwM2MExecutorAwareService {
     protected abstract String getExecutorName();
 
     protected void init() {
-        this.executor = ThingsBoardExecutors.newWorkStealingPool(getExecutorSize(), getExecutorName());
+        this.executor = EchoiotExecutors.newWorkStealingPool(getExecutorSize(), getExecutorName());
     }
 
     public void destroy() {

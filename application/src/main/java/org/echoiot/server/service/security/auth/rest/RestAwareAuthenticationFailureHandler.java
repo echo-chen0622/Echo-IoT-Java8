@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
-import org.echoiot.server.exception.ThingsboardErrorResponseHandler;
+import org.echoiot.server.exception.EchoiotErrorResponseHandler;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -14,10 +14,10 @@ import java.io.IOException;
 @Component(value = "defaultAuthenticationFailureHandler")
 public class RestAwareAuthenticationFailureHandler implements AuthenticationFailureHandler {
 
-    private final ThingsboardErrorResponseHandler errorResponseHandler;
+    private final EchoiotErrorResponseHandler errorResponseHandler;
 
     @Autowired
-    public RestAwareAuthenticationFailureHandler(ThingsboardErrorResponseHandler errorResponseHandler) {
+    public RestAwareAuthenticationFailureHandler(EchoiotErrorResponseHandler errorResponseHandler) {
         this.errorResponseHandler = errorResponseHandler;
     }
 

@@ -1,21 +1,21 @@
 package org.echoiot.server.actors.device;
 
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.rule.engine.api.msg.DeviceAttributesEventNotificationMsg;
+import org.echoiot.rule.engine.api.msg.DeviceEdgeUpdateMsg;
+import org.echoiot.rule.engine.api.msg.DeviceNameOrTypeUpdateMsg;
+import org.echoiot.server.actors.ActorSystemContext;
 import org.echoiot.server.actors.TbActorCtx;
 import org.echoiot.server.actors.TbActorException;
 import org.echoiot.server.actors.service.ContextAwareActor;
 import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.msg.TbActorMsg;
+import org.echoiot.server.common.msg.timeout.DeviceActorServerSideRpcTimeoutMsg;
 import org.echoiot.server.service.rpc.FromDeviceRpcResponseActorMsg;
 import org.echoiot.server.service.rpc.RemoveRpcActorMsg;
 import org.echoiot.server.service.rpc.ToDeviceRpcRequestActorMsg;
 import org.echoiot.server.service.transport.msg.TransportToDeviceActorMsgWrapper;
-import org.thingsboard.rule.engine.api.msg.DeviceAttributesEventNotificationMsg;
-import org.thingsboard.rule.engine.api.msg.DeviceEdgeUpdateMsg;
-import org.thingsboard.rule.engine.api.msg.DeviceNameOrTypeUpdateMsg;
-import org.echoiot.server.actors.ActorSystemContext;
-import org.echoiot.server.common.msg.timeout.DeviceActorServerSideRpcTimeoutMsg;
 
 @Slf4j
 public class DeviceActor extends ContextAwareActor {

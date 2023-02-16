@@ -6,6 +6,18 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.common.util.EchoiotExecutors;
+import org.echoiot.server.common.data.*;
+import org.echoiot.server.common.data.id.TenantId;
+import org.echoiot.server.common.data.page.PageData;
+import org.echoiot.server.common.data.page.PageLink;
+import org.echoiot.server.common.data.plugin.ComponentLifecycleEvent;
+import org.echoiot.server.common.data.queue.Queue;
+import org.echoiot.server.common.data.queue.*;
+import org.echoiot.server.common.data.security.Authority;
+import org.echoiot.server.common.data.tenant.profile.DefaultTenantProfileConfiguration;
+import org.echoiot.server.common.data.tenant.profile.TenantProfileData;
+import org.echoiot.server.common.data.tenant.profile.TenantProfileQueueConfiguration;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -14,33 +26,8 @@ import org.mockito.ArgumentMatcher;
 import org.mockito.Mockito;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.ResultActions;
-import org.thingsboard.common.util.ThingsBoardExecutors;
-import org.echoiot.server.common.data.DataConstants;
-import org.echoiot.server.common.data.StringUtils;
-import org.echoiot.server.common.data.Tenant;
-import org.echoiot.server.common.data.TenantInfo;
-import org.echoiot.server.common.data.TenantProfile;
-import org.echoiot.server.common.data.User;
-import org.echoiot.server.common.data.id.TenantId;
-import org.echoiot.server.common.data.page.PageData;
-import org.echoiot.server.common.data.page.PageLink;
-import org.echoiot.server.common.data.plugin.ComponentLifecycleEvent;
-import org.echoiot.server.common.data.queue.ProcessingStrategy;
-import org.echoiot.server.common.data.queue.ProcessingStrategyType;
-import org.echoiot.server.common.data.queue.Queue;
-import org.echoiot.server.common.data.queue.SubmitStrategy;
-import org.echoiot.server.common.data.queue.SubmitStrategyType;
-import org.echoiot.server.common.data.security.Authority;
-import org.echoiot.server.common.data.tenant.profile.DefaultTenantProfileConfiguration;
-import org.echoiot.server.common.data.tenant.profile.TenantProfileData;
-import org.echoiot.server.common.data.tenant.profile.TenantProfileQueueConfiguration;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -65,7 +52,7 @@ public abstract class BaseTenantControllerTest extends AbstractControllerTest {
 
     @Before
     public void setUp() throws Exception {
-        executor = MoreExecutors.listeningDecorator(ThingsBoardExecutors.newWorkStealingPool(8, getClass()));
+        executor = MoreExecutors.listeningDecorator(EchoiotExecutors.newWorkStealingPool(8, getClass()));
     }
 
     @After
@@ -376,7 +363,7 @@ public abstract class BaseTenantControllerTest extends AbstractControllerTest {
     @Test
     public void testUpdateQueueConfigForIsolatedTenant() throws Exception {
         Comparator<Queue> queueComparator = Comparator.comparing(Queue::getName);
-        final String username = "isolatedtenant@thingsboard.org";
+        final String username = "isolatedtenant@echoiot.org";
         final String password = "123456";
         loginSysAdmin();
 

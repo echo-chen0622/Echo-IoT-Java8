@@ -2,9 +2,15 @@ package org.echoiot.server.service.queue.processing;
 
 import com.google.protobuf.ByteString;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.common.util.EchoiotThreadFactory;
+import org.echoiot.server.actors.ActorSystemContext;
 import org.echoiot.server.common.data.EntityType;
+import org.echoiot.server.common.data.id.*;
 import org.echoiot.server.common.data.plugin.ComponentLifecycleEvent;
 import org.echoiot.server.common.msg.TbActorMsg;
+import org.echoiot.server.common.msg.plugin.ComponentLifecycleMsg;
+import org.echoiot.server.common.msg.queue.ServiceType;
+import org.echoiot.server.common.msg.queue.TbCallback;
 import org.echoiot.server.dao.tenant.TbTenantProfileCache;
 import org.echoiot.server.queue.TbQueueConsumer;
 import org.echoiot.server.queue.common.TbProtoQueueMsg;
@@ -13,36 +19,19 @@ import org.echoiot.server.queue.discovery.TbApplicationEventListener;
 import org.echoiot.server.queue.discovery.event.PartitionChangeEvent;
 import org.echoiot.server.queue.util.AfterStartUp;
 import org.echoiot.server.queue.util.DataDecodingEncodingService;
-import org.echoiot.server.service.security.auth.jwt.settings.JwtSettingsService;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.thingsboard.common.util.ThingsBoardThreadFactory;
-import org.echoiot.server.actors.ActorSystemContext;
-import org.echoiot.server.common.data.id.AssetId;
-import org.echoiot.server.common.data.id.AssetProfileId;
-import org.echoiot.server.common.data.id.CustomerId;
-import org.echoiot.server.common.data.id.DeviceId;
-import org.echoiot.server.common.data.id.DeviceProfileId;
-import org.echoiot.server.common.data.id.TenantId;
-import org.echoiot.server.common.data.id.TenantProfileId;
-import org.echoiot.server.common.msg.plugin.ComponentLifecycleMsg;
-import org.echoiot.server.common.msg.queue.ServiceType;
-import org.echoiot.server.common.msg.queue.TbCallback;
 import org.echoiot.server.service.apiusage.TbApiUsageStateService;
 import org.echoiot.server.service.profile.TbAssetProfileCache;
 import org.echoiot.server.service.profile.TbDeviceProfileCache;
 import org.echoiot.server.service.queue.TbPackCallback;
 import org.echoiot.server.service.queue.TbPackProcessingContext;
+import org.echoiot.server.service.security.auth.jwt.settings.JwtSettingsService;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 
 import javax.annotation.PreDestroy;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -81,8 +70,8 @@ public abstract class AbstractConsumerService<N extends com.google.protobuf.Gene
     }
 
     public void init(String mainConsumerThreadName, String nfConsumerThreadName) {
-        this.consumersExecutor = Executors.newCachedThreadPool(ThingsBoardThreadFactory.forName(mainConsumerThreadName));
-        this.notificationsConsumerExecutor = Executors.newSingleThreadExecutor(ThingsBoardThreadFactory.forName(nfConsumerThreadName));
+        this.consumersExecutor = Executors.newCachedThreadPool(EchoiotThreadFactory.forName(mainConsumerThreadName));
+        this.notificationsConsumerExecutor = Executors.newSingleThreadExecutor(EchoiotThreadFactory.forName(nfConsumerThreadName));
     }
 
     @AfterStartUp(order = AfterStartUp.REGULAR_SERVICE)

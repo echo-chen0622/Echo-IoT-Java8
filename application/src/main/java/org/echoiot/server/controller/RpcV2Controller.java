@@ -7,7 +7,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.DataConstants;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.data.id.RpcId;
 import org.echoiot.server.common.data.id.TenantId;
@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 import org.springframework.web.server.ResponseStatusException;
-import org.thingsboard.common.util.JacksonUtil;
+import org.echoiot.common.util.JacksonUtil;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
@@ -97,7 +97,7 @@ public class RpcV2Controller extends AbstractRpcController {
             @ApiParam(value = ControllerConstants.DEVICE_ID_PARAM_DESCRIPTION)
             @PathVariable("deviceId") String deviceIdStr,
             @ApiParam(value = "A JSON value representing the RPC request.")
-            @RequestBody String requestBody) throws ThingsboardException {
+            @RequestBody String requestBody) throws EchoiotException {
         return handleDeviceRPCRequest(true, new DeviceId(UUID.fromString(deviceIdStr)), requestBody, HttpStatus.GATEWAY_TIMEOUT, HttpStatus.GATEWAY_TIMEOUT);
     }
 
@@ -115,7 +115,7 @@ public class RpcV2Controller extends AbstractRpcController {
             @ApiParam(value = ControllerConstants.DEVICE_ID_PARAM_DESCRIPTION)
             @PathVariable(ControllerConstants.DEVICE_ID) String deviceIdStr,
             @ApiParam(value = "A JSON value representing the RPC request.")
-            @RequestBody String requestBody) throws ThingsboardException {
+            @RequestBody String requestBody) throws EchoiotException {
         return handleDeviceRPCRequest(false, new DeviceId(UUID.fromString(deviceIdStr)), requestBody, HttpStatus.GATEWAY_TIMEOUT, HttpStatus.GATEWAY_TIMEOUT);
     }
 
@@ -125,7 +125,7 @@ public class RpcV2Controller extends AbstractRpcController {
     @ResponseBody
     public Rpc getPersistedRpc(
             @ApiParam(value = ControllerConstants.RPC_ID_PARAM_DESCRIPTION, required = true)
-            @PathVariable(ControllerConstants.RPC_ID) String strRpc) throws ThingsboardException {
+            @PathVariable(ControllerConstants.RPC_ID) String strRpc) throws EchoiotException {
         checkParameter("RpcId", strRpc);
         try {
             RpcId rpcId = new RpcId(UUID.fromString(strRpc));
@@ -153,7 +153,7 @@ public class RpcV2Controller extends AbstractRpcController {
             @ApiParam(value = ControllerConstants.SORT_PROPERTY_DESCRIPTION, allowableValues = ControllerConstants.RPC_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
             @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
-            @RequestParam(required = false) String sortOrder) throws ThingsboardException {
+            @RequestParam(required = false) String sortOrder) throws EchoiotException {
         checkParameter("DeviceId", strDeviceId);
         try {
             if (rpcStatus != null && rpcStatus.equals(RpcStatus.DELETED)) {
@@ -200,7 +200,7 @@ public class RpcV2Controller extends AbstractRpcController {
     @ResponseBody
     public void deleteRpc(
             @ApiParam(value = ControllerConstants.RPC_ID_PARAM_DESCRIPTION, required = true)
-            @PathVariable(ControllerConstants.RPC_ID) String strRpc) throws ThingsboardException {
+            @PathVariable(ControllerConstants.RPC_ID) String strRpc) throws EchoiotException {
         checkParameter("RpcId", strRpc);
         try {
             RpcId rpcId = new RpcId(UUID.fromString(strRpc));

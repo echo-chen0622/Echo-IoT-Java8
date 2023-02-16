@@ -7,7 +7,7 @@ import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.User;
 import org.echoiot.server.common.data.audit.ActionType;
 import org.echoiot.server.common.data.edge.Edge;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.id.EdgeId;
 import org.echoiot.server.common.data.id.RuleChainId;
@@ -15,9 +15,9 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.rule.RuleChain;
 import org.echoiot.server.dao.rule.RuleChainService;
 import org.echoiot.server.queue.util.TbCoreComponent;
-import org.springframework.stereotype.Service;
 import org.echoiot.server.service.edge.EdgeNotificationService;
 import org.echoiot.server.service.entitiy.AbstractTbEntityService;
+import org.springframework.stereotype.Service;
 
 @AllArgsConstructor
 @TbCoreComponent
@@ -69,7 +69,7 @@ public class DefaultTbEdgeService extends AbstractTbEntityService implements TbE
     }
 
     @Override
-    public Edge assignEdgeToCustomer(TenantId tenantId, EdgeId edgeId, Customer customer, User user) throws ThingsboardException {
+    public Edge assignEdgeToCustomer(TenantId tenantId, EdgeId edgeId, Customer customer, User user) throws EchoiotException {
         ActionType actionType = ActionType.ASSIGNED_TO_CUSTOMER;
         CustomerId customerId = customer.getId();
         try {
@@ -86,7 +86,7 @@ public class DefaultTbEdgeService extends AbstractTbEntityService implements TbE
     }
 
     @Override
-    public Edge unassignEdgeFromCustomer(Edge edge, Customer customer, User user) throws ThingsboardException {
+    public Edge unassignEdgeFromCustomer(Edge edge, Customer customer, User user) throws EchoiotException {
         ActionType actionType = ActionType.UNASSIGNED_FROM_CUSTOMER;
         TenantId tenantId = edge.getTenantId();
         EdgeId edgeId = edge.getId();
@@ -104,7 +104,7 @@ public class DefaultTbEdgeService extends AbstractTbEntityService implements TbE
     }
 
     @Override
-    public Edge assignEdgeToPublicCustomer(TenantId tenantId, EdgeId edgeId, User user) throws ThingsboardException {
+    public Edge assignEdgeToPublicCustomer(TenantId tenantId, EdgeId edgeId, User user) throws EchoiotException {
         Customer publicCustomer = customerService.findOrCreatePublicCustomer(tenantId);
         CustomerId customerId = publicCustomer.getId();
         try {

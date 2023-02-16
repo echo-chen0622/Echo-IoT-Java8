@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -17,9 +17,9 @@
 // tslint:disable-next-line:no-reference
 /// <reference path="../../../../../../../src/typings/jquery.flot.typings.d.ts" />
 
-import { DataKey, Datasource, DatasourceData, FormattedData, JsonSettingsSchema } from '@shared/models/widget.models';
-import { DataKeyType } from '@shared/models/telemetry/telemetry.models';
-import { ComparisonDuration } from '@shared/models/time/time.models';
+import {DataKey, Datasource, DatasourceData, FormattedData} from '@shared/models/widget.models';
+import {DataKeyType} from '@shared/models/telemetry/telemetry.models';
+import {ComparisonDuration} from '@shared/models/time/time.models';
 
 export declare type ChartType = 'line' | 'pie' | 'bar' | 'state' | 'graph';
 

@@ -13,7 +13,7 @@ import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.common.data.rule.RuleChain;
 import org.echoiot.server.dao.rule.RuleChainService;
-import org.thingsboard.common.util.JacksonUtil;
+import org.echoiot.common.util.JacksonUtil;
 
 import static org.echoiot.server.service.edge.DefaultEdgeNotificationService.EDGE_IS_ROOT_BODY_KEY;
 

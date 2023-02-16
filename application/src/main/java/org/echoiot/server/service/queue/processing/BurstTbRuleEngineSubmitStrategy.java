@@ -1,8 +1,8 @@
 package org.echoiot.server.service.queue.processing;
 
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.queue.common.TbProtoQueueMsg;
-import org.thingsboard.server.gen.transport.TransportProtos;
 
 import java.util.UUID;
 import java.util.function.BiConsumer;

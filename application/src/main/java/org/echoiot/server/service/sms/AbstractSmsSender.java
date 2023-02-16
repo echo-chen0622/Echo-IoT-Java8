@@ -1,8 +1,8 @@
 package org.echoiot.server.service.sms;
 
 import lombok.extern.slf4j.Slf4j;
-import org.thingsboard.rule.engine.api.sms.SmsSender;
-import org.thingsboard.rule.engine.api.sms.exception.SmsParseException;
+import org.echoiot.rule.engine.api.sms.SmsSender;
+import org.echoiot.rule.engine.api.sms.exception.SmsParseException;
 
 import java.util.regex.Pattern;
 

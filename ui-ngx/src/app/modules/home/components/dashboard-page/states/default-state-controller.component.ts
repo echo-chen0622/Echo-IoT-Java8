@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,19 +14,19 @@
 /// limitations under the License.
 ///
 
-import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
-import { StateObject, StateParams } from '@core/api/widget-api.models';
-import { ActivatedRoute, Router } from '@angular/router';
-import { DashboardState } from '@shared/models/dashboard.models';
-import { StateControllerState } from './state-controller.models';
-import { StateControllerComponent } from './state-controller.component';
-import { StatesControllerService } from '@home/components/dashboard-page/states/states-controller.service';
-import { EntityId } from '@app/shared/models/id/entity-id';
-import { UtilsService } from '@core/services/utils.service';
-import { base64toObj, objToBase64 } from '@app/core/utils';
-import { DashboardUtilsService } from '@core/services/dashboard-utils.service';
-import { EntityService } from '@core/http/entity.service';
-import { MobileService } from '@core/services/mobile.service';
+import {Component, NgZone, OnDestroy, OnInit} from '@angular/core';
+import {StateObject, StateParams} from '@core/api/widget-api.models';
+import {ActivatedRoute, Router} from '@angular/router';
+import {DashboardState} from '@shared/models/dashboard.models';
+import {StateControllerState} from './state-controller.models';
+import {StateControllerComponent} from './state-controller.component';
+import {StatesControllerService} from '@home/components/dashboard-page/states/states-controller.service';
+import {EntityId} from '@app/shared/models/id/entity-id';
+import {UtilsService} from '@core/services/utils.service';
+import {base64toObj, objToBase64} from '@app/core/utils';
+import {DashboardUtilsService} from '@core/services/dashboard-utils.service';
+import {EntityService} from '@core/http/entity.service';
+import {MobileService} from '@core/services/mobile.service';
 
 @Component({
   selector: 'tb-default-state-controller',

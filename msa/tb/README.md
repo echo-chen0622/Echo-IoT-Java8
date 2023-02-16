@@ -1,10 +1,10 @@
-# ThingsBoard single docker images 
+# Echoiot single docker images 
 
-This project provides the build for the ThingsBoard single docker images.
+This project provides the build for the Echoiot single docker images.
 
-* `thingsboard/tb` - single instance of ThingsBoard with embedded HSQLDB database.
-* `thingsboard/tb-postgres` - single instance of ThingsBoard with PostgreSQL database.
-* `thingsboard/tb-cassandra` - single instance of ThingsBoard with Hybrid PostgreSQL (entities) and Cassandra (timeseries) database.
+* `echoiot/tb` - single instance of Echoiot with embedded HSQLDB database.
+* `echoiot/tb-postgres` - single instance of Echoiot with PostgreSQL database.
+* `echoiot/tb-cassandra` - single instance of Echoiot with Hybrid PostgreSQL (entities) and Cassandra (timeseries) database.
 
 ## Running
 
@@ -17,24 +17,24 @@ $ mkdir -p ~/.mytb-data && sudo chown -R 799:799 ~/.mytb-data
 
 **NOTE**: replace directory `~/.mytb-data` with directory you're planning to use on container creation. 
 
-In this example `thingsboard/tb` image will be used. You can choose any other images with different databases (see above).
+In this example `echoiot/tb` image will be used. You can choose any other images with different databases (see above).
 Execute the following command to run this docker directly:
 
 ` 
-$ docker run -it -p 9090:9090 -p 1883:1883 -p 5683:5683/udp  -p 5685:5685/udp -v ~/.mytb-data:/data --name mytb thingsboard/tb
+$ docker run -it -p 9090:9090 -p 1883:1883 -p 5683:5683/udp  -p 5685:5685/udp -v ~/.mytb-data:/data --name mytb echoiot/tb
 ` 
 
 Where: 
     
 - `docker run`              - run this container
-- `-it`                     - attach a terminal session with current ThingsBoard process output
+- `-it`                     - attach a terminal session with current Echoiot process output
 - `-p 9090:9090`            - connect local port 9090 to exposed internal HTTP port 9090
 - `-p 1883:1883`            - connect local port 1883 to exposed internal MQTT port 1883    
 - `-p 5683:5683`            - connect local port 5683 to exposed internal COAP port 5683 
 - `-p 5685:5685`            - connect local port 5685 to exposed internal COAP port 5685 (lwm2m) 
-- `-v ~/.mytb-data:/data`   - mounts the host's dir `~/.mytb-data` to ThingsBoard DataBase data directory
+- `-v ~/.mytb-data:/data`   - mounts the host's dir `~/.mytb-data` to Echoiot DataBase data directory
 - `--name mytb`             - friendly local name of this machine
-- `thingsboard/tb`          - docker image, can be also `thingsboard/tb-postgres` or `thingsboard/tb-cassandra`
+- `echoiot/tb`          - docker image, can be also `echoiot/tb-postgres` or `echoiot/tb-cassandra`
 
 > **NOTE**: **Windows** users should use docker managed volume instead of host's dir. Create docker volume (for ex. `mytb-data`) before executing `docker run` command:
 > ```
@@ -49,18 +49,18 @@ Where:
 > $ VBoxManage controlvm "default" natpf1 "tcp-port5683,tcp,,5685,,5685"
 > ```
 
-After executing `docker run` command you can open `http://{your-host-ip}:9090` in you browser (for ex. `http://localhost:9090`). You should see ThingsBoard login page.
+After executing `docker run` command you can open `http://{your-host-ip}:9090` in you browser (for ex. `http://localhost:9090`). You should see Echoiot login page.
 Use the following default credentials:
 
-- **System Administrator**: sysadmin@thingsboard.org / sysadmin
-- **Tenant Administrator**: tenant@thingsboard.org / tenant
-- **Customer User**: customer@thingsboard.org / customer
+- **System Administrator**: sysadmin@echoiot.org / sysadmin
+- **Tenant Administrator**: tenant@echoiot.org / tenant
+- **Customer User**: customer@echoiot.org / customer
     
 You can always change passwords for each account in account profile page.
 
 You can detach from session terminal with `Ctrl-p` `Ctrl-q` - the container will keep running in the background.
 
-To reattach to the terminal (to see ThingsBoard logs) run:
+To reattach to the terminal (to see Echoiot logs) run:
 
 ```
 $ docker attach mytb
@@ -83,12 +83,12 @@ $ docker start mytb
 In order to update to the latest image, execute the following commands:
 
 ```
-$ docker pull thingsboard/tb
+$ docker pull echoiot/tb
 $ docker stop mytb
-$ docker run -it -v ~/.mytb-data:/data --rm thingsboard/tb upgrade-tb.sh
+$ docker run -it -v ~/.mytb-data:/data --rm echoiot/tb upgrade-tb.sh
 $ docker start mytb
 ```
 
-**NOTE**: if you use different database change image name in all commands from `thingsboard/tb` to `thingsboard/tb-postgres` or `thingsboard/tb-cassandra` correspondingly.
+**NOTE**: if you use different database change image name in all commands from `echoiot/tb` to `echoiot/tb-postgres` or `echoiot/tb-cassandra` correspondingly.
  
 **NOTE**: replace host's directory `~/.mytb-data` with directory used during container creation. 

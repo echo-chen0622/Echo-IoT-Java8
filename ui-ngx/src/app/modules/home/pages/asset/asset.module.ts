@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,15 +14,15 @@
 /// limitations under the License.
 ///
 
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { SharedModule } from '@shared/shared.module';
-import { HomeDialogsModule } from '../../dialogs/home-dialogs.module';
-import { AssetComponent } from './asset.component';
-import { AssetTableHeaderComponent } from './asset-table-header.component';
-import { AssetRoutingModule } from './asset-routing.module';
-import { HomeComponentsModule } from '@modules/home/components/home-components.module';
-import { AssetTabsComponent } from '@home/pages/asset/asset-tabs.component';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {SharedModule} from '@shared/shared.module';
+import {HomeDialogsModule} from '../../dialogs/home-dialogs.module';
+import {AssetComponent} from './asset.component';
+import {AssetTableHeaderComponent} from './asset-table-header.component';
+import {AssetRoutingModule} from './asset-routing.module';
+import {HomeComponentsModule} from '@modules/home/components/home-components.module';
+import {AssetTabsComponent} from '@home/pages/asset/asset-tabs.component';
 
 @NgModule({
   declarations: [

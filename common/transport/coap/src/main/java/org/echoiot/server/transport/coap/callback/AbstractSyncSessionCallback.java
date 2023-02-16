@@ -4,13 +4,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.transport.SessionMsgListener;
-import org.eclipse.californium.core.coap.Request;
-import org.eclipse.californium.core.coap.Response;
-import org.eclipse.californium.core.server.resources.CoapExchange;
-import org.thingsboard.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.transport.coap.client.TbCoapClientState;
 import org.echoiot.server.transport.coap.client.TbCoapContentFormatUtil;
 import org.echoiot.server.transport.coap.client.TbCoapObservationState;
+import org.eclipse.californium.core.coap.Request;
+import org.eclipse.californium.core.coap.Response;
+import org.eclipse.californium.core.server.resources.CoapExchange;
 
 import java.util.UUID;
 

@@ -1,11 +1,11 @@
 package org.echoiot.server.service.telemetry;
 
 import com.google.common.util.concurrent.FutureCallback;
+import org.echoiot.rule.engine.api.RuleEngineTelemetryService;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.kv.AttributeKvEntry;
 import org.echoiot.server.common.data.kv.TsKvEntry;
-import org.thingsboard.rule.engine.api.RuleEngineTelemetryService;
 
 import java.util.List;
 

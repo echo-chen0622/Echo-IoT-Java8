@@ -3,8 +3,8 @@ package org.echoiot.server.service.edge.rpc.constructor;
 import org.echoiot.server.common.data.edge.Edge;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.springframework.stereotype.Component;
-import org.thingsboard.common.util.JacksonUtil;
-import org.thingsboard.server.gen.edge.v1.EdgeConfiguration;
+import org.echoiot.common.util.JacksonUtil;
+import org.echoiot.server.gen.edge.v1.EdgeConfiguration;
 
 @Component
 @TbCoreComponent

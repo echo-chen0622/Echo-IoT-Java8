@@ -1,21 +1,12 @@
 package org.echoiot.server.service.sync.vc;
 
 import com.google.common.collect.Iterables;
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.common.util.concurrent.MoreExecutors;
+import com.google.common.util.concurrent.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
-import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Service;
-import org.thingsboard.common.util.CollectionsUtil;
-import org.thingsboard.common.util.ThingsBoardThreadFactory;
+import org.echoiot.common.util.CollectionsUtil;
+import org.echoiot.common.util.EchoiotThreadFactory;
 import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.id.EntityId;
@@ -27,28 +18,8 @@ import org.echoiot.server.common.data.sync.vc.VersionCreationResult;
 import org.echoiot.server.common.data.sync.vc.VersionedEntityInfo;
 import org.echoiot.server.common.msg.queue.ServiceType;
 import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
-import org.thingsboard.server.gen.transport.TransportProtos;
-import org.thingsboard.server.gen.transport.TransportProtos.AddMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.BranchInfoProto;
-import org.thingsboard.server.gen.transport.TransportProtos.CommitRequestMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.CommitResponseMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.DeleteMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.EntitiesContentRequestMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.EntitiesContentResponseMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.EntityContentRequestMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.EntityContentResponseMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.EntityVersionProto;
-import org.thingsboard.server.gen.transport.TransportProtos.ListBranchesRequestMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.ListBranchesResponseMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.ListEntitiesRequestMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.ListEntitiesResponseMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.ListVersionsRequestMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.ListVersionsResponseMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.PrepareMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.ToCoreNotificationMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.ToVersionControlServiceMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.VersionControlResponseMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.VersionedEntityInfoProto;
+import org.echoiot.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.transport.TransportProtos.*;
 import org.echoiot.server.queue.TbQueueConsumer;
 import org.echoiot.server.queue.TbQueueProducer;
 import org.echoiot.server.queue.common.TbProtoQueueMsg;
@@ -60,22 +31,17 @@ import org.echoiot.server.queue.provider.TbQueueProducerProvider;
 import org.echoiot.server.queue.provider.TbVersionControlQueueFactory;
 import org.echoiot.server.queue.util.DataDecodingEncodingService;
 import org.echoiot.server.queue.util.TbVersionControlComponent;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
+import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.*;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -120,8 +86,8 @@ public class DefaultClusterVersionControlService extends TbApplicationEventListe
 
     @PostConstruct
     public void init() {
-        consumerExecutor = Executors.newSingleThreadExecutor(ThingsBoardThreadFactory.forName("vc-consumer"));
-        var threadFactory = ThingsBoardThreadFactory.forName("vc-io-thread");
+        consumerExecutor = Executors.newSingleThreadExecutor(EchoiotThreadFactory.forName("vc-consumer"));
+        var threadFactory = EchoiotThreadFactory.forName("vc-io-thread");
         for (int i = 0; i < ioPoolSize; i++) {
             ioThreads.add(MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor(threadFactory)));
         }

@@ -9,7 +9,7 @@
     <artifactId>application</artifactId>
     <packaging>jar</packaging>
 
-    <name>ThingsBoard Server Application</name>
+    <name>Echoiot Server Application</name>
     <description>Open-source IoT Platform - Device management, data collection, processing and visualization
     </description>
 
@@ -23,8 +23,8 @@
         <echo.name>echoiot</echo.name>
         <echo.win.dist>${project.build.directory}/windows</echo.win.dist>
         <echo.copyInstallScripts>true</echo.copyInstallScripts>
-        <echo.implementationTitle>ThingsBoard</echo.implementationTitle>
-        <echo.mainClass>org.echoiot.server.server.ThingsboardServerApplication</echo.mainClass>
+        <echo.implementationTitle>Echoiot</echo.implementationTitle>
+        <echo.mainClass>org.echoiot.server.server.EchoiotServerApplication</echo.mainClass>
     </properties>
 
     <dependencies>
@@ -248,7 +248,7 @@
             <artifactId>opensmpp-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.echoiot</groupId>
+            <groupId>org.thingsboard</groupId>
             <artifactId>springfox-boot-starter</artifactId>
         </dependency>
         <dependency>
@@ -396,7 +396,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
             <plugin>
-                <groupId>org.echoiot</groupId>
+                <groupId>org.thingsboard</groupId>
                 <artifactId>gradle-maven-plugin</artifactId>
             </plugin>
             <plugin>

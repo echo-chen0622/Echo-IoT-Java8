@@ -23,15 +23,15 @@
         </encoder>
     </appender>
 
-    <logger name="org.thingsboard.server.install" level="INFO">
+    <logger name="org.echoiot.server.install" level="INFO">
         <appender-ref ref="STDOUT" />
     </logger>
 
-    <logger name="org.thingsboard.server.service.install" level="INFO">
+    <logger name="org.echoiot.server.service.install" level="INFO">
         <appender-ref ref="STDOUT" />
     </logger>
 
-    <logger name="org.echoiot.server.ThingsboardInstallApplication" level="ERROR">
+    <logger name="org.echoiot.server.EchoiotInstallApplication" level="ERROR">
         <appender-ref ref="STDOUT" />
     </logger>
 
@@ -39,11 +39,11 @@
         <appender-ref ref="STDOUT" />
     </logger>
 
-    <logger name="org.thingsboard.server.config.jwt" level="INFO">
+    <logger name="org.echoiot.server.config.jwt" level="INFO">
         <appender-ref ref="STDOUT" />
     </logger>
 
-    <logger name="org.thingsboard.server" level="INFO" />
+    <logger name="org.echoiot.server" level="INFO" />
 
     <root level="INFO">
         <appender-ref ref="fileLogAppender"/>

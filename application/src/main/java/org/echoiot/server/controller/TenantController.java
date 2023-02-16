@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.Tenant;
 import org.echoiot.server.common.data.TenantInfo;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
@@ -62,7 +62,7 @@ public class TenantController extends BaseController {
     @ResponseBody
     public Tenant getTenantById(
             @ApiParam(value = TENANT_ID_PARAM_DESCRIPTION)
-            @PathVariable(TENANT_ID) String strTenantId) throws ThingsboardException {
+            @PathVariable(TENANT_ID) String strTenantId) throws EchoiotException {
         checkParameter(TENANT_ID, strTenantId);
         try {
             TenantId tenantId = TenantId.fromUUID(toUUID(strTenantId));
@@ -84,7 +84,7 @@ public class TenantController extends BaseController {
     @ResponseBody
     public TenantInfo getTenantInfoById(
             @ApiParam(value = TENANT_ID_PARAM_DESCRIPTION)
-            @PathVariable(TENANT_ID) String strTenantId) throws ThingsboardException {
+            @PathVariable(TENANT_ID) String strTenantId) throws EchoiotException {
         checkParameter(TENANT_ID, strTenantId);
         try {
             TenantId tenantId = TenantId.fromUUID(toUUID(strTenantId));
@@ -138,7 +138,7 @@ public class TenantController extends BaseController {
             @ApiParam(value = SORT_PROPERTY_DESCRIPTION, allowableValues = TENANT_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
             @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
-            @RequestParam(required = false) String sortOrder) throws ThingsboardException {
+            @RequestParam(required = false) String sortOrder) throws EchoiotException {
         try {
             PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
             return checkNotNull(tenantService.findTenants(pageLink));
@@ -163,7 +163,7 @@ public class TenantController extends BaseController {
             @RequestParam(required = false) String sortProperty,
             @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortOrder
-    ) throws ThingsboardException {
+    ) throws EchoiotException {
         try {
             PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
             return checkNotNull(tenantService.findTenantInfos(pageLink));

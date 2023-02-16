@@ -27,8 +27,8 @@ import org.echoiot.server.queue.TbQueueProducer;
 import org.echoiot.server.queue.common.TbProtoQueueMsg;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.springframework.stereotype.Component;
-import org.thingsboard.common.util.JacksonUtil;
-import org.thingsboard.rule.engine.api.msg.DeviceAttributesEventNotificationMsg;
+import org.echoiot.common.util.JacksonUtil;
+import org.echoiot.rule.engine.api.msg.DeviceAttributesEventNotificationMsg;
 import org.echoiot.server.common.data.DataConstants;
 import org.echoiot.server.common.data.Device;
 import org.echoiot.server.common.data.DeviceProfile;
@@ -48,10 +48,10 @@ import org.echoiot.server.common.data.id.UserId;
 import org.echoiot.server.common.msg.queue.ServiceType;
 import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
 import org.echoiot.server.common.msg.session.SessionMsgType;
-import org.thingsboard.server.gen.edge.v1.AttributeDeleteMsg;
-import org.thingsboard.server.gen.edge.v1.DownlinkMsg;
-import org.thingsboard.server.gen.edge.v1.EntityDataProto;
-import org.thingsboard.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.edge.v1.AttributeDeleteMsg;
+import org.echoiot.server.gen.edge.v1.DownlinkMsg;
+import org.echoiot.server.gen.edge.v1.EntityDataProto;
+import org.echoiot.server.gen.transport.TransportProtos;
 
 import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
@@ -120,7 +120,7 @@ public class TelemetryEdgeProcessor extends BaseEdgeProcessor {
         TbMsgMetaData metaData = new TbMsgMetaData();
         CustomerId customerId = null;
         switch (entityId.getEntityType()) {
-            case EntityType.DEVICE:
+            case DEVICE:
                 Device device = deviceService.findDeviceById(tenantId, new DeviceId(entityId.getId()));
                 if (device != null) {
                     customerId = device.getCustomerId();
@@ -128,7 +128,7 @@ public class TelemetryEdgeProcessor extends BaseEdgeProcessor {
                     metaData.putValue("deviceType", device.getType());
                 }
                 break;
-            case EntityType.ASSET:
+            case ASSET:
                 Asset asset = assetService.findAssetById(tenantId, new AssetId(entityId.getId()));
                 if (asset != null) {
                     customerId = asset.getCustomerId();
@@ -136,7 +136,7 @@ public class TelemetryEdgeProcessor extends BaseEdgeProcessor {
                     metaData.putValue("assetType", asset.getType());
                 }
                 break;
-            case EntityType.ENTITY_VIEW:
+            case ENTITY_VIEW:
                 EntityView entityView = entityViewService.findEntityViewById(tenantId, new EntityViewId(entityId.getId()));
                 if (entityView != null) {
                     customerId = entityView.getCustomerId();
@@ -144,7 +144,7 @@ public class TelemetryEdgeProcessor extends BaseEdgeProcessor {
                     metaData.putValue("entityViewType", entityView.getType());
                 }
                 break;
-            case EntityType.EDGE:
+            case EDGE:
                 Edge edge = edgeService.findEdgeById(tenantId, new EdgeId(entityId.getId()));
                 if (edge != null) {
                     customerId = edge.getCustomerId();

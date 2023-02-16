@@ -1,6 +1,13 @@
 package org.echoiot.server.actors.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.common.util.EchoiotExecutors;
+import org.echoiot.common.util.EchoiotThreadFactory;
+import org.echoiot.server.actors.*;
+import org.echoiot.server.actors.app.AppActor;
+import org.echoiot.server.actors.app.AppInitMsg;
+import org.echoiot.server.actors.stats.StatsActor;
+import org.echoiot.server.common.msg.queue.PartitionChangeMsg;
 import org.echoiot.server.queue.discovery.TbApplicationEventListener;
 import org.echoiot.server.queue.discovery.event.PartitionChangeEvent;
 import org.echoiot.server.queue.util.AfterStartUp;
@@ -8,17 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.stereotype.Service;
-import org.thingsboard.common.util.ThingsBoardExecutors;
-import org.thingsboard.common.util.ThingsBoardThreadFactory;
-import org.echoiot.server.actors.ActorSystemContext;
-import org.echoiot.server.actors.DefaultTbActorSystem;
-import org.echoiot.server.actors.TbActorRef;
-import org.echoiot.server.actors.TbActorSystem;
-import org.echoiot.server.actors.TbActorSystemSettings;
-import org.echoiot.server.actors.app.AppActor;
-import org.echoiot.server.actors.app.AppInitMsg;
-import org.echoiot.server.actors.stats.StatsActor;
-import org.echoiot.server.common.msg.queue.PartitionChangeMsg;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -91,9 +87,9 @@ public class DefaultActorService extends TbApplicationEventListener<PartitionCha
             poolSize = Math.max(1, cores / 2);
         }
         if (poolSize == 1) {
-            return Executors.newSingleThreadExecutor(ThingsBoardThreadFactory.forName(dispatcherName));
+            return Executors.newSingleThreadExecutor(EchoiotThreadFactory.forName(dispatcherName));
         } else {
-            return ThingsBoardExecutors.newWorkStealingPool(poolSize, dispatcherName);
+            return EchoiotExecutors.newWorkStealingPool(poolSize, dispatcherName);
         }
     }
 

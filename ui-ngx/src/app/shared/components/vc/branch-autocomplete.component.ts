@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -15,26 +15,26 @@
 ///
 
 import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  forwardRef,
-  Input,
-  NgZone,
-  OnInit,
-  ViewChild,
-  ViewEncapsulation
+    AfterViewInit,
+    Component,
+    ElementRef,
+    forwardRef,
+    Input,
+    NgZone,
+    OnInit,
+    ViewChild,
+    ViewEncapsulation
 } from '@angular/core';
-import { ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map, share, switchMap, tap } from 'rxjs/operators';
-import { Store } from '@ngrx/store';
-import { AppState } from '@app/core/core.state';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { BranchInfo } from '@shared/models/vc.models';
-import { EntitiesVersionControlService } from '@core/http/entities-version-control.service';
-import { isNotEmptyStr } from '@core/utils';
-import { MatAutocomplete, MatAutocompleteTrigger } from '@angular/material/autocomplete';
+import {ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {Observable} from 'rxjs';
+import {debounceTime, distinctUntilChanged, map, share, switchMap, tap} from 'rxjs/operators';
+import {Store} from '@ngrx/store';
+import {AppState} from '@app/core/core.state';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {BranchInfo} from '@shared/models/vc.models';
+import {EntitiesVersionControlService} from '@core/http/entities-version-control.service';
+import {isNotEmptyStr} from '@core/utils';
+import {MatAutocomplete, MatAutocompleteTrigger} from '@angular/material/autocomplete';
 
 @Component({
   selector: 'tb-branch-autocomplete',

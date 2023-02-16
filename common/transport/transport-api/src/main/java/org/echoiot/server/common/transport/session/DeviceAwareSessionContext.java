@@ -7,7 +7,7 @@ import org.echoiot.server.common.data.Device;
 import org.echoiot.server.common.data.DeviceProfile;
 import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.transport.auth.TransportDeviceInfo;
-import org.thingsboard.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.transport.TransportProtos;
 
 import java.util.Optional;
 import java.util.UUID;

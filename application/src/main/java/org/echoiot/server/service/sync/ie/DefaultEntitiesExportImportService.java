@@ -5,8 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.ExportableEntity;
 import org.echoiot.server.common.data.audit.ActionType;
-import org.echoiot.server.common.data.exception.ThingsboardErrorCode;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotErrorCode;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.relation.EntityRelation;
 import org.echoiot.server.common.data.sync.ThrowingRunnable;
@@ -15,6 +15,8 @@ import org.echoiot.server.common.data.sync.ie.EntityImportResult;
 import org.echoiot.server.dao.exception.DataValidationException;
 import org.echoiot.server.dao.relation.RelationService;
 import org.echoiot.server.queue.util.TbCoreComponent;
+import org.echoiot.server.service.apiusage.RateLimitService;
+import org.echoiot.server.service.entitiy.TbNotificationEntityService;
 import org.echoiot.server.service.sync.ie.exporting.EntityExportService;
 import org.echoiot.server.service.sync.ie.exporting.impl.BaseEntityExportService;
 import org.echoiot.server.service.sync.ie.exporting.impl.DefaultEntityExportService;
@@ -25,15 +27,8 @@ import org.echoiot.server.service.sync.vc.data.EntitiesExportCtx;
 import org.echoiot.server.service.sync.vc.data.EntitiesImportCtx;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.echoiot.server.service.apiusage.RateLimitService;
-import org.echoiot.server.service.entitiy.TbNotificationEntityService;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @TbCoreComponent
@@ -56,9 +51,9 @@ public class DefaultEntitiesExportImportService implements EntitiesExportImportS
 
 
     @Override
-    public <E extends ExportableEntity<I>, I extends EntityId> EntityExportData<E> exportEntity(EntitiesExportCtx<?> ctx, I entityId) throws ThingsboardException {
+    public <E extends ExportableEntity<I>, I extends EntityId> EntityExportData<E> exportEntity(EntitiesExportCtx<?> ctx, I entityId) throws EchoiotException {
         if (!rateLimitService.checkEntityExportLimit(ctx.getTenantId())) {
-            throw new ThingsboardException("Rate limit for entities export is exceeded", ThingsboardErrorCode.TOO_MANY_REQUESTS);
+            throw new EchoiotException("Rate limit for entities export is exceeded", EchoiotErrorCode.TOO_MANY_REQUESTS);
         }
 
         EntityType entityType = entityId.getEntityType();
@@ -68,9 +63,9 @@ public class DefaultEntitiesExportImportService implements EntitiesExportImportS
     }
 
     @Override
-    public <E extends ExportableEntity<I>, I extends EntityId> EntityImportResult<E> importEntity(EntitiesImportCtx ctx, EntityExportData<E> exportData) throws ThingsboardException {
+    public <E extends ExportableEntity<I>, I extends EntityId> EntityImportResult<E> importEntity(EntitiesImportCtx ctx, EntityExportData<E> exportData) throws EchoiotException {
         if (!rateLimitService.checkEntityImportLimit(ctx.getTenantId())) {
-            throw new ThingsboardException("Rate limit for entities import is exceeded", ThingsboardErrorCode.TOO_MANY_REQUESTS);
+            throw new EchoiotException("Rate limit for entities import is exceeded", EchoiotErrorCode.TOO_MANY_REQUESTS);
         }
         if (exportData.getEntity() == null || exportData.getEntity().getId() == null) {
             throw new DataValidationException("Invalid entity data");
@@ -88,7 +83,7 @@ public class DefaultEntitiesExportImportService implements EntitiesExportImportS
     }
 
     @Override
-    public void saveReferencesAndRelations(EntitiesImportCtx ctx) throws ThingsboardException {
+    public void saveReferencesAndRelations(EntitiesImportCtx ctx) throws EchoiotException {
         for (Map.Entry<EntityId, ThrowingRunnable> callbackEntry : ctx.getReferenceCallbacks().entrySet()) {
             EntityId externalId = callbackEntry.getKey();
             ThrowingRunnable saveReferencesCallback = callbackEntry.getValue();

@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -18,13 +18,13 @@ import * as tv from 'tv4';
 import ObjectPath from 'objectpath';
 import _ from 'lodash';
 import {
-  DefaultsFormOptions,
-  FormOption,
-  JsonFormData,
-  JsonSchemaData,
-  SchemaValidationResult
+    DefaultsFormOptions,
+    FormOption,
+    JsonFormData,
+    JsonSchemaData,
+    SchemaValidationResult
 } from './json-form.models';
-import { isDefined, isEqual, isString, isUndefined } from '@core/utils';
+import {isDefined, isEqual, isString, isUndefined} from '@core/utils';
 
 function validateBySchema(schema: any, value: any): SchemaValidationResult {
   return tv.validateResult(value, schema);

@@ -2,7 +2,7 @@ package org.echoiot.server.service.edge.rpc;
 
 import com.google.common.util.concurrent.SettableFuture;
 import lombok.Data;
-import org.thingsboard.server.gen.edge.v1.DownlinkMsg;
+import org.echoiot.server.gen.edge.v1.DownlinkMsg;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;

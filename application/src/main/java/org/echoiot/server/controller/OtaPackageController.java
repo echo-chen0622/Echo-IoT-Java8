@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.OtaPackage;
 import org.echoiot.server.common.data.OtaPackageInfo;
 import org.echoiot.server.common.data.SaveOtaPackageInfoRequest;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.DeviceProfileId;
 import org.echoiot.server.common.data.id.OtaPackageId;
 import org.echoiot.server.common.data.ota.ChecksumAlgorithm;
@@ -54,7 +54,7 @@ public class OtaPackageController extends BaseController {
     @RequestMapping(value = "/otaPackage/{otaPackageId}/download", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<org.springframework.core.io.Resource> downloadOtaPackage(@ApiParam(value = ControllerConstants.OTA_PACKAGE_ID_PARAM_DESCRIPTION)
-                                                                                   @PathVariable(OTA_PACKAGE_ID) String strOtaPackageId) throws ThingsboardException {
+                                                                                   @PathVariable(OTA_PACKAGE_ID) String strOtaPackageId) throws EchoiotException {
         checkParameter(OTA_PACKAGE_ID, strOtaPackageId);
         try {
             OtaPackageId otaPackageId = new OtaPackageId(toUUID(strOtaPackageId));
@@ -84,7 +84,7 @@ public class OtaPackageController extends BaseController {
     @RequestMapping(value = "/otaPackage/info/{otaPackageId}", method = RequestMethod.GET)
     @ResponseBody
     public OtaPackageInfo getOtaPackageInfoById(@ApiParam(value = ControllerConstants.OTA_PACKAGE_ID_PARAM_DESCRIPTION)
-                                                @PathVariable(OTA_PACKAGE_ID) String strOtaPackageId) throws ThingsboardException {
+                                                @PathVariable(OTA_PACKAGE_ID) String strOtaPackageId) throws EchoiotException {
         checkParameter(OTA_PACKAGE_ID, strOtaPackageId);
         try {
             OtaPackageId otaPackageId = new OtaPackageId(toUUID(strOtaPackageId));
@@ -102,7 +102,7 @@ public class OtaPackageController extends BaseController {
     @RequestMapping(value = "/otaPackage/{otaPackageId}", method = RequestMethod.GET)
     @ResponseBody
     public OtaPackage getOtaPackageById(@ApiParam(value = ControllerConstants.OTA_PACKAGE_ID_PARAM_DESCRIPTION)
-                                        @PathVariable(OTA_PACKAGE_ID) String strOtaPackageId) throws ThingsboardException {
+                                        @PathVariable(OTA_PACKAGE_ID) String strOtaPackageId) throws EchoiotException {
         checkParameter(OTA_PACKAGE_ID, strOtaPackageId);
         try {
             OtaPackageId otaPackageId = new OtaPackageId(toUUID(strOtaPackageId));
@@ -124,7 +124,7 @@ public class OtaPackageController extends BaseController {
     @RequestMapping(value = "/otaPackage", method = RequestMethod.POST)
     @ResponseBody
     public OtaPackageInfo saveOtaPackageInfo(@ApiParam(value = "A JSON value representing the OTA Package.")
-                                             @RequestBody SaveOtaPackageInfoRequest otaPackageInfo) throws ThingsboardException {
+                                             @RequestBody SaveOtaPackageInfoRequest otaPackageInfo) throws EchoiotException {
         otaPackageInfo.setTenantId(getTenantId());
         checkEntity(otaPackageInfo.getId(), otaPackageInfo, Resource.OTA_PACKAGE);
 
@@ -145,7 +145,7 @@ public class OtaPackageController extends BaseController {
                                              @ApiParam(value = "OTA Package checksum algorithm.", allowableValues = ControllerConstants.OTA_PACKAGE_CHECKSUM_ALGORITHM_ALLOWABLE_VALUES)
                                              @RequestParam(CHECKSUM_ALGORITHM) String checksumAlgorithmStr,
                                              @ApiParam(value = "OTA Package data.")
-                                             @RequestPart MultipartFile file) throws ThingsboardException, IOException {
+                                             @RequestPart MultipartFile file) throws EchoiotException, IOException {
         checkParameter(OTA_PACKAGE_ID, strOtaPackageId);
         checkParameter(CHECKSUM_ALGORITHM, checksumAlgorithmStr);
         OtaPackageId otaPackageId = new OtaPackageId(toUUID(strOtaPackageId));
@@ -172,7 +172,7 @@ public class OtaPackageController extends BaseController {
                                                    @ApiParam(value = ControllerConstants.SORT_PROPERTY_DESCRIPTION, allowableValues = ControllerConstants.OTA_PACKAGE_SORT_PROPERTY_ALLOWABLE_VALUES)
                                                    @RequestParam(required = false) String sortProperty,
                                                    @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
-                                                   @RequestParam(required = false) String sortOrder) throws ThingsboardException {
+                                                   @RequestParam(required = false) String sortOrder) throws EchoiotException {
         try {
             PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
             return checkNotNull(otaPackageService.findTenantOtaPackagesByTenantId(getTenantId(), pageLink));
@@ -201,7 +201,7 @@ public class OtaPackageController extends BaseController {
                                                    @ApiParam(value = ControllerConstants.SORT_PROPERTY_DESCRIPTION, allowableValues = ControllerConstants.OTA_PACKAGE_SORT_PROPERTY_ALLOWABLE_VALUES)
                                                    @RequestParam(required = false) String sortProperty,
                                                    @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
-                                                   @RequestParam(required = false) String sortOrder) throws ThingsboardException {
+                                                   @RequestParam(required = false) String sortOrder) throws EchoiotException {
         checkParameter("deviceProfileId", strDeviceProfileId);
         checkParameter("type", strType);
         try {
@@ -221,7 +221,7 @@ public class OtaPackageController extends BaseController {
     @RequestMapping(value = "/otaPackage/{otaPackageId}", method = RequestMethod.DELETE)
     @ResponseBody
     public void deleteOtaPackage(@ApiParam(value = ControllerConstants.OTA_PACKAGE_ID_PARAM_DESCRIPTION)
-                                 @PathVariable("otaPackageId") String strOtaPackageId) throws ThingsboardException {
+                                 @PathVariable("otaPackageId") String strOtaPackageId) throws EchoiotException {
         checkParameter(OTA_PACKAGE_ID, strOtaPackageId);
         OtaPackageId otaPackageId = new OtaPackageId(toUUID(strOtaPackageId));
         OtaPackageInfo otaPackageInfo = checkOtaPackageInfoId(otaPackageId, Operation.DELETE);

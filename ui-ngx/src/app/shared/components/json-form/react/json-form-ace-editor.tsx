@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016-2023 The Thingsboard Authors
+ * Copyright © 2016-2023 The Echoiot Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 import * as React from 'react';
+import {MouseEvent} from 'react';
 import * as ReactDOM from 'react-dom';
-import ThingsboardBaseComponent from './json-form-base-component';
+import EchoiotBaseComponent from './json-form-base-component';
 import reactCSS from 'reactcss';
 import Button from '@material-ui/core/Button';
-import { JsonFormFieldProps, JsonFormFieldState } from '@shared/components/json-form/react/json-form.models';
-import { IEditorProps } from 'react-ace/src/types';
-import { mergeMap } from 'rxjs/operators';
-import { getAce } from '@shared/models/ace/ace.models';
-import { from } from 'rxjs';
-import { Observable } from 'rxjs/internal/Observable';
-import { CircularProgress, IconButton } from '@material-ui/core';
-import { MouseEvent } from 'react';
-import { Help, HelpOutline } from '@material-ui/icons';
+import {JsonFormFieldProps, JsonFormFieldState} from '@shared/components/json-form/react/json-form.models';
+import {IEditorProps} from 'react-ace/src/types';
+import {mergeMap} from 'rxjs/operators';
+import {getAce} from '@shared/models/ace/ace.models';
+import {from} from 'rxjs';
+import {Observable} from 'rxjs/internal/Observable';
+import {CircularProgress, IconButton} from '@material-ui/core';
+import {Help, HelpOutline} from '@material-ui/icons';
 
 const ReactAce = React.lazy(() => {
   return getAce().pipe(
@@ -36,12 +36,12 @@ const ReactAce = React.lazy(() => {
   ).toPromise();
 });
 
-interface ThingsboardAceEditorProps extends JsonFormFieldProps {
+interface EchoiotAceEditorProps extends JsonFormFieldProps {
   mode: string;
   onTidy: (value: string) => Observable<string>;
 }
 
-interface ThingsboardAceEditorState extends JsonFormFieldState {
+interface EchoiotAceEditorState extends JsonFormFieldState {
   isFull: boolean;
   fullscreenContainerElement: Element;
   helpVisible: boolean;
@@ -49,7 +49,7 @@ interface ThingsboardAceEditorState extends JsonFormFieldState {
   focused: boolean;
 }
 
-class ThingsboardAceEditor extends React.Component<ThingsboardAceEditorProps, ThingsboardAceEditorState> {
+class EchoiotAceEditor extends React.Component<EchoiotAceEditorProps, EchoiotAceEditorState> {
 
     private aceEditor: IEditorProps;
 
@@ -233,4 +233,4 @@ class ThingsboardAceEditor extends React.Component<ThingsboardAceEditorProps, Th
     }
 }
 
-export default ThingsboardBaseComponent(ThingsboardAceEditor);
+export default EchoiotBaseComponent(EchoiotAceEditor);

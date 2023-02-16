@@ -8,7 +8,7 @@
         </encoder>
     </appender>
 
-    <logger name="org.thingsboard.server" level="INFO" />
+    <logger name="org.echoiot.server" level="INFO" />
 
     <logger name="com.microsoft.azure.servicebus.primitives.CoreMessageReceiver" level="OFF" />
     <logger name="org.apache.kafka.common.utils.AppInfoParser" level="WARN"/>

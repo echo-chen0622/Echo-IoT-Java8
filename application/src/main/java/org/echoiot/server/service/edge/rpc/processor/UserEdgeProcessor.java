@@ -10,10 +10,10 @@ import org.echoiot.server.common.data.id.UserId;
 import org.echoiot.server.common.data.security.UserCredentials;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.springframework.stereotype.Component;
-import org.thingsboard.server.gen.edge.v1.DownlinkMsg;
-import org.thingsboard.server.gen.edge.v1.UpdateMsgType;
-import org.thingsboard.server.gen.edge.v1.UserCredentialsUpdateMsg;
-import org.thingsboard.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.edge.v1.DownlinkMsg;
+import org.echoiot.server.gen.edge.v1.UpdateMsgType;
+import org.echoiot.server.gen.edge.v1.UserCredentialsUpdateMsg;
+import org.echoiot.server.gen.transport.TransportProtos;
 
 @Component
 @Slf4j

@@ -2,23 +2,23 @@ package org.echoiot.server.edge;
 
 import com.google.protobuf.AbstractMessage;
 import com.google.protobuf.ByteString;
+import org.echoiot.common.util.JacksonUtil;
+import org.echoiot.server.common.data.OtaPackageInfo;
+import org.echoiot.server.common.data.SaveOtaPackageInfoRequest;
+import org.echoiot.server.common.data.ota.ChecksumAlgorithm;
+import org.echoiot.server.common.data.ota.OtaPackageType;
+import org.echoiot.server.gen.edge.v1.OtaPackageUpdateMsg;
+import org.echoiot.server.gen.edge.v1.UpdateMsgType;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.thingsboard.common.util.JacksonUtil;
-import org.echoiot.server.common.data.OtaPackageInfo;
-import org.echoiot.server.common.data.SaveOtaPackageInfoRequest;
-import org.echoiot.server.common.data.ota.ChecksumAlgorithm;
-import org.echoiot.server.common.data.ota.OtaPackageType;
-import org.thingsboard.server.gen.edge.v1.OtaPackageUpdateMsg;
-import org.thingsboard.server.gen.edge.v1.UpdateMsgType;
 
 import java.nio.ByteBuffer;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.echoiot.server.common.data.ota.OtaPackageType.FIRMWARE;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 abstract public class BaseOtaPackageEdgeTest extends AbstractEdgeTest {
 

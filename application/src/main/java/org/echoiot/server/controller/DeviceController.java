@@ -8,10 +8,12 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.server.common.data.*;
 import org.echoiot.server.common.data.device.DeviceSearchQuery;
 import org.echoiot.server.common.data.edge.Edge;
-import org.echoiot.server.common.data.exception.ThingsboardErrorCode;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotErrorCode;
+import org.echoiot.server.common.data.exception.EchoiotException;
+import org.echoiot.server.common.data.id.*;
 import org.echoiot.server.common.data.ota.OtaPackageType;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
@@ -34,29 +36,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
-import org.echoiot.server.common.data.ClaimRequest;
-import org.echoiot.server.common.data.Customer;
-import org.echoiot.server.common.data.DataConstants;
-import org.echoiot.server.common.data.Device;
-import org.echoiot.server.common.data.DeviceInfo;
-import org.echoiot.server.common.data.EntitySubtype;
-import org.echoiot.server.common.data.SaveDeviceWithCredentialsRequest;
-import org.echoiot.server.common.data.Tenant;
-import org.echoiot.server.common.data.id.CustomerId;
-import org.echoiot.server.common.data.id.DeviceId;
-import org.echoiot.server.common.data.id.DeviceProfileId;
-import org.echoiot.server.common.data.id.EdgeId;
-import org.echoiot.server.common.data.id.TenantId;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -86,7 +67,7 @@ public class DeviceController extends BaseController {
     @RequestMapping(value = "/device/{deviceId}", method = RequestMethod.GET)
     @ResponseBody
     public Device getDeviceById(@ApiParam(value = ControllerConstants.DEVICE_ID_PARAM_DESCRIPTION)
-                                @PathVariable(ControllerConstants.DEVICE_ID) String strDeviceId) throws ThingsboardException {
+                                @PathVariable(ControllerConstants.DEVICE_ID) String strDeviceId) throws EchoiotException {
         checkParameter(ControllerConstants.DEVICE_ID, strDeviceId);
         DeviceId deviceId = new DeviceId(toUUID(strDeviceId));
         return checkDeviceId(deviceId, Operation.READ);
@@ -101,7 +82,7 @@ public class DeviceController extends BaseController {
     @RequestMapping(value = "/device/info/{deviceId}", method = RequestMethod.GET)
     @ResponseBody
     public DeviceInfo getDeviceInfoById(@ApiParam(value = ControllerConstants.DEVICE_ID_PARAM_DESCRIPTION)
-                                        @PathVariable(ControllerConstants.DEVICE_ID) String strDeviceId) throws ThingsboardException {
+                                        @PathVariable(ControllerConstants.DEVICE_ID) String strDeviceId) throws EchoiotException {
         checkParameter(ControllerConstants.DEVICE_ID, strDeviceId);
         DeviceId deviceId = new DeviceId(toUUID(strDeviceId));
         return checkDeviceInfoId(deviceId, Operation.READ);
@@ -143,7 +124,7 @@ public class DeviceController extends BaseController {
     @RequestMapping(value = "/device-with-credentials", method = RequestMethod.POST)
     @ResponseBody
     public Device saveDeviceWithCredentials(@ApiParam(value = "The JSON object with device and credentials. See method description above for example.")
-                                            @RequestBody SaveDeviceWithCredentialsRequest deviceAndCredentials) throws ThingsboardException {
+                                            @RequestBody SaveDeviceWithCredentialsRequest deviceAndCredentials) throws EchoiotException {
         Device device = checkNotNull(deviceAndCredentials.getDevice());
         DeviceCredentials credentials = checkNotNull(deviceAndCredentials.getCredentials());
         device.setTenantId(getCurrentUser().getTenantId());
@@ -172,7 +153,7 @@ public class DeviceController extends BaseController {
     public Device assignDeviceToCustomer(@ApiParam(value = ControllerConstants.CUSTOMER_ID_PARAM_DESCRIPTION)
                                          @PathVariable("customerId") String strCustomerId,
                                          @ApiParam(value = ControllerConstants.DEVICE_ID_PARAM_DESCRIPTION)
-                                         @PathVariable(ControllerConstants.DEVICE_ID) String strDeviceId) throws ThingsboardException {
+                                         @PathVariable(ControllerConstants.DEVICE_ID) String strDeviceId) throws EchoiotException {
         checkParameter("customerId", strCustomerId);
         checkParameter(ControllerConstants.DEVICE_ID, strDeviceId);
         CustomerId customerId = new CustomerId(toUUID(strCustomerId));
@@ -188,7 +169,7 @@ public class DeviceController extends BaseController {
     @RequestMapping(value = "/customer/device/{deviceId}", method = RequestMethod.DELETE)
     @ResponseBody
     public Device unassignDeviceFromCustomer(@ApiParam(value = ControllerConstants.DEVICE_ID_PARAM_DESCRIPTION)
-                                             @PathVariable(ControllerConstants.DEVICE_ID) String strDeviceId) throws ThingsboardException {
+                                             @PathVariable(ControllerConstants.DEVICE_ID) String strDeviceId) throws EchoiotException {
         checkParameter(ControllerConstants.DEVICE_ID, strDeviceId);
         DeviceId deviceId = new DeviceId(toUUID(strDeviceId));
         Device device = checkDeviceId(deviceId, Operation.UNASSIGN_FROM_CUSTOMER);
@@ -209,7 +190,7 @@ public class DeviceController extends BaseController {
     @RequestMapping(value = "/customer/public/device/{deviceId}", method = RequestMethod.POST)
     @ResponseBody
     public Device assignDeviceToPublicCustomer(@ApiParam(value = ControllerConstants.DEVICE_ID_PARAM_DESCRIPTION)
-                                               @PathVariable(ControllerConstants.DEVICE_ID) String strDeviceId) throws ThingsboardException {
+                                               @PathVariable(ControllerConstants.DEVICE_ID) String strDeviceId) throws EchoiotException {
         checkParameter(ControllerConstants.DEVICE_ID, strDeviceId);
         DeviceId deviceId = new DeviceId(toUUID(strDeviceId));
         checkDeviceId(deviceId, Operation.ASSIGN_TO_CUSTOMER);
@@ -222,7 +203,7 @@ public class DeviceController extends BaseController {
     @RequestMapping(value = "/device/{deviceId}/credentials", method = RequestMethod.GET)
     @ResponseBody
     public DeviceCredentials getDeviceCredentialsByDeviceId(@ApiParam(value = ControllerConstants.DEVICE_ID_PARAM_DESCRIPTION)
-                                                            @PathVariable(ControllerConstants.DEVICE_ID) String strDeviceId) throws ThingsboardException {
+                                                            @PathVariable(ControllerConstants.DEVICE_ID) String strDeviceId) throws EchoiotException {
         checkParameter(ControllerConstants.DEVICE_ID, strDeviceId);
         DeviceId deviceId = new DeviceId(toUUID(strDeviceId));
         Device device = checkDeviceId(deviceId, Operation.READ_CREDENTIALS);
@@ -238,7 +219,7 @@ public class DeviceController extends BaseController {
     @ResponseBody
     public DeviceCredentials updateDeviceCredentials(
             @ApiParam(value = "A JSON value representing the device credentials.")
-            @RequestBody DeviceCredentials deviceCredentials) throws ThingsboardException {
+            @RequestBody DeviceCredentials deviceCredentials) throws EchoiotException {
         checkNotNull(deviceCredentials);
         Device device = checkDeviceId(deviceCredentials.getDeviceId(), Operation.WRITE_CREDENTIALS);
         return tbDeviceService.updateDeviceCredentials(device, deviceCredentials, getCurrentUser());
@@ -262,7 +243,7 @@ public class DeviceController extends BaseController {
             @ApiParam(value = ControllerConstants.SORT_PROPERTY_DESCRIPTION, allowableValues = ControllerConstants.DEVICE_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
             @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
-            @RequestParam(required = false) String sortOrder) throws ThingsboardException {
+            @RequestParam(required = false) String sortOrder) throws EchoiotException {
         try {
             TenantId tenantId = getCurrentUser().getTenantId();
             PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
@@ -297,7 +278,7 @@ public class DeviceController extends BaseController {
             @RequestParam(required = false) String sortProperty,
             @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortOrder
-    ) throws ThingsboardException {
+    ) throws EchoiotException {
         try {
             TenantId tenantId = getCurrentUser().getTenantId();
             PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
@@ -322,7 +303,7 @@ public class DeviceController extends BaseController {
     @ResponseBody
     public Device getTenantDevice(
             @ApiParam(value = ControllerConstants.DEVICE_NAME_DESCRIPTION)
-            @RequestParam String deviceName) throws ThingsboardException {
+            @RequestParam String deviceName) throws EchoiotException {
         try {
             TenantId tenantId = getCurrentUser().getTenantId();
             return checkNotNull(deviceService.findDeviceByTenantIdAndName(tenantId, deviceName));
@@ -351,7 +332,7 @@ public class DeviceController extends BaseController {
             @ApiParam(value = ControllerConstants.SORT_PROPERTY_DESCRIPTION, allowableValues = ControllerConstants.DEVICE_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
             @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
-            @RequestParam(required = false) String sortOrder) throws ThingsboardException {
+            @RequestParam(required = false) String sortOrder) throws EchoiotException {
         checkParameter("customerId", strCustomerId);
         try {
             TenantId tenantId = getCurrentUser().getTenantId();
@@ -390,7 +371,7 @@ public class DeviceController extends BaseController {
             @ApiParam(value = ControllerConstants.SORT_PROPERTY_DESCRIPTION, allowableValues = ControllerConstants.DEVICE_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
             @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
-            @RequestParam(required = false) String sortOrder) throws ThingsboardException {
+            @RequestParam(required = false) String sortOrder) throws EchoiotException {
         checkParameter("customerId", strCustomerId);
         try {
             TenantId tenantId = getCurrentUser().getTenantId();
@@ -417,7 +398,7 @@ public class DeviceController extends BaseController {
     @ResponseBody
     public List<Device> getDevicesByIds(
             @ApiParam(value = "A list of devices ids, separated by comma ','")
-            @RequestParam("deviceIds") String[] strDeviceIds) throws ThingsboardException {
+            @RequestParam("deviceIds") String[] strDeviceIds) throws EchoiotException {
         checkArrayParameter("deviceIds", strDeviceIds);
         try {
             SecurityUser user = getCurrentUser();
@@ -448,7 +429,7 @@ public class DeviceController extends BaseController {
     @ResponseBody
     public List<Device> findByQuery(
             @ApiParam(value = "The device search query JSON")
-            @RequestBody DeviceSearchQuery query) throws ThingsboardException {
+            @RequestBody DeviceSearchQuery query) throws EchoiotException {
         checkNotNull(query);
         checkNotNull(query.getParameters());
         checkNotNull(query.getDeviceTypes());
@@ -459,7 +440,7 @@ public class DeviceController extends BaseController {
                 try {
                     accessControlService.checkPermission(getCurrentUser(), Resource.DEVICE, Operation.READ, device.getId(), device);
                     return true;
-                } catch (ThingsboardException e) {
+                } catch (EchoiotException e) {
                     return false;
                 }
             }).collect(Collectors.toList());
@@ -475,7 +456,7 @@ public class DeviceController extends BaseController {
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/device/types", method = RequestMethod.GET)
     @ResponseBody
-    public List<EntitySubtype> getDeviceTypes() throws ThingsboardException {
+    public List<EntitySubtype> getDeviceTypes() throws EchoiotException {
         try {
             SecurityUser user = getCurrentUser();
             TenantId tenantId = user.getTenantId();
@@ -499,7 +480,7 @@ public class DeviceController extends BaseController {
     public DeferredResult<ResponseEntity> claimDevice(@ApiParam(value = "Unique name of the device which is going to be claimed")
                                                       @PathVariable(DEVICE_NAME) String deviceName,
                                                       @ApiParam(value = "Claiming request which can optionally contain secret key")
-                                                      @RequestBody(required = false) ClaimRequest claimRequest) throws ThingsboardException {
+                                                      @RequestBody(required = false) ClaimRequest claimRequest) throws EchoiotException {
         checkParameter(DEVICE_NAME, deviceName);
         final DeferredResult<ResponseEntity> deferredResult = new DeferredResult<>();
 
@@ -546,7 +527,7 @@ public class DeviceController extends BaseController {
     @RequestMapping(value = "/customer/device/{deviceName}/claim", method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.OK)
     public DeferredResult<ResponseEntity> reClaimDevice(@ApiParam(value = "Unique name of the device which is going to be reclaimed")
-                                                        @PathVariable(DEVICE_NAME) String deviceName) throws ThingsboardException {
+                                                        @PathVariable(DEVICE_NAME) String deviceName) throws EchoiotException {
         checkParameter(DEVICE_NAME, deviceName);
         final DeferredResult<ResponseEntity> deferredResult = new DeferredResult<>();
 
@@ -588,7 +569,7 @@ public class DeviceController extends BaseController {
     public Device assignDeviceToTenant(@ApiParam(value = ControllerConstants.TENANT_ID_PARAM_DESCRIPTION)
                                        @PathVariable(ControllerConstants.TENANT_ID) String strTenantId,
                                        @ApiParam(value = ControllerConstants.DEVICE_ID_PARAM_DESCRIPTION)
-                                       @PathVariable(ControllerConstants.DEVICE_ID) String strDeviceId) throws ThingsboardException {
+                                       @PathVariable(ControllerConstants.DEVICE_ID) String strDeviceId) throws EchoiotException {
         checkParameter(ControllerConstants.TENANT_ID, strTenantId);
         checkParameter(ControllerConstants.DEVICE_ID, strDeviceId);
         DeviceId deviceId = new DeviceId(toUUID(strDeviceId));
@@ -597,7 +578,7 @@ public class DeviceController extends BaseController {
         TenantId newTenantId = TenantId.fromUUID(toUUID(strTenantId));
         Tenant newTenant = tenantService.findTenantById(newTenantId);
         if (newTenant == null) {
-            throw new ThingsboardException("Could not find the specified Tenant!", ThingsboardErrorCode.BAD_REQUEST_PARAMS);
+            throw new EchoiotException("Could not find the specified Tenant!", EchoiotErrorCode.BAD_REQUEST_PARAMS);
         }
         return tbDeviceService.assignDeviceToTenant(device, newTenant, getCurrentUser());
     }
@@ -615,7 +596,7 @@ public class DeviceController extends BaseController {
     public Device assignDeviceToEdge(@ApiParam(value = ControllerConstants.EDGE_ID_PARAM_DESCRIPTION)
                                      @PathVariable(EdgeController.EDGE_ID) String strEdgeId,
                                      @ApiParam(value = ControllerConstants.DEVICE_ID_PARAM_DESCRIPTION)
-                                     @PathVariable(ControllerConstants.DEVICE_ID) String strDeviceId) throws ThingsboardException {
+                                     @PathVariable(ControllerConstants.DEVICE_ID) String strDeviceId) throws EchoiotException {
         checkParameter(EdgeController.EDGE_ID, strEdgeId);
         checkParameter(ControllerConstants.DEVICE_ID, strDeviceId);
         EdgeId edgeId = new EdgeId(toUUID(strEdgeId));
@@ -640,7 +621,7 @@ public class DeviceController extends BaseController {
     public Device unassignDeviceFromEdge(@ApiParam(value = ControllerConstants.EDGE_ID_PARAM_DESCRIPTION)
                                          @PathVariable(EdgeController.EDGE_ID) String strEdgeId,
                                          @ApiParam(value = ControllerConstants.DEVICE_ID_PARAM_DESCRIPTION)
-                                         @PathVariable(ControllerConstants.DEVICE_ID) String strDeviceId) throws ThingsboardException {
+                                         @PathVariable(ControllerConstants.DEVICE_ID) String strDeviceId) throws EchoiotException {
         checkParameter(EdgeController.EDGE_ID, strEdgeId);
         checkParameter(ControllerConstants.DEVICE_ID, strDeviceId);
         EdgeId edgeId = new EdgeId(toUUID(strEdgeId));
@@ -675,7 +656,7 @@ public class DeviceController extends BaseController {
             @ApiParam(value = "Timestamp. Devices with creation time before it won't be queried")
             @RequestParam(required = false) Long startTime,
             @ApiParam(value = "Timestamp. Devices with creation time after it won't be queried")
-            @RequestParam(required = false) Long endTime) throws ThingsboardException {
+            @RequestParam(required = false) Long endTime) throws EchoiotException {
         checkParameter(EdgeController.EDGE_ID, strEdgeId);
         try {
             TenantId tenantId = getCurrentUser().getTenantId();
@@ -692,7 +673,7 @@ public class DeviceController extends BaseController {
                 try {
                     accessControlService.checkPermission(getCurrentUser(), Resource.DEVICE, Operation.READ, device.getId(), device);
                     return true;
-                } catch (ThingsboardException e) {
+                } catch (EchoiotException e) {
                     return false;
                 }
             }).collect(Collectors.toList());
@@ -718,7 +699,7 @@ public class DeviceController extends BaseController {
             (@ApiParam(value = "OTA package type", allowableValues = "FIRMWARE, SOFTWARE")
              @PathVariable("otaPackageType") String otaPackageType,
              @ApiParam(value = "Device Profile Id. I.g. '784f394c-42b6-435a-983c-b7beff2784f9'")
-             @PathVariable("deviceProfileId") String deviceProfileId) throws ThingsboardException {
+             @PathVariable("deviceProfileId") String deviceProfileId) throws EchoiotException {
         checkParameter("OtaPackageType", otaPackageType);
         checkParameter("DeviceProfileId", deviceProfileId);
         try {

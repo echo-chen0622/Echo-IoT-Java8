@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,12 +14,12 @@
 /// limitations under the License.
 ///
 
-import { Component } from '@angular/core';
-import { EntityTableHeaderComponent } from '@home/components/entity/entity-table-header.component';
-import { EntityType } from '@shared/models/entity-type.models';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { EdgeInfo } from '@shared/models/edge.models';
+import {Component} from '@angular/core';
+import {EntityTableHeaderComponent} from '@home/components/entity/entity-table-header.component';
+import {EntityType} from '@shared/models/entity-type.models';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {EdgeInfo} from '@shared/models/edge.models';
 
 @Component({
   selector: 'tb-edge-table-header',

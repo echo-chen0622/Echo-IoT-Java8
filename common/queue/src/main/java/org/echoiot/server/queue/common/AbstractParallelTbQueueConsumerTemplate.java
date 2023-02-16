@@ -3,8 +3,8 @@ package org.echoiot.server.queue.common;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.common.util.EchoiotThreadFactory;
 import org.echoiot.server.queue.TbQueueMsg;
-import org.thingsboard.common.util.ThingsBoardThreadFactory;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -27,7 +27,7 @@ public abstract class AbstractParallelTbQueueConsumerTemplate<R, T extends TbQue
                 log.trace("Interrupted while waiting for consumer executor to stop");
             }
         }
-        consumerExecutor = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(threadPoolSize, ThingsBoardThreadFactory.forName(getClass().getSimpleName())));
+        consumerExecutor = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(threadPoolSize, EchoiotThreadFactory.forName(getClass().getSimpleName())));
     }
 
     protected void shutdownExecutor() {

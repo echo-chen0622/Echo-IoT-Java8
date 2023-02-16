@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016-2023 The Thingsboard Authors
+ * Copyright © 2016-2023 The Echoiot Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +15,17 @@
  */
 import React from 'react';
 import Dropzone from 'react-dropzone';
-import ThingsboardBaseComponent from './json-form-base-component';
-import { JsonFormFieldProps, JsonFormFieldState } from '@shared/components/json-form/react/json-form.models';
+import EchoiotBaseComponent from './json-form-base-component';
+import {JsonFormFieldProps, JsonFormFieldState} from '@shared/components/json-form/react/json-form.models';
 import IconButton from '@material-ui/core/IconButton';
 import Clear from '@material-ui/icons/Clear';
 import Tooltip from '@material-ui/core/Tooltip';
 
-interface ThingsboardImageState extends JsonFormFieldState {
+interface EchoiotImageState extends JsonFormFieldState {
   imageUrl: string;
 }
 
-class ThingsboardImage extends React.Component<JsonFormFieldProps, ThingsboardImageState> {
+class EchoiotImage extends React.Component<JsonFormFieldProps, EchoiotImageState> {
 
     constructor(props) {
         super(props);
@@ -105,4 +105,4 @@ class ThingsboardImage extends React.Component<JsonFormFieldProps, ThingsboardIm
     }
 }
 
-export default ThingsboardBaseComponent(ThingsboardImage);
+export default EchoiotBaseComponent(EchoiotImage);

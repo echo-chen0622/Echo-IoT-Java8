@@ -28,12 +28,12 @@ import org.snmp4j.transport.DefaultTcpTransportMapping;
 import org.snmp4j.transport.DefaultUdpTransportMapping;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.thingsboard.common.util.ThingsBoardExecutors;
-import org.thingsboard.common.util.ThingsBoardThreadFactory;
+import org.echoiot.common.util.EchoiotExecutors;
+import org.echoiot.common.util.EchoiotThreadFactory;
 import org.echoiot.server.common.data.DataConstants;
 import org.echoiot.server.common.data.TbTransportService;
 import org.echoiot.server.common.data.kv.DataType;
-import org.thingsboard.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.queue.util.TbSnmpTransportComponent;
 
 import javax.annotation.PostConstruct;
@@ -75,8 +75,8 @@ public class SnmpTransportService implements TbTransportService {
 
     @PostConstruct
     private void init() throws IOException {
-        queryingExecutor = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors(), ThingsBoardThreadFactory.forName("snmp-querying"));
-        responseProcessingExecutor = ThingsBoardExecutors.newWorkStealingPool(responseProcessingParallelismLevel, "snmp-response-processing");
+        queryingExecutor = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors(), EchoiotThreadFactory.forName("snmp-querying"));
+        responseProcessingExecutor = EchoiotExecutors.newWorkStealingPool(responseProcessingParallelismLevel, "snmp-response-processing");
 
         initializeSnmp();
         configureResponseDataMappers();

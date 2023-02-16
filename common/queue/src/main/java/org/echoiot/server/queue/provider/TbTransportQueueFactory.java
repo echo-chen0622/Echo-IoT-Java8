@@ -3,11 +3,11 @@ package org.echoiot.server.queue.provider;
 import org.echoiot.server.queue.TbQueueConsumer;
 import org.echoiot.server.queue.TbQueueProducer;
 import org.echoiot.server.queue.TbQueueRequestTemplate;
-import org.thingsboard.server.gen.transport.TransportProtos.ToCoreMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.ToRuleEngineMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.ToTransportMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.TransportApiRequestMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.TransportApiResponseMsg;
+import org.echoiot.server.gen.transport.TransportProtos.ToCoreMsg;
+import org.echoiot.server.gen.transport.TransportProtos.ToRuleEngineMsg;
+import org.echoiot.server.gen.transport.TransportProtos.ToTransportMsg;
+import org.echoiot.server.gen.transport.TransportProtos.TransportApiRequestMsg;
+import org.echoiot.server.gen.transport.TransportProtos.TransportApiResponseMsg;
 import org.echoiot.server.queue.common.TbProtoQueueMsg;
 
 public interface TbTransportQueueFactory extends TbUsageStatsClientQueueFactory {

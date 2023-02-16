@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -15,39 +15,39 @@
 ///
 
 import {
-  Component,
-  Inject,
-  InjectionToken,
-  Injector,
-  Input,
-  OnDestroy,
-  OnInit,
-  StaticProvider,
-  ViewChild,
-  ViewContainerRef,
-  ViewEncapsulation
+    Component,
+    Inject,
+    InjectionToken,
+    Injector,
+    Input,
+    OnDestroy,
+    OnInit,
+    StaticProvider,
+    ViewChild,
+    ViewContainerRef,
+    ViewEncapsulation
 } from '@angular/core';
-import { PageComponent } from '@shared/components/page.component';
-import { WidgetContext } from '@home/models/widget-component.models';
-import { UtilsService } from '@core/services/utils.service';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
+import {PageComponent} from '@shared/components/page.component';
+import {WidgetContext} from '@home/models/widget-component.models';
+import {UtilsService} from '@core/services/utils.service';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
 import {
-  cloneDateRangeNavigatorModel,
-  DateIntervalEntry,
-  dateIntervalsMap,
-  DateRangeNavigatorModel,
-  DateRangeNavigatorSettings,
-  getFormattedDate
+    cloneDateRangeNavigatorModel,
+    DateIntervalEntry,
+    dateIntervalsMap,
+    DateRangeNavigatorModel,
+    DateRangeNavigatorSettings,
+    getFormattedDate
 } from '@home/components/widget/lib/date-range-navigator/date-range-navigator.models';
-import { KeyValue } from '@angular/common';
+import {KeyValue} from '@angular/common';
 import * as _moment from 'moment';
-import { ConnectedPosition, Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
-import { ComponentPortal } from '@angular/cdk/portal';
-import { MatSelect } from '@angular/material/select';
-import { Subscription } from 'rxjs';
-import { HistoryWindowType, TimewindowType } from '@shared/models/time/time.models';
-import { isDefined } from '@core/utils';
+import {ConnectedPosition, Overlay, OverlayConfig, OverlayRef} from '@angular/cdk/overlay';
+import {ComponentPortal} from '@angular/cdk/portal';
+import {MatSelect} from '@angular/material/select';
+import {Subscription} from 'rxjs';
+import {HistoryWindowType, TimewindowType} from '@shared/models/time/time.models';
+import {isDefined} from '@core/utils';
 
 @Component({
   selector: 'tb-date-range-navigator-widget',

@@ -1,10 +1,10 @@
 package org.echoiot.server.transport.lwm2m.server.client;
 
+import org.echoiot.server.common.data.DeviceProfile;
 import org.echoiot.server.common.data.device.profile.Lwm2mDeviceProfileTransportConfiguration;
 import org.echoiot.server.common.transport.auth.ValidateDeviceCredentialsResponse;
+import org.echoiot.server.gen.transport.TransportProtos;
 import org.eclipse.leshan.server.registration.Registration;
-import org.echoiot.server.common.data.DeviceProfile;
-import org.thingsboard.server.gen.transport.TransportProtos;
 
 import java.util.Collection;
 import java.util.Optional;

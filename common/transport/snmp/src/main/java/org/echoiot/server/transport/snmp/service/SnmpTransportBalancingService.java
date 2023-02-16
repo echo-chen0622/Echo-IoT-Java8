@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
-import org.thingsboard.server.gen.transport.TransportProtos.ServiceInfo;
+import org.echoiot.server.gen.transport.TransportProtos.ServiceInfo;
 import org.echoiot.server.queue.discovery.PartitionService;
 import org.echoiot.server.queue.discovery.event.ServiceListChangedEvent;
 import org.echoiot.server.queue.util.TbSnmpTransportComponent;

@@ -8,7 +8,7 @@ import org.eclipse.leshan.core.node.LwM2mResource;
 import org.eclipse.leshan.core.response.ExecuteResponse;
 import org.eclipse.leshan.core.response.ReadResponse;
 import org.eclipse.leshan.core.response.WriteResponse;
-import org.thingsboard.common.util.ThingsBoardThreadFactory;
+import org.echoiot.common.util.EchoiotThreadFactory;
 
 import javax.security.auth.Destroyable;
 import java.util.Arrays;
@@ -23,7 +23,7 @@ public class SwLwM2MDevice extends BaseInstanceEnabler implements Destroyable {
 
     private static final List<Integer> supportedResources = Arrays.asList(0, 1, 2, 3, 4, 6, 7, 9);
 
-    private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor(ThingsBoardThreadFactory.forName(getClass().getSimpleName() + "-test-scope"));
+    private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor(EchoiotThreadFactory.forName(getClass().getSimpleName() + "-test-scope"));
 
     private final AtomicInteger state = new AtomicInteger(0);
 

@@ -7,7 +7,7 @@
         </encoder>
     </appender>
 
-    <logger name="org.thingsboard.server.dao" level="WARN"/>
+    <logger name="org.echoiot.server.dao" level="WARN"/>
     <logger name="org.apache.cassandra" level="WARN"/>
     <logger name="org.cassandraunit" level="WARN" />
     <logger name="org.apache.cassandra" level="WARN" />

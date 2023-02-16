@@ -6,7 +6,7 @@
         "layoutX": 325,
         "layoutY": 150
       },
-      "type": "org.thingsboard.rule.engine.filter.TbMsgTypeSwitchNode",
+      "type": "org.echoiot.rule.engine.filter.TbMsgTypeSwitchNode",
       "name": "msgTypeSwitch",
       "debugMode": true,
       "configuration": {
@@ -18,7 +18,7 @@
         "layoutX": 60,
         "layoutY": 300
       },
-      "type": "org.thingsboard.rule.engine.transform.TbTransformMsgNode",
+      "type": "org.echoiot.rule.engine.transform.TbTransformMsgNode",
       "name": "formResponse",
       "debugMode": true,
       "configuration": {
@@ -30,7 +30,7 @@
         "layoutX": 450,
         "layoutY": 300
       },
-      "type": "org.thingsboard.rule.engine.rpc.TbSendRPCReplyNode",
+      "type": "org.echoiot.rule.engine.rpc.TbSendRPCReplyNode",
       "name": "rpcReply",
       "debugMode": true,
       "configuration": {

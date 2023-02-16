@@ -5,24 +5,18 @@ import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.UUIDConverter;
 import org.echoiot.server.dao.cassandra.CassandraCluster;
 import org.echoiot.server.dao.util.NoSqlAnyDao;
+import org.echoiot.server.service.install.EntityDatabaseSchemaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
-import org.echoiot.server.service.install.EntityDatabaseSchemaService;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.echoiot.server.service.install.migrate.CassandraToSqlColumn.bigintColumn;
-import static org.echoiot.server.service.install.migrate.CassandraToSqlColumn.booleanColumn;
-import static org.echoiot.server.service.install.migrate.CassandraToSqlColumn.doubleColumn;
-import static org.echoiot.server.service.install.migrate.CassandraToSqlColumn.enumToIntColumn;
-import static org.echoiot.server.service.install.migrate.CassandraToSqlColumn.idColumn;
-import static org.echoiot.server.service.install.migrate.CassandraToSqlColumn.jsonColumn;
-import static org.echoiot.server.service.install.migrate.CassandraToSqlColumn.stringColumn;
+import static org.echoiot.server.service.install.migrate.CassandraToSqlColumn.*;
 
 @Service
 @Profile("install")
@@ -55,7 +49,7 @@ public class CassandraEntitiesToSqlMigrateService implements EntitiesMigrateServ
                 table.migrateToSql(cluster.getSession(), conn);
             }
         } catch (Exception e) {
-            log.error("Unexpected error during ThingsBoard entities data migration!", e);
+            log.error("Unexpected error during Echoiot entities data migration!", e);
             throw e;
         }
         entityDatabaseSchemaService.createDatabaseIndexes();

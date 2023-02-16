@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,31 +14,31 @@
 /// limitations under the License.
 ///
 
-import { Component, forwardRef, Input, OnDestroy } from '@angular/core';
+import {Component, forwardRef, Input, OnDestroy} from '@angular/core';
 import {
-  AbstractControl,
-  ControlValueAccessor,
-  FormArray,
-  FormBuilder,
-  FormGroup,
-  NG_VALIDATORS,
-  NG_VALUE_ACCESSOR,
-  Validator,
-  Validators
+    AbstractControl,
+    ControlValueAccessor,
+    FormArray,
+    FormBuilder,
+    FormGroup,
+    NG_VALIDATORS,
+    NG_VALUE_ACCESSOR,
+    Validator,
+    Validators
 } from '@angular/forms';
-import { Subject, Subscription } from 'rxjs';
+import {Subject, Subscription} from 'rxjs';
 import {
-  AttributeName,
-  AttributeNameTranslationMap,
-  AttributesNameValue,
-  AttributesNameValueMap,
-  valueValidatorByAttributeName
+    AttributeName,
+    AttributeNameTranslationMap,
+    AttributesNameValue,
+    AttributesNameValueMap,
+    valueValidatorByAttributeName
 } from './lwm2m-profile-config.models';
-import { isUndefinedOrNull } from '@core/utils';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { PageComponent } from '@shared/components/page.component';
-import { takeUntil } from 'rxjs/operators';
+import {isUndefinedOrNull} from '@core/utils';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {PageComponent} from '@shared/components/page.component';
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
   selector: 'tb-lwm2m-attributes-key-list',

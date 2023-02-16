@@ -1,20 +1,16 @@
 package org.echoiot.server.edge;
 
 import com.google.protobuf.AbstractMessage;
+import org.echoiot.server.common.data.Customer;
+import org.echoiot.server.common.data.User;
+import org.echoiot.server.common.data.edge.Edge;
 import org.echoiot.server.common.data.security.Authority;
+import org.echoiot.server.gen.edge.v1.*;
+import org.echoiot.server.service.security.model.ChangePasswordRequest;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.echoiot.server.common.data.Customer;
-import org.echoiot.server.common.data.User;
-import org.echoiot.server.common.data.edge.Edge;
-import org.thingsboard.server.gen.edge.v1.UpdateMsgType;
-import org.thingsboard.server.gen.edge.v1.UplinkMsg;
-import org.thingsboard.server.gen.edge.v1.UserCredentialsRequestMsg;
-import org.thingsboard.server.gen.edge.v1.UserCredentialsUpdateMsg;
-import org.thingsboard.server.gen.edge.v1.UserUpdateMsg;
-import org.echoiot.server.service.security.model.ChangePasswordRequest;
 
 import java.util.Optional;
 
@@ -32,7 +28,7 @@ abstract public class BaseUserEdgeTest extends AbstractEdgeTest {
         User newTenantAdmin = new User();
         newTenantAdmin.setAuthority(Authority.TENANT_ADMIN);
         newTenantAdmin.setTenantId(savedTenant.getId());
-        newTenantAdmin.setEmail("tenantAdmin@thingsboard.org");
+        newTenantAdmin.setEmail("tenantAdmin@echoiot.org");
         newTenantAdmin.setFirstName("Boris");
         newTenantAdmin.setLastName("Johnson");
         User savedTenantAdmin = createUser(newTenantAdmin, "tenant");
@@ -111,7 +107,7 @@ abstract public class BaseUserEdgeTest extends AbstractEdgeTest {
         customerUser.setAuthority(Authority.CUSTOMER_USER);
         customerUser.setTenantId(savedTenant.getId());
         customerUser.setCustomerId(savedCustomer.getId());
-        customerUser.setEmail("customerUser@thingsboard.org");
+        customerUser.setEmail("customerUser@echoiot.org");
         customerUser.setFirstName("John");
         customerUser.setLastName("Edwards");
         User savedCustomerUser = createUser(customerUser, "customer");

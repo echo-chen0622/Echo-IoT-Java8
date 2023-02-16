@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,25 +14,26 @@
 /// limitations under the License.
 ///
 
-import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { PageComponent } from '@shared/components/page.component';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import {ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {PageComponent} from '@shared/components/page.component';
+import {FormBuilder, FormGroup} from '@angular/forms';
 import {
-  createDefaultEntityTypesVersionLoad, EntityTypeLoadResult,
-  EntityTypeVersionLoadRequest,
-  VersionLoadRequestType,
-  VersionLoadResult
+    createDefaultEntityTypesVersionLoad,
+    EntityTypeLoadResult,
+    EntityTypeVersionLoadRequest,
+    VersionLoadRequestType,
+    VersionLoadResult
 } from '@shared/models/vc.models';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { EntitiesVersionControlService } from '@core/http/entities-version-control.service';
-import { TranslateService } from '@ngx-translate/core';
-import { entityTypeTranslations } from '@shared/models/entity-type.models';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { TbPopoverComponent } from '@shared/components/popover.component';
-import { Observable, Subscription } from 'rxjs';
-import { share } from 'rxjs/operators';
-import { parseHttpErrorMessage } from '@core/utils';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {EntitiesVersionControlService} from '@core/http/entities-version-control.service';
+import {TranslateService} from '@ngx-translate/core';
+import {entityTypeTranslations} from '@shared/models/entity-type.models';
+import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
+import {TbPopoverComponent} from '@shared/components/popover.component';
+import {Observable, Subscription} from 'rxjs';
+import {share} from 'rxjs/operators';
+import {parseHttpErrorMessage} from '@core/utils';
 
 @Component({
   selector: 'tb-complex-version-load',

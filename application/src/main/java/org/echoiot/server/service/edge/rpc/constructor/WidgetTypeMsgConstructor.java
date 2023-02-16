@@ -5,9 +5,9 @@ import org.echoiot.server.common.data.id.WidgetTypeId;
 import org.echoiot.server.common.data.widget.WidgetTypeDetails;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.springframework.stereotype.Component;
-import org.thingsboard.common.util.JacksonUtil;
-import org.thingsboard.server.gen.edge.v1.UpdateMsgType;
-import org.thingsboard.server.gen.edge.v1.WidgetTypeUpdateMsg;
+import org.echoiot.common.util.JacksonUtil;
+import org.echoiot.server.gen.edge.v1.UpdateMsgType;
+import org.echoiot.server.gen.edge.v1.WidgetTypeUpdateMsg;
 
 @Component
 @TbCoreComponent

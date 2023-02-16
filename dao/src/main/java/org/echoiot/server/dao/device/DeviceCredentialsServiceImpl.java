@@ -2,6 +2,14 @@ package org.echoiot.server.dao.device;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.common.util.JacksonUtil;
+import org.echoiot.server.common.data.StringUtils;
+import org.echoiot.server.common.data.device.credentials.BasicMqttCredentials;
+import org.echoiot.server.common.data.device.credentials.lwm2m.*;
+import org.echoiot.server.common.data.id.DeviceId;
+import org.echoiot.server.common.data.id.TenantId;
+import org.echoiot.server.common.data.security.DeviceCredentials;
+import org.echoiot.server.common.msg.EncryptionUtil;
 import org.echoiot.server.dao.entity.AbstractCachedEntityService;
 import org.echoiot.server.dao.exception.DataValidationException;
 import org.echoiot.server.dao.exception.DeviceCredentialsValidationException;
@@ -13,23 +21,6 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.event.TransactionalEventListener;
-import org.thingsboard.common.util.JacksonUtil;
-import org.echoiot.server.common.data.StringUtils;
-import org.echoiot.server.common.data.device.credentials.BasicMqttCredentials;
-import org.echoiot.server.common.data.device.credentials.lwm2m.LwM2MBootstrapClientCredential;
-import org.echoiot.server.common.data.device.credentials.lwm2m.LwM2MBootstrapClientCredentials;
-import org.echoiot.server.common.data.device.credentials.lwm2m.LwM2MClientCredential;
-import org.echoiot.server.common.data.device.credentials.lwm2m.LwM2MDeviceCredentials;
-import org.echoiot.server.common.data.device.credentials.lwm2m.PSKBootstrapClientCredential;
-import org.echoiot.server.common.data.device.credentials.lwm2m.PSKClientCredential;
-import org.echoiot.server.common.data.device.credentials.lwm2m.RPKBootstrapClientCredential;
-import org.echoiot.server.common.data.device.credentials.lwm2m.RPKClientCredential;
-import org.echoiot.server.common.data.device.credentials.lwm2m.X509BootstrapClientCredential;
-import org.echoiot.server.common.data.device.credentials.lwm2m.X509ClientCredential;
-import org.echoiot.server.common.data.id.DeviceId;
-import org.echoiot.server.common.data.id.TenantId;
-import org.echoiot.server.common.data.security.DeviceCredentials;
-import org.echoiot.server.common.msg.EncryptionUtil;
 
 import static org.echoiot.server.dao.service.Validator.validateId;
 

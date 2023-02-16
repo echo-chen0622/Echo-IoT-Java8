@@ -6,25 +6,44 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.common.util.DonAsynchron;
+import org.echoiot.server.common.data.Device;
+import org.echoiot.server.common.data.DeviceProfile;
+import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.device.profile.Lwm2mDeviceProfileTransportConfiguration;
 import org.echoiot.server.common.data.device.profile.lwm2m.ObjectAttributes;
 import org.echoiot.server.common.data.device.profile.lwm2m.OtherConfiguration;
 import org.echoiot.server.common.data.device.profile.lwm2m.TelemetryMappingConfiguration;
+import org.echoiot.server.common.data.id.DeviceId;
+import org.echoiot.server.common.data.id.TenantId;
+import org.echoiot.server.common.data.ota.OtaPackageUtil;
 import org.echoiot.server.common.transport.TransportService;
 import org.echoiot.server.common.transport.TransportServiceCallback;
+import org.echoiot.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.transport.TransportProtos.SessionInfoProto;
+import org.echoiot.server.queue.util.TbLwM2mTransportComponent;
+import org.echoiot.server.transport.lwm2m.config.LwM2MTransportServerConfig;
+import org.echoiot.server.transport.lwm2m.server.LwM2mOtaConvert;
+import org.echoiot.server.transport.lwm2m.server.LwM2mTransportContext;
+import org.echoiot.server.transport.lwm2m.server.LwM2mTransportServerHelper;
+import org.echoiot.server.transport.lwm2m.server.LwM2mVersionedModelProvider;
 import org.echoiot.server.transport.lwm2m.server.attributes.LwM2MAttributesService;
+import org.echoiot.server.transport.lwm2m.server.client.*;
+import org.echoiot.server.transport.lwm2m.server.common.LwM2MExecutorAwareService;
+import org.echoiot.server.transport.lwm2m.server.downlink.*;
+import org.echoiot.server.transport.lwm2m.server.log.LwM2MTelemetryLogService;
+import org.echoiot.server.transport.lwm2m.server.model.LwM2MModelConfig;
+import org.echoiot.server.transport.lwm2m.server.model.LwM2MModelConfigService;
+import org.echoiot.server.transport.lwm2m.server.ota.LwM2MOtaUpdateService;
 import org.echoiot.server.transport.lwm2m.server.session.LwM2MSessionManager;
+import org.echoiot.server.transport.lwm2m.server.store.TbLwM2MDtlsSessionStore;
+import org.echoiot.server.transport.lwm2m.server.store.TbLwM2mSecurityStore;
+import org.echoiot.server.transport.lwm2m.utils.LwM2MTransportUtil;
+import org.echoiot.server.transport.lwm2m.utils.LwM2mValueConverterImpl;
 import org.eclipse.leshan.core.ResponseCode;
 import org.eclipse.leshan.core.model.ObjectModel;
 import org.eclipse.leshan.core.model.ResourceModel;
-import org.eclipse.leshan.core.node.LwM2mMultipleResource;
-import org.eclipse.leshan.core.node.LwM2mNode;
-import org.eclipse.leshan.core.node.LwM2mObject;
-import org.eclipse.leshan.core.node.LwM2mObjectInstance;
-import org.eclipse.leshan.core.node.LwM2mPath;
-import org.eclipse.leshan.core.node.LwM2mResource;
-import org.eclipse.leshan.core.node.LwM2mResourceInstance;
-import org.eclipse.leshan.core.node.LwM2mSingleResource;
+import org.eclipse.leshan.core.node.*;
 import org.eclipse.leshan.core.observation.Observation;
 import org.eclipse.leshan.core.request.*;
 import org.eclipse.leshan.core.request.WriteRequest.Mode;
@@ -35,47 +54,6 @@ import org.eclipse.leshan.server.registration.Registration;
 import org.eclipse.leshan.server.registration.RegistrationStore;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-import org.thingsboard.common.util.DonAsynchron;
-import org.echoiot.server.common.data.Device;
-import org.echoiot.server.common.data.DeviceProfile;
-import org.echoiot.server.common.data.StringUtils;
-import org.echoiot.server.common.data.id.DeviceId;
-import org.echoiot.server.common.data.id.TenantId;
-import org.echoiot.server.common.data.ota.OtaPackageUtil;
-import org.thingsboard.server.gen.transport.TransportProtos;
-import org.thingsboard.server.gen.transport.TransportProtos.SessionInfoProto;
-import org.echoiot.server.queue.util.TbLwM2mTransportComponent;
-import org.echoiot.server.transport.lwm2m.config.LwM2MTransportServerConfig;
-import org.echoiot.server.transport.lwm2m.server.LwM2mOtaConvert;
-import org.echoiot.server.transport.lwm2m.server.LwM2mTransportContext;
-import org.echoiot.server.transport.lwm2m.server.LwM2mTransportServerHelper;
-import org.echoiot.server.transport.lwm2m.server.LwM2mVersionedModelProvider;
-import org.echoiot.server.transport.lwm2m.server.client.LwM2MClientState;
-import org.echoiot.server.transport.lwm2m.server.client.LwM2MClientStateException;
-import org.thingsboard.server.transport.lwm2m.server.client.LwM2mClient;
-import org.echoiot.server.transport.lwm2m.server.client.LwM2mClientContext;
-import org.echoiot.server.transport.lwm2m.server.client.ParametersAnalyzeResult;
-import org.echoiot.server.transport.lwm2m.server.client.ResultsAddKeyValueProto;
-import org.echoiot.server.transport.lwm2m.server.common.LwM2MExecutorAwareService;
-import org.echoiot.server.transport.lwm2m.server.downlink.DownlinkRequestCallback;
-import org.echoiot.server.transport.lwm2m.server.downlink.LwM2mDownlinkMsgHandler;
-import org.echoiot.server.transport.lwm2m.server.downlink.TbLwM2MCancelObserveCallback;
-import org.echoiot.server.transport.lwm2m.server.downlink.TbLwM2MCancelObserveRequest;
-import org.echoiot.server.transport.lwm2m.server.downlink.TbLwM2MLatchCallback;
-import org.echoiot.server.transport.lwm2m.server.downlink.TbLwM2MObserveCallback;
-import org.echoiot.server.transport.lwm2m.server.downlink.TbLwM2MObserveRequest;
-import org.echoiot.server.transport.lwm2m.server.downlink.TbLwM2MReadCallback;
-import org.echoiot.server.transport.lwm2m.server.downlink.TbLwM2MReadRequest;
-import org.echoiot.server.transport.lwm2m.server.downlink.TbLwM2MWriteAttributesCallback;
-import org.echoiot.server.transport.lwm2m.server.downlink.TbLwM2MWriteAttributesRequest;
-import org.echoiot.server.transport.lwm2m.server.log.LwM2MTelemetryLogService;
-import org.echoiot.server.transport.lwm2m.server.model.LwM2MModelConfig;
-import org.echoiot.server.transport.lwm2m.server.model.LwM2MModelConfigService;
-import org.echoiot.server.transport.lwm2m.server.ota.LwM2MOtaUpdateService;
-import org.echoiot.server.transport.lwm2m.server.store.TbLwM2MDtlsSessionStore;
-import org.echoiot.server.transport.lwm2m.utils.LwM2MTransportUtil;
-import org.echoiot.server.transport.lwm2m.server.store.TbLwM2mSecurityStore;
-import org.echoiot.server.transport.lwm2m.utils.LwM2mValueConverterImpl;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -85,25 +63,10 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import static org.thingsboard.common.util.CollectionsUtil.diffSets;
+import static org.echoiot.common.util.CollectionsUtil.diffSets;
 import static org.echoiot.server.common.data.lwm2m.LwM2mConstants.LWM2M_SEPARATOR_PATH;
-import static org.echoiot.server.transport.lwm2m.server.ota.DefaultLwM2MOtaUpdateService.FW_3_VER_ID;
-import static org.echoiot.server.transport.lwm2m.server.ota.DefaultLwM2MOtaUpdateService.FW_DELIVERY_METHOD;
-import static org.echoiot.server.transport.lwm2m.server.ota.DefaultLwM2MOtaUpdateService.FW_NAME_ID;
-import static org.echoiot.server.transport.lwm2m.server.ota.DefaultLwM2MOtaUpdateService.FW_RESULT_ID;
-import static org.echoiot.server.transport.lwm2m.server.ota.DefaultLwM2MOtaUpdateService.FW_STATE_ID;
-import static org.echoiot.server.transport.lwm2m.server.ota.DefaultLwM2MOtaUpdateService.FW_VER_ID;
-import static org.echoiot.server.transport.lwm2m.server.ota.DefaultLwM2MOtaUpdateService.SW_3_VER_ID;
-import static org.echoiot.server.transport.lwm2m.server.ota.DefaultLwM2MOtaUpdateService.SW_NAME_ID;
-import static org.echoiot.server.transport.lwm2m.server.ota.DefaultLwM2MOtaUpdateService.SW_RESULT_ID;
-import static org.echoiot.server.transport.lwm2m.server.ota.DefaultLwM2MOtaUpdateService.SW_STATE_ID;
-import static org.echoiot.server.transport.lwm2m.server.ota.DefaultLwM2MOtaUpdateService.SW_VER_ID;
-import static org.echoiot.server.transport.lwm2m.utils.LwM2MTransportUtil.LOG_LWM2M_ERROR;
-import static org.echoiot.server.transport.lwm2m.utils.LwM2MTransportUtil.LOG_LWM2M_INFO;
-import static org.echoiot.server.transport.lwm2m.utils.LwM2MTransportUtil.LOG_LWM2M_WARN;
-import static org.echoiot.server.transport.lwm2m.utils.LwM2MTransportUtil.convertObjectIdToVersionedId;
-import static org.echoiot.server.transport.lwm2m.utils.LwM2MTransportUtil.convertOtaUpdateValueToString;
-import static org.echoiot.server.transport.lwm2m.utils.LwM2MTransportUtil.fromVersionedIdToObjectId;
+import static org.echoiot.server.transport.lwm2m.server.ota.DefaultLwM2MOtaUpdateService.*;
+import static org.echoiot.server.transport.lwm2m.utils.LwM2MTransportUtil.*;
 
 
 @Slf4j
@@ -294,7 +257,7 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
     }
 
     /**
-     * Sending observe value to thingsboard from ObservationListener.onResponse: object, instance, SingleResource or MultipleResource
+     * Sending observe value to echoiot from ObservationListener.onResponse: object, instance, SingleResource or MultipleResource
      *
      * @param registration - Registration LwM2M Client
      * @param path         - observe
@@ -345,7 +308,7 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
     }
 
     /**
-     * Sending updated value to thingsboard from SendListener.dataReceived: object, instance, SingleResource or MultipleResource
+     * Sending updated value to echoiot from SendListener.dataReceived: object, instance, SingleResource or MultipleResource
      *
      * @param registration - Registration LwM2M Client
      * @param sendRequest  - sendRequest
@@ -559,7 +522,7 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
     }
 
     /**
-     * Sending observe value of resources to thingsboard
+     * Sending observe value of resources to echoiot
      * #1 Return old Value Resource from LwM2MClient
      * #2 Update new Resources (replace old Resource Value on new Resource Value)
      * #3 If fr_update -> UpdateFirmware
@@ -605,7 +568,7 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
 
 
     /**
-     * send Attribute and Telemetry to Thingsboard
+     * send Attribute and Telemetry to Echoiot
      * #1 - get AttrName/TelemetryName with value from LwM2MClient:
      * -- resourceId == path from LwM2MClientProfile.postAttributeProfile/postTelemetryProfile/postObserveProfile
      * -- AttrName/TelemetryName == resourceName from ModelObject.objectModel, value from ModelObject.instance.resource(resourceId)
@@ -619,10 +582,10 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
             SessionInfoProto sessionInfo = this.getSessionInfoOrCloseSession(registration);
             if (results != null && sessionInfo != null) {
                 if (results.getResultAttributes().size() > 0) {
-                    this.helper.sendParametersOnThingsboardAttribute(results.getResultAttributes(), sessionInfo);
+                    this.helper.sendParametersOnEchoiotAttribute(results.getResultAttributes(), sessionInfo);
                 }
                 if (results.getResultTelemetries().size() > 0) {
-                    this.helper.sendParametersOnThingsboardTelemetry(results.getResultTelemetries(), sessionInfo);
+                    this.helper.sendParametersOnEchoiotTelemetry(results.getResultTelemetries(), sessionInfo);
                 }
             }
         } catch (Exception e) {
@@ -672,7 +635,7 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
             List<TransportProtos.KeyValueProto> resultAttributes = new ArrayList<>();
             profile.getObserveAttr().getAttribute().forEach(pathIdVer -> {
                 if (path.contains(pathIdVer)) {
-                    TransportProtos.KeyValueProto kvAttr = this.getKvToThingsBoard(pathIdVer, registration);
+                    TransportProtos.KeyValueProto kvAttr = this.getKvToEchoiot(pathIdVer, registration);
                     if (kvAttr != null) {
                         resultAttributes.add(kvAttr);
                     }
@@ -681,7 +644,7 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
             List<TransportProtos.KeyValueProto> resultTelemetries = new ArrayList<>();
             profile.getObserveAttr().getTelemetry().forEach(pathIdVer -> {
                 if (path.contains(pathIdVer)) {
-                    TransportProtos.KeyValueProto kvAttr = this.getKvToThingsBoard(pathIdVer, registration);
+                    TransportProtos.KeyValueProto kvAttr = this.getKvToEchoiot(pathIdVer, registration);
                     if (kvAttr != null) {
                         resultTelemetries.add(kvAttr);
                     }
@@ -698,7 +661,7 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
         return null;
     }
 
-    private TransportProtos.KeyValueProto getKvToThingsBoard(String pathIdVer, Registration registration) {
+    private TransportProtos.KeyValueProto getKvToEchoiot(String pathIdVer, Registration registration) {
         LwM2mClient lwM2MClient = this.clientContext.getClientByEndpoint(registration.getEndpoint());
         Map<String, String> names = clientContext.getProfile(lwM2MClient.getProfileId()).getObserveAttr().getKeyName();
         if (names != null && names.containsKey(pathIdVer)) {
@@ -729,7 +692,7 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
                         LwM2mOtaConvert lwM2mOtaConvert = convertOtaUpdateValueToString(pathIdVer, valueKvProto, currentType);
                         valueKvProto = lwM2mOtaConvert.getValue();
                         currentType = lwM2mOtaConvert.getCurrentType();
-                        return valueKvProto != null ? this.helper.getKvAttrTelemetryToThingsboard(currentType, resourceName, valueKvProto, resourceValue.isMultiInstances()) : null;
+                        return valueKvProto != null ? this.helper.getKvAttrTelemetryToEchoiot(currentType, resourceName, valueKvProto, resourceValue.isMultiInstances()) : null;
                     }
                 } catch (Exception e) {
                     log.error("Failed to add parameters.", e);
@@ -935,7 +898,7 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
      * - If there is a difference in values between the current resource values and the shared attribute values
      * - when the client connects to the server
      * #1.1 get attributes name from profile include name resources in ModelObject if resource  isWritable
-     * #1.2 #1 size > 0 => send Request getAttributes to thingsboard
+     * #1.2 #1 size > 0 => send Request getAttributes to echoiot
      * #2. FirmwareAttribute subscribe:
      *
      * @param lwM2MClient - LwM2M Client

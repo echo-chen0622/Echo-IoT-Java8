@@ -2,23 +2,15 @@ package org.echoiot.server.transport.lwm2m.server.client;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.server.common.data.DeviceProfile;
+import org.echoiot.server.common.data.device.data.PowerMode;
 import org.echoiot.server.common.data.device.profile.Lwm2mDeviceProfileTransportConfiguration;
 import org.echoiot.server.common.data.device.profile.lwm2m.OtherConfiguration;
+import org.echoiot.server.common.data.id.DeviceProfileId;
 import org.echoiot.server.common.transport.TransportDeviceProfileCache;
 import org.echoiot.server.common.transport.TransportServiceCallback;
 import org.echoiot.server.common.transport.auth.ValidateDeviceCredentialsResponse;
-import org.echoiot.server.transport.lwm2m.server.session.LwM2MSessionManager;
-import org.echoiot.server.transport.lwm2m.server.uplink.DefaultLwM2mUplinkMsgHandler;
-import org.eclipse.leshan.core.SecurityMode;
-import org.eclipse.leshan.core.node.LwM2mPath;
-import org.eclipse.leshan.server.registration.Registration;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Service;
-import org.echoiot.server.common.data.DeviceProfile;
-import org.echoiot.server.common.data.device.data.PowerMode;
-import org.echoiot.server.common.data.id.DeviceProfileId;
-import org.thingsboard.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.queue.util.AfterStartUp;
 import org.echoiot.server.queue.util.TbLwM2mTransportComponent;
 import org.echoiot.server.transport.lwm2m.config.LwM2MTransportServerConfig;
@@ -26,23 +18,26 @@ import org.echoiot.server.transport.lwm2m.secure.TbLwM2MSecurityInfo;
 import org.echoiot.server.transport.lwm2m.server.LwM2mTransportContext;
 import org.echoiot.server.transport.lwm2m.server.model.LwM2MModelConfigService;
 import org.echoiot.server.transport.lwm2m.server.ota.LwM2MOtaUpdateService;
+import org.echoiot.server.transport.lwm2m.server.session.LwM2MSessionManager;
 import org.echoiot.server.transport.lwm2m.server.store.TbLwM2MClientStore;
 import org.echoiot.server.transport.lwm2m.server.store.TbMainSecurityStore;
+import org.echoiot.server.transport.lwm2m.server.uplink.DefaultLwM2mUplinkMsgHandler;
 import org.echoiot.server.transport.lwm2m.utils.LwM2MTransportUtil;
+import org.eclipse.leshan.core.SecurityMode;
+import org.eclipse.leshan.core.node.LwM2mPath;
+import org.eclipse.leshan.server.registration.Registration;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 
-import static org.eclipse.leshan.core.SecurityMode.NO_SEC;
 import static org.echoiot.server.transport.lwm2m.utils.LwM2MTransportUtil.convertObjectIdToVersionedId;
+import static org.eclipse.leshan.core.SecurityMode.NO_SEC;
 
 @Slf4j
 @Service

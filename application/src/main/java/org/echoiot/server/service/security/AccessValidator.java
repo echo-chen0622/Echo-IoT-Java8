@@ -4,14 +4,17 @@ import com.google.common.base.Function;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
+import org.echoiot.common.util.EchoiotThreadFactory;
 import org.echoiot.server.common.data.*;
 import org.echoiot.server.common.data.asset.Asset;
 import org.echoiot.server.common.data.asset.AssetProfile;
 import org.echoiot.server.common.data.edge.Edge;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotException;
+import org.echoiot.server.common.data.id.*;
 import org.echoiot.server.common.data.rpc.Rpc;
 import org.echoiot.server.common.data.rule.RuleChain;
 import org.echoiot.server.common.data.rule.RuleNode;
+import org.echoiot.server.controller.HttpValidationCallback;
 import org.echoiot.server.dao.alarm.AlarmService;
 import org.echoiot.server.dao.asset.AssetProfileService;
 import org.echoiot.server.dao.asset.AssetService;
@@ -38,34 +41,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.async.DeferredResult;
-import org.thingsboard.common.util.ThingsBoardThreadFactory;
-import org.echoiot.server.common.data.ApiUsageState;
-import org.echoiot.server.common.data.Customer;
-import org.echoiot.server.common.data.Device;
-import org.echoiot.server.common.data.DeviceProfile;
-import org.echoiot.server.common.data.EntityView;
-import org.echoiot.server.common.data.OtaPackageInfo;
-import org.echoiot.server.common.data.TbResourceInfo;
-import org.echoiot.server.common.data.Tenant;
-import org.echoiot.server.common.data.User;
-import org.echoiot.server.common.data.id.ApiUsageStateId;
-import org.echoiot.server.common.data.id.AssetId;
-import org.echoiot.server.common.data.id.AssetProfileId;
-import org.echoiot.server.common.data.id.CustomerId;
-import org.echoiot.server.common.data.id.DeviceId;
-import org.echoiot.server.common.data.id.DeviceProfileId;
-import org.echoiot.server.common.data.id.EdgeId;
-import org.echoiot.server.common.data.id.EntityId;
-import org.echoiot.server.common.data.id.EntityIdFactory;
-import org.echoiot.server.common.data.id.EntityViewId;
-import org.echoiot.server.common.data.id.OtaPackageId;
-import org.echoiot.server.common.data.id.RpcId;
-import org.echoiot.server.common.data.id.RuleChainId;
-import org.echoiot.server.common.data.id.RuleNodeId;
-import org.echoiot.server.common.data.id.TbResourceId;
-import org.echoiot.server.common.data.id.TenantId;
-import org.echoiot.server.common.data.id.UserId;
-import org.echoiot.server.controller.HttpValidationCallback;
 
 import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
@@ -139,7 +114,7 @@ public class AccessValidator {
 
     @PostConstruct
     public void initExecutor() {
-        executor = Executors.newSingleThreadExecutor(ThingsBoardThreadFactory.forName("access-validator"));
+        executor = Executors.newSingleThreadExecutor(EchoiotThreadFactory.forName("access-validator"));
     }
 
     @PreDestroy
@@ -150,25 +125,25 @@ public class AccessValidator {
     }
 
     public DeferredResult<ResponseEntity> validateEntityAndCallback(SecurityUser currentUser, Operation operation, String entityType, String entityIdStr,
-                                                                    ThreeConsumer<DeferredResult<ResponseEntity>, TenantId, EntityId> onSuccess) throws ThingsboardException {
+                                                                    ThreeConsumer<DeferredResult<ResponseEntity>, TenantId, EntityId> onSuccess) throws EchoiotException {
         return validateEntityAndCallback(currentUser, operation, entityType, entityIdStr, onSuccess, (result, t) -> handleError(t, result, HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
     public DeferredResult<ResponseEntity> validateEntityAndCallback(SecurityUser currentUser, Operation operation, String entityType, String entityIdStr,
                                                                     ThreeConsumer<DeferredResult<ResponseEntity>, TenantId, EntityId> onSuccess,
-                                                                    BiConsumer<DeferredResult<ResponseEntity>, Throwable> onFailure) throws ThingsboardException {
+                                                                    BiConsumer<DeferredResult<ResponseEntity>, Throwable> onFailure) throws EchoiotException {
         return validateEntityAndCallback(currentUser, operation, EntityIdFactory.getByTypeAndId(entityType, entityIdStr),
                                          onSuccess, onFailure);
     }
 
     public DeferredResult<ResponseEntity> validateEntityAndCallback(SecurityUser currentUser, Operation operation, EntityId entityId,
-                                                                    ThreeConsumer<DeferredResult<ResponseEntity>, TenantId, EntityId> onSuccess) throws ThingsboardException {
+                                                                    ThreeConsumer<DeferredResult<ResponseEntity>, TenantId, EntityId> onSuccess) throws EchoiotException {
         return validateEntityAndCallback(currentUser, operation, entityId, onSuccess, (result, t) -> handleError(t, result, HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
     public DeferredResult<ResponseEntity> validateEntityAndCallback(SecurityUser currentUser, Operation operation, EntityId entityId,
                                                                     ThreeConsumer<DeferredResult<ResponseEntity>, TenantId, EntityId> onSuccess,
-                                                                    BiConsumer<DeferredResult<ResponseEntity>, Throwable> onFailure) throws ThingsboardException {
+                                                                    BiConsumer<DeferredResult<ResponseEntity>, Throwable> onFailure) throws EchoiotException {
 
         final DeferredResult<ResponseEntity> response = new DeferredResult<>();
 
@@ -194,49 +169,49 @@ public class AccessValidator {
 
     public void validate(SecurityUser currentUser, Operation operation, EntityId entityId, FutureCallback<ValidationResult> callback) {
         switch (entityId.getEntityType()) {
-            case EntityType.DEVICE:
+            case DEVICE:
                 validateDevice(currentUser, operation, entityId, callback);
                 return;
-            case EntityType.DEVICE_PROFILE:
+            case DEVICE_PROFILE:
                 validateDeviceProfile(currentUser, operation, entityId, callback);
                 return;
-            case EntityType.ASSET:
+            case ASSET:
                 validateAsset(currentUser, operation, entityId, callback);
                 return;
-            case EntityType.ASSET_PROFILE:
+            case ASSET_PROFILE:
                 validateAssetProfile(currentUser, operation, entityId, callback);
                 return;
-            case EntityType.RULE_CHAIN:
+            case RULE_CHAIN:
                 validateRuleChain(currentUser, operation, entityId, callback);
                 return;
-            case EntityType.CUSTOMER:
+            case CUSTOMER:
                 validateCustomer(currentUser, operation, entityId, callback);
                 return;
-            case EntityType.TENANT:
+            case TENANT:
                 validateTenant(currentUser, operation, entityId, callback);
                 return;
-            case EntityType.TENANT_PROFILE:
+            case TENANT_PROFILE:
                 validateTenantProfile(currentUser, operation, entityId, callback);
                 return;
-            case EntityType.USER:
+            case USER:
                 validateUser(currentUser, operation, entityId, callback);
                 return;
-            case EntityType.ENTITY_VIEW:
+            case ENTITY_VIEW:
                 validateEntityView(currentUser, operation, entityId, callback);
                 return;
-            case EntityType.EDGE:
+            case EDGE:
                 validateEdge(currentUser, operation, entityId, callback);
                 return;
-            case EntityType.API_USAGE_STATE:
+            case API_USAGE_STATE:
                 validateApiUsageState(currentUser, operation, entityId, callback);
                 return;
-            case EntityType.TB_RESOURCE:
+            case TB_RESOURCE:
                 validateResource(currentUser, operation, entityId, callback);
                 return;
-            case EntityType.OTA_PACKAGE:
+            case OTA_PACKAGE:
                 validateOtaPackage(currentUser, operation, entityId, callback);
                 return;
-            case EntityType.RPC:
+            case RPC:
                 validateRpc(currentUser, operation, entityId, callback);
                 return;
             default:
@@ -256,7 +231,7 @@ public class AccessValidator {
                 } else {
                     try {
                         accessControlService.checkPermission(currentUser, Resource.DEVICE, operation, entityId, device);
-                    } catch (ThingsboardException e) {
+                    } catch (EchoiotException e) {
                         return ValidationResult.accessDenied(e.getMessage());
                     }
                     return ValidationResult.ok(device);
@@ -273,7 +248,7 @@ public class AccessValidator {
             } else {
                 try {
                     accessControlService.checkPermission(currentUser, Resource.RPC, operation, entityId, rpc);
-                } catch (ThingsboardException e) {
+                } catch (EchoiotException e) {
                     return ValidationResult.accessDenied(e.getMessage());
                 }
                 return ValidationResult.ok(rpc);
@@ -291,7 +266,7 @@ public class AccessValidator {
             } else {
                 try {
                     accessControlService.checkPermission(currentUser, Resource.DEVICE_PROFILE, operation, entityId, deviceProfile);
-                } catch (ThingsboardException e) {
+                } catch (EchoiotException e) {
                     callback.onSuccess(ValidationResult.accessDenied(e.getMessage()));
                 }
                 callback.onSuccess(ValidationResult.ok(deviceProfile));
@@ -309,7 +284,7 @@ public class AccessValidator {
             } else {
                 try {
                     accessControlService.checkPermission(currentUser, Resource.ASSET_PROFILE, operation, entityId, assetProfile);
-                } catch (ThingsboardException e) {
+                } catch (EchoiotException e) {
                     callback.onSuccess(ValidationResult.accessDenied(e.getMessage()));
                 }
                 callback.onSuccess(ValidationResult.ok(assetProfile));
@@ -330,7 +305,7 @@ public class AccessValidator {
             } else {
                 try {
                     accessControlService.checkPermission(currentUser, Resource.API_USAGE_STATE, operation, entityId, apiUsageState);
-                } catch (ThingsboardException e) {
+                } catch (EchoiotException e) {
                     callback.onSuccess(ValidationResult.accessDenied(e.getMessage()));
                 }
                 callback.onSuccess(ValidationResult.ok(apiUsageState));
@@ -348,7 +323,7 @@ public class AccessValidator {
             } else {
                 try {
                     accessControlService.checkPermission(currentUser, Resource.OTA_PACKAGE, operation, entityId, otaPackage);
-                } catch (ThingsboardException e) {
+                } catch (EchoiotException e) {
                     callback.onSuccess(ValidationResult.accessDenied(e.getMessage()));
                 }
                 callback.onSuccess(ValidationResult.ok(otaPackage));
@@ -364,7 +339,7 @@ public class AccessValidator {
             } else {
                 try {
                     accessControlService.checkPermission(currentUser, Resource.TB_RESOURCE, operation, entityId, resource);
-                } catch (ThingsboardException e) {
+                } catch (EchoiotException e) {
                     return ValidationResult.accessDenied(e.getMessage());
                 }
                 return ValidationResult.ok(resource);
@@ -383,7 +358,7 @@ public class AccessValidator {
                 } else {
                     try {
                         accessControlService.checkPermission(currentUser, Resource.ASSET, operation, entityId, asset);
-                    } catch (ThingsboardException e) {
+                    } catch (EchoiotException e) {
                         return ValidationResult.accessDenied(e.getMessage());
                     }
                     return ValidationResult.ok(asset);
@@ -403,7 +378,7 @@ public class AccessValidator {
                 } else {
                     try {
                         accessControlService.checkPermission(currentUser, Resource.RULE_CHAIN, operation, entityId, ruleChain);
-                    } catch (ThingsboardException e) {
+                    } catch (EchoiotException e) {
                         return ValidationResult.accessDenied(e.getMessage());
                     }
                     return ValidationResult.ok(ruleChain);
@@ -428,7 +403,7 @@ public class AccessValidator {
                     RuleChain ruleChain = ruleChainService.findRuleChainById(currentUser.getTenantId(), ruleNode.getRuleChainId());
                     try {
                         accessControlService.checkPermission(currentUser, Resource.RULE_CHAIN, operation, ruleNode.getRuleChainId(), ruleChain);
-                    } catch (ThingsboardException e) {
+                    } catch (EchoiotException e) {
                         return ValidationResult.accessDenied(e.getMessage());
                     }
                     return ValidationResult.ok(ruleNode);
@@ -448,7 +423,7 @@ public class AccessValidator {
                 } else {
                     try {
                         accessControlService.checkPermission(currentUser, Resource.CUSTOMER, operation, entityId, customer);
-                    } catch (ThingsboardException e) {
+                    } catch (EchoiotException e) {
                         return ValidationResult.accessDenied(e.getMessage());
                     }
                     return ValidationResult.ok(customer);
@@ -470,7 +445,7 @@ public class AccessValidator {
                 }
                 try {
                     accessControlService.checkPermission(currentUser, Resource.TENANT, operation, entityId, tenant);
-                } catch (ThingsboardException e) {
+                } catch (EchoiotException e) {
                     return ValidationResult.accessDenied(e.getMessage());
                 }
                 return ValidationResult.ok(tenant);
@@ -495,7 +470,7 @@ public class AccessValidator {
             }
             try {
                 accessControlService.checkPermission(currentUser, Resource.USER, operation, entityId, user);
-            } catch (ThingsboardException e) {
+            } catch (EchoiotException e) {
                 return ValidationResult.accessDenied(e.getMessage());
             }
             return ValidationResult.ok(user);
@@ -514,7 +489,7 @@ public class AccessValidator {
                 } else {
                     try {
                         accessControlService.checkPermission(currentUser, Resource.ENTITY_VIEW, operation, entityId, entityView);
-                    } catch (ThingsboardException e) {
+                    } catch (EchoiotException e) {
                         return ValidationResult.accessDenied(e.getMessage());
                     }
                     return ValidationResult.ok(entityView);
@@ -534,7 +509,7 @@ public class AccessValidator {
                 } else {
                     try {
                         accessControlService.checkPermission(currentUser, Resource.EDGE, operation, entityId, edge);
-                    } catch (ThingsboardException e) {
+                    } catch (EchoiotException e) {
                         return ValidationResult.accessDenied(e.getMessage());
                     }
                     return ValidationResult.ok(edge);

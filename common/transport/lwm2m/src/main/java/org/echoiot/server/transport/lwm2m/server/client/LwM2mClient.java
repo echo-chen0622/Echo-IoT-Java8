@@ -1,13 +1,19 @@
-package org.thingsboard.server.transport.lwm2m.server.client;
+package org.echoiot.server.transport.lwm2m.server.client;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.server.common.data.Device;
+import org.echoiot.server.common.data.DeviceProfile;
 import org.echoiot.server.common.data.device.data.Lwm2mDeviceTransportConfiguration;
+import org.echoiot.server.common.data.device.data.PowerMode;
+import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.transport.auth.ValidateDeviceCredentialsResponse;
-import org.echoiot.server.transport.lwm2m.server.client.ResourceValue;
+import org.echoiot.server.gen.transport.TransportProtos.SessionInfoProto;
+import org.echoiot.server.gen.transport.TransportProtos.TsKvProto;
+import org.echoiot.server.transport.lwm2m.config.TbLwM2mVersion;
 import org.eclipse.leshan.core.link.LinkParamValue;
 import org.eclipse.leshan.core.model.ObjectModel;
 import org.eclipse.leshan.core.model.ResourceModel;
@@ -20,21 +26,8 @@ import org.eclipse.leshan.core.request.ContentFormat;
 import org.eclipse.leshan.core.request.WriteRequest.Mode;
 import org.eclipse.leshan.server.model.LwM2mModelProvider;
 import org.eclipse.leshan.server.registration.Registration;
-import org.echoiot.server.common.data.Device;
-import org.echoiot.server.common.data.DeviceProfile;
-import org.echoiot.server.common.data.device.data.PowerMode;
-import org.echoiot.server.common.data.id.TenantId;
-import org.thingsboard.server.gen.transport.TransportProtos.SessionInfoProto;
-import org.thingsboard.server.gen.transport.TransportProtos.TsKvProto;
-import org.echoiot.server.transport.lwm2m.config.TbLwM2mVersion;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.Future;
@@ -46,11 +39,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.echoiot.server.common.data.lwm2m.LwM2mConstants.LWM2M_SEPARATOR_PATH;
-import static org.echoiot.server.transport.lwm2m.utils.LwM2MTransportUtil.convertMultiResourceValuesFromRpcBody;
-import static org.echoiot.server.transport.lwm2m.utils.LwM2MTransportUtil.convertObjectIdToVersionedId;
-import static org.echoiot.server.transport.lwm2m.utils.LwM2MTransportUtil.equalsResourceTypeGetSimpleName;
-import static org.echoiot.server.transport.lwm2m.utils.LwM2MTransportUtil.fromVersionedIdToObjectId;
-import static org.echoiot.server.transport.lwm2m.utils.LwM2MTransportUtil.getVerFromPathIdVerOrId;
+import static org.echoiot.server.transport.lwm2m.utils.LwM2MTransportUtil.*;
 
 @Slf4j
 @EqualsAndHashCode(of = {"endpoint"})

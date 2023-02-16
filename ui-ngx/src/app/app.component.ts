@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -16,20 +16,20 @@
 
 import 'hammerjs';
 
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
-import { environment as env } from '@env/environment';
+import {environment as env} from '@env/environment';
 
-import { TranslateService } from '@ngx-translate/core';
-import { select, Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { LocalStorageService } from '@core/local-storage/local-storage.service';
-import { DomSanitizer } from '@angular/platform-browser';
-import { MatIconRegistry } from '@angular/material/icon';
-import { combineLatest } from 'rxjs';
-import { selectIsAuthenticated, selectIsUserLoaded } from '@core/auth/auth.selectors';
-import { distinctUntilChanged, filter, map, skip } from 'rxjs/operators';
-import { AuthService } from '@core/auth/auth.service';
+import {TranslateService} from '@ngx-translate/core';
+import {select, Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {LocalStorageService} from '@core/local-storage/local-storage.service';
+import {DomSanitizer} from '@angular/platform-browser';
+import {MatIconRegistry} from '@angular/material/icon';
+import {combineLatest} from 'rxjs';
+import {selectIsAuthenticated, selectIsUserLoaded} from '@core/auth/auth.selectors';
+import {distinctUntilChanged, filter, map, skip} from 'rxjs/operators';
+import {AuthService} from '@core/auth/auth.service';
 
 @Component({
   selector: 'tb-root',
@@ -45,7 +45,7 @@ export class AppComponent implements OnInit {
               private domSanitizer: DomSanitizer,
               private authService: AuthService) {
 
-    console.log(`ThingsBoard Version: ${env.tbVersion}`);
+    console.log(`Echoiot Version: ${env.tbVersion}`);
 
     this.matIconRegistry.addSvgIconSetInNamespace('mdi',
       this.domSanitizer.bypassSecurityTrustResourceUrl('./assets/mdi.svg'));

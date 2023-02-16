@@ -6,7 +6,7 @@ import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.User;
 import org.echoiot.server.common.data.audit.ActionType;
 import org.echoiot.server.common.data.edge.EdgeEventActionType;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.RuleChainId;
 import org.echoiot.server.common.data.id.RuleNodeId;
 import org.echoiot.server.common.data.id.TenantId;
@@ -111,7 +111,7 @@ public class RuleChainImportService extends BaseEntityImportService<RuleChainId,
     }
 
     @Override
-    protected void onEntitySaved(User user, RuleChain savedRuleChain, RuleChain oldRuleChain) throws ThingsboardException {
+    protected void onEntitySaved(User user, RuleChain savedRuleChain, RuleChain oldRuleChain) throws EchoiotException {
         entityActionService.logEntityAction(user, savedRuleChain.getId(), savedRuleChain, null,
                 oldRuleChain == null ? ActionType.ADDED : ActionType.UPDATED, null);
         if (savedRuleChain.getType() == RuleChainType.CORE) {

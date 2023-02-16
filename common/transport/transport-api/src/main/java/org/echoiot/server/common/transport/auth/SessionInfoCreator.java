@@ -2,7 +2,7 @@ package org.echoiot.server.common.transport.auth;
 
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.transport.TransportContext;
-import org.thingsboard.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.transport.TransportProtos;
 
 import java.util.UUID;
 

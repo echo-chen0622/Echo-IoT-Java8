@@ -2,8 +2,8 @@ package org.echoiot.server.queue.provider;
 
 import org.echoiot.server.queue.TbQueueConsumer;
 import org.echoiot.server.queue.TbQueueProducer;
-import org.thingsboard.server.gen.transport.TransportProtos.ToCoreNotificationMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.ToVersionControlServiceMsg;
+import org.echoiot.server.gen.transport.TransportProtos.ToCoreNotificationMsg;
+import org.echoiot.server.gen.transport.TransportProtos.ToVersionControlServiceMsg;
 import org.echoiot.server.queue.common.TbProtoQueueMsg;
 
 /**

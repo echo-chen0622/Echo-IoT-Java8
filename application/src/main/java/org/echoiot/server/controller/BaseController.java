@@ -9,6 +9,7 @@ import com.google.common.util.concurrent.MoreExecutors;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.cluster.TbClusterService;
+import org.echoiot.server.common.data.*;
 import org.echoiot.server.common.data.alarm.Alarm;
 import org.echoiot.server.common.data.alarm.AlarmInfo;
 import org.echoiot.server.common.data.asset.Asset;
@@ -18,8 +19,9 @@ import org.echoiot.server.common.data.edge.Edge;
 import org.echoiot.server.common.data.edge.EdgeEventActionType;
 import org.echoiot.server.common.data.edge.EdgeEventType;
 import org.echoiot.server.common.data.edge.EdgeInfo;
-import org.echoiot.server.common.data.exception.ThingsboardErrorCode;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotErrorCode;
+import org.echoiot.server.common.data.exception.EchoiotException;
+import org.echoiot.server.common.data.id.*;
 import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.common.data.page.SortOrder;
 import org.echoiot.server.common.data.page.TimePageLink;
@@ -61,6 +63,7 @@ import org.echoiot.server.dao.tenant.TenantService;
 import org.echoiot.server.dao.user.UserService;
 import org.echoiot.server.dao.widget.WidgetTypeService;
 import org.echoiot.server.dao.widget.WidgetsBundleService;
+import org.echoiot.server.exception.EchoiotErrorResponseHandler;
 import org.echoiot.server.queue.discovery.PartitionService;
 import org.echoiot.server.queue.provider.TbQueueProducerProvider;
 import org.echoiot.server.queue.util.TbCoreComponent;
@@ -89,48 +92,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.async.AsyncRequestTimeoutException;
 import org.springframework.web.context.request.async.DeferredResult;
-import org.echoiot.server.common.data.Customer;
-import org.echoiot.server.common.data.Dashboard;
-import org.echoiot.server.common.data.DashboardInfo;
-import org.echoiot.server.common.data.Device;
-import org.echoiot.server.common.data.DeviceInfo;
-import org.echoiot.server.common.data.DeviceProfile;
-import org.echoiot.server.common.data.EntityType;
-import org.echoiot.server.common.data.EntityView;
-import org.echoiot.server.common.data.EntityViewInfo;
-import org.echoiot.server.common.data.HasTenantId;
-import org.echoiot.server.common.data.OtaPackage;
-import org.echoiot.server.common.data.OtaPackageInfo;
-import org.echoiot.server.common.data.StringUtils;
-import org.echoiot.server.common.data.TbResource;
-import org.echoiot.server.common.data.TbResourceInfo;
-import org.echoiot.server.common.data.Tenant;
-import org.echoiot.server.common.data.TenantInfo;
-import org.echoiot.server.common.data.TenantProfile;
-import org.echoiot.server.common.data.User;
-import org.echoiot.server.common.data.id.AlarmId;
-import org.echoiot.server.common.data.id.AssetId;
-import org.echoiot.server.common.data.id.AssetProfileId;
-import org.echoiot.server.common.data.id.CustomerId;
-import org.echoiot.server.common.data.id.DashboardId;
-import org.echoiot.server.common.data.id.DeviceId;
-import org.echoiot.server.common.data.id.DeviceProfileId;
-import org.echoiot.server.common.data.id.EdgeId;
-import org.echoiot.server.common.data.id.EntityId;
-import org.echoiot.server.common.data.id.EntityIdFactory;
-import org.echoiot.server.common.data.id.EntityViewId;
-import org.echoiot.server.common.data.id.OtaPackageId;
-import org.echoiot.server.common.data.id.QueueId;
-import org.echoiot.server.common.data.id.RpcId;
-import org.echoiot.server.common.data.id.RuleChainId;
-import org.echoiot.server.common.data.id.RuleNodeId;
-import org.echoiot.server.common.data.id.TbResourceId;
-import org.echoiot.server.common.data.id.TenantId;
-import org.echoiot.server.common.data.id.TenantProfileId;
-import org.echoiot.server.common.data.id.UserId;
-import org.echoiot.server.common.data.id.WidgetTypeId;
-import org.echoiot.server.common.data.id.WidgetsBundleId;
-import org.echoiot.server.exception.ThingsboardErrorResponseHandler;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
@@ -152,7 +113,7 @@ public abstract class BaseController {
     private static final ObjectMapper json = new ObjectMapper();
 
     @Autowired
-    private ThingsboardErrorResponseHandler errorResponseHandler;
+    private EchoiotErrorResponseHandler errorResponseHandler;
 
     @Autowired
     protected AccessControlService accessControlService;
@@ -284,24 +245,24 @@ public abstract class BaseController {
 
     @ExceptionHandler(Exception.class)
     public void handleControllerException(Exception e, HttpServletResponse response) {
-        ThingsboardException thingsboardException = handleException(e);
-        if (thingsboardException.getErrorCode() == ThingsboardErrorCode.GENERAL && thingsboardException.getCause() instanceof Exception
-            && StringUtils.equals(thingsboardException.getCause().getMessage(), thingsboardException.getMessage())) {
-            e = (Exception) thingsboardException.getCause();
+        EchoiotException echoiotException = handleException(e);
+        if (echoiotException.getErrorCode() == EchoiotErrorCode.GENERAL && echoiotException.getCause() instanceof Exception
+            && StringUtils.equals(echoiotException.getCause().getMessage(), echoiotException.getMessage())) {
+            e = (Exception) echoiotException.getCause();
         } else {
-            e = thingsboardException;
+            e = echoiotException;
         }
         errorResponseHandler.handle(e, response);
     }
 
-    @ExceptionHandler(ThingsboardException.class)
-    public void handleThingsboardException(ThingsboardException ex, HttpServletResponse response) {
+    @ExceptionHandler(EchoiotException.class)
+    public void handleEchoiotException(EchoiotException ex, HttpServletResponse response) {
         errorResponseHandler.handle(ex, response);
     }
 
     /**
-     * @deprecated Exceptions that are not of {@link ThingsboardException} type
-     * are now caught and mapped to {@link ThingsboardException} by
+     * @deprecated Exceptions that are not of {@link EchoiotException} type
+     * are now caught and mapped to {@link EchoiotException} by
      * {@link ExceptionHandler} {@link BaseController#handleControllerException(Exception, HttpServletResponse)}
      * which basically acts like the following boilerplate:
      * {@code
@@ -313,11 +274,11 @@ public abstract class BaseController {
      * }
      * */
     @Deprecated
-    ThingsboardException handleException(Exception exception) {
+    EchoiotException handleException(Exception exception) {
         return handleException(exception, true);
     }
 
-    private ThingsboardException handleException(Exception exception, boolean logException) {
+    private EchoiotException handleException(Exception exception, boolean logException) {
         if (logException && logControllerErrorStackTrace) {
             log.error("Error [{}]", exception.getMessage(), exception);
         }
@@ -327,17 +288,17 @@ public abstract class BaseController {
             cause = exception.getCause().getClass().getCanonicalName();
         }
 
-        if (exception instanceof ThingsboardException) {
-            return (ThingsboardException) exception;
+        if (exception instanceof EchoiotException) {
+            return (EchoiotException) exception;
         } else if (exception instanceof IllegalArgumentException || exception instanceof IncorrectParameterException
                    || exception instanceof DataValidationException || cause.contains("IncorrectParameterException")) {
-            return new ThingsboardException(exception.getMessage(), ThingsboardErrorCode.BAD_REQUEST_PARAMS);
+            return new EchoiotException(exception.getMessage(), EchoiotErrorCode.BAD_REQUEST_PARAMS);
         } else if (exception instanceof MessagingException) {
-            return new ThingsboardException("Unable to send mail: " + exception.getMessage(), ThingsboardErrorCode.GENERAL);
+            return new EchoiotException("Unable to send mail: " + exception.getMessage(), EchoiotErrorCode.GENERAL);
         } else if (exception instanceof AsyncRequestTimeoutException) {
-            return new ThingsboardException("Request timeout", ThingsboardErrorCode.GENERAL);
+            return new EchoiotException("Request timeout", EchoiotErrorCode.GENERAL);
         } else {
-            return new ThingsboardException(exception.getMessage(), exception, ThingsboardErrorCode.GENERAL);
+            return new EchoiotException(exception.getMessage(), exception, EchoiotErrorCode.GENERAL);
         }
     }
 
@@ -349,42 +310,42 @@ public abstract class BaseController {
         String errorMessage = "Validation error: " + e.getBindingResult().getAllErrors().stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.joining(", "));
-        ThingsboardException thingsboardException = new ThingsboardException(errorMessage, ThingsboardErrorCode.BAD_REQUEST_PARAMS);
-        handleThingsboardException(thingsboardException, response);
+        EchoiotException echoiotException = new EchoiotException(errorMessage, EchoiotErrorCode.BAD_REQUEST_PARAMS);
+        handleEchoiotException(echoiotException, response);
     }
 
-    <T> T checkNotNull(T reference) throws ThingsboardException {
+    <T> T checkNotNull(T reference) throws EchoiotException {
         return checkNotNull(reference, "Requested item wasn't found!");
     }
 
-    <T> T checkNotNull(T reference, String notFoundMessage) throws ThingsboardException {
+    <T> T checkNotNull(T reference, String notFoundMessage) throws EchoiotException {
         if (reference == null) {
-            throw new ThingsboardException(notFoundMessage, ThingsboardErrorCode.ITEM_NOT_FOUND);
+            throw new EchoiotException(notFoundMessage, EchoiotErrorCode.ITEM_NOT_FOUND);
         }
         return reference;
     }
 
-    <T> T checkNotNull(Optional<T> reference) throws ThingsboardException {
+    <T> T checkNotNull(Optional<T> reference) throws EchoiotException {
         return checkNotNull(reference, "Requested item wasn't found!");
     }
 
-    <T> T checkNotNull(Optional<T> reference, String notFoundMessage) throws ThingsboardException {
+    <T> T checkNotNull(Optional<T> reference, String notFoundMessage) throws EchoiotException {
         if (reference.isPresent()) {
             return reference.get();
         } else {
-            throw new ThingsboardException(notFoundMessage, ThingsboardErrorCode.ITEM_NOT_FOUND);
+            throw new EchoiotException(notFoundMessage, EchoiotErrorCode.ITEM_NOT_FOUND);
         }
     }
 
-    void checkParameter(String name, String param) throws ThingsboardException {
+    void checkParameter(String name, String param) throws EchoiotException {
         if (StringUtils.isEmpty(param)) {
-            throw new ThingsboardException("Parameter '" + name + "' can't be empty!", ThingsboardErrorCode.BAD_REQUEST_PARAMS);
+            throw new EchoiotException("Parameter '" + name + "' can't be empty!", EchoiotErrorCode.BAD_REQUEST_PARAMS);
         }
     }
 
-    void checkArrayParameter(String name, String[] params) throws ThingsboardException {
+    void checkArrayParameter(String name, String[] params) throws EchoiotException {
         if (params == null || params.length == 0) {
-            throw new ThingsboardException("Parameter '" + name + "' can't be empty!", ThingsboardErrorCode.BAD_REQUEST_PARAMS);
+            throw new EchoiotException("Parameter '" + name + "' can't be empty!", EchoiotErrorCode.BAD_REQUEST_PARAMS);
         } else {
             for (String param : params) {
                 checkParameter(name, param);
@@ -392,7 +353,7 @@ public abstract class BaseController {
         }
     }
 
-    UUID toUUID(String id) throws ThingsboardException {
+    UUID toUUID(String id) throws EchoiotException {
         try {
             return UUID.fromString(id);
         } catch (IllegalArgumentException e) {
@@ -400,7 +361,7 @@ public abstract class BaseController {
         }
     }
 
-    PageLink createPageLink(int pageSize, int page, String textSearch, String sortProperty, String sortOrder) throws ThingsboardException {
+    PageLink createPageLink(int pageSize, int page, String textSearch, String sortProperty, String sortOrder) throws EchoiotException {
         if (StringUtils.isNotEmpty(sortProperty)) {
             if (!Validator.isValidProperty(sortProperty)) {
                 throw new IllegalArgumentException("Invalid sort property");
@@ -410,7 +371,7 @@ public abstract class BaseController {
                 try {
                     direction = SortOrder.Direction.valueOf(sortOrder.toUpperCase());
                 } catch (IllegalArgumentException e) {
-                    throw new ThingsboardException("Unsupported sort order '" + sortOrder + "'! Only 'ASC' or 'DESC' types are allowed.", ThingsboardErrorCode.BAD_REQUEST_PARAMS);
+                    throw new EchoiotException("Unsupported sort order '" + sortOrder + "'! Only 'ASC' or 'DESC' types are allowed.", EchoiotErrorCode.BAD_REQUEST_PARAMS);
                 }
             }
             SortOrder sort = new SortOrder(sortProperty, direction);
@@ -421,21 +382,21 @@ public abstract class BaseController {
     }
 
     TimePageLink createTimePageLink(int pageSize, int page, String textSearch,
-                                    String sortProperty, String sortOrder, Long startTime, Long endTime) throws ThingsboardException {
+                                    String sortProperty, String sortOrder, Long startTime, Long endTime) throws EchoiotException {
         PageLink pageLink = this.createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
         return new TimePageLink(pageLink, startTime, endTime);
     }
 
-    protected SecurityUser getCurrentUser() throws ThingsboardException {
+    protected SecurityUser getCurrentUser() throws EchoiotException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof SecurityUser) {
             return (SecurityUser) authentication.getPrincipal();
         } else {
-            throw new ThingsboardException("You aren't authorized to perform this operation!", ThingsboardErrorCode.AUTHENTICATION);
+            throw new EchoiotException("You aren't authorized to perform this operation!", EchoiotErrorCode.AUTHENTICATION);
         }
     }
 
-    Tenant checkTenantId(TenantId tenantId, Operation operation) throws ThingsboardException {
+    Tenant checkTenantId(TenantId tenantId, Operation operation) throws EchoiotException {
         try {
             validateId(tenantId, INCORRECT_TENANT_ID + tenantId);
             Tenant tenant = tenantService.findTenantById(tenantId);
@@ -447,7 +408,7 @@ public abstract class BaseController {
         }
     }
 
-    TenantInfo checkTenantInfoId(TenantId tenantId, Operation operation) throws ThingsboardException {
+    TenantInfo checkTenantInfoId(TenantId tenantId, Operation operation) throws EchoiotException {
         try {
             validateId(tenantId, INCORRECT_TENANT_ID + tenantId);
             TenantInfo tenant = tenantService.findTenantInfoById(tenantId);
@@ -459,7 +420,7 @@ public abstract class BaseController {
         }
     }
 
-    TenantProfile checkTenantProfileId(TenantProfileId tenantProfileId, Operation operation) throws ThingsboardException {
+    TenantProfile checkTenantProfileId(TenantProfileId tenantProfileId, Operation operation) throws EchoiotException {
         try {
             Validator.validateId(tenantProfileId, "Incorrect tenantProfileId " + tenantProfileId);
             TenantProfile tenantProfile = tenantProfileService.findTenantProfileById(getTenantId(), tenantProfileId);
@@ -471,11 +432,11 @@ public abstract class BaseController {
         }
     }
 
-    protected TenantId getTenantId() throws ThingsboardException {
+    protected TenantId getTenantId() throws EchoiotException {
         return getCurrentUser().getTenantId();
     }
 
-    Customer checkCustomerId(CustomerId customerId, Operation operation) throws ThingsboardException {
+    Customer checkCustomerId(CustomerId customerId, Operation operation) throws EchoiotException {
         try {
             Validator.validateId(customerId, "Incorrect customerId " + customerId);
             Customer customer = customerService.findCustomerById(getTenantId(), customerId);
@@ -487,7 +448,7 @@ public abstract class BaseController {
         }
     }
 
-    User checkUserId(UserId userId, Operation operation) throws ThingsboardException {
+    User checkUserId(UserId userId, Operation operation) throws EchoiotException {
         try {
             Validator.validateId(userId, "Incorrect userId " + userId);
             User user = userService.findUserById(getCurrentUser().getTenantId(), userId);
@@ -499,7 +460,7 @@ public abstract class BaseController {
         }
     }
 
-    protected <I extends EntityId, T extends HasTenantId> void checkEntity(I entityId, T entity, Resource resource) throws ThingsboardException {
+    protected <I extends EntityId, T extends HasTenantId> void checkEntity(I entityId, T entity, Resource resource) throws EchoiotException {
         if (entityId == null) {
             accessControlService
                     .checkPermission(getCurrentUser(), resource, Operation.CREATE, null, entity);
@@ -508,68 +469,68 @@ public abstract class BaseController {
         }
     }
 
-    protected void checkEntityId(EntityId entityId, Operation operation) throws ThingsboardException {
+    protected void checkEntityId(EntityId entityId, Operation operation) throws EchoiotException {
         try {
             if (entityId == null) {
-                throw new ThingsboardException("Parameter entityId can't be empty!", ThingsboardErrorCode.BAD_REQUEST_PARAMS);
+                throw new EchoiotException("Parameter entityId can't be empty!", EchoiotErrorCode.BAD_REQUEST_PARAMS);
             }
             Validator.validateId(entityId.getId(), "Incorrect entityId " + entityId);
             switch (entityId.getEntityType()) {
-                case EntityType.ALARM:
+                case ALARM:
                     checkAlarmId(new AlarmId(entityId.getId()), operation);
                     return;
-                case EntityType.DEVICE:
+                case DEVICE:
                     checkDeviceId(new DeviceId(entityId.getId()), operation);
                     return;
-                case EntityType.DEVICE_PROFILE:
+                case DEVICE_PROFILE:
                     checkDeviceProfileId(new DeviceProfileId(entityId.getId()), operation);
                     return;
-                case EntityType.CUSTOMER:
+                case CUSTOMER:
                     checkCustomerId(new CustomerId(entityId.getId()), operation);
                     return;
-                case EntityType.TENANT:
+                case TENANT:
                     checkTenantId(TenantId.fromUUID(entityId.getId()), operation);
                     return;
-                case EntityType.TENANT_PROFILE:
+                case TENANT_PROFILE:
                     checkTenantProfileId(new TenantProfileId(entityId.getId()), operation);
                     return;
-                case EntityType.RULE_CHAIN:
+                case RULE_CHAIN:
                     checkRuleChain(new RuleChainId(entityId.getId()), operation);
                     return;
-                case EntityType.RULE_NODE:
+                case RULE_NODE:
                     checkRuleNode(new RuleNodeId(entityId.getId()), operation);
                     return;
-                case EntityType.ASSET:
+                case ASSET:
                     checkAssetId(new AssetId(entityId.getId()), operation);
                     return;
-                case EntityType.ASSET_PROFILE:
+                case ASSET_PROFILE:
                     checkAssetProfileId(new AssetProfileId(entityId.getId()), operation);
                     return;
-                case EntityType.DASHBOARD:
+                case DASHBOARD:
                     checkDashboardId(new DashboardId(entityId.getId()), operation);
                     return;
-                case EntityType.USER:
+                case USER:
                     checkUserId(new UserId(entityId.getId()), operation);
                     return;
-                case EntityType.ENTITY_VIEW:
+                case ENTITY_VIEW:
                     checkEntityViewId(new EntityViewId(entityId.getId()), operation);
                     return;
-                case EntityType.EDGE:
+                case EDGE:
                     checkEdgeId(new EdgeId(entityId.getId()), operation);
                     return;
-                case EntityType.WIDGETS_BUNDLE:
+                case WIDGETS_BUNDLE:
                     checkWidgetsBundleId(new WidgetsBundleId(entityId.getId()), operation);
                     return;
-                case EntityType.WIDGET_TYPE:
+                case WIDGET_TYPE:
                     checkWidgetTypeId(new WidgetTypeId(entityId.getId()), operation);
                     return;
-                case EntityType.TB_RESOURCE:
+                case TB_RESOURCE:
                     checkResourceId(new TbResourceId(entityId.getId()), operation);
                     return;
-                case EntityType.OTA_PACKAGE:
+                case OTA_PACKAGE:
                     checkOtaPackageId(new OtaPackageId(entityId.getId()), operation);
                     return;
-                case EntityType.QUEUE:
+                case QUEUE:
                     checkQueueId(new QueueId(entityId.getId()), operation);
                     return;
                 default:
@@ -580,7 +541,7 @@ public abstract class BaseController {
         }
     }
 
-    Device checkDeviceId(DeviceId deviceId, Operation operation) throws ThingsboardException {
+    Device checkDeviceId(DeviceId deviceId, Operation operation) throws EchoiotException {
         try {
             Validator.validateId(deviceId, "Incorrect deviceId " + deviceId);
             Device device = deviceService.findDeviceById(getCurrentUser().getTenantId(), deviceId);
@@ -592,7 +553,7 @@ public abstract class BaseController {
         }
     }
 
-    DeviceInfo checkDeviceInfoId(DeviceId deviceId, Operation operation) throws ThingsboardException {
+    DeviceInfo checkDeviceInfoId(DeviceId deviceId, Operation operation) throws EchoiotException {
         try {
             Validator.validateId(deviceId, "Incorrect deviceId " + deviceId);
             DeviceInfo device = deviceService.findDeviceInfoById(getCurrentUser().getTenantId(), deviceId);
@@ -604,7 +565,7 @@ public abstract class BaseController {
         }
     }
 
-    DeviceProfile checkDeviceProfileId(DeviceProfileId deviceProfileId, Operation operation) throws ThingsboardException {
+    DeviceProfile checkDeviceProfileId(DeviceProfileId deviceProfileId, Operation operation) throws EchoiotException {
         try {
             Validator.validateId(deviceProfileId, "Incorrect deviceProfileId " + deviceProfileId);
             DeviceProfile deviceProfile = deviceProfileService.findDeviceProfileById(getCurrentUser().getTenantId(), deviceProfileId);
@@ -616,7 +577,7 @@ public abstract class BaseController {
         }
     }
 
-    protected EntityView checkEntityViewId(EntityViewId entityViewId, Operation operation) throws ThingsboardException {
+    protected EntityView checkEntityViewId(EntityViewId entityViewId, Operation operation) throws EchoiotException {
         try {
             Validator.validateId(entityViewId, "Incorrect entityViewId " + entityViewId);
             EntityView entityView = entityViewService.findEntityViewById(getCurrentUser().getTenantId(), entityViewId);
@@ -628,7 +589,7 @@ public abstract class BaseController {
         }
     }
 
-    EntityViewInfo checkEntityViewInfoId(EntityViewId entityViewId, Operation operation) throws ThingsboardException {
+    EntityViewInfo checkEntityViewInfoId(EntityViewId entityViewId, Operation operation) throws EchoiotException {
         try {
             Validator.validateId(entityViewId, "Incorrect entityViewId " + entityViewId);
             EntityViewInfo entityView = entityViewService.findEntityViewInfoById(getCurrentUser().getTenantId(), entityViewId);
@@ -640,7 +601,7 @@ public abstract class BaseController {
         }
     }
 
-    Asset checkAssetId(AssetId assetId, Operation operation) throws ThingsboardException {
+    Asset checkAssetId(AssetId assetId, Operation operation) throws EchoiotException {
         try {
             Validator.validateId(assetId, "Incorrect assetId " + assetId);
             Asset asset = assetService.findAssetById(getCurrentUser().getTenantId(), assetId);
@@ -652,7 +613,7 @@ public abstract class BaseController {
         }
     }
 
-    AssetInfo checkAssetInfoId(AssetId assetId, Operation operation) throws ThingsboardException {
+    AssetInfo checkAssetInfoId(AssetId assetId, Operation operation) throws EchoiotException {
         try {
             Validator.validateId(assetId, "Incorrect assetId " + assetId);
             AssetInfo asset = assetService.findAssetInfoById(getCurrentUser().getTenantId(), assetId);
@@ -664,7 +625,7 @@ public abstract class BaseController {
         }
     }
 
-    AssetProfile checkAssetProfileId(AssetProfileId assetProfileId, Operation operation) throws ThingsboardException {
+    AssetProfile checkAssetProfileId(AssetProfileId assetProfileId, Operation operation) throws EchoiotException {
         try {
             Validator.validateId(assetProfileId, "Incorrect assetProfileId " + assetProfileId);
             AssetProfile assetProfile = assetProfileService.findAssetProfileById(getCurrentUser().getTenantId(), assetProfileId);
@@ -676,7 +637,7 @@ public abstract class BaseController {
         }
     }
 
-    Alarm checkAlarmId(AlarmId alarmId, Operation operation) throws ThingsboardException {
+    Alarm checkAlarmId(AlarmId alarmId, Operation operation) throws EchoiotException {
         try {
             Validator.validateId(alarmId, "Incorrect alarmId " + alarmId);
             Alarm alarm = alarmService.findAlarmByIdAsync(getCurrentUser().getTenantId(), alarmId).get();
@@ -688,7 +649,7 @@ public abstract class BaseController {
         }
     }
 
-    AlarmInfo checkAlarmInfoId(AlarmId alarmId, Operation operation) throws ThingsboardException {
+    AlarmInfo checkAlarmInfoId(AlarmId alarmId, Operation operation) throws EchoiotException {
         try {
             Validator.validateId(alarmId, "Incorrect alarmId " + alarmId);
             AlarmInfo alarmInfo = alarmService.findAlarmInfoByIdAsync(getCurrentUser().getTenantId(), alarmId).get();
@@ -700,7 +661,7 @@ public abstract class BaseController {
         }
     }
 
-    WidgetsBundle checkWidgetsBundleId(WidgetsBundleId widgetsBundleId, Operation operation) throws ThingsboardException {
+    WidgetsBundle checkWidgetsBundleId(WidgetsBundleId widgetsBundleId, Operation operation) throws EchoiotException {
         try {
             Validator.validateId(widgetsBundleId, "Incorrect widgetsBundleId " + widgetsBundleId);
             WidgetsBundle widgetsBundle = widgetsBundleService.findWidgetsBundleById(getCurrentUser().getTenantId(), widgetsBundleId);
@@ -712,7 +673,7 @@ public abstract class BaseController {
         }
     }
 
-    WidgetTypeDetails checkWidgetTypeId(WidgetTypeId widgetTypeId, Operation operation) throws ThingsboardException {
+    WidgetTypeDetails checkWidgetTypeId(WidgetTypeId widgetTypeId, Operation operation) throws EchoiotException {
         try {
             Validator.validateId(widgetTypeId, "Incorrect widgetTypeId " + widgetTypeId);
             WidgetTypeDetails widgetTypeDetails = widgetTypeService.findWidgetTypeDetailsById(getCurrentUser().getTenantId(), widgetTypeId);
@@ -724,7 +685,7 @@ public abstract class BaseController {
         }
     }
 
-    Dashboard checkDashboardId(DashboardId dashboardId, Operation operation) throws ThingsboardException {
+    Dashboard checkDashboardId(DashboardId dashboardId, Operation operation) throws EchoiotException {
         try {
             Validator.validateId(dashboardId, "Incorrect dashboardId " + dashboardId);
             Dashboard dashboard = dashboardService.findDashboardById(getCurrentUser().getTenantId(), dashboardId);
@@ -736,7 +697,7 @@ public abstract class BaseController {
         }
     }
 
-    Edge checkEdgeId(EdgeId edgeId, Operation operation) throws ThingsboardException {
+    Edge checkEdgeId(EdgeId edgeId, Operation operation) throws EchoiotException {
         try {
             Validator.validateId(edgeId, "Incorrect edgeId " + edgeId);
             Edge edge = edgeService.findEdgeById(getTenantId(), edgeId);
@@ -748,7 +709,7 @@ public abstract class BaseController {
         }
     }
 
-    EdgeInfo checkEdgeInfoId(EdgeId edgeId, Operation operation) throws ThingsboardException {
+    EdgeInfo checkEdgeInfoId(EdgeId edgeId, Operation operation) throws EchoiotException {
         try {
             Validator.validateId(edgeId, "Incorrect edgeId " + edgeId);
             EdgeInfo edge = edgeService.findEdgeInfoById(getCurrentUser().getTenantId(), edgeId);
@@ -760,7 +721,7 @@ public abstract class BaseController {
         }
     }
 
-    DashboardInfo checkDashboardInfoId(DashboardId dashboardId, Operation operation) throws ThingsboardException {
+    DashboardInfo checkDashboardInfoId(DashboardId dashboardId, Operation operation) throws EchoiotException {
         try {
             Validator.validateId(dashboardId, "Incorrect dashboardId " + dashboardId);
             DashboardInfo dashboardInfo = dashboardService.findDashboardInfoById(getCurrentUser().getTenantId(), dashboardId);
@@ -772,7 +733,7 @@ public abstract class BaseController {
         }
     }
 
-    ComponentDescriptor checkComponentDescriptorByClazz(String clazz) throws ThingsboardException {
+    ComponentDescriptor checkComponentDescriptorByClazz(String clazz) throws EchoiotException {
         try {
             log.debug("[{}] Lookup component descriptor", clazz);
             return checkNotNull(componentDescriptorService.getComponent(clazz));
@@ -781,7 +742,7 @@ public abstract class BaseController {
         }
     }
 
-    List<ComponentDescriptor> checkComponentDescriptorsByType(ComponentType type, RuleChainType ruleChainType) throws ThingsboardException {
+    List<ComponentDescriptor> checkComponentDescriptorsByType(ComponentType type, RuleChainType ruleChainType) throws EchoiotException {
         try {
             log.debug("[{}] Lookup component descriptors", type);
             return componentDescriptorService.getComponents(type, ruleChainType);
@@ -790,7 +751,7 @@ public abstract class BaseController {
         }
     }
 
-    List<ComponentDescriptor> checkComponentDescriptorsByTypes(Set<ComponentType> types, RuleChainType ruleChainType) throws ThingsboardException {
+    List<ComponentDescriptor> checkComponentDescriptorsByTypes(Set<ComponentType> types, RuleChainType ruleChainType) throws EchoiotException {
         try {
             log.debug("[{}] Lookup component descriptors", types);
             return componentDescriptorService.getComponents(types, ruleChainType);
@@ -799,7 +760,7 @@ public abstract class BaseController {
         }
     }
 
-    protected RuleChain checkRuleChain(RuleChainId ruleChainId, Operation operation) throws ThingsboardException {
+    protected RuleChain checkRuleChain(RuleChainId ruleChainId, Operation operation) throws EchoiotException {
         Validator.validateId(ruleChainId, "Incorrect ruleChainId " + ruleChainId);
         RuleChain ruleChain = ruleChainService.findRuleChainById(getCurrentUser().getTenantId(), ruleChainId);
         checkNotNull(ruleChain, "Rule chain with id [" + ruleChainId + "] is not found");
@@ -807,7 +768,7 @@ public abstract class BaseController {
         return ruleChain;
     }
 
-    protected RuleNode checkRuleNode(RuleNodeId ruleNodeId, Operation operation) throws ThingsboardException {
+    protected RuleNode checkRuleNode(RuleNodeId ruleNodeId, Operation operation) throws EchoiotException {
         Validator.validateId(ruleNodeId, "Incorrect ruleNodeId " + ruleNodeId);
         RuleNode ruleNode = ruleChainService.findRuleNodeById(getTenantId(), ruleNodeId);
         checkNotNull(ruleNode, "Rule node with id [" + ruleNodeId + "] is not found");
@@ -815,7 +776,7 @@ public abstract class BaseController {
         return ruleNode;
     }
 
-    TbResource checkResourceId(TbResourceId resourceId, Operation operation) throws ThingsboardException {
+    TbResource checkResourceId(TbResourceId resourceId, Operation operation) throws EchoiotException {
         try {
             Validator.validateId(resourceId, "Incorrect resourceId " + resourceId);
             TbResource resource = resourceService.findResourceById(getCurrentUser().getTenantId(), resourceId);
@@ -827,7 +788,7 @@ public abstract class BaseController {
         }
     }
 
-    TbResourceInfo checkResourceInfoId(TbResourceId resourceId, Operation operation) throws ThingsboardException {
+    TbResourceInfo checkResourceInfoId(TbResourceId resourceId, Operation operation) throws EchoiotException {
         try {
             Validator.validateId(resourceId, "Incorrect resourceId " + resourceId);
             TbResourceInfo resourceInfo = resourceService.findResourceInfoById(getCurrentUser().getTenantId(), resourceId);
@@ -839,7 +800,7 @@ public abstract class BaseController {
         }
     }
 
-    OtaPackage checkOtaPackageId(OtaPackageId otaPackageId, Operation operation) throws ThingsboardException {
+    OtaPackage checkOtaPackageId(OtaPackageId otaPackageId, Operation operation) throws EchoiotException {
         try {
             Validator.validateId(otaPackageId, "Incorrect otaPackageId " + otaPackageId);
             OtaPackage otaPackage = otaPackageService.findOtaPackageById(getCurrentUser().getTenantId(), otaPackageId);
@@ -851,7 +812,7 @@ public abstract class BaseController {
         }
     }
 
-    OtaPackageInfo checkOtaPackageInfoId(OtaPackageId otaPackageId, Operation operation) throws ThingsboardException {
+    OtaPackageInfo checkOtaPackageInfoId(OtaPackageId otaPackageId, Operation operation) throws EchoiotException {
         try {
             Validator.validateId(otaPackageId, "Incorrect otaPackageId " + otaPackageId);
             OtaPackageInfo otaPackageIn = otaPackageService.findOtaPackageInfoById(getCurrentUser().getTenantId(), otaPackageId);
@@ -863,7 +824,7 @@ public abstract class BaseController {
         }
     }
 
-    Rpc checkRpcId(RpcId rpcId, Operation operation) throws ThingsboardException {
+    Rpc checkRpcId(RpcId rpcId, Operation operation) throws EchoiotException {
         try {
             Validator.validateId(rpcId, "Incorrect rpcId " + rpcId);
             Rpc rpc = rpcService.findById(getCurrentUser().getTenantId(), rpcId);
@@ -875,7 +836,7 @@ public abstract class BaseController {
         }
     }
 
-    protected Queue checkQueueId(QueueId queueId, Operation operation) throws ThingsboardException {
+    protected Queue checkQueueId(QueueId queueId, Operation operation) throws EchoiotException {
         Validator.validateId(queueId, "Incorrect queueId " + queueId);
         Queue queue = queueService.findQueueById(getCurrentUser().getTenantId(), queueId);
         checkNotNull(queue);
@@ -884,8 +845,8 @@ public abstract class BaseController {
         if (queue.getTenantId().isNullUid() && !tenantId.isNullUid()) {
             TenantProfile tenantProfile = tenantProfileCache.get(tenantId);
             if (tenantProfile.isIsolatedTbRuleEngine()) {
-                throw new ThingsboardException(UserController.YOU_DON_T_HAVE_PERMISSION_TO_PERFORM_THIS_OPERATION,
-                                               ThingsboardErrorCode.PERMISSION_DENIED);
+                throw new EchoiotException(UserController.YOU_DON_T_HAVE_PERMISSION_TO_PERFORM_THIS_OPERATION,
+                                               EchoiotErrorCode.PERMISSION_DENIED);
             }
         }
         return queue;
@@ -911,7 +872,7 @@ public abstract class BaseController {
         tbClusterService.sendNotificationMsgToEdge(tenantId, edgeId, entityId, body, type, action);
     }
 
-    protected void processDashboardIdFromAdditionalInfo(ObjectNode additionalInfo, String requiredFields) throws ThingsboardException {
+    protected void processDashboardIdFromAdditionalInfo(ObjectNode additionalInfo, String requiredFields) throws EchoiotException {
         String dashboardId = additionalInfo.has(requiredFields) ? additionalInfo.get(requiredFields).asText() : null;
         if (dashboardId != null && !dashboardId.equals("null")) {
             if (dashboardService.findDashboardById(getTenantId(), new DashboardId(UUID.fromString(dashboardId))) == null) {

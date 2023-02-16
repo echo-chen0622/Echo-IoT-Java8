@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,17 +14,17 @@
 /// limitations under the License.
 ///
 
-import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { PageComponent } from '@shared/components/page.component';
-import { Router } from '@angular/router';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { HasConfirmForm } from '@core/guards/confirm-on-exit.guard';
-import { DashboardService } from '@core/http/dashboard.service';
-import { HomeDashboardInfo } from '@shared/models/dashboard.models';
-import { isDefinedAndNotNull } from '@core/utils';
-import { DashboardId } from '@shared/models/id/dashboard-id';
+import {Component, OnInit} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {PageComponent} from '@shared/components/page.component';
+import {Router} from '@angular/router';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {HasConfirmForm} from '@core/guards/confirm-on-exit.guard';
+import {DashboardService} from '@core/http/dashboard.service';
+import {HomeDashboardInfo} from '@shared/models/dashboard.models';
+import {isDefinedAndNotNull} from '@core/utils';
+import {DashboardId} from '@shared/models/id/dashboard-id';
 
 @Component({
   selector: 'tb-home-settings',

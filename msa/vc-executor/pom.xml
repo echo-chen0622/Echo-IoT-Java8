@@ -3,16 +3,15 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.thingsboard</groupId>
+        <groupId>org.echoiot</groupId>
         <version>3.4.4</version>
         <artifactId>msa</artifactId>
     </parent>
-    <groupId>org.thingsboard.msa</groupId>
+    <groupId>org.echoiot.msa</groupId>
     <artifactId>vc-executor</artifactId>
 
-    <name>ThingsBoard Version Control Executor</name>
-    <url>https://thingsboard.io</url>
-    <description>Project for ThingsBoard version control microservice</description>
+    <name>Echoiot Version Control Executor</name>
+    <description>Project for Echoiot version control microservice</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -24,17 +23,17 @@
         <pkg.name>tb-vc-executor</pkg.name>
         <pkg.copyInstallScripts>false</pkg.copyInstallScripts>
         <pkg.win.dist>${project.build.directory}/windows</pkg.win.dist>
-        <pkg.implementationTitle>ThingsBoard Version Control Executor Service</pkg.implementationTitle>
-        <pkg.mainClass>org.echoiot.server.vc.ThingsboardVersionControlExecutorApplication</pkg.mainClass>
+        <pkg.implementationTitle>Echoiot Version Control Executor Service</pkg.implementationTitle>
+        <pkg.mainClass>org.echoiot.server.vc.EchoiotVersionControlExecutorApplication</pkg.mainClass>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>org.thingsboard.common</groupId>
+            <groupId>org.echoiot.common</groupId>
             <artifactId>queue</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard.common</groupId>
+            <groupId>org.echoiot.common</groupId>
             <artifactId>version-control</artifactId>
         </dependency>
         <dependency>

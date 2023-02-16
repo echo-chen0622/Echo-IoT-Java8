@@ -1,6 +1,10 @@
 package org.echoiot.server.service.subscription;
 
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.common.util.DonAsynchron;
+import org.echoiot.common.util.EchoiotThreadFactory;
+import org.echoiot.common.util.JacksonUtil;
+import org.echoiot.rule.engine.api.msg.DeviceAttributesEventNotificationMsg;
 import org.echoiot.server.cluster.TbClusterService;
 import org.echoiot.server.common.data.DataConstants;
 import org.echoiot.server.common.data.EntityType;
@@ -8,8 +12,13 @@ import org.echoiot.server.common.data.alarm.Alarm;
 import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.TenantId;
+import org.echoiot.server.common.data.kv.*;
+import org.echoiot.server.common.msg.queue.ServiceType;
+import org.echoiot.server.common.msg.queue.TbCallback;
+import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
 import org.echoiot.server.dao.attributes.AttributesService;
 import org.echoiot.server.dao.timeseries.TimeseriesService;
+import org.echoiot.server.gen.transport.TransportProtos.*;
 import org.echoiot.server.queue.TbQueueProducer;
 import org.echoiot.server.queue.common.TbProtoQueueMsg;
 import org.echoiot.server.queue.discovery.NotificationsTopicService;
@@ -19,43 +28,16 @@ import org.echoiot.server.queue.discovery.TbServiceInfoProvider;
 import org.echoiot.server.queue.discovery.event.PartitionChangeEvent;
 import org.echoiot.server.queue.provider.TbQueueProducerProvider;
 import org.echoiot.server.queue.util.TbCoreComponent;
+import org.echoiot.server.service.state.DefaultDeviceStateService;
+import org.echoiot.server.service.state.DeviceStateService;
 import org.echoiot.server.service.telemetry.sub.AlarmSubscriptionUpdate;
 import org.echoiot.server.service.telemetry.sub.TelemetrySubscriptionUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.thingsboard.common.util.DonAsynchron;
-import org.thingsboard.common.util.JacksonUtil;
-import org.thingsboard.common.util.ThingsBoardThreadFactory;
-import org.thingsboard.rule.engine.api.msg.DeviceAttributesEventNotificationMsg;
-import org.echoiot.server.common.data.kv.Aggregation;
-import org.echoiot.server.common.data.kv.AttributeKvEntry;
-import org.echoiot.server.common.data.kv.BaseReadTsKvQuery;
-import org.echoiot.server.common.data.kv.BasicTsKvEntry;
-import org.echoiot.server.common.data.kv.KvEntry;
-import org.echoiot.server.common.data.kv.ReadTsKvQuery;
-import org.echoiot.server.common.data.kv.StringDataEntry;
-import org.echoiot.server.common.data.kv.TsKvEntry;
-import org.echoiot.server.common.msg.queue.ServiceType;
-import org.echoiot.server.common.msg.queue.TbCallback;
-import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
-import org.thingsboard.server.gen.transport.TransportProtos.LocalSubscriptionServiceMsgProto;
-import org.thingsboard.server.gen.transport.TransportProtos.TbAlarmSubscriptionUpdateProto;
-import org.thingsboard.server.gen.transport.TransportProtos.TbSubscriptionUpdateProto;
-import org.thingsboard.server.gen.transport.TransportProtos.TbSubscriptionUpdateTsValue;
-import org.thingsboard.server.gen.transport.TransportProtos.TbSubscriptionUpdateValueListProto;
-import org.thingsboard.server.gen.transport.TransportProtos.ToCoreNotificationMsg;
-import org.echoiot.server.service.state.DefaultDeviceStateService;
-import org.echoiot.server.service.state.DeviceStateService;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
@@ -106,7 +88,7 @@ public class DefaultSubscriptionManagerService extends TbApplicationEventListene
 
     @PostConstruct
     public void initExecutor() {
-        tsCallBackExecutor = Executors.newSingleThreadExecutor(ThingsBoardThreadFactory.forName("ts-sub-callback"));
+        tsCallBackExecutor = Executors.newSingleThreadExecutor(EchoiotThreadFactory.forName("ts-sub-callback"));
         serviceId = serviceInfoProvider.getServiceId();
         toCoreNotificationsProducer = producerProvider.getTbCoreNotificationsMsgProducer();
     }

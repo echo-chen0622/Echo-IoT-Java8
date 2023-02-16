@@ -10,7 +10,7 @@ import java.util.Arrays;
 
 @RunWith(ClasspathSuite.class)
 @ClasspathSuite.ClassnameFilters({
-        "org.thingsboard.server.transport.*.telemetry.timeseries.nosql.*Test",
+        "org.echoiot.server.transport.*.telemetry.timeseries.nosql.*Test",
 })
 public class TransportNoSqlTestSuite {
 

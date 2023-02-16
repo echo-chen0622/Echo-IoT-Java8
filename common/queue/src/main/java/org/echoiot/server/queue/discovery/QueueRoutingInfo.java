@@ -4,8 +4,8 @@ import lombok.Data;
 import org.echoiot.server.common.data.id.QueueId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.queue.Queue;
-import org.thingsboard.server.gen.transport.TransportProtos.GetQueueRoutingInfoResponseMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.QueueUpdateMsg;
+import org.echoiot.server.gen.transport.TransportProtos.GetQueueRoutingInfoResponseMsg;
+import org.echoiot.server.gen.transport.TransportProtos.QueueUpdateMsg;
 
 import java.util.UUID;
 

@@ -1,7 +1,7 @@
 package org.echoiot.server.service.session;
 
 import org.echoiot.server.common.data.id.DeviceId;
-import org.thingsboard.server.gen.transport.TransportProtos.DeviceSessionsCacheEntry;
+import org.echoiot.server.gen.transport.TransportProtos.DeviceSessionsCacheEntry;
 
 /**
  * Created by Echo on 29.10.18.

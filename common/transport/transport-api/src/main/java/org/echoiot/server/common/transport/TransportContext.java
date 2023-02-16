@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.transport.limits.TransportRateLimitService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.thingsboard.common.util.ThingsBoardExecutors;
+import org.echoiot.common.util.EchoiotExecutors;
 import org.echoiot.server.cache.ota.OtaPackageDataCache;
 import org.echoiot.server.queue.discovery.TbServiceInfoProvider;
 import org.echoiot.server.queue.scheduler.SchedulerComponent;
@@ -48,7 +48,7 @@ public abstract class TransportContext {
 
     @PostConstruct
     public void init() {
-        executor = ThingsBoardExecutors.newWorkStealingPool(50, getClass());
+        executor = EchoiotExecutors.newWorkStealingPool(50, getClass());
     }
 
     @PreDestroy

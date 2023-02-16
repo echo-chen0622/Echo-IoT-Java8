@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
-import org.thingsboard.common.util.JacksonUtil;
+import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.kv.Aggregation;
 import org.echoiot.server.common.data.query.EntityDataPageLink;

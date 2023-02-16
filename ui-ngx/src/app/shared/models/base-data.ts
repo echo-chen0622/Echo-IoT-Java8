@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,9 +14,9 @@
 /// limitations under the License.
 ///
 
-import { EntityId } from '@shared/models/id/entity-id';
-import { HasUUID } from '@shared/models/id/has-uuid';
-import { isDefinedAndNotNull } from '@core/utils';
+import {EntityId} from '@shared/models/id/entity-id';
+import {HasUUID} from '@shared/models/id/has-uuid';
+import {isDefinedAndNotNull} from '@core/utils';
 
 export declare type HasId = EntityId | HasUUID;
 

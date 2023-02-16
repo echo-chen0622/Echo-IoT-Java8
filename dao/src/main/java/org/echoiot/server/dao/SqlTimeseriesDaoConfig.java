@@ -9,8 +9,8 @@ import org.echoiot.server.dao.util.TbAutoConfiguration;
 
 @Configuration
 @TbAutoConfiguration
-@EnableJpaRepositories({"org.thingsboard.server.dao.sqlts.dictionary"})
-@EntityScan({"org.thingsboard.server.dao.model.sqlts.dictionary"})
+@EnableJpaRepositories({"org.echoiot.server.dao.sqlts.dictionary"})
+@EntityScan({"org.echoiot.server.dao.model.sqlts.dictionary"})
 @EnableTransactionManagement
 @SqlTsOrTsLatestAnyDao
 public class SqlTimeseriesDaoConfig {

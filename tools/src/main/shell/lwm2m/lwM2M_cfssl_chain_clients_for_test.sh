@@ -1,20 +1,4 @@
 #!/usr/bin/env bash
-#
-# Copyright © 2016-2023 The Thingsboard Authors
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
-
 
 # Change working directory
 cd -- "$(
@@ -41,7 +25,7 @@ readonly CLIENT_JKS_FOR_TEST="lwm2mclient"
 readonly CLIENT_CERT_KEY_PREF="LwX509"
 readonly CLIENT_CERT_ALIAS_PREF="client_alias_"
 readonly CLIENT_STORE_PWD="client_ks_password"
-readonly CLIENT_HOST_NAME="thingsboard_test.io"
+readonly CLIENT_HOST_NAME="echoiot_test.io"
 
 readonly TRUST_NO_PATH="TrustNo"
 readonly CA_ROOT_NO_ALIAS="root-no"
@@ -132,7 +116,7 @@ tee ./${TRUST_PATH}/ca-config.json 1> /dev/null <<-CONFIG
           "C": "UK",
           "ST": "Kyiv city",
           "L": "Kyiv",
-          "O": "Thingsboard",
+          "O": "Echoiot",
           "OU": "DEVELOPER_TEST"
         }
       ]
@@ -223,7 +207,7 @@ cfssl genkey \
       "C": "UK",
       "ST": "Kyiv city",
       "L": "Kyiv",
-      "O": "Thingsboard",
+      "O": "Echoiot",
       "OU": "DEVELOPER_TEST"
     }
   ],
@@ -257,7 +241,7 @@ do
         "C": "UK",
         "ST": "Kyiv city",
         "L": "Kyiv",
-        "O": "Thingsboard",
+        "O": "Echoiot",
         "OU": "DEVELOPER_TEST"
       }
     ]
@@ -330,7 +314,7 @@ cfssl genkey \
       "C": "UK",
       "ST": "Kyiv city",
       "L": "Kyiv",
-      "O": "Thingsboard",
+      "O": "Echoiot",
       "OU": "DEVELOPER_TEST"
     }
   ],
@@ -368,7 +352,7 @@ do
         "C": "UK",
         "ST": "Kyiv city",
         "L": "Kyiv",
-        "O": "Thingsboard",
+        "O": "Echoiot",
         "OU": "DEVELOPER_TEST"
       }
     ]

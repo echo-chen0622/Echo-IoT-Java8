@@ -4,12 +4,14 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.common.util.JacksonUtil;
+import org.echoiot.rule.engine.api.MailService;
 import org.echoiot.server.common.data.AdminSettings;
 import org.echoiot.server.common.data.CacheConstants;
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.User;
 import org.echoiot.server.common.data.audit.ActionType;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.id.UserId;
@@ -26,14 +28,8 @@ import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.security.auth.rest.RestAuthenticationDetails;
 import org.echoiot.server.service.security.exception.UserPasswordExpiredException;
 import org.echoiot.server.service.security.model.SecurityUser;
-import org.passay.CharacterRule;
-import org.passay.EnglishCharacterData;
-import org.passay.LengthRule;
-import org.passay.PasswordData;
-import org.passay.PasswordValidator;
-import org.passay.Rule;
-import org.passay.RuleResult;
-import org.passay.WhitespaceRule;
+import org.echoiot.server.utils.MiscUtils;
+import org.passay.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -43,9 +39,6 @@ import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.thingsboard.common.util.JacksonUtil;
-import org.thingsboard.rule.engine.api.MailService;
-import org.echoiot.server.utils.MiscUtils;
 import ua_parser.Client;
 
 import javax.annotation.Resource;
@@ -174,7 +167,7 @@ public class DefaultSystemSecurityService implements SystemSecurityService {
         if (StringUtils.isNotBlank(userLockoutNotificationEmail)) {
             try {
                 mailService.sendAccountLockoutEmail(username, userLockoutNotificationEmail, maxFailedLoginAttempts);
-            } catch (ThingsboardException e) {
+            } catch (EchoiotException e) {
                 log.warn("Can't send email regarding user account [{}] lockout to provided email [{}]", username, userLockoutNotificationEmail, e);
             }
         }

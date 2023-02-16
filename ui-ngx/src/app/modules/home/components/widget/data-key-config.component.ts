@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,44 +14,44 @@
 /// limitations under the License.
 ///
 
-import { Component, ElementRef, forwardRef, Input, OnInit, ViewChild } from '@angular/core';
-import { PageComponent } from '@shared/components/page.component';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
+import {Component, ElementRef, forwardRef, Input, OnInit, ViewChild} from '@angular/core';
+import {PageComponent} from '@shared/components/page.component';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
 import {
-  ComparisonResultType,
-  comparisonResultTypeTranslationMap,
-  DataKey,
-  dataKeyAggregationTypeHintTranslationMap,
-  Widget,
-  widgetType
+    ComparisonResultType,
+    comparisonResultTypeTranslationMap,
+    DataKey,
+    dataKeyAggregationTypeHintTranslationMap,
+    Widget,
+    widgetType
 } from '@shared/models/widget.models';
 import {
-  ControlValueAccessor,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  NG_VALIDATORS,
-  NG_VALUE_ACCESSOR,
-  Validator,
-  Validators
+    ControlValueAccessor,
+    FormBuilder,
+    FormControl,
+    FormGroup,
+    NG_VALIDATORS,
+    NG_VALUE_ACCESSOR,
+    Validator,
+    Validators
 } from '@angular/forms';
-import { UtilsService } from '@core/services/utils.service';
-import { TranslateService } from '@ngx-translate/core';
-import { MatDialog } from '@angular/material/dialog';
-import { EntityService } from '@core/http/entity.service';
-import { DataKeysCallbacks } from '@home/components/widget/data-keys.component.models';
-import { DataKeyType } from '@shared/models/telemetry/telemetry.models';
-import { Observable, of } from 'rxjs';
-import { map, mergeMap, publishReplay, refCount, tap } from 'rxjs/operators';
-import { alarmFields } from '@shared/models/alarm.models';
-import { JsFuncComponent } from '@shared/components/js-func.component';
-import { JsonFormComponentData } from '@shared/components/json-form/json-form-component.models';
-import { WidgetService } from '@core/http/widget.service';
-import { Dashboard } from '@shared/models/dashboard.models';
-import { IAliasController } from '@core/api/widget-api.models';
-import { aggregationTranslations, AggregationType, ComparisonDuration } from '@shared/models/time/time.models';
-import { genNextLabel } from '@core/utils';
+import {UtilsService} from '@core/services/utils.service';
+import {TranslateService} from '@ngx-translate/core';
+import {MatDialog} from '@angular/material/dialog';
+import {EntityService} from '@core/http/entity.service';
+import {DataKeysCallbacks} from '@home/components/widget/data-keys.component.models';
+import {DataKeyType} from '@shared/models/telemetry/telemetry.models';
+import {Observable, of} from 'rxjs';
+import {map, mergeMap, publishReplay, refCount, tap} from 'rxjs/operators';
+import {alarmFields} from '@shared/models/alarm.models';
+import {JsFuncComponent} from '@shared/components/js-func.component';
+import {JsonFormComponentData} from '@shared/components/json-form/json-form-component.models';
+import {WidgetService} from '@core/http/widget.service';
+import {Dashboard} from '@shared/models/dashboard.models';
+import {IAliasController} from '@core/api/widget-api.models';
+import {aggregationTranslations, AggregationType, ComparisonDuration} from '@shared/models/time/time.models';
+import {genNextLabel} from '@core/utils';
 
 @Component({
   selector: 'tb-data-key-config',

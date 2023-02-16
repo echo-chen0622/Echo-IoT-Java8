@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,60 +14,60 @@
 /// limitations under the License.
 ///
 
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 
-import { ActivatedRouteSnapshot, Resolve, Router } from '@angular/router';
+import {ActivatedRouteSnapshot, Resolve, Router} from '@angular/router';
 import {
-  CellActionDescriptor,
-  checkBoxCell,
-  DateEntityTableColumn,
-  EntityTableColumn,
-  EntityTableConfig,
-  GroupActionDescriptor,
-  HeaderActionDescriptor
+    CellActionDescriptor,
+    checkBoxCell,
+    DateEntityTableColumn,
+    EntityTableColumn,
+    EntityTableConfig,
+    GroupActionDescriptor,
+    HeaderActionDescriptor
 } from '@home/models/entity/entities-table-config.models';
-import { TranslateService } from '@ngx-translate/core';
-import { DatePipe } from '@angular/common';
-import { EntityType, entityTypeResources, entityTypeTranslations } from '@shared/models/entity-type.models';
-import { AddEntityDialogData, EntityAction } from '@home/models/entity/entity-component.models';
-import { Device, DeviceCredentials, DeviceInfo } from '@app/shared/models/device.models';
-import { DeviceComponent } from '@modules/home/pages/device/device.component';
-import { forkJoin, Observable, of, Subject } from 'rxjs';
-import { select, Store } from '@ngrx/store';
-import { selectAuthUser } from '@core/auth/auth.selectors';
-import { map, mergeMap, take, tap } from 'rxjs/operators';
-import { AppState } from '@core/core.state';
-import { DeviceService } from '@app/core/http/device.service';
-import { Authority } from '@app/shared/models/authority.enum';
-import { CustomerService } from '@core/http/customer.service';
-import { Customer } from '@app/shared/models/customer.model';
-import { NULL_UUID } from '@shared/models/id/has-uuid';
-import { BroadcastService } from '@core/services/broadcast.service';
-import { DeviceTableHeaderComponent } from '@modules/home/pages/device/device-table-header.component';
-import { MatDialog } from '@angular/material/dialog';
+import {TranslateService} from '@ngx-translate/core';
+import {DatePipe} from '@angular/common';
+import {EntityType, entityTypeResources, entityTypeTranslations} from '@shared/models/entity-type.models';
+import {AddEntityDialogData, EntityAction} from '@home/models/entity/entity-component.models';
+import {Device, DeviceCredentials, DeviceInfo} from '@app/shared/models/device.models';
+import {DeviceComponent} from '@modules/home/pages/device/device.component';
+import {forkJoin, Observable, of, Subject} from 'rxjs';
+import {select, Store} from '@ngrx/store';
+import {selectAuthUser} from '@core/auth/auth.selectors';
+import {map, mergeMap, take, tap} from 'rxjs/operators';
+import {AppState} from '@core/core.state';
+import {DeviceService} from '@app/core/http/device.service';
+import {Authority} from '@app/shared/models/authority.enum';
+import {CustomerService} from '@core/http/customer.service';
+import {Customer} from '@app/shared/models/customer.model';
+import {NULL_UUID} from '@shared/models/id/has-uuid';
+import {BroadcastService} from '@core/services/broadcast.service';
+import {DeviceTableHeaderComponent} from '@modules/home/pages/device/device-table-header.component';
+import {MatDialog} from '@angular/material/dialog';
 import {
-  DeviceCredentialsDialogComponent,
-  DeviceCredentialsDialogData
+    DeviceCredentialsDialogComponent,
+    DeviceCredentialsDialogData
 } from '@modules/home/pages/device/device-credentials-dialog.component';
-import { DialogService } from '@core/services/dialog.service';
+import {DialogService} from '@core/services/dialog.service';
 import {
-  AssignToCustomerDialogComponent,
-  AssignToCustomerDialogData
+    AssignToCustomerDialogComponent,
+    AssignToCustomerDialogData
 } from '@modules/home/dialogs/assign-to-customer-dialog.component';
-import { DeviceId } from '@app/shared/models/id/device-id';
+import {DeviceId} from '@app/shared/models/id/device-id';
 import {
-  AddEntitiesToCustomerDialogComponent,
-  AddEntitiesToCustomerDialogData
+    AddEntitiesToCustomerDialogComponent,
+    AddEntitiesToCustomerDialogData
 } from '../../dialogs/add-entities-to-customer-dialog.component';
-import { DeviceTabsComponent } from '@home/pages/device/device-tabs.component';
-import { HomeDialogsService } from '@home/dialogs/home-dialogs.service';
-import { DeviceWizardDialogComponent } from '@home/components/wizard/device-wizard-dialog.component';
-import { BaseData, HasId } from '@shared/models/base-data';
-import { isDefinedAndNotNull } from '@core/utils';
-import { EdgeService } from '@core/http/edge.service';
+import {DeviceTabsComponent} from '@home/pages/device/device-tabs.component';
+import {HomeDialogsService} from '@home/dialogs/home-dialogs.service';
+import {DeviceWizardDialogComponent} from '@home/components/wizard/device-wizard-dialog.component';
+import {BaseData, HasId} from '@shared/models/base-data';
+import {isDefinedAndNotNull} from '@core/utils';
+import {EdgeService} from '@core/http/edge.service';
 import {
-  AddEntitiesToEdgeDialogComponent,
-  AddEntitiesToEdgeDialogData
+    AddEntitiesToEdgeDialogComponent,
+    AddEntitiesToEdgeDialogData
 } from '@home/dialogs/add-entities-to-edge-dialog.component';
 
 @Injectable()

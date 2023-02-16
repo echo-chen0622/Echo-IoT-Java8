@@ -5,8 +5,6 @@ import com.google.protobuf.Descriptors;
 import com.google.protobuf.DynamicMessage;
 import com.squareup.wire.schema.internal.parser.ProtoFileElement;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Before;
-import org.junit.Test;
 import org.echoiot.server.common.data.Device;
 import org.echoiot.server.common.data.DynamicProtoUtils;
 import org.echoiot.server.common.data.TransportPayloadType;
@@ -14,24 +12,20 @@ import org.echoiot.server.common.data.device.profile.DeviceProfileTransportConfi
 import org.echoiot.server.common.data.device.profile.MqttDeviceProfileTransportConfiguration;
 import org.echoiot.server.common.data.device.profile.ProtoTransportPayloadConfiguration;
 import org.echoiot.server.common.data.device.profile.TransportPayloadTypeConfiguration;
-import org.thingsboard.server.gen.transport.TransportApiProtos;
-import org.thingsboard.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.transport.TransportApiProtos;
+import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.transport.mqtt.MqttTestCallback;
 import org.echoiot.server.transport.mqtt.MqttTestClient;
 import org.echoiot.server.transport.mqtt.MqttTestConfigProperties;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.echoiot.server.common.data.device.profile.MqttTopics.DEVICE_TELEMETRY_SHORT_JSON_TOPIC;
-import static org.echoiot.server.common.data.device.profile.MqttTopics.DEVICE_TELEMETRY_SHORT_PROTO_TOPIC;
-import static org.echoiot.server.common.data.device.profile.MqttTopics.DEVICE_TELEMETRY_SHORT_TOPIC;
-import static org.echoiot.server.common.data.device.profile.MqttTopics.GATEWAY_CONNECT_TOPIC;
-import static org.echoiot.server.common.data.device.profile.MqttTopics.GATEWAY_TELEMETRY_TOPIC;
+import static org.echoiot.server.common.data.device.profile.MqttTopics.*;
+import static org.junit.Assert.*;
 
 @Slf4j
 public abstract class AbstractMqttTimeseriesProtoIntegrationTest extends AbstractMqttTimeseriesIntegrationTest {

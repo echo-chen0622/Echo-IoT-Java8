@@ -4,8 +4,9 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.echoiot.server.common.data.StringUtils;
-import org.echoiot.server.common.data.exception.ThingsboardErrorCode;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.alarm.*;
+import org.echoiot.server.common.data.exception.EchoiotErrorCode;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.AlarmId;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.EntityIdFactory;
@@ -18,20 +19,7 @@ import org.echoiot.server.service.security.permission.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-import org.echoiot.server.common.data.alarm.Alarm;
-import org.echoiot.server.common.data.alarm.AlarmInfo;
-import org.echoiot.server.common.data.alarm.AlarmQuery;
-import org.echoiot.server.common.data.alarm.AlarmSearchStatus;
-import org.echoiot.server.common.data.alarm.AlarmSeverity;
-import org.echoiot.server.common.data.alarm.AlarmStatus;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @TbCoreComponent
@@ -60,7 +48,7 @@ public class AlarmController extends BaseController {
     @RequestMapping(value = "/alarm/{alarmId}", method = RequestMethod.GET)
     @ResponseBody
     public Alarm getAlarmById(@ApiParam(value = ControllerConstants.ALARM_ID_PARAM_DESCRIPTION)
-                              @PathVariable(ALARM_ID) String strAlarmId) throws ThingsboardException {
+                              @PathVariable(ALARM_ID) String strAlarmId) throws EchoiotException {
         checkParameter(ALARM_ID, strAlarmId);
         try {
             AlarmId alarmId = new AlarmId(toUUID(strAlarmId));
@@ -77,7 +65,7 @@ public class AlarmController extends BaseController {
     @RequestMapping(value = "/alarm/info/{alarmId}", method = RequestMethod.GET)
     @ResponseBody
     public AlarmInfo getAlarmInfoById(@ApiParam(value = ControllerConstants.ALARM_ID_PARAM_DESCRIPTION)
-                                      @PathVariable(ALARM_ID) String strAlarmId) throws ThingsboardException {
+                                      @PathVariable(ALARM_ID) String strAlarmId) throws EchoiotException {
         checkParameter(ALARM_ID, strAlarmId);
         try {
             AlarmId alarmId = new AlarmId(toUUID(strAlarmId));
@@ -102,7 +90,7 @@ public class AlarmController extends BaseController {
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/alarm", method = RequestMethod.POST)
     @ResponseBody
-    public Alarm saveAlarm(@ApiParam(value = "A JSON value representing the alarm.") @RequestBody Alarm alarm) throws ThingsboardException {
+    public Alarm saveAlarm(@ApiParam(value = "A JSON value representing the alarm.") @RequestBody Alarm alarm) throws EchoiotException {
         alarm.setTenantId(getTenantId());
         checkEntity(alarm.getId(), alarm, Resource.ALARM);
         return tbAlarmService.save(alarm, getCurrentUser());
@@ -113,7 +101,7 @@ public class AlarmController extends BaseController {
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/alarm/{alarmId}", method = RequestMethod.DELETE)
     @ResponseBody
-    public Boolean deleteAlarm(@ApiParam(value = ControllerConstants.ALARM_ID_PARAM_DESCRIPTION) @PathVariable(ALARM_ID) String strAlarmId) throws ThingsboardException {
+    public Boolean deleteAlarm(@ApiParam(value = ControllerConstants.ALARM_ID_PARAM_DESCRIPTION) @PathVariable(ALARM_ID) String strAlarmId) throws EchoiotException {
         checkParameter(ALARM_ID, strAlarmId);
         AlarmId alarmId = new AlarmId(toUUID(strAlarmId));
         Alarm alarm = checkAlarmId(alarmId, Operation.DELETE);
@@ -179,15 +167,15 @@ public class AlarmController extends BaseController {
             @RequestParam(required = false) Long endTime,
             @ApiParam(value = ALARM_QUERY_FETCH_ORIGINATOR_DESCRIPTION)
             @RequestParam(required = false) Boolean fetchOriginator
-                                        ) throws ThingsboardException {
+                                        ) throws EchoiotException {
         checkParameter("EntityId", strEntityId);
         checkParameter("EntityType", strEntityType);
         EntityId entityId = EntityIdFactory.getByTypeAndId(strEntityType, strEntityId);
         AlarmSearchStatus alarmSearchStatus = StringUtils.isEmpty(searchStatus) ? null : AlarmSearchStatus.valueOf(searchStatus);
         AlarmStatus alarmStatus = StringUtils.isEmpty(status) ? null : AlarmStatus.valueOf(status);
         if (alarmSearchStatus != null && alarmStatus != null) {
-            throw new ThingsboardException("Invalid alarms search query: Both parameters 'searchStatus' " +
-                    "and 'status' can't be specified at the same time!", ThingsboardErrorCode.BAD_REQUEST_PARAMS);
+            throw new EchoiotException("Invalid alarms search query: Both parameters 'searchStatus' " +
+                    "and 'status' can't be specified at the same time!", EchoiotErrorCode.BAD_REQUEST_PARAMS);
         }
         checkEntityId(entityId, Operation.READ);
         TimePageLink pageLink = createTimePageLink(pageSize, page, textSearch, sortProperty, sortOrder, startTime, endTime);
@@ -229,12 +217,12 @@ public class AlarmController extends BaseController {
             @RequestParam(required = false) Long endTime,
             @ApiParam(value = ALARM_QUERY_FETCH_ORIGINATOR_DESCRIPTION)
             @RequestParam(required = false) Boolean fetchOriginator
-    ) throws ThingsboardException {
+    ) throws EchoiotException {
         AlarmSearchStatus alarmSearchStatus = StringUtils.isEmpty(searchStatus) ? null : AlarmSearchStatus.valueOf(searchStatus);
         AlarmStatus alarmStatus = StringUtils.isEmpty(status) ? null : AlarmStatus.valueOf(status);
         if (alarmSearchStatus != null && alarmStatus != null) {
-            throw new ThingsboardException("Invalid alarms search query: Both parameters 'searchStatus' " +
-                    "and 'status' can't be specified at the same time!", ThingsboardErrorCode.BAD_REQUEST_PARAMS);
+            throw new EchoiotException("Invalid alarms search query: Both parameters 'searchStatus' " +
+                    "and 'status' can't be specified at the same time!", EchoiotErrorCode.BAD_REQUEST_PARAMS);
         }
         TimePageLink pageLink = createTimePageLink(pageSize, page, textSearch, sortProperty, sortOrder, startTime, endTime);
 
@@ -265,15 +253,15 @@ public class AlarmController extends BaseController {
             @RequestParam(required = false) String searchStatus,
             @ApiParam(value = ALARM_QUERY_STATUS_DESCRIPTION, allowableValues = ALARM_QUERY_STATUS_ALLOWABLE_VALUES)
             @RequestParam(required = false) String status
-    ) throws ThingsboardException {
+    ) throws EchoiotException {
         checkParameter("EntityId", strEntityId);
         checkParameter("EntityType", strEntityType);
         EntityId entityId = EntityIdFactory.getByTypeAndId(strEntityType, strEntityId);
         AlarmSearchStatus alarmSearchStatus = StringUtils.isEmpty(searchStatus) ? null : AlarmSearchStatus.valueOf(searchStatus);
         AlarmStatus alarmStatus = StringUtils.isEmpty(status) ? null : AlarmStatus.valueOf(status);
         if (alarmSearchStatus != null && alarmStatus != null) {
-            throw new ThingsboardException("Invalid alarms search query: Both parameters 'searchStatus' " +
-                    "and 'status' can't be specified at the same time!", ThingsboardErrorCode.BAD_REQUEST_PARAMS);
+            throw new EchoiotException("Invalid alarms search query: Both parameters 'searchStatus' " +
+                    "and 'status' can't be specified at the same time!", EchoiotErrorCode.BAD_REQUEST_PARAMS);
         }
         checkEntityId(entityId, Operation.READ);
         try {

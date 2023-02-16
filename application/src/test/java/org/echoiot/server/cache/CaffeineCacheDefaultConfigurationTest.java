@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = CaffeineCacheDefaultConfigurationTest.class, loader = SpringBootContextLoader.class)
-@ComponentScan({"org.thingsboard.server.cache"})
+@ComponentScan({"org.echoiot.server.cache"})
 @EnableConfigurationProperties
 @Slf4j
 public class CaffeineCacheDefaultConfigurationTest {

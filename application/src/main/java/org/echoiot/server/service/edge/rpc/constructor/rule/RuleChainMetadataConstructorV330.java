@@ -8,11 +8,11 @@ import org.echoiot.server.common.data.rule.NodeConnectionInfo;
 import org.echoiot.server.common.data.rule.RuleChainConnectionInfo;
 import org.echoiot.server.common.data.rule.RuleChainMetaData;
 import org.echoiot.server.common.data.rule.RuleNode;
-import org.thingsboard.common.util.JacksonUtil;
-import org.thingsboard.rule.engine.flow.TbRuleChainInputNode;
-import org.thingsboard.rule.engine.flow.TbRuleChainInputNodeConfiguration;
-import org.thingsboard.rule.engine.flow.TbRuleChainOutputNode;
-import org.thingsboard.server.gen.edge.v1.RuleChainMetadataUpdateMsg;
+import org.echoiot.common.util.JacksonUtil;
+import org.echoiot.rule.engine.flow.TbRuleChainInputNode;
+import org.echoiot.rule.engine.flow.TbRuleChainInputNodeConfiguration;
+import org.echoiot.rule.engine.flow.TbRuleChainOutputNode;
+import org.echoiot.server.gen.edge.v1.RuleChainMetadataUpdateMsg;
 
 import java.util.ArrayList;
 import java.util.List;

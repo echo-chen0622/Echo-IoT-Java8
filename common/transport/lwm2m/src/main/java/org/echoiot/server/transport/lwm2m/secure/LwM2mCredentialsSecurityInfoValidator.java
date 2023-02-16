@@ -3,15 +3,18 @@ package org.echoiot.server.transport.lwm2m.secure;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.DecoderException;
+import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.device.credentials.lwm2m.LwM2MClientCredential;
-import org.echoiot.server.common.data.device.credentials.lwm2m.LwM2MSecurityMode;
 import org.echoiot.server.common.data.device.credentials.lwm2m.PSKClientCredential;
 import org.echoiot.server.common.data.device.credentials.lwm2m.RPKClientCredential;
 import org.echoiot.server.common.data.device.profile.Lwm2mDeviceProfileTransportConfiguration;
 import org.echoiot.server.common.transport.TransportServiceCallback;
 import org.echoiot.server.common.transport.auth.ValidateDeviceCredentialsResponse;
+import org.echoiot.server.gen.transport.TransportProtos.ValidateDeviceLwM2MCredentialsRequestMsg;
+import org.echoiot.server.queue.util.TbLwM2mTransportComponent;
 import org.echoiot.server.transport.lwm2m.bootstrap.secure.LwM2MBootstrapConfig;
+import org.echoiot.server.transport.lwm2m.config.LwM2MTransportServerConfig;
 import org.echoiot.server.transport.lwm2m.secure.credentials.LwM2MClientCredentials;
 import org.echoiot.server.transport.lwm2m.server.LwM2mTransportContext;
 import org.echoiot.server.transport.lwm2m.server.client.LwM2MAuthException;
@@ -19,10 +22,6 @@ import org.echoiot.server.transport.lwm2m.server.uplink.LwM2mTypeServer;
 import org.eclipse.leshan.core.util.SecurityUtil;
 import org.eclipse.leshan.server.security.SecurityInfo;
 import org.springframework.stereotype.Component;
-import org.thingsboard.common.util.JacksonUtil;
-import org.thingsboard.server.gen.transport.TransportProtos.ValidateDeviceLwM2MCredentialsRequestMsg;
-import org.echoiot.server.queue.util.TbLwM2mTransportComponent;
-import org.echoiot.server.transport.lwm2m.config.LwM2MTransportServerConfig;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -30,10 +29,7 @@ import java.security.PublicKey;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import static org.eclipse.leshan.core.SecurityMode.NO_SEC;
-import static org.eclipse.leshan.core.SecurityMode.PSK;
-import static org.eclipse.leshan.core.SecurityMode.RPK;
-import static org.eclipse.leshan.core.SecurityMode.X509;
+import static org.eclipse.leshan.core.SecurityMode.*;
 
 @Slf4j
 @Component
@@ -93,16 +89,16 @@ public class LwM2mCredentialsSecurityInfoValidator {
             result.setEndpoint(credentials.getClient().getEndpoint());
 //            if ((keyValue.equals(CLIENT))) {
             switch (credentials.getClient().getSecurityConfigClientMode()) {
-                case LwM2MSecurityMode.NO_SEC:
+                case NO_SEC:
                     createClientSecurityInfoNoSec(result);
                     break;
-                case LwM2MSecurityMode.PSK:
+                case PSK:
                     createClientSecurityInfoPSK(result, endpoint, credentials.getClient());
                     break;
-                case LwM2MSecurityMode.RPK:
+                case RPK:
                     createClientSecurityInfoRPK(result, endpoint, credentials.getClient());
                     break;
-                case LwM2MSecurityMode.X509:
+                case X509:
                     createClientSecurityInfoX509(result, endpoint);
                     break;
                 default:

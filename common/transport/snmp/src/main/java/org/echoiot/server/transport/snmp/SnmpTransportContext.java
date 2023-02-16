@@ -27,8 +27,8 @@ import org.echoiot.server.common.transport.TransportContext;
 import org.echoiot.server.common.transport.TransportDeviceProfileCache;
 import org.echoiot.server.common.transport.TransportService;
 import org.echoiot.server.common.transport.TransportServiceCallback;
-import org.thingsboard.server.gen.transport.TransportProtos;
-import org.thingsboard.server.gen.transport.TransportProtos.SessionInfoProto;
+import org.echoiot.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.transport.TransportProtos.SessionInfoProto;
 import org.echoiot.server.queue.util.AfterStartUp;
 import org.echoiot.server.queue.util.TbSnmpTransportComponent;
 

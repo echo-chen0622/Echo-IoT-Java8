@@ -2,16 +2,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.thingsboard</groupId>
+        <groupId>org.echoiot</groupId>
         <version>3.4.4</version>
         <artifactId>transport</artifactId>
     </parent>
-    <groupId>org.thingsboard.transport</groupId>
+    <groupId>org.echoiot.transport</groupId>
     <artifactId>mqtt</artifactId>
     <packaging>jar</packaging>
 
-    <name>Thingsboard MQTT Transport Service</name>
-    <url>https://thingsboard.io</url>
+    <name>Echoiot MQTT Transport Service</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -23,17 +22,17 @@
         <pkg.name>tb-mqtt-transport</pkg.name>
         <pkg.copyInstallScripts>false</pkg.copyInstallScripts>
         <pkg.win.dist>${project.build.directory}/windows</pkg.win.dist>
-        <pkg.implementationTitle>ThingsBoard MQTT Transport Service</pkg.implementationTitle>
-        <pkg.mainClass>org.echoiot.server.mqtt.ThingsboardMqttTransportApplication</pkg.mainClass>
+        <pkg.implementationTitle>Echoiot MQTT Transport Service</pkg.implementationTitle>
+        <pkg.mainClass>org.echoiot.server.mqtt.EchoiotMqttTransportApplication</pkg.mainClass>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>org.thingsboard.common.transport</groupId>
+            <groupId>org.echoiot.common.transport</groupId>
             <artifactId>mqtt</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard.common</groupId>
+            <groupId>org.echoiot.common</groupId>
             <artifactId>queue</artifactId>
         </dependency>
         <dependency>

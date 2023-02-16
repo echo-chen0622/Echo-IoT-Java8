@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.security.model.mfa.PlatformTwoFaSettings;
 import org.echoiot.server.common.data.security.model.mfa.account.AccountTwoFaSettings;
 import org.echoiot.server.common.data.security.model.mfa.account.TwoFaAccountConfig;
@@ -43,14 +43,14 @@ public class TwoFactorAuthConfigController extends BaseController {
             notes = "Get user's account 2FA configuration. Configuration contains configs for different 2FA providers." + ControllerConstants.NEW_LINE +
                     "Example:\n" +
                     "```\n{\n  \"configs\": {\n" +
-                    "    \"EMAIL\": {\n      \"providerType\": \"EMAIL\",\n      \"useByDefault\": true,\n      \"email\": \"tenant@thingsboard.org\"\n    },\n" +
-                    "    \"TOTP\": {\n      \"providerType\": \"TOTP\",\n      \"useByDefault\": false,\n      \"authUrl\": \"otpauth://totp/TB%202FA:tenant@thingsboard.org?issuer=TB+2FA&secret=P6Z2TLYTASOGP6LCJZAD24ETT5DACNNX\"\n    },\n" +
+                    "    \"EMAIL\": {\n      \"providerType\": \"EMAIL\",\n      \"useByDefault\": true,\n      \"email\": \"tenant@echoiot.org\"\n    },\n" +
+                    "    \"TOTP\": {\n      \"providerType\": \"TOTP\",\n      \"useByDefault\": false,\n      \"authUrl\": \"otpauth://totp/TB%202FA:tenant@echoiot.org?issuer=TB+2FA&secret=P6Z2TLYTASOGP6LCJZAD24ETT5DACNNX\"\n    },\n" +
                     "    \"SMS\": {\n      \"providerType\": \"SMS\",\n      \"useByDefault\": false,\n      \"phoneNumber\": \"+380501253652\"\n    }\n" +
                     "  }\n}\n```" +
                     ControllerConstants.AVAILABLE_FOR_ANY_AUTHORIZED_USER)
     @GetMapping("/account/settings")
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
-    public AccountTwoFaSettings getAccountTwoFaSettings() throws ThingsboardException {
+    public AccountTwoFaSettings getAccountTwoFaSettings() throws EchoiotException {
         SecurityUser user = getCurrentUser();
         return twoFaConfigManager.getAccountTwoFaSettings(user.getTenantId(), user.getId()).orElse(null);
     }
@@ -64,13 +64,13 @@ public class TwoFactorAuthConfigController extends BaseController {
                     "```\n{\n" +
                     "  \"providerType\": \"TOTP\",\n" +
                     "  \"useByDefault\": false,\n" +
-                    "  \"authUrl\": \"otpauth://totp/TB%202FA:tenant@thingsboard.org?issuer=TB+2FA&secret=PNJDNWJVAK4ZTUYT7RFGPQLXA7XGU7PX\"\n" +
+                    "  \"authUrl\": \"otpauth://totp/TB%202FA:tenant@echoiot.org?issuer=TB+2FA&secret=PNJDNWJVAK4ZTUYT7RFGPQLXA7XGU7PX\"\n" +
                     "}\n```" + ControllerConstants.NEW_LINE +
                     "For EMAIL, the generated config will contain email from user's account:\n" +
                     "```\n{\n" +
                     "  \"providerType\": \"EMAIL\",\n" +
                     "  \"useByDefault\": false,\n" +
-                    "  \"email\": \"tenant@thingsboard.org\"\n" +
+                    "  \"email\": \"tenant@echoiot.org\"\n" +
                     "}\n```" + ControllerConstants.NEW_LINE +
                     "For SMS 2FA this method will just return a config with empty/default values as there is nothing to generate/preset:\n" +
                     "```\n{\n" +
@@ -96,7 +96,7 @@ public class TwoFactorAuthConfigController extends BaseController {
                     "```\n{\n" +
                     "  \"providerType\": \"EMAIL\",\n" +
                     "  \"useByDefault\": true,\n" +
-                    "  \"email\": \"separate-email-for-2fa@thingsboard.org\"\n" +
+                    "  \"email\": \"separate-email-for-2fa@echoiot.org\"\n" +
                     "}\n```" + ControllerConstants.NEW_LINE +
                     "Example of SMS 2FA account config:\n" +
                     "```\n{\n" +
@@ -151,7 +151,7 @@ public class TwoFactorAuthConfigController extends BaseController {
     @PutMapping("/account/config")
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     public AccountTwoFaSettings updateTwoFaAccountConfig(@RequestParam TwoFaProviderType providerType,
-                                                         @RequestBody TwoFaAccountConfigUpdateRequest updateRequest) throws ThingsboardException {
+                                                         @RequestBody TwoFaAccountConfigUpdateRequest updateRequest) throws EchoiotException {
         SecurityUser user = getCurrentUser();
 
         TwoFaAccountConfig accountConfig = twoFaConfigManager.getTwoFaAccountConfig(user.getTenantId(), user.getId(), providerType)
@@ -166,7 +166,7 @@ public class TwoFactorAuthConfigController extends BaseController {
                     ControllerConstants.AVAILABLE_FOR_ANY_AUTHORIZED_USER)
     @DeleteMapping("/account/config")
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
-    public AccountTwoFaSettings deleteTwoFaAccountConfig(@RequestParam TwoFaProviderType providerType) throws ThingsboardException {
+    public AccountTwoFaSettings deleteTwoFaAccountConfig(@RequestParam TwoFaProviderType providerType) throws EchoiotException {
         SecurityUser user = getCurrentUser();
         return twoFaConfigManager.deleteTwoFaAccountConfig(user.getTenantId(), user.getId(), providerType);
     }
@@ -180,7 +180,7 @@ public class TwoFactorAuthConfigController extends BaseController {
     )
     @GetMapping("/providers")
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
-    public List<TwoFaProviderType> getAvailableTwoFaProviders() throws ThingsboardException {
+    public List<TwoFaProviderType> getAvailableTwoFaProviders() throws EchoiotException {
         return twoFaConfigManager.getPlatformTwoFaSettings(getTenantId(), true)
                                  .map(PlatformTwoFaSettings::getProviders).orElse(Collections.emptyList()).stream()
                                  .map(TwoFaProviderConfig::getProviderType)
@@ -194,7 +194,7 @@ public class TwoFactorAuthConfigController extends BaseController {
                     ControllerConstants.SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
     @GetMapping("/settings")
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN')")
-    public PlatformTwoFaSettings getPlatformTwoFaSettings() throws ThingsboardException {
+    public PlatformTwoFaSettings getPlatformTwoFaSettings() throws EchoiotException {
         return twoFaConfigManager.getPlatformTwoFaSettings(getTenantId(), false).orElse(null);
     }
 
@@ -242,7 +242,7 @@ public class TwoFactorAuthConfigController extends BaseController {
     @PostMapping("/settings")
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN')")
     public PlatformTwoFaSettings savePlatformTwoFaSettings(@ApiParam(value = "Settings value", required = true)
-                                          @RequestBody PlatformTwoFaSettings twoFaSettings) throws ThingsboardException {
+                                          @RequestBody PlatformTwoFaSettings twoFaSettings) throws EchoiotException {
         return twoFaConfigManager.savePlatformTwoFaSettings(getTenantId(), twoFaSettings);
     }
 

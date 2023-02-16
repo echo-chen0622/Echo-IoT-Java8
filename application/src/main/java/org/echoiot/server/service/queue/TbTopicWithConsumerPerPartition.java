@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.echoiot.server.queue.TbQueueConsumer;
 import org.echoiot.server.queue.common.TbProtoQueueMsg;
 import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
-import org.thingsboard.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.transport.TransportProtos;
 
 import java.util.Collections;
 import java.util.Queue;

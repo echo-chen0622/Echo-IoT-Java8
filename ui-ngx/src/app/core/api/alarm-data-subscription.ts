@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -15,25 +15,25 @@
 ///
 
 import {
-  AlarmDataCmd,
-  DataKeyType,
-  TelemetryService,
-  TelemetrySubscriber
+    AlarmDataCmd,
+    DataKeyType,
+    TelemetryService,
+    TelemetrySubscriber
 } from '@shared/models/telemetry/telemetry.models';
-import { DatasourceType } from '@shared/models/widget.models';
+import {DatasourceType} from '@shared/models/widget.models';
 import {
-  AlarmData,
-  AlarmDataPageLink,
-  EntityFilter,
-  EntityKey,
-  EntityKeyType,
-  KeyFilter
+    AlarmData,
+    AlarmDataPageLink,
+    EntityFilter,
+    EntityKey,
+    EntityKeyType,
+    KeyFilter
 } from '@shared/models/query/query.models';
-import { SubscriptionTimewindow } from '@shared/models/time/time.models';
-import { AlarmDataListener } from '@core/api/alarm-data.service';
-import { PageData } from '@shared/models/page/page-data';
-import { deepClone, isDefined, isDefinedAndNotNull, isObject } from '@core/utils';
-import { simulatedAlarm } from '@shared/models/alarm.models';
+import {SubscriptionTimewindow} from '@shared/models/time/time.models';
+import {AlarmDataListener} from '@core/api/alarm-data.service';
+import {PageData} from '@shared/models/page/page-data';
+import {deepClone, isDefined, isDefinedAndNotNull, isObject} from '@core/utils';
+import {simulatedAlarm} from '@shared/models/alarm.models';
 
 export interface AlarmSubscriptionDataKey {
   name: string;

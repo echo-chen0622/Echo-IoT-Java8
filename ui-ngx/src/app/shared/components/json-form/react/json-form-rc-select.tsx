@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016-2023 The Thingsboard Authors
+ * Copyright © 2016-2023 The Echoiot Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 import * as React from 'react';
-import ThingsboardBaseComponent from './json-form-base-component';
-import Select, { Option } from 'rc-select';
+import EchoiotBaseComponent from './json-form-base-component';
+import Select, {Option} from 'rc-select';
 import {
-  JsonFormFieldProps,
-  JsonFormFieldState,
-  KeyLabelItem
+    JsonFormFieldProps,
+    JsonFormFieldState,
+    KeyLabelItem
 } from '@shared/components/json-form/react/json-form.models';
-import { Mode } from 'rc-select/lib/interface';
-import { deepClone } from '@core/utils';
+import {Mode} from 'rc-select/lib/interface';
+import {deepClone} from '@core/utils';
 
-interface ThingsboardRcSelectState extends JsonFormFieldState {
+interface EchoiotRcSelectState extends JsonFormFieldState {
   currentValue: KeyLabelItem | KeyLabelItem[];
   items: Array<KeyLabelItem>;
   focused: boolean;
 }
 
-class ThingsboardRcSelect extends React.Component<JsonFormFieldProps, ThingsboardRcSelectState> {
+class EchoiotRcSelect extends React.Component<JsonFormFieldProps, EchoiotRcSelectState> {
 
     constructor(props) {
         super(props);
@@ -199,4 +199,4 @@ class ThingsboardRcSelect extends React.Component<JsonFormFieldProps, Thingsboar
     }
 }
 
-export default ThingsboardBaseComponent(ThingsboardRcSelect);
+export default EchoiotBaseComponent(EchoiotRcSelect);

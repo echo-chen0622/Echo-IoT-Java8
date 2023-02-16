@@ -85,13 +85,13 @@ public class TimescaleTsDatabaseUpgradeService extends AbstractSqlTsDatabaseUpgr
                             Path pathToTempTsKvFile = null;
                             if (SystemUtils.IS_OS_WINDOWS) {
                                 Path pathToDir;
-                                log.info("Lookup for environment variable: {} ...", THINGSBOARD_WINDOWS_UPGRADE_DIR);
-                                String thingsboardWindowsUpgradeDir = System.getenv(THINGSBOARD_WINDOWS_UPGRADE_DIR);
-                                if (StringUtils.isNotEmpty(thingsboardWindowsUpgradeDir)) {
-                                    log.info("Environment variable: {} was found!", THINGSBOARD_WINDOWS_UPGRADE_DIR);
-                                    pathToDir = Paths.get(thingsboardWindowsUpgradeDir);
+                                log.info("Lookup for environment variable: {} ...", ECHOIOT_WINDOWS_UPGRADE_DIR);
+                                String echoiotWindowsUpgradeDir = System.getenv(ECHOIOT_WINDOWS_UPGRADE_DIR);
+                                if (StringUtils.isNotEmpty(echoiotWindowsUpgradeDir)) {
+                                    log.info("Environment variable: {} was found!", ECHOIOT_WINDOWS_UPGRADE_DIR);
+                                    pathToDir = Paths.get(echoiotWindowsUpgradeDir);
                                 } else {
-                                    log.info("Failed to lookup environment variable: {}", THINGSBOARD_WINDOWS_UPGRADE_DIR);
+                                    log.info("Failed to lookup environment variable: {}", ECHOIOT_WINDOWS_UPGRADE_DIR);
                                     pathToDir = Paths.get(PATH_TO_USERS_PUBLIC_FOLDER);
                                 }
                                 log.info("Directory: {} will be used for creation temporary upgrade file!", pathToDir);

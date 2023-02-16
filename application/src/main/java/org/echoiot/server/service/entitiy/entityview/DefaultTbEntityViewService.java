@@ -10,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.*;
 import org.echoiot.server.common.data.audit.ActionType;
 import org.echoiot.server.common.data.edge.Edge;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.kv.AttributeKvEntry;
 import org.echoiot.server.common.data.kv.BaseReadTsKvQuery;
 import org.echoiot.server.common.data.kv.ReadTsKvQuery;
@@ -78,7 +78,7 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
     }
 
     @Override
-    public void updateEntityViewAttributes(TenantId tenantId, EntityView savedEntityView, EntityView oldEntityView, User user) throws ThingsboardException {
+    public void updateEntityViewAttributes(TenantId tenantId, EntityView savedEntityView, EntityView oldEntityView, User user) throws EchoiotException {
         List<ListenableFuture<?>> futures = new ArrayList<>();
 
         if (oldEntityView != null) {
@@ -109,7 +109,7 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
     }
 
     @Override
-    public void delete(EntityView entityView, User user) throws ThingsboardException {
+    public void delete(EntityView entityView, User user) throws EchoiotException {
         TenantId tenantId = entityView.getTenantId();
         EntityViewId entityViewId = entityView.getId();
         try {
@@ -128,7 +128,7 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
     }
 
     @Override
-    public EntityView assignEntityViewToCustomer(TenantId tenantId, EntityViewId entityViewId, Customer customer, User user) throws ThingsboardException {
+    public EntityView assignEntityViewToCustomer(TenantId tenantId, EntityViewId entityViewId, Customer customer, User user) throws EchoiotException {
         CustomerId customerId = customer.getId();
         try {
             EntityView savedEntityView = checkNotNull(entityViewService.assignEntityViewToCustomer(tenantId, entityViewId, customerId));
@@ -144,7 +144,7 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
 
     @Override
     public EntityView assignEntityViewToPublicCustomer(TenantId tenantId, CustomerId customerId, Customer publicCustomer,
-                                                       EntityViewId entityViewId, User user) throws ThingsboardException {
+                                                       EntityViewId entityViewId, User user) throws EchoiotException {
         try {
             EntityView savedEntityView = checkNotNull(entityViewService.assignEntityViewToCustomer(tenantId,
                     entityViewId, publicCustomer.getId()));
@@ -160,7 +160,7 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
     }
 
     @Override
-    public EntityView assignEntityViewToEdge(TenantId tenantId, CustomerId customerId, EntityViewId entityViewId, Edge edge, User user) throws ThingsboardException {
+    public EntityView assignEntityViewToEdge(TenantId tenantId, CustomerId customerId, EntityViewId entityViewId, Edge edge, User user) throws EchoiotException {
         EdgeId edgeId = edge.getId();
         try {
             EntityView savedEntityView = checkNotNull(entityViewService.assignEntityViewToEdge(tenantId, entityViewId, edgeId));
@@ -177,7 +177,7 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
 
     @Override
     public EntityView unassignEntityViewFromEdge(TenantId tenantId, CustomerId customerId, EntityView entityView,
-                                                 Edge edge, User user) throws ThingsboardException {
+                                                 Edge edge, User user) throws EchoiotException {
         EntityViewId entityViewId = entityView.getId();
         EdgeId edgeId = edge.getId();
         try {
@@ -194,7 +194,7 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
     }
 
     @Override
-    public EntityView unassignEntityViewFromCustomer(TenantId tenantId, EntityViewId entityViewId, Customer customer, User user) throws ThingsboardException {
+    public EntityView unassignEntityViewFromCustomer(TenantId tenantId, EntityViewId entityViewId, Customer customer, User user) throws EchoiotException {
         try {
             EntityView savedEntityView = checkNotNull(entityViewService.unassignEntityViewFromCustomer(tenantId, entityViewId));
             notificationEntityService.notifyAssignOrUnassignEntityToCustomer(tenantId, entityViewId, customer.getId(), savedEntityView,
@@ -252,7 +252,7 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
         }
     }
 
-    private ListenableFuture<List<Void>> copyAttributesFromEntityToEntityView(EntityView entityView, String scope, Collection<String> keys, User user) throws ThingsboardException {
+    private ListenableFuture<List<Void>> copyAttributesFromEntityToEntityView(EntityView entityView, String scope, Collection<String> keys, User user) throws EchoiotException {
         EntityViewId entityId = entityView.getId();
         if (keys != null && !keys.isEmpty()) {
             ListenableFuture<List<AttributeKvEntry>> getAttrFuture = attributesService.find(entityView.getTenantId(), entityView.getEntityId(), scope, keys);
@@ -275,7 +275,7 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
                         public void onSuccess(@Nullable Void tmp) {
                             try {
                                 logAttributesUpdated(entityView.getTenantId(), user, entityId, scope, attributes, null);
-                            } catch (ThingsboardException e) {
+                            } catch (EchoiotException e) {
                                 log.error("Failed to log attribute updates", e);
                             }
                         }
@@ -284,7 +284,7 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
                         public void onFailure(Throwable t) {
                             try {
                                 logAttributesUpdated(entityView.getTenantId(), user, entityId, scope, attributes, t);
-                            } catch (ThingsboardException e) {
+                            } catch (EchoiotException e) {
                                 log.error("Failed to log attribute updates", e);
                             }
                         }
@@ -343,7 +343,7 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
                 public void onSuccess(@Nullable Void tmp) {
                     try {
                         logAttributesDeleted(entityView.getTenantId(), user, entityId, scope, keys, null);
-                    } catch (ThingsboardException e) {
+                    } catch (EchoiotException e) {
                         log.error("Failed to log attribute delete", e);
                     }
                     resultFuture.set(tmp);
@@ -353,7 +353,7 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
                 public void onFailure(Throwable t) {
                     try {
                         logAttributesDeleted(entityView.getTenantId(), user, entityId, scope, keys, t);
-                    } catch (ThingsboardException e) {
+                    } catch (EchoiotException e) {
                         log.error("Failed to log attribute delete", e);
                     }
                     resultFuture.setException(t);
@@ -374,7 +374,7 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
                 public void onSuccess(@Nullable Void tmp) {
                     try {
                         logTimeseriesDeleted(entityView.getTenantId(), user, entityId, keys, null);
-                    } catch (ThingsboardException e) {
+                    } catch (EchoiotException e) {
                         log.error("Failed to log timeseries delete", e);
                     }
                     resultFuture.set(tmp);
@@ -384,7 +384,7 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
                 public void onFailure(Throwable t) {
                     try {
                         logTimeseriesDeleted(entityView.getTenantId(), user, entityId, keys, t);
-                    } catch (ThingsboardException e) {
+                    } catch (EchoiotException e) {
                         log.error("Failed to log timeseries delete", e);
                     }
                     resultFuture.setException(t);
@@ -396,7 +396,7 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
                 public void onSuccess(@Nullable Collection<String> keys) {
                     try {
                         logTimeseriesDeleted(entityView.getTenantId(), user, entityId, new ArrayList<>(keys), null);
-                    } catch (ThingsboardException e) {
+                    } catch (EchoiotException e) {
                         log.error("Failed to log timeseries delete", e);
                     }
                     resultFuture.set(null);
@@ -406,7 +406,7 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
                 public void onFailure(Throwable t) {
                     try {
                         logTimeseriesDeleted(entityView.getTenantId(), user, entityId, Collections.emptyList(), t);
-                    } catch (ThingsboardException e) {
+                    } catch (EchoiotException e) {
                         log.error("Failed to log timeseries delete", e);
                     }
                     resultFuture.setException(t);
@@ -416,15 +416,15 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
         return resultFuture;
     }
 
-    private void logAttributesUpdated(TenantId tenantId, User user, EntityId entityId, String scope, List<AttributeKvEntry> attributes, Throwable e) throws ThingsboardException {
+    private void logAttributesUpdated(TenantId tenantId, User user, EntityId entityId, String scope, List<AttributeKvEntry> attributes, Throwable e) throws EchoiotException {
         notificationEntityService.logEntityAction(tenantId, entityId, ActionType.ATTRIBUTES_UPDATED, user, toException(e), scope, attributes);
     }
 
-    private void logAttributesDeleted(TenantId tenantId, User user, EntityId entityId, String scope, List<String> keys, Throwable e) throws ThingsboardException {
+    private void logAttributesDeleted(TenantId tenantId, User user, EntityId entityId, String scope, List<String> keys, Throwable e) throws EchoiotException {
         notificationEntityService.logEntityAction(tenantId, entityId, ActionType.ATTRIBUTES_DELETED, user, toException(e), scope, keys);
     }
 
-    private void logTimeseriesDeleted(TenantId tenantId, User user, EntityId entityId, List<String> keys, Throwable e) throws ThingsboardException {
+    private void logTimeseriesDeleted(TenantId tenantId, User user, EntityId entityId, List<String> keys, Throwable e) throws EchoiotException {
         notificationEntityService.logEntityAction(tenantId, entityId, ActionType.TIMESERIES_DELETED, user, toException(e), keys);
     }
 

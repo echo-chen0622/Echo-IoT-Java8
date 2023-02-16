@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,23 +14,23 @@
 /// limitations under the License.
 ///
 
-import { CollectionViewer, DataSource, SelectionModel } from '@angular/cdk/collections';
-import { BehaviorSubject, Observable, of, ReplaySubject } from 'rxjs';
-import { emptyPageData, PageData } from '@shared/models/page/page-data';
-import { PageLink } from '@shared/models/page/page-link';
-import { catchError, map, publishReplay, refCount, take, tap } from 'rxjs/operators';
-import { EntityId } from '@app/shared/models/id/entity-id';
-import { TranslateService } from '@ngx-translate/core';
+import {CollectionViewer, DataSource, SelectionModel} from '@angular/cdk/collections';
+import {BehaviorSubject, Observable, of, ReplaySubject} from 'rxjs';
+import {emptyPageData, PageData} from '@shared/models/page/page-data';
+import {PageLink} from '@shared/models/page/page-link';
+import {catchError, map, publishReplay, refCount, take, tap} from 'rxjs/operators';
+import {EntityId} from '@app/shared/models/id/entity-id';
+import {TranslateService} from '@ngx-translate/core';
 import {
-  AttributeData,
-  AttributeScope,
-  isClientSideTelemetryType,
-  TelemetrySubscriber,
-  TelemetryType
+    AttributeData,
+    AttributeScope,
+    isClientSideTelemetryType,
+    TelemetrySubscriber,
+    TelemetryType
 } from '@shared/models/telemetry/telemetry.models';
-import { AttributeService } from '@core/http/attribute.service';
-import { TelemetryWebsocketService } from '@core/ws/telemetry-websocket.service';
-import { NgZone } from '@angular/core';
+import {AttributeService} from '@core/http/attribute.service';
+import {TelemetryWebsocketService} from '@core/ws/telemetry-websocket.service';
+import {NgZone} from '@angular/core';
 
 export class AttributeDatasource implements DataSource<AttributeData> {
 

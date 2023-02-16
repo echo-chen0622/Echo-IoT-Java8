@@ -2,13 +2,13 @@ package org.echoiot.server.util;
 
 import com.google.common.util.concurrent.MoreExecutors;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.common.util.EchoiotThreadFactory;
+import org.echoiot.server.utils.EventDeduplicationExecutor;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.thingsboard.common.util.ThingsBoardThreadFactory;
-import org.echoiot.server.utils.EventDeduplicationExecutor;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -18,7 +18,7 @@ import java.util.function.Consumer;
 @RunWith(MockitoJUnitRunner.class)
 public class EventDeduplicationExecutorTest {
 
-    ThingsBoardThreadFactory threadFactory = ThingsBoardThreadFactory.forName(getClass().getSimpleName());
+    EchoiotThreadFactory threadFactory = EchoiotThreadFactory.forName(getClass().getSimpleName());
     ExecutorService executor;
 
     @After

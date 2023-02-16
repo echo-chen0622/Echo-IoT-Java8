@@ -2,17 +2,16 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.thingsboard.msa</groupId>
+        <groupId>org.echoiot.msa</groupId>
         <version>3.4.4</version>
         <artifactId>transport</artifactId>
     </parent>
-    <groupId>org.thingsboard.msa.transport</groupId>
+    <groupId>org.echoiot.msa.transport</groupId>
     <artifactId>lwm2m</artifactId>
     <packaging>pom</packaging>
 
-    <name>ThingsBoard LWM2M Transport Microservice</name>
-    <url>https://thingsboard.io</url>
-    <description>ThingsBoard LWM2M Transport Microservice</description>
+    <name>Echoiot LWM2M Transport Microservice</name>
+    <description>Echoiot LWM2M Transport Microservice</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -26,7 +25,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.thingsboard.transport</groupId>
+            <groupId>org.echoiot.transport</groupId>
             <artifactId>lwm2m</artifactId>
             <version>${project.version}</version>
             <classifier>deb</classifier>
@@ -50,7 +49,7 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.thingsboard.transport</groupId>
+                                    <groupId>org.echoiot.transport</groupId>
                                     <artifactId>lwm2m</artifactId>
                                     <classifier>deb</classifier>
                                     <type>deb</type>

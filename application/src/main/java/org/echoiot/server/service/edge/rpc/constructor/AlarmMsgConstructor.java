@@ -1,6 +1,6 @@
 package org.echoiot.server.service.edge.rpc.constructor;
 
-import org.echoiot.server.common.data.EntityType;
+import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.common.data.alarm.Alarm;
 import org.echoiot.server.common.data.id.AssetId;
 import org.echoiot.server.common.data.id.DeviceId;
@@ -9,12 +9,11 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.dao.asset.AssetService;
 import org.echoiot.server.dao.device.DeviceService;
 import org.echoiot.server.dao.entityview.EntityViewService;
+import org.echoiot.server.gen.edge.v1.AlarmUpdateMsg;
+import org.echoiot.server.gen.edge.v1.UpdateMsgType;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.thingsboard.common.util.JacksonUtil;
-import org.thingsboard.server.gen.edge.v1.AlarmUpdateMsg;
-import org.thingsboard.server.gen.edge.v1.UpdateMsgType;
 
 @Component
 @TbCoreComponent
@@ -32,13 +31,13 @@ public class AlarmMsgConstructor {
     public AlarmUpdateMsg constructAlarmUpdatedMsg(TenantId tenantId, UpdateMsgType msgType, Alarm alarm) {
         String entityName = null;
         switch (alarm.getOriginator().getEntityType()) {
-            case EntityType.DEVICE:
+            case DEVICE:
                 entityName = deviceService.findDeviceById(tenantId, new DeviceId(alarm.getOriginator().getId())).getName();
                 break;
-            case EntityType.ASSET:
+            case ASSET:
                 entityName = assetService.findAssetById(tenantId, new AssetId(alarm.getOriginator().getId())).getName();
                 break;
-            case EntityType.ENTITY_VIEW:
+            case ENTITY_VIEW:
                 entityName = entityViewService.findEntityViewById(tenantId, new EntityViewId(alarm.getOriginator().getId())).getName();
                 break;
         }

@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,19 +14,19 @@
 /// limitations under the License.
 ///
 
-import { Component, ElementRef, forwardRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { LinkLabel } from '@shared/models/rule-node.models';
-import { Observable, of } from 'rxjs';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { deepClone } from '@core/utils';
-import { TruncatePipe } from '@shared/pipe/truncate.pipe';
-import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { MatChipInputEvent, MatChipList } from '@angular/material/chips';
-import { TranslateService } from '@ngx-translate/core';
-import { COMMA, ENTER, SEMICOLON } from '@angular/cdk/keycodes';
-import { catchError, map, mergeMap, share, startWith } from 'rxjs/operators';
-import { RuleChainService } from '@core/http/rule-chain.service';
+import {Component, ElementRef, forwardRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {LinkLabel} from '@shared/models/rule-node.models';
+import {Observable, of} from 'rxjs';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {deepClone} from '@core/utils';
+import {TruncatePipe} from '@shared/pipe/truncate.pipe';
+import {MatAutocomplete, MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
+import {MatChipInputEvent, MatChipList} from '@angular/material/chips';
+import {TranslateService} from '@ngx-translate/core';
+import {COMMA, ENTER, SEMICOLON} from '@angular/cdk/keycodes';
+import {catchError, map, mergeMap, share, startWith} from 'rxjs/operators';
+import {RuleChainService} from '@core/http/rule-chain.service';
 
 @Component({
   selector: 'tb-link-labels',
@@ -286,4 +286,3 @@ export class LinkLabelsComponent implements ControlValueAccessor, OnInit, OnChan
     this.propagateChange(labels);
   }
 }
-

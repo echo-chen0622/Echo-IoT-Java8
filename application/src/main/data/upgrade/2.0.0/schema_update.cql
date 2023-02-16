@@ -1,5 +1,5 @@
 --
--- Copyright © 2016-2023 The Thingsboard Authors
+-- Copyright © 2016-2023 The Echoiot Authors
 --
 -- Licensed under the Apache License, Version 2.0 (the "License");
 -- you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
 -- limitations under the License.
 --
 
-CREATE TABLE IF NOT EXISTS thingsboard.msg_queue (
+CREATE TABLE IF NOT EXISTS echoiot.msg_queue (
     node_id         timeuuid,
     cluster_partition    bigint,
     ts_partition       bigint,
@@ -31,7 +31,7 @@ AND compaction = {
     'unchecked_tombstone_compaction': 'true'
 };
 
-CREATE TABLE IF NOT EXISTS thingsboard.msg_ack_queue (
+CREATE TABLE IF NOT EXISTS echoiot.msg_ack_queue (
     node_id         timeuuid,
     cluster_partition    bigint,
     ts_partition       bigint,
@@ -47,7 +47,7 @@ AND compaction = {
     'unchecked_tombstone_compaction': 'true'
 };
 
-CREATE TABLE IF NOT EXISTS thingsboard.processed_msg_partitions (
+CREATE TABLE IF NOT EXISTS echoiot.processed_msg_partitions (
     node_id         timeuuid,
     cluster_partition    bigint,
     ts_partition       bigint,
@@ -62,7 +62,7 @@ AND compaction = {
     'unchecked_tombstone_compaction': 'true'
 };
 
-CREATE TABLE IF NOT EXISTS  thingsboard.rule_chain (
+CREATE TABLE IF NOT EXISTS  echoiot.rule_chain (
     id uuid,
     tenant_id uuid,
     name text,
@@ -75,14 +75,14 @@ CREATE TABLE IF NOT EXISTS  thingsboard.rule_chain (
     PRIMARY KEY (id, tenant_id)
 );
 
-CREATE MATERIALIZED VIEW IF NOT EXISTS thingsboard.rule_chain_by_tenant_and_search_text AS
+CREATE MATERIALIZED VIEW IF NOT EXISTS echoiot.rule_chain_by_tenant_and_search_text AS
     SELECT *
-    from thingsboard.rule_chain
+    from echoiot.rule_chain
     WHERE tenant_id IS NOT NULL AND search_text IS NOT NULL AND id IS NOT NULL
     PRIMARY KEY ( tenant_id, search_text, id )
     WITH CLUSTERING ORDER BY ( search_text ASC, id DESC );
 
-CREATE TABLE IF NOT EXISTS  thingsboard.rule_node (
+CREATE TABLE IF NOT EXISTS  echoiot.rule_node (
     id uuid,
     rule_chain_id uuid,
     type text,
@@ -94,10 +94,10 @@ CREATE TABLE IF NOT EXISTS  thingsboard.rule_node (
     PRIMARY KEY (id)
 );
 
-DROP MATERIALIZED VIEW IF EXISTS thingsboard.rule_by_plugin_token;
-DROP MATERIALIZED VIEW IF EXISTS thingsboard.rule_by_tenant_and_search_text;
-DROP MATERIALIZED VIEW IF EXISTS thingsboard.plugin_by_api_token;
-DROP MATERIALIZED VIEW IF EXISTS thingsboard.plugin_by_tenant_and_search_text;
+DROP MATERIALIZED VIEW IF EXISTS echoiot.rule_by_plugin_token;
+DROP MATERIALIZED VIEW IF EXISTS echoiot.rule_by_tenant_and_search_text;
+DROP MATERIALIZED VIEW IF EXISTS echoiot.plugin_by_api_token;
+DROP MATERIALIZED VIEW IF EXISTS echoiot.plugin_by_tenant_and_search_text;
 
-DROP TABLE IF EXISTS thingsboard.rule;
-DROP TABLE IF EXISTS thingsboard.plugin;
+DROP TABLE IF EXISTS echoiot.rule;
+DROP TABLE IF EXISTS echoiot.plugin;

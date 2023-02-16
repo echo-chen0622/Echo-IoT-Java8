@@ -6,16 +6,18 @@ import com.google.common.util.concurrent.FutureCallback;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.cluster.TbClusterService;
 import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.ExportableEntity;
 import org.echoiot.server.common.data.User;
 import org.echoiot.server.common.data.audit.ActionType;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.EntityIdFactory;
 import org.echoiot.server.common.data.id.HasId;
 import org.echoiot.server.common.data.id.TenantId;
+import org.echoiot.server.common.data.kv.*;
 import org.echoiot.server.common.data.relation.EntityRelation;
 import org.echoiot.server.common.data.relation.RelationTypeGroup;
 import org.echoiot.server.common.data.sync.ie.AttributeExportData;
@@ -23,33 +25,17 @@ import org.echoiot.server.common.data.sync.ie.EntityExportData;
 import org.echoiot.server.common.data.sync.ie.EntityImportResult;
 import org.echoiot.server.dao.relation.RelationDao;
 import org.echoiot.server.dao.relation.RelationService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.transaction.annotation.Transactional;
-import org.thingsboard.common.util.JacksonUtil;
-import org.echoiot.server.common.data.kv.AttributeKvEntry;
-import org.echoiot.server.common.data.kv.BaseAttributeKvEntry;
-import org.echoiot.server.common.data.kv.BooleanDataEntry;
-import org.echoiot.server.common.data.kv.DoubleDataEntry;
-import org.echoiot.server.common.data.kv.JsonDataEntry;
-import org.echoiot.server.common.data.kv.KvEntry;
-import org.echoiot.server.common.data.kv.LongDataEntry;
-import org.echoiot.server.common.data.kv.StringDataEntry;
 import org.echoiot.server.service.action.EntityActionService;
 import org.echoiot.server.service.entitiy.TbNotificationEntityService;
 import org.echoiot.server.service.sync.ie.exporting.ExportableEntitiesService;
 import org.echoiot.server.service.sync.ie.importing.EntityImportService;
 import org.echoiot.server.service.sync.vc.data.EntitiesImportCtx;
 import org.echoiot.server.service.telemetry.TelemetrySubscriptionService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -74,7 +60,7 @@ public abstract class BaseEntityImportService<I extends EntityId, E extends Expo
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public EntityImportResult<E> importEntity(EntitiesImportCtx ctx, D exportData) throws ThingsboardException {
+    public EntityImportResult<E> importEntity(EntitiesImportCtx ctx, D exportData) throws EchoiotException {
         EntityImportResult<E> importResult = new EntityImportResult<>();
         ctx.setCurrentImportResult(importResult);
         importResult.setEntityType(getEntityType());
@@ -151,7 +137,7 @@ public abstract class BaseEntityImportService<I extends EntityId, E extends Expo
     protected abstract E saveOrUpdate(EntitiesImportCtx ctx, E entity, D exportData, IdProvider idProvider);
 
 
-    protected void processAfterSaved(EntitiesImportCtx ctx, EntityImportResult<E> importResult, D exportData, IdProvider idProvider) throws ThingsboardException {
+    protected void processAfterSaved(EntitiesImportCtx ctx, EntityImportResult<E> importResult, D exportData, IdProvider idProvider) throws EchoiotException {
         E savedEntity = importResult.getSavedEntity();
         E oldEntity = importResult.getOldEntity();
 
@@ -252,7 +238,7 @@ public abstract class BaseEntityImportService<I extends EntityId, E extends Expo
         });
     }
 
-    protected void onEntitySaved(User user, E savedEntity, E oldEntity) throws ThingsboardException {
+    protected void onEntitySaved(User user, E savedEntity, E oldEntity) throws EchoiotException {
         entityNotificationService.notifyCreateOrUpdateEntity(user.getTenantId(), savedEntity.getId(), savedEntity,
                 null, oldEntity == null ? ActionType.ADDED : ActionType.UPDATED, user);
     }

@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,11 +14,11 @@
 /// limitations under the License.
 ///
 
-import { Component } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { EntityTabsComponent } from '../../components/entity/entity-tabs.component';
-import { EntityViewInfo } from '@app/shared/models/entity-view.models';
+import {Component} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {EntityTabsComponent} from '../../components/entity/entity-tabs.component';
+import {EntityViewInfo} from '@app/shared/models/entity-view.models';
 
 @Component({
   selector: 'tb-entity-view-tabs',

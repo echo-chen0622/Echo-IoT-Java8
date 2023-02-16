@@ -1,20 +1,4 @@
 #!/usr/bin/env bash
-#
-# Copyright © 2016-2023 The Thingsboard Authors
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
-
 
 # REF: https://github.com/cloudflare/cfssl
 
@@ -96,7 +80,7 @@ tee ./${SERVER_PATH}/ca-config.json 1> /dev/null <<-CONFIG
           "C": "UK",
           "ST": "Kyiv city",
           "L": "Kyiv",
-          "O": "Thingsboard",
+          "O": "Echoiot",
           "OU": "DEVELOPER_TEST"
         }
       ]
@@ -187,7 +171,7 @@ cfssl genkey \
       "C": "UK",
       "ST": "Kyiv city",
       "L": "Kyiv",
-      "O": "Thingsboard",
+      "O": "Echoiot",
       "OU": "DEVELOPER_TEST"
     }
   ],
@@ -215,7 +199,7 @@ cfssl gencert \
       "C": "UK",
       "ST": "Kyiv city",
       "L": "Kyiv",
-      "O": "Thingsboard",
+      "O": "Echoiot",
       "OU": "DEVELOPER_TEST"
     }
   ]
@@ -269,7 +253,7 @@ cfssl gencert \
       "C": "UK",
       "ST": "Kyiv city",
       "L": "Kyiv",
-      "O": "Thingsboard",
+      "O": "Echoiot",
       "OU": "DEVELOPER_TEST"
     }
   ]
@@ -311,4 +295,3 @@ rm ./${SERVER_PATH}/${CA_INTERMEDIATE_CERT_KEY_PREF}* 2> /dev/null
 rm ./${SERVER_PATH}/${CA_ROOT_CERT_KEY}* 2> /dev/null
 mv ./${SERVER_PATH}/${SERVER_CERT_KEY}-key.pem ./${SERVER_PATH}/${SERVER_CERT_KEY}_key.pem
 mv ./${SERVER_PATH}/${BS_SERVER_CERT_KEY}-key.pem ./${SERVER_PATH}/${BS_SERVER_CERT_KEY}_key.pem
-

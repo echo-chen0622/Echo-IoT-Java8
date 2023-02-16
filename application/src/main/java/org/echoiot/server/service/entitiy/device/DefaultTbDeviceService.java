@@ -5,9 +5,10 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.MoreExecutors;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.server.common.data.*;
 import org.echoiot.server.common.data.audit.ActionType;
 import org.echoiot.server.common.data.edge.Edge;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.data.id.EdgeId;
@@ -21,13 +22,8 @@ import org.echoiot.server.dao.device.claim.ClaimResult;
 import org.echoiot.server.dao.device.claim.ReclaimResult;
 import org.echoiot.server.dao.tenant.TenantService;
 import org.echoiot.server.queue.util.TbCoreComponent;
-import org.springframework.stereotype.Service;
-import org.echoiot.server.common.data.Customer;
-import org.echoiot.server.common.data.Device;
-import org.echoiot.server.common.data.EntityType;
-import org.echoiot.server.common.data.Tenant;
-import org.echoiot.server.common.data.User;
 import org.echoiot.server.service.entitiy.AbstractTbEntityService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -60,7 +56,7 @@ public class DefaultTbDeviceService extends AbstractTbEntityService implements T
     }
 
     @Override
-    public Device saveDeviceWithCredentials(Device device, DeviceCredentials credentials, User user) throws ThingsboardException {
+    public Device saveDeviceWithCredentials(Device device, DeviceCredentials credentials, User user) throws EchoiotException {
         boolean isCreate = device.getId() == null;
         ActionType actionType = isCreate ? ActionType.ADDED : ActionType.UPDATED;
         TenantId tenantId = device.getTenantId();
@@ -96,7 +92,7 @@ public class DefaultTbDeviceService extends AbstractTbEntityService implements T
     }
 
     @Override
-    public Device assignDeviceToCustomer(TenantId tenantId, DeviceId deviceId, Customer customer, User user) throws ThingsboardException {
+    public Device assignDeviceToCustomer(TenantId tenantId, DeviceId deviceId, Customer customer, User user) throws EchoiotException {
         ActionType actionType = ActionType.ASSIGNED_TO_CUSTOMER;
         CustomerId customerId = customer.getId();
         try {
@@ -113,7 +109,7 @@ public class DefaultTbDeviceService extends AbstractTbEntityService implements T
     }
 
     @Override
-    public Device unassignDeviceFromCustomer(Device device, Customer customer, User user) throws ThingsboardException {
+    public Device unassignDeviceFromCustomer(Device device, Customer customer, User user) throws EchoiotException {
         ActionType actionType = ActionType.UNASSIGNED_FROM_CUSTOMER;
         TenantId tenantId = device.getTenantId();
         DeviceId deviceId = device.getId();
@@ -133,7 +129,7 @@ public class DefaultTbDeviceService extends AbstractTbEntityService implements T
     }
 
     @Override
-    public Device assignDeviceToPublicCustomer(TenantId tenantId, DeviceId deviceId, User user) throws ThingsboardException {
+    public Device assignDeviceToPublicCustomer(TenantId tenantId, DeviceId deviceId, User user) throws EchoiotException {
         ActionType actionType = ActionType.ASSIGNED_TO_CUSTOMER;
         Customer publicCustomer = customerService.findOrCreatePublicCustomer(tenantId);
         try {
@@ -152,7 +148,7 @@ public class DefaultTbDeviceService extends AbstractTbEntityService implements T
     }
 
     @Override
-    public DeviceCredentials getDeviceCredentialsByDeviceId(Device device, User user) throws ThingsboardException {
+    public DeviceCredentials getDeviceCredentialsByDeviceId(Device device, User user) throws EchoiotException {
         TenantId tenantId = device.getTenantId();
         DeviceId deviceId = device.getId();
         try {
@@ -168,7 +164,7 @@ public class DefaultTbDeviceService extends AbstractTbEntityService implements T
     }
 
     @Override
-    public DeviceCredentials updateDeviceCredentials(Device device, DeviceCredentials deviceCredentials, User user) throws ThingsboardException {
+    public DeviceCredentials updateDeviceCredentials(Device device, DeviceCredentials deviceCredentials, User user) throws EchoiotException {
         TenantId tenantId = device.getTenantId();
         DeviceId deviceId = device.getId();
         try {
@@ -232,7 +228,7 @@ public class DefaultTbDeviceService extends AbstractTbEntityService implements T
     }
 
     @Override
-    public Device assignDeviceToEdge(TenantId tenantId, DeviceId deviceId, Edge edge, User user) throws ThingsboardException {
+    public Device assignDeviceToEdge(TenantId tenantId, DeviceId deviceId, Edge edge, User user) throws EchoiotException {
         ActionType actionType = ActionType.ASSIGNED_TO_EDGE;
         EdgeId edgeId = edge.getId();
         try {
@@ -248,7 +244,7 @@ public class DefaultTbDeviceService extends AbstractTbEntityService implements T
     }
 
     @Override
-    public Device unassignDeviceFromEdge(Device device, Edge edge, User user) throws ThingsboardException {
+    public Device unassignDeviceFromEdge(Device device, Edge edge, User user) throws EchoiotException {
         TenantId tenantId = device.getTenantId();
         DeviceId deviceId = device.getId();
         EdgeId edgeId = edge.getId();

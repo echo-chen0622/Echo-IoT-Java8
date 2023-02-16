@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -19,4 +19,3 @@ import { ComponentType } from '@angular/cdk/portal';
 
 export const EMBED_DASHBOARD_DIALOG_TOKEN: InjectionToken<ComponentType<any>> =
   new InjectionToken<ComponentType<any>>('EMBED_DASHBOARD_DIALOG_TOKEN');
-

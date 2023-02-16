@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,17 +14,17 @@
 /// limitations under the License.
 ///
 
-import { Injectable, NgModule } from '@angular/core';
-import { ActivatedRouteSnapshot, Resolve, RouterModule, Routes } from '@angular/router';
+import {Injectable, NgModule} from '@angular/core';
+import {ActivatedRouteSnapshot, Resolve, RouterModule, Routes} from '@angular/router';
 
-import { Authority } from '@shared/models/authority.enum';
-import { DashboardPageComponent } from '@home/components/dashboard-page/dashboard-page.component';
-import { Dashboard } from '@app/shared/models/dashboard.models';
-import { DashboardService } from '@core/http/dashboard.service';
-import { DashboardUtilsService } from '@core/services/dashboard-utils.service';
-import { DashboardResolver } from '@app/modules/home/pages/dashboard/dashboard-routing.module';
-import { UtilsService } from '@core/services/utils.service';
-import { Widget } from '@app/shared/models/widget.models';
+import {Authority} from '@shared/models/authority.enum';
+import {DashboardPageComponent} from '@home/components/dashboard-page/dashboard-page.component';
+import {Dashboard} from '@app/shared/models/dashboard.models';
+import {DashboardService} from '@core/http/dashboard.service';
+import {DashboardUtilsService} from '@core/services/dashboard-utils.service';
+import {DashboardResolver} from '@app/modules/home/pages/dashboard/dashboard-routing.module';
+import {UtilsService} from '@core/services/utils.service';
+import {Widget} from '@app/shared/models/widget.models';
 
 @Injectable()
 export class WidgetEditorDashboardResolver implements Resolve<Dashboard> {

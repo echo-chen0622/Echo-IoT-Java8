@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016-2023 The Thingsboard Authors
+ * Copyright © 2016-2023 The Echoiot Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 import * as React from 'react';
-import ThingsboardBaseComponent from './json-form-base-component';
+import EchoiotBaseComponent from './json-form-base-component';
 import DateFnsUtils from '@date-io/date-fns';
-import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
-import { JsonFormFieldProps, JsonFormFieldState } from '@shared/components/json-form/react/json-form.models';
+import {KeyboardDatePicker, MuiPickersUtilsProvider} from '@material-ui/pickers';
+import {JsonFormFieldProps, JsonFormFieldState} from '@shared/components/json-form/react/json-form.models';
 
-interface ThingsboardDateState extends JsonFormFieldState {
+interface EchoiotDateState extends JsonFormFieldState {
   currentValue: Date | null;
 }
 
-class ThingsboardDate extends React.Component<JsonFormFieldProps, ThingsboardDateState> {
+class EchoiotDate extends React.Component<JsonFormFieldProps, EchoiotDateState> {
 
     constructor(props) {
         super(props);
@@ -76,4 +76,4 @@ class ThingsboardDate extends React.Component<JsonFormFieldProps, ThingsboardDat
     }
 }
 
-export default ThingsboardBaseComponent(ThingsboardDate);
+export default EchoiotBaseComponent(EchoiotDate);

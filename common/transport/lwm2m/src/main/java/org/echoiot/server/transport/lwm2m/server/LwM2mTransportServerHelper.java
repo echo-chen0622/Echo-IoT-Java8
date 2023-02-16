@@ -12,10 +12,10 @@ import org.eclipse.leshan.core.model.ObjectModel;
 import org.eclipse.leshan.core.model.ResourceModel;
 import org.eclipse.leshan.core.node.codec.CodecException;
 import org.springframework.stereotype.Component;
-import org.thingsboard.server.gen.transport.TransportProtos;
-import org.thingsboard.server.gen.transport.TransportProtos.PostAttributeMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.PostTelemetryMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.SessionInfoProto;
+import org.echoiot.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.transport.TransportProtos.PostAttributeMsg;
+import org.echoiot.server.gen.transport.TransportProtos.PostTelemetryMsg;
+import org.echoiot.server.gen.transport.TransportProtos.SessionInfoProto;
 import org.echoiot.server.queue.util.TbLwM2mTransportComponent;
 
 import javax.annotation.Nonnull;
@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
-import static org.thingsboard.server.gen.transport.TransportProtos.KeyValueType.BOOLEAN_V;
+import static org.echoiot.server.gen.transport.TransportProtos.KeyValueType.BOOLEAN_V;
 
 @Slf4j
 @Component
@@ -38,18 +38,18 @@ public class LwM2mTransportServerHelper {
     private final LwM2mTransportContext context;
     private final static JsonParser JSON_PARSER = new JsonParser();
 
-    public void sendParametersOnThingsboardAttribute(List<TransportProtos.KeyValueProto> result, SessionInfoProto sessionInfo) {
+    public void sendParametersOnEchoiotAttribute(List<TransportProtos.KeyValueProto> result, SessionInfoProto sessionInfo) {
         PostAttributeMsg.Builder request = PostAttributeMsg.newBuilder();
         request.addAllKv(result);
         PostAttributeMsg postAttributeMsg = request.build();
         context.getTransportService().process(sessionInfo, postAttributeMsg, TransportServiceCallback.EMPTY);
     }
 
-    public void sendParametersOnThingsboardTelemetry(List<TransportProtos.KeyValueProto> kvList, SessionInfoProto sessionInfo) {
-        sendParametersOnThingsboardTelemetry(kvList, sessionInfo, null);
+    public void sendParametersOnEchoiotTelemetry(List<TransportProtos.KeyValueProto> kvList, SessionInfoProto sessionInfo) {
+        sendParametersOnEchoiotTelemetry(kvList, sessionInfo, null);
     }
 
-    public void sendParametersOnThingsboardTelemetry(List<TransportProtos.KeyValueProto> kvList, SessionInfoProto sessionInfo, @Nullable Map<String, AtomicLong> keyTsLatestMap) {
+    public void sendParametersOnEchoiotTelemetry(List<TransportProtos.KeyValueProto> kvList, SessionInfoProto sessionInfo, @Nullable Map<String, AtomicLong> keyTsLatestMap) {
         TransportProtos.TsKvListProto tsKvList = toTsKvList(kvList, keyTsLatestMap);
 
         PostTelemetryMsg postTelemetryMsg = PostTelemetryMsg.newBuilder()
@@ -141,7 +141,7 @@ public class LwM2mTransportServerHelper {
      * @param value - info about Logs
      * @return- KeyValueProto for telemetry (Logs)
      */
-    public List<TransportProtos.KeyValueProto> getKvStringtoThingsboard(String key, String value) {
+    public List<TransportProtos.KeyValueProto> getKvStringtoEchoiot(String key, String value) {
         List<TransportProtos.KeyValueProto> result = new ArrayList<>();
         value = value.replaceAll("<", "").replaceAll(">", "");
         result.add(TransportProtos.KeyValueProto.newBuilder()
@@ -156,7 +156,7 @@ public class LwM2mTransportServerHelper {
      * @throws CodecException -
      */
 
-    public TransportProtos.KeyValueProto getKvAttrTelemetryToThingsboard(ResourceModel.Type resourceType, String resourceName, Object value, boolean isMultiInstances) {
+    public TransportProtos.KeyValueProto getKvAttrTelemetryToEchoiot(ResourceModel.Type resourceType, String resourceName, Object value, boolean isMultiInstances) {
         TransportProtos.KeyValueProto.Builder kvProto = TransportProtos.KeyValueProto.newBuilder().setKey(resourceName);
         if (isMultiInstances) {
             kvProto.setType(TransportProtos.KeyValueType.JSON_V)

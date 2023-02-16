@@ -183,7 +183,7 @@ public class SqlDatabaseUpgradeService implements DatabaseEntitiesUpgradeService
         String sql = new String(Files.readAllBytes(sqlFile), Charset.forName("UTF-8"));
         Statement st = conn.createStatement();
         st.setQueryTimeout((int) TimeUnit.HOURS.toSeconds(3));
-        st.execute(sql);//NOSONAR, ignoring because method used to execute thingsboard database upgrade script
+        st.execute(sql);//NOSONAR, ignoring because method used to execute echoiot database upgrade script
         printWarnings(st);
         Thread.sleep(5000);
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016-2023 The Thingsboard Authors
+ * Copyright © 2016-2023 The Echoiot Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,43 +14,44 @@
  * limitations under the License.
  */
 import * as React from 'react';
+import {MouseEvent} from 'react';
 import JsonFormUtils from './json-form-utils';
 
-import ThingsboardArray from './json-form-array';
-import ThingsboardJavaScript from './json-form-javascript';
-import ThingsboardJson from './json-form-json';
-import ThingsboardHtml from './json-form-html';
-import ThingsboardCss from './json-form-css';
-import ThingsboardColor from './json-form-color';
-import ThingsboardRcSelect from './json-form-rc-select';
-import ThingsboardNumber from './json-form-number';
-import ThingsboardText from './json-form-text';
-import ThingsboardSelect from './json-form-select';
-import ThingsboardRadios from './json-form-radios';
-import ThingsboardDate from './json-form-date';
-import ThingsboardImage from './json-form-image';
-import ThingsboardCheckbox from './json-form-checkbox';
-import ThingsboardHelp from './json-form-help';
-import ThingsboardFieldSet from './json-form-fieldset';
-import ThingsboardIcon from './json-form-icon';
+import EchoiotArray from './json-form-array';
+import EchoiotJavaScript from './json-form-javascript';
+import EchoiotJson from './json-form-json';
+import EchoiotHtml from './json-form-html';
+import EchoiotCss from './json-form-css';
+import EchoiotColor from './json-form-color';
+import EchoiotRcSelect from './json-form-rc-select';
+import EchoiotNumber from './json-form-number';
+import EchoiotText from './json-form-text';
+import EchoiotSelect from './json-form-select';
+import EchoiotRadios from './json-form-radios';
+import EchoiotDate from './json-form-date';
+import EchoiotImage from './json-form-image';
+import EchoiotCheckbox from './json-form-checkbox';
+import EchoiotHelp from './json-form-help';
+import EchoiotFieldSet from './json-form-fieldset';
+import EchoiotIcon from './json-form-icon';
 import {
-  JsonFormData,
-  JsonFormProps,
-  onChangeFn,
-  OnColorClickFn, onHelpClickFn,
-  OnIconClickFn,
-  onToggleFullscreenFn
+    JsonFormData,
+    JsonFormProps,
+    onChangeFn,
+    OnColorClickFn,
+    onHelpClickFn,
+    OnIconClickFn,
+    onToggleFullscreenFn
 } from './json-form.models';
 
 import _ from 'lodash';
 import * as tinycolor_ from 'tinycolor2';
-import { GroupInfo } from '@shared/models/widget.models';
-import ThingsboardMarkdown from '@shared/components/json-form/react/json-form-markdown';
-import { MouseEvent } from 'react';
+import {GroupInfo} from '@shared/models/widget.models';
+import EchoiotMarkdown from '@shared/components/json-form/react/json-form-markdown';
 
 const tinycolor = tinycolor_;
 
-class ThingsboardSchemaForm extends React.Component<JsonFormProps, any> {
+class EchoiotSchemaForm extends React.Component<JsonFormProps, any> {
 
   private hasConditions: boolean;
   private readonly mapper: {[type: string]: any};
@@ -59,26 +60,26 @@ class ThingsboardSchemaForm extends React.Component<JsonFormProps, any> {
     super(props);
 
     this.mapper = {
-      number: ThingsboardNumber,
-      text: ThingsboardText,
-      password: ThingsboardText,
-      textarea: ThingsboardText,
-      select: ThingsboardSelect,
-      radios: ThingsboardRadios,
-      date: ThingsboardDate,
-      image: ThingsboardImage,
-      checkbox: ThingsboardCheckbox,
-      help: ThingsboardHelp,
-      array: ThingsboardArray,
-      javascript: ThingsboardJavaScript,
-      json: ThingsboardJson,
-      html: ThingsboardHtml,
-      css: ThingsboardCss,
-      markdown: ThingsboardMarkdown,
-      color: ThingsboardColor,
-      'rc-select': ThingsboardRcSelect,
-      fieldset: ThingsboardFieldSet,
-      icon: ThingsboardIcon
+      number: EchoiotNumber,
+      text: EchoiotText,
+      password: EchoiotText,
+      textarea: EchoiotText,
+      select: EchoiotSelect,
+      radios: EchoiotRadios,
+      date: EchoiotDate,
+      image: EchoiotImage,
+      checkbox: EchoiotCheckbox,
+      help: EchoiotHelp,
+      array: EchoiotArray,
+      javascript: EchoiotJavaScript,
+      json: EchoiotJson,
+      html: EchoiotHtml,
+      css: EchoiotCss,
+      markdown: EchoiotMarkdown,
+      color: EchoiotColor,
+      'rc-select': EchoiotRcSelect,
+      fieldset: EchoiotFieldSet,
+      icon: EchoiotIcon
     };
 
     this.onChange = this.onChange.bind(this);
@@ -171,7 +172,7 @@ class ThingsboardSchemaForm extends React.Component<JsonFormProps, any> {
       const content: JSX.Element[] = [];
       for (const info of this.props.groupInfoes) {
         const forms = this.createSchema(this.props.form[info.formIndex]);
-        const item = <ThingsboardSchemaGroup key={content.length} forms={forms} info={info}></ThingsboardSchemaGroup>;
+        const item = <EchoiotSchemaGroup key={content.length} forms={forms} info={info}></EchoiotSchemaGroup>;
         content.push(item);
       }
       return (<div>{content}</div>);
@@ -180,18 +181,18 @@ class ThingsboardSchemaForm extends React.Component<JsonFormProps, any> {
     }
   }
 }
-export default ThingsboardSchemaForm;
+export default EchoiotSchemaForm;
 
-interface ThingsboardSchemaGroupProps {
+interface EchoiotSchemaGroupProps {
   info: GroupInfo;
   forms: JSX.Element;
 }
 
-interface ThingsboardSchemaGroupState {
+interface EchoiotSchemaGroupState {
   showGroup: boolean;
 }
 
-class ThingsboardSchemaGroup extends React.Component<ThingsboardSchemaGroupProps, ThingsboardSchemaGroupState> {
+class EchoiotSchemaGroup extends React.Component<EchoiotSchemaGroupProps, EchoiotSchemaGroupState> {
   constructor(props) {
     super(props);
     this.state = {

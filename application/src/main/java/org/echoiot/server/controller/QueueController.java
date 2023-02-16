@@ -3,7 +3,7 @@ package org.echoiot.server.controller;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.QueueId;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
@@ -65,7 +65,7 @@ public class QueueController extends BaseController {
                                                         @ApiParam(value = SORT_PROPERTY_DESCRIPTION, allowableValues = QUEUE_SORT_PROPERTY_ALLOWABLE_VALUES)
                                                         @RequestParam(required = false) String sortProperty,
                                                         @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
-                                                        @RequestParam(required = false) String sortOrder) throws ThingsboardException {
+                                                        @RequestParam(required = false) String sortOrder) throws EchoiotException {
         checkParameter("serviceType", serviceType);
         PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
         ServiceType type = ServiceType.valueOf(serviceType);
@@ -83,7 +83,7 @@ public class QueueController extends BaseController {
     @RequestMapping(value = "/queues/{queueId}", method = RequestMethod.GET)
     @ResponseBody
     public Queue getQueueById(@ApiParam(value = QUEUE_ID_PARAM_DESCRIPTION)
-                              @PathVariable("queueId") String queueIdStr) throws ThingsboardException {
+                              @PathVariable("queueId") String queueIdStr) throws EchoiotException {
         checkParameter("queueId", queueIdStr);
         QueueId queueId = new QueueId(UUID.fromString(queueIdStr));
         checkQueueId(queueId, Operation.READ);
@@ -96,7 +96,7 @@ public class QueueController extends BaseController {
     @RequestMapping(value = "/queues/name/{queueName}", method = RequestMethod.GET)
     @ResponseBody
     public Queue getQueueByName(@ApiParam(value = QUEUE_NAME_PARAM_DESCRIPTION)
-                                @PathVariable("queueName") String queueName) throws ThingsboardException {
+                                @PathVariable("queueName") String queueName) throws EchoiotException {
         checkParameter("queueName", queueName);
         return checkNotNull(queueService.findQueueByTenantIdAndName(getTenantId(), queueName));
     }
@@ -115,7 +115,7 @@ public class QueueController extends BaseController {
     public Queue saveQueue(@ApiParam(value = "A JSON value representing the queue.")
                            @RequestBody Queue queue,
                            @ApiParam(value = QUEUE_SERVICE_TYPE_DESCRIPTION, allowableValues = QUEUE_SERVICE_TYPE_ALLOWABLE_VALUES, required = true)
-                           @RequestParam String serviceType) throws ThingsboardException {
+                           @RequestParam String serviceType) throws EchoiotException {
         checkParameter("serviceType", serviceType);
         queue.setTenantId(getCurrentUser().getTenantId());
 
@@ -138,7 +138,7 @@ public class QueueController extends BaseController {
     @RequestMapping(value = "/queues/{queueId}", method = RequestMethod.DELETE)
     @ResponseBody
     public void deleteQueue(@ApiParam(value = QUEUE_ID_PARAM_DESCRIPTION)
-                            @PathVariable("queueId") String queueIdStr) throws ThingsboardException {
+                            @PathVariable("queueId") String queueIdStr) throws EchoiotException {
         checkParameter("queueId", queueIdStr);
         QueueId queueId = new QueueId(toUUID(queueIdStr));
         checkQueueId(queueId, Operation.DELETE);

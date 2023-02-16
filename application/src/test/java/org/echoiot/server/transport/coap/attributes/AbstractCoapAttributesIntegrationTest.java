@@ -7,27 +7,22 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import com.squareup.wire.schema.internal.parser.ProtoFileElement;
 import lombok.extern.slf4j.Slf4j;
 import org.awaitility.Awaitility;
-import org.echoiot.server.common.transport.service.DefaultTransportService;
-import org.eclipse.californium.core.CoapObserveRelation;
-import org.eclipse.californium.core.CoapResponse;
-import org.eclipse.californium.core.coap.CoAP;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.thingsboard.common.util.JacksonUtil;
+import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.common.data.DynamicProtoUtils;
-import org.echoiot.server.common.data.device.profile.CoapDeviceProfileTransportConfiguration;
-import org.echoiot.server.common.data.device.profile.CoapDeviceTypeConfiguration;
-import org.echoiot.server.common.data.device.profile.DefaultCoapDeviceTypeConfiguration;
-import org.echoiot.server.common.data.device.profile.DeviceProfileTransportConfiguration;
-import org.echoiot.server.common.data.device.profile.ProtoTransportPayloadConfiguration;
-import org.echoiot.server.common.data.device.profile.TransportPayloadTypeConfiguration;
+import org.echoiot.server.common.data.device.profile.*;
 import org.echoiot.server.common.data.query.EntityKey;
 import org.echoiot.server.common.data.query.EntityKeyType;
 import org.echoiot.server.common.data.query.SingleEntityFilter;
 import org.echoiot.server.common.msg.session.FeatureType;
-import org.thingsboard.server.gen.transport.TransportProtos;
+import org.echoiot.server.common.transport.service.DefaultTransportService;
+import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.transport.coap.AbstractCoapIntegrationTest;
 import org.echoiot.server.transport.coap.CoapTestCallback;
 import org.echoiot.server.transport.coap.CoapTestClient;
+import org.eclipse.californium.core.CoapObserveRelation;
+import org.eclipse.californium.core.CoapResponse;
+import org.eclipse.californium.core.coap.CoAP;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -37,13 +32,10 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.echoiot.server.common.data.query.EntityKeyType.CLIENT_ATTRIBUTE;
 import static org.echoiot.server.common.data.query.EntityKeyType.SHARED_ATTRIBUTE;
+import static org.junit.Assert.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Slf4j
 public abstract class AbstractCoapAttributesIntegrationTest extends AbstractCoapIntegrationTest {

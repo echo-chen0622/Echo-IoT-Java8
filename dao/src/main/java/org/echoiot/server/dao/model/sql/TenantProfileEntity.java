@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
-import org.thingsboard.common.util.JacksonUtil;
+import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.common.data.TenantProfile;
 import org.echoiot.server.common.data.id.TenantProfileId;
 import org.echoiot.server.common.data.tenant.profile.TenantProfileData;

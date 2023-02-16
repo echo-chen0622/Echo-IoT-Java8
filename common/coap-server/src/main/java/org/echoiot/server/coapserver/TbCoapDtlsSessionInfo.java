@@ -3,7 +3,7 @@ package org.echoiot.server.coapserver;
 import lombok.Data;
 import org.echoiot.server.common.data.DeviceProfile;
 import org.echoiot.server.common.transport.auth.ValidateDeviceCredentialsResponse;
-import org.thingsboard.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.transport.TransportProtos;
 
 @Data
 public class TbCoapDtlsSessionInfo {

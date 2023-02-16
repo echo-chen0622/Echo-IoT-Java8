@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,27 +14,27 @@
 /// limitations under the License.
 ///
 
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 
-import { Resolve, Router } from '@angular/router';
+import {Resolve, Router} from '@angular/router';
 
 import {
-  DateEntityTableColumn,
-  EntityTableColumn,
-  EntityTableConfig
+    DateEntityTableColumn,
+    EntityTableColumn,
+    EntityTableConfig
 } from '@home/models/entity/entities-table-config.models';
-import { TranslateService } from '@ngx-translate/core';
-import { DatePipe } from '@angular/common';
-import { EntityType, entityTypeResources, entityTypeTranslations } from '@shared/models/entity-type.models';
-import { EntityAction } from '@home/models/entity/entity-component.models';
-import { Customer } from '@app/shared/models/customer.model';
-import { CustomerService } from '@app/core/http/customer.service';
-import { CustomerComponent } from '@modules/home/pages/customer/customer.component';
-import { CustomerTabsComponent } from '@home/pages/customer/customer-tabs.component';
-import { getCurrentAuthState } from '@core/auth/auth.selectors';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { HomeDialogsService } from '@home/dialogs/home-dialogs.service';
+import {TranslateService} from '@ngx-translate/core';
+import {DatePipe} from '@angular/common';
+import {EntityType, entityTypeResources, entityTypeTranslations} from '@shared/models/entity-type.models';
+import {EntityAction} from '@home/models/entity/entity-component.models';
+import {Customer} from '@app/shared/models/customer.model';
+import {CustomerService} from '@app/core/http/customer.service';
+import {CustomerComponent} from '@modules/home/pages/customer/customer.component';
+import {CustomerTabsComponent} from '@home/pages/customer/customer-tabs.component';
+import {getCurrentAuthState} from '@core/auth/auth.selectors';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {HomeDialogsService} from '@home/dialogs/home-dialogs.service';
 
 @Injectable()
 export class CustomersTableConfigResolver implements Resolve<EntityTableConfig<Customer>> {

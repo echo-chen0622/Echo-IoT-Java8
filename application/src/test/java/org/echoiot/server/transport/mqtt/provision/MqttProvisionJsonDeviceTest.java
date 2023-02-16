@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.thingsboard.common.util.JacksonUtil;
+import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.common.data.Device;
 import org.echoiot.server.common.data.DeviceProfileProvisionType;
 import org.echoiot.server.common.data.TransportPayloadType;

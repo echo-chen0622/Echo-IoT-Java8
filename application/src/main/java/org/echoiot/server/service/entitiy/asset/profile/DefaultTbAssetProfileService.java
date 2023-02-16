@@ -6,16 +6,16 @@ import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.User;
 import org.echoiot.server.common.data.asset.AssetProfile;
 import org.echoiot.server.common.data.audit.ActionType;
-import org.echoiot.server.common.data.exception.ThingsboardErrorCode;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotErrorCode;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.AssetProfileId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.plugin.ComponentLifecycleEvent;
 import org.echoiot.server.dao.asset.AssetProfileService;
 import org.echoiot.server.dao.asset.BaseAssetService;
 import org.echoiot.server.queue.util.TbCoreComponent;
-import org.springframework.stereotype.Service;
 import org.echoiot.server.service.entitiy.AbstractTbEntityService;
+import org.springframework.stereotype.Service;
 
 @Service
 @TbCoreComponent
@@ -31,11 +31,11 @@ public class DefaultTbAssetProfileService extends AbstractTbEntityService implem
         TenantId tenantId = assetProfile.getTenantId();
         try {
             if (BaseAssetService.TB_SERVICE_QUEUE.equals(assetProfile.getName())) {
-                throw new ThingsboardException("Unable to save asset profile with name " + BaseAssetService.TB_SERVICE_QUEUE, ThingsboardErrorCode.BAD_REQUEST_PARAMS);
+                throw new EchoiotException("Unable to save asset profile with name " + BaseAssetService.TB_SERVICE_QUEUE, EchoiotErrorCode.BAD_REQUEST_PARAMS);
             } else if (assetProfile.getId() != null) {
                 AssetProfile foundAssetProfile = assetProfileService.findAssetProfileById(tenantId, assetProfile.getId());
                 if (foundAssetProfile != null && BaseAssetService.TB_SERVICE_QUEUE.equals(foundAssetProfile.getName())) {
-                    throw new ThingsboardException("Updating asset profile with name " + BaseAssetService.TB_SERVICE_QUEUE + " is prohibited!", ThingsboardErrorCode.BAD_REQUEST_PARAMS);
+                    throw new EchoiotException("Updating asset profile with name " + BaseAssetService.TB_SERVICE_QUEUE + " is prohibited!", EchoiotErrorCode.BAD_REQUEST_PARAMS);
                 }
             }
             AssetProfile savedAssetProfile = checkNotNull(assetProfileService.saveAssetProfile(assetProfile));
@@ -70,7 +70,7 @@ public class DefaultTbAssetProfileService extends AbstractTbEntityService implem
     }
 
     @Override
-    public AssetProfile setDefaultAssetProfile(AssetProfile assetProfile, AssetProfile previousDefaultAssetProfile, User user) throws ThingsboardException {
+    public AssetProfile setDefaultAssetProfile(AssetProfile assetProfile, AssetProfile previousDefaultAssetProfile, User user) throws EchoiotException {
         TenantId tenantId = assetProfile.getTenantId();
         AssetProfileId assetProfileId = assetProfile.getId();
         try {

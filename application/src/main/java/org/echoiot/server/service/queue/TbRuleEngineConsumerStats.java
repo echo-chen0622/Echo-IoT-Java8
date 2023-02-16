@@ -9,7 +9,7 @@ import org.echoiot.server.common.stats.StatsType;
 import org.echoiot.server.queue.common.TbProtoQueueMsg;
 import org.echoiot.server.service.queue.processing.TbRuleEngineProcessingResult;
 import org.echoiot.server.common.msg.queue.RuleEngineException;
-import org.thingsboard.server.gen.transport.TransportProtos.ToRuleEngineMsg;
+import org.echoiot.server.gen.transport.TransportProtos.ToRuleEngineMsg;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;

@@ -7,9 +7,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.msg.TbMsg;
-import org.thingsboard.rule.engine.api.ScriptEngine;
-import org.thingsboard.script.api.ScriptInvokeService;
-import org.thingsboard.script.api.ScriptType;
+import org.echoiot.rule.engine.api.ScriptEngine;
+import org.echoiot.script.api.ScriptInvokeService;
+import org.echoiot.script.api.ScriptType;
 
 import javax.script.ScriptException;
 import java.util.List;

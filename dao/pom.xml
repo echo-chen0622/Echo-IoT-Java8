@@ -2,15 +2,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.thingsboard</groupId>
+        <groupId>org.echoiot</groupId>
         <version>3.4.4</version>
-        <artifactId>thingsboard</artifactId>
+        <artifactId>echoiot</artifactId>
     </parent>
     <artifactId>dao</artifactId>
     <packaging>jar</packaging>
 
-    <name>Thingsboard Server DAO Layer</name>
-    <url>https://thingsboard.io</url>
+    <name>Echoiot Server DAO Layer</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -19,27 +18,27 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.thingsboard.common</groupId>
+            <groupId>org.echoiot.common</groupId>
             <artifactId>data</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard.common</groupId>
+            <groupId>org.echoiot.common</groupId>
             <artifactId>cache</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard.common</groupId>
+            <groupId>org.echoiot.common</groupId>
             <artifactId>message</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard.common</groupId>
+            <groupId>org.echoiot.common</groupId>
             <artifactId>stats</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard.common</groupId>
+            <groupId>org.echoiot.common</groupId>
             <artifactId>dao-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard.common</groupId>
+            <groupId>org.echoiot.common</groupId>
             <artifactId>util</artifactId>
         </dependency>
         <dependency>

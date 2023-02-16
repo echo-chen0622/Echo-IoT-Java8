@@ -2,8 +2,8 @@ package org.echoiot.server.transport.coap.adaptors;
 
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.transport.adaptor.AdaptorException;
+import org.echoiot.server.gen.transport.TransportProtos;
 import org.eclipse.californium.core.coap.Request;
-import org.thingsboard.server.gen.transport.TransportProtos;
 
 import java.util.Arrays;
 import java.util.HashSet;

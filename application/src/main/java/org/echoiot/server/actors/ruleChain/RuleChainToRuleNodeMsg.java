@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.ToString;
 import org.echoiot.server.common.msg.MsgType;
 import org.echoiot.server.common.msg.TbMsg;
-import org.thingsboard.rule.engine.api.TbContext;
+import org.echoiot.rule.engine.api.TbContext;
 
 /**
  * Created by Echo on 19.03.18.

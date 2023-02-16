@@ -5,9 +5,9 @@ import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.sms.config.TwilioSmsProviderConfiguration;
-import org.thingsboard.rule.engine.api.sms.exception.SmsException;
-import org.thingsboard.rule.engine.api.sms.exception.SmsParseException;
-import org.thingsboard.rule.engine.api.sms.exception.SmsSendException;
+import org.echoiot.rule.engine.api.sms.exception.SmsException;
+import org.echoiot.rule.engine.api.sms.exception.SmsParseException;
+import org.echoiot.rule.engine.api.sms.exception.SmsSendException;
 import org.echoiot.server.service.sms.AbstractSmsSender;
 
 import java.util.regex.Pattern;

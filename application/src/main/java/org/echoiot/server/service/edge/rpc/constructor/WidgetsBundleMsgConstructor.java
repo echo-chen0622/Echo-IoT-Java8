@@ -6,8 +6,8 @@ import org.echoiot.server.common.data.id.WidgetsBundleId;
 import org.echoiot.server.common.data.widget.WidgetsBundle;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.springframework.stereotype.Component;
-import org.thingsboard.server.gen.edge.v1.UpdateMsgType;
-import org.thingsboard.server.gen.edge.v1.WidgetsBundleUpdateMsg;
+import org.echoiot.server.gen.edge.v1.UpdateMsgType;
+import org.echoiot.server.gen.edge.v1.WidgetsBundleUpdateMsg;
 
 import java.nio.charset.StandardCharsets;
 

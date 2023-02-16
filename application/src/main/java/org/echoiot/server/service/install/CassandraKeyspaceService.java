@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 /*
 * Create keyspace for Cassandra NoSQL database for non-cloud deployment.
 * For cloud service like Astra DBaas admin have to create keyspace manually on cloud UI.
-* Then create tokens with database admin role and put it on Thingsboard parameters.
+* Then create tokens with database admin role and put it on Echoiot parameters.
 * Without this service cloud DB will end up with exception like
-* UnauthorizedException: Missing correct permission on thingsboard
+* UnauthorizedException: Missing correct permission on echoiot
 * */
 @Service
 @NoSqlAnyDaoNonCloud

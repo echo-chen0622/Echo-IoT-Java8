@@ -3,18 +3,6 @@ package org.echoiot.server.controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.echoiot.server.dao.exception.DataValidationException;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Test;
-import org.mockito.AdditionalAnswers;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Primary;
-import org.springframework.http.HttpHeaders;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.web.servlet.ResultActions;
 import org.echoiot.server.common.data.Customer;
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.Tenant;
@@ -26,20 +14,30 @@ import org.echoiot.server.common.data.id.UserId;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.common.data.security.Authority;
+import org.echoiot.server.dao.exception.DataValidationException;
 import org.echoiot.server.dao.user.UserDao;
 import org.echoiot.server.service.mail.TestMailService;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Test;
+import org.mockito.AdditionalAnswers;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
+import org.springframework.http.HttpHeaders;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.echoiot.server.dao.model.ModelConstants.SYSTEM_TENANT;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.echoiot.server.dao.model.ModelConstants.SYSTEM_TENANT;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ContextConfiguration(classes = {BaseUserControllerTest.Config.class})
 public abstract class BaseUserControllerTest extends AbstractControllerTest {
@@ -68,7 +66,7 @@ public abstract class BaseUserControllerTest extends AbstractControllerTest {
     public void testSaveUser() throws Exception {
         loginSysAdmin();
 
-        String email = "tenant2@thingsboard.org";
+        String email = "tenant2@echoiot.org";
         User user = new User();
         user.setAuthority(Authority.TENANT_ADMIN);
         user.setTenantId(tenantId);
@@ -137,7 +135,7 @@ public abstract class BaseUserControllerTest extends AbstractControllerTest {
 
         Mockito.reset(tbClusterService, auditLogService);
 
-        String email = "tenant2@thingsboard.org";
+        String email = "tenant2@echoiot.org";
         User user = new User();
         user.setAuthority(Authority.TENANT_ADMIN);
         user.setTenantId(tenantId);
@@ -173,7 +171,7 @@ public abstract class BaseUserControllerTest extends AbstractControllerTest {
         User tenantAdmin = new User();
         tenantAdmin.setAuthority(Authority.TENANT_ADMIN);
         tenantAdmin.setTenantId(tenantId);
-        tenantAdmin.setEmail("tenant2@thingsboard.org");
+        tenantAdmin.setEmail("tenant2@echoiot.org");
         tenantAdmin.setFirstName("Joe");
         tenantAdmin.setLastName("Downs");
         tenantAdmin = createUserAndLogin(tenantAdmin, "testPassword1");
@@ -195,7 +193,7 @@ public abstract class BaseUserControllerTest extends AbstractControllerTest {
     public void testResetPassword() throws Exception {
         loginSysAdmin();
 
-        String email = "tenant2@thingsboard.org";
+        String email = "tenant2@echoiot.org";
         User user = new User();
         user.setAuthority(Authority.TENANT_ADMIN);
         user.setTenantId(tenantId);
@@ -247,7 +245,7 @@ public abstract class BaseUserControllerTest extends AbstractControllerTest {
     public void testFindUserById() throws Exception {
         loginSysAdmin();
 
-        String email = "tenant2@thingsboard.org";
+        String email = "tenant2@echoiot.org";
         User user = new User();
         user.setAuthority(Authority.TENANT_ADMIN);
         user.setTenantId(tenantId);
@@ -291,7 +289,7 @@ public abstract class BaseUserControllerTest extends AbstractControllerTest {
 
         Mockito.reset(tbClusterService, auditLogService);
 
-        String email = "tenant_thingsboard.org";
+        String email = "tenant_echoiot.org";
         User user = new User();
         user.setAuthority(Authority.TENANT_ADMIN);
         user.setTenantId(tenantId);
@@ -339,7 +337,7 @@ public abstract class BaseUserControllerTest extends AbstractControllerTest {
 
         User user = new User();
         user.setAuthority(Authority.TENANT_ADMIN);
-        user.setEmail("tenant2@thingsboard.org");
+        user.setEmail("tenant2@echoiot.org");
         user.setFirstName("Joe");
         user.setLastName("Downs");
 
@@ -358,7 +356,7 @@ public abstract class BaseUserControllerTest extends AbstractControllerTest {
     public void testDeleteUser() throws Exception {
         loginSysAdmin();
 
-        String email = "tenant2@thingsboard.org";
+        String email = "tenant2@echoiot.org";
         User user = new User();
         user.setAuthority(Authority.TENANT_ADMIN);
         user.setTenantId(tenantId);
@@ -399,7 +397,7 @@ public abstract class BaseUserControllerTest extends AbstractControllerTest {
             User user = new User();
             user.setAuthority(Authority.TENANT_ADMIN);
             user.setTenantId(tenantId);
-            user.setEmail("testTenant" + i + "@thingsboard.org");
+            user.setEmail("testTenant" + i + "@echoiot.org");
             tenantAdmins.add(doPost("/api/user", user, User.class));
         }
 
@@ -454,7 +452,7 @@ public abstract class BaseUserControllerTest extends AbstractControllerTest {
             user.setAuthority(Authority.TENANT_ADMIN);
             user.setTenantId(tenantId);
             String suffix = StringUtils.randomAlphanumeric((int) (5 + Math.random() * 10));
-            String email = email1 + suffix + "@thingsboard.org";
+            String email = email1 + suffix + "@echoiot.org";
             email = i % 2 == 0 ? email.toLowerCase() : email.toUpperCase();
             user.setEmail(email);
             tenantAdminsEmail1.add(doPost("/api/user", user, User.class));
@@ -468,7 +466,7 @@ public abstract class BaseUserControllerTest extends AbstractControllerTest {
             user.setAuthority(Authority.TENANT_ADMIN);
             user.setTenantId(tenantId);
             String suffix = StringUtils.randomAlphanumeric((int) (5 + Math.random() * 10));
-            String email = email2 + suffix + "@thingsboard.org";
+            String email = email2 + suffix + "@echoiot.org";
             email = i % 2 == 0 ? email.toLowerCase() : email.toUpperCase();
             user.setEmail(email);
             tenantAdminsEmail2.add(doPost("/api/user", user, User.class));
@@ -549,7 +547,7 @@ public abstract class BaseUserControllerTest extends AbstractControllerTest {
         User tenantAdmin = new User();
         tenantAdmin.setAuthority(Authority.TENANT_ADMIN);
         tenantAdmin.setTenantId(tenantId);
-        tenantAdmin.setEmail("tenant2@thingsboard.org");
+        tenantAdmin.setEmail("tenant2@echoiot.org");
         tenantAdmin.setFirstName("Joe");
         tenantAdmin.setLastName("Downs");
 
@@ -566,7 +564,7 @@ public abstract class BaseUserControllerTest extends AbstractControllerTest {
             User user = new User();
             user.setAuthority(Authority.CUSTOMER_USER);
             user.setCustomerId(customerId);
-            user.setEmail("testCustomer" + i + "@thingsboard.org");
+            user.setEmail("testCustomer" + i + "@echoiot.org");
             customerUsers.add(doPost("/api/user", user, User.class));
         }
 
@@ -599,7 +597,7 @@ public abstract class BaseUserControllerTest extends AbstractControllerTest {
         User tenantAdmin = new User();
         tenantAdmin.setAuthority(Authority.TENANT_ADMIN);
         tenantAdmin.setTenantId(tenantId);
-        tenantAdmin.setEmail("tenant2@thingsboard.org");
+        tenantAdmin.setEmail("tenant2@echoiot.org");
         tenantAdmin.setFirstName("Joe");
         tenantAdmin.setLastName("Downs");
 
@@ -619,7 +617,7 @@ public abstract class BaseUserControllerTest extends AbstractControllerTest {
             user.setAuthority(Authority.CUSTOMER_USER);
             user.setCustomerId(customerId);
             String suffix = StringUtils.randomAlphanumeric((int) (5 + Math.random() * 10));
-            String email = email1 + suffix + "@thingsboard.org";
+            String email = email1 + suffix + "@echoiot.org";
             email = i % 2 == 0 ? email.toLowerCase() : email.toUpperCase();
             user.setEmail(email);
             customerUsersEmail1.add(doPost("/api/user", user, User.class));
@@ -633,7 +631,7 @@ public abstract class BaseUserControllerTest extends AbstractControllerTest {
             user.setAuthority(Authority.CUSTOMER_USER);
             user.setCustomerId(customerId);
             String suffix = StringUtils.randomAlphanumeric((int) (5 + Math.random() * 10));
-            String email = email2 + suffix + "@thingsboard.org";
+            String email = email2 + suffix + "@echoiot.org";
             email = i % 2 == 0 ? email.toLowerCase() : email.toUpperCase();
             user.setEmail(email);
             customerUsersEmail2.add(doPost("/api/user", user, User.class));
@@ -728,7 +726,7 @@ public abstract class BaseUserControllerTest extends AbstractControllerTest {
 
     private User createUser() throws Exception {
         loginSysAdmin();
-        String email = "tenant2@thingsboard.org";
+        String email = "tenant2@echoiot.org";
         User user = new User();
         user.setAuthority(Authority.TENANT_ADMIN);
         user.setTenantId(tenantId);

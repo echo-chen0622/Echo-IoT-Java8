@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,12 +14,12 @@
 /// limitations under the License.
 ///
 
-import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { PageComponent } from '@shared/components/page.component';
+import {Component, OnInit} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {PageComponent} from '@shared/components/page.component';
 import apiUsageDashboardJson from '!raw-loader!./api_usage_json.raw';
-import { Dashboard } from '@shared/models/dashboard.models';
+import {Dashboard} from '@shared/models/dashboard.models';
 
 @Component({
   selector: 'tb-api-usage',

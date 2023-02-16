@@ -4,29 +4,25 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.Test;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.thingsboard.common.util.JacksonUtil;
-import org.thingsboard.rule.engine.api.MailService;
+import org.echoiot.common.util.JacksonUtil;
+import org.echoiot.rule.engine.api.MailService;
 import org.echoiot.server.common.data.AdminSettings;
 import org.echoiot.server.common.data.security.model.JwtSettings;
 import org.echoiot.server.service.mail.DefaultMailService;
+import org.junit.Test;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.hamcrest.Matchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @Slf4j
 public abstract class BaseAdminControllerTest extends AbstractControllerTest {
-    final JwtSettings defaultJwtSettings = new JwtSettings(9000, 604800, "thingsboard.io", "thingsboardDefaultSigningKey");
+    final JwtSettings defaultJwtSettings = new JwtSettings(9000, 604800, "echoiot.io", "echoiotDefaultSigningKey");
 
     @Autowired
     MailService mailService;

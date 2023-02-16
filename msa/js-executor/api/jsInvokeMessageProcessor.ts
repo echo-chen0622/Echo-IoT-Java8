@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -15,11 +15,11 @@
 ///
 
 import config from 'config';
-import { _logger } from '../config/logger';
-import { JsExecutor, TbScript } from './jsExecutor';
-import { performance } from 'perf_hooks';
-import { isString, parseJsErrorDetails, toUUIDString, UUIDFromBuffer, UUIDToBits, isNotUUID } from './utils';
-import { IQueue } from '../queue/queue.models';
+import {_logger} from '../config/logger';
+import {JsExecutor, TbScript} from './jsExecutor';
+import {performance} from 'perf_hooks';
+import {isNotUUID, isString, parseJsErrorDetails, toUUIDString, UUIDFromBuffer, UUIDToBits} from './utils';
+import {IQueue} from '../queue/queue.models';
 import {
     JsCompileRequest,
     JsCompileResponse,

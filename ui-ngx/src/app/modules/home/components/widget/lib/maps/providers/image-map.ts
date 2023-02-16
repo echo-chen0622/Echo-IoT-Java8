@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,27 +14,24 @@
 /// limitations under the License.
 ///
 
-import L, { LatLngBounds, LatLngLiteral, LatLngTuple } from 'leaflet';
+import L, {LatLngBounds, LatLngLiteral, LatLngTuple} from 'leaflet';
 import LeafletMap from '../leaflet-map';
 import {
-  CircleData,
-  defaultImageMapProviderSettings,
-  MapImage,
-  PosFunction,
-  WidgetUnitedMapSettings
+    CircleData,
+    defaultImageMapProviderSettings,
+    MapImage,
+    PosFunction,
+    WidgetUnitedMapSettings
 } from '../map-models';
-import { Observable, ReplaySubject } from 'rxjs';
-import { catchError, map, mergeMap } from 'rxjs/operators';
-import {
-  aspectCache,
-  calculateNewPointCoordinate
-} from '@home/components/widget/lib/maps/common-maps-utils';
-import { WidgetContext } from '@home/models/widget-component.models';
-import { DataSet, DatasourceType, FormattedData, widgetType } from '@shared/models/widget.models';
-import { DataKeyType } from '@shared/models/telemetry/telemetry.models';
-import { WidgetSubscriptionOptions } from '@core/api/widget-api.models';
-import { isDefinedAndNotNull, isEmptyStr, isNotEmptyStr, parseFunction } from '@core/utils';
-import { EntityDataPageLink } from '@shared/models/query/query.models';
+import {Observable, ReplaySubject} from 'rxjs';
+import {catchError, map, mergeMap} from 'rxjs/operators';
+import {aspectCache, calculateNewPointCoordinate} from '@home/components/widget/lib/maps/common-maps-utils';
+import {WidgetContext} from '@home/models/widget-component.models';
+import {DataSet, DatasourceType, FormattedData, widgetType} from '@shared/models/widget.models';
+import {DataKeyType} from '@shared/models/telemetry/telemetry.models';
+import {WidgetSubscriptionOptions} from '@core/api/widget-api.models';
+import {isDefinedAndNotNull, isEmptyStr, isNotEmptyStr, parseFunction} from '@core/utils';
+import {EntityDataPageLink} from '@shared/models/query/query.models';
 
 const maxZoom = 4; // ?
 

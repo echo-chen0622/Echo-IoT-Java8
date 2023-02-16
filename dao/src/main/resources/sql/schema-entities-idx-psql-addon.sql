@@ -1,5 +1,5 @@
 --
--- Copyright © 2016-2023 The Thingsboard Authors
+-- Copyright © 2016-2023 The Echoiot Authors
 --
 -- Licensed under the Apache License, Version 2.0 (the "License");
 -- you may not use this file except in compliance with the License.
@@ -35,4 +35,3 @@ CREATE INDEX IF NOT EXISTS idx_lc_event_main
 
 CREATE INDEX IF NOT EXISTS idx_error_event_main
     ON error_event (tenant_id ASC, entity_id ASC, ts DESC NULLS LAST) WITH (FILLFACTOR=95);
-

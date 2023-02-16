@@ -7,14 +7,14 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.thingsboard.script.api.ScriptType;
+import org.echoiot.script.api.ScriptType;
 import org.echoiot.server.common.data.ApiUsageState;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.stats.TbApiUsageReportClient;
 import org.echoiot.server.common.stats.TbApiUsageStateClient;
-import org.thingsboard.server.gen.js.JsInvokeProtos;
-import org.thingsboard.server.gen.js.JsInvokeProtos.RemoteJsRequest;
-import org.thingsboard.server.gen.js.JsInvokeProtos.RemoteJsResponse;
+import org.echoiot.server.gen.js.JsInvokeProtos;
+import org.echoiot.server.gen.js.JsInvokeProtos.RemoteJsRequest;
+import org.echoiot.server.gen.js.JsInvokeProtos.RemoteJsResponse;
 import org.echoiot.server.queue.common.TbProtoJsQueueMsg;
 import org.echoiot.server.queue.common.TbProtoQueueMsg;
 

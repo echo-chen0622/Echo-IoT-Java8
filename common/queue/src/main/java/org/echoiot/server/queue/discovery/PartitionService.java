@@ -5,7 +5,7 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.queue.discovery.event.PartitionChangeEvent;
 import org.echoiot.server.common.msg.queue.ServiceType;
 import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
-import org.thingsboard.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.transport.TransportProtos;
 
 import java.util.List;
 import java.util.Set;
@@ -22,8 +22,8 @@ public interface PartitionService {
 
     /**
      * Received from the Discovery service when network topology is changed.
-     * @param currentService - current service information {@link org.thingsboard.server.gen.transport.TransportProtos.ServiceInfo}
-     * @param otherServices - all other discovered services {@link org.thingsboard.server.gen.transport.TransportProtos.ServiceInfo}
+     * @param currentService - current service information {@link org.echoiot.server.gen.transport.TransportProtos.ServiceInfo}
+     * @param otherServices - all other discovered services {@link org.echoiot.server.gen.transport.TransportProtos.ServiceInfo}
      */
     void recalculatePartitions(TransportProtos.ServiceInfo currentService, List<TransportProtos.ServiceInfo> otherServices);
 

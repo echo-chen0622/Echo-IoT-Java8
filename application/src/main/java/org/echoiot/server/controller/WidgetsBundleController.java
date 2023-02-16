@@ -3,7 +3,7 @@ package org.echoiot.server.controller;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.id.WidgetsBundleId;
 import org.echoiot.server.common.data.page.PageData;
@@ -44,7 +44,7 @@ public class WidgetsBundleController extends BaseController {
     @ResponseBody
     public WidgetsBundle getWidgetsBundleById(
             @ApiParam(value = ControllerConstants.WIDGET_BUNDLE_ID_PARAM_DESCRIPTION, required = true)
-            @PathVariable("widgetsBundleId") String strWidgetsBundleId) throws ThingsboardException {
+            @PathVariable("widgetsBundleId") String strWidgetsBundleId) throws EchoiotException {
         checkParameter("widgetsBundleId", strWidgetsBundleId);
         try {
             WidgetsBundleId widgetsBundleId = new WidgetsBundleId(toUUID(strWidgetsBundleId));
@@ -89,7 +89,7 @@ public class WidgetsBundleController extends BaseController {
     @ResponseStatus(value = HttpStatus.OK)
     public void deleteWidgetsBundle(
             @ApiParam(value = ControllerConstants.WIDGET_BUNDLE_ID_PARAM_DESCRIPTION, required = true)
-            @PathVariable("widgetsBundleId") String strWidgetsBundleId) throws ThingsboardException {
+            @PathVariable("widgetsBundleId") String strWidgetsBundleId) throws EchoiotException {
         checkParameter("widgetsBundleId", strWidgetsBundleId);
         WidgetsBundleId widgetsBundleId = new WidgetsBundleId(toUUID(strWidgetsBundleId));
         WidgetsBundle widgetsBundle = checkWidgetsBundleId(widgetsBundleId, Operation.DELETE);
@@ -112,7 +112,7 @@ public class WidgetsBundleController extends BaseController {
             @ApiParam(value = ControllerConstants.SORT_PROPERTY_DESCRIPTION, allowableValues = ControllerConstants.WIDGET_BUNDLE_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
             @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
-            @RequestParam(required = false) String sortOrder) throws ThingsboardException {
+            @RequestParam(required = false) String sortOrder) throws EchoiotException {
         try {
             PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
             if (Authority.SYS_ADMIN.equals(getCurrentUser().getAuthority())) {
@@ -131,7 +131,7 @@ public class WidgetsBundleController extends BaseController {
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/widgetsBundles", method = RequestMethod.GET)
     @ResponseBody
-    public List<WidgetsBundle> getWidgetsBundles() throws ThingsboardException {
+    public List<WidgetsBundle> getWidgetsBundles() throws EchoiotException {
         try {
             if (Authority.SYS_ADMIN.equals(getCurrentUser().getAuthority())) {
                 return checkNotNull(widgetsBundleService.findSystemWidgetsBundles(getTenantId()));

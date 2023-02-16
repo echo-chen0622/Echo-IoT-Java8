@@ -3,7 +3,7 @@ package org.echoiot.server.service.security.auth.mfa.provider.impl;
 import lombok.Data;
 import org.echoiot.server.common.data.CacheConstants;
 import org.echoiot.server.common.data.StringUtils;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.security.model.mfa.account.OtpBasedTwoFaAccountConfig;
 import org.echoiot.server.common.data.security.model.mfa.provider.OtpBasedTwoFaProviderConfig;
 import org.echoiot.server.service.security.auth.mfa.provider.TwoFaProvider;
@@ -24,13 +24,13 @@ public abstract class OtpBasedTwoFaProvider<C extends OtpBasedTwoFaProviderConfi
 
 
     @Override
-    public final void prepareVerificationCode(SecurityUser user, C providerConfig, A accountConfig) throws ThingsboardException {
+    public final void prepareVerificationCode(SecurityUser user, C providerConfig, A accountConfig) throws EchoiotException {
         String verificationCode = StringUtils.randomNumeric(6);
         sendVerificationCode(user, verificationCode, providerConfig, accountConfig);
         verificationCodesCache.put(user.getId(), new Otp(System.currentTimeMillis(), verificationCode, accountConfig));
     }
 
-    protected abstract void sendVerificationCode(SecurityUser user, String verificationCode, C providerConfig, A accountConfig) throws ThingsboardException;
+    protected abstract void sendVerificationCode(SecurityUser user, String verificationCode, C providerConfig, A accountConfig) throws EchoiotException;
 
 
     @Override

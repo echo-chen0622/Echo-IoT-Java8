@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -15,30 +15,30 @@
 ///
 
 import {
-  ChangeDetectorRef,
-  Component,
-  Injector,
-  Input,
-  OnDestroy,
-  OnInit,
-  StaticProvider,
-  ViewChild,
-  ViewContainerRef
+    ChangeDetectorRef,
+    Component,
+    Injector,
+    Input,
+    OnDestroy,
+    OnInit,
+    StaticProvider,
+    ViewChild,
+    ViewContainerRef
 } from '@angular/core';
-import { TooltipPosition } from '@angular/material/tooltip';
-import { AliasInfo, IAliasController } from '@core/api/widget-api.models';
-import { CdkOverlayOrigin, ConnectedPosition, Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
-import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
-import { BreakpointObserver } from '@angular/cdk/layout';
-import { ComponentPortal } from '@angular/cdk/portal';
+import {TooltipPosition} from '@angular/material/tooltip';
+import {AliasInfo, IAliasController} from '@core/api/widget-api.models';
+import {CdkOverlayOrigin, ConnectedPosition, Overlay, OverlayConfig, OverlayRef} from '@angular/cdk/overlay';
+import {TranslateService} from '@ngx-translate/core';
+import {Subscription} from 'rxjs';
+import {BreakpointObserver} from '@angular/cdk/layout';
+import {ComponentPortal} from '@angular/cdk/portal';
 import {
-  ALIASES_ENTITY_SELECT_PANEL_DATA,
-  AliasesEntitySelectPanelComponent,
-  AliasesEntitySelectPanelData
+    ALIASES_ENTITY_SELECT_PANEL_DATA,
+    AliasesEntitySelectPanelComponent,
+    AliasesEntitySelectPanelData
 } from './aliases-entity-select-panel.component';
-import { deepClone } from '@core/utils';
-import { AliasFilterType } from '@shared/models/alias.models';
+import {deepClone} from '@core/utils';
+import {AliasFilterType} from '@shared/models/alias.models';
 
 @Component({
   selector: 'tb-aliases-entity-select',

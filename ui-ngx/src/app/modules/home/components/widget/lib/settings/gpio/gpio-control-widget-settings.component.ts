@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,13 +14,13 @@
 /// limitations under the License.
 ///
 
-import { Component } from '@angular/core';
-import { WidgetSettings, WidgetSettingsComponent } from '@shared/models/widget.models';
-import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { GpioItem, gpioItemValidator } from '@home/components/widget/lib/settings/gpio/gpio-item.component';
-import { ContentType } from '@shared/models/constants';
+import {Component} from '@angular/core';
+import {WidgetSettings, WidgetSettingsComponent} from '@shared/models/widget.models';
+import {AbstractControl, FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {GpioItem, gpioItemValidator} from '@home/components/widget/lib/settings/gpio/gpio-item.component';
+import {ContentType} from '@shared/models/constants';
 
 @Component({
   selector: 'tb-gpio-control-widget-settings',

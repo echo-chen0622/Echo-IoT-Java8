@@ -1,5 +1,5 @@
 --
--- Copyright © 2016-2023 The Thingsboard Authors
+-- Copyright © 2016-2023 The Echoiot Authors
 --
 -- Licensed under the Apache License, Version 2.0 (the "License");
 -- you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
 -- limitations under the License.
 --
 
-CREATE TABLE IF NOT EXISTS thingsboard.ts_kv_cf (
+CREATE TABLE IF NOT EXISTS echoiot.ts_kv_cf (
     entity_type text, // (DEVICE, CUSTOMER, TENANT)
     entity_id timeuuid,
     key text,
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS thingsboard.ts_kv_cf (
     PRIMARY KEY (( entity_type, entity_id, key, partition ), ts)
 );
 
-CREATE TABLE IF NOT EXISTS thingsboard.ts_kv_partitions_cf (
+CREATE TABLE IF NOT EXISTS echoiot.ts_kv_partitions_cf (
     entity_type text, // (DEVICE, CUSTOMER, TENANT)
     entity_id timeuuid,
     key text,

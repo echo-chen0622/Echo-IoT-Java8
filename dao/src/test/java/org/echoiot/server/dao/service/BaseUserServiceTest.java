@@ -37,7 +37,7 @@ public abstract class BaseUserServiceTest extends AbstractServiceTest {
         User tenantAdmin = new User();
         tenantAdmin.setAuthority(Authority.TENANT_ADMIN);
         tenantAdmin.setTenantId(tenantId);
-        tenantAdmin.setEmail("tenant@thingsboard.org");
+        tenantAdmin.setEmail("tenant@echoiot.org");
         userService.saveUser(tenantAdmin);
 
         Customer customer = new Customer();
@@ -49,7 +49,7 @@ public abstract class BaseUserServiceTest extends AbstractServiceTest {
         customerUser.setAuthority(Authority.CUSTOMER_USER);
         customerUser.setTenantId(tenantId);
         customerUser.setCustomerId(savedCustomer.getId());
-        customerUser.setEmail("customer@thingsboard.org");
+        customerUser.setEmail("customer@echoiot.org");
         userService.saveUser(customerUser);
     }
 
@@ -60,22 +60,22 @@ public abstract class BaseUserServiceTest extends AbstractServiceTest {
 
     @Test
     public void testFindUserByEmail() {
-        User user = userService.findUserByEmail(SYSTEM_TENANT_ID, "sysadmin@thingsboard.org");
+        User user = userService.findUserByEmail(SYSTEM_TENANT_ID, "sysadmin@echoiot.org");
         Assert.assertNotNull(user);
         Assert.assertEquals(Authority.SYS_ADMIN, user.getAuthority());
-        user = userService.findUserByEmail(tenantId, "tenant@thingsboard.org");
+        user = userService.findUserByEmail(tenantId, "tenant@echoiot.org");
         Assert.assertNotNull(user);
         Assert.assertEquals(Authority.TENANT_ADMIN, user.getAuthority());
-        user = userService.findUserByEmail(tenantId, "customer@thingsboard.org");
+        user = userService.findUserByEmail(tenantId, "customer@echoiot.org");
         Assert.assertNotNull(user);
         Assert.assertEquals(Authority.CUSTOMER_USER, user.getAuthority());
-        user = userService.findUserByEmail(tenantId, "fake@thingsboard.org");
+        user = userService.findUserByEmail(tenantId, "fake@echoiot.org");
         Assert.assertNull(user);
     }
 
     @Test
     public void testFindUserById() {
-        User user = userService.findUserByEmail(SYSTEM_TENANT_ID, "sysadmin@thingsboard.org");
+        User user = userService.findUserByEmail(SYSTEM_TENANT_ID, "sysadmin@echoiot.org");
         Assert.assertNotNull(user);
         User foundUser = userService.findUserById(SYSTEM_TENANT_ID, user.getId());
         Assert.assertNotNull(foundUser);
@@ -84,7 +84,7 @@ public abstract class BaseUserServiceTest extends AbstractServiceTest {
 
     @Test
     public void testFindUserCredentials() {
-        User user = userService.findUserByEmail(SYSTEM_TENANT_ID,"sysadmin@thingsboard.org");
+        User user = userService.findUserByEmail(SYSTEM_TENANT_ID,"sysadmin@echoiot.org");
         Assert.assertNotNull(user);
         UserCredentials userCredentials = userService.findUserCredentialsByUserId(SYSTEM_TENANT_ID, user.getId());
         Assert.assertNotNull(userCredentials);
@@ -92,11 +92,11 @@ public abstract class BaseUserServiceTest extends AbstractServiceTest {
 
     @Test
     public void testSaveUser() {
-        User tenantAdminUser = userService.findUserByEmail(SYSTEM_TENANT_ID,"tenant@thingsboard.org");
+        User tenantAdminUser = userService.findUserByEmail(SYSTEM_TENANT_ID,"tenant@echoiot.org");
         User user = new User();
         user.setAuthority(Authority.TENANT_ADMIN);
         user.setTenantId(tenantAdminUser.getTenantId());
-        user.setEmail("tenant2@thingsboard.org");
+        user.setEmail("tenant2@echoiot.org");
         User savedUser = userService.saveUser(user);
         Assert.assertNotNull(savedUser);
         Assert.assertNotNull(savedUser.getId());
@@ -123,39 +123,39 @@ public abstract class BaseUserServiceTest extends AbstractServiceTest {
 
     @Test(expected = DataValidationException.class)
     public void testSaveUserWithSameEmail() {
-        User tenantAdminUser = userService.findUserByEmail(tenantId, "tenant@thingsboard.org");
-        tenantAdminUser.setEmail("sysadmin@thingsboard.org");
+        User tenantAdminUser = userService.findUserByEmail(tenantId, "tenant@echoiot.org");
+        tenantAdminUser.setEmail("sysadmin@echoiot.org");
         userService.saveUser(tenantAdminUser);
     }
 
     @Test(expected = DataValidationException.class)
     public void testSaveUserWithInvalidEmail() {
-        User tenantAdminUser = userService.findUserByEmail(tenantId, "tenant@thingsboard.org");
-        tenantAdminUser.setEmail("tenant_thingsboard.org");
+        User tenantAdminUser = userService.findUserByEmail(tenantId, "tenant@echoiot.org");
+        tenantAdminUser.setEmail("tenant_echoiot.org");
         userService.saveUser(tenantAdminUser);
     }
 
     @Test(expected = DataValidationException.class)
     public void testSaveUserWithEmptyEmail() {
-        User tenantAdminUser = userService.findUserByEmail(tenantId, "tenant@thingsboard.org");
+        User tenantAdminUser = userService.findUserByEmail(tenantId, "tenant@echoiot.org");
         tenantAdminUser.setEmail(null);
         userService.saveUser(tenantAdminUser);
     }
 
     @Test(expected = DataValidationException.class)
     public void testSaveUserWithoutTenant() {
-        User tenantAdminUser = userService.findUserByEmail(tenantId, "tenant@thingsboard.org");
+        User tenantAdminUser = userService.findUserByEmail(tenantId, "tenant@echoiot.org");
         tenantAdminUser.setTenantId(null);
         userService.saveUser(tenantAdminUser);
     }
 
     @Test
     public void testDeleteUser() {
-        User tenantAdminUser = userService.findUserByEmail(tenantId, "tenant@thingsboard.org");
+        User tenantAdminUser = userService.findUserByEmail(tenantId, "tenant@echoiot.org");
         User user = new User();
         user.setAuthority(Authority.TENANT_ADMIN);
         user.setTenantId(tenantAdminUser.getTenantId());
-        user.setEmail("tenant2@thingsboard.org");
+        user.setEmail("tenant2@echoiot.org");
         User savedUser = userService.saveUser(user);
         Assert.assertNotNull(savedUser);
         Assert.assertNotNull(savedUser.getId());
@@ -172,7 +172,7 @@ public abstract class BaseUserServiceTest extends AbstractServiceTest {
 
     @Test
     public void testFindTenantAdmins() {
-        User tenantAdminUser = userService.findUserByEmail(tenantId, "tenant@thingsboard.org");
+        User tenantAdminUser = userService.findUserByEmail(tenantId, "tenant@echoiot.org");
         PageData<User> pageData = userService.findTenantAdmins(tenantAdminUser.getTenantId(), new PageLink(10));
         Assert.assertFalse(pageData.hasNext());
         List<User> users = pageData.getData();
@@ -190,7 +190,7 @@ public abstract class BaseUserServiceTest extends AbstractServiceTest {
             User user = new User();
             user.setAuthority(Authority.TENANT_ADMIN);
             user.setTenantId(tenantId);
-            user.setEmail("testTenant" + i + "@thingsboard.org");
+            user.setEmail("testTenant" + i + "@echoiot.org");
             tenantAdmins.add(userService.saveUser(user));
         }
 
@@ -234,7 +234,7 @@ public abstract class BaseUserServiceTest extends AbstractServiceTest {
             user.setAuthority(Authority.TENANT_ADMIN);
             user.setTenantId(tenantId);
             String suffix = StringUtils.randomAlphanumeric((int) (5 + Math.random() * 10));
-            String email = email1 + suffix + "@thingsboard.org";
+            String email = email1 + suffix + "@echoiot.org";
             email = i % 2 == 0 ? email.toLowerCase() : email.toUpperCase();
             user.setEmail(email);
             tenantAdminsEmail1.add(userService.saveUser(user));
@@ -248,7 +248,7 @@ public abstract class BaseUserServiceTest extends AbstractServiceTest {
             user.setAuthority(Authority.TENANT_ADMIN);
             user.setTenantId(tenantId);
             String suffix = StringUtils.randomAlphanumeric((int) (5 + Math.random() * 10));
-            String email = email2 + suffix + "@thingsboard.org";
+            String email = email2 + suffix + "@echoiot.org";
             email = i % 2 == 0 ? email.toLowerCase() : email.toUpperCase();
             user.setEmail(email);
             tenantAdminsEmail2.add(userService.saveUser(user));
@@ -308,7 +308,7 @@ public abstract class BaseUserServiceTest extends AbstractServiceTest {
 
     @Test
     public void testFindCustomerUsers() {
-        User customerUser = userService.findUserByEmail(tenantId, "customer@thingsboard.org");
+        User customerUser = userService.findUserByEmail(tenantId, "customer@echoiot.org");
         PageData<User> pageData = userService.findCustomerUsers(customerUser.getTenantId(),
                 customerUser.getCustomerId(), new PageLink(10));
         Assert.assertFalse(pageData.hasNext());
@@ -335,7 +335,7 @@ public abstract class BaseUserServiceTest extends AbstractServiceTest {
             user.setAuthority(Authority.CUSTOMER_USER);
             user.setTenantId(tenantId);
             user.setCustomerId(customerId);
-            user.setEmail("testCustomer" + i + "@thingsboard.org");
+            user.setEmail("testCustomer" + i + "@echoiot.org");
             customerUsers.add(userService.saveUser(user));
         }
 
@@ -386,7 +386,7 @@ public abstract class BaseUserServiceTest extends AbstractServiceTest {
             user.setTenantId(tenantId);
             user.setCustomerId(customerId);
             String suffix = StringUtils.randomAlphanumeric((int) (5 + Math.random() * 10));
-            String email = email1 + suffix + "@thingsboard.org";
+            String email = email1 + suffix + "@echoiot.org";
             email = i % 2 == 0 ? email.toLowerCase() : email.toUpperCase();
             user.setEmail(email);
             customerUsersEmail1.add(userService.saveUser(user));
@@ -401,7 +401,7 @@ public abstract class BaseUserServiceTest extends AbstractServiceTest {
             user.setTenantId(tenantId);
             user.setCustomerId(customerId);
             String suffix = StringUtils.randomAlphanumeric((int) (5 + Math.random() * 10));
-            String email = email2 + suffix + "@thingsboard.org";
+            String email = email2 + suffix + "@echoiot.org";
             email = i % 2 == 0 ? email.toLowerCase() : email.toUpperCase();
             user.setEmail(email);
             customerUsersEmail2.add(userService.saveUser(user));

@@ -1,36 +1,32 @@
 package org.echoiot.server.service.rpc;
 
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.common.util.EchoiotThreadFactory;
+import org.echoiot.rule.engine.api.RuleEngineDeviceRpcRequest;
+import org.echoiot.rule.engine.api.RuleEngineDeviceRpcResponse;
 import org.echoiot.server.cluster.TbClusterService;
 import org.echoiot.server.common.data.id.RpcId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.rpc.Rpc;
 import org.echoiot.server.common.data.rpc.RpcError;
 import org.echoiot.server.common.data.rpc.ToDeviceRpcRequestBody;
+import org.echoiot.server.common.msg.queue.ServiceType;
+import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
+import org.echoiot.server.common.msg.rpc.FromDeviceRpcResponse;
+import org.echoiot.server.common.msg.rpc.ToDeviceRpcRequest;
 import org.echoiot.server.dao.rpc.RpcService;
+import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.queue.discovery.PartitionService;
 import org.echoiot.server.queue.discovery.TbServiceInfoProvider;
 import org.echoiot.server.queue.util.TbRuleEngineComponent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.thingsboard.common.util.ThingsBoardThreadFactory;
-import org.thingsboard.rule.engine.api.RuleEngineDeviceRpcRequest;
-import org.thingsboard.rule.engine.api.RuleEngineDeviceRpcResponse;
-import org.echoiot.server.common.msg.queue.ServiceType;
-import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
-import org.echoiot.server.common.msg.rpc.FromDeviceRpcResponse;
-import org.echoiot.server.common.msg.rpc.ToDeviceRpcRequest;
-import org.thingsboard.server.gen.transport.TransportProtos;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.function.Consumer;
 
 @Service
@@ -66,7 +62,7 @@ public class DefaultTbRuleEngineRpcService implements TbRuleEngineDeviceRpcServi
 
     @PostConstruct
     public void initExecutor() {
-        scheduler = Executors.newSingleThreadScheduledExecutor(ThingsBoardThreadFactory.forName("rule-engine-rpc-scheduler"));
+        scheduler = Executors.newSingleThreadScheduledExecutor(EchoiotThreadFactory.forName("rule-engine-rpc-scheduler"));
         serviceId = serviceInfoProvider.getServiceId();
     }
 

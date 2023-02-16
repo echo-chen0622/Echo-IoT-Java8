@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.echoiot.server.common.transport.TransportService;
-import org.thingsboard.server.gen.transport.TransportProtos.GetAllQueueRoutingInfoRequestMsg;
+import org.echoiot.server.gen.transport.TransportProtos.GetAllQueueRoutingInfoRequestMsg;
 import org.echoiot.server.queue.discovery.QueueRoutingInfo;
 import org.echoiot.server.queue.discovery.QueueRoutingInfoService;
 

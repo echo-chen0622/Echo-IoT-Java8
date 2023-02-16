@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.common.util.EchoiotThreadFactory;
+import org.echoiot.server.actors.ActorSystemContext;
 import org.echoiot.server.cluster.TbClusterService;
 import org.echoiot.server.common.data.DataConstants;
 import org.echoiot.server.common.data.Device;
@@ -12,26 +14,20 @@ import org.echoiot.server.common.data.rpc.RpcError;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.TbMsgDataType;
 import org.echoiot.server.common.msg.TbMsgMetaData;
+import org.echoiot.server.common.msg.rpc.FromDeviceRpcResponse;
+import org.echoiot.server.common.msg.rpc.ToDeviceRpcRequest;
 import org.echoiot.server.dao.device.DeviceService;
 import org.echoiot.server.queue.discovery.TbServiceInfoProvider;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.security.model.SecurityUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.thingsboard.common.util.ThingsBoardThreadFactory;
-import org.echoiot.server.actors.ActorSystemContext;
-import org.echoiot.server.common.msg.rpc.FromDeviceRpcResponse;
-import org.echoiot.server.common.msg.rpc.ToDeviceRpcRequest;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.function.Consumer;
 
 /**
@@ -71,7 +67,7 @@ public class DefaultTbCoreDeviceRpcService implements TbCoreDeviceRpcService {
 
     @PostConstruct
     public void initExecutor() {
-        scheduler = Executors.newSingleThreadScheduledExecutor(ThingsBoardThreadFactory.forName("tb-core-rpc-scheduler"));
+        scheduler = Executors.newSingleThreadScheduledExecutor(EchoiotThreadFactory.forName("tb-core-rpc-scheduler"));
         serviceId = serviceInfoProvider.getServiceId();
     }
 

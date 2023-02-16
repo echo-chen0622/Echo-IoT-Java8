@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,22 +14,22 @@
 /// limitations under the License.
 ///
 
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { TranslateService } from '@ngx-translate/core';
-import { AuthService } from '@core/auth/auth.service';
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs';
+import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
+import {TranslateService} from '@ngx-translate/core';
+import {AuthService} from '@core/auth/auth.service';
 import {
-  ColorPickerDialogComponent,
-  ColorPickerDialogData
+    ColorPickerDialogComponent,
+    ColorPickerDialogData
 } from '@shared/components/dialog/color-picker-dialog.component';
 import {
-  MaterialIconsDialogComponent,
-  MaterialIconsDialogData
+    MaterialIconsDialogComponent,
+    MaterialIconsDialogData
 } from '@shared/components/dialog/material-icons-dialog.component';
-import { ConfirmDialogComponent } from '@shared/components/dialog/confirm-dialog.component';
-import { AlertDialogComponent } from '@shared/components/dialog/alert-dialog.component';
-import { TodoDialogComponent } from '@shared/components/dialog/todo-dialog.component';
+import {ConfirmDialogComponent} from '@shared/components/dialog/confirm-dialog.component';
+import {AlertDialogComponent} from '@shared/components/dialog/alert-dialog.component';
+import {TodoDialogComponent} from '@shared/components/dialog/todo-dialog.component';
 
 @Injectable(
   {

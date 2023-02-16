@@ -2,7 +2,7 @@ package org.echoiot.server.queue.discovery.event;
 
 import lombok.Getter;
 import lombok.ToString;
-import org.thingsboard.server.gen.transport.TransportProtos.ServiceInfo;
+import org.echoiot.server.gen.transport.TransportProtos.ServiceInfo;
 
 import java.util.List;
 

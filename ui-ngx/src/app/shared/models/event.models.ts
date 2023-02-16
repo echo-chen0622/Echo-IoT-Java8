@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,12 +14,12 @@
 /// limitations under the License.
 ///
 
-import { BaseData } from '@shared/models/base-data';
-import { TenantId } from '@shared/models/id/tenant-id';
-import { EntityId } from '@shared/models/id/entity-id';
-import { EventId } from './id/event-id';
-import { ContentType } from '@shared/models/constants';
-import { EntityType } from '@shared/models/entity-type.models';
+import {BaseData} from '@shared/models/base-data';
+import {TenantId} from '@shared/models/id/tenant-id';
+import {EntityId} from '@shared/models/id/entity-id';
+import {EventId} from './id/event-id';
+import {ContentType} from '@shared/models/constants';
+import {EntityType} from '@shared/models/entity-type.models';
 
 export enum EventType {
   ERROR = 'ERROR',

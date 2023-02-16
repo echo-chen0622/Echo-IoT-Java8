@@ -27,7 +27,7 @@ public class JwtSettings {
     /**
      * Token issuer.
      */
-    @ApiModelProperty(position = 3, value = "The JWT issuer.", example = "thingsboard.io")
+    @ApiModelProperty(position = 3, value = "The JWT issuer.", example = "echoiot.io")
     private String tokenIssuer;
 
     /**

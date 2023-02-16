@@ -3,7 +3,7 @@ package org.echoiot.server.transport.lwm2m.server;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.thingsboard.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.transport.TransportProtos;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;

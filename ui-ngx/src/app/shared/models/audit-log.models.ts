@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,12 +14,12 @@
 /// limitations under the License.
 ///
 
-import { BaseData } from './base-data';
-import { AuditLogId } from './id/audit-log-id';
-import { CustomerId } from './id/customer-id';
-import { EntityId } from './id/entity-id';
-import { UserId } from './id/user-id';
-import { TenantId } from './id/tenant-id';
+import {BaseData} from './base-data';
+import {AuditLogId} from './id/audit-log-id';
+import {CustomerId} from './id/customer-id';
+import {EntityId} from './id/entity-id';
+import {UserId} from './id/user-id';
+import {TenantId} from './id/tenant-id';
 
 export enum AuditLogMode {
   TENANT,

@@ -19,7 +19,7 @@ import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.TenantProfile;
 import org.echoiot.server.common.data.audit.ActionType;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.tenant.profile.DefaultTenantProfileConfiguration;
 import org.echoiot.server.common.transport.adaptor.JsonConverter;
 import org.echoiot.server.dao.service.ConstraintValidator;
@@ -46,9 +46,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
-import org.thingsboard.common.util.JacksonUtil;
-import org.thingsboard.common.util.ThingsBoardThreadFactory;
-import org.thingsboard.rule.engine.api.msg.DeviceAttributesEventNotificationMsg;
+import org.echoiot.common.util.JacksonUtil;
+import org.echoiot.common.util.EchoiotThreadFactory;
+import org.echoiot.rule.engine.api.msg.DeviceAttributesEventNotificationMsg;
 import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.EntityIdFactory;
@@ -107,7 +107,7 @@ public class TelemetryController extends BaseController {
 
     @PostConstruct
     public void initExecutor() {
-        executor = Executors.newSingleThreadExecutor(ThingsBoardThreadFactory.forName("telemetry-controller"));
+        executor = Executors.newSingleThreadExecutor(EchoiotThreadFactory.forName("telemetry-controller"));
     }
 
     @PreDestroy
@@ -130,7 +130,7 @@ public class TelemetryController extends BaseController {
     @ResponseBody
     public DeferredResult<ResponseEntity> getAttributeKeys(
             @ApiParam(value = ControllerConstants.ENTITY_TYPE_PARAM_DESCRIPTION, required = true, defaultValue = "DEVICE") @PathVariable("entityType") String entityType,
-            @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @PathVariable("entityId") String entityIdStr) throws ThingsboardException {
+            @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @PathVariable("entityId") String entityIdStr) throws EchoiotException {
         try {
             return accessValidator.validateEntityAndCallback(getCurrentUser(), Operation.READ_ATTRIBUTES, entityType, entityIdStr, this::getAttributeKeysCallback);
         } catch (Exception e) {
@@ -151,7 +151,7 @@ public class TelemetryController extends BaseController {
     public DeferredResult<ResponseEntity> getAttributeKeysByScope(
             @ApiParam(value = ControllerConstants.ENTITY_TYPE_PARAM_DESCRIPTION, required = true, defaultValue = "DEVICE") @PathVariable("entityType") String entityType,
             @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @PathVariable("entityId") String entityIdStr,
-            @ApiParam(value = ControllerConstants.ATTRIBUTES_SCOPE_DESCRIPTION, required = true, allowableValues = ControllerConstants.ATTRIBUTES_SCOPE_ALLOWED_VALUES) @PathVariable("scope") String scope) throws ThingsboardException {
+            @ApiParam(value = ControllerConstants.ATTRIBUTES_SCOPE_DESCRIPTION, required = true, allowableValues = ControllerConstants.ATTRIBUTES_SCOPE_ALLOWED_VALUES) @PathVariable("scope") String scope) throws EchoiotException {
         try {
             return accessValidator.validateEntityAndCallback(getCurrentUser(), Operation.READ_ATTRIBUTES, entityType, entityIdStr,
                     (result, tenantId, entityId) -> getAttributeKeysCallback(result, tenantId, entityId, scope));
@@ -174,7 +174,7 @@ public class TelemetryController extends BaseController {
     public DeferredResult<ResponseEntity> getAttributes(
             @ApiParam(value = ControllerConstants.ENTITY_TYPE_PARAM_DESCRIPTION, required = true, defaultValue = "DEVICE") @PathVariable("entityType") String entityType,
             @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @PathVariable("entityId") String entityIdStr,
-            @ApiParam(value = ControllerConstants.ATTRIBUTES_KEYS_DESCRIPTION) @RequestParam(name = "keys", required = false) String keysStr) throws ThingsboardException {
+            @ApiParam(value = ControllerConstants.ATTRIBUTES_KEYS_DESCRIPTION) @RequestParam(name = "keys", required = false) String keysStr) throws EchoiotException {
         try {
             SecurityUser user = getCurrentUser();
             return accessValidator.validateEntityAndCallback(getCurrentUser(), Operation.READ_ATTRIBUTES, entityType, entityIdStr,
@@ -202,7 +202,7 @@ public class TelemetryController extends BaseController {
             @ApiParam(value = ControllerConstants.ENTITY_TYPE_PARAM_DESCRIPTION, required = true, defaultValue = "DEVICE") @PathVariable("entityType") String entityType,
             @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @PathVariable("entityId") String entityIdStr,
             @ApiParam(value = ControllerConstants.ATTRIBUTES_SCOPE_DESCRIPTION, allowableValues = ControllerConstants.ATTRIBUTES_SCOPE_ALLOWED_VALUES, required = true) @PathVariable("scope") String scope,
-            @ApiParam(value = ControllerConstants.ATTRIBUTES_KEYS_DESCRIPTION) @RequestParam(name = "keys", required = false) String keysStr) throws ThingsboardException {
+            @ApiParam(value = ControllerConstants.ATTRIBUTES_KEYS_DESCRIPTION) @RequestParam(name = "keys", required = false) String keysStr) throws EchoiotException {
         try {
             SecurityUser user = getCurrentUser();
             return accessValidator.validateEntityAndCallback(getCurrentUser(), Operation.READ_ATTRIBUTES, entityType, entityIdStr,
@@ -221,7 +221,7 @@ public class TelemetryController extends BaseController {
     @ResponseBody
     public DeferredResult<ResponseEntity> getTimeseriesKeys(
             @ApiParam(value = ControllerConstants.ENTITY_TYPE_PARAM_DESCRIPTION, required = true, defaultValue = "DEVICE") @PathVariable("entityType") String entityType,
-            @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @PathVariable("entityId") String entityIdStr) throws ThingsboardException {
+            @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @PathVariable("entityId") String entityIdStr) throws EchoiotException {
         try {
             return accessValidator.validateEntityAndCallback(getCurrentUser(), Operation.READ_TELEMETRY, entityType, entityIdStr,
                     (result, tenantId, entityId) -> Futures.addCallback(tsService.findAllLatest(tenantId, entityId), getTsKeysToResponseCallback(result), MoreExecutors.directExecutor()));
@@ -251,7 +251,7 @@ public class TelemetryController extends BaseController {
             @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @PathVariable("entityId") String entityIdStr,
             @ApiParam(value = ControllerConstants.TELEMETRY_KEYS_DESCRIPTION) @RequestParam(name = "keys", required = false) String keysStr,
             @ApiParam(value = ControllerConstants.STRICT_DATA_TYPES_DESCRIPTION)
-            @RequestParam(name = "useStrictDataTypes", required = false, defaultValue = "false") Boolean useStrictDataTypes) throws ThingsboardException {
+            @RequestParam(name = "useStrictDataTypes", required = false, defaultValue = "false") Boolean useStrictDataTypes) throws EchoiotException {
         try {
             SecurityUser user = getCurrentUser();
             return accessValidator.validateEntityAndCallback(getCurrentUser(), Operation.READ_TELEMETRY, entityType, entityIdStr,
@@ -294,7 +294,7 @@ public class TelemetryController extends BaseController {
             @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
             @RequestParam(name = "orderBy", defaultValue = "DESC") String orderBy,
             @ApiParam(value = ControllerConstants.STRICT_DATA_TYPES_DESCRIPTION)
-            @RequestParam(name = "useStrictDataTypes", required = false, defaultValue = "false") Boolean useStrictDataTypes) throws ThingsboardException {
+            @RequestParam(name = "useStrictDataTypes", required = false, defaultValue = "false") Boolean useStrictDataTypes) throws EchoiotException {
         try {
             return accessValidator.validateEntityAndCallback(getCurrentUser(), Operation.READ_TELEMETRY, entityType, entityIdStr,
                     (result, tenantId, entityId) -> {
@@ -330,7 +330,7 @@ public class TelemetryController extends BaseController {
     public DeferredResult<ResponseEntity> saveDeviceAttributes(
             @ApiParam(value = ControllerConstants.DEVICE_ID_PARAM_DESCRIPTION, required = true) @PathVariable("deviceId") String deviceIdStr,
             @ApiParam(value = ControllerConstants.ATTRIBUTES_SCOPE_DESCRIPTION, allowableValues = ControllerConstants.ATTRIBUTES_SAVE_SCOPE_ALLOWED_VALUES, required = true) @PathVariable("scope") String scope,
-            @ApiParam(value = ControllerConstants.ATTRIBUTES_JSON_REQUEST_DESCRIPTION, required = true) @RequestBody JsonNode request) throws ThingsboardException {
+            @ApiParam(value = ControllerConstants.ATTRIBUTES_JSON_REQUEST_DESCRIPTION, required = true) @RequestBody JsonNode request) throws EchoiotException {
         try {
             EntityId entityId = EntityIdFactory.getByTypeAndUuid(EntityType.DEVICE, deviceIdStr);
             return saveAttributes(getTenantId(), entityId, scope, request);
@@ -358,7 +358,7 @@ public class TelemetryController extends BaseController {
             @ApiParam(value = ControllerConstants.ENTITY_TYPE_PARAM_DESCRIPTION, required = true, defaultValue = "DEVICE") @PathVariable("entityType") String entityType,
             @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @PathVariable("entityId") String entityIdStr,
             @ApiParam(value = ControllerConstants.ATTRIBUTES_SCOPE_DESCRIPTION, allowableValues = ControllerConstants.ATTRIBUTES_SAVE_SCOPE_ALLOWED_VALUES) @PathVariable("scope") String scope,
-            @ApiParam(value = ControllerConstants.ATTRIBUTES_JSON_REQUEST_DESCRIPTION, required = true) @RequestBody JsonNode request) throws ThingsboardException {
+            @ApiParam(value = ControllerConstants.ATTRIBUTES_JSON_REQUEST_DESCRIPTION, required = true) @RequestBody JsonNode request) throws EchoiotException {
         try {
             EntityId entityId = EntityIdFactory.getByTypeAndId(entityType, entityIdStr);
             return saveAttributes(getTenantId(), entityId, scope, request);
@@ -386,7 +386,7 @@ public class TelemetryController extends BaseController {
             @ApiParam(value = ControllerConstants.ENTITY_TYPE_PARAM_DESCRIPTION, required = true, defaultValue = "DEVICE") @PathVariable("entityType") String entityType,
             @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @PathVariable("entityId") String entityIdStr,
             @ApiParam(value = ControllerConstants.ATTRIBUTES_SCOPE_DESCRIPTION, allowableValues = ControllerConstants.ATTRIBUTES_SAVE_SCOPE_ALLOWED_VALUES, required = true) @PathVariable("scope") String scope,
-            @ApiParam(value = ControllerConstants.ATTRIBUTES_JSON_REQUEST_DESCRIPTION, required = true) @RequestBody JsonNode request) throws ThingsboardException {
+            @ApiParam(value = ControllerConstants.ATTRIBUTES_JSON_REQUEST_DESCRIPTION, required = true) @RequestBody JsonNode request) throws EchoiotException {
         try {
             EntityId entityId = EntityIdFactory.getByTypeAndId(entityType, entityIdStr);
             return saveAttributes(getTenantId(), entityId, scope, request);
@@ -415,7 +415,7 @@ public class TelemetryController extends BaseController {
             @ApiParam(value = ControllerConstants.ENTITY_TYPE_PARAM_DESCRIPTION, required = true, defaultValue = "DEVICE") @PathVariable("entityType") String entityType,
             @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @PathVariable("entityId") String entityIdStr,
             @ApiParam(value = ControllerConstants.TELEMETRY_SCOPE_DESCRIPTION, required = true, allowableValues = "ANY") @PathVariable("scope") String scope,
-            @ApiParam(value = ControllerConstants.TELEMETRY_JSON_REQUEST_DESCRIPTION, required = true) @RequestBody String requestBody) throws ThingsboardException {
+            @ApiParam(value = ControllerConstants.TELEMETRY_JSON_REQUEST_DESCRIPTION, required = true) @RequestBody String requestBody) throws EchoiotException {
         try {
             EntityId entityId = EntityIdFactory.getByTypeAndId(entityType, entityIdStr);
             return saveTelemetry(getTenantId(), entityId, requestBody, 0L);
@@ -445,7 +445,7 @@ public class TelemetryController extends BaseController {
             @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @PathVariable("entityId") String entityIdStr,
             @ApiParam(value = ControllerConstants.TELEMETRY_SCOPE_DESCRIPTION, required = true, allowableValues = "ANY") @PathVariable("scope") String scope,
             @ApiParam(value = "A long value representing TTL (Time to Live) parameter.", required = true) @PathVariable("ttl") Long ttl,
-            @ApiParam(value = ControllerConstants.TELEMETRY_JSON_REQUEST_DESCRIPTION, required = true) @RequestBody String requestBody) throws ThingsboardException {
+            @ApiParam(value = ControllerConstants.TELEMETRY_JSON_REQUEST_DESCRIPTION, required = true) @RequestBody String requestBody) throws EchoiotException {
         try {
             EntityId entityId = EntityIdFactory.getByTypeAndId(entityType, entityIdStr);
             return saveTelemetry(getTenantId(), entityId, requestBody, ttl);
@@ -483,7 +483,7 @@ public class TelemetryController extends BaseController {
             @ApiParam(value = "A long value representing the end timestamp of removal time range in milliseconds.")
             @RequestParam(name = "endTs", required = false) Long endTs,
             @ApiParam(value = "If the parameter is set to true, the latest telemetry will be rewritten in case that current latest value was removed, otherwise, in case that parameter is set to false the new latest value will not set.")
-            @RequestParam(name = "rewriteLatestIfDeleted", defaultValue = "false") boolean rewriteLatestIfDeleted) throws ThingsboardException {
+            @RequestParam(name = "rewriteLatestIfDeleted", defaultValue = "false") boolean rewriteLatestIfDeleted) throws EchoiotException {
         try {
             EntityId entityId = EntityIdFactory.getByTypeAndId(entityType, entityIdStr);
             return deleteTimeseries(entityId, keysStr, deleteAllDataForKeys, startTs, endTs, rewriteLatestIfDeleted);
@@ -493,7 +493,7 @@ public class TelemetryController extends BaseController {
     }
 
     private DeferredResult<ResponseEntity> deleteTimeseries(EntityId entityIdStr, String keysStr, boolean deleteAllDataForKeys,
-                                                            Long startTs, Long endTs, boolean rewriteLatestIfDeleted) throws ThingsboardException {
+                                                            Long startTs, Long endTs, boolean rewriteLatestIfDeleted) throws EchoiotException {
         List<String> keys = toKeysList(keysStr);
         if (keys.isEmpty()) {
             return getImmediateDeferredResult("Empty keys: " + keysStr, HttpStatus.BAD_REQUEST);
@@ -553,7 +553,7 @@ public class TelemetryController extends BaseController {
     public DeferredResult<ResponseEntity> deleteDeviceAttributes(
             @ApiParam(value = ControllerConstants.DEVICE_ID_PARAM_DESCRIPTION, required = true) @PathVariable(ControllerConstants.DEVICE_ID) String deviceIdStr,
             @ApiParam(value = ControllerConstants.ATTRIBUTES_SCOPE_DESCRIPTION, allowableValues = ControllerConstants.ATTRIBUTES_SCOPE_ALLOWED_VALUES, required = true) @PathVariable("scope") String scope,
-            @ApiParam(value = ControllerConstants.ATTRIBUTES_KEYS_DESCRIPTION, required = true) @RequestParam(name = "keys") String keysStr) throws ThingsboardException {
+            @ApiParam(value = ControllerConstants.ATTRIBUTES_KEYS_DESCRIPTION, required = true) @RequestParam(name = "keys") String keysStr) throws EchoiotException {
         try {
             EntityId entityId = EntityIdFactory.getByTypeAndUuid(EntityType.DEVICE, deviceIdStr);
             return deleteAttributes(entityId, scope, keysStr);
@@ -581,7 +581,7 @@ public class TelemetryController extends BaseController {
             @ApiParam(value = ControllerConstants.ENTITY_TYPE_PARAM_DESCRIPTION, required = true, defaultValue = "DEVICE") @PathVariable("entityType") String entityType,
             @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @PathVariable("entityId") String entityIdStr,
             @ApiParam(value = ControllerConstants.ATTRIBUTES_SCOPE_DESCRIPTION, required = true, allowableValues = ControllerConstants.ATTRIBUTES_SCOPE_ALLOWED_VALUES) @PathVariable("scope") String scope,
-            @ApiParam(value = ControllerConstants.ATTRIBUTES_KEYS_DESCRIPTION, required = true) @RequestParam(name = "keys") String keysStr) throws ThingsboardException {
+            @ApiParam(value = ControllerConstants.ATTRIBUTES_KEYS_DESCRIPTION, required = true) @RequestParam(name = "keys") String keysStr) throws EchoiotException {
         try {
             EntityId entityId = EntityIdFactory.getByTypeAndId(entityType, entityIdStr);
             return deleteAttributes(entityId, scope, keysStr);
@@ -590,7 +590,7 @@ public class TelemetryController extends BaseController {
         }
     }
 
-    private DeferredResult<ResponseEntity> deleteAttributes(EntityId entityIdSrc, String scope, String keysStr) throws ThingsboardException {
+    private DeferredResult<ResponseEntity> deleteAttributes(EntityId entityIdSrc, String scope, String keysStr) throws EchoiotException {
         List<String> keys = toKeysList(keysStr);
         if (keys.isEmpty()) {
             return getImmediateDeferredResult("Empty keys: " + keysStr, HttpStatus.BAD_REQUEST);
@@ -625,7 +625,7 @@ public class TelemetryController extends BaseController {
         }
     }
 
-    private DeferredResult<ResponseEntity> saveAttributes(TenantId srcTenantId, EntityId entityIdSrc, String scope, JsonNode json) throws ThingsboardException {
+    private DeferredResult<ResponseEntity> saveAttributes(TenantId srcTenantId, EntityId entityIdSrc, String scope, JsonNode json) throws EchoiotException {
         if (!DataConstants.SERVER_SCOPE.equals(scope) && !DataConstants.SHARED_SCOPE.equals(scope)) {
             return getImmediateDeferredResult("Invalid scope: " + scope, HttpStatus.BAD_REQUEST);
         }
@@ -661,7 +661,7 @@ public class TelemetryController extends BaseController {
         }
     }
 
-    private DeferredResult<ResponseEntity> saveTelemetry(TenantId curTenantId, EntityId entityIdSrc, String requestBody, long ttl) throws ThingsboardException {
+    private DeferredResult<ResponseEntity> saveTelemetry(TenantId curTenantId, EntityId entityIdSrc, String requestBody, long ttl) throws EchoiotException {
         Map<Long, List<KvEntry>> telemetryRequest;
         JsonElement telemetryJson;
         try {

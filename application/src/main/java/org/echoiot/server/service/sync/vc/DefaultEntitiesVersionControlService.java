@@ -7,14 +7,19 @@ import com.google.common.util.concurrent.MoreExecutors;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.common.util.DonAsynchron;
+import org.echoiot.common.util.EchoiotExecutors;
+import org.echoiot.common.util.JacksonUtil;
+import org.echoiot.common.util.TbStopWatch;
 import org.echoiot.server.cache.TbTransactionalCache;
 import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.ExportableEntity;
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.User;
 import org.echoiot.server.common.data.audit.ActionType;
-import org.echoiot.server.common.data.exception.ThingsboardErrorCode;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotErrorCode;
+import org.echoiot.server.common.data.exception.EchoiotException;
+import org.echoiot.server.common.data.id.*;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.common.data.sync.ThrowingRunnable;
@@ -22,6 +27,8 @@ import org.echoiot.server.common.data.sync.ie.EntityExportData;
 import org.echoiot.server.common.data.sync.ie.EntityExportSettings;
 import org.echoiot.server.common.data.sync.ie.EntityImportResult;
 import org.echoiot.server.common.data.sync.ie.EntityImportSettings;
+import org.echoiot.server.common.data.sync.vc.*;
+import org.echoiot.server.common.data.sync.vc.request.create.*;
 import org.echoiot.server.common.data.sync.vc.request.load.EntityTypeVersionLoadRequest;
 import org.echoiot.server.common.data.sync.vc.request.load.SingleEntityVersionLoadRequest;
 import org.echoiot.server.common.data.sync.vc.request.load.VersionLoadConfig;
@@ -30,57 +37,21 @@ import org.echoiot.server.dao.DaoUtil;
 import org.echoiot.server.dao.edge.EdgeService;
 import org.echoiot.server.dao.exception.DeviceCredentialsValidationException;
 import org.echoiot.server.queue.util.TbCoreComponent;
+import org.echoiot.server.service.entitiy.TbNotificationEntityService;
+import org.echoiot.server.service.sync.ie.EntitiesExportImportService;
 import org.echoiot.server.service.sync.ie.exporting.ExportableEntitiesService;
 import org.echoiot.server.service.sync.ie.importing.impl.MissingEntityException;
 import org.echoiot.server.service.sync.vc.autocommit.TbAutoCommitSettingsService;
+import org.echoiot.server.service.sync.vc.data.*;
 import org.echoiot.server.service.sync.vc.repository.TbRepositorySettingsService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
-import org.thingsboard.common.util.DonAsynchron;
-import org.thingsboard.common.util.JacksonUtil;
-import org.thingsboard.common.util.TbStopWatch;
-import org.thingsboard.common.util.ThingsBoardExecutors;
-import org.echoiot.server.common.data.id.EdgeId;
-import org.echoiot.server.common.data.id.EntityId;
-import org.echoiot.server.common.data.id.EntityIdFactory;
-import org.echoiot.server.common.data.id.HasId;
-import org.echoiot.server.common.data.id.TenantId;
-import org.echoiot.server.common.data.sync.vc.BranchInfo;
-import org.echoiot.server.common.data.sync.vc.EntityDataDiff;
-import org.echoiot.server.common.data.sync.vc.EntityDataInfo;
-import org.echoiot.server.common.data.sync.vc.EntityLoadError;
-import org.echoiot.server.common.data.sync.vc.EntityTypeLoadResult;
-import org.echoiot.server.common.data.sync.vc.EntityVersion;
-import org.echoiot.server.common.data.sync.vc.RepositorySettings;
-import org.echoiot.server.common.data.sync.vc.VersionCreationResult;
-import org.echoiot.server.common.data.sync.vc.VersionLoadResult;
-import org.echoiot.server.common.data.sync.vc.VersionedEntityInfo;
-import org.echoiot.server.common.data.sync.vc.request.create.AutoVersionCreateConfig;
-import org.echoiot.server.common.data.sync.vc.request.create.ComplexVersionCreateRequest;
-import org.echoiot.server.common.data.sync.vc.request.create.EntityTypeVersionCreateConfig;
-import org.echoiot.server.common.data.sync.vc.request.create.SingleEntityVersionCreateRequest;
-import org.echoiot.server.common.data.sync.vc.request.create.SyncStrategy;
-import org.echoiot.server.common.data.sync.vc.request.create.VersionCreateRequest;
-import org.echoiot.server.service.entitiy.TbNotificationEntityService;
-import org.echoiot.server.service.sync.ie.EntitiesExportImportService;
-import org.echoiot.server.service.sync.vc.data.CommitGitRequest;
-import org.echoiot.server.service.sync.vc.data.ComplexEntitiesExportCtx;
-import org.echoiot.server.service.sync.vc.data.EntitiesExportCtx;
-import org.echoiot.server.service.sync.vc.data.EntitiesImportCtx;
-import org.echoiot.server.service.sync.vc.data.EntityTypeExportCtx;
-import org.echoiot.server.service.sync.vc.data.ReimportTask;
-import org.echoiot.server.service.sync.vc.data.SimpleEntitiesExportCtx;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -110,7 +81,7 @@ public class DefaultEntitiesVersionControlService implements EntitiesVersionCont
 
     @PostConstruct
     public void init() {
-        executor = MoreExecutors.listeningDecorator(ThingsBoardExecutors.newWorkStealingPool(threadPoolSize, DefaultEntitiesVersionControlService.class));
+        executor = MoreExecutors.listeningDecorator(EchoiotExecutors.newWorkStealingPool(threadPoolSize, DefaultEntitiesVersionControlService.class));
     }
 
     @PreDestroy
@@ -155,26 +126,26 @@ public class DefaultEntitiesVersionControlService implements EntitiesVersionCont
     }
 
     @Override
-    public VersionCreationResult getVersionCreateStatus(User user, UUID requestId) throws ThingsboardException {
+    public VersionCreationResult getVersionCreateStatus(User user, UUID requestId) throws EchoiotException {
         return getStatus(user, requestId, VersionControlTaskCacheEntry::getExportResult);
     }
 
     @Override
-    public VersionLoadResult getVersionLoadStatus(User user, UUID requestId) throws ThingsboardException {
+    public VersionLoadResult getVersionLoadStatus(User user, UUID requestId) throws EchoiotException {
         return getStatus(user, requestId, VersionControlTaskCacheEntry::getImportResult);
     }
 
-    private <T> T getStatus(User user, UUID requestId, Function<VersionControlTaskCacheEntry, T> getter) throws ThingsboardException {
+    private <T> T getStatus(User user, UUID requestId, Function<VersionControlTaskCacheEntry, T> getter) throws EchoiotException {
         var cacheEntry = taskCache.get(requestId);
         if (cacheEntry == null || cacheEntry.get() == null) {
             log.debug("[{}] No cache record: {}", requestId, cacheEntry);
-            throw new ThingsboardException(ThingsboardErrorCode.ITEM_NOT_FOUND);
+            throw new EchoiotException(EchoiotErrorCode.ITEM_NOT_FOUND);
         } else {
             var entry = cacheEntry.get();
             log.debug("[{}] Cache get: {}", requestId, entry);
             var result = getter.apply(entry);
             if (result == null) {
-                throw new ThingsboardException(ThingsboardErrorCode.BAD_REQUEST_PARAMS);
+                throw new EchoiotException(EchoiotErrorCode.BAD_REQUEST_PARAMS);
             } else {
                 return result;
             }
@@ -463,7 +434,7 @@ public class DefaultEntitiesVersionControlService implements EntitiesVersionCont
                     EntityExportData<?> currentVersion;
                     try {
                         currentVersion = exportImportService.exportEntity(ctx, entityId);
-                    } catch (ThingsboardException e) {
+                    } catch (EchoiotException e) {
                         throw new RuntimeException(e);
                     }
                     return new EntityDataDiff(currentVersion.sort(), otherVersion.sort());
@@ -509,13 +480,13 @@ public class DefaultEntitiesVersionControlService implements EntitiesVersionCont
     }
 
     @Override
-    public ListenableFuture<Void> checkVersionControlAccess(TenantId tenantId, RepositorySettings settings) throws ThingsboardException {
+    public ListenableFuture<Void> checkVersionControlAccess(TenantId tenantId, RepositorySettings settings) throws EchoiotException {
         settings = this.repositorySettingsService.restore(tenantId, settings);
         try {
             return gitServiceQueue.testRepository(tenantId, settings);
         } catch (Exception e) {
-            throw new ThingsboardException(String.format("Unable to access repository: %s", getCauseMessage(e)),
-                    ThingsboardErrorCode.GENERAL);
+            throw new EchoiotException(String.format("Unable to access repository: %s", getCauseMessage(e)),
+                    EchoiotErrorCode.GENERAL);
         }
     }
 

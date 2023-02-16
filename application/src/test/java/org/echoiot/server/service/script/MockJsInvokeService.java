@@ -5,8 +5,8 @@ import com.google.common.util.concurrent.ListenableFuture;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
-import org.thingsboard.script.api.ScriptType;
-import org.thingsboard.script.api.js.JsInvokeService;
+import org.echoiot.script.api.ScriptType;
+import org.echoiot.script.api.js.JsInvokeService;
 import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.id.TenantId;
 

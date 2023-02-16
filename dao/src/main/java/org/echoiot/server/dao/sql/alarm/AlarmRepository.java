@@ -1,5 +1,7 @@
 package org.echoiot.server.dao.sql.alarm;
 
+import org.echoiot.server.common.data.alarm.AlarmSeverity;
+import org.echoiot.server.common.data.alarm.AlarmStatus;
 import org.echoiot.server.dao.model.sql.AlarmEntity;
 import org.echoiot.server.dao.model.sql.AlarmInfoEntity;
 import org.springframework.data.domain.Page;
@@ -7,8 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.echoiot.server.common.data.alarm.AlarmSeverity;
-import org.echoiot.server.common.data.alarm.AlarmStatus;
 
 import java.util.List;
 import java.util.Set;
@@ -24,7 +24,7 @@ public interface AlarmRepository extends JpaRepository<AlarmEntity, UUID> {
                                                     @Param("alarmType") String alarmType,
                                                     Pageable pageable);
 
-    @Query(value = "SELECT new org.thingsboard.server.dao.model.sql.AlarmInfoEntity(a) FROM AlarmEntity a " +
+    @Query(value = "SELECT new org.echoiot.server.dao.model.sql.AlarmInfoEntity(a) FROM AlarmEntity a " +
             "LEFT JOIN EntityAlarmEntity ea ON a.id = ea.alarmId " +
             "WHERE a.tenantId = :tenantId " +
             "AND ea.tenantId = :tenantId " +
@@ -60,7 +60,7 @@ public interface AlarmRepository extends JpaRepository<AlarmEntity, UUID> {
                                      @Param("searchText") String searchText,
                                      Pageable pageable);
 
-    @Query(value = "SELECT new org.thingsboard.server.dao.model.sql.AlarmInfoEntity(a) FROM AlarmEntity a " +
+    @Query(value = "SELECT new org.echoiot.server.dao.model.sql.AlarmInfoEntity(a) FROM AlarmEntity a " +
             "WHERE a.tenantId = :tenantId " +
             "AND (:startTime IS NULL OR a.createdTime >= :startTime) " +
             "AND (:endTime IS NULL OR a.createdTime <= :endTime) " +
@@ -85,7 +85,7 @@ public interface AlarmRepository extends JpaRepository<AlarmEntity, UUID> {
                                         @Param("searchText") String searchText,
                                         Pageable pageable);
 
-    @Query(value = "SELECT new org.thingsboard.server.dao.model.sql.AlarmInfoEntity(a) FROM AlarmEntity a " +
+    @Query(value = "SELECT new org.echoiot.server.dao.model.sql.AlarmInfoEntity(a) FROM AlarmEntity a " +
             "WHERE a.tenantId = :tenantId AND a.customerId = :customerId " +
             "AND (:startTime IS NULL OR a.createdTime >= :startTime) " +
             "AND (:endTime IS NULL OR a.createdTime <= :endTime) " +

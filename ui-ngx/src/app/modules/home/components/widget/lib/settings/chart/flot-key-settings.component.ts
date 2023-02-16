@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,27 +14,27 @@
 /// limitations under the License.
 ///
 
-import { Component, forwardRef, Input, OnInit } from '@angular/core';
+import {Component, forwardRef, Input, OnInit} from '@angular/core';
 import {
-  AbstractControl,
-  ControlValueAccessor,
-  FormArray,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  NG_VALIDATORS,
-  NG_VALUE_ACCESSOR,
-  Validator,
-  Validators
+    AbstractControl,
+    ControlValueAccessor,
+    FormArray,
+    FormBuilder,
+    FormControl,
+    FormGroup,
+    NG_VALIDATORS,
+    NG_VALUE_ACCESSOR,
+    Validator,
+    Validators
 } from '@angular/forms';
-import { PageComponent } from '@shared/components/page.component';
-import { ChartType, TbFlotKeySettings, TbFlotKeyThreshold } from '@home/components/widget/lib/flot-widget.models';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { TranslateService } from '@ngx-translate/core';
-import { WidgetService } from '@core/http/widget.service';
-import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { IAliasController } from 'src/app/core/api/widget-api.models';
+import {PageComponent} from '@shared/components/page.component';
+import {ChartType, TbFlotKeySettings, TbFlotKeyThreshold} from '@home/components/widget/lib/flot-widget.models';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {TranslateService} from '@ngx-translate/core';
+import {WidgetService} from '@core/http/widget.service';
+import {CdkDragDrop} from '@angular/cdk/drag-drop';
+import {IAliasController} from 'src/app/core/api/widget-api.models';
 
 export function flotDataKeyDefaultSettings(chartType: ChartType): TbFlotKeySettings {
   const settings: TbFlotKeySettings = {

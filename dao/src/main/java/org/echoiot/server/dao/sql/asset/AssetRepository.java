@@ -1,5 +1,7 @@
 package org.echoiot.server.dao.sql.asset;
 
+import org.echoiot.server.common.data.util.TbPair;
+import org.echoiot.server.dao.ExportableEntityRepository;
 import org.echoiot.server.dao.model.sql.AssetEntity;
 import org.echoiot.server.dao.model.sql.AssetInfoEntity;
 import org.springframework.data.domain.Page;
@@ -7,8 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.echoiot.server.dao.ExportableEntityRepository;
-import org.echoiot.server.common.data.util.TbPair;
 
 import java.util.List;
 import java.util.UUID;
@@ -18,7 +18,7 @@ import java.util.UUID;
  */
 public interface AssetRepository extends JpaRepository<AssetEntity, UUID>, ExportableEntityRepository<AssetEntity> {
 
-    @Query("SELECT new org.thingsboard.server.dao.model.sql.AssetInfoEntity(a, c.title, c.additionalInfo, p.name) " +
+    @Query("SELECT new org.echoiot.server.dao.model.sql.AssetInfoEntity(a, c.title, c.additionalInfo, p.name) " +
             "FROM AssetEntity a " +
             "LEFT JOIN CustomerEntity c on c.id = a.customerId " +
             "LEFT JOIN AssetProfileEntity p on p.id = a.assetProfileId " +
@@ -31,7 +31,7 @@ public interface AssetRepository extends JpaRepository<AssetEntity, UUID>, Expor
                                      @Param("textSearch") String textSearch,
                                      Pageable pageable);
 
-    @Query("SELECT new org.thingsboard.server.dao.model.sql.AssetInfoEntity(a, c.title, c.additionalInfo, p.name) " +
+    @Query("SELECT new org.echoiot.server.dao.model.sql.AssetInfoEntity(a, c.title, c.additionalInfo, p.name) " +
             "FROM AssetEntity a " +
             "LEFT JOIN CustomerEntity c on c.id = a.customerId " +
             "LEFT JOIN AssetProfileEntity p on p.id = a.assetProfileId " +
@@ -60,7 +60,7 @@ public interface AssetRepository extends JpaRepository<AssetEntity, UUID>, Expor
                                                  @Param("searchText") String searchText,
                                                  Pageable pageable);
 
-    @Query("SELECT new org.thingsboard.server.dao.model.sql.AssetInfoEntity(a, c.title, c.additionalInfo, p.name) " +
+    @Query("SELECT new org.echoiot.server.dao.model.sql.AssetInfoEntity(a, c.title, c.additionalInfo, p.name) " +
             "FROM AssetEntity a " +
             "LEFT JOIN CustomerEntity c on c.id = a.customerId " +
             "LEFT JOIN AssetProfileEntity p on p.id = a.assetProfileId " +
@@ -86,7 +86,7 @@ public interface AssetRepository extends JpaRepository<AssetEntity, UUID>, Expor
                                             @Param("textSearch") String textSearch,
                                             Pageable pageable);
 
-    @Query("SELECT new org.thingsboard.server.dao.model.sql.AssetInfoEntity(a, c.title, c.additionalInfo, p.name) " +
+    @Query("SELECT new org.echoiot.server.dao.model.sql.AssetInfoEntity(a, c.title, c.additionalInfo, p.name) " +
             "FROM AssetEntity a " +
             "LEFT JOIN CustomerEntity c on c.id = a.customerId " +
             "LEFT JOIN AssetProfileEntity p on p.id = a.assetProfileId " +
@@ -100,7 +100,7 @@ public interface AssetRepository extends JpaRepository<AssetEntity, UUID>, Expor
                                                           @Param("textSearch") String textSearch,
                                                           Pageable pageable);
 
-    @Query("SELECT new org.thingsboard.server.dao.model.sql.AssetInfoEntity(a, c.title, c.additionalInfo, p.name) " +
+    @Query("SELECT new org.echoiot.server.dao.model.sql.AssetInfoEntity(a, c.title, c.additionalInfo, p.name) " +
             "FROM AssetEntity a " +
             "LEFT JOIN CustomerEntity c on c.id = a.customerId " +
             "LEFT JOIN AssetProfileEntity p on p.id = a.assetProfileId " +
@@ -124,7 +124,7 @@ public interface AssetRepository extends JpaRepository<AssetEntity, UUID>, Expor
                                                          @Param("textSearch") String textSearch,
                                                          Pageable pageable);
 
-    @Query("SELECT new org.thingsboard.server.dao.model.sql.AssetInfoEntity(a, c.title, c.additionalInfo, p.name) " +
+    @Query("SELECT new org.echoiot.server.dao.model.sql.AssetInfoEntity(a, c.title, c.additionalInfo, p.name) " +
             "FROM AssetEntity a " +
             "LEFT JOIN CustomerEntity c on c.id = a.customerId " +
             "LEFT JOIN AssetProfileEntity p on p.id = a.assetProfileId " +
@@ -138,7 +138,7 @@ public interface AssetRepository extends JpaRepository<AssetEntity, UUID>, Expor
                                                                        @Param("textSearch") String textSearch,
                                                                        Pageable pageable);
 
-    @Query("SELECT new org.thingsboard.server.dao.model.sql.AssetInfoEntity(a, c.title, c.additionalInfo, p.name) " +
+    @Query("SELECT new org.echoiot.server.dao.model.sql.AssetInfoEntity(a, c.title, c.additionalInfo, p.name) " +
             "FROM AssetEntity a " +
             "LEFT JOIN CustomerEntity c on c.id = a.customerId " +
             "LEFT JOIN AssetProfileEntity p on p.id = a.assetProfileId " +
@@ -182,7 +182,7 @@ public interface AssetRepository extends JpaRepository<AssetEntity, UUID>, Expor
     @Query("SELECT externalId FROM AssetEntity WHERE id = :id")
     UUID getExternalIdById(@Param("id") UUID id);
 
-    @Query(value = "SELECT DISTINCT new org.thingsboard.server.common.data.util.TbPair(a.tenantId , a.type) FROM  AssetEntity a")
+    @Query(value = "SELECT DISTINCT new org.echoiot.server.common.data.util.TbPair(a.tenantId , a.type) FROM  AssetEntity a")
     Page<TbPair<UUID, String>> getAllAssetTypes(Pageable pageable);
 
 }

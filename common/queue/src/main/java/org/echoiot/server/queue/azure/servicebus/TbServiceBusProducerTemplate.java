@@ -1,4 +1,4 @@
-package org.thingsboard.server.queue.azure.servicebus;
+package org.echoiot.server.queue.azure.servicebus;
 
 import com.google.gson.Gson;
 import com.microsoft.azure.servicebus.IMessage;

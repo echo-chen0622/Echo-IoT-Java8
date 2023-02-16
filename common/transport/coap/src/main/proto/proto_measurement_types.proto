@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option java_package = "org.thingsboard.server.gen.transport.coap";
+option java_package = "org.echoiot.server.gen.transport.coap";
 option java_outer_classname = "MeasurementTypeProtos";
 
 enum MeasurementType {

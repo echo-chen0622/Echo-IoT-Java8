@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.EntityInfo;
 import org.echoiot.server.common.data.TenantProfile;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.TenantProfileId;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
@@ -58,7 +58,7 @@ public class TenantProfileController extends BaseController {
     @ResponseBody
     public TenantProfile getTenantProfileById(
             @ApiParam(value = TENANT_PROFILE_ID_PARAM_DESCRIPTION)
-            @PathVariable("tenantProfileId") String strTenantProfileId) throws ThingsboardException {
+            @PathVariable("tenantProfileId") String strTenantProfileId) throws EchoiotException {
         checkParameter("tenantProfileId", strTenantProfileId);
         try {
             TenantProfileId tenantProfileId = new TenantProfileId(toUUID(strTenantProfileId));
@@ -75,7 +75,7 @@ public class TenantProfileController extends BaseController {
     @ResponseBody
     public EntityInfo getTenantProfileInfoById(
             @ApiParam(value = TENANT_PROFILE_ID_PARAM_DESCRIPTION)
-            @PathVariable("tenantProfileId") String strTenantProfileId) throws ThingsboardException {
+            @PathVariable("tenantProfileId") String strTenantProfileId) throws EchoiotException {
         checkParameter("tenantProfileId", strTenantProfileId);
         try {
             TenantProfileId tenantProfileId = new TenantProfileId(toUUID(strTenantProfileId));
@@ -90,7 +90,7 @@ public class TenantProfileController extends BaseController {
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN')")
     @RequestMapping(value = "/tenantProfileInfo/default", method = RequestMethod.GET)
     @ResponseBody
-    public EntityInfo getDefaultTenantProfileInfo() throws ThingsboardException {
+    public EntityInfo getDefaultTenantProfileInfo() throws EchoiotException {
         try {
             return checkNotNull(tenantProfileService.findDefaultTenantProfileInfo(getTenantId()));
         } catch (Exception e) {
@@ -155,7 +155,7 @@ public class TenantProfileController extends BaseController {
     @RequestMapping(value = "/tenantProfile", method = RequestMethod.POST)
     @ResponseBody
     public TenantProfile saveTenantProfile(@ApiParam(value = "A JSON value representing the tenant profile.")
-                                           @RequestBody TenantProfile tenantProfile) throws ThingsboardException {
+                                           @RequestBody TenantProfile tenantProfile) throws EchoiotException {
         try {
             TenantProfile oldProfile;
             if (tenantProfile.getId() == null) {
@@ -177,7 +177,7 @@ public class TenantProfileController extends BaseController {
     @RequestMapping(value = "/tenantProfile/{tenantProfileId}", method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.OK)
     public void deleteTenantProfile(@ApiParam(value = TENANT_PROFILE_ID_PARAM_DESCRIPTION)
-                                    @PathVariable("tenantProfileId") String strTenantProfileId) throws ThingsboardException {
+                                    @PathVariable("tenantProfileId") String strTenantProfileId) throws EchoiotException {
         try {
             checkParameter("tenantProfileId", strTenantProfileId);
             TenantProfileId tenantProfileId = new TenantProfileId(toUUID(strTenantProfileId));
@@ -195,7 +195,7 @@ public class TenantProfileController extends BaseController {
     @ResponseBody
     public TenantProfile setDefaultTenantProfile(
             @ApiParam(value = TENANT_PROFILE_ID_PARAM_DESCRIPTION)
-            @PathVariable("tenantProfileId") String strTenantProfileId) throws ThingsboardException {
+            @PathVariable("tenantProfileId") String strTenantProfileId) throws EchoiotException {
         checkParameter("tenantProfileId", strTenantProfileId);
         try {
             TenantProfileId tenantProfileId = new TenantProfileId(toUUID(strTenantProfileId));
@@ -221,7 +221,7 @@ public class TenantProfileController extends BaseController {
             @ApiParam(value = SORT_PROPERTY_DESCRIPTION, allowableValues = TENANT_PROFILE_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
             @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
-            @RequestParam(required = false) String sortOrder) throws ThingsboardException {
+            @RequestParam(required = false) String sortOrder) throws EchoiotException {
         try {
             PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
             return checkNotNull(tenantProfileService.findTenantProfiles(getTenantId(), pageLink));
@@ -245,7 +245,7 @@ public class TenantProfileController extends BaseController {
             @ApiParam(value = SORT_PROPERTY_DESCRIPTION, allowableValues = TENANT_PROFILE_INFO_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
             @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
-            @RequestParam(required = false) String sortOrder) throws ThingsboardException {
+            @RequestParam(required = false) String sortOrder) throws EchoiotException {
         try {
             PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
             return checkNotNull(tenantProfileService.findTenantProfileInfos(getTenantId(), pageLink));

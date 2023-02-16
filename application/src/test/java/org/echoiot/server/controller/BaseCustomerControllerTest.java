@@ -5,6 +5,17 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
+import org.echoiot.common.util.EchoiotExecutors;
+import org.echoiot.server.common.data.Customer;
+import org.echoiot.server.common.data.StringUtils;
+import org.echoiot.server.common.data.Tenant;
+import org.echoiot.server.common.data.User;
+import org.echoiot.server.common.data.audit.ActionType;
+import org.echoiot.server.common.data.id.CustomerId;
+import org.echoiot.server.common.data.id.TenantId;
+import org.echoiot.server.common.data.page.PageData;
+import org.echoiot.server.common.data.page.PageLink;
+import org.echoiot.server.common.data.security.Authority;
 import org.echoiot.server.dao.customer.CustomerDao;
 import org.echoiot.server.dao.exception.DataValidationException;
 import org.junit.After;
@@ -17,17 +28,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.test.context.ContextConfiguration;
-import org.thingsboard.common.util.ThingsBoardExecutors;
-import org.echoiot.server.common.data.Customer;
-import org.echoiot.server.common.data.StringUtils;
-import org.echoiot.server.common.data.Tenant;
-import org.echoiot.server.common.data.User;
-import org.echoiot.server.common.data.audit.ActionType;
-import org.echoiot.server.common.data.id.CustomerId;
-import org.echoiot.server.common.data.id.TenantId;
-import org.echoiot.server.common.data.page.PageData;
-import org.echoiot.server.common.data.page.PageLink;
-import org.echoiot.server.common.data.security.Authority;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +61,7 @@ public abstract class BaseCustomerControllerTest extends AbstractControllerTest 
 
     @Before
     public void beforeTest() throws Exception {
-        executor = MoreExecutors.listeningDecorator(ThingsBoardExecutors.newWorkStealingPool(8, getClass()));
+        executor = MoreExecutors.listeningDecorator(EchoiotExecutors.newWorkStealingPool(8, getClass()));
 
         loginSysAdmin();
 
@@ -73,7 +73,7 @@ public abstract class BaseCustomerControllerTest extends AbstractControllerTest 
         tenantAdmin = new User();
         tenantAdmin.setAuthority(Authority.TENANT_ADMIN);
         tenantAdmin.setTenantId(savedTenant.getId());
-        tenantAdmin.setEmail("tenant2@thingsboard.org");
+        tenantAdmin.setEmail("tenant2@echoiot.org");
         tenantAdmin.setFirstName("Joe");
         tenantAdmin.setLastName("Downs");
 

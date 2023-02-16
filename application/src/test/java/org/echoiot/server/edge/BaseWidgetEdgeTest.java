@@ -2,14 +2,14 @@ package org.echoiot.server.edge;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.protobuf.AbstractMessage;
+import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.common.data.widget.WidgetType;
 import org.echoiot.server.common.data.widget.WidgetsBundle;
+import org.echoiot.server.gen.edge.v1.UpdateMsgType;
+import org.echoiot.server.gen.edge.v1.WidgetTypeUpdateMsg;
+import org.echoiot.server.gen.edge.v1.WidgetsBundleUpdateMsg;
 import org.junit.Assert;
 import org.junit.Test;
-import org.thingsboard.common.util.JacksonUtil;
-import org.thingsboard.server.gen.edge.v1.UpdateMsgType;
-import org.thingsboard.server.gen.edge.v1.WidgetTypeUpdateMsg;
-import org.thingsboard.server.gen.edge.v1.WidgetsBundleUpdateMsg;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 

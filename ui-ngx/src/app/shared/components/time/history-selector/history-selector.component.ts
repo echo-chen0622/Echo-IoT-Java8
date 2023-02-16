@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,10 +14,10 @@
 /// limitations under the License.
 ///
 
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
-import { interval } from 'rxjs';
-import { filter } from 'rxjs/operators';
-import { HistorySelectSettings } from '@app/modules/home/components/widget/lib/maps/map-models';
+import {ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
+import {interval} from 'rxjs';
+import {filter} from 'rxjs/operators';
+import {HistorySelectSettings} from '@app/modules/home/components/widget/lib/maps/map-models';
 
 @Component({
   selector: 'tb-history-selector',

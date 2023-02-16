@@ -1,29 +1,19 @@
 package org.echoiot.server.service.resource.sql;
 
 import com.datastax.oss.driver.api.core.uuid.Uuids;
-import org.echoiot.server.common.data.tenant.profile.DefaultTenantProfileConfiguration;
-import org.echoiot.server.controller.AbstractControllerTest;
-import org.echoiot.server.dao.exception.DataValidationException;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.echoiot.server.common.data.EntityInfo;
-import org.echoiot.server.common.data.ResourceType;
-import org.echoiot.server.common.data.TbResource;
-import org.echoiot.server.common.data.TbResourceInfo;
-import org.echoiot.server.common.data.Tenant;
-import org.echoiot.server.common.data.TenantProfile;
-import org.echoiot.server.common.data.User;
+import org.echoiot.server.common.data.*;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.common.data.security.Authority;
+import org.echoiot.server.common.data.tenant.profile.DefaultTenantProfileConfiguration;
+import org.echoiot.server.controller.AbstractControllerTest;
+import org.echoiot.server.dao.exception.DataValidationException;
 import org.echoiot.server.dao.service.DaoSqlTest;
 import org.echoiot.server.service.resource.TbResourceService;
+import org.junit.*;
+import org.junit.rules.ExpectedException;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.Base64;
@@ -85,7 +75,7 @@ public class BaseTbResourceServiceTest extends AbstractControllerTest {
         tenantAdmin = new User();
         tenantAdmin.setAuthority(Authority.TENANT_ADMIN);
         tenantAdmin.setTenantId(savedTenant.getId());
-        tenantAdmin.setEmail("tenant2@thingsboard.org");
+        tenantAdmin.setEmail("tenant2@echoiot.org");
         tenantAdmin.setFirstName("Joe");
         tenantAdmin.setLastName("Downs");
 

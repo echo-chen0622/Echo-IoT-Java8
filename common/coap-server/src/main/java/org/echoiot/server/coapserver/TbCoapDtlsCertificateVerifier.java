@@ -20,7 +20,7 @@ import org.echoiot.server.common.transport.TransportService;
 import org.echoiot.server.common.transport.TransportServiceCallback;
 import org.echoiot.server.common.transport.auth.ValidateDeviceCredentialsResponse;
 import org.echoiot.server.common.transport.util.SslUtil;
-import org.thingsboard.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.queue.discovery.TbServiceInfoProvider;
 
 import javax.security.auth.x500.X500Principal;

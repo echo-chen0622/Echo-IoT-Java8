@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.TbResource;
 import org.echoiot.server.common.data.TbResourceInfo;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.TbResourceId;
 import org.echoiot.server.common.data.lwm2m.LwM2mObject;
 import org.echoiot.server.common.data.page.PageData;
@@ -65,7 +65,7 @@ public class TbResourceController extends BaseController {
     @RequestMapping(value = "/resource/{resourceId}/download", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<org.springframework.core.io.Resource> downloadResource(@ApiParam(value = RESOURCE_ID_PARAM_DESCRIPTION)
-                                                                                 @PathVariable(RESOURCE_ID) String strResourceId) throws ThingsboardException {
+                                                                                 @PathVariable(RESOURCE_ID) String strResourceId) throws EchoiotException {
         checkParameter(RESOURCE_ID, strResourceId);
         try {
             TbResourceId resourceId = new TbResourceId(toUUID(strResourceId));
@@ -91,7 +91,7 @@ public class TbResourceController extends BaseController {
     @RequestMapping(value = "/resource/info/{resourceId}", method = RequestMethod.GET)
     @ResponseBody
     public TbResourceInfo getResourceInfoById(@ApiParam(value = RESOURCE_ID_PARAM_DESCRIPTION)
-                                              @PathVariable(RESOURCE_ID) String strResourceId) throws ThingsboardException {
+                                              @PathVariable(RESOURCE_ID) String strResourceId) throws EchoiotException {
         checkParameter(RESOURCE_ID, strResourceId);
         try {
             TbResourceId resourceId = new TbResourceId(toUUID(strResourceId));
@@ -109,7 +109,7 @@ public class TbResourceController extends BaseController {
     @RequestMapping(value = "/resource/{resourceId}", method = RequestMethod.GET)
     @ResponseBody
     public TbResource getResourceById(@ApiParam(value = RESOURCE_ID_PARAM_DESCRIPTION)
-                                      @PathVariable(RESOURCE_ID) String strResourceId) throws ThingsboardException {
+                                      @PathVariable(RESOURCE_ID) String strResourceId) throws EchoiotException {
         checkParameter(RESOURCE_ID, strResourceId);
         try {
             TbResourceId resourceId = new TbResourceId(toUUID(strResourceId));
@@ -155,7 +155,7 @@ public class TbResourceController extends BaseController {
                                                  @ApiParam(value = SORT_PROPERTY_DESCRIPTION, allowableValues = RESOURCE_SORT_PROPERTY_ALLOWABLE_VALUES)
                                                  @RequestParam(required = false) String sortProperty,
                                                  @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
-                                                 @RequestParam(required = false) String sortOrder) throws ThingsboardException {
+                                                 @RequestParam(required = false) String sortOrder) throws EchoiotException {
         try {
             PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
             if (Authority.SYS_ADMIN.equals(getCurrentUser().getAuthority())) {
@@ -184,7 +184,7 @@ public class TbResourceController extends BaseController {
                                                      @ApiParam(value = SORT_PROPERTY_DESCRIPTION, allowableValues = LWM2M_OBJECT_SORT_PROPERTY_ALLOWABLE_VALUES)
                                                      @RequestParam(required = false) String sortProperty,
                                                      @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
-                                                     @RequestParam(required = false) String sortOrder) throws ThingsboardException {
+                                                     @RequestParam(required = false) String sortOrder) throws EchoiotException {
         try {
             PageLink pageLink = new PageLink(pageSize, page, textSearch);
             return checkNotNull(resourceService.findLwM2mObjectPage(getTenantId(), sortProperty, sortOrder, pageLink));
@@ -205,7 +205,7 @@ public class TbResourceController extends BaseController {
                                                  @ApiParam(value = SORT_PROPERTY_DESCRIPTION, allowableValues = LWM2M_OBJECT_SORT_PROPERTY_ALLOWABLE_VALUES, required = true)
                                                  @RequestParam String sortProperty,
                                                  @ApiParam(value = "LwM2M Object ids.", required = true)
-                                                 @RequestParam(required = false) String[] objectIds) throws ThingsboardException {
+                                                 @RequestParam(required = false) String[] objectIds) throws EchoiotException {
         try {
             return checkNotNull(resourceService.findLwM2mObject(getTenantId(), sortOrder, sortProperty, objectIds));
         } catch (Exception e) {
@@ -219,7 +219,7 @@ public class TbResourceController extends BaseController {
     @RequestMapping(value = "/resource/{resourceId}", method = RequestMethod.DELETE)
     @ResponseBody
     public void deleteResource(@ApiParam(value = RESOURCE_ID_PARAM_DESCRIPTION)
-                               @PathVariable("resourceId") String strResourceId) throws ThingsboardException {
+                               @PathVariable("resourceId") String strResourceId) throws EchoiotException {
         checkParameter(RESOURCE_ID, strResourceId);
         TbResourceId resourceId = new TbResourceId(toUUID(strResourceId));
         TbResource tbResource = checkResourceId(resourceId, Operation.DELETE);

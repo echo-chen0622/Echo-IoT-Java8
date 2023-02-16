@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.DeviceProfile;
 import org.echoiot.server.common.data.DeviceProfileInfo;
 import org.echoiot.server.common.data.StringUtils;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.DeviceProfileId;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
@@ -52,7 +52,7 @@ public class DeviceProfileController extends BaseController {
     @ResponseBody
     public DeviceProfile getDeviceProfileById(
             @ApiParam(value = ControllerConstants.DEVICE_PROFILE_ID_PARAM_DESCRIPTION)
-            @PathVariable(ControllerConstants.DEVICE_PROFILE_ID) String strDeviceProfileId) throws ThingsboardException {
+            @PathVariable(ControllerConstants.DEVICE_PROFILE_ID) String strDeviceProfileId) throws EchoiotException {
         checkParameter(ControllerConstants.DEVICE_PROFILE_ID, strDeviceProfileId);
         try {
             DeviceProfileId deviceProfileId = new DeviceProfileId(toUUID(strDeviceProfileId));
@@ -71,7 +71,7 @@ public class DeviceProfileController extends BaseController {
     @ResponseBody
     public DeviceProfileInfo getDeviceProfileInfoById(
             @ApiParam(value = ControllerConstants.DEVICE_PROFILE_ID_PARAM_DESCRIPTION)
-            @PathVariable(ControllerConstants.DEVICE_PROFILE_ID) String strDeviceProfileId) throws ThingsboardException {
+            @PathVariable(ControllerConstants.DEVICE_PROFILE_ID) String strDeviceProfileId) throws EchoiotException {
         checkParameter(ControllerConstants.DEVICE_PROFILE_ID, strDeviceProfileId);
         try {
             DeviceProfileId deviceProfileId = new DeviceProfileId(toUUID(strDeviceProfileId));
@@ -88,7 +88,7 @@ public class DeviceProfileController extends BaseController {
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/deviceProfileInfo/default", method = RequestMethod.GET)
     @ResponseBody
-    public DeviceProfileInfo getDefaultDeviceProfileInfo() throws ThingsboardException {
+    public DeviceProfileInfo getDefaultDeviceProfileInfo() throws EchoiotException {
         try {
             return checkNotNull(deviceProfileService.findDefaultDeviceProfileInfo(getTenantId()));
         } catch (Exception e) {
@@ -108,7 +108,7 @@ public class DeviceProfileController extends BaseController {
     @ResponseBody
     public List<String> getTimeseriesKeys(
             @ApiParam(value = ControllerConstants.DEVICE_PROFILE_ID_PARAM_DESCRIPTION)
-            @RequestParam(name = ControllerConstants.DEVICE_PROFILE_ID, required = false) String deviceProfileIdStr) throws ThingsboardException {
+            @RequestParam(name = ControllerConstants.DEVICE_PROFILE_ID, required = false) String deviceProfileIdStr) throws EchoiotException {
         DeviceProfileId deviceProfileId;
         if (StringUtils.isNotEmpty(deviceProfileIdStr)) {
             deviceProfileId = new DeviceProfileId(UUID.fromString(deviceProfileIdStr));
@@ -136,7 +136,7 @@ public class DeviceProfileController extends BaseController {
     @ResponseBody
     public List<String> getAttributesKeys(
             @ApiParam(value = ControllerConstants.DEVICE_PROFILE_ID_PARAM_DESCRIPTION)
-            @RequestParam(name = ControllerConstants.DEVICE_PROFILE_ID, required = false) String deviceProfileIdStr) throws ThingsboardException {
+            @RequestParam(name = ControllerConstants.DEVICE_PROFILE_ID, required = false) String deviceProfileIdStr) throws EchoiotException {
         DeviceProfileId deviceProfileId;
         if (StringUtils.isNotEmpty(deviceProfileIdStr)) {
             deviceProfileId = new DeviceProfileId(UUID.fromString(deviceProfileIdStr));
@@ -182,7 +182,7 @@ public class DeviceProfileController extends BaseController {
     @ResponseStatus(value = HttpStatus.OK)
     public void deleteDeviceProfile(
             @ApiParam(value = ControllerConstants.DEVICE_PROFILE_ID_PARAM_DESCRIPTION)
-            @PathVariable(ControllerConstants.DEVICE_PROFILE_ID) String strDeviceProfileId) throws ThingsboardException {
+            @PathVariable(ControllerConstants.DEVICE_PROFILE_ID) String strDeviceProfileId) throws EchoiotException {
         checkParameter(ControllerConstants.DEVICE_PROFILE_ID, strDeviceProfileId);
         DeviceProfileId deviceProfileId = new DeviceProfileId(toUUID(strDeviceProfileId));
         DeviceProfile deviceProfile = checkDeviceProfileId(deviceProfileId, Operation.DELETE);
@@ -197,7 +197,7 @@ public class DeviceProfileController extends BaseController {
     @ResponseBody
     public DeviceProfile setDefaultDeviceProfile(
             @ApiParam(value = ControllerConstants.DEVICE_PROFILE_ID_PARAM_DESCRIPTION)
-            @PathVariable(ControllerConstants.DEVICE_PROFILE_ID) String strDeviceProfileId) throws ThingsboardException {
+            @PathVariable(ControllerConstants.DEVICE_PROFILE_ID) String strDeviceProfileId) throws EchoiotException {
         checkParameter(ControllerConstants.DEVICE_PROFILE_ID, strDeviceProfileId);
         DeviceProfileId deviceProfileId = new DeviceProfileId(toUUID(strDeviceProfileId));
         DeviceProfile deviceProfile = checkDeviceProfileId(deviceProfileId, Operation.WRITE);
@@ -222,7 +222,7 @@ public class DeviceProfileController extends BaseController {
             @ApiParam(value = ControllerConstants.SORT_PROPERTY_DESCRIPTION, allowableValues = ControllerConstants.DEVICE_PROFILE_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
             @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
-            @RequestParam(required = false) String sortOrder) throws ThingsboardException {
+            @RequestParam(required = false) String sortOrder) throws EchoiotException {
         try {
             PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
             return checkNotNull(deviceProfileService.findDeviceProfiles(getTenantId(), pageLink));
@@ -250,7 +250,7 @@ public class DeviceProfileController extends BaseController {
             @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortOrder,
             @ApiParam(value = "Type of the transport", allowableValues = ControllerConstants.TRANSPORT_TYPE_ALLOWABLE_VALUES)
-            @RequestParam(required = false) String transportType) throws ThingsboardException {
+            @RequestParam(required = false) String transportType) throws EchoiotException {
         try {
             PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
             return checkNotNull(deviceProfileService.findDeviceProfileInfos(getTenantId(), pageLink, transportType));

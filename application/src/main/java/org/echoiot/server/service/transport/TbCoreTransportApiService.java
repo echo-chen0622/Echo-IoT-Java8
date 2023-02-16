@@ -14,10 +14,10 @@ import org.echoiot.server.queue.util.TbCoreComponent;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.stereotype.Service;
-import org.thingsboard.common.util.ThingsBoardExecutors;
-import org.thingsboard.server.queue.common.DefaultTbQueueResponseTemplate;
-import org.thingsboard.server.gen.transport.TransportProtos.TransportApiRequestMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.TransportApiResponseMsg;
+import org.echoiot.common.util.EchoiotExecutors;
+import org.echoiot.server.queue.common.DefaultTbQueueResponseTemplate;
+import org.echoiot.server.gen.transport.TransportProtos.TransportApiRequestMsg;
+import org.echoiot.server.gen.transport.TransportProtos.TransportApiResponseMsg;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -55,7 +55,7 @@ public class TbCoreTransportApiService {
 
     @PostConstruct
     public void init() {
-        this.transportCallbackExecutor = ThingsBoardExecutors.newWorkStealingPool(maxCallbackThreads, getClass());
+        this.transportCallbackExecutor = EchoiotExecutors.newWorkStealingPool(maxCallbackThreads, getClass());
         TbQueueProducer<TbProtoQueueMsg<TransportApiResponseMsg>> producer = tbCoreQueueFactory.createTransportApiResponseProducer();
         TbQueueConsumer<TbProtoQueueMsg<TransportApiRequestMsg>> consumer = tbCoreQueueFactory.createTransportApiRequestConsumer();
 

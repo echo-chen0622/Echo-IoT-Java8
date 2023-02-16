@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,13 +14,13 @@
 /// limitations under the License.
 ///
 
-import { Injectable } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { EntityType } from '@shared/models/entity-type.models';
-import { Observable } from 'rxjs';
+import {Injectable} from '@angular/core';
+import {MatDialog} from '@angular/material/dialog';
+import {EntityType} from '@shared/models/entity-type.models';
+import {Observable} from 'rxjs';
 import {
-  ImportDialogCsvComponent,
-  ImportDialogCsvData
+    ImportDialogCsvComponent,
+    ImportDialogCsvData
 } from '@home/components/import-export/import-dialog-csv.component';
 
 @Injectable()

@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,24 +14,24 @@
 /// limitations under the License.
 ///
 
-import { Injectable } from '@angular/core';
-import { defaultHttpOptionsFromConfig, RequestConfig } from './http-utils';
-import { Observable, ReplaySubject } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
-import { PageLink } from '@shared/models/page/page-link';
-import { PageData } from '@shared/models/page/page-data';
+import {Injectable} from '@angular/core';
+import {defaultHttpOptionsFromConfig, RequestConfig} from './http-utils';
+import {Observable, ReplaySubject} from 'rxjs';
+import {HttpClient} from '@angular/common/http';
+import {PageLink} from '@shared/models/page/page-link';
+import {PageData} from '@shared/models/page/page-data';
 import {
-  ClaimRequest,
-  ClaimResult,
-  Device,
-  DeviceCredentials,
-  DeviceInfo,
-  DeviceSearchQuery
+    ClaimRequest,
+    ClaimResult,
+    Device,
+    DeviceCredentials,
+    DeviceInfo,
+    DeviceSearchQuery
 } from '@app/shared/models/device.models';
-import { EntitySubtype } from '@app/shared/models/entity-type.models';
-import { AuthService } from '@core/auth/auth.service';
-import { BulkImportRequest, BulkImportResult } from '@home/components/import-export/import-export.models';
-import { PersistentRpc, RpcStatus } from '@shared/models/rpc.models';
+import {EntitySubtype} from '@app/shared/models/entity-type.models';
+import {AuthService} from '@core/auth/auth.service';
+import {BulkImportRequest, BulkImportResult} from '@home/components/import-export/import-export.models';
+import {PersistentRpc, RpcStatus} from '@shared/models/rpc.models';
 
 @Injectable({
   providedIn: 'root'

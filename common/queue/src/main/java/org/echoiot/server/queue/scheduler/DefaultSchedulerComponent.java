@@ -1,15 +1,11 @@
 package org.echoiot.server.queue.scheduler;
 
+import org.echoiot.common.util.EchoiotThreadFactory;
 import org.springframework.stereotype.Component;
-import org.thingsboard.common.util.ThingsBoardThreadFactory;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 @Component
 public class DefaultSchedulerComponent implements SchedulerComponent{
@@ -18,7 +14,7 @@ public class DefaultSchedulerComponent implements SchedulerComponent{
 
     @PostConstruct
     public void init(){
-        this.schedulerExecutor = Executors.newSingleThreadScheduledExecutor(ThingsBoardThreadFactory.forName("queue-scheduler"));
+        this.schedulerExecutor = Executors.newSingleThreadScheduledExecutor(EchoiotThreadFactory.forName("queue-scheduler"));
     }
 
     @PreDestroy

@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,9 +14,9 @@
 /// limitations under the License.
 ///
 
-import { AbstractControl, ValidationErrors } from '@angular/forms';
-import { EntityId } from '@shared/models/id/entity-id';
-import { EntityType } from '@shared/models/entity-type.models';
+import {AbstractControl, ValidationErrors} from '@angular/forms';
+import {EntityId} from '@shared/models/id/entity-id';
+import {EntityType} from '@shared/models/entity-type.models';
 
 export enum SecurityType {
   tls = 'tls',
@@ -116,7 +116,7 @@ type Connector = {
 }
 
 interface GatewaySetting extends Connector{
-  thingsboard: GatewayMainSetting;
+  echoiot: GatewayMainSetting;
 }
 
 interface ConnectorConfig {
@@ -125,13 +125,13 @@ interface ConnectorConfig {
 }
 
 interface GatewayMainSetting {
-  thingsboard: GatewayMainThingsboardSetting;
+  echoiot: GatewayMainEchoiotSetting;
   connectors: Array<GatewayMainConnector>,
   logs: string,
   storage: GatewayStorage
 }
 
-interface GatewayMainThingsboardSetting {
+interface GatewayMainEchoiotSetting {
   host: string,
   remoteConfiguration: boolean,
   port: number,
@@ -183,7 +183,7 @@ const TEMPLATE_LOGS_CONFIG = '[loggers]}}keys=root, service, connector, converte
 
 export function generateYAMLConfigFile(gatewaySetting: GatewayFormModels): string {
   let config;
-  config = 'thingsboard:\n';
+  config = 'echoiot:\n';
   config += '  host: ' + gatewaySetting.host + '\n';
   config += '  remoteConfiguration: ' + gatewaySetting.remoteConfiguration + '\n';
   config += '  port: ' + gatewaySetting.port + '\n';
@@ -253,18 +253,18 @@ export function getEntityId(gatewayId: string): EntityId {
 
 export function createFormConfig(keyValue: GatewayMainSetting): GatewayFormModels {
   const formSetting: GatewayFormModels = {};
-  if (Object.prototype.hasOwnProperty.call(keyValue, 'thingsboard')) {
-    formSetting.host = keyValue.thingsboard.host;
-    formSetting.port = keyValue.thingsboard.port;
-    formSetting.remoteConfiguration = keyValue.thingsboard.remoteConfiguration;
-    if (Object.prototype.hasOwnProperty.call(keyValue.thingsboard.security, SecurityType.accessToken)) {
+  if (Object.prototype.hasOwnProperty.call(keyValue, 'echoiot')) {
+    formSetting.host = keyValue.echoiot.host;
+    formSetting.port = keyValue.echoiot.port;
+    formSetting.remoteConfiguration = keyValue.echoiot.remoteConfiguration;
+    if (Object.prototype.hasOwnProperty.call(keyValue.echoiot.security, SecurityType.accessToken)) {
       formSetting.securityType = SecurityType.accessToken;
-      formSetting.accessToken = (keyValue.thingsboard.security as SecurityToken).accessToken;
+      formSetting.accessToken = (keyValue.echoiot.security as SecurityToken).accessToken;
     } else {
       formSetting.securityType = SecurityType.tls;
-      formSetting.caCertPath = (keyValue.thingsboard.security as SecurityCertificate).caCert;
-      formSetting.privateKeyPath = (keyValue.thingsboard.security as SecurityCertificate).privateKey;
-      formSetting.certPath = (keyValue.thingsboard.security as SecurityCertificate).cert;
+      formSetting.caCertPath = (keyValue.echoiot.security as SecurityCertificate).caCert;
+      formSetting.privateKeyPath = (keyValue.echoiot.security as SecurityCertificate).privateKey;
+      formSetting.certPath = (keyValue.echoiot.security as SecurityCertificate).cert;
     }
   }
 
@@ -299,7 +299,7 @@ export function getDraftConnectorsJSON(currentConnectors: Array<GatewayFormConne
 
 export function gatewayConfigJSON(gatewayConfiguration: GatewayFormModels): GatewaySetting {
   const gatewayConfig = {
-    thingsboard: gatewayMainConfigJSON(gatewayConfiguration)
+    echoiot: gatewayMainConfigJSON(gatewayConfiguration)
   };
   gatewayConnectorJSON(gatewayConfig, gatewayConfiguration.connectors);
   return gatewayConfig;
@@ -318,7 +318,7 @@ function gatewayMainConfigJSON(gatewayConfiguration: GatewayFormModels): Gateway
       cert: gatewayConfiguration.certPath
     }
   }
-  const thingsboard: GatewayMainThingsboardSetting = {
+  const echoiot: GatewayMainEchoiotSetting = {
     host: gatewayConfiguration.host,
     remoteConfiguration: gatewayConfiguration.remoteConfiguration,
     port: gatewayConfiguration.port,
@@ -355,7 +355,7 @@ function gatewayMainConfigJSON(gatewayConfiguration: GatewayFormModels): Gateway
   }
 
   return {
-    thingsboard,
+    echoiot,
     connectors,
     storage,
     logs: window.btoa(getLogsConfig(gatewayConfiguration.remoteLoggingLevel, gatewayConfiguration.remoteLoggingPathToLogs))

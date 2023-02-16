@@ -5,15 +5,15 @@ setlocal ENABLEEXTENSIONS
 SET BASE=${project.basedir}\target
 SET LOADER_PATH=%BASE%\conf,%BASE%\extensions
 
-SET jarfile=%BASE%\thingsboard-${project.version}-boot.jar
+SET jarfile=%BASE%\echoiot-${project.version}-boot.jar
 SET installDir=%BASE%\data
 SET loadDemo=true
 
-IF "%SQL_DATA_FOLDER%" == "" (	
+IF "%SQL_DATA_FOLDER%" == "" (
 	SET SQL_DATA_FOLDER=/tmp
 )
 
-java -cp %jarfile% -Dloader.main=org.thingsboard.server.ThingsboardInstallApplication^
+java -cp %jarfile% -Dloader.main=org.echoiot.server.EchoiotInstallApplication^
                     -Dinstall.data_dir=%installDir%^
                     -Dinstall.load_demo=%loadDemo%^
                     -Dspring.jpa.hibernate.ddl-auto=none^
@@ -22,8 +22,8 @@ java -cp %jarfile% -Dloader.main=org.thingsboard.server.ThingsboardInstallApplic
                     org.springframework.boot.loader.PropertiesLauncher
 
 if errorlevel 1 (
-   @echo ThingsBoard DB installation failed!
+   @echo Echoiot DB installation failed!
    POPD
    exit /b %errorlevel%
    )
-@echo ThingsBoard DB installed successfully!
+@echo Echoiot DB installed successfully!

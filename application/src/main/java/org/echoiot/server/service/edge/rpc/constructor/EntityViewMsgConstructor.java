@@ -1,14 +1,13 @@
 package org.echoiot.server.service.edge.rpc.constructor;
 
-import org.echoiot.server.common.data.EntityType;
+import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.common.data.EntityView;
 import org.echoiot.server.common.data.id.EntityViewId;
+import org.echoiot.server.gen.edge.v1.EdgeEntityType;
+import org.echoiot.server.gen.edge.v1.EntityViewUpdateMsg;
+import org.echoiot.server.gen.edge.v1.UpdateMsgType;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.springframework.stereotype.Component;
-import org.thingsboard.common.util.JacksonUtil;
-import org.thingsboard.server.gen.edge.v1.EdgeEntityType;
-import org.thingsboard.server.gen.edge.v1.EntityViewUpdateMsg;
-import org.thingsboard.server.gen.edge.v1.UpdateMsgType;
 
 @Component
 @TbCoreComponent
@@ -17,10 +16,10 @@ public class EntityViewMsgConstructor {
     public EntityViewUpdateMsg constructEntityViewUpdatedMsg(UpdateMsgType msgType, EntityView entityView) {
         EdgeEntityType entityType;
         switch (entityView.getEntityId().getEntityType()) {
-            case EntityType.DEVICE:
+            case DEVICE:
                 entityType = EdgeEntityType.DEVICE;
                 break;
-            case EntityType.ASSET:
+            case ASSET:
                 entityType = EdgeEntityType.ASSET;
                 break;
             default:

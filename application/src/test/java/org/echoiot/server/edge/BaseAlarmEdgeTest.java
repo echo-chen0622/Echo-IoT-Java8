@@ -2,8 +2,6 @@ package org.echoiot.server.edge;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.protobuf.AbstractMessage;
-import org.junit.Assert;
-import org.junit.Test;
 import org.echoiot.server.common.data.Device;
 import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.alarm.Alarm;
@@ -12,9 +10,11 @@ import org.echoiot.server.common.data.alarm.AlarmSeverity;
 import org.echoiot.server.common.data.alarm.AlarmStatus;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
-import org.thingsboard.server.gen.edge.v1.AlarmUpdateMsg;
-import org.thingsboard.server.gen.edge.v1.UpdateMsgType;
-import org.thingsboard.server.gen.edge.v1.UplinkMsg;
+import org.echoiot.server.gen.edge.v1.AlarmUpdateMsg;
+import org.echoiot.server.gen.edge.v1.UpdateMsgType;
+import org.echoiot.server.gen.edge.v1.UplinkMsg;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.util.List;
 import java.util.Optional;

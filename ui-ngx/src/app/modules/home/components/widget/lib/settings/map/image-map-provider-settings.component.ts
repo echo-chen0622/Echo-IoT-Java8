@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,27 +14,27 @@
 /// limitations under the License.
 ///
 
-import { Component, ElementRef, forwardRef, Input, OnInit, ViewChild } from '@angular/core';
+import {Component, ElementRef, forwardRef, Input, OnInit, ViewChild} from '@angular/core';
 import {
-  ControlValueAccessor,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  NG_VALIDATORS,
-  NG_VALUE_ACCESSOR,
-  Validator
+    ControlValueAccessor,
+    FormBuilder,
+    FormControl,
+    FormGroup,
+    NG_VALIDATORS,
+    NG_VALUE_ACCESSOR,
+    Validator
 } from '@angular/forms';
-import { PageComponent } from '@shared/components/page.component';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { TranslateService } from '@ngx-translate/core';
-import { ImageMapProviderSettings } from '@home/components/widget/lib/maps/map-models';
-import { IAliasController } from '@core/api/widget-api.models';
-import { Observable, of } from 'rxjs';
-import { catchError, map, mergeMap, publishReplay, refCount, startWith, tap } from 'rxjs/operators';
-import { DataKey } from '@shared/models/widget.models';
-import { DataKeyType } from '@shared/models/telemetry/telemetry.models';
-import { EntityService } from '@core/http/entity.service';
+import {PageComponent} from '@shared/components/page.component';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {TranslateService} from '@ngx-translate/core';
+import {ImageMapProviderSettings} from '@home/components/widget/lib/maps/map-models';
+import {IAliasController} from '@core/api/widget-api.models';
+import {Observable, of} from 'rxjs';
+import {catchError, map, mergeMap, publishReplay, refCount, tap} from 'rxjs/operators';
+import {DataKey} from '@shared/models/widget.models';
+import {DataKeyType} from '@shared/models/telemetry/telemetry.models';
+import {EntityService} from '@core/http/entity.service';
 
 @Component({
   selector: 'tb-image-map-provider-settings',

@@ -3,7 +3,7 @@ package org.echoiot.server.controller;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.springframework.http.HttpStatus;
@@ -33,7 +33,7 @@ public class RpcV1Controller extends AbstractRpcController {
             @ApiParam(value = ControllerConstants.DEVICE_ID_PARAM_DESCRIPTION)
             @PathVariable("deviceId") String deviceIdStr,
             @ApiParam(value = "A JSON value representing the RPC request.")
-            @RequestBody String requestBody) throws ThingsboardException {
+            @RequestBody String requestBody) throws EchoiotException {
         return handleDeviceRPCRequest(true, new DeviceId(UUID.fromString(deviceIdStr)), requestBody, HttpStatus.REQUEST_TIMEOUT, HttpStatus.CONFLICT);
     }
 
@@ -45,7 +45,7 @@ public class RpcV1Controller extends AbstractRpcController {
             @ApiParam(value = ControllerConstants.DEVICE_ID_PARAM_DESCRIPTION)
             @PathVariable("deviceId") String deviceIdStr,
             @ApiParam(value = "A JSON value representing the RPC request.")
-            @RequestBody String requestBody) throws ThingsboardException {
+            @RequestBody String requestBody) throws EchoiotException {
         return handleDeviceRPCRequest(false, new DeviceId(UUID.fromString(deviceIdStr)), requestBody, HttpStatus.REQUEST_TIMEOUT, HttpStatus.CONFLICT);
     }
 

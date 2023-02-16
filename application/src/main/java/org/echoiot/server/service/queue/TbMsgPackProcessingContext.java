@@ -8,7 +8,7 @@ import org.echoiot.server.queue.common.TbProtoQueueMsg;
 import org.echoiot.server.service.queue.processing.TbRuleEngineSubmitStrategy;
 import org.echoiot.server.common.msg.queue.RuleEngineException;
 import org.echoiot.server.common.msg.queue.RuleNodeInfo;
-import org.thingsboard.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.transport.TransportProtos;
 
 import java.util.Comparator;
 import java.util.Map;

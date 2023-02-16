@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,24 +14,24 @@
 /// limitations under the License.
 ///
 
-import { BaseData, HasId } from '@shared/models/base-data';
-import { PageComponent } from '@shared/components/page.component';
-import { AfterViewInit, Directive, Input, OnInit, QueryList, ViewChildren } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { EntityTableConfig } from '@home/models/entity/entities-table-config.models';
-import { MatTab } from '@angular/material/tabs';
-import { BehaviorSubject } from 'rxjs';
-import { Authority } from '@app/shared/models/authority.enum';
-import { getCurrentAuthUser } from '@core/auth/auth.selectors';
-import { AuthUser } from '@shared/models/user.model';
-import { EntityType } from '@shared/models/entity-type.models';
-import { AuditLogMode } from '@shared/models/audit-log.models';
-import { DebugEventType, EventType } from '@shared/models/event.models';
-import { AttributeScope, LatestTelemetry } from '@shared/models/telemetry/telemetry.models';
-import { NULL_UUID } from '@shared/models/id/has-uuid';
-import { FormGroup } from '@angular/forms';
-import { PageLink } from '@shared/models/page/page-link';
+import {BaseData, HasId} from '@shared/models/base-data';
+import {PageComponent} from '@shared/components/page.component';
+import {AfterViewInit, Directive, Input, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {EntityTableConfig} from '@home/models/entity/entities-table-config.models';
+import {MatTab} from '@angular/material/tabs';
+import {BehaviorSubject} from 'rxjs';
+import {Authority} from '@app/shared/models/authority.enum';
+import {getCurrentAuthUser} from '@core/auth/auth.selectors';
+import {AuthUser} from '@shared/models/user.model';
+import {EntityType} from '@shared/models/entity-type.models';
+import {AuditLogMode} from '@shared/models/audit-log.models';
+import {DebugEventType, EventType} from '@shared/models/event.models';
+import {AttributeScope, LatestTelemetry} from '@shared/models/telemetry/telemetry.models';
+import {NULL_UUID} from '@shared/models/id/has-uuid';
+import {FormGroup} from '@angular/forms';
+import {PageLink} from '@shared/models/page/page-link';
 
 @Directive()
 // tslint:disable-next-line:directive-class-suffix

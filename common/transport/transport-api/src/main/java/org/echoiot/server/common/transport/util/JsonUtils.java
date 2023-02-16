@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import org.thingsboard.server.gen.transport.TransportProtos.KeyValueProto;
+import org.echoiot.server.gen.transport.TransportProtos.KeyValueProto;
 
 import java.util.List;
 

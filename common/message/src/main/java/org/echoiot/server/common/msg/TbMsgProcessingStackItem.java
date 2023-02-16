@@ -3,7 +3,7 @@ package org.echoiot.server.common.msg;
 import lombok.Data;
 import org.echoiot.server.common.data.id.RuleChainId;
 import org.echoiot.server.common.data.id.RuleNodeId;
-import org.thingsboard.server.common.msg.gen.MsgProtos;
+import org.echoiot.server.common.msg.gen.MsgProtos;
 
 import java.io.Serializable;
 import java.util.UUID;

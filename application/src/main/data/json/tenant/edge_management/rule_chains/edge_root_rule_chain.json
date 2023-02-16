@@ -17,7 +17,7 @@
           "layoutX": 187,
           "layoutY": 468
         },
-        "type": "org.thingsboard.rule.engine.profile.TbDeviceProfileNode",
+        "type": "org.echoiot.rule.engine.profile.TbDeviceProfileNode",
         "name": "Device Profile Node",
         "debugMode": false,
         "configuration": {
@@ -30,7 +30,7 @@
           "layoutX": 823,
           "layoutY": 157
         },
-        "type": "org.thingsboard.rule.engine.telemetry.TbMsgTimeseriesNode",
+        "type": "org.echoiot.rule.engine.telemetry.TbMsgTimeseriesNode",
         "name": "Save Timeseries",
         "debugMode": false,
         "configuration": {
@@ -42,7 +42,7 @@
           "layoutX": 824,
           "layoutY": 52
         },
-        "type": "org.thingsboard.rule.engine.telemetry.TbMsgAttributesNode",
+        "type": "org.echoiot.rule.engine.telemetry.TbMsgAttributesNode",
         "name": "Save Client Attributes",
         "debugMode": false,
         "configuration": {
@@ -54,7 +54,7 @@
           "layoutX": 347,
           "layoutY": 149
         },
-        "type": "org.thingsboard.rule.engine.filter.TbMsgTypeSwitchNode",
+        "type": "org.echoiot.rule.engine.filter.TbMsgTypeSwitchNode",
         "name": "Message Type Switch",
         "debugMode": false,
         "configuration": {
@@ -66,7 +66,7 @@
           "layoutX": 825,
           "layoutY": 266
         },
-        "type": "org.thingsboard.rule.engine.action.TbLogNode",
+        "type": "org.echoiot.rule.engine.action.TbLogNode",
         "name": "Log RPC from Device",
         "debugMode": false,
         "configuration": {
@@ -80,7 +80,7 @@
           "layoutX": 824,
           "layoutY": 378
         },
-        "type": "org.thingsboard.rule.engine.action.TbLogNode",
+        "type": "org.echoiot.rule.engine.action.TbLogNode",
         "name": "Log Other",
         "debugMode": false,
         "configuration": {
@@ -94,7 +94,7 @@
           "layoutX": 824,
           "layoutY": 466
         },
-        "type": "org.thingsboard.rule.engine.rpc.TbSendRPCRequestNode",
+        "type": "org.echoiot.rule.engine.rpc.TbSendRPCRequestNode",
         "name": "RPC Call Request",
         "debugMode": false,
         "configuration": {
@@ -106,7 +106,7 @@
           "layoutX": 1129,
           "layoutY": 52
         },
-        "type": "org.thingsboard.rule.engine.edge.TbMsgPushToCloudNode",
+        "type": "org.echoiot.rule.engine.edge.TbMsgPushToCloudNode",
         "name": "Push to cloud",
         "debugMode": false,
         "configuration": {

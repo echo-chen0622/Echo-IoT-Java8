@@ -12,11 +12,11 @@ A clear and concise description of what the bug is.
 
 **Your Server Environment**
 <!-- 🔅🔅🔅🔅🔅🔅🔅 Choose one of the following or write your own 🔅🔅🔅🔅🔅🔅🔅-->
-* demo.thingsboard.io
-* cloud.thingsboard.io
+* demo.echoiot.io
+* cloud.echoiot.io
 * own setup
   * cloud or local infrastructure or docker deployment
-  * ThingsBoard Version
+  * Echoiot Version
   * OS Name and Version
 
 **Your Client Environment**

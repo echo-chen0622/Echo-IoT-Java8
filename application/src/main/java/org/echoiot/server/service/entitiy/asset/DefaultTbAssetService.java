@@ -9,8 +9,8 @@ import org.echoiot.server.common.data.asset.Asset;
 import org.echoiot.server.common.data.asset.AssetProfile;
 import org.echoiot.server.common.data.audit.ActionType;
 import org.echoiot.server.common.data.edge.Edge;
-import org.echoiot.server.common.data.exception.ThingsboardErrorCode;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotErrorCode;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.AssetId;
 import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.id.EdgeId;
@@ -18,9 +18,9 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.plugin.ComponentLifecycleEvent;
 import org.echoiot.server.dao.asset.AssetService;
 import org.echoiot.server.dao.asset.BaseAssetService;
-import org.springframework.stereotype.Service;
 import org.echoiot.server.service.entitiy.AbstractTbEntityService;
 import org.echoiot.server.service.profile.TbAssetProfileCache;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -37,11 +37,11 @@ public class DefaultTbAssetService extends AbstractTbEntityService implements Tb
         TenantId tenantId = asset.getTenantId();
         try {
             if (BaseAssetService.TB_SERVICE_QUEUE.equals(asset.getType())) {
-                throw new ThingsboardException("Unable to save asset with type " + BaseAssetService.TB_SERVICE_QUEUE, ThingsboardErrorCode.BAD_REQUEST_PARAMS);
+                throw new EchoiotException("Unable to save asset with type " + BaseAssetService.TB_SERVICE_QUEUE, EchoiotErrorCode.BAD_REQUEST_PARAMS);
             } else if (asset.getAssetProfileId() != null) {
                 AssetProfile assetProfile = assetProfileCache.get(tenantId, asset.getAssetProfileId());
                 if (assetProfile != null && BaseAssetService.TB_SERVICE_QUEUE.equals(assetProfile.getName())) {
-                    throw new ThingsboardException("Unable to save asset with profile " + BaseAssetService.TB_SERVICE_QUEUE, ThingsboardErrorCode.BAD_REQUEST_PARAMS);
+                    throw new EchoiotException("Unable to save asset with profile " + BaseAssetService.TB_SERVICE_QUEUE, EchoiotErrorCode.BAD_REQUEST_PARAMS);
                 }
             }
             Asset savedAsset = checkNotNull(assetService.saveAsset(asset));
@@ -76,7 +76,7 @@ public class DefaultTbAssetService extends AbstractTbEntityService implements Tb
     }
 
     @Override
-    public Asset assignAssetToCustomer(TenantId tenantId, AssetId assetId, Customer customer, User user) throws ThingsboardException {
+    public Asset assignAssetToCustomer(TenantId tenantId, AssetId assetId, Customer customer, User user) throws EchoiotException {
         ActionType actionType = ActionType.ASSIGNED_TO_CUSTOMER;
         CustomerId customerId = customer.getId();
         try {
@@ -93,7 +93,7 @@ public class DefaultTbAssetService extends AbstractTbEntityService implements Tb
     }
 
     @Override
-    public Asset unassignAssetToCustomer(TenantId tenantId, AssetId assetId, Customer customer, User user) throws ThingsboardException {
+    public Asset unassignAssetToCustomer(TenantId tenantId, AssetId assetId, Customer customer, User user) throws EchoiotException {
         ActionType actionType = ActionType.UNASSIGNED_FROM_CUSTOMER;
         try {
             Asset savedAsset = checkNotNull(assetService.unassignAssetFromCustomer(tenantId, assetId));
@@ -109,7 +109,7 @@ public class DefaultTbAssetService extends AbstractTbEntityService implements Tb
     }
 
     @Override
-    public Asset assignAssetToPublicCustomer(TenantId tenantId, AssetId assetId, User user) throws ThingsboardException {
+    public Asset assignAssetToPublicCustomer(TenantId tenantId, AssetId assetId, User user) throws EchoiotException {
         ActionType actionType = ActionType.ASSIGNED_TO_CUSTOMER;
         try {
             Customer publicCustomer = customerService.findOrCreatePublicCustomer(tenantId);
@@ -125,7 +125,7 @@ public class DefaultTbAssetService extends AbstractTbEntityService implements Tb
     }
 
     @Override
-    public Asset assignAssetToEdge(TenantId tenantId, AssetId assetId, Edge edge, User user) throws ThingsboardException {
+    public Asset assignAssetToEdge(TenantId tenantId, AssetId assetId, Edge edge, User user) throws EchoiotException {
         ActionType actionType = ActionType.ASSIGNED_TO_EDGE;
         EdgeId edgeId = edge.getId();
         try {
@@ -142,7 +142,7 @@ public class DefaultTbAssetService extends AbstractTbEntityService implements Tb
     }
 
     @Override
-    public Asset unassignAssetFromEdge(TenantId tenantId, Asset asset, Edge edge, User user) throws ThingsboardException {
+    public Asset unassignAssetFromEdge(TenantId tenantId, Asset asset, Edge edge, User user) throws EchoiotException {
         ActionType actionType = ActionType.UNASSIGNED_FROM_EDGE;
         AssetId assetId = asset.getId();
         EdgeId edgeId = edge.getId();

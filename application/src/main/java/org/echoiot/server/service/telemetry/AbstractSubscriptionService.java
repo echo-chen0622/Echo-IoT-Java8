@@ -4,15 +4,15 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.common.util.EchoiotThreadFactory;
 import org.echoiot.server.cluster.TbClusterService;
+import org.echoiot.server.common.msg.queue.ServiceType;
+import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
 import org.echoiot.server.queue.discovery.PartitionService;
 import org.echoiot.server.queue.discovery.TbApplicationEventListener;
 import org.echoiot.server.queue.discovery.event.PartitionChangeEvent;
 import org.echoiot.server.service.subscription.SubscriptionManagerService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.thingsboard.common.util.ThingsBoardThreadFactory;
-import org.echoiot.server.common.msg.queue.ServiceType;
-import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
 
 import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
@@ -53,7 +53,7 @@ public abstract class AbstractSubscriptionService extends TbApplicationEventList
 
     @PostConstruct
     public void initExecutor() {
-        wsCallBackExecutor = Executors.newSingleThreadExecutor(ThingsBoardThreadFactory.forName(getExecutorPrefix() + "-service-ws-callback"));
+        wsCallBackExecutor = Executors.newSingleThreadExecutor(EchoiotThreadFactory.forName(getExecutorPrefix() + "-service-ws-callback"));
     }
 
     @PreDestroy

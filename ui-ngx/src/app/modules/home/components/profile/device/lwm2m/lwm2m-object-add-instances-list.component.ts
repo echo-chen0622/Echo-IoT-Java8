@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,19 +14,21 @@
 /// limitations under the License.
 ///
 
-import { Component, ElementRef, forwardRef, Input, ViewChild } from '@angular/core';
+import {Component, ElementRef, forwardRef, Input, ViewChild} from '@angular/core';
 import {
-  ControlValueAccessor,
-  FormBuilder,
-  FormGroup,
-  NG_VALIDATORS,
-  NG_VALUE_ACCESSOR, ValidationErrors, Validator,
-  Validators
+    ControlValueAccessor,
+    FormBuilder,
+    FormGroup,
+    NG_VALIDATORS,
+    NG_VALUE_ACCESSOR,
+    ValidationErrors,
+    Validator,
+    Validators
 } from '@angular/forms';
-import { INSTANCES_ID_VALUE_MAX, INSTANCES_ID_VALUE_MIN } from './lwm2m-profile-config.models';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { COMMA, ENTER, SEMICOLON } from '@angular/cdk/keycodes';
-import { MatChipInputEvent } from '@angular/material/chips';
+import {INSTANCES_ID_VALUE_MAX, INSTANCES_ID_VALUE_MIN} from './lwm2m-profile-config.models';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {COMMA, ENTER, SEMICOLON} from '@angular/cdk/keycodes';
+import {MatChipInputEvent} from '@angular/material/chips';
 
 @Component({
   selector: 'tb-profile-lwm2m-object-add-instances-list',

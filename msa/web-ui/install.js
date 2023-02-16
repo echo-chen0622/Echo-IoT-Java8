@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016-2023 The Thingsboard Authors
+ * Copyright © 2016-2023 The Echoiot Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,10 +21,10 @@ let _projectRoot = null;
 
 
 (async() => {
-    await fse.move(path.join(projectRoot(), 'target', 'thingsboard-web-ui-linux'),
+    await fse.move(path.join(projectRoot(), 'target', 'echoiot-web-ui-linux'),
                    path.join(targetPackageDir('linux'), 'bin', 'tb-web-ui'),
                    {overwrite: true});
-    await fse.move(path.join(projectRoot(), 'target', 'thingsboard-web-ui-win.exe'),
+    await fse.move(path.join(projectRoot(), 'target', 'echoiot-web-ui-win.exe'),
                    path.join(targetPackageDir('windows'), 'bin', 'tb-web-ui.exe'),
                    {overwrite: true});
 })();

@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,15 +14,15 @@
 /// limitations under the License.
 ///
 
-import { Component, forwardRef, Input, OnDestroy } from '@angular/core';
-import { ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { isEmpty, isUndefinedOrNull } from '@core/utils';
-import { Lwm2mAttributesDialogComponent, Lwm2mAttributesDialogData } from './lwm2m-attributes-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
-import { AttributesNameValueMap } from './lwm2m-profile-config.models';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import {Component, forwardRef, Input, OnDestroy} from '@angular/core';
+import {ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {isEmpty, isUndefinedOrNull} from '@core/utils';
+import {Lwm2mAttributesDialogComponent, Lwm2mAttributesDialogData} from './lwm2m-attributes-dialog.component';
+import {MatDialog} from '@angular/material/dialog';
+import {AttributesNameValueMap} from './lwm2m-profile-config.models';
+import {Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
   selector: 'tb-profile-lwm2m-attributes',

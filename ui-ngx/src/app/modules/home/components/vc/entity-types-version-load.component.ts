@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,29 +14,28 @@
 /// limitations under the License.
 ///
 
-import { Component, forwardRef, Input, OnInit, Renderer2, ViewContainerRef } from '@angular/core';
+import {Component, forwardRef, Input, OnInit, Renderer2, ViewContainerRef} from '@angular/core';
 import {
-  AbstractControl,
-  ControlValueAccessor,
-  FormArray,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  NG_VALIDATORS,
-  NG_VALUE_ACCESSOR,
-  Validator,
-  Validators
+    AbstractControl,
+    ControlValueAccessor,
+    FormArray,
+    FormBuilder,
+    FormControl,
+    FormGroup,
+    NG_VALIDATORS,
+    NG_VALUE_ACCESSOR,
+    Validator,
+    Validators
 } from '@angular/forms';
-import { PageComponent } from '@shared/components/page.component';
-import { EntityTypeVersionLoadConfig, exportableEntityTypes, VersionCreationResult } from '@shared/models/vc.models';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { TranslateService } from '@ngx-translate/core';
-import { EntityType, entityTypeTranslations } from '@shared/models/entity-type.models';
-import { MatCheckbox } from '@angular/material/checkbox/checkbox';
-import { TbPopoverService } from '@shared/components/popover.service';
-import { EntityVersionCreateComponent } from '@home/components/vc/entity-version-create.component';
-import { RemoveOtherEntitiesConfirmComponent } from '@home/components/vc/remove-other-entities-confirm.component';
+import {PageComponent} from '@shared/components/page.component';
+import {EntityTypeVersionLoadConfig, exportableEntityTypes} from '@shared/models/vc.models';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {TranslateService} from '@ngx-translate/core';
+import {EntityType, entityTypeTranslations} from '@shared/models/entity-type.models';
+import {MatCheckbox} from '@angular/material/checkbox/checkbox';
+import {TbPopoverService} from '@shared/components/popover.service';
+import {RemoveOtherEntitiesConfirmComponent} from '@home/components/vc/remove-other-entities-confirm.component';
 
 @Component({
   selector: 'tb-entity-types-version-load',

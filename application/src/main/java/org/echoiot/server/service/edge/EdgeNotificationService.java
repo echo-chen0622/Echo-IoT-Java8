@@ -4,7 +4,7 @@ import org.echoiot.server.common.data.edge.Edge;
 import org.echoiot.server.common.data.id.RuleChainId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.msg.queue.TbCallback;
-import org.thingsboard.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.transport.TransportProtos;
 
 public interface EdgeNotificationService {
 

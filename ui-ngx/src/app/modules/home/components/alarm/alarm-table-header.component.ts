@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,12 +14,12 @@
 /// limitations under the License.
 ///
 
-import { Component } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { EntityTableHeaderComponent } from '../../components/entity/entity-table-header.component';
-import { AlarmInfo, AlarmSearchStatus, alarmSearchStatusTranslations } from '@shared/models/alarm.models';
-import { AlarmTableConfig } from './alarm-table-config';
+import {Component} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {EntityTableHeaderComponent} from '../../components/entity/entity-table-header.component';
+import {AlarmInfo, AlarmSearchStatus, alarmSearchStatusTranslations} from '@shared/models/alarm.models';
+import {AlarmTableConfig} from './alarm-table-config';
 
 @Component({
   selector: 'tb-alarm-table-header',

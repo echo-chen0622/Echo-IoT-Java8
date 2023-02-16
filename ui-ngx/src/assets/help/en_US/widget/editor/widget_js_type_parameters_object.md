@@ -3,7 +3,7 @@
 <div class="divider"></div>
 <br/>
 
-Object [WidgetTypeParameters{:target="_blank"}](https://github.com/thingsboard/thingsboard/blob/2627fe51d491055d4140f16617ed543f7f5bd8f6/ui-ngx/src/app/shared/models/widget.models.ts#L151) describing widget datasource parameters. It has the following properties:
+Object [WidgetTypeParameters{:target="_blank"}](https://github.com/echoiot/echoiot/blob/2627fe51d491055d4140f16617ed543f7f5bd8f6/ui-ngx/src/app/shared/models/widget.models.ts#L151) describing widget datasource parameters. It has the following properties:
 
 ```javascript
     return {

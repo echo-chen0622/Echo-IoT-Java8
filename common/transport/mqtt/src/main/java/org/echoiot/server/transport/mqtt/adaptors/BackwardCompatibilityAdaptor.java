@@ -1,4 +1,4 @@
-package org.thingsboard.server.transport.mqtt.adaptors;
+package org.echoiot.server.transport.mqtt.adaptors;
 
 import io.netty.handler.codec.mqtt.MqttMessage;
 import io.netty.handler.codec.mqtt.MqttPublishMessage;
@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.ota.OtaPackageType;
 import org.echoiot.server.common.transport.adaptor.AdaptorException;
-import org.thingsboard.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.transport.mqtt.session.MqttDeviceAwareSessionContext;
 
 import java.util.Optional;

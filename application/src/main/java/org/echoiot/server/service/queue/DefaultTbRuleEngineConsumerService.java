@@ -2,14 +2,21 @@ package org.echoiot.server.service.queue;
 
 import com.google.protobuf.ProtocolStringList;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.common.util.EchoiotThreadFactory;
+import org.echoiot.server.actors.ActorSystemContext;
 import org.echoiot.server.common.data.id.QueueId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.queue.Queue;
 import org.echoiot.server.common.data.rpc.RpcError;
 import org.echoiot.server.common.msg.TbMsg;
+import org.echoiot.server.common.msg.queue.*;
+import org.echoiot.server.common.msg.rpc.FromDeviceRpcResponse;
 import org.echoiot.server.common.stats.StatsFactory;
 import org.echoiot.server.dao.queue.QueueService;
 import org.echoiot.server.dao.tenant.TbTenantProfileCache;
+import org.echoiot.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.transport.TransportProtos.ToRuleEngineMsg;
+import org.echoiot.server.gen.transport.TransportProtos.ToRuleEngineNotificationMsg;
 import org.echoiot.server.queue.TbQueueConsumer;
 import org.echoiot.server.queue.common.TbProtoQueueMsg;
 import org.echoiot.server.queue.discovery.PartitionService;
@@ -22,48 +29,17 @@ import org.echoiot.server.queue.util.TbRuleEngineComponent;
 import org.echoiot.server.service.apiusage.TbApiUsageStateService;
 import org.echoiot.server.service.profile.TbAssetProfileCache;
 import org.echoiot.server.service.profile.TbDeviceProfileCache;
+import org.echoiot.server.service.queue.processing.*;
+import org.echoiot.server.service.rpc.TbRuleEngineDeviceRpcService;
+import org.echoiot.server.service.stats.RuleEngineStatisticsService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.thingsboard.common.util.ThingsBoardThreadFactory;
-import org.echoiot.server.actors.ActorSystemContext;
-import org.echoiot.server.common.msg.queue.QueueToRuleEngineMsg;
-import org.echoiot.server.common.msg.queue.RuleEngineException;
-import org.echoiot.server.common.msg.queue.RuleNodeInfo;
-import org.echoiot.server.common.msg.queue.ServiceType;
-import org.echoiot.server.common.msg.queue.TbCallback;
-import org.echoiot.server.common.msg.queue.TbMsgCallback;
-import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
-import org.echoiot.server.common.msg.rpc.FromDeviceRpcResponse;
-import org.thingsboard.server.gen.transport.TransportProtos;
-import org.thingsboard.server.gen.transport.TransportProtos.ToRuleEngineMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.ToRuleEngineNotificationMsg;
-import org.echoiot.server.service.queue.processing.AbstractConsumerService;
-import org.echoiot.server.service.queue.processing.TbRuleEngineProcessingDecision;
-import org.echoiot.server.service.queue.processing.TbRuleEngineProcessingResult;
-import org.echoiot.server.service.queue.processing.TbRuleEngineProcessingStrategy;
-import org.echoiot.server.service.queue.processing.TbRuleEngineProcessingStrategyFactory;
-import org.echoiot.server.service.queue.processing.TbRuleEngineSubmitStrategy;
-import org.echoiot.server.service.queue.processing.TbRuleEngineSubmitStrategyFactory;
-import org.echoiot.server.service.rpc.TbRuleEngineDeviceRpcService;
-import org.echoiot.server.service.stats.RuleEngineStatisticsService;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.*;
+import java.util.concurrent.*;
 import java.util.concurrent.locks.ReentrantLock;
 
 @Service
@@ -96,8 +72,8 @@ public class DefaultTbRuleEngineConsumerService extends AbstractConsumerService<
     private final ConcurrentMap<QueueKey, Queue> consumerConfigurations = new ConcurrentHashMap<>();
     private final ConcurrentMap<QueueKey, TbRuleEngineConsumerStats> consumerStats = new ConcurrentHashMap<>();
     private final ConcurrentMap<QueueKey, TbTopicWithConsumerPerPartition> topicsConsumerPerPartition = new ConcurrentHashMap<>();
-    final ExecutorService submitExecutor = Executors.newSingleThreadExecutor(ThingsBoardThreadFactory.forName("tb-rule-engine-consumer-submit"));
-    final ScheduledExecutorService repartitionExecutor = Executors.newScheduledThreadPool(1, ThingsBoardThreadFactory.forName("tb-rule-engine-consumer-repartition"));
+    final ExecutorService submitExecutor = Executors.newSingleThreadExecutor(EchoiotThreadFactory.forName("tb-rule-engine-consumer-submit"));
+    final ScheduledExecutorService repartitionExecutor = Executors.newScheduledThreadPool(1, EchoiotThreadFactory.forName("tb-rule-engine-consumer-repartition"));
 
     public DefaultTbRuleEngineConsumerService(TbRuleEngineProcessingStrategyFactory processingStrategyFactory,
                                               TbRuleEngineSubmitStrategyFactory submitStrategyFactory,

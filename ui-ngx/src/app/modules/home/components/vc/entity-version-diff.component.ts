@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -15,31 +15,31 @@
 ///
 
 import {
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-  Renderer2,
-  ViewChild,
-  ViewContainerRef,
-  ViewEncapsulation
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    EventEmitter,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+    Renderer2,
+    ViewChild,
+    ViewContainerRef,
+    ViewEncapsulation
 } from '@angular/core';
-import { PageComponent } from '@shared/components/page.component';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { EntitiesVersionControlService } from '@core/http/entities-version-control.service';
-import { EntityId } from '@shared/models/id/entity-id';
-import { getAceDiff } from '@shared/models/ace/ace.models';
-import { TbPopoverComponent } from '@shared/components/popover.component';
-import { entityExportDataToJsonString, VersionLoadResult } from '@shared/models/vc.models';
-import { Ace } from 'ace-builds';
-import { MatButton } from '@angular/material/button';
-import { TbPopoverService } from '@shared/components/popover.service';
-import { EntityVersionRestoreComponent } from '@home/components/vc/entity-version-restore.component';
+import {PageComponent} from '@shared/components/page.component';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {EntitiesVersionControlService} from '@core/http/entities-version-control.service';
+import {EntityId} from '@shared/models/id/entity-id';
+import {getAceDiff} from '@shared/models/ace/ace.models';
+import {TbPopoverComponent} from '@shared/components/popover.component';
+import {entityExportDataToJsonString, VersionLoadResult} from '@shared/models/vc.models';
+import {Ace} from 'ace-builds';
+import {MatButton} from '@angular/material/button';
+import {TbPopoverService} from '@shared/components/popover.service';
+import {EntityVersionRestoreComponent} from '@home/components/vc/entity-version-restore.component';
 
 interface DiffInfo {
   leftStartLine: number;

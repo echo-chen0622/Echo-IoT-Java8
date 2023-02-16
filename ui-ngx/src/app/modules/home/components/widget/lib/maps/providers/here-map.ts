@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -16,8 +16,8 @@
 
 import L from 'leaflet';
 import LeafletMap from '../leaflet-map';
-import { DEFAULT_ZOOM_LEVEL, WidgetUnitedMapSettings } from '../map-models';
-import { WidgetContext } from '@home/models/widget-component.models';
+import {DEFAULT_ZOOM_LEVEL, WidgetUnitedMapSettings} from '../map-models';
+import {WidgetContext} from '@home/models/widget-component.models';
 
 export class HEREMap extends LeafletMap {
     constructor(ctx: WidgetContext, $container, options: WidgetUnitedMapSettings) {

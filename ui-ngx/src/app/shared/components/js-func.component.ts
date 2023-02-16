@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -15,30 +15,30 @@
 ///
 
 import {
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  forwardRef,
-  Input,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-  ViewEncapsulation
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    forwardRef,
+    Input,
+    OnDestroy,
+    OnInit,
+    ViewChild,
+    ViewEncapsulation
 } from '@angular/core';
-import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
-import { Ace } from 'ace-builds';
-import { getAce, Range } from '@shared/models/ace/ace.models';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ActionNotificationHide, ActionNotificationShow } from '@core/notification/notification.actions';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { UtilsService } from '@core/services/utils.service';
-import { guid, isUndefined } from '@app/core/utils';
-import { TranslateService } from '@ngx-translate/core';
-import { CancelAnimationFrame, RafService } from '@core/services/raf.service';
-import { ResizeObserver } from '@juggle/resize-observer';
-import { TbEditorCompleter } from '@shared/models/ace/completion.models';
-import { beautifyJs } from '@shared/models/beautify.models';
+import {ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator} from '@angular/forms';
+import {Ace} from 'ace-builds';
+import {getAce, Range} from '@shared/models/ace/ace.models';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {ActionNotificationHide, ActionNotificationShow} from '@core/notification/notification.actions';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {UtilsService} from '@core/services/utils.service';
+import {guid, isUndefined} from '@app/core/utils';
+import {TranslateService} from '@ngx-translate/core';
+import {CancelAnimationFrame, RafService} from '@core/services/raf.service';
+import {ResizeObserver} from '@juggle/resize-observer';
+import {TbEditorCompleter} from '@shared/models/ace/completion.models';
+import {beautifyJs} from '@shared/models/beautify.models';
 
 @Component({
   selector: 'tb-js-func',

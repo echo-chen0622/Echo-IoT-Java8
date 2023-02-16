@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -15,43 +15,43 @@
 ///
 
 import {
-  DateEntityTableColumn,
-  EntityActionTableColumn,
-  EntityTableColumn,
-  EntityTableConfig
+    DateEntityTableColumn,
+    EntityActionTableColumn,
+    EntityTableColumn,
+    EntityTableConfig
 } from '@home/models/entity/entities-table-config.models';
 import {
-  EdgeEvent,
-  EdgeEventActionType,
-  edgeEventActionTypeTranslations,
-  EdgeEventStatus,
-  edgeEventStatusColor,
-  EdgeEventType,
-  edgeEventTypeTranslations
+    EdgeEvent,
+    EdgeEventActionType,
+    edgeEventActionTypeTranslations,
+    EdgeEventStatus,
+    edgeEventStatusColor,
+    EdgeEventType,
+    edgeEventTypeTranslations
 } from '@shared/models/edge.models';
-import { TimePageLink } from '@shared/models/page/page-link';
-import { TranslateService } from '@ngx-translate/core';
-import { DatePipe } from '@angular/common';
-import { MatDialog } from '@angular/material/dialog';
-import { EntityId } from '@shared/models/id/entity-id';
-import { Observable } from 'rxjs';
-import { PageData } from '@shared/models/page/page-data';
-import { Direction } from '@shared/models/page/sort-order';
-import { DialogService } from '@core/services/dialog.service';
-import { ContentType } from '@shared/models/constants';
+import {TimePageLink} from '@shared/models/page/page-link';
+import {TranslateService} from '@ngx-translate/core';
+import {DatePipe} from '@angular/common';
+import {MatDialog} from '@angular/material/dialog';
+import {EntityId} from '@shared/models/id/entity-id';
+import {Observable} from 'rxjs';
+import {PageData} from '@shared/models/page/page-data';
+import {Direction} from '@shared/models/page/sort-order';
+import {DialogService} from '@core/services/dialog.service';
+import {ContentType} from '@shared/models/constants';
 import {
-  EventContentDialogComponent,
-  EventContentDialogData
+    EventContentDialogComponent,
+    EventContentDialogData
 } from '@home/components/event/event-content-dialog.component';
-import { AttributeService } from '@core/http/attribute.service';
-import { AttributeScope } from '@shared/models/telemetry/telemetry.models';
-import { EdgeDownlinkTableHeaderComponent } from '@home/components/edge/edge-downlink-table-header.component';
-import { EdgeService } from '@core/http/edge.service';
-import { concatMap, map } from 'rxjs/operators';
-import { EntityService } from '@core/http/entity.service';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { ActionNotificationShow } from '@core/notification/notification.actions';
+import {AttributeService} from '@core/http/attribute.service';
+import {AttributeScope} from '@shared/models/telemetry/telemetry.models';
+import {EdgeDownlinkTableHeaderComponent} from '@home/components/edge/edge-downlink-table-header.component';
+import {EdgeService} from '@core/http/edge.service';
+import {concatMap, map} from 'rxjs/operators';
+import {EntityService} from '@core/http/entity.service';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {ActionNotificationShow} from '@core/notification/notification.actions';
 
 export class EdgeDownlinkTableConfig extends EntityTableConfig<EdgeEvent, TimePageLink> {
 

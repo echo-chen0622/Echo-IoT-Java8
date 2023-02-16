@@ -3,9 +3,9 @@ package org.echoiot.server.transport.lwm2m.server.rpc;
 import org.echoiot.server.common.transport.TransportService;
 import org.echoiot.server.transport.lwm2m.server.downlink.DownlinkRequestCallback;
 import org.eclipse.leshan.core.ResponseCode;
-import org.thingsboard.common.util.JacksonUtil;
-import org.thingsboard.server.gen.transport.TransportProtos;
-import org.thingsboard.server.transport.lwm2m.server.client.LwM2mClient;
+import org.echoiot.common.util.JacksonUtil;
+import org.echoiot.server.gen.transport.TransportProtos;
+import org.echoiot.server.transport.lwm2m.server.client.LwM2mClient;
 
 public class RpcLinkSetCallback<R, T> extends RpcDownlinkRequestCallbackProxy<R, T> {
 

@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,11 +14,11 @@
 /// limitations under the License.
 ///
 
-import { Directive, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
-import { Hotkey } from 'angular2-hotkeys';
-import { MousetrapInstance } from 'mousetrap';
+import {Directive, ElementRef, Input, OnDestroy, OnInit} from '@angular/core';
+import {Hotkey} from 'angular2-hotkeys';
 import * as Mousetrap from 'mousetrap';
-import { TbCheatSheetComponent } from '@shared/components/cheatsheet.component';
+import {MousetrapInstance} from 'mousetrap';
+import {TbCheatSheetComponent} from '@shared/components/cheatsheet.component';
 
 @Directive({
   selector : '[tb-hotkeys]'

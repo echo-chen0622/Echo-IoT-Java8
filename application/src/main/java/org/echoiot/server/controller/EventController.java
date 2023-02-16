@@ -5,8 +5,8 @@ import io.swagger.annotations.ApiParam;
 import org.echoiot.server.common.data.EventInfo;
 import org.echoiot.server.common.data.event.EventFilter;
 import org.echoiot.server.common.data.event.EventType;
-import org.echoiot.server.common.data.exception.ThingsboardErrorCode;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotErrorCode;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.EntityIdFactory;
 import org.echoiot.server.common.data.id.TenantId;
@@ -19,14 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @TbCoreComponent
@@ -95,7 +88,7 @@ public class EventController extends BaseController {
             @ApiParam(value = ControllerConstants.EVENT_START_TIME_DESCRIPTION)
             @RequestParam(required = false) Long startTime,
             @ApiParam(value = ControllerConstants.EVENT_END_TIME_DESCRIPTION)
-            @RequestParam(required = false) Long endTime) throws ThingsboardException {
+            @RequestParam(required = false) Long endTime) throws EchoiotException {
         checkParameter("EntityId", strEntityId);
         checkParameter("EntityType", strEntityType);
         TenantId tenantId = TenantId.fromUUID(toUUID(strTenantId));
@@ -135,7 +128,7 @@ public class EventController extends BaseController {
             @ApiParam(value = ControllerConstants.EVENT_START_TIME_DESCRIPTION)
             @RequestParam(required = false) Long startTime,
             @ApiParam(value = ControllerConstants.EVENT_END_TIME_DESCRIPTION)
-            @RequestParam(required = false) Long endTime) throws ThingsboardException {
+            @RequestParam(required = false) Long endTime) throws EchoiotException {
         checkParameter("EntityId", strEntityId);
         checkParameter("EntityType", strEntityType);
         TenantId tenantId = TenantId.fromUUID(toUUID(strTenantId));
@@ -178,7 +171,7 @@ public class EventController extends BaseController {
             @ApiParam(value = ControllerConstants.EVENT_START_TIME_DESCRIPTION)
             @RequestParam(required = false) Long startTime,
             @ApiParam(value = ControllerConstants.EVENT_END_TIME_DESCRIPTION)
-            @RequestParam(required = false) Long endTime) throws ThingsboardException {
+            @RequestParam(required = false) Long endTime) throws EchoiotException {
         checkParameter("EntityId", strEntityId);
         checkParameter("EntityType", strEntityType);
         TenantId tenantId = TenantId.fromUUID(toUUID(strTenantId));
@@ -203,7 +196,7 @@ public class EventController extends BaseController {
                             @ApiParam(value = ControllerConstants.EVENT_END_TIME_DESCRIPTION)
                             @RequestParam(required = false) Long endTime,
                             @ApiParam(value = EVENT_FILTER_DEFINITION)
-                            @RequestBody EventFilter eventFilter) throws ThingsboardException {
+                            @RequestBody EventFilter eventFilter) throws EchoiotException {
         checkParameter("EntityId", strEntityId);
         checkParameter("EntityType", strEntityType);
         try {
@@ -216,13 +209,13 @@ public class EventController extends BaseController {
         }
     }
 
-    private static EventType resolveEventType(String eventType) throws ThingsboardException {
+    private static EventType resolveEventType(String eventType) throws EchoiotException {
         for (var et : EventType.values()) {
             if (et.name().equalsIgnoreCase(eventType) || et.getOldName().equalsIgnoreCase(eventType)) {
                 return et;
             }
         }
-        throw new ThingsboardException("Event type: '" + eventType + "' is not supported!", ThingsboardErrorCode.BAD_REQUEST_PARAMS);
+        throw new EchoiotException("Event type: '" + eventType + "' is not supported!", EchoiotErrorCode.BAD_REQUEST_PARAMS);
     }
 
 }

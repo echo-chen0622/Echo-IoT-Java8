@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,14 +14,14 @@
 /// limitations under the License.
 ///
 
-import { Injectable, NgModule } from '@angular/core';
-import { Resolve, RouterModule, Routes } from '@angular/router';
+import {Injectable, NgModule} from '@angular/core';
+import {Resolve, RouterModule, Routes} from '@angular/router';
 
-import { HomeLinksComponent } from './home-links.component';
-import { Authority } from '@shared/models/authority.enum';
-import { Observable } from 'rxjs';
-import { HomeDashboard } from '@shared/models/dashboard.models';
-import { DashboardService } from '@core/http/dashboard.service';
+import {HomeLinksComponent} from './home-links.component';
+import {Authority} from '@shared/models/authority.enum';
+import {Observable} from 'rxjs';
+import {HomeDashboard} from '@shared/models/dashboard.models';
+import {DashboardService} from '@core/http/dashboard.service';
 
 @Injectable()
 export class HomeDashboardResolver implements Resolve<HomeDashboard> {

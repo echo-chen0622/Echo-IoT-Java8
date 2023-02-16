@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,15 +14,15 @@
 /// limitations under the License.
 ///
 
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { SharedModule } from '@shared/shared.module';
-import { HomeDialogsModule } from '@home/dialogs/home-dialogs.module';
-import { HomeComponentsModule } from '@home/components/home-components.module';
-import { EdgeRoutingModule } from '@home/pages/edge/edge-routing.module';
-import { EdgeComponent } from '@modules/home/pages/edge/edge.component';
-import { EdgeTableHeaderComponent } from '@home/pages/edge/edge-table-header.component';
-import { EdgeTabsComponent } from '@home/pages/edge/edge-tabs.component';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {SharedModule} from '@shared/shared.module';
+import {HomeDialogsModule} from '@home/dialogs/home-dialogs.module';
+import {HomeComponentsModule} from '@home/components/home-components.module';
+import {EdgeRoutingModule} from '@home/pages/edge/edge-routing.module';
+import {EdgeComponent} from '@modules/home/pages/edge/edge.component';
+import {EdgeTableHeaderComponent} from '@home/pages/edge/edge-table-header.component';
+import {EdgeTabsComponent} from '@home/pages/edge/edge-tabs.component';
 
 @NgModule({
   declarations: [

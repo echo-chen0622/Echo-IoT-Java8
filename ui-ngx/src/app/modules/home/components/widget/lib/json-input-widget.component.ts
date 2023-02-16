@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,22 +14,22 @@
 /// limitations under the License.
 ///
 
-import { Component, Input, OnInit } from '@angular/core';
-import { PageComponent } from '@shared/components/page.component';
-import { WidgetContext } from '@home/models/widget-component.models';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { UtilsService } from '@core/services/utils.service';
-import { TranslateService } from '@ngx-translate/core';
-import { Datasource, DatasourceData, DatasourceType, WidgetConfig } from '@shared/models/widget.models';
-import { IWidgetSubscription } from '@core/api/widget-api.models';
-import { FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
-import { AttributeService } from '@core/http/attribute.service';
-import { AttributeData, AttributeScope, DataKeyType, LatestTelemetry } from '@shared/models/telemetry/telemetry.models';
-import { EntityId } from '@shared/models/id/entity-id';
-import { EntityType } from '@shared/models/entity-type.models';
-import { createLabelFromDatasource, isDefinedAndNotNull } from '@core/utils';
-import { Observable } from 'rxjs';
+import {Component, Input, OnInit} from '@angular/core';
+import {PageComponent} from '@shared/components/page.component';
+import {WidgetContext} from '@home/models/widget-component.models';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {UtilsService} from '@core/services/utils.service';
+import {TranslateService} from '@ngx-translate/core';
+import {Datasource, DatasourceData, DatasourceType, WidgetConfig} from '@shared/models/widget.models';
+import {IWidgetSubscription} from '@core/api/widget-api.models';
+import {FormBuilder, FormGroup, ValidatorFn, Validators} from '@angular/forms';
+import {AttributeService} from '@core/http/attribute.service';
+import {AttributeData, AttributeScope, DataKeyType, LatestTelemetry} from '@shared/models/telemetry/telemetry.models';
+import {EntityId} from '@shared/models/id/entity-id';
+import {EntityType} from '@shared/models/entity-type.models';
+import {createLabelFromDatasource, isDefinedAndNotNull} from '@core/utils';
+import {Observable} from 'rxjs';
 
 enum JsonInputWidgetMode {
   ATTRIBUTE = 'ATTRIBUTE',

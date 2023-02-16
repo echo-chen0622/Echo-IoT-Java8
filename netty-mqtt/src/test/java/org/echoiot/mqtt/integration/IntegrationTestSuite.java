@@ -5,7 +5,7 @@ import org.junit.runner.RunWith;
 
 @RunWith(ClasspathSuite.class)
 @ClasspathSuite.ClassnameFilters({
-        "org.thingsboard.mqtt.integration.*Test",
+        "org.echoiot.mqtt.integration.*Test",
 })
 public class IntegrationTestSuite {
 

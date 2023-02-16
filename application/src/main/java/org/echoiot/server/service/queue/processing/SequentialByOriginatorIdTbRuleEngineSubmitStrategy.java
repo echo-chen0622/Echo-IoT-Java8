@@ -4,8 +4,8 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.EntityIdFactory;
-import org.thingsboard.server.common.msg.gen.MsgProtos;
-import org.thingsboard.server.gen.transport.TransportProtos;
+import org.echoiot.server.common.msg.gen.MsgProtos;
+import org.echoiot.server.gen.transport.TransportProtos;
 
 import java.util.UUID;
 

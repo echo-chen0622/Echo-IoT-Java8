@@ -1,12 +1,6 @@
 package org.echoiot.server.transport.coap.claim;
 
 import lombok.extern.slf4j.Slf4j;
-import org.eclipse.californium.core.CoapResponse;
-import org.eclipse.californium.core.coap.CoAP;
-import org.eclipse.californium.elements.exception.ConnectorException;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
 import org.echoiot.server.common.data.ClaimRequest;
 import org.echoiot.server.common.data.Customer;
 import org.echoiot.server.common.data.Device;
@@ -19,6 +13,12 @@ import org.echoiot.server.dao.service.DaoSqlTest;
 import org.echoiot.server.transport.coap.AbstractCoapIntegrationTest;
 import org.echoiot.server.transport.coap.CoapTestClient;
 import org.echoiot.server.transport.coap.CoapTestConfigProperties;
+import org.eclipse.californium.core.CoapResponse;
+import org.eclipse.californium.core.coap.CoAP;
+import org.eclipse.californium.elements.exception.ConnectorException;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.IOException;
 
@@ -56,7 +56,7 @@ public class CoapClaimDeviceTest extends AbstractCoapIntegrationTest {
         user.setAuthority(Authority.CUSTOMER_USER);
         user.setTenantId(tenantId);
         user.setCustomerId(savedCustomer.getId());
-        user.setEmail("customer@thingsboard.org");
+        user.setEmail("customer@echoiot.org");
 
         customerAdmin = createUser(user, CUSTOMER_USER_PASSWORD);
         assertNotNull(customerAdmin);

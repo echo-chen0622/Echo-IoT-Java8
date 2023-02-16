@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016-2023 The Thingsboard Authors
+ * Copyright © 2016-2023 The Echoiot Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 import * as React from 'react';
-import ThingsboardAceEditor from './json-form-ace-editor';
-import { JsonFormFieldProps, JsonFormFieldState } from '@shared/components/json-form/react/json-form.models';
-import { Observable } from 'rxjs/internal/Observable';
-import { beautifyJs } from '@shared/models/beautify.models';
+import EchoiotAceEditor from './json-form-ace-editor';
+import {JsonFormFieldProps, JsonFormFieldState} from '@shared/components/json-form/react/json-form.models';
+import {Observable} from 'rxjs/internal/Observable';
+import {beautifyJs} from '@shared/models/beautify.models';
 
-class ThingsboardJavaScript extends React.Component<JsonFormFieldProps, JsonFormFieldState> {
+class EchoiotJavaScript extends React.Component<JsonFormFieldProps, JsonFormFieldState> {
 
     constructor(props) {
         super(props);
@@ -32,9 +32,9 @@ class ThingsboardJavaScript extends React.Component<JsonFormFieldProps, JsonForm
 
     render() {
         return (
-           <ThingsboardAceEditor {...this.props} mode='javascript' onTidy={this.onTidyJavascript} {...this.state}></ThingsboardAceEditor>
+           <EchoiotAceEditor {...this.props} mode='javascript' onTidy={this.onTidyJavascript} {...this.state}></EchoiotAceEditor>
         );
     }
 }
 
-export default ThingsboardJavaScript;
+export default EchoiotJavaScript;

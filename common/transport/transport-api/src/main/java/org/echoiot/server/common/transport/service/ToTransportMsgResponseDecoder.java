@@ -1,7 +1,7 @@
 package org.echoiot.server.common.transport.service;
 
 import org.echoiot.server.queue.TbQueueMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.ToTransportMsg;
+import org.echoiot.server.gen.transport.TransportProtos.ToTransportMsg;
 import org.echoiot.server.queue.kafka.TbKafkaDecoder;
 
 import java.io.IOException;

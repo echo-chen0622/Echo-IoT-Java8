@@ -7,11 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.SQLWarning;
-import java.sql.Statement;
+import java.sql.*;
 
 @Slf4j
 public abstract class AbstractSqlTsDatabaseUpgradeService {
@@ -21,7 +17,7 @@ public abstract class AbstractSqlTsDatabaseUpgradeService {
     protected static final String DROP_PROCEDURE_IF_EXISTS = "DROP PROCEDURE IF EXISTS ";
     protected static final String TS_KV_SQL = "ts_kv.sql";
     protected static final String PATH_TO_USERS_PUBLIC_FOLDER = "C:\\Users\\Public";
-    protected static final String THINGSBOARD_WINDOWS_UPGRADE_DIR = "THINGSBOARD_WINDOWS_UPGRADE_DIR";
+    protected static final String ECHOIOT_WINDOWS_UPGRADE_DIR = "ECHOIOT_WINDOWS_UPGRADE_DIR";
 
     @Value("${spring.datasource.url}")
     protected String dbUrl;
@@ -39,7 +35,7 @@ public abstract class AbstractSqlTsDatabaseUpgradeService {
 
     protected void loadFunctions(Path sqlFile, Connection conn) throws Exception {
         String sql = new String(Files.readAllBytes(sqlFile), StandardCharsets.UTF_8);
-        conn.createStatement().execute(sql); //NOSONAR, ignoring because method used to execute thingsboard database upgrade script
+        conn.createStatement().execute(sql); //NOSONAR, ignoring because method used to execute echoiot database upgrade script
     }
 
     protected boolean checkVersion(Connection conn) {
@@ -81,7 +77,7 @@ public abstract class AbstractSqlTsDatabaseUpgradeService {
     protected void executeQuery(Connection conn, String query) {
         try {
             Statement statement = conn.createStatement();
-            statement.execute(query); //NOSONAR, ignoring because method used to execute thingsboard database upgrade script
+            statement.execute(query); //NOSONAR, ignoring because method used to execute echoiot database upgrade script
             SQLWarning warnings = statement.getWarnings();
             if (warnings != null) {
                 log.info("{}", warnings.getMessage());

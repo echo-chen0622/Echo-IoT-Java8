@@ -1,7 +1,7 @@
 package org.echoiot.server.common.transport.service;
 
 import lombok.Data;
-import org.thingsboard.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.transport.TransportProtos;
 
 /**
  * Created by Echo on 15.10.18.

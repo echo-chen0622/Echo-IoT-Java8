@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option java_package = "org.thingsboard.server.gen.edge.v1";
+option java_package = "org.echoiot.server.gen.edge.v1";
 option java_multiple_files = true;
 option java_outer_classname = "EdgeProtos";
 
@@ -8,7 +8,7 @@ import "queue.proto";
 
 package edge;
 
-// Interface exported by the ThingsBoard Edge Transport.
+// Interface exported by the Echoiot Edge Transport.
 service EdgeRpcService {
 
   rpc handleMsgs(stream RequestMsg) returns (stream ResponseMsg) {}

@@ -1,19 +1,15 @@
 package org.echoiot.server.queue.provider;
 
+import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.queue.TbQueueAdmin;
 import org.echoiot.server.queue.TbQueueConsumer;
 import org.echoiot.server.queue.TbQueueProducer;
+import org.echoiot.server.queue.common.TbProtoQueueMsg;
 import org.echoiot.server.queue.settings.TbQueueCoreSettings;
 import org.echoiot.server.queue.settings.TbQueueVersionControlSettings;
+import org.echoiot.server.queue.sqs.*;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Component;
-import org.thingsboard.server.gen.transport.TransportProtos;
-import org.echoiot.server.queue.common.TbProtoQueueMsg;
-import org.echoiot.server.queue.sqs.TbAwsSqsAdmin;
-import org.echoiot.server.queue.sqs.TbAwsSqsConsumerTemplate;
-import org.echoiot.server.queue.sqs.TbAwsSqsProducerTemplate;
-import org.echoiot.server.queue.sqs.TbAwsSqsQueueAttributes;
-import org.echoiot.server.queue.sqs.TbAwsSqsSettings;
 
 import javax.annotation.PreDestroy;
 

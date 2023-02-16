@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.echoiot.server.common.data.TransportPayloadType;
 import org.echoiot.server.dao.service.DaoSqlTest;
-import org.thingsboard.server.gen.transport.TransportApiProtos;
+import org.echoiot.server.gen.transport.TransportApiProtos;
 import org.echoiot.server.transport.mqtt.MqttTestClient;
 import org.echoiot.server.transport.mqtt.MqttTestConfigProperties;
 

@@ -8,7 +8,17 @@ import com.google.common.util.concurrent.MoreExecutors;
 import com.google.common.util.concurrent.SettableFuture;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.common.util.EchoiotThreadFactory;
+import org.echoiot.server.cache.TbTransactionalCache;
+import org.echoiot.server.common.data.StringUtils;
+import org.echoiot.server.common.data.id.EntityId;
+import org.echoiot.server.common.data.id.TenantId;
+import org.echoiot.server.common.data.relation.*;
+import org.echoiot.server.common.data.rule.RuleChainType;
+import org.echoiot.server.dao.entity.EntityService;
 import org.echoiot.server.dao.exception.DataValidationException;
+import org.echoiot.server.dao.service.ConstraintValidator;
+import org.echoiot.server.dao.sql.JpaExecutorService;
 import org.echoiot.server.dao.sql.relation.JpaRelationQueryExecutorService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
@@ -18,37 +28,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.event.TransactionalEventListener;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
-import org.thingsboard.common.util.ThingsBoardThreadFactory;
-import org.echoiot.server.cache.TbTransactionalCache;
-import org.echoiot.server.common.data.StringUtils;
-import org.echoiot.server.common.data.id.EntityId;
-import org.echoiot.server.common.data.id.TenantId;
-import org.echoiot.server.common.data.relation.EntityRelation;
-import org.echoiot.server.common.data.relation.EntityRelationInfo;
-import org.echoiot.server.common.data.relation.EntityRelationsQuery;
-import org.echoiot.server.common.data.relation.EntitySearchDirection;
-import org.echoiot.server.common.data.relation.RelationEntityTypeFilter;
-import org.echoiot.server.common.data.relation.RelationTypeGroup;
-import org.echoiot.server.common.data.relation.RelationsSearchParameters;
-import org.echoiot.server.common.data.rule.RuleChainType;
-import org.echoiot.server.dao.entity.EntityService;
-import org.echoiot.server.dao.service.ConstraintValidator;
-import org.echoiot.server.dao.sql.JpaExecutorService;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.*;
+import java.util.concurrent.*;
 import java.util.function.BiConsumer;
 
 import static org.echoiot.server.dao.service.Validator.validateId;
@@ -85,7 +69,7 @@ public class BaseRelationService implements RelationService {
 
     @PostConstruct
     public void init() {
-        timeoutExecutorService = Executors.newSingleThreadScheduledExecutor(ThingsBoardThreadFactory.forName("relations-query-timeout"));
+        timeoutExecutorService = Executors.newSingleThreadScheduledExecutor(EchoiotThreadFactory.forName("relations-query-timeout"));
     }
 
     @PreDestroy

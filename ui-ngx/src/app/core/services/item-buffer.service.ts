@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,26 +14,19 @@
 /// limitations under the License.
 ///
 
-import { Injectable } from '@angular/core';
-import { Dashboard, DashboardLayoutId } from '@app/shared/models/dashboard.models';
-import { AliasesInfo, EntityAlias, EntityAliases, EntityAliasInfo } from '@shared/models/alias.models';
-import {
-  Datasource,
-  DatasourceType,
-  Widget,
-  WidgetPosition,
-  WidgetSize,
-  widgetType
-} from '@shared/models/widget.models';
-import { DashboardUtilsService } from '@core/services/dashboard-utils.service';
-import { deepClone, isEqual } from '@core/utils';
-import { UtilsService } from '@core/services/utils.service';
-import { Observable, of, throwError } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { FcRuleNode, ruleNodeTypeDescriptors } from '@shared/models/rule-node.models';
-import { RuleChainService } from '@core/http/rule-chain.service';
-import { RuleChainImport } from '@shared/models/rule-chain.models';
-import { Filter, FilterInfo, Filters, FiltersInfo } from '@shared/models/query/query.models';
+import {Injectable} from '@angular/core';
+import {Dashboard, DashboardLayoutId} from '@app/shared/models/dashboard.models';
+import {AliasesInfo, EntityAlias, EntityAliases, EntityAliasInfo} from '@shared/models/alias.models';
+import {Datasource, DatasourceType, Widget, WidgetPosition, WidgetSize, widgetType} from '@shared/models/widget.models';
+import {DashboardUtilsService} from '@core/services/dashboard-utils.service';
+import {deepClone, isEqual} from '@core/utils';
+import {UtilsService} from '@core/services/utils.service';
+import {Observable, of, throwError} from 'rxjs';
+import {map} from 'rxjs/operators';
+import {FcRuleNode, ruleNodeTypeDescriptors} from '@shared/models/rule-node.models';
+import {RuleChainService} from '@core/http/rule-chain.service';
+import {RuleChainImport} from '@shared/models/rule-chain.models';
+import {Filter, FilterInfo, Filters, FiltersInfo} from '@shared/models/query/query.models';
 
 const WIDGET_ITEM = 'widget_item';
 const WIDGET_REFERENCE = 'widget_reference';

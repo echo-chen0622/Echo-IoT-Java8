@@ -1,19 +1,15 @@
 package org.echoiot.server.edge;
 
 import com.google.protobuf.AbstractMessage;
-import org.junit.Assert;
-import org.junit.Test;
 import org.echoiot.server.common.data.edge.Edge;
 import org.echoiot.server.common.data.id.RuleChainId;
 import org.echoiot.server.common.data.rule.RuleChain;
 import org.echoiot.server.common.data.rule.RuleChainMetaData;
 import org.echoiot.server.common.data.rule.RuleChainType;
 import org.echoiot.server.common.data.rule.RuleNode;
-import org.thingsboard.server.gen.edge.v1.RuleChainMetadataRequestMsg;
-import org.thingsboard.server.gen.edge.v1.RuleChainMetadataUpdateMsg;
-import org.thingsboard.server.gen.edge.v1.RuleChainUpdateMsg;
-import org.thingsboard.server.gen.edge.v1.UpdateMsgType;
-import org.thingsboard.server.gen.edge.v1.UplinkMsg;
+import org.echoiot.server.gen.edge.v1.*;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;

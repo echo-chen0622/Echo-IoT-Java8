@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,10 +14,10 @@
 /// limitations under the License.
 ///
 
-import { CustomerId } from '@shared/models/id/customer-id';
-import { ContactBased } from '@shared/models/contact-based.model';
-import { TenantId } from './id/tenant-id';
-import { ExportableEntity } from '@shared/models/base-data';
+import {CustomerId} from '@shared/models/id/customer-id';
+import {ContactBased} from '@shared/models/contact-based.model';
+import {TenantId} from './id/tenant-id';
+import {ExportableEntity} from '@shared/models/base-data';
 
 export interface Customer extends ContactBased<CustomerId>, ExportableEntity<CustomerId> {
   tenantId: TenantId;

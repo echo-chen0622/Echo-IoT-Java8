@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,15 +14,15 @@
 /// limitations under the License.
 ///
 
-import { MatDialogRef } from '@angular/material/dialog';
-import { Directive, InjectionToken } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { Router } from '@angular/router';
-import { PageComponent } from '@shared/components/page.component';
-import { CustomDialogContainerComponent } from './custom-dialog-container.component';
-import { FormBuilder, Validators } from '@angular/forms';
-import { TbInject } from '@shared/decorators/tb-inject';
+import {MatDialogRef} from '@angular/material/dialog';
+import {Directive, InjectionToken} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {Router} from '@angular/router';
+import {PageComponent} from '@shared/components/page.component';
+import {CustomDialogContainerComponent} from './custom-dialog-container.component';
+import {FormBuilder, Validators} from '@angular/forms';
+import {TbInject} from '@shared/decorators/tb-inject';
 
 export const CUSTOM_DIALOG_DATA = new InjectionToken<any>('ConfigDialogData');
 

@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,12 +14,12 @@
 /// limitations under the License.
 ///
 
-import { Component, Inject, InjectionToken } from '@angular/core';
-import { IAliasController } from '@core/api/widget-api.models';
-import { Filter, FilterInfo } from '@shared/models/query/query.models';
-import { MatDialog } from '@angular/material/dialog';
-import { deepClone } from '@core/utils';
-import { UserFilterDialogComponent, UserFilterDialogData } from '@home/components/filter/user-filter-dialog.component';
+import {Component, Inject, InjectionToken} from '@angular/core';
+import {IAliasController} from '@core/api/widget-api.models';
+import {Filter, FilterInfo} from '@shared/models/query/query.models';
+import {MatDialog} from '@angular/material/dialog';
+import {deepClone} from '@core/utils';
+import {UserFilterDialogComponent, UserFilterDialogData} from '@home/components/filter/user-filter-dialog.component';
 
 export const FILTER_EDIT_PANEL_DATA = new InjectionToken<any>('FiltersEditPanelData');
 

@@ -1,22 +1,17 @@
 package org.echoiot.server.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import org.echoiot.server.common.data.*;
+import org.echoiot.server.common.data.audit.ActionType;
+import org.echoiot.server.common.data.page.PageData;
+import org.echoiot.server.common.data.page.PageLink;
+import org.echoiot.server.common.data.security.Authority;
 import org.echoiot.server.dao.exception.DataValidationException;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.echoiot.server.common.data.ResourceType;
-import org.echoiot.server.common.data.StringUtils;
-import org.echoiot.server.common.data.TbResource;
-import org.echoiot.server.common.data.TbResourceInfo;
-import org.echoiot.server.common.data.Tenant;
-import org.echoiot.server.common.data.User;
-import org.echoiot.server.common.data.audit.ActionType;
-import org.echoiot.server.common.data.page.PageData;
-import org.echoiot.server.common.data.page.PageLink;
-import org.echoiot.server.common.data.security.Authority;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,7 +41,7 @@ public abstract class BaseTbResourceControllerTest extends AbstractControllerTes
         tenantAdmin = new User();
         tenantAdmin.setAuthority(Authority.TENANT_ADMIN);
         tenantAdmin.setTenantId(savedTenant.getId());
-        tenantAdmin.setEmail("tenant2@thingsboard.org");
+        tenantAdmin.setEmail("tenant2@echoiot.org");
         tenantAdmin.setFirstName("Joe");
         tenantAdmin.setLastName("Downs");
 

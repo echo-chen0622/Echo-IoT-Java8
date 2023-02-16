@@ -1,7 +1,7 @@
 package org.echoiot.server.queue.discovery;
 
 import org.echoiot.server.common.msg.queue.ServiceType;
-import org.thingsboard.server.gen.transport.TransportProtos.ServiceInfo;
+import org.echoiot.server.gen.transport.TransportProtos.ServiceInfo;
 
 public interface TbServiceInfoProvider {
 

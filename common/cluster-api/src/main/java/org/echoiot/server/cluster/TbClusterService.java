@@ -18,10 +18,10 @@ import org.echoiot.server.common.msg.edge.FromEdgeSyncResponse;
 import org.echoiot.server.common.msg.edge.ToEdgeSyncRequest;
 import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
 import org.echoiot.server.common.msg.rpc.FromDeviceRpcResponse;
-import org.thingsboard.server.gen.transport.TransportProtos.ToVersionControlServiceMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.ToCoreMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.ToRuleEngineMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.ToTransportMsg;
+import org.echoiot.server.gen.transport.TransportProtos.ToVersionControlServiceMsg;
+import org.echoiot.server.gen.transport.TransportProtos.ToCoreMsg;
+import org.echoiot.server.gen.transport.TransportProtos.ToRuleEngineMsg;
+import org.echoiot.server.gen.transport.TransportProtos.ToTransportMsg;
 import org.echoiot.server.queue.TbQueueCallback;
 import org.echoiot.server.queue.TbQueueClusterService;
 

@@ -4,8 +4,8 @@ import org.echoiot.server.common.transport.TransportService;
 import org.echoiot.server.transport.lwm2m.server.downlink.DownlinkRequestCallback;
 import org.eclipse.leshan.core.request.LwM2mRequest;
 import org.eclipse.leshan.core.response.CreateResponse;
-import org.thingsboard.server.gen.transport.TransportProtos;
-import org.thingsboard.server.transport.lwm2m.server.client.LwM2mClient;
+import org.echoiot.server.gen.transport.TransportProtos;
+import org.echoiot.server.transport.lwm2m.server.client.LwM2mClient;
 
 import java.util.Optional;
 

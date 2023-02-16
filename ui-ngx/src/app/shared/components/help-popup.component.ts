@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -15,19 +15,21 @@
 ///
 
 import {
-  Component,
-  ElementRef,
-  Input, OnChanges,
-  OnDestroy,
-  Renderer2, SimpleChanges,
-  ViewChild,
-  ViewContainerRef,
-  ViewEncapsulation
+    Component,
+    ElementRef,
+    Input,
+    OnChanges,
+    OnDestroy,
+    Renderer2,
+    SimpleChanges,
+    ViewChild,
+    ViewContainerRef,
+    ViewEncapsulation
 } from '@angular/core';
-import { TbPopoverService } from '@shared/components/popover.service';
-import { PopoverPlacement } from '@shared/components/popover.models';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { isDefinedAndNotNull } from '@core/utils';
+import {TbPopoverService} from '@shared/components/popover.service';
+import {PopoverPlacement} from '@shared/components/popover.models';
+import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
+import {isDefinedAndNotNull} from '@core/utils';
 
 @Component({
   // tslint:disable-next-line:component-selector

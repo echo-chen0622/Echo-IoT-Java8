@@ -1,9 +1,9 @@
 package org.echoiot.server.service.security.auth.jwt.extractor;
 
 import org.echoiot.server.common.data.StringUtils;
+import org.echoiot.server.config.EchoiotSecurityConfiguration;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.stereotype.Component;
-import org.echoiot.server.config.ThingsboardSecurityConfiguration;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -13,9 +13,9 @@ public class JwtHeaderTokenExtractor implements TokenExtractor {
 
     @Override
     public String extract(HttpServletRequest request) {
-        String header = request.getHeader(ThingsboardSecurityConfiguration.JWT_TOKEN_HEADER_PARAM);
+        String header = request.getHeader(EchoiotSecurityConfiguration.JWT_TOKEN_HEADER_PARAM);
         if (StringUtils.isBlank(header)) {
-            header = request.getHeader(ThingsboardSecurityConfiguration.JWT_TOKEN_HEADER_PARAM_V2);
+            header = request.getHeader(EchoiotSecurityConfiguration.JWT_TOKEN_HEADER_PARAM_V2);
             if (StringUtils.isBlank(header)) {
                 throw new AuthenticationServiceException("Authorization header cannot be blank!");
             }

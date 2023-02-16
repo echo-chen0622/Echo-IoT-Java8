@@ -2,27 +2,23 @@ package org.echoiot.server.queue.provider;
 
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.queue.Queue;
+import org.echoiot.server.common.msg.queue.ServiceType;
+import org.echoiot.server.gen.js.JsInvokeProtos;
+import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.queue.TbQueueConsumer;
 import org.echoiot.server.queue.TbQueueProducer;
 import org.echoiot.server.queue.TbQueueRequestTemplate;
-import org.echoiot.server.queue.discovery.NotificationsTopicService;
-import org.echoiot.server.queue.discovery.TbServiceInfoProvider;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
-import org.echoiot.server.common.msg.queue.ServiceType;
-import org.thingsboard.server.gen.js.JsInvokeProtos;
-import org.thingsboard.server.gen.transport.TransportProtos;
 import org.echoiot.server.queue.common.TbProtoJsQueueMsg;
 import org.echoiot.server.queue.common.TbProtoQueueMsg;
+import org.echoiot.server.queue.discovery.NotificationsTopicService;
+import org.echoiot.server.queue.discovery.TbServiceInfoProvider;
 import org.echoiot.server.queue.memory.InMemoryStorage;
 import org.echoiot.server.queue.memory.InMemoryTbQueueConsumer;
 import org.echoiot.server.queue.memory.InMemoryTbQueueProducer;
-import org.echoiot.server.queue.settings.TbQueueCoreSettings;
-import org.echoiot.server.queue.settings.TbQueueRuleEngineSettings;
-import org.echoiot.server.queue.settings.TbQueueTransportApiSettings;
-import org.echoiot.server.queue.settings.TbQueueTransportNotificationSettings;
-import org.echoiot.server.queue.settings.TbQueueVersionControlSettings;
+import org.echoiot.server.queue.settings.*;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component

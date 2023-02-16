@@ -18,7 +18,7 @@ public class EnvironmentLogService {
 
     @PostConstruct
     public void init() {
-        Environment.logEnv("ThingsBoard server environment: ", log);
+        Environment.logEnv("Echoiot server environment: ", log);
     }
 
 }

@@ -3,17 +3,20 @@ package org.echoiot.server.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.util.concurrent.FutureCallback;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.common.data.DataConstants;
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.audit.ActionType;
-import org.echoiot.server.common.data.exception.ThingsboardErrorCode;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotErrorCode;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.id.UUIDBased;
 import org.echoiot.server.common.data.rpc.RpcError;
 import org.echoiot.server.common.data.rpc.ToDeviceRpcRequestBody;
+import org.echoiot.server.common.msg.rpc.FromDeviceRpcResponse;
+import org.echoiot.server.common.msg.rpc.ToDeviceRpcRequest;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.rpc.LocalRequestMetaData;
 import org.echoiot.server.service.rpc.TbCoreDeviceRpcService;
@@ -26,9 +29,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.async.DeferredResult;
-import org.thingsboard.common.util.JacksonUtil;
-import org.echoiot.server.common.msg.rpc.FromDeviceRpcResponse;
-import org.echoiot.server.common.msg.rpc.ToDeviceRpcRequest;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
@@ -54,7 +54,7 @@ public abstract class AbstractRpcController extends BaseController {
     protected long defaultTimeout;
 
     protected DeferredResult<ResponseEntity> handleDeviceRPCRequest(boolean oneWay, DeviceId deviceId, String requestBody, HttpStatus timeoutStatus, HttpStatus noActiveConnectionStatus) throws
-                                                                                                                                                                                          ThingsboardException {
+                                                                                                                                                                                          EchoiotException {
         try {
             JsonNode rpcRequestBody = JacksonUtil.toJsonNode(requestBody);
             ToDeviceRpcRequestBody body = new ToDeviceRpcRequestBody(rpcRequestBody.get("method").asText(), JacksonUtil.toString(rpcRequestBody.get("params")));
@@ -97,7 +97,7 @@ public abstract class AbstractRpcController extends BaseController {
             }));
             return response;
         } catch (IllegalArgumentException ioe) {
-            throw new ThingsboardException("Invalid request body", ioe, ThingsboardErrorCode.BAD_REQUEST_PARAMS);
+            throw new EchoiotException("Invalid request body", ioe, EchoiotErrorCode.BAD_REQUEST_PARAMS);
         }
     }
 

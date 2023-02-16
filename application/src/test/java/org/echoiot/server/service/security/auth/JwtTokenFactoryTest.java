@@ -1,20 +1,20 @@
 package org.echoiot.server.service.security.auth;
 
 import io.jsonwebtoken.Claims;
-import org.echoiot.server.common.data.security.model.JwtSettings;
-import org.echoiot.server.common.data.security.model.JwtToken;
-import org.junit.BeforeClass;
-import org.junit.Test;
 import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.id.UserId;
 import org.echoiot.server.common.data.security.Authority;
+import org.echoiot.server.common.data.security.model.JwtSettings;
+import org.echoiot.server.common.data.security.model.JwtToken;
 import org.echoiot.server.service.security.auth.jwt.settings.JwtSettingsService;
 import org.echoiot.server.service.security.model.SecurityUser;
 import org.echoiot.server.service.security.model.UserPrincipal;
 import org.echoiot.server.service.security.model.token.AccessJwtToken;
 import org.echoiot.server.service.security.model.token.JwtTokenFactory;
 import org.echoiot.server.service.security.model.token.RawAccessJwtToken;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -48,7 +48,7 @@ public class JwtTokenFactoryTest {
     public void testCreateAndParseAccessJwtToken() {
         SecurityUser securityUser = new SecurityUser();
         securityUser.setId(new UserId(UUID.randomUUID()));
-        securityUser.setEmail("tenant@thingsboard.org");
+        securityUser.setEmail("tenant@echoiot.org");
         securityUser.setAuthority(Authority.TENANT_ADMIN);
         securityUser.setTenantId(new TenantId(UUID.randomUUID()));
         securityUser.setEnabled(true);
@@ -90,7 +90,7 @@ public class JwtTokenFactoryTest {
     public void testCreateAndParseRefreshJwtToken() {
         SecurityUser securityUser = new SecurityUser();
         securityUser.setId(new UserId(UUID.randomUUID()));
-        securityUser.setEmail("tenant@thingsboard.org");
+        securityUser.setEmail("tenant@echoiot.org");
         securityUser.setAuthority(Authority.TENANT_ADMIN);
         securityUser.setUserPrincipal(new UserPrincipal(UserPrincipal.Type.USER_NAME, securityUser.getEmail()));
         securityUser.setEnabled(true);
@@ -113,7 +113,7 @@ public class JwtTokenFactoryTest {
     public void testCreateAndParsePreVerificationJwtToken() {
         SecurityUser securityUser = new SecurityUser();
         securityUser.setId(new UserId(UUID.randomUUID()));
-        securityUser.setEmail("tenant@thingsboard.org");
+        securityUser.setEmail("tenant@echoiot.org");
         securityUser.setAuthority(Authority.TENANT_ADMIN);
         securityUser.setUserPrincipal(new UserPrincipal(UserPrincipal.Type.USER_NAME, securityUser.getEmail()));
         securityUser.setEnabled(true);

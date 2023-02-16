@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ let queues: IQueue | null;
 let httpServer: HttpServer | null;
 
 (async () => {
-    logger.info('Starting ThingsBoard JavaScript Executor Microservice...');
+    logger.info('Starting Echoiot JavaScript Executor Microservice...');
     try {
         queues = await createQueue(serviceType);
         logger.info(`Starting ${queues.name} template...`);
@@ -44,7 +44,7 @@ let httpServer: HttpServer | null;
         logger.info(`${queues.name} template started.`);
         httpServer = new HttpServer(httpPort);
     } catch (e: any) {
-        logger.error('Failed to start ThingsBoard JavaScript Executor Microservice: %s', e.message);
+        logger.error('Failed to start Echoiot JavaScript Executor Microservice: %s', e.message);
         logger.error(e.stack);
         await exit(-1);
     }
@@ -76,7 +76,7 @@ async function createQueue(serviceType: string): Promise<IQueue> {
 })
 
 process.on('exit', (code: number) => {
-    logger.info(`ThingsBoard JavaScript Executor Microservice has been stopped. Exit code: ${code}.`);
+    logger.info(`Echoiot JavaScript Executor Microservice has been stopped. Exit code: ${code}.`);
 });
 
 async function exit(status: number) {

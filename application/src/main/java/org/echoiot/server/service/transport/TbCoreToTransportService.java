@@ -1,6 +1,6 @@
 package org.echoiot.server.service.transport;
 
-import org.thingsboard.server.gen.transport.TransportProtos.ToTransportMsg;
+import org.echoiot.server.gen.transport.TransportProtos.ToTransportMsg;
 
 import java.util.function.Consumer;
 

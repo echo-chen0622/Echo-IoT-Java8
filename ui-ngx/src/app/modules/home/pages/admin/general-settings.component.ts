@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,15 +14,15 @@
 /// limitations under the License.
 ///
 
-import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { PageComponent } from '@shared/components/page.component';
-import { Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AdminSettings, GeneralSettings } from '@shared/models/settings.models';
-import { AdminService } from '@core/http/admin.service';
-import { HasConfirmForm } from '@core/guards/confirm-on-exit.guard';
+import {Component, OnInit} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {PageComponent} from '@shared/components/page.component';
+import {Router} from '@angular/router';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AdminSettings, GeneralSettings} from '@shared/models/settings.models';
+import {AdminService} from '@core/http/admin.service';
+import {HasConfirmForm} from '@core/guards/confirm-on-exit.guard';
 
 @Component({
   selector: 'tb-general-settings',

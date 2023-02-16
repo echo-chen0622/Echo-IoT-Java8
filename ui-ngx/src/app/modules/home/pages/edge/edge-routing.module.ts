@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,33 +14,33 @@
 /// limitations under the License.
 ///
 
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { EntitiesTableComponent } from '@home/components/entity/entities-table.component';
-import { Authority } from '@shared/models/authority.enum';
-import { EdgesTableConfigResolver } from '@home/pages/edge/edges-table-config.resolver';
-import { AssetsTableConfigResolver } from '@home/pages/asset/assets-table-config.resolver';
-import { DevicesTableConfigResolver } from '@home/pages/device/devices-table-config.resolver';
-import { EntityViewsTableConfigResolver } from '@home/pages/entity-view/entity-views-table-config.resolver';
-import { DashboardsTableConfigResolver } from '@home/pages/dashboard/dashboards-table-config.resolver';
-import { RuleChainsTableConfigResolver } from '@home/pages/rulechain/rulechains-table-config.resolver';
-import { DashboardPageComponent } from '@home/components/dashboard-page/dashboard-page.component';
-import { dashboardBreadcumbLabelFunction, DashboardResolver } from '@home/pages/dashboard/dashboard-routing.module';
-import { BreadCrumbConfig } from '@shared/components/breadcrumb';
-import { RuleChainPageComponent } from '@home/pages/rulechain/rulechain-page.component';
-import { ConfirmOnExitGuard } from '@core/guards/confirm-on-exit.guard';
-import { RuleChainType } from '@shared/models/rule-chain.models';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
+import {EntitiesTableComponent} from '@home/components/entity/entities-table.component';
+import {Authority} from '@shared/models/authority.enum';
+import {EdgesTableConfigResolver} from '@home/pages/edge/edges-table-config.resolver';
+import {AssetsTableConfigResolver} from '@home/pages/asset/assets-table-config.resolver';
+import {DevicesTableConfigResolver} from '@home/pages/device/devices-table-config.resolver';
+import {EntityViewsTableConfigResolver} from '@home/pages/entity-view/entity-views-table-config.resolver';
+import {DashboardsTableConfigResolver} from '@home/pages/dashboard/dashboards-table-config.resolver';
+import {RuleChainsTableConfigResolver} from '@home/pages/rulechain/rulechains-table-config.resolver';
+import {DashboardPageComponent} from '@home/components/dashboard-page/dashboard-page.component';
+import {dashboardBreadcumbLabelFunction, DashboardResolver} from '@home/pages/dashboard/dashboard-routing.module';
+import {BreadCrumbConfig} from '@shared/components/breadcrumb';
+import {RuleChainPageComponent} from '@home/pages/rulechain/rulechain-page.component';
+import {ConfirmOnExitGuard} from '@core/guards/confirm-on-exit.guard';
+import {RuleChainType} from '@shared/models/rule-chain.models';
 import {
-  importRuleChainBreadcumbLabelFunction,
-  RuleChainMetaDataResolver,
-  ruleChainBreadcumbLabelFunction,
-  RuleChainImportGuard,
-  RuleChainResolver,
-  RuleNodeComponentsResolver,
-  TooltipsterResolver
+    importRuleChainBreadcumbLabelFunction,
+    ruleChainBreadcumbLabelFunction,
+    RuleChainImportGuard,
+    RuleChainMetaDataResolver,
+    RuleChainResolver,
+    RuleNodeComponentsResolver,
+    TooltipsterResolver
 } from '@home/pages/rulechain/rulechain-routing.module';
-import { EntityDetailsPageComponent } from '@home/components/entity/entity-details-page.component';
-import { entityDetailsPageBreadcrumbLabelFunction } from '@home/pages/home-pages.models';
+import {EntityDetailsPageComponent} from '@home/components/entity/entity-details-page.component';
+import {entityDetailsPageBreadcrumbLabelFunction} from '@home/pages/home-pages.models';
 
 const routes: Routes = [
   {

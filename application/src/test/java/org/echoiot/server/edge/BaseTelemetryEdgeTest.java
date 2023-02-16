@@ -2,17 +2,17 @@ package org.echoiot.server.edge;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.protobuf.AbstractMessage;
-import org.junit.Assert;
-import org.junit.Test;
 import org.echoiot.server.common.data.Device;
 import org.echoiot.server.common.data.edge.EdgeEvent;
 import org.echoiot.server.common.data.edge.EdgeEventActionType;
 import org.echoiot.server.common.data.edge.EdgeEventType;
 import org.echoiot.server.common.data.id.EntityId;
-import org.thingsboard.server.gen.edge.v1.AttributeDeleteMsg;
-import org.thingsboard.server.gen.edge.v1.DeviceUpdateMsg;
-import org.thingsboard.server.gen.edge.v1.EntityDataProto;
-import org.thingsboard.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.edge.v1.AttributeDeleteMsg;
+import org.echoiot.server.gen.edge.v1.DeviceUpdateMsg;
+import org.echoiot.server.gen.edge.v1.EntityDataProto;
+import org.echoiot.server.gen.transport.TransportProtos;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.util.List;
 

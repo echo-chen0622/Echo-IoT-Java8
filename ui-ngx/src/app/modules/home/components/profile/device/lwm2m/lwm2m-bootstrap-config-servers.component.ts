@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,25 +14,28 @@
 /// limitations under the License.
 ///
 
-import { Component, EventEmitter, forwardRef, Input, OnInit, Output } from '@angular/core';
+import {Component, EventEmitter, forwardRef, Input, OnInit, Output} from '@angular/core';
 import {
-  AbstractControl,
-  ControlValueAccessor,
-  FormArray,
-  FormBuilder, FormControl,
-  FormGroup,
-  NG_VALIDATORS,
-  NG_VALUE_ACCESSOR
+    AbstractControl,
+    ControlValueAccessor,
+    FormArray,
+    FormBuilder,
+    FormControl,
+    FormGroup,
+    NG_VALIDATORS,
+    NG_VALUE_ACCESSOR
 } from '@angular/forms';
-import { of, Subscription } from 'rxjs';
-import { ServerSecurityConfig } from '@home/components/profile/device/lwm2m/lwm2m-profile-config.models';
-import { TranslateService } from '@ngx-translate/core';
-import { DialogService } from '@core/services/dialog.service';
-import { MatDialog } from '@angular/material/dialog';
-import { Lwm2mBootstrapAddConfigServerDialogComponent } from '@home/components/profile/device/lwm2m/lwm2m-bootstrap-add-config-server-dialog.component';
-import { mergeMap } from 'rxjs/operators';
-import { DeviceProfileService } from '@core/http/device-profile.service';
-import { Lwm2mSecurityType } from '@shared/models/lwm2m-security-config.models';
+import {of, Subscription} from 'rxjs';
+import {ServerSecurityConfig} from '@home/components/profile/device/lwm2m/lwm2m-profile-config.models';
+import {TranslateService} from '@ngx-translate/core';
+import {DialogService} from '@core/services/dialog.service';
+import {MatDialog} from '@angular/material/dialog';
+import {
+    Lwm2mBootstrapAddConfigServerDialogComponent
+} from '@home/components/profile/device/lwm2m/lwm2m-bootstrap-add-config-server-dialog.component';
+import {mergeMap} from 'rxjs/operators';
+import {DeviceProfileService} from '@core/http/device-profile.service';
+import {Lwm2mSecurityType} from '@shared/models/lwm2m-security-config.models';
 
 @Component({
   selector: 'tb-profile-lwm2m-bootstrap-config-servers',

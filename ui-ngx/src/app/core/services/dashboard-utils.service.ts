@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,27 +14,27 @@
 /// limitations under the License.
 ///
 
-import { Injectable } from '@angular/core';
-import { UtilsService } from '@core/services/utils.service';
-import { TimeService } from '@core/services/time.service';
+import {Injectable} from '@angular/core';
+import {UtilsService} from '@core/services/utils.service';
+import {TimeService} from '@core/services/time.service';
 import {
-  Dashboard,
-  DashboardConfiguration,
-  DashboardLayout,
-  DashboardLayoutId,
-  DashboardLayoutInfo,
-  DashboardLayoutsInfo,
-  DashboardState,
-  DashboardStateLayouts,
-  GridSettings,
-  WidgetLayout
+    Dashboard,
+    DashboardConfiguration,
+    DashboardLayout,
+    DashboardLayoutId,
+    DashboardLayoutInfo,
+    DashboardLayoutsInfo,
+    DashboardState,
+    DashboardStateLayouts,
+    GridSettings,
+    WidgetLayout
 } from '@shared/models/dashboard.models';
-import { isDefined, isString, isUndefined } from '@core/utils';
-import { Datasource, DatasourceType, Widget, widgetType } from '@app/shared/models/widget.models';
-import { EntityType } from '@shared/models/entity-type.models';
-import { AliasFilterType, EntityAlias, EntityAliasFilter } from '@app/shared/models/alias.models';
-import { EntityId } from '@app/shared/models/id/entity-id';
-import { initModelFromDefaultTimewindow } from '@shared/models/time/time.models';
+import {isDefined, isString, isUndefined} from '@core/utils';
+import {Datasource, DatasourceType, Widget, widgetType} from '@app/shared/models/widget.models';
+import {EntityType} from '@shared/models/entity-type.models';
+import {AliasFilterType, EntityAlias, EntityAliasFilter} from '@app/shared/models/alias.models';
+import {EntityId} from '@app/shared/models/id/entity-id';
+import {initModelFromDefaultTimewindow} from '@shared/models/time/time.models';
 
 @Injectable({
   providedIn: 'root'

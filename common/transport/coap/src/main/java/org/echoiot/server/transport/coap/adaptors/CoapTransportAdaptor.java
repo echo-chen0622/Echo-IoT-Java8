@@ -3,10 +3,10 @@ package org.echoiot.server.transport.coap.adaptors;
 import com.google.protobuf.Descriptors;
 import com.google.protobuf.DynamicMessage;
 import org.echoiot.server.common.transport.adaptor.AdaptorException;
+import org.echoiot.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.transport.TransportProtos.ProvisionDeviceRequestMsg;
 import org.eclipse.californium.core.coap.Request;
 import org.eclipse.californium.core.coap.Response;
-import org.thingsboard.server.gen.transport.TransportProtos;
-import org.thingsboard.server.gen.transport.TransportProtos.ProvisionDeviceRequestMsg;
 
 import java.util.UUID;
 

@@ -5,27 +5,19 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.google.protobuf.util.JsonFormat;
 import lombok.SneakyThrows;
-import org.echoiot.server.transport.lwm2m.server.client.LwM2MClientState;
-import org.echoiot.server.transport.lwm2m.server.client.ResourceValue;
-import org.eclipse.leshan.core.model.ResourceModel;
-import org.eclipse.leshan.core.node.LwM2mMultipleResource;
-import org.eclipse.leshan.core.node.LwM2mNodeException;
-import org.eclipse.leshan.core.node.LwM2mResource;
-import org.eclipse.leshan.core.node.LwM2mSingleResource;
-import org.eclipse.leshan.core.node.ObjectLink;
-import org.eclipse.leshan.core.util.datatype.ULong;
-import org.eclipse.leshan.server.redis.serialization.RegistrationSerDes;
 import org.echoiot.server.common.data.device.data.PowerMode;
 import org.echoiot.server.common.data.id.TenantId;
-import org.thingsboard.server.gen.transport.TransportProtos;
-import org.thingsboard.server.transport.lwm2m.server.client.LwM2mClient;
+import org.echoiot.server.gen.transport.TransportProtos;
+import org.echoiot.server.transport.lwm2m.server.client.LwM2MClientState;
+import org.echoiot.server.transport.lwm2m.server.client.LwM2mClient;
+import org.echoiot.server.transport.lwm2m.server.client.ResourceValue;
+import org.eclipse.leshan.core.model.ResourceModel;
+import org.eclipse.leshan.core.node.*;
+import org.eclipse.leshan.core.util.datatype.ULong;
+import org.eclipse.leshan.server.redis.serialization.RegistrationSerDes;
 
 import java.lang.reflect.Field;
-import java.util.Base64;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class LwM2MClientSerDes {

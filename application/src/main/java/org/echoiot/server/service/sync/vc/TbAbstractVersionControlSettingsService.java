@@ -4,7 +4,7 @@ import org.echoiot.server.cache.TbTransactionalCache;
 import org.echoiot.server.common.data.AdminSettings;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.dao.settings.AdminSettingsService;
-import org.thingsboard.common.util.JacksonUtil;
+import org.echoiot.common.util.JacksonUtil;
 
 import java.io.Serializable;
 

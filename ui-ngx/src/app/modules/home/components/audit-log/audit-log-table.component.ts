@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,22 +14,22 @@
 /// limitations under the License.
 ///
 
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { AuditLogService } from '@core/http/audit-log.service';
-import { TranslateService } from '@ngx-translate/core';
-import { DatePipe } from '@angular/common';
-import { MatDialog } from '@angular/material/dialog';
-import { AuditLogMode } from '@shared/models/audit-log.models';
-import { EntityId } from '@shared/models/id/entity-id';
-import { UserId } from '@shared/models/id/user-id';
-import { CustomerId } from '@shared/models/id/customer-id';
-import { AuditLogTableConfig } from '@home/components/audit-log/audit-log-table-config';
-import { EntitiesTableComponent } from '@home/components/entity/entities-table.component';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { Authority } from '@shared/models/authority.enum';
-import { getCurrentAuthUser } from '@core/auth/auth.selectors';
-import { ActivatedRoute } from '@angular/router';
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {AuditLogService} from '@core/http/audit-log.service';
+import {TranslateService} from '@ngx-translate/core';
+import {DatePipe} from '@angular/common';
+import {MatDialog} from '@angular/material/dialog';
+import {AuditLogMode} from '@shared/models/audit-log.models';
+import {EntityId} from '@shared/models/id/entity-id';
+import {UserId} from '@shared/models/id/user-id';
+import {CustomerId} from '@shared/models/id/customer-id';
+import {AuditLogTableConfig} from '@home/components/audit-log/audit-log-table-config';
+import {EntitiesTableComponent} from '@home/components/entity/entities-table.component';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {Authority} from '@shared/models/authority.enum';
+import {getCurrentAuthUser} from '@core/auth/auth.selectors';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'tb-audit-log-table',

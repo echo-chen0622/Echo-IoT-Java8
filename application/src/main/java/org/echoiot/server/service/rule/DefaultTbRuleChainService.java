@@ -2,18 +2,23 @@ package org.echoiot.server.service.rule;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.common.util.JacksonUtil;
+import org.echoiot.rule.engine.flow.TbRuleChainInputNode;
+import org.echoiot.rule.engine.flow.TbRuleChainInputNodeConfiguration;
+import org.echoiot.rule.engine.flow.TbRuleChainOutputNode;
 import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.User;
 import org.echoiot.server.common.data.audit.ActionType;
 import org.echoiot.server.common.data.edge.Edge;
 import org.echoiot.server.common.data.edge.EdgeEventActionType;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.EdgeId;
 import org.echoiot.server.common.data.id.RuleChainId;
 import org.echoiot.server.common.data.id.RuleNodeId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.plugin.ComponentLifecycleEvent;
 import org.echoiot.server.common.data.relation.EntityRelation;
+import org.echoiot.server.common.data.rule.*;
 import org.echoiot.server.dao.relation.RelationService;
 import org.echoiot.server.dao.rule.RuleChainService;
 import org.echoiot.server.queue.util.TbCoreComponent;
@@ -21,29 +26,8 @@ import org.echoiot.server.service.entitiy.AbstractTbEntityService;
 import org.echoiot.server.service.install.InstallScripts;
 import org.echoiot.server.service.sync.vc.EntitiesVersionControlService;
 import org.springframework.stereotype.Service;
-import org.thingsboard.common.util.JacksonUtil;
-import org.thingsboard.rule.engine.flow.TbRuleChainInputNode;
-import org.thingsboard.rule.engine.flow.TbRuleChainInputNodeConfiguration;
-import org.thingsboard.rule.engine.flow.TbRuleChainOutputNode;
-import org.echoiot.server.common.data.rule.DefaultRuleChainCreateRequest;
-import org.echoiot.server.common.data.rule.RuleChain;
-import org.echoiot.server.common.data.rule.RuleChainMetaData;
-import org.echoiot.server.common.data.rule.RuleChainOutputLabelsUsage;
-import org.echoiot.server.common.data.rule.RuleChainType;
-import org.echoiot.server.common.data.rule.RuleChainUpdateResult;
-import org.echoiot.server.common.data.rule.RuleNode;
-import org.echoiot.server.common.data.rule.RuleNodeUpdateResult;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -228,7 +212,7 @@ public class DefaultTbRuleChainService extends AbstractTbEntityService implement
     }
 
     @Override
-    public RuleChain setRootRuleChain(TenantId tenantId, RuleChain ruleChain, User user) throws ThingsboardException {
+    public RuleChain setRootRuleChain(TenantId tenantId, RuleChain ruleChain, User user) throws EchoiotException {
         RuleChainId ruleChainId = ruleChain.getId();
         try {
             RuleChain previousRootRuleChain = ruleChainService.getRootTenantRuleChain(tenantId);
@@ -314,7 +298,7 @@ public class DefaultTbRuleChainService extends AbstractTbEntityService implement
     }
 
     @Override
-    public RuleChain assignRuleChainToEdge(TenantId tenantId, RuleChain ruleChain, Edge edge, User user) throws ThingsboardException {
+    public RuleChain assignRuleChainToEdge(TenantId tenantId, RuleChain ruleChain, Edge edge, User user) throws EchoiotException {
         RuleChainId ruleChainId = ruleChain.getId();
         EdgeId edgeId = edge.getId();
         try {
@@ -331,7 +315,7 @@ public class DefaultTbRuleChainService extends AbstractTbEntityService implement
     }
 
     @Override
-    public RuleChain unassignRuleChainFromEdge(TenantId tenantId, RuleChain ruleChain, Edge edge, User user) throws ThingsboardException {
+    public RuleChain unassignRuleChainFromEdge(TenantId tenantId, RuleChain ruleChain, Edge edge, User user) throws EchoiotException {
         RuleChainId ruleChainId = ruleChain.getId();
         EdgeId edgeId = edge.getId();
         try {
@@ -348,7 +332,7 @@ public class DefaultTbRuleChainService extends AbstractTbEntityService implement
     }
 
     @Override
-    public RuleChain setEdgeTemplateRootRuleChain(TenantId tenantId, RuleChain ruleChain, User user) throws ThingsboardException {
+    public RuleChain setEdgeTemplateRootRuleChain(TenantId tenantId, RuleChain ruleChain, User user) throws EchoiotException {
         RuleChainId ruleChainId = ruleChain.getId();
         try {
             ruleChainService.setEdgeTemplateRootRuleChain(tenantId, ruleChainId);
@@ -362,7 +346,7 @@ public class DefaultTbRuleChainService extends AbstractTbEntityService implement
     }
 
     @Override
-    public RuleChain setAutoAssignToEdgeRuleChain(TenantId tenantId, RuleChain ruleChain, User user) throws ThingsboardException {
+    public RuleChain setAutoAssignToEdgeRuleChain(TenantId tenantId, RuleChain ruleChain, User user) throws EchoiotException {
         RuleChainId ruleChainId = ruleChain.getId();
         try {
             ruleChainService.setAutoAssignToEdgeRuleChain(tenantId, ruleChainId);
@@ -376,7 +360,7 @@ public class DefaultTbRuleChainService extends AbstractTbEntityService implement
     }
 
     @Override
-    public RuleChain unsetAutoAssignToEdgeRuleChain(TenantId tenantId, RuleChain ruleChain, User user) throws ThingsboardException {
+    public RuleChain unsetAutoAssignToEdgeRuleChain(TenantId tenantId, RuleChain ruleChain, User user) throws EchoiotException {
         RuleChainId ruleChainId = ruleChain.getId();
         try {
             ruleChainService.unsetAutoAssignToEdgeRuleChain(tenantId, ruleChainId);

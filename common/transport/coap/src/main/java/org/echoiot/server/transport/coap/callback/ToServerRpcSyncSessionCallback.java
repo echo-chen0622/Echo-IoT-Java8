@@ -5,7 +5,7 @@ import org.echoiot.server.common.transport.adaptor.AdaptorException;
 import org.eclipse.californium.core.coap.CoAP;
 import org.eclipse.californium.core.coap.Request;
 import org.eclipse.californium.core.server.resources.CoapExchange;
-import org.thingsboard.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.transport.coap.client.TbCoapClientState;
 
 @Slf4j

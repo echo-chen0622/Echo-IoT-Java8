@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,23 +14,23 @@
 /// limitations under the License.
 ///
 
-import { AfterViewInit, Component, ElementRef, forwardRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
-import { Observable, Subscription, throwError } from 'rxjs';
-import { map, mergeMap, publishReplay, refCount, share } from 'rxjs/operators';
-import { Store } from '@ngrx/store';
-import { AppState } from '@app/core/core.state';
-import { TranslateService } from '@ngx-translate/core';
-import { EntitySubtype, EntityType } from '@shared/models/entity-type.models';
-import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { MatChipInputEvent, MatChipList } from '@angular/material/chips';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { AssetService } from '@core/http/asset.service';
-import { DeviceService } from '@core/http/device.service';
-import { EdgeService } from '@core/http/edge.service';
-import { EntityViewService } from '@core/http/entity-view.service';
-import { BroadcastService } from '@core/services/broadcast.service';
-import { COMMA, ENTER, SEMICOLON } from '@angular/cdk/keycodes';
+import {AfterViewInit, Component, ElementRef, forwardRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR, Validators} from '@angular/forms';
+import {Observable, Subscription, throwError} from 'rxjs';
+import {map, mergeMap, publishReplay, refCount, share} from 'rxjs/operators';
+import {Store} from '@ngrx/store';
+import {AppState} from '@app/core/core.state';
+import {TranslateService} from '@ngx-translate/core';
+import {EntitySubtype, EntityType} from '@shared/models/entity-type.models';
+import {MatAutocomplete, MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
+import {MatChipInputEvent, MatChipList} from '@angular/material/chips';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {AssetService} from '@core/http/asset.service';
+import {DeviceService} from '@core/http/device.service';
+import {EdgeService} from '@core/http/edge.service';
+import {EntityViewService} from '@core/http/entity-view.service';
+import {BroadcastService} from '@core/services/broadcast.service';
+import {COMMA, ENTER, SEMICOLON} from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'tb-entity-subtype-list',

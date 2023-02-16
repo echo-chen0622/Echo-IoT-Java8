@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -15,31 +15,31 @@
 ///
 
 import {
-  DateEntityTableColumn,
-  EntityTableColumn,
-  EntityTableConfig
+    DateEntityTableColumn,
+    EntityTableColumn,
+    EntityTableConfig
 } from '@home/models/entity/entities-table-config.models';
 import {
-  actionStatusTranslations,
-  actionTypeTranslations,
-  AuditLog,
-  AuditLogMode
+    actionStatusTranslations,
+    actionTypeTranslations,
+    AuditLog,
+    AuditLogMode
 } from '@shared/models/audit-log.models';
-import { EntityTypeResource, entityTypeTranslations } from '@shared/models/entity-type.models';
-import { AuditLogService } from '@core/http/audit-log.service';
-import { TranslateService } from '@ngx-translate/core';
-import { DatePipe } from '@angular/common';
-import { Direction } from '@shared/models/page/sort-order';
-import { MatDialog } from '@angular/material/dialog';
-import { TimePageLink } from '@shared/models/page/page-link';
-import { Observable } from 'rxjs';
-import { PageData } from '@shared/models/page/page-data';
-import { EntityId } from '@shared/models/id/entity-id';
-import { UserId } from '@shared/models/id/user-id';
-import { CustomerId } from '@shared/models/id/customer-id';
+import {EntityTypeResource, entityTypeTranslations} from '@shared/models/entity-type.models';
+import {AuditLogService} from '@core/http/audit-log.service';
+import {TranslateService} from '@ngx-translate/core';
+import {DatePipe} from '@angular/common';
+import {Direction} from '@shared/models/page/sort-order';
+import {MatDialog} from '@angular/material/dialog';
+import {TimePageLink} from '@shared/models/page/page-link';
+import {Observable} from 'rxjs';
+import {PageData} from '@shared/models/page/page-data';
+import {EntityId} from '@shared/models/id/entity-id';
+import {UserId} from '@shared/models/id/user-id';
+import {CustomerId} from '@shared/models/id/customer-id';
 import {
-  AuditLogDetailsDialogComponent,
-  AuditLogDetailsDialogData
+    AuditLogDetailsDialogComponent,
+    AuditLogDetailsDialogData
 } from '@home/components/audit-log/audit-log-details-dialog.component';
 
 export class AuditLogTableConfig extends EntityTableConfig<AuditLog, TimePageLink> {

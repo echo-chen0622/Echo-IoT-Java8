@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,13 +14,13 @@
 /// limitations under the License.
 ///
 
-import { Dashboard, DashboardLayoutId, GridSettings, WidgetLayouts } from '@app/shared/models/dashboard.models';
-import { Widget, WidgetPosition } from '@app/shared/models/widget.models';
-import { Timewindow } from '@shared/models/time/time.models';
-import { IAliasController, IStateController } from '@core/api/widget-api.models';
-import { ILayoutController } from './layout/layout.models';
-import { DashboardContextMenuItem, WidgetContextMenuItem } from '@home/models/dashboard-component.models';
-import { Observable } from 'rxjs';
+import {Dashboard, DashboardLayoutId, GridSettings, WidgetLayouts} from '@app/shared/models/dashboard.models';
+import {Widget, WidgetPosition} from '@app/shared/models/widget.models';
+import {Timewindow} from '@shared/models/time/time.models';
+import {IAliasController, IStateController} from '@core/api/widget-api.models';
+import {ILayoutController} from './layout/layout.models';
+import {DashboardContextMenuItem, WidgetContextMenuItem} from '@home/models/dashboard-component.models';
+import {Observable} from 'rxjs';
 
 export declare type DashboardPageScope = 'tenant' | 'customer';
 

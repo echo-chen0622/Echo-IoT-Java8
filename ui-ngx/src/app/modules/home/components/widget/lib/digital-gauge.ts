@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -15,30 +15,23 @@
 ///
 
 import * as CanvasGauges from 'canvas-gauges';
-import { WidgetContext } from '@home/models/widget-component.models';
+import {WidgetContext} from '@home/models/widget-component.models';
 import {
-  attributesGaugeType,
-  AttributeSourceProperty,
-  ColorLevelSetting,
-  DigitalGaugeSettings,
-  FixedLevelColors
+    attributesGaugeType,
+    AttributeSourceProperty,
+    ColorLevelSetting,
+    DigitalGaugeSettings,
+    FixedLevelColors
 } from '@home/components/widget/lib/digital-gauge.models';
 import * as tinycolor_ from 'tinycolor2';
-import { isDefined, isDefinedAndNotNull } from '@core/utils';
-import { prepareFontSettings } from '@home/components/widget/lib/settings.models';
-import { CanvasDigitalGauge, CanvasDigitalGaugeOptions } from '@home/components/widget/lib/canvas-digital-gauge';
-import { DatePipe } from '@angular/common';
-import {
-  DataKey,
-  Datasource,
-  DatasourceData,
-  DatasourceType,
-  JsonSettingsSchema,
-  widgetType
-} from '@shared/models/widget.models';
-import { IWidgetSubscription, WidgetSubscriptionOptions } from '@core/api/widget-api.models';
-import { DataKeyType } from '@shared/models/telemetry/telemetry.models';
-import { EMPTY, Observable } from 'rxjs';
+import {isDefined, isDefinedAndNotNull} from '@core/utils';
+import {prepareFontSettings} from '@home/components/widget/lib/settings.models';
+import {CanvasDigitalGauge, CanvasDigitalGaugeOptions} from '@home/components/widget/lib/canvas-digital-gauge';
+import {DatePipe} from '@angular/common';
+import {DataKey, Datasource, DatasourceData, DatasourceType, widgetType} from '@shared/models/widget.models';
+import {IWidgetSubscription, WidgetSubscriptionOptions} from '@core/api/widget-api.models';
+import {DataKeyType} from '@shared/models/telemetry/telemetry.models';
+import {EMPTY, Observable} from 'rxjs';
 import GenericOptions = CanvasGauges.GenericOptions;
 
 const tinycolor = tinycolor_;

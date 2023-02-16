@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,66 +14,66 @@
 /// limitations under the License.
 ///
 
-import { Inject, Injectable } from '@angular/core';
-import { DashboardService } from '@core/http/dashboard.service';
-import { TranslateService } from '@ngx-translate/core';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { ActionNotificationShow } from '@core/notification/notification.actions';
-import { Dashboard, DashboardLayoutId } from '@shared/models/dashboard.models';
-import { deepClone, isDefined, isObject, isString, isUndefined } from '@core/utils';
-import { WINDOW } from '@core/services/window.service';
-import { DOCUMENT } from '@angular/common';
+import {Inject, Injectable} from '@angular/core';
+import {DashboardService} from '@core/http/dashboard.service';
+import {TranslateService} from '@ngx-translate/core';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {ActionNotificationShow} from '@core/notification/notification.actions';
+import {Dashboard, DashboardLayoutId} from '@shared/models/dashboard.models';
+import {deepClone, isDefined, isObject, isString, isUndefined} from '@core/utils';
+import {WINDOW} from '@core/services/window.service';
+import {DOCUMENT} from '@angular/common';
 import {
-  AliasesInfo,
-  AliasFilterType,
-  EntityAlias,
-  EntityAliases,
-  EntityAliasFilter,
-  EntityAliasInfo
+    AliasesInfo,
+    AliasFilterType,
+    EntityAlias,
+    EntityAliases,
+    EntityAliasFilter,
+    EntityAliasInfo
 } from '@shared/models/alias.models';
-import { MatDialog } from '@angular/material/dialog';
-import { ImportDialogComponent, ImportDialogData } from '@home/components/import-export/import-dialog.component';
-import { forkJoin, Observable, of } from 'rxjs';
-import { catchError, map, mergeMap, tap } from 'rxjs/operators';
-import { DashboardUtilsService } from '@core/services/dashboard-utils.service';
-import { EntityService } from '@core/http/entity.service';
-import { Widget, WidgetSize, WidgetType, WidgetTypeDetails } from '@shared/models/widget.models';
+import {MatDialog} from '@angular/material/dialog';
+import {ImportDialogComponent, ImportDialogData} from '@home/components/import-export/import-dialog.component';
+import {forkJoin, Observable, of} from 'rxjs';
+import {catchError, map, mergeMap, tap} from 'rxjs/operators';
+import {DashboardUtilsService} from '@core/services/dashboard-utils.service';
+import {EntityService} from '@core/http/entity.service';
+import {Widget, WidgetSize, WidgetType, WidgetTypeDetails} from '@shared/models/widget.models';
 import {
-  EntityAliasesDialogComponent,
-  EntityAliasesDialogData
+    EntityAliasesDialogComponent,
+    EntityAliasesDialogData
 } from '@home/components/alias/entity-aliases-dialog.component';
-import { ItemBufferService, WidgetItem } from '@core/services/item-buffer.service';
+import {ItemBufferService, WidgetItem} from '@core/services/item-buffer.service';
 import {
-  BulkImportRequest,
-  BulkImportResult,
-  FileType,
-  ImportWidgetResult,
-  JSON_TYPE,
-  TEXT_TYPE,
-  WidgetsBundleItem,
-  ZIP_TYPE
+    BulkImportRequest,
+    BulkImportResult,
+    FileType,
+    ImportWidgetResult,
+    JSON_TYPE,
+    TEXT_TYPE,
+    WidgetsBundleItem,
+    ZIP_TYPE
 } from './import-export.models';
-import { EntityType } from '@shared/models/entity-type.models';
-import { UtilsService } from '@core/services/utils.service';
-import { WidgetService } from '@core/http/widget.service';
-import { NULL_UUID } from '@shared/models/id/has-uuid';
-import { WidgetsBundle } from '@shared/models/widgets-bundle.model';
-import { ImportEntitiesResultInfo, ImportEntityData } from '@shared/models/entity.models';
-import { RequestConfig } from '@core/http/http-utils';
-import { RuleChain, RuleChainImport, RuleChainMetaData, RuleChainType } from '@shared/models/rule-chain.models';
-import { RuleChainService } from '@core/http/rule-chain.service';
-import { FiltersInfo } from '@shared/models/query/query.models';
-import { DeviceProfileService } from '@core/http/device-profile.service';
-import { DeviceProfile } from '@shared/models/device.models';
-import { TenantProfile } from '@shared/models/tenant.model';
-import { TenantProfileService } from '@core/http/tenant-profile.service';
-import { DeviceService } from '@core/http/device.service';
-import { AssetService } from '@core/http/asset.service';
-import { EdgeService } from '@core/http/edge.service';
-import { RuleNode } from '@shared/models/rule-node.models';
-import { AssetProfileService } from '@core/http/asset-profile.service';
-import { AssetProfile } from '@shared/models/asset.models';
+import {EntityType} from '@shared/models/entity-type.models';
+import {UtilsService} from '@core/services/utils.service';
+import {WidgetService} from '@core/http/widget.service';
+import {NULL_UUID} from '@shared/models/id/has-uuid';
+import {WidgetsBundle} from '@shared/models/widgets-bundle.model';
+import {ImportEntitiesResultInfo, ImportEntityData} from '@shared/models/entity.models';
+import {RequestConfig} from '@core/http/http-utils';
+import {RuleChain, RuleChainImport, RuleChainMetaData, RuleChainType} from '@shared/models/rule-chain.models';
+import {RuleChainService} from '@core/http/rule-chain.service';
+import {FiltersInfo} from '@shared/models/query/query.models';
+import {DeviceProfileService} from '@core/http/device-profile.service';
+import {DeviceProfile} from '@shared/models/device.models';
+import {TenantProfile} from '@shared/models/tenant.model';
+import {TenantProfileService} from '@core/http/tenant-profile.service';
+import {DeviceService} from '@core/http/device.service';
+import {AssetService} from '@core/http/asset.service';
+import {EdgeService} from '@core/http/edge.service';
+import {RuleNode} from '@shared/models/rule-node.models';
+import {AssetProfileService} from '@core/http/asset-profile.service';
+import {AssetProfile} from '@shared/models/asset.models';
 
 // @dynamic
 @Injectable()
@@ -466,7 +466,7 @@ export class ImportExportService {
           const ruleChainNode: RuleNode = {
             name: '',
             debugMode: false,
-            type: 'org.thingsboard.rule.engine.flow.TbRuleChainInputNode',
+            type: 'org.echoiot.rule.engine.flow.TbRuleChainInputNode',
             configuration: {
               ruleChainId: ruleChainConnection.targetRuleChainId.id
             },

@@ -29,7 +29,7 @@ import org.eclipse.californium.scandium.util.ServerNames;
 import org.eclipse.leshan.server.security.NonUniqueSecurityInfoException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.thingsboard.common.util.JacksonUtil;
+import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.queue.util.TbLwM2mTransportComponent;
 import org.echoiot.server.transport.lwm2m.config.LwM2MTransportServerConfig;
 

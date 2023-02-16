@@ -16,8 +16,8 @@ import org.echoiot.server.common.transport.adaptor.AdaptorException;
 import org.echoiot.server.common.transport.adaptor.JsonConverter;
 import org.echoiot.server.common.transport.adaptor.ProtoConverter;
 import org.springframework.stereotype.Component;
-import org.thingsboard.server.gen.transport.TransportApiProtos;
-import org.thingsboard.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.transport.TransportApiProtos;
+import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.transport.mqtt.session.DeviceSessionCtx;
 import org.echoiot.server.transport.mqtt.session.MqttDeviceAwareSessionContext;
 

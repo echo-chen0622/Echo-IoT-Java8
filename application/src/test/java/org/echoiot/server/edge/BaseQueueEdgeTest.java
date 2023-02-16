@@ -1,16 +1,12 @@
 package org.echoiot.server.edge;
 
 import com.google.protobuf.AbstractMessage;
+import org.echoiot.server.common.data.queue.*;
+import org.echoiot.server.common.msg.queue.ServiceType;
+import org.echoiot.server.gen.edge.v1.QueueUpdateMsg;
+import org.echoiot.server.gen.edge.v1.UpdateMsgType;
 import org.junit.Assert;
 import org.junit.Test;
-import org.echoiot.server.common.data.queue.ProcessingStrategy;
-import org.echoiot.server.common.data.queue.ProcessingStrategyType;
-import org.echoiot.server.common.data.queue.Queue;
-import org.echoiot.server.common.data.queue.SubmitStrategy;
-import org.echoiot.server.common.data.queue.SubmitStrategyType;
-import org.echoiot.server.common.msg.queue.ServiceType;
-import org.thingsboard.server.gen.edge.v1.QueueUpdateMsg;
-import org.thingsboard.server.gen.edge.v1.UpdateMsgType;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 

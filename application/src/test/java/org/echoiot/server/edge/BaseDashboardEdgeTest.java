@@ -2,15 +2,15 @@ package org.echoiot.server.edge;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.protobuf.AbstractMessage;
-import org.junit.Assert;
-import org.junit.Test;
-import org.thingsboard.common.util.JacksonUtil;
+import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.common.data.Customer;
 import org.echoiot.server.common.data.Dashboard;
 import org.echoiot.server.common.data.ShortCustomerInfo;
 import org.echoiot.server.common.data.edge.Edge;
-import org.thingsboard.server.gen.edge.v1.DashboardUpdateMsg;
-import org.thingsboard.server.gen.edge.v1.UpdateMsgType;
+import org.echoiot.server.gen.edge.v1.DashboardUpdateMsg;
+import org.echoiot.server.gen.edge.v1.UpdateMsgType;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.util.Set;
 

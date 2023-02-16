@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -18,24 +18,24 @@
 /// <reference path="../../../../../../../src/typings/split.js.typings.d.ts" />
 
 import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  forwardRef,
-  Input,
-  OnDestroy,
-  OnInit,
-  QueryList,
-  ViewChildren,
-  ViewEncapsulation
+    AfterViewInit,
+    Component,
+    ElementRef,
+    forwardRef,
+    Input,
+    OnDestroy,
+    OnInit,
+    QueryList,
+    ViewChildren,
+    ViewEncapsulation
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { PageComponent } from '@shared/components/page.component';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { combineLatest } from 'rxjs';
-import { CustomActionDescriptor } from '@shared/models/widget.models';
-import { CustomPrettyActionEditorCompleter } from '@home/components/widget/action/custom-action.models';
+import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {PageComponent} from '@shared/components/page.component';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {combineLatest} from 'rxjs';
+import {CustomActionDescriptor} from '@shared/models/widget.models';
+import {CustomPrettyActionEditorCompleter} from '@home/components/widget/action/custom-action.models';
 
 @Component({
   selector: 'tb-custom-action-pretty-editor',

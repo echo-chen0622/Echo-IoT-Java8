@@ -3,24 +3,24 @@ package org.echoiot.server.service.security.auth.mfa;
 import lombok.RequiredArgsConstructor;
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.User;
-import org.echoiot.server.common.data.exception.ThingsboardErrorCode;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotErrorCode;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.id.UserId;
 import org.echoiot.server.common.data.security.model.mfa.PlatformTwoFaSettings;
 import org.echoiot.server.common.data.security.model.mfa.account.TwoFaAccountConfig;
 import org.echoiot.server.common.data.security.model.mfa.provider.TwoFaProviderConfig;
 import org.echoiot.server.common.data.security.model.mfa.provider.TwoFaProviderType;
+import org.echoiot.server.common.msg.tools.TbRateLimits;
 import org.echoiot.server.dao.user.UserService;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.security.auth.mfa.config.TwoFaConfigManager;
 import org.echoiot.server.service.security.auth.mfa.provider.TwoFaProvider;
+import org.echoiot.server.service.security.model.SecurityUser;
+import org.echoiot.server.service.security.system.SystemSecurityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.stereotype.Service;
-import org.echoiot.server.common.msg.tools.TbRateLimits;
-import org.echoiot.server.service.security.model.SecurityUser;
-import org.echoiot.server.service.security.system.SystemSecurityService;
 
 import java.util.Collection;
 import java.util.EnumMap;
@@ -39,9 +39,9 @@ public class DefaultTwoFactorAuthService implements TwoFactorAuthService {
     private final UserService userService;
     private final Map<TwoFaProviderType, TwoFaProvider<TwoFaProviderConfig, TwoFaAccountConfig>> providers = new EnumMap<>(TwoFaProviderType.class);
 
-    private static final ThingsboardException ACCOUNT_NOT_CONFIGURED_ERROR = new ThingsboardException("2FA is not configured for account", ThingsboardErrorCode.BAD_REQUEST_PARAMS);
-    private static final ThingsboardException PROVIDER_NOT_CONFIGURED_ERROR = new ThingsboardException("2FA provider is not configured", ThingsboardErrorCode.BAD_REQUEST_PARAMS);
-    private static final ThingsboardException PROVIDER_NOT_AVAILABLE_ERROR = new ThingsboardException("2FA provider is not available", ThingsboardErrorCode.GENERAL);
+    private static final EchoiotException ACCOUNT_NOT_CONFIGURED_ERROR = new EchoiotException("2FA is not configured for account", EchoiotErrorCode.BAD_REQUEST_PARAMS);
+    private static final EchoiotException PROVIDER_NOT_CONFIGURED_ERROR = new EchoiotException("2FA provider is not configured", EchoiotErrorCode.BAD_REQUEST_PARAMS);
+    private static final EchoiotException PROVIDER_NOT_AVAILABLE_ERROR = new EchoiotException("2FA provider is not available", EchoiotErrorCode.GENERAL);
 
     private final ConcurrentMap<UserId, ConcurrentMap<TwoFaProviderType, TbRateLimits>> verificationCodeSendingRateLimits = new ConcurrentHashMap<>();
     private final ConcurrentMap<UserId, ConcurrentMap<TwoFaProviderType, TbRateLimits>> verificationCodeCheckingRateLimits = new ConcurrentHashMap<>();
@@ -54,7 +54,7 @@ public class DefaultTwoFactorAuthService implements TwoFactorAuthService {
     }
 
     @Override
-    public void checkProvider(TenantId tenantId, TwoFaProviderType providerType) throws ThingsboardException {
+    public void checkProvider(TenantId tenantId, TwoFaProviderType providerType) throws EchoiotException {
         getTwoFaProvider(providerType).check(tenantId);
     }
 
@@ -67,7 +67,7 @@ public class DefaultTwoFactorAuthService implements TwoFactorAuthService {
     }
 
     @Override
-    public void prepareVerificationCode(SecurityUser user, TwoFaAccountConfig accountConfig, boolean checkLimits) throws ThingsboardException {
+    public void prepareVerificationCode(SecurityUser user, TwoFaAccountConfig accountConfig, boolean checkLimits) throws EchoiotException {
         PlatformTwoFaSettings twoFaSettings = configManager.getPlatformTwoFaSettings(user.getTenantId(), true)
                                                            .orElseThrow(() -> PROVIDER_NOT_CONFIGURED_ERROR);
         if (checkLimits) {
@@ -86,16 +86,16 @@ public class DefaultTwoFactorAuthService implements TwoFactorAuthService {
 
 
     @Override
-    public boolean checkVerificationCode(SecurityUser user, TwoFaProviderType providerType, String verificationCode, boolean checkLimits) throws ThingsboardException {
+    public boolean checkVerificationCode(SecurityUser user, TwoFaProviderType providerType, String verificationCode, boolean checkLimits) throws EchoiotException {
         TwoFaAccountConfig accountConfig = configManager.getTwoFaAccountConfig(user.getTenantId(), user.getId(), providerType)
                 .orElseThrow(() -> ACCOUNT_NOT_CONFIGURED_ERROR);
         return checkVerificationCode(user, verificationCode, accountConfig, checkLimits);
     }
 
     @Override
-    public boolean checkVerificationCode(SecurityUser user, String verificationCode, TwoFaAccountConfig accountConfig, boolean checkLimits) throws ThingsboardException {
+    public boolean checkVerificationCode(SecurityUser user, String verificationCode, TwoFaAccountConfig accountConfig, boolean checkLimits) throws EchoiotException {
         if (!userService.findUserCredentialsByUserId(user.getTenantId(), user.getId()).isEnabled()) {
-            throw new ThingsboardException("User is disabled", ThingsboardErrorCode.AUTHENTICATION);
+            throw new EchoiotException("User is disabled", EchoiotErrorCode.AUTHENTICATION);
         }
 
         PlatformTwoFaSettings twoFaSettings = configManager.getPlatformTwoFaSettings(user.getTenantId(), true)
@@ -118,7 +118,7 @@ public class DefaultTwoFactorAuthService implements TwoFactorAuthService {
             } catch (LockedException e) {
                 verificationCodeCheckingRateLimits.remove(user.getId());
                 verificationCodeSendingRateLimits.remove(user.getId());
-                throw new ThingsboardException(e.getMessage(), ThingsboardErrorCode.AUTHENTICATION);
+                throw new EchoiotException(e.getMessage(), EchoiotErrorCode.AUTHENTICATION);
             }
             if (verificationSuccess) {
                 verificationCodeCheckingRateLimits.remove(user.getId());
@@ -129,7 +129,7 @@ public class DefaultTwoFactorAuthService implements TwoFactorAuthService {
     }
 
     private void checkRateLimits(UserId userId, TwoFaProviderType providerType, String rateLimitConfig,
-                                 ConcurrentMap<UserId, ConcurrentMap<TwoFaProviderType, TbRateLimits>> rateLimits) throws ThingsboardException {
+                                 ConcurrentMap<UserId, ConcurrentMap<TwoFaProviderType, TbRateLimits>> rateLimits) throws EchoiotException {
         if (StringUtils.isNotEmpty(rateLimitConfig)) {
             ConcurrentMap<TwoFaProviderType, TbRateLimits> providersRateLimits = rateLimits.computeIfAbsent(userId, i -> new ConcurrentHashMap<>());
 
@@ -139,7 +139,7 @@ public class DefaultTwoFactorAuthService implements TwoFactorAuthService {
                 providersRateLimits.put(providerType, rateLimit);
             }
             if (!rateLimit.tryConsume()) {
-                throw new ThingsboardException("Too many requests", ThingsboardErrorCode.TOO_MANY_REQUESTS);
+                throw new EchoiotException("Too many requests", EchoiotErrorCode.TOO_MANY_REQUESTS);
             }
         } else {
             rateLimits.remove(userId);
@@ -148,19 +148,19 @@ public class DefaultTwoFactorAuthService implements TwoFactorAuthService {
 
 
     @Override
-    public TwoFaAccountConfig generateNewAccountConfig(User user, TwoFaProviderType providerType) throws ThingsboardException {
+    public TwoFaAccountConfig generateNewAccountConfig(User user, TwoFaProviderType providerType) throws EchoiotException {
         TwoFaProviderConfig providerConfig = getTwoFaProviderConfig(user.getTenantId(), providerType);
         return getTwoFaProvider(providerType).generateNewAccountConfig(user, providerConfig);
     }
 
 
-    private TwoFaProviderConfig getTwoFaProviderConfig(TenantId tenantId, TwoFaProviderType providerType) throws ThingsboardException {
+    private TwoFaProviderConfig getTwoFaProviderConfig(TenantId tenantId, TwoFaProviderType providerType) throws EchoiotException {
         return configManager.getPlatformTwoFaSettings(tenantId, true)
                 .flatMap(twoFaSettings -> twoFaSettings.getProviderConfig(providerType))
                 .orElseThrow(() -> PROVIDER_NOT_CONFIGURED_ERROR);
     }
 
-    private TwoFaProvider<TwoFaProviderConfig, TwoFaAccountConfig> getTwoFaProvider(TwoFaProviderType providerType) throws ThingsboardException {
+    private TwoFaProvider<TwoFaProviderConfig, TwoFaAccountConfig> getTwoFaProvider(TwoFaProviderType providerType) throws EchoiotException {
         return Optional.ofNullable(providers.get(providerType))
                 .orElseThrow(() -> PROVIDER_NOT_AVAILABLE_ERROR);
     }

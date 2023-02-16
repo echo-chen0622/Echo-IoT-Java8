@@ -7,6 +7,8 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import lombok.extern.slf4j.Slf4j;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.echoiot.common.util.EchoiotThreadFactory;
+import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.cluster.TbClusterService;
 import org.echoiot.server.common.data.EdgeUtils;
 import org.echoiot.server.common.data.edge.Edge;
@@ -17,31 +19,14 @@ import org.echoiot.server.common.data.id.EdgeId;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.RuleChainId;
 import org.echoiot.server.common.data.id.TenantId;
+import org.echoiot.server.common.msg.queue.TbCallback;
 import org.echoiot.server.dao.edge.EdgeEventService;
 import org.echoiot.server.dao.edge.EdgeService;
+import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.queue.util.TbCoreComponent;
+import org.echoiot.server.service.edge.rpc.processor.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.thingsboard.common.util.JacksonUtil;
-import org.thingsboard.common.util.ThingsBoardThreadFactory;
-import org.echoiot.server.common.msg.queue.TbCallback;
-import org.thingsboard.server.gen.transport.TransportProtos;
-import org.echoiot.server.service.edge.rpc.processor.AlarmEdgeProcessor;
-import org.echoiot.server.service.edge.rpc.processor.AssetEdgeProcessor;
-import org.echoiot.server.service.edge.rpc.processor.AssetProfileEdgeProcessor;
-import org.echoiot.server.service.edge.rpc.processor.CustomerEdgeProcessor;
-import org.echoiot.server.service.edge.rpc.processor.DashboardEdgeProcessor;
-import org.echoiot.server.service.edge.rpc.processor.DeviceEdgeProcessor;
-import org.echoiot.server.service.edge.rpc.processor.DeviceProfileEdgeProcessor;
-import org.echoiot.server.service.edge.rpc.processor.EdgeProcessor;
-import org.echoiot.server.service.edge.rpc.processor.EntityViewEdgeProcessor;
-import org.echoiot.server.service.edge.rpc.processor.OtaPackageEdgeProcessor;
-import org.echoiot.server.service.edge.rpc.processor.QueueEdgeProcessor;
-import org.echoiot.server.service.edge.rpc.processor.RelationEdgeProcessor;
-import org.echoiot.server.service.edge.rpc.processor.RuleChainEdgeProcessor;
-import org.echoiot.server.service.edge.rpc.processor.UserEdgeProcessor;
-import org.echoiot.server.service.edge.rpc.processor.WidgetBundleEdgeProcessor;
-import org.echoiot.server.service.edge.rpc.processor.WidgetTypeEdgeProcessor;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -117,7 +102,7 @@ public class DefaultEdgeNotificationService implements EdgeNotificationService {
 
     @PostConstruct
     public void initExecutor() {
-        dbCallBackExecutor = Executors.newSingleThreadExecutor(ThingsBoardThreadFactory.forName("edge-notifications"));
+        dbCallBackExecutor = Executors.newSingleThreadExecutor(EchoiotThreadFactory.forName("edge-notifications"));
     }
 
     @PreDestroy

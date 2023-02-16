@@ -7,6 +7,10 @@ import com.google.gson.JsonPrimitive;
 import lombok.Data;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.echoiot.common.util.DonAsynchron;
+import org.echoiot.common.util.EchoiotThreadFactory;
+import org.echoiot.common.util.JacksonUtil;
+import org.echoiot.server.common.data.*;
 import org.echoiot.server.common.data.audit.ActionType;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.HasId;
@@ -21,19 +25,8 @@ import org.echoiot.server.common.data.sync.ie.importing.csv.BulkImportRequest;
 import org.echoiot.server.common.data.sync.ie.importing.csv.BulkImportResult;
 import org.echoiot.server.common.data.tenant.profile.DefaultTenantProfileConfiguration;
 import org.echoiot.server.common.transport.adaptor.JsonConverter;
-import org.echoiot.server.dao.tenant.TbTenantProfileCache;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.thingsboard.common.util.DonAsynchron;
-import org.thingsboard.common.util.JacksonUtil;
-import org.thingsboard.common.util.ThingsBoardThreadFactory;
-import org.echoiot.server.common.data.EntityType;
-import org.echoiot.server.common.data.HasAdditionalInfo;
-import org.echoiot.server.common.data.HasTenantId;
-import org.echoiot.server.common.data.StringUtils;
-import org.echoiot.server.common.data.TenantProfile;
 import org.echoiot.server.controller.BaseController;
+import org.echoiot.server.dao.tenant.TbTenantProfileCache;
 import org.echoiot.server.service.action.EntityActionService;
 import org.echoiot.server.service.security.AccessValidator;
 import org.echoiot.server.service.security.model.SecurityUser;
@@ -43,15 +36,14 @@ import org.echoiot.server.service.security.permission.Resource;
 import org.echoiot.server.service.telemetry.TelemetrySubscriptionService;
 import org.echoiot.server.utils.CsvUtils;
 import org.echoiot.server.utils.TypeCastUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -79,7 +71,7 @@ public abstract class AbstractBulkImportService<E extends HasId<? extends Entity
         if (executor == null) {
             executor = new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors(), Runtime.getRuntime().availableProcessors(),
                     60L, TimeUnit.SECONDS, new LinkedBlockingQueue<>(150_000),
-                    ThingsBoardThreadFactory.forName("bulk-import"), new ThreadPoolExecutor.CallerRunsPolicy());
+                    EchoiotThreadFactory.forName("bulk-import"), new ThreadPoolExecutor.CallerRunsPolicy());
             executor.allowCoreThreadTimeOut(true);
         }
     }

@@ -17,11 +17,11 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StopWatch;
-import org.thingsboard.common.util.ThingsBoardThreadFactory;
-import org.thingsboard.script.api.TbScriptException;
-import org.thingsboard.script.api.js.AbstractJsInvokeService;
-import org.thingsboard.script.api.js.JsScriptInfo;
-import org.thingsboard.server.gen.js.JsInvokeProtos;
+import org.echoiot.common.util.EchoiotThreadFactory;
+import org.echoiot.script.api.TbScriptException;
+import org.echoiot.script.api.js.AbstractJsInvokeService;
+import org.echoiot.script.api.js.JsScriptInfo;
+import org.echoiot.server.gen.js.JsInvokeProtos;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -66,7 +66,7 @@ public class RemoteJsInvokeService extends AbstractJsInvokeService {
     private boolean statsEnabled;
 
     private final ExecutorService callbackExecutor = Executors.newFixedThreadPool(
-            Runtime.getRuntime().availableProcessors(), ThingsBoardThreadFactory.forName("js-executor-remote-callback"));
+            Runtime.getRuntime().availableProcessors(), EchoiotThreadFactory.forName("js-executor-remote-callback"));
 
     public RemoteJsInvokeService(Optional<TbApiUsageStateClient> apiUsageStateClient, Optional<TbApiUsageReportClient> apiUsageClient) {
         super(apiUsageStateClient, apiUsageClient);

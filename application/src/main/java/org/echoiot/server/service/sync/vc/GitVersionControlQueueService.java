@@ -9,15 +9,10 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.common.data.sync.ie.EntityExportData;
+import org.echoiot.server.common.data.sync.vc.*;
 import org.echoiot.server.common.data.sync.vc.request.create.VersionCreateRequest;
+import org.echoiot.server.gen.transport.TransportProtos.VersionControlResponseMsg;
 import org.echoiot.server.service.sync.vc.data.CommitGitRequest;
-import org.echoiot.server.common.data.sync.vc.BranchInfo;
-import org.echoiot.server.common.data.sync.vc.EntityVersion;
-import org.echoiot.server.common.data.sync.vc.EntityVersionsDiff;
-import org.echoiot.server.common.data.sync.vc.RepositorySettings;
-import org.echoiot.server.common.data.sync.vc.VersionCreationResult;
-import org.echoiot.server.common.data.sync.vc.VersionedEntityInfo;
-import org.thingsboard.server.gen.transport.TransportProtos.VersionControlResponseMsg;
 
 import java.util.List;
 

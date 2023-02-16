@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -15,31 +15,31 @@
 ///
 
 import {
-  Component,
-  Injector,
-  Input,
-  OnDestroy,
-  OnInit,
-  StaticProvider,
-  ViewChild,
-  ViewContainerRef
+    Component,
+    Injector,
+    Input,
+    OnDestroy,
+    OnInit,
+    StaticProvider,
+    ViewChild,
+    ViewContainerRef
 } from '@angular/core';
-import { TooltipPosition } from '@angular/material/tooltip';
-import { IAliasController } from '@core/api/widget-api.models';
-import { CdkOverlayOrigin, ConnectedPosition, Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
-import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
-import { BreakpointObserver } from '@angular/cdk/layout';
-import { deepClone } from '@core/utils';
-import { Filter, FilterInfo, isFilterEditable } from '@shared/models/query/query.models';
+import {TooltipPosition} from '@angular/material/tooltip';
+import {IAliasController} from '@core/api/widget-api.models';
+import {CdkOverlayOrigin, ConnectedPosition, Overlay, OverlayConfig, OverlayRef} from '@angular/cdk/overlay';
+import {TranslateService} from '@ngx-translate/core';
+import {Subscription} from 'rxjs';
+import {BreakpointObserver} from '@angular/cdk/layout';
+import {deepClone} from '@core/utils';
+import {Filter, FilterInfo, isFilterEditable} from '@shared/models/query/query.models';
 import {
-  FILTER_EDIT_PANEL_DATA,
-  FiltersEditPanelComponent,
-  FiltersEditPanelData
+    FILTER_EDIT_PANEL_DATA,
+    FiltersEditPanelComponent,
+    FiltersEditPanelData
 } from '@home/components/filter/filters-edit-panel.component';
-import { ComponentPortal } from '@angular/cdk/portal';
-import { UserFilterDialogComponent, UserFilterDialogData } from '@home/components/filter/user-filter-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
+import {ComponentPortal} from '@angular/cdk/portal';
+import {UserFilterDialogComponent, UserFilterDialogData} from '@home/components/filter/user-filter-dialog.component';
+import {MatDialog} from '@angular/material/dialog';
 
 @Component({
   selector: 'tb-filters-edit',

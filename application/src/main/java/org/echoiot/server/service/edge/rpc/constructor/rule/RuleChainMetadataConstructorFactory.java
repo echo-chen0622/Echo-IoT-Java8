@@ -1,6 +1,6 @@
 package org.echoiot.server.service.edge.rpc.constructor.rule;
 
-import org.thingsboard.server.gen.edge.v1.EdgeVersion;
+import org.echoiot.server.gen.edge.v1.EdgeVersion;
 
 public final class RuleChainMetadataConstructorFactory {
 

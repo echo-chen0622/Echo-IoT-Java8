@@ -1,25 +1,18 @@
 package org.echoiot.server.dao.attributes;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.serializer.SerializationException;
-import org.springframework.stereotype.Service;
 import org.echoiot.server.cache.CacheSpecsMap;
 import org.echoiot.server.cache.RedisTbTransactionalCache;
 import org.echoiot.server.cache.TBRedisCacheConfiguration;
 import org.echoiot.server.cache.TbRedisSerializer;
 import org.echoiot.server.common.data.CacheConstants;
-import org.echoiot.server.common.data.kv.AttributeKvEntry;
-import org.echoiot.server.common.data.kv.BaseAttributeKvEntry;
-import org.echoiot.server.common.data.kv.BooleanDataEntry;
-import org.echoiot.server.common.data.kv.DoubleDataEntry;
-import org.echoiot.server.common.data.kv.JsonDataEntry;
-import org.echoiot.server.common.data.kv.KvEntry;
-import org.echoiot.server.common.data.kv.LongDataEntry;
-import org.echoiot.server.common.data.kv.StringDataEntry;
-import org.thingsboard.server.gen.transport.TransportProtos.AttributeValueProto;
-import org.thingsboard.server.gen.transport.TransportProtos.KeyValueType;
+import org.echoiot.server.common.data.kv.*;
+import org.echoiot.server.gen.transport.TransportProtos.AttributeValueProto;
+import org.echoiot.server.gen.transport.TransportProtos.KeyValueType;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.serializer.SerializationException;
+import org.springframework.stereotype.Service;
 
 @ConditionalOnProperty(prefix = "cache", value = "type", havingValue = "redis")
 @Service("AttributeCache")

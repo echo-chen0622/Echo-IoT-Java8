@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
-import static org.thingsboard.rest.client.utils.RestJsonConverter.toTimeseries;
+import static org.echoiot.rest.client.utils.RestJsonConverter.toTimeseries;
 import static org.echoiot.server.common.data.ota.OtaPackageUpdateStatus.DOWNLOADED;
 import static org.echoiot.server.common.data.ota.OtaPackageUpdateStatus.DOWNLOADING;
 import static org.echoiot.server.common.data.ota.OtaPackageUpdateStatus.FAILED;

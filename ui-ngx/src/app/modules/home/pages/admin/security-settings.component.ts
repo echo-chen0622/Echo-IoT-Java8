@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -172,7 +172,7 @@ export class SecuritySettingsComponent extends PageComponent implements HasConfi
   }
 
   private base64Format(control: FormControl): { [key: string]: boolean } | null {
-    if (control.value === '' || control.value === 'thingsboardDefaultSigningKey') {
+    if (control.value === '' || control.value === 'echoiotDefaultSigningKey') {
       return null;
     }
     try {

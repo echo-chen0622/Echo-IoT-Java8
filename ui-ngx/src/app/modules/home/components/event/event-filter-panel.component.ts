@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,12 +14,12 @@
 /// limitations under the License.
 ///
 
-import { Component, Inject, InjectionToken } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { OverlayRef } from '@angular/cdk/overlay';
-import { EntityType } from '@shared/models/entity-type.models';
-import { FilterEventBody } from '@shared/models/event.models';
-import { deepTrim } from '@core/utils';
+import {Component, Inject, InjectionToken} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {OverlayRef} from '@angular/cdk/overlay';
+import {EntityType} from '@shared/models/entity-type.models';
+import {FilterEventBody} from '@shared/models/event.models';
+import {deepTrim} from '@core/utils';
 
 export const EVENT_FILTER_PANEL_DATA = new InjectionToken<any>('AlarmFilterPanelData');
 
@@ -112,4 +112,3 @@ export class EventFilterPanelComponent {
     }
   }
 }
-

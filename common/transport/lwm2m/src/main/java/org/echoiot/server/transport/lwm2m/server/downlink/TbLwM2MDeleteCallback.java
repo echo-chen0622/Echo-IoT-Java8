@@ -2,7 +2,7 @@ package org.echoiot.server.transport.lwm2m.server.downlink;
 
 import org.eclipse.leshan.core.request.DeleteRequest;
 import org.eclipse.leshan.core.response.DeleteResponse;
-import org.thingsboard.server.transport.lwm2m.server.client.LwM2mClient;
+import org.echoiot.server.transport.lwm2m.server.client.LwM2mClient;
 import org.echoiot.server.transport.lwm2m.server.log.LwM2MTelemetryLogService;
 
 public class TbLwM2MDeleteCallback extends TbLwM2MTargetedCallback<DeleteRequest, DeleteResponse> {

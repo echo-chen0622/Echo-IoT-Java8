@@ -16,8 +16,8 @@ import org.eclipse.californium.core.coap.MediaTypeRegistry;
 import org.eclipse.californium.core.coap.Request;
 import org.eclipse.californium.core.coap.Response;
 import org.springframework.stereotype.Component;
-import org.thingsboard.server.gen.transport.TransportApiProtos;
-import org.thingsboard.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.transport.TransportApiProtos;
+import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.transport.coap.CoapTransportResource;
 
 import java.util.Optional;

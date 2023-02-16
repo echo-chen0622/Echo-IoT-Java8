@@ -5,6 +5,7 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
+import org.echoiot.common.util.EchoiotExecutors;
 import org.echoiot.server.common.data.Customer;
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.Tenant;
@@ -16,7 +17,6 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.thingsboard.common.util.ThingsBoardExecutors;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +33,7 @@ public abstract class BaseCustomerServiceTest extends AbstractServiceTest {
 
     @Before
     public void before() {
-        executor = MoreExecutors.listeningDecorator(ThingsBoardExecutors.newWorkStealingPool(8, getClass()));
+        executor = MoreExecutors.listeningDecorator(EchoiotExecutors.newWorkStealingPool(8, getClass()));
 
         Tenant tenant = new Tenant();
         tenant.setTitle("My tenant");

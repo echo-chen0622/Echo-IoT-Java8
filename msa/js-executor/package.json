@@ -1,8 +1,8 @@
 {
-  "name": "thingsboard-js-executor",
+  "name": "echoiot-js-executor",
   "private": true,
   "version": "3.4.4",
-  "description": "ThingsBoard JavaScript Executor Microservice",
+  "description": "Echoiot JavaScript Executor Microservice",
   "main": "server.ts",
   "bin": "server.js",
   "scripts": {

@@ -3,7 +3,7 @@
 
 <suite name="Rule Chain Smoke Tests">
     <listeners>
-        <listener class-name="org.thingsboard.server.msa.ui.listeners.RetryTestListener"/>
+        <listener class-name="org.echoiot.server.msa.ui.listeners.RetryTestListener"/>
     </listeners>
     <test name="Rule Chain ui smoke tests">
         <groups>
@@ -12,7 +12,7 @@
             </run>
         </groups>
         <packages>
-            <package name="org.thingsboard.server.msa.ui.tests.ruleChainsSmoke"/>
+            <package name="org.echoiot.server.msa.ui.tests.ruleChainsSmoke"/>
         </packages>
     </test>
 </suite>

@@ -2,17 +2,17 @@ package org.echoiot.server.service.security.permission;
 
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.HasTenantId;
-import org.echoiot.server.common.data.exception.ThingsboardErrorCode;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotErrorCode;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.security.Authority;
+import org.echoiot.server.service.security.model.SecurityUser;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.echoiot.server.service.security.model.SecurityUser;
 
-import java.util.*;
-
-import static org.echoiot.server.dao.service.Validator.validateId;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -33,7 +33,7 @@ public class DefaultAccessControlService implements AccessControlService {
     }
 
     @Override
-    public void checkPermission(SecurityUser user, Resource resource, Operation operation) throws ThingsboardException {
+    public void checkPermission(SecurityUser user, Resource resource, Operation operation) throws EchoiotException {
         PermissionChecker permissionChecker = getPermissionChecker(user.getAuthority(), resource);
         if (!permissionChecker.hasPermission(user, operation)) {
             permissionDenied();
@@ -43,14 +43,14 @@ public class DefaultAccessControlService implements AccessControlService {
     @Override
     @SuppressWarnings("unchecked")
     public <I extends EntityId, T extends HasTenantId> void checkPermission(SecurityUser user, Resource resource,
-                                                                            Operation operation, I entityId, T entity) throws ThingsboardException {
+                                                                            Operation operation, I entityId, T entity) throws EchoiotException {
         PermissionChecker permissionChecker = getPermissionChecker(user.getAuthority(), resource);
         if (!permissionChecker.hasPermission(user, operation, entityId, entity)) {
             permissionDenied();
         }
     }
 
-    private PermissionChecker getPermissionChecker(Authority authority, Resource resource) throws ThingsboardException {
+    private PermissionChecker getPermissionChecker(Authority authority, Resource resource) throws EchoiotException {
         Permissions permissions = authorityPermissions.get(authority);
         if (permissions == null) {
             permissionDenied();
@@ -62,9 +62,9 @@ public class DefaultAccessControlService implements AccessControlService {
         return permissionChecker.get();
     }
 
-    private void permissionDenied() throws ThingsboardException {
-        throw new ThingsboardException(YOU_DON_T_HAVE_PERMISSION_TO_PERFORM_THIS_OPERATION,
-                                       ThingsboardErrorCode.PERMISSION_DENIED);
+    private void permissionDenied() throws EchoiotException {
+        throw new EchoiotException(YOU_DON_T_HAVE_PERMISSION_TO_PERFORM_THIS_OPERATION,
+                                       EchoiotErrorCode.PERMISSION_DENIED);
     }
 
 }

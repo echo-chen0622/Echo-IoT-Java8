@@ -3,10 +3,10 @@ package org.echoiot.server.service.session;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.cache.TbTransactionalCache;
 import org.echoiot.server.common.data.id.DeviceId;
+import org.echoiot.server.gen.transport.TransportProtos.DeviceSessionsCacheEntry;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.thingsboard.server.gen.transport.TransportProtos.DeviceSessionsCacheEntry;
 
 import java.util.Collections;
 

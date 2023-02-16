@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,31 +14,31 @@
 /// limitations under the License.
 ///
 
-import { Component, forwardRef, Input, OnInit } from '@angular/core';
+import {Component, forwardRef, Input, OnInit} from '@angular/core';
 import {
-  AbstractControl,
-  ControlValueAccessor,
-  FormArray,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  NG_VALIDATORS,
-  NG_VALUE_ACCESSOR,
-  Validator,
-  Validators
+    AbstractControl,
+    ControlValueAccessor,
+    FormArray,
+    FormBuilder,
+    FormControl,
+    FormGroup,
+    NG_VALIDATORS,
+    NG_VALUE_ACCESSOR,
+    Validator,
+    Validators
 } from '@angular/forms';
-import { PageComponent } from '@shared/components/page.component';
+import {PageComponent} from '@shared/components/page.component';
 import {
-  EntityTypeVersionCreateConfig,
-  exportableEntityTypes,
-  SyncStrategy,
-  syncStrategyTranslationMap
+    EntityTypeVersionCreateConfig,
+    exportableEntityTypes,
+    SyncStrategy,
+    syncStrategyTranslationMap
 } from '@shared/models/vc.models';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { TranslateService } from '@ngx-translate/core';
-import { EntityType, entityTypeTranslations } from '@shared/models/entity-type.models';
-import { isDefinedAndNotNull } from '@core/utils';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {TranslateService} from '@ngx-translate/core';
+import {EntityType, entityTypeTranslations} from '@shared/models/entity-type.models';
+import {isDefinedAndNotNull} from '@core/utils';
 
 @Component({
   selector: 'tb-entity-types-version-create',

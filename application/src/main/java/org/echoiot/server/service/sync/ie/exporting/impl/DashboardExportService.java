@@ -2,14 +2,14 @@ package org.echoiot.server.service.sync.ie.exporting.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.collections.CollectionUtils;
+import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.common.data.Dashboard;
 import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.id.DashboardId;
 import org.echoiot.server.common.data.sync.ie.EntityExportData;
-import org.springframework.stereotype.Service;
-import org.thingsboard.common.util.JacksonUtil;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.sync.vc.data.EntitiesExportCtx;
+import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.Set;

@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,15 +14,15 @@
 /// limitations under the License.
 ///
 
-import { Injectable } from '@angular/core';
-import { defaultHttpOptionsFromConfig, RequestConfig } from './http-utils';
-import { Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
-import { PageLink } from '@shared/models/page/page-link';
-import { PageData } from '@shared/models/page/page-data';
-import { EntitySubtype } from '@app/shared/models/entity-type.models';
-import { Asset, AssetInfo, AssetSearchQuery } from '@app/shared/models/asset.models';
-import { BulkImportRequest, BulkImportResult } from '@home/components/import-export/import-export.models';
+import {Injectable} from '@angular/core';
+import {defaultHttpOptionsFromConfig, RequestConfig} from './http-utils';
+import {Observable} from 'rxjs';
+import {HttpClient} from '@angular/common/http';
+import {PageLink} from '@shared/models/page/page-link';
+import {PageData} from '@shared/models/page/page-data';
+import {EntitySubtype} from '@app/shared/models/entity-type.models';
+import {Asset, AssetInfo, AssetSearchQuery} from '@app/shared/models/asset.models';
+import {BulkImportRequest, BulkImportResult} from '@home/components/import-export/import-export.models';
 
 @Injectable({
   providedIn: 'root'

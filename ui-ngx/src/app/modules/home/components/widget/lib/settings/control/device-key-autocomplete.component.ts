@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,19 +14,19 @@
 /// limitations under the License.
 ///
 
-import { Component, ElementRef, forwardRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
-import { PageComponent } from '@shared/components/page.component';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { TranslateService } from '@ngx-translate/core';
-import { DataKeyType } from '@shared/models/telemetry/telemetry.models';
-import { Observable, of } from 'rxjs';
-import { IAliasController } from '@core/api/widget-api.models';
-import { catchError, map, mergeMap, publishReplay, refCount, tap } from 'rxjs/operators';
-import { DataKey } from '@shared/models/widget.models';
-import { EntityService } from '@core/http/entity.service';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import {Component, ElementRef, forwardRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR, Validators} from '@angular/forms';
+import {PageComponent} from '@shared/components/page.component';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {TranslateService} from '@ngx-translate/core';
+import {DataKeyType} from '@shared/models/telemetry/telemetry.models';
+import {Observable, of} from 'rxjs';
+import {IAliasController} from '@core/api/widget-api.models';
+import {catchError, map, mergeMap, publishReplay, refCount, tap} from 'rxjs/operators';
+import {DataKey} from '@shared/models/widget.models';
+import {EntityService} from '@core/http/entity.service';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
 
 @Component({
   selector: 'tb-device-key-autocomplete',

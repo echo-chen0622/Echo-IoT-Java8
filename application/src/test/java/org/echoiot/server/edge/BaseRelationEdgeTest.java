@@ -1,18 +1,18 @@
 package org.echoiot.server.edge;
 
 import com.google.protobuf.AbstractMessage;
-import org.echoiot.server.common.data.relation.EntityRelation;
-import org.echoiot.server.common.data.relation.RelationTypeGroup;
-import org.junit.Assert;
-import org.junit.Test;
 import org.echoiot.server.common.data.Device;
 import org.echoiot.server.common.data.asset.Asset;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.EntityIdFactory;
-import org.thingsboard.server.gen.edge.v1.RelationRequestMsg;
-import org.thingsboard.server.gen.edge.v1.RelationUpdateMsg;
-import org.thingsboard.server.gen.edge.v1.UpdateMsgType;
-import org.thingsboard.server.gen.edge.v1.UplinkMsg;
+import org.echoiot.server.common.data.relation.EntityRelation;
+import org.echoiot.server.common.data.relation.RelationTypeGroup;
+import org.echoiot.server.gen.edge.v1.RelationRequestMsg;
+import org.echoiot.server.gen.edge.v1.RelationUpdateMsg;
+import org.echoiot.server.gen.edge.v1.UpdateMsgType;
+import org.echoiot.server.gen.edge.v1.UplinkMsg;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.util.UUID;
 

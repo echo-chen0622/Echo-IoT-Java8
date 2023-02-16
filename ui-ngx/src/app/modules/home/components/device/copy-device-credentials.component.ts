@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,18 +14,18 @@
 /// limitations under the License.
 ///
 
-import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { EntityId } from '@shared/models/id/entity-id';
-import { DeviceService } from '@core/http/device.service';
-import { DeviceCredentials, DeviceCredentialsType } from '@shared/models/device.models';
-import { isDefinedAndNotNull, isEqual } from '@core/utils';
-import { BehaviorSubject, Subject, Subscription } from 'rxjs';
-import { distinctUntilChanged, filter, mergeMap, tap } from 'rxjs/operators';
-import { EntityType } from '@shared/models/entity-type.models';
-import { ActionNotificationShow } from '@core/notification/notification.actions';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { TranslateService } from '@ngx-translate/core';
+import {ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {EntityId} from '@shared/models/id/entity-id';
+import {DeviceService} from '@core/http/device.service';
+import {DeviceCredentials, DeviceCredentialsType} from '@shared/models/device.models';
+import {isDefinedAndNotNull, isEqual} from '@core/utils';
+import {BehaviorSubject, Subject, Subscription} from 'rxjs';
+import {distinctUntilChanged, filter, mergeMap, tap} from 'rxjs/operators';
+import {EntityType} from '@shared/models/entity-type.models';
+import {ActionNotificationShow} from '@core/notification/notification.actions';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {TranslateService} from '@ngx-translate/core';
 
 @Component({
   selector: 'tb-copy-device-credentials',

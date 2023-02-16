@@ -1,6 +1,13 @@
 package org.echoiot.server.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import org.echoiot.common.util.JacksonUtil;
+import org.echoiot.server.common.data.*;
+import org.echoiot.server.common.data.audit.ActionType;
+import org.echoiot.server.common.data.id.DeviceProfileId;
+import org.echoiot.server.common.data.page.PageData;
+import org.echoiot.server.common.data.page.PageLink;
+import org.echoiot.server.common.data.security.Authority;
 import org.echoiot.server.dao.exception.DataValidationException;
 import org.junit.After;
 import org.junit.Assert;
@@ -10,28 +17,15 @@ import org.mockito.Mockito;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.thingsboard.common.util.JacksonUtil;
-import org.echoiot.server.common.data.DeviceProfile;
-import org.echoiot.server.common.data.OtaPackage;
-import org.echoiot.server.common.data.OtaPackageInfo;
-import org.echoiot.server.common.data.SaveOtaPackageInfoRequest;
-import org.echoiot.server.common.data.StringUtils;
-import org.echoiot.server.common.data.Tenant;
-import org.echoiot.server.common.data.User;
-import org.echoiot.server.common.data.audit.ActionType;
-import org.echoiot.server.common.data.id.DeviceProfileId;
-import org.echoiot.server.common.data.page.PageData;
-import org.echoiot.server.common.data.page.PageLink;
-import org.echoiot.server.common.data.security.Authority;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static org.echoiot.server.common.data.ota.OtaPackageType.FIRMWARE;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.echoiot.server.common.data.ota.OtaPackageType.FIRMWARE;
 
 public abstract class BaseOtaPackageControllerTest extends AbstractControllerTest {
 
@@ -61,7 +55,7 @@ public abstract class BaseOtaPackageControllerTest extends AbstractControllerTes
         tenantAdmin = new User();
         tenantAdmin.setAuthority(Authority.TENANT_ADMIN);
         tenantAdmin.setTenantId(savedTenant.getId());
-        tenantAdmin.setEmail("tenant2@thingsboard.org");
+        tenantAdmin.setEmail("tenant2@echoiot.org");
         tenantAdmin.setFirstName("Joe");
         tenantAdmin.setLastName("Downs");
 

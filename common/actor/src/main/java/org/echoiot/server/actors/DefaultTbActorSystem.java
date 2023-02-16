@@ -3,18 +3,13 @@ package org.echoiot.server.actors;
 import lombok.Data;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.common.util.EchoiotThreadFactory;
 import org.echoiot.server.common.msg.TbActorMsg;
-import org.thingsboard.common.util.ThingsBoardThreadFactory;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Predicate;
@@ -36,7 +31,7 @@ public class DefaultTbActorSystem implements TbActorSystem {
 
     public DefaultTbActorSystem(TbActorSystemSettings settings) {
         this.settings = settings;
-        this.scheduler = Executors.newScheduledThreadPool(settings.getSchedulerPoolSize(), ThingsBoardThreadFactory.forName("actor-system-scheduler"));
+        this.scheduler = Executors.newScheduledThreadPool(settings.getSchedulerPoolSize(), EchoiotThreadFactory.forName("actor-system-scheduler"));
     }
 
     @Override

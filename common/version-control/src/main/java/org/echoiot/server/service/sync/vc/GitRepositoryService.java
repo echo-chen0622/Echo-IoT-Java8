@@ -1,15 +1,11 @@
 package org.echoiot.server.service.sync.vc;
 
-import org.eclipse.jgit.api.errors.GitAPIException;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
-import org.echoiot.server.common.data.sync.vc.BranchInfo;
-import org.echoiot.server.common.data.sync.vc.EntityVersion;
-import org.echoiot.server.common.data.sync.vc.RepositorySettings;
-import org.echoiot.server.common.data.sync.vc.VersionCreationResult;
-import org.echoiot.server.common.data.sync.vc.VersionedEntityInfo;
-import org.thingsboard.server.service.sync.vc.GitRepository.Diff;
+import org.echoiot.server.common.data.sync.vc.*;
+import org.echoiot.server.service.sync.vc.GitRepository.Diff;
+import org.eclipse.jgit.api.errors.GitAPIException;
 
 import java.io.IOException;
 import java.util.List;

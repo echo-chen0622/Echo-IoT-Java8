@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016-2023 The Thingsboard Authors
+ * Copyright © 2016-2023 The Echoiot Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,12 @@
  */
 import * as React from 'react';
 import {
-  JsonFormData,
-  JsonFormFieldProps,
-  JsonFormFieldState
+    JsonFormData,
+    JsonFormFieldProps,
+    JsonFormFieldState
 } from '@shared/components/json-form/react/json-form.models';
 
-class ThingsboardFieldSet extends React.Component<JsonFormFieldProps, JsonFormFieldState> {
+class EchoiotFieldSet extends React.Component<JsonFormFieldProps, JsonFormFieldState> {
 
     render() {
         const forms = (this.props.form.items as JsonFormData[]).map((form: JsonFormData, index) => {
@@ -41,4 +41,4 @@ class ThingsboardFieldSet extends React.Component<JsonFormFieldProps, JsonFormFi
     }
 }
 
-export default ThingsboardFieldSet;
+export default EchoiotFieldSet;

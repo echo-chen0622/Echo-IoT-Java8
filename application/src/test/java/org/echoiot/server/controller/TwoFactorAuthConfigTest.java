@@ -12,7 +12,7 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.cache.CacheManager;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.thingsboard.rule.engine.api.SmsService;
+import org.echoiot.rule.engine.api.SmsService;
 import org.echoiot.server.common.data.CacheConstants;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.security.model.mfa.PlatformTwoFaSettings;
@@ -208,7 +208,7 @@ public abstract class TwoFactorAuthConfigTest extends AbstractControllerTest {
                 .andExpect(status().isBadRequest()));
         assertThat(errorMessage).containsIgnoringCase("otp auth url is invalid");
 
-        totpTwoFaAccountConfig.setAuthUrl("otpauth://totp/ThingsBoard%20(Tenant):tenant@thingsboard.org?issuer=ThingsBoard+%28Tenant%29&secret=FUNBIM3CXFNNGQR6ZIPVWHP65PPFWDII");
+        totpTwoFaAccountConfig.setAuthUrl("otpauth://totp/Echoiot%20(Tenant):tenant@echoiot.org?issuer=Echoiot+%28Tenant%29&secret=FUNBIM3CXFNNGQR6ZIPVWHP65PPFWDII");
         doPost("/api/2fa/account/config/submit", totpTwoFaAccountConfig)
                 .andExpect(status().isOk());
     }

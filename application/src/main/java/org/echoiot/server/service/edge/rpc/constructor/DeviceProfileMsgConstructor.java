@@ -3,12 +3,12 @@ package org.echoiot.server.service.edge.rpc.constructor;
 import com.google.protobuf.ByteString;
 import org.echoiot.server.common.data.DeviceProfile;
 import org.echoiot.server.common.data.id.DeviceProfileId;
+import org.echoiot.server.gen.edge.v1.DeviceProfileUpdateMsg;
+import org.echoiot.server.gen.edge.v1.UpdateMsgType;
 import org.echoiot.server.queue.util.DataDecodingEncodingService;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.thingsboard.server.gen.edge.v1.DeviceProfileUpdateMsg;
-import org.thingsboard.server.gen.edge.v1.UpdateMsgType;
 
 import java.nio.charset.StandardCharsets;
 

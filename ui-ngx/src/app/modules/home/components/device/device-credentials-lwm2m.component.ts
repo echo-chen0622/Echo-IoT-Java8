@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,27 +14,28 @@
 /// limitations under the License.
 ///
 
-import { Component, forwardRef, OnDestroy } from '@angular/core';
+import {Component, forwardRef, OnDestroy} from '@angular/core';
 import {
-  ControlValueAccessor,
-  FormBuilder,
-  FormGroup,
-  NG_VALIDATORS,
-  NG_VALUE_ACCESSOR,
-  ValidationErrors,
-  Validator,
-  Validators
+    ControlValueAccessor,
+    FormBuilder,
+    FormGroup,
+    NG_VALIDATORS,
+    NG_VALUE_ACCESSOR,
+    ValidationErrors,
+    Validator,
+    Validators
 } from '@angular/forms';
 import {
-  getDefaultClientSecurityConfig,
-  getDefaultServerSecurityConfig, Lwm2mClientKeyTooltipTranslationsMap,
-  Lwm2mSecurityConfigModels,
-  Lwm2mSecurityType,
-  Lwm2mSecurityTypeTranslationMap
+    getDefaultClientSecurityConfig,
+    getDefaultServerSecurityConfig,
+    Lwm2mClientKeyTooltipTranslationsMap,
+    Lwm2mSecurityConfigModels,
+    Lwm2mSecurityType,
+    Lwm2mSecurityTypeTranslationMap
 } from '@shared/models/lwm2m-security-config.models';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { isDefinedAndNotNull } from '@core/utils';
+import {Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
+import {isDefinedAndNotNull} from '@core/utils';
 
 @Component({
   selector: 'tb-device-credentials-lwm2m',

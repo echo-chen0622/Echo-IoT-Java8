@@ -1,30 +1,11 @@
 package org.echoiot.server.transport.lwm2m.server.downlink;
 
+import org.echoiot.server.transport.lwm2m.server.client.LwM2mClient;
 import org.echoiot.server.transport.lwm2m.server.downlink.composite.TbLwM2MReadCompositeRequest;
-import org.eclipse.leshan.core.link.Link;
-import org.eclipse.leshan.core.request.ContentFormat;
-import org.eclipse.leshan.core.request.CreateRequest;
-import org.eclipse.leshan.core.request.DeleteRequest;
-import org.eclipse.leshan.core.request.DiscoverRequest;
-import org.eclipse.leshan.core.request.ExecuteRequest;
-import org.eclipse.leshan.core.request.ObserveRequest;
-import org.eclipse.leshan.core.request.ReadCompositeRequest;
-import org.eclipse.leshan.core.request.ReadRequest;
-import org.eclipse.leshan.core.request.WriteAttributesRequest;
-import org.eclipse.leshan.core.request.WriteCompositeRequest;
-import org.eclipse.leshan.core.request.WriteRequest;
-import org.eclipse.leshan.core.response.CreateResponse;
-import org.eclipse.leshan.core.response.DeleteResponse;
-import org.eclipse.leshan.core.response.DiscoverResponse;
-import org.eclipse.leshan.core.response.ExecuteResponse;
-import org.eclipse.leshan.core.response.ObserveResponse;
-import org.eclipse.leshan.core.response.ReadCompositeResponse;
-import org.eclipse.leshan.core.response.ReadResponse;
-import org.eclipse.leshan.core.response.WriteAttributesResponse;
-import org.eclipse.leshan.core.response.WriteCompositeResponse;
-import org.eclipse.leshan.core.response.WriteResponse;
-import org.thingsboard.server.transport.lwm2m.server.client.LwM2mClient;
 import org.echoiot.server.transport.lwm2m.server.rpc.composite.RpcWriteCompositeRequest;
+import org.eclipse.leshan.core.link.Link;
+import org.eclipse.leshan.core.request.*;
+import org.eclipse.leshan.core.response.*;
 
 import java.util.List;
 import java.util.Set;

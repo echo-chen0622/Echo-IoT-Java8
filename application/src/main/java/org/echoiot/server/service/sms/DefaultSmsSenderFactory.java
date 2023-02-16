@@ -1,5 +1,7 @@
 package org.echoiot.server.service.sms;
 
+import org.echoiot.rule.engine.api.sms.SmsSender;
+import org.echoiot.rule.engine.api.sms.SmsSenderFactory;
 import org.echoiot.server.common.data.sms.config.AwsSnsSmsProviderConfiguration;
 import org.echoiot.server.common.data.sms.config.SmppSmsProviderConfiguration;
 import org.echoiot.server.common.data.sms.config.SmsProviderConfiguration;
@@ -8,8 +10,6 @@ import org.echoiot.server.service.sms.aws.AwsSmsSender;
 import org.echoiot.server.service.sms.smpp.SmppSmsSender;
 import org.echoiot.server.service.sms.twilio.TwilioSmsSender;
 import org.springframework.stereotype.Component;
-import org.thingsboard.rule.engine.api.sms.SmsSender;
-import org.thingsboard.rule.engine.api.sms.SmsSenderFactory;
 
 @Component
 public class DefaultSmsSenderFactory implements SmsSenderFactory {

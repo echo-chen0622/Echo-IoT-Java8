@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.asset.AssetProfile;
 import org.echoiot.server.common.data.asset.AssetProfileInfo;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.AssetProfileId;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
@@ -16,14 +16,7 @@ import org.echoiot.server.service.security.permission.Operation;
 import org.echoiot.server.service.security.permission.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @TbCoreComponent
@@ -43,7 +36,7 @@ public class AssetProfileController extends BaseController {
     @ResponseBody
     public AssetProfile getAssetProfileById(
             @ApiParam(value = ControllerConstants.ASSET_PROFILE_ID_PARAM_DESCRIPTION)
-            @PathVariable(ControllerConstants.ASSET_PROFILE_ID) String strAssetProfileId) throws ThingsboardException {
+            @PathVariable(ControllerConstants.ASSET_PROFILE_ID) String strAssetProfileId) throws EchoiotException {
         checkParameter(ControllerConstants.ASSET_PROFILE_ID, strAssetProfileId);
         try {
             AssetProfileId assetProfileId = new AssetProfileId(toUUID(strAssetProfileId));
@@ -62,7 +55,7 @@ public class AssetProfileController extends BaseController {
     @ResponseBody
     public AssetProfileInfo getAssetProfileInfoById(
             @ApiParam(value = ControllerConstants.ASSET_PROFILE_ID_PARAM_DESCRIPTION)
-            @PathVariable(ControllerConstants.ASSET_PROFILE_ID) String strAssetProfileId) throws ThingsboardException {
+            @PathVariable(ControllerConstants.ASSET_PROFILE_ID) String strAssetProfileId) throws EchoiotException {
         checkParameter(ControllerConstants.ASSET_PROFILE_ID, strAssetProfileId);
         try {
             AssetProfileId assetProfileId = new AssetProfileId(toUUID(strAssetProfileId));
@@ -79,7 +72,7 @@ public class AssetProfileController extends BaseController {
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/assetProfileInfo/default", method = RequestMethod.GET)
     @ResponseBody
-    public AssetProfileInfo getDefaultAssetProfileInfo() throws ThingsboardException {
+    public AssetProfileInfo getDefaultAssetProfileInfo() throws EchoiotException {
         try {
             return checkNotNull(assetProfileService.findDefaultAssetProfileInfo(getTenantId()));
         } catch (Exception e) {
@@ -117,7 +110,7 @@ public class AssetProfileController extends BaseController {
     @ResponseStatus(value = HttpStatus.OK)
     public void deleteAssetProfile(
             @ApiParam(value = ControllerConstants.ASSET_PROFILE_ID_PARAM_DESCRIPTION)
-            @PathVariable(ControllerConstants.ASSET_PROFILE_ID) String strAssetProfileId) throws ThingsboardException {
+            @PathVariable(ControllerConstants.ASSET_PROFILE_ID) String strAssetProfileId) throws EchoiotException {
         checkParameter(ControllerConstants.ASSET_PROFILE_ID, strAssetProfileId);
         AssetProfileId assetProfileId = new AssetProfileId(toUUID(strAssetProfileId));
         AssetProfile assetProfile = checkAssetProfileId(assetProfileId, Operation.DELETE);
@@ -132,7 +125,7 @@ public class AssetProfileController extends BaseController {
     @ResponseBody
     public AssetProfile setDefaultAssetProfile(
             @ApiParam(value = ControllerConstants.ASSET_PROFILE_ID_PARAM_DESCRIPTION)
-            @PathVariable(ControllerConstants.ASSET_PROFILE_ID) String strAssetProfileId) throws ThingsboardException {
+            @PathVariable(ControllerConstants.ASSET_PROFILE_ID) String strAssetProfileId) throws EchoiotException {
         checkParameter(ControllerConstants.ASSET_PROFILE_ID, strAssetProfileId);
         AssetProfileId assetProfileId = new AssetProfileId(toUUID(strAssetProfileId));
         AssetProfile assetProfile = checkAssetProfileId(assetProfileId, Operation.WRITE);
@@ -157,7 +150,7 @@ public class AssetProfileController extends BaseController {
             @ApiParam(value = ControllerConstants.SORT_PROPERTY_DESCRIPTION, allowableValues = ControllerConstants.ASSET_PROFILE_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
             @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
-            @RequestParam(required = false) String sortOrder) throws ThingsboardException {
+            @RequestParam(required = false) String sortOrder) throws EchoiotException {
         try {
             PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
             return checkNotNull(assetProfileService.findAssetProfiles(getTenantId(), pageLink));
@@ -183,7 +176,7 @@ public class AssetProfileController extends BaseController {
             @ApiParam(value = ControllerConstants.SORT_PROPERTY_DESCRIPTION, allowableValues = ControllerConstants.ASSET_PROFILE_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
             @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
-            @RequestParam(required = false) String sortOrder) throws ThingsboardException {
+            @RequestParam(required = false) String sortOrder) throws EchoiotException {
         try {
             PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
             return checkNotNull(assetProfileService.findAssetProfileInfos(getTenantId(), pageLink));

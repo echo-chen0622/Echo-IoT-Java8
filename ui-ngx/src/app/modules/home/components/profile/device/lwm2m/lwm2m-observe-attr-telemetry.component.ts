@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,29 +14,29 @@
 /// limitations under the License.
 ///
 
-import { ChangeDetectorRef, Component, forwardRef, Input, OnDestroy } from '@angular/core';
+import {ChangeDetectorRef, Component, forwardRef, Input, OnDestroy} from '@angular/core';
 import {
-  AbstractControl,
-  ControlValueAccessor,
-  FormArray,
-  FormBuilder,
-  FormGroup,
-  NG_VALIDATORS,
-  NG_VALUE_ACCESSOR,
-  ValidationErrors,
-  Validator,
-  Validators
+    AbstractControl,
+    ControlValueAccessor,
+    FormArray,
+    FormBuilder,
+    FormGroup,
+    NG_VALIDATORS,
+    NG_VALUE_ACCESSOR,
+    ValidationErrors,
+    Validator,
+    Validators
 } from '@angular/forms';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { Instance, ObjectLwM2M } from './lwm2m-profile-config.models';
-import { deepClone, isDefinedAndNotNull, isEqual } from '@core/utils';
-import { MatDialog } from '@angular/material/dialog';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {Instance, ObjectLwM2M} from './lwm2m-profile-config.models';
+import {deepClone, isDefinedAndNotNull, isEqual} from '@core/utils';
+import {MatDialog} from '@angular/material/dialog';
 import {
-  Lwm2mObjectAddInstancesData,
-  Lwm2mObjectAddInstancesDialogComponent
+    Lwm2mObjectAddInstancesData,
+    Lwm2mObjectAddInstancesDialogComponent
 } from '@home/components/profile/device/lwm2m/lwm2m-object-add-instances-dialog.component';
 import _ from 'lodash';
-import { Subscription } from 'rxjs';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'tb-profile-lwm2m-observe-attr-telemetry',

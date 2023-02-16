@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.StringUtils;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.oauth2.OAuth2ClientInfo;
 import org.echoiot.server.common.data.oauth2.OAuth2Info;
 import org.echoiot.server.common.data.oauth2.PlatformType;
@@ -51,7 +51,7 @@ public class OAuth2Controller extends BaseController {
                                                            "the usage with this platform type is allowed in the settings. " +
                                                            "If platform type is not one of allowable values - it will just be ignored",
                                                            allowableValues = "WEB, ANDROID, IOS")
-                                                   @RequestParam(required = false) String platform) throws ThingsboardException {
+                                                   @RequestParam(required = false) String platform) throws EchoiotException {
         try {
             if (log.isDebugEnabled()) {
                 log.debug("Executing getOAuth2Clients: [{}][{}][{}]", request.getScheme(), request.getServerName(), request.getServerPort());
@@ -77,7 +77,7 @@ public class OAuth2Controller extends BaseController {
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN')")
     @RequestMapping(value = "/oauth2/config", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
-    public OAuth2Info getCurrentOAuth2Info() throws ThingsboardException {
+    public OAuth2Info getCurrentOAuth2Info() throws EchoiotException {
         try {
             accessControlService.checkPermission(getCurrentUser(), Resource.OAUTH2_CONFIGURATION_INFO, Operation.READ);
             return oAuth2Service.findOAuth2Info();
@@ -90,7 +90,7 @@ public class OAuth2Controller extends BaseController {
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN')")
     @RequestMapping(value = "/oauth2/config", method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.OK)
-    public OAuth2Info saveOAuth2Info(@RequestBody OAuth2Info oauth2Info) throws ThingsboardException {
+    public OAuth2Info saveOAuth2Info(@RequestBody OAuth2Info oauth2Info) throws EchoiotException {
         try {
             accessControlService.checkPermission(getCurrentUser(), Resource.OAUTH2_CONFIGURATION_INFO, Operation.WRITE);
             oAuth2Service.saveOAuth2Info(oauth2Info);
@@ -107,7 +107,7 @@ public class OAuth2Controller extends BaseController {
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN')")
     @RequestMapping(value = "/oauth2/loginProcessingUrl", method = RequestMethod.GET)
     @ResponseBody
-    public String getLoginProcessingUrl() throws ThingsboardException {
+    public String getLoginProcessingUrl() throws EchoiotException {
         try {
             accessControlService.checkPermission(getCurrentUser(), Resource.OAUTH2_CONFIGURATION_INFO, Operation.READ);
             return "\"" + oAuth2Configuration.getLoginProcessingUrl() + "\"";

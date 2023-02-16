@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -15,50 +15,50 @@
 ///
 
 import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  DoCheck,
-  Input,
-  IterableDiffers,
-  KeyValueDiffers,
-  NgZone,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  SimpleChanges,
-  ViewChild
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    DoCheck,
+    Input,
+    IterableDiffers,
+    KeyValueDiffers,
+    NgZone,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    SimpleChanges,
+    ViewChild
 } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { PageComponent } from '@shared/components/page.component';
-import { AuthUser } from '@shared/models/user.model';
-import { getCurrentAuthUser } from '@core/auth/auth.selectors';
-import { Timewindow, toHistoryTimewindow } from '@shared/models/time/time.models';
-import { TimeService } from '@core/services/time.service';
-import { GridsterComponent, GridsterConfig, GridType } from 'angular-gridster2';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {PageComponent} from '@shared/components/page.component';
+import {AuthUser} from '@shared/models/user.model';
+import {getCurrentAuthUser} from '@core/auth/auth.selectors';
+import {Timewindow, toHistoryTimewindow} from '@shared/models/time/time.models';
+import {TimeService} from '@core/services/time.service';
+import {GridsterComponent, GridsterConfig, GridType} from 'angular-gridster2';
 import {
-  DashboardCallbacks,
-  DashboardWidget,
-  DashboardWidgets,
-  IDashboardComponent
+    DashboardCallbacks,
+    DashboardWidget,
+    DashboardWidgets,
+    IDashboardComponent
 } from '../../models/dashboard-component.models';
-import { ReplaySubject, Subject, Subscription } from 'rxjs';
-import { WidgetLayout, WidgetLayouts } from '@shared/models/dashboard.models';
-import { DialogService } from '@core/services/dialog.service';
-import { animatedScroll, deepClone, isDefined } from '@app/core/utils';
-import { BreakpointObserver } from '@angular/cdk/layout';
-import { MediaBreakpoints } from '@shared/models/constants';
-import { IAliasController, IStateController } from '@app/core/api/widget-api.models';
-import { Widget, WidgetPosition } from '@app/shared/models/widget.models';
-import { MatMenuTrigger } from '@angular/material/menu';
-import { SafeStyle } from '@angular/platform-browser';
-import { distinct } from 'rxjs/operators';
-import { ResizeObserver } from '@juggle/resize-observer';
-import { UtilsService } from '@core/services/utils.service';
-import { WidgetComponentAction, WidgetComponentActionType } from '@home/components/widget/widget-container.component';
-import { TbPopoverComponent } from '@shared/components/popover.component';
+import {ReplaySubject, Subject, Subscription} from 'rxjs';
+import {WidgetLayout, WidgetLayouts} from '@shared/models/dashboard.models';
+import {DialogService} from '@core/services/dialog.service';
+import {animatedScroll, deepClone, isDefined} from '@app/core/utils';
+import {BreakpointObserver} from '@angular/cdk/layout';
+import {MediaBreakpoints} from '@shared/models/constants';
+import {IAliasController, IStateController} from '@app/core/api/widget-api.models';
+import {Widget, WidgetPosition} from '@app/shared/models/widget.models';
+import {MatMenuTrigger} from '@angular/material/menu';
+import {SafeStyle} from '@angular/platform-browser';
+import {distinct} from 'rxjs/operators';
+import {ResizeObserver} from '@juggle/resize-observer';
+import {UtilsService} from '@core/services/utils.service';
+import {WidgetComponentAction, WidgetComponentActionType} from '@home/components/widget/widget-container.component';
+import {TbPopoverComponent} from '@shared/components/popover.component';
 
 @Component({
   selector: 'tb-dashboard',

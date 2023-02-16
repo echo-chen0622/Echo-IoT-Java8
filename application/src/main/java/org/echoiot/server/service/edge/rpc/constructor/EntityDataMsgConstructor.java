@@ -1,10 +1,6 @@
 package org.echoiot.server.service.edge.rpc.constructor;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
+import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.DataConstants;
@@ -12,11 +8,11 @@ import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.edge.EdgeEventActionType;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.transport.adaptor.JsonConverter;
+import org.echoiot.server.gen.edge.v1.AttributeDeleteMsg;
+import org.echoiot.server.gen.edge.v1.EntityDataProto;
+import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.springframework.stereotype.Component;
-import org.thingsboard.server.gen.edge.v1.AttributeDeleteMsg;
-import org.thingsboard.server.gen.edge.v1.EntityDataProto;
-import org.thingsboard.server.gen.transport.TransportProtos;
 
 import java.util.List;
 

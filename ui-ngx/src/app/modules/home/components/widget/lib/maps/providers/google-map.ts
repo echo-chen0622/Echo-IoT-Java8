@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -17,10 +17,10 @@
 
 import L from 'leaflet';
 import LeafletMap from '../leaflet-map';
-import { DEFAULT_ZOOM_LEVEL, WidgetUnitedMapSettings } from '../map-models';
+import {DEFAULT_ZOOM_LEVEL, WidgetUnitedMapSettings} from '../map-models';
 import 'leaflet.gridlayer.googlemutant';
-import { ResourcesService } from '@core/services/resources.service';
-import { WidgetContext } from '@home/models/widget-component.models';
+import {ResourcesService} from '@core/services/resources.service';
+import {WidgetContext} from '@home/models/widget-component.models';
 
 const gmGlobals: GmGlobal = {};
 

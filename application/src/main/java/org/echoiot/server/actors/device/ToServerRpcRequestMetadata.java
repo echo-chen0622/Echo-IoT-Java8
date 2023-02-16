@@ -1,7 +1,7 @@
 package org.echoiot.server.actors.device;
 
 import lombok.Data;
-import org.thingsboard.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.transport.TransportProtos;
 
 import java.util.UUID;
 

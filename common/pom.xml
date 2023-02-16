@@ -9,7 +9,7 @@
     <artifactId>common</artifactId>
     <packaging>pom</packaging>
 
-    <name>Thingsboard Server Commons</name>
+    <name>Echoiot Server Commons</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

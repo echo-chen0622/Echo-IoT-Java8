@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,25 +14,25 @@
 /// limitations under the License.
 ///
 
-import { Component, forwardRef, Input, OnInit } from '@angular/core';
+import {Component, forwardRef, Input, OnInit} from '@angular/core';
 import {
-  ControlValueAccessor,
-  FormBuilder,
-  FormGroup,
-  NG_VALIDATORS,
-  NG_VALUE_ACCESSOR,
-  ValidationErrors,
-  Validator,
-  ValidatorFn,
-  Validators
+    ControlValueAccessor,
+    FormBuilder,
+    FormGroup,
+    NG_VALIDATORS,
+    NG_VALUE_ACCESSOR,
+    ValidationErrors,
+    Validator,
+    ValidatorFn,
+    Validators
 } from '@angular/forms';
 import {
-  DynamicValueSourceType,
-  dynamicValueSourceTypeTranslationMap,
-  EntityKeyValueType,
-  FilterPredicateValue,
-  getDynamicSourcesForAllowUser,
-  inheritModeForDynamicValueSourceType
+    DynamicValueSourceType,
+    dynamicValueSourceTypeTranslationMap,
+    EntityKeyValueType,
+    FilterPredicateValue,
+    getDynamicSourcesForAllowUser,
+    inheritModeForDynamicValueSourceType
 } from '@shared/models/query/query.models';
 
 @Component({

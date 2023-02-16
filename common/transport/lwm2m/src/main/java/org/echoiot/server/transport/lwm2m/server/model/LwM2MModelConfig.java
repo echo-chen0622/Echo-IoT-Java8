@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static org.thingsboard.common.util.CollectionsUtil.diffSets;
+import static org.echoiot.common.util.CollectionsUtil.diffSets;
 
 @Data
 @NoArgsConstructor

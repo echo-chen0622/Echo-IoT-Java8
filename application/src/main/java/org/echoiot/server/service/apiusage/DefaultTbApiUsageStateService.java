@@ -4,8 +4,12 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.ListenableFuture;
 import lombok.extern.slf4j.Slf4j;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.echoiot.common.util.EchoiotThreadFactory;
+import org.echoiot.rule.engine.api.MailService;
 import org.echoiot.server.cluster.TbClusterService;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.*;
+import org.echoiot.server.common.data.exception.EchoiotException;
+import org.echoiot.server.common.data.id.*;
 import org.echoiot.server.common.data.kv.BasicTsKvEntry;
 import org.echoiot.server.common.data.kv.LongDataEntry;
 import org.echoiot.server.common.data.kv.StringDataEntry;
@@ -13,10 +17,16 @@ import org.echoiot.server.common.data.kv.TsKvEntry;
 import org.echoiot.server.common.data.page.PageDataIterable;
 import org.echoiot.server.common.data.tenant.profile.TenantProfileConfiguration;
 import org.echoiot.server.common.data.tenant.profile.TenantProfileData;
+import org.echoiot.server.common.msg.queue.ServiceType;
+import org.echoiot.server.common.msg.queue.TbCallback;
+import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
+import org.echoiot.server.common.msg.tools.SchedulerUtils;
 import org.echoiot.server.dao.tenant.TbTenantProfileCache;
 import org.echoiot.server.dao.tenant.TenantService;
 import org.echoiot.server.dao.timeseries.TimeseriesService;
 import org.echoiot.server.dao.usagerecord.ApiUsageStateService;
+import org.echoiot.server.gen.transport.TransportProtos.ToUsageStatsServiceMsg;
+import org.echoiot.server.gen.transport.TransportProtos.UsageStatsKVProto;
 import org.echoiot.server.queue.common.TbProtoQueueMsg;
 import org.echoiot.server.queue.discovery.PartitionService;
 import org.echoiot.server.service.executors.DbCallbackExecutorService;
@@ -26,45 +36,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-import org.thingsboard.common.util.ThingsBoardThreadFactory;
-import org.thingsboard.rule.engine.api.MailService;
-import org.echoiot.server.common.data.ApiFeature;
-import org.echoiot.server.common.data.ApiUsageRecordKey;
-import org.echoiot.server.common.data.ApiUsageState;
-import org.echoiot.server.common.data.ApiUsageStateMailMessage;
-import org.echoiot.server.common.data.ApiUsageStateValue;
-import org.echoiot.server.common.data.EntityType;
-import org.echoiot.server.common.data.StringUtils;
-import org.echoiot.server.common.data.Tenant;
-import org.echoiot.server.common.data.TenantProfile;
-import org.echoiot.server.common.data.id.ApiUsageStateId;
-import org.echoiot.server.common.data.id.CustomerId;
-import org.echoiot.server.common.data.id.EntityId;
-import org.echoiot.server.common.data.id.TenantId;
-import org.echoiot.server.common.data.id.TenantProfileId;
-import org.echoiot.server.common.msg.queue.ServiceType;
-import org.echoiot.server.common.msg.queue.TbCallback;
-import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
-import org.echoiot.server.common.msg.tools.SchedulerUtils;
-import org.thingsboard.server.gen.transport.TransportProtos.ToUsageStatsServiceMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.UsageStatsKVProto;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.*;
+import java.util.concurrent.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
@@ -128,7 +104,7 @@ public class DefaultTbApiUsageStateService extends AbstractPartitionBasedService
         this.apiUsageStateService = apiUsageStateService;
         this.tenantProfileCache = tenantProfileCache;
         this.mailService = mailService;
-        this.mailExecutor = Executors.newSingleThreadExecutor(ThingsBoardThreadFactory.forName("api-usage-svc-mail"));
+        this.mailExecutor = Executors.newSingleThreadExecutor(EchoiotThreadFactory.forName("api-usage-svc-mail"));
         this.dbExecutor = dbExecutor;
     }
 
@@ -346,7 +322,7 @@ public class DefaultTbApiUsageStateService extends AbstractPartitionBasedService
                     mailExecutor.submit(() -> {
                         try {
                             mailService.sendApiFeatureStateEmail(apiFeature, stateValue, email, createStateMailMessage((TenantApiUsageState) state, apiFeature, stateValue));
-                        } catch (ThingsboardException e) {
+                        } catch (EchoiotException e) {
                             log.warn("[{}] Can't send update of the API state to tenant with provided email [{}]", state.getTenantId(), email, e);
                         }
                     });

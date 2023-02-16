@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,13 +14,13 @@
 /// limitations under the License.
 ///
 
-import { Component, ElementRef, ViewChild } from '@angular/core';
-import { WidgetActionType, WidgetSettings, WidgetSettingsComponent } from '@shared/models/widget.models';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { Observable, of } from 'rxjs';
-import { map, mergeMap, startWith } from 'rxjs/operators';
+import {Component, ElementRef, ViewChild} from '@angular/core';
+import {WidgetSettings, WidgetSettingsComponent} from '@shared/models/widget.models';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {Observable, of} from 'rxjs';
+import {map, mergeMap, startWith} from 'rxjs/operators';
 
 @Component({
   selector: 'tb-dashboard-state-widget-settings',

@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,9 +14,8 @@
 /// limitations under the License.
 ///
 
-import { InjectionToken } from '@angular/core';
-import { IModulesMap } from '@modules/common/modules-map.models';
-import { EntityType } from '@shared/models/entity-type.models';
+import {InjectionToken} from '@angular/core';
+import {IModulesMap} from '@modules/common/modules-map.models';
 
 export const Constants = {
   serverErrorCode: {
@@ -70,7 +69,7 @@ export const MediaBreakpoints = {
   'gt-xl': 'screen and (min-width: 5001px)'
 };
 
-export const helpBaseUrl = 'https://thingsboard.io';
+export const helpBaseUrl = 'https://echoiot.io';
 
 export const HelpLinks = {
   linksMap: {

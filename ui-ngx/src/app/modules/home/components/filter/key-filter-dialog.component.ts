@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,30 +14,30 @@
 /// limitations under the License.
 ///
 
-import { Component, ElementRef, Inject, OnDestroy, SkipSelf, ViewChild } from '@angular/core';
-import { ErrorStateMatcher } from '@angular/material/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { DialogComponent } from '@app/shared/components/dialog.component';
+import {Component, ElementRef, Inject, OnDestroy, SkipSelf, ViewChild} from '@angular/core';
+import {ErrorStateMatcher} from '@angular/material/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, Validators} from '@angular/forms';
+import {Router} from '@angular/router';
+import {DialogComponent} from '@app/shared/components/dialog.component';
 import {
-  EntityKeyType,
-  entityKeyTypeTranslationMap,
-  EntityKeyValueType,
-  entityKeyValueTypesMap,
-  KeyFilterInfo,
-  KeyFilterPredicate
+    EntityKeyType,
+    entityKeyTypeTranslationMap,
+    EntityKeyValueType,
+    entityKeyValueTypesMap,
+    KeyFilterInfo,
+    KeyFilterPredicate
 } from '@shared/models/query/query.models';
-import { DialogService } from '@core/services/dialog.service';
-import { TranslateService } from '@ngx-translate/core';
-import { entityFields } from '@shared/models/entity.models';
-import { Observable, of, Subject } from 'rxjs';
-import { filter, map, mergeMap, publishReplay, refCount, startWith, takeUntil } from 'rxjs/operators';
-import { isDefined } from '@core/utils';
-import { EntityId } from '@shared/models/id/entity-id';
-import { DeviceProfileService } from '@core/http/device-profile.service';
+import {DialogService} from '@core/services/dialog.service';
+import {TranslateService} from '@ngx-translate/core';
+import {entityFields} from '@shared/models/entity.models';
+import {Observable, of, Subject} from 'rxjs';
+import {filter, map, mergeMap, publishReplay, refCount, startWith, takeUntil} from 'rxjs/operators';
+import {isDefined} from '@core/utils';
+import {EntityId} from '@shared/models/id/entity-id';
+import {DeviceProfileService} from '@core/http/device-profile.service';
 
 export interface KeyFilterDialogData {
   keyFilter: KeyFilterInfo;

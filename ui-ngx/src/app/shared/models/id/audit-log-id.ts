@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
 /// limitations under the License.
 ///
 
-import { HasUUID } from '@shared/models/id/has-uuid';
+import {HasUUID} from '@shared/models/id/has-uuid';
 
 export class AuditLogId implements HasUUID {
   id: string;

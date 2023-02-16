@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -15,39 +15,39 @@
 ///
 
 import {
-  DateEntityTableColumn,
-  EntityTableColumn,
-  EntityTableConfig
+    DateEntityTableColumn,
+    EntityTableColumn,
+    EntityTableConfig
 } from '@home/models/entity/entities-table-config.models';
-import { EntityType, EntityTypeResource, entityTypeTranslations } from '@shared/models/entity-type.models';
-import { TranslateService } from '@ngx-translate/core';
-import { DatePipe } from '@angular/common';
-import { Direction } from '@shared/models/page/sort-order';
-import { MatDialog } from '@angular/material/dialog';
-import { TimePageLink } from '@shared/models/page/page-link';
-import { Observable } from 'rxjs';
-import { PageData } from '@shared/models/page/page-data';
-import { EntityId } from '@shared/models/id/entity-id';
+import {EntityType, EntityTypeResource, entityTypeTranslations} from '@shared/models/entity-type.models';
+import {TranslateService} from '@ngx-translate/core';
+import {DatePipe} from '@angular/common';
+import {Direction} from '@shared/models/page/sort-order';
+import {MatDialog} from '@angular/material/dialog';
+import {TimePageLink} from '@shared/models/page/page-link';
+import {Observable} from 'rxjs';
+import {PageData} from '@shared/models/page/page-data';
+import {EntityId} from '@shared/models/id/entity-id';
 import {
-  AlarmInfo,
-  AlarmQuery,
-  AlarmSearchStatus,
-  alarmSeverityColors,
-  alarmSeverityTranslations,
-  alarmStatusTranslations
+    AlarmInfo,
+    AlarmQuery,
+    AlarmSearchStatus,
+    alarmSeverityColors,
+    alarmSeverityTranslations,
+    alarmStatusTranslations
 } from '@app/shared/models/alarm.models';
-import { AlarmService } from '@app/core/http/alarm.service';
-import { DialogService } from '@core/services/dialog.service';
-import { AlarmTableHeaderComponent } from '@home/components/alarm/alarm-table-header.component';
+import {AlarmService} from '@app/core/http/alarm.service';
+import {DialogService} from '@core/services/dialog.service';
+import {AlarmTableHeaderComponent} from '@home/components/alarm/alarm-table-header.component';
 import {
-  AlarmDetailsDialogComponent,
-  AlarmDetailsDialogData
+    AlarmDetailsDialogComponent,
+    AlarmDetailsDialogData
 } from '@home/components/alarm/alarm-details-dialog.component';
-import { DAY, historyInterval } from '@shared/models/time/time.models';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { getCurrentAuthUser } from '@core/auth/auth.selectors';
-import { Authority } from '@shared/models/authority.enum';
+import {DAY, historyInterval} from '@shared/models/time/time.models';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {getCurrentAuthUser} from '@core/auth/auth.selectors';
+import {Authority} from '@shared/models/authority.enum';
 
 export class AlarmTableConfig extends EntityTableConfig<AlarmInfo, TimePageLink> {
 

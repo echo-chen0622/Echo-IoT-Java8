@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,16 +14,16 @@
 /// limitations under the License.
 ///
 
-import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { PageComponent } from '@shared/components/page.component';
-import { WidgetContext } from '@home/models/widget-component.models';
-import { UtilsService } from '@core/services/utils.service';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { isDefined, isNumber } from '@core/utils';
-import { CanvasDigitalGaugeOptions } from '@home/components/widget/lib/canvas-digital-gauge';
+import {Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {PageComponent} from '@shared/components/page.component';
+import {WidgetContext} from '@home/models/widget-component.models';
+import {UtilsService} from '@core/services/utils.service';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {isDefined, isNumber} from '@core/utils';
+import {CanvasDigitalGaugeOptions} from '@home/components/widget/lib/canvas-digital-gauge';
 import * as tinycolor_ from 'tinycolor2';
-import { ResizeObserver } from '@juggle/resize-observer';
+import {ResizeObserver} from '@juggle/resize-observer';
 import GenericOptions = CanvasGauges.GenericOptions;
 
 const tinycolor = tinycolor_;

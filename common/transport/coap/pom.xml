@@ -10,7 +10,7 @@
     <artifactId>coap</artifactId>
     <packaging>jar</packaging>
 
-    <name>Thingsboard CoAP Transport Common</name>
+    <name>Echoiot CoAP Transport Common</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

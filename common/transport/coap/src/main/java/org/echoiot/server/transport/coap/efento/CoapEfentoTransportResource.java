@@ -11,6 +11,11 @@ import org.echoiot.server.common.data.device.profile.DeviceProfileTransportConfi
 import org.echoiot.server.common.data.device.profile.EfentoCoapDeviceTypeConfiguration;
 import org.echoiot.server.common.transport.adaptor.AdaptorException;
 import org.echoiot.server.common.transport.auth.SessionInfoCreator;
+import org.echoiot.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.transport.coap.MeasurementTypeProtos;
+import org.echoiot.server.gen.transport.coap.MeasurementsProtos;
+import org.echoiot.server.transport.coap.AbstractCoapTransportResource;
+import org.echoiot.server.transport.coap.CoapTransportContext;
 import org.echoiot.server.transport.coap.callback.CoapDeviceAuthCallback;
 import org.echoiot.server.transport.coap.callback.CoapEfentoCallback;
 import org.echoiot.server.transport.coap.efento.utils.CoapEfentoUtils;
@@ -21,24 +26,12 @@ import org.eclipse.californium.core.network.Exchange;
 import org.eclipse.californium.core.server.resources.CoapExchange;
 import org.eclipse.californium.core.server.resources.Resource;
 import org.springframework.util.CollectionUtils;
-import org.thingsboard.server.gen.transport.TransportProtos;
-import org.thingsboard.server.gen.transport.coap.MeasurementTypeProtos;
-import org.thingsboard.server.gen.transport.coap.MeasurementsProtos;
-import org.echoiot.server.transport.coap.AbstractCoapTransportResource;
-import org.echoiot.server.transport.coap.CoapTransportContext;
 
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-import static org.echoiot.server.transport.coap.CoapTransportService.CONFIGURATION;
-import static org.echoiot.server.transport.coap.CoapTransportService.CURRENT_TIMESTAMP;
-import static org.echoiot.server.transport.coap.CoapTransportService.DEVICE_INFO;
-import static org.echoiot.server.transport.coap.CoapTransportService.MEASUREMENTS;
+import static org.echoiot.server.transport.coap.CoapTransportService.*;
 
 @Slf4j
 public class CoapEfentoTransportResource extends AbstractCoapTransportResource {

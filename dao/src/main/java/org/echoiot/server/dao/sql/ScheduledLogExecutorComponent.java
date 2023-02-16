@@ -1,7 +1,7 @@
 package org.echoiot.server.dao.sql;
 
 import org.springframework.stereotype.Component;
-import org.thingsboard.common.util.ThingsBoardThreadFactory;
+import org.echoiot.common.util.EchoiotThreadFactory;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -16,7 +16,7 @@ public class ScheduledLogExecutorComponent {
 
     @PostConstruct
     public void init() {
-        schedulerLogExecutor = Executors.newSingleThreadScheduledExecutor(ThingsBoardThreadFactory.forName("sql-log"));
+        schedulerLogExecutor = Executors.newSingleThreadScheduledExecutor(EchoiotThreadFactory.forName("sql-log"));
     }
 
     @PreDestroy

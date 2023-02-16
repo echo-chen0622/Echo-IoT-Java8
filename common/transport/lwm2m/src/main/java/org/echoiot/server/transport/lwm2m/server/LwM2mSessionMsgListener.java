@@ -10,16 +10,11 @@ import org.echoiot.server.common.data.ResourceType;
 import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.transport.SessionMsgListener;
 import org.echoiot.server.common.transport.TransportService;
+import org.echoiot.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.transport.TransportProtos.*;
 import org.echoiot.server.transport.lwm2m.server.attributes.LwM2MAttributesService;
 import org.echoiot.server.transport.lwm2m.server.rpc.LwM2MRpcRequestHandler;
 import org.echoiot.server.transport.lwm2m.server.uplink.LwM2mUplinkMsgHandler;
-import org.thingsboard.server.gen.transport.TransportProtos;
-import org.thingsboard.server.gen.transport.TransportProtos.AttributeUpdateNotificationMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.GetAttributeResponseMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.SessionCloseNotificationProto;
-import org.thingsboard.server.gen.transport.TransportProtos.ToDeviceRpcRequestMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.ToServerRpcResponseMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.ToTransportUpdateCredentialsProto;
 
 import java.util.Optional;
 import java.util.UUID;

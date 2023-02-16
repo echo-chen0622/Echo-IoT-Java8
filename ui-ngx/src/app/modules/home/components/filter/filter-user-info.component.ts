@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,20 +14,21 @@
 /// limitations under the License.
 ///
 
-import { Component, forwardRef, Input, OnInit } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import {Component, forwardRef, Input, OnInit} from '@angular/core';
+import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {
-  BooleanOperation,
-  EntityKeyValueType,
-  KeyFilterPredicateUserInfo, NumericOperation,
-  StringOperation
+    BooleanOperation,
+    EntityKeyValueType,
+    KeyFilterPredicateUserInfo,
+    NumericOperation,
+    StringOperation
 } from '@shared/models/query/query.models';
-import { MatDialog } from '@angular/material/dialog';
+import {MatDialog} from '@angular/material/dialog';
 import {
-  FilterUserInfoDialogComponent,
-  FilterUserInfoDialogData
+    FilterUserInfoDialogComponent,
+    FilterUserInfoDialogData
 } from '@home/components/filter/filter-user-info-dialog.component';
-import { deepClone } from '@core/utils';
+import {deepClone} from '@core/utils';
 
 @Component({
   selector: 'tb-filter-user-info',

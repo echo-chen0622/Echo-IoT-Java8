@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,21 +14,18 @@
 /// limitations under the License.
 ///
 
+import {AggKey, IndexedSubscriptionData,} from '@app/shared/models/telemetry/telemetry.models';
 import {
-  AggKey,
-  IndexedSubscriptionData,
-} from '@app/shared/models/telemetry/telemetry.models';
-import {
-  AggregationType,
-  calculateIntervalComparisonEndTime,
-  calculateIntervalEndTime,
-  calculateIntervalStartEndTime,
-  getCurrentTime,
-  getTime,
-  SubscriptionTimewindow
+    AggregationType,
+    calculateIntervalComparisonEndTime,
+    calculateIntervalEndTime,
+    calculateIntervalStartEndTime,
+    getCurrentTime,
+    getTime,
+    SubscriptionTimewindow
 } from '@shared/models/time/time.models';
-import { UtilsService } from '@core/services/utils.service';
-import { deepClone, isDefinedAndNotNull, isNumber, isNumeric } from '@core/utils';
+import {UtilsService} from '@core/services/utils.service';
+import {deepClone, isDefinedAndNotNull, isNumber, isNumeric} from '@core/utils';
 import Timeout = NodeJS.Timeout;
 
 export declare type onAggregatedData = (data: IndexedSubscriptionData, detectChanges: boolean) => void;

@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,26 +14,26 @@
 /// limitations under the License.
 ///
 
-import { BaseData, ExportableEntity } from '@shared/models/base-data';
-import { DeviceId } from './id/device-id';
-import { TenantId } from '@shared/models/id/tenant-id';
-import { CustomerId } from '@shared/models/id/customer-id';
-import { DeviceCredentialsId } from '@shared/models/id/device-credentials-id';
-import { EntitySearchQuery } from '@shared/models/relation.models';
-import { DeviceProfileId } from '@shared/models/id/device-profile-id';
-import { RuleChainId } from '@shared/models/id/rule-chain-id';
-import { EntityInfoData } from '@shared/models/entity.models';
-import { FilterPredicateValue, KeyFilter } from '@shared/models/query/query.models';
-import { TimeUnit } from '@shared/models/time/time.models';
+import {BaseData, ExportableEntity} from '@shared/models/base-data';
+import {DeviceId} from './id/device-id';
+import {TenantId} from '@shared/models/id/tenant-id';
+import {CustomerId} from '@shared/models/id/customer-id';
+import {DeviceCredentialsId} from '@shared/models/id/device-credentials-id';
+import {EntitySearchQuery} from '@shared/models/relation.models';
+import {DeviceProfileId} from '@shared/models/id/device-profile-id';
+import {RuleChainId} from '@shared/models/id/rule-chain-id';
+import {EntityInfoData} from '@shared/models/entity.models';
+import {FilterPredicateValue, KeyFilter} from '@shared/models/query/query.models';
+import {TimeUnit} from '@shared/models/time/time.models';
 import * as _moment from 'moment';
-import { AbstractControl, ValidationErrors } from '@angular/forms';
-import { OtaPackageId } from '@shared/models/id/ota-package-id';
-import { DashboardId } from '@shared/models/id/dashboard-id';
-import { DataType } from '@shared/models/constants';
+import {AbstractControl, ValidationErrors} from '@angular/forms';
+import {OtaPackageId} from '@shared/models/id/ota-package-id';
+import {DashboardId} from '@shared/models/id/dashboard-id';
+import {DataType} from '@shared/models/constants';
 import {
-  getDefaultProfileClientLwM2mSettingsConfig,
-  getDefaultProfileObserveAttrConfig,
-  PowerMode
+    getDefaultProfileClientLwM2mSettingsConfig,
+    getDefaultProfileObserveAttrConfig,
+    PowerMode
 } from '@home/components/profile/device/lwm2m/lwm2m-profile-config.models';
 
 export enum DeviceProfileType {

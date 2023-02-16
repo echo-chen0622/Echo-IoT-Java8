@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,15 +14,15 @@
 /// limitations under the License.
 ///
 
-import { BaseData, ExportableEntity } from '@shared/models/base-data';
-import { DashboardId } from '@shared/models/id/dashboard-id';
-import { TenantId } from '@shared/models/id/tenant-id';
-import { ShortCustomerInfo } from '@shared/models/customer.model';
-import { Widget } from './widget.models';
-import { Timewindow } from '@shared/models/time/time.models';
-import { EntityAliases } from './alias.models';
-import { Filters } from '@shared/models/query/query.models';
-import { MatDialogRef } from '@angular/material/dialog';
+import {BaseData, ExportableEntity} from '@shared/models/base-data';
+import {DashboardId} from '@shared/models/id/dashboard-id';
+import {TenantId} from '@shared/models/id/tenant-id';
+import {ShortCustomerInfo} from '@shared/models/customer.model';
+import {Widget} from './widget.models';
+import {Timewindow} from '@shared/models/time/time.models';
+import {EntityAliases} from './alias.models';
+import {Filters} from '@shared/models/query/query.models';
+import {MatDialogRef} from '@angular/material/dialog';
 
 export interface DashboardInfo extends BaseData<DashboardId>, ExportableEntity<DashboardId> {
   tenantId?: TenantId;

@@ -20,7 +20,7 @@ import org.echoiot.server.dao.rule.RuleChainService;
 import org.echoiot.server.queue.TbQueueCallback;
 import org.echoiot.server.queue.common.MultipleTbQueueTbMsgCallbackWrapper;
 import org.echoiot.server.queue.common.TbQueueTbMsgCallbackWrapper;
-import org.thingsboard.rule.engine.api.TbRelationTypes;
+import org.echoiot.rule.engine.api.TbRelationTypes;
 import org.echoiot.server.actors.ActorSystemContext;
 import org.echoiot.server.actors.TbActorCtx;
 import org.echoiot.server.actors.TbActorRef;
@@ -34,7 +34,7 @@ import org.echoiot.server.common.msg.queue.RuleEngineException;
 import org.echoiot.server.common.msg.queue.RuleNodeException;
 import org.echoiot.server.common.msg.queue.ServiceType;
 import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
-import org.thingsboard.server.gen.transport.TransportProtos.ToRuleEngineMsg;
+import org.echoiot.server.gen.transport.TransportProtos.ToRuleEngineMsg;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -326,10 +326,10 @@ public class RuleChainActorMessageProcessor extends ComponentMsgProcessor<RuleCh
 
     private void putToQueue(TopicPartitionInfo tpi, TbMsg msg, TbQueueCallback callbackWrapper, EntityId target) {
         switch (target.getEntityType()) {
-            case EntityType.RULE_NODE:
+            case RULE_NODE:
                 putToQueue(tpi, msg.copyWithRuleNodeId(entityId, new RuleNodeId(target.getId()), UUID.randomUUID()), callbackWrapper);
                 break;
-            case EntityType.RULE_CHAIN:
+            case RULE_CHAIN:
                 putToQueue(tpi, msg.copyWithRuleChainId(new RuleChainId(target.getId()), UUID.randomUUID()), callbackWrapper);
                 break;
         }
@@ -338,10 +338,10 @@ public class RuleChainActorMessageProcessor extends ComponentMsgProcessor<RuleCh
     private void pushToTarget(TopicPartitionInfo tpi, TbMsg msg, EntityId target, String fromRelationType) {
         if (tpi.isMyPartition()) {
             switch (target.getEntityType()) {
-                case EntityType.RULE_NODE:
+                case RULE_NODE:
                     pushMsgToNode(nodeActors.get(new RuleNodeId(target.getId())), msg, fromRelationType);
                     break;
-                case EntityType.RULE_CHAIN:
+                case RULE_CHAIN:
                     parent.tell(new RuleChainToRuleChainMsg(new RuleChainId(target.getId()), entityId, msg, fromRelationType));
                     break;
             }

@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,22 +14,22 @@
 /// limitations under the License.
 ///
 
-import { Component } from '@angular/core';
-import { DialogComponent } from '@shared/components/dialog.component';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { Router } from '@angular/router';
-import { TwoFactorAuthenticationService } from '@core/http/two-factor-authentication.service';
-import { MatDialogRef } from '@angular/material/dialog';
-import { FormBuilder } from '@angular/forms';
+import {Component} from '@angular/core';
+import {DialogComponent} from '@shared/components/dialog.component';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {Router} from '@angular/router';
+import {TwoFactorAuthenticationService} from '@core/http/two-factor-authentication.service';
+import {MatDialogRef} from '@angular/material/dialog';
+import {FormBuilder} from '@angular/forms';
 import {
-  AccountTwoFaSettings,
-  BackupCodeTwoFactorAuthAccountConfig,
-  TwoFactorAuthProviderType
+    AccountTwoFaSettings,
+    BackupCodeTwoFactorAuthAccountConfig,
+    TwoFactorAuthProviderType
 } from '@shared/models/two-factor-auth.models';
-import { mergeMap, tap } from 'rxjs/operators';
-import { ImportExportService } from '@home/components/import-export/import-export.service';
-import { deepClone } from '@core/utils';
+import {mergeMap, tap} from 'rxjs/operators';
+import {ImportExportService} from '@home/components/import-export/import-export.service';
+import {deepClone} from '@core/utils';
 
 import printTemplate from '!raw-loader!./backup-code-print-template.raw';
 

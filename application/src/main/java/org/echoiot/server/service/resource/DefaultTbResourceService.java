@@ -1,9 +1,10 @@
 package org.echoiot.server.service.resource;
 
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.server.common.data.*;
 import org.echoiot.server.common.data.audit.ActionType;
-import org.echoiot.server.common.data.exception.ThingsboardErrorCode;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotErrorCode;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.TbResourceId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.lwm2m.LwM2mConstants;
@@ -17,18 +18,12 @@ import org.echoiot.server.dao.exception.DataValidationException;
 import org.echoiot.server.dao.resource.ResourceService;
 import org.echoiot.server.dao.service.Validator;
 import org.echoiot.server.queue.util.TbCoreComponent;
+import org.echoiot.server.service.entitiy.AbstractTbEntityService;
 import org.eclipse.leshan.core.model.DDFFileParser;
 import org.eclipse.leshan.core.model.DefaultDDFFileValidator;
 import org.eclipse.leshan.core.model.InvalidDDFFileException;
 import org.eclipse.leshan.core.model.ObjectModel;
 import org.springframework.stereotype.Service;
-import org.echoiot.server.common.data.EntityType;
-import org.echoiot.server.common.data.ResourceType;
-import org.echoiot.server.common.data.StringUtils;
-import org.echoiot.server.common.data.TbResource;
-import org.echoiot.server.common.data.TbResourceInfo;
-import org.echoiot.server.common.data.User;
-import org.echoiot.server.service.entitiy.AbstractTbEntityService;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -38,8 +33,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static org.echoiot.server.dao.service.Validator.validateId;
 
 @Slf4j
 @Service
@@ -164,7 +157,7 @@ public class DefaultTbResourceService extends AbstractTbEntityService implements
     }
 
     @Override
-    public TbResource save(TbResource tbResource, User user) throws ThingsboardException {
+    public TbResource save(TbResource tbResource, User user) throws EchoiotException {
         ActionType actionType = tbResource.getId() == null ? ActionType.ADDED : ActionType.UPDATED;
         TenantId tenantId = tbResource.getTenantId();
         try {
@@ -194,7 +187,7 @@ public class DefaultTbResourceService extends AbstractTbEntityService implements
         }
     }
 
-    private TbResource doSave(TbResource resource) throws ThingsboardException {
+    private TbResource doSave(TbResource resource) throws EchoiotException {
         log.trace("Executing saveResource [{}]", resource);
         if (StringUtils.isEmpty(resource.getData())) {
             throw new DataValidationException("Resource data should be specified!");
@@ -220,7 +213,7 @@ public class DefaultTbResourceService extends AbstractTbEntityService implements
                 log.error("Failed to parse file {}", resource.getFileName(), e);
                 throw new DataValidationException("Failed to parse file " + resource.getFileName());
             } catch (IOException e) {
-                throw new ThingsboardException(e, ThingsboardErrorCode.GENERAL);
+                throw new EchoiotException(e, EchoiotErrorCode.GENERAL);
             }
             if (resource.getResourceType().equals(ResourceType.LWM2M_MODEL) && toLwM2mObject(resource, true) == null) {
                 throw new DataValidationException(String.format("Could not parse the XML of objectModel with name %s", resource.getSearchText()));

@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,18 +14,18 @@
 /// limitations under the License.
 ///
 
-import { AfterViewInit, ChangeDetectorRef, Component, Input, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { DatePipe } from '@angular/common';
-import { MatDialog } from '@angular/material/dialog';
-import { EntityId } from '@shared/models/id/entity-id';
-import { EntitiesTableComponent } from '@home/components/entity/entities-table.component';
-import { EventTableConfig } from './event-table-config';
-import { EventService } from '@core/http/event.service';
-import { DialogService } from '@core/services/dialog.service';
-import { DebugEventType, EventType } from '@shared/models/event.models';
-import { Overlay } from '@angular/cdk/overlay';
-import { Subscription } from 'rxjs';
+import {AfterViewInit, ChangeDetectorRef, Component, Input, OnInit, ViewChild, ViewContainerRef} from '@angular/core';
+import {TranslateService} from '@ngx-translate/core';
+import {DatePipe} from '@angular/common';
+import {MatDialog} from '@angular/material/dialog';
+import {EntityId} from '@shared/models/id/entity-id';
+import {EntitiesTableComponent} from '@home/components/entity/entities-table.component';
+import {EventTableConfig} from './event-table-config';
+import {EventService} from '@core/http/event.service';
+import {DialogService} from '@core/services/dialog.service';
+import {DebugEventType, EventType} from '@shared/models/event.models';
+import {Overlay} from '@angular/cdk/overlay';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'tb-event-table',

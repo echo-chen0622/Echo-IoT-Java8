@@ -1,8 +1,8 @@
 package org.echoiot.server.transport.lwm2m.server.attributes;
 
 import com.google.common.util.concurrent.ListenableFuture;
-import org.thingsboard.server.gen.transport.TransportProtos;
-import org.thingsboard.server.transport.lwm2m.server.client.LwM2mClient;
+import org.echoiot.server.gen.transport.TransportProtos;
+import org.echoiot.server.transport.lwm2m.server.client.LwM2mClient;
 
 import java.util.Collection;
 import java.util.List;

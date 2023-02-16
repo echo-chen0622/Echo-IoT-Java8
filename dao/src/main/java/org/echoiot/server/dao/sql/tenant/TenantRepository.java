@@ -16,7 +16,7 @@ import java.util.UUID;
  */
 public interface TenantRepository extends JpaRepository<TenantEntity, UUID> {
 
-    @Query("SELECT new org.thingsboard.server.dao.model.sql.TenantInfoEntity(t, p.name) " +
+    @Query("SELECT new org.echoiot.server.dao.model.sql.TenantInfoEntity(t, p.name) " +
             "FROM TenantEntity t " +
             "LEFT JOIN TenantProfileEntity p on p.id = t.tenantProfileId " +
             "WHERE t.id = :tenantId")
@@ -26,7 +26,7 @@ public interface TenantRepository extends JpaRepository<TenantEntity, UUID> {
     Page<TenantEntity> findTenantsNextPage(@Param("textSearch") String textSearch,
                                            Pageable pageable);
 
-    @Query("SELECT new org.thingsboard.server.dao.model.sql.TenantInfoEntity(t, p.name) " +
+    @Query("SELECT new org.echoiot.server.dao.model.sql.TenantInfoEntity(t, p.name) " +
             "FROM TenantEntity t " +
             "LEFT JOIN TenantProfileEntity p on p.id = t.tenantProfileId " +
             "WHERE LOWER(t.searchText) LIKE LOWER(CONCAT('%', :textSearch, '%'))")

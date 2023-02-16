@@ -2,16 +2,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.thingsboard</groupId>
+        <groupId>org.echoiot</groupId>
         <version>3.4.4</version>
         <artifactId>common</artifactId>
     </parent>
-    <groupId>org.thingsboard.common</groupId>
+    <groupId>org.echoiot.common</groupId>
     <artifactId>data</artifactId>
     <packaging>jar</packaging>
 
-    <name>Thingsboard Server Common Data</name>
-    <url>https://thingsboard.io</url>
+    <name>Echoiot Server Common Data</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -78,6 +77,7 @@
         <dependency>
             <groupId>org.thingsboard</groupId>
             <artifactId>protobuf-dynamic</artifactId>
+            <version>1.0.4TB</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>

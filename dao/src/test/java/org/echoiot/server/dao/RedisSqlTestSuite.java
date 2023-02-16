@@ -14,7 +14,7 @@ import org.testcontainers.containers.GenericContainer;
 @RunWith(ClasspathSuite.class)
 @ClassnameFilters(
         //All the same tests using redis instead of caffeine.
-        "org.thingsboard.server.dao.service.*ServiceSqlTest"
+        "org.echoiot.server.dao.service.*ServiceSqlTest"
 )
 public class RedisSqlTestSuite implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 

@@ -11,7 +11,8 @@ import org.echoiot.server.common.data.asset.Asset;
 import org.echoiot.server.common.data.asset.AssetInfo;
 import org.echoiot.server.common.data.asset.AssetSearchQuery;
 import org.echoiot.server.common.data.edge.Edge;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotException;
+import org.echoiot.server.common.data.id.*;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.common.data.page.TimePageLink;
@@ -28,20 +29,7 @@ import org.echoiot.server.service.security.permission.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-import org.echoiot.server.common.data.id.AssetId;
-import org.echoiot.server.common.data.id.AssetProfileId;
-import org.echoiot.server.common.data.id.CustomerId;
-import org.echoiot.server.common.data.id.EdgeId;
-import org.echoiot.server.common.data.id.TenantId;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +55,7 @@ public class AssetController extends BaseController {
     @RequestMapping(value = "/asset/{assetId}", method = RequestMethod.GET)
     @ResponseBody
     public Asset getAssetById(@ApiParam(value = ControllerConstants.ASSET_ID_PARAM_DESCRIPTION)
-                              @PathVariable(ASSET_ID) String strAssetId) throws ThingsboardException {
+                              @PathVariable(ASSET_ID) String strAssetId) throws EchoiotException {
         checkParameter(ASSET_ID, strAssetId);
         try {
             AssetId assetId = new AssetId(toUUID(strAssetId));
@@ -86,7 +74,7 @@ public class AssetController extends BaseController {
     @RequestMapping(value = "/asset/info/{assetId}", method = RequestMethod.GET)
     @ResponseBody
     public AssetInfo getAssetInfoById(@ApiParam(value = ControllerConstants.ASSET_ID_PARAM_DESCRIPTION)
-                                      @PathVariable(ASSET_ID) String strAssetId) throws ThingsboardException {
+                                      @PathVariable(ASSET_ID) String strAssetId) throws EchoiotException {
         checkParameter(ASSET_ID, strAssetId);
         try {
             AssetId assetId = new AssetId(toUUID(strAssetId));
@@ -130,7 +118,7 @@ public class AssetController extends BaseController {
     @RequestMapping(value = "/customer/{customerId}/asset/{assetId}", method = RequestMethod.POST)
     @ResponseBody
     public Asset assignAssetToCustomer(@ApiParam(value = ControllerConstants.CUSTOMER_ID_PARAM_DESCRIPTION) @PathVariable("customerId") String strCustomerId,
-                                       @ApiParam(value = ControllerConstants.ASSET_ID_PARAM_DESCRIPTION) @PathVariable(ASSET_ID) String strAssetId) throws ThingsboardException {
+                                       @ApiParam(value = ControllerConstants.ASSET_ID_PARAM_DESCRIPTION) @PathVariable(ASSET_ID) String strAssetId) throws EchoiotException {
         checkParameter("customerId", strCustomerId);
         checkParameter(ASSET_ID, strAssetId);
         CustomerId customerId = new CustomerId(toUUID(strCustomerId));
@@ -145,7 +133,7 @@ public class AssetController extends BaseController {
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
     @RequestMapping(value = "/customer/asset/{assetId}", method = RequestMethod.DELETE)
     @ResponseBody
-    public Asset unassignAssetFromCustomer(@ApiParam(value = ControllerConstants.ASSET_ID_PARAM_DESCRIPTION) @PathVariable(ASSET_ID) String strAssetId) throws ThingsboardException {
+    public Asset unassignAssetFromCustomer(@ApiParam(value = ControllerConstants.ASSET_ID_PARAM_DESCRIPTION) @PathVariable(ASSET_ID) String strAssetId) throws EchoiotException {
         checkParameter(ASSET_ID, strAssetId);
         AssetId assetId = new AssetId(toUUID(strAssetId));
         Asset asset = checkAssetId(assetId, Operation.UNASSIGN_FROM_CUSTOMER);
@@ -163,7 +151,7 @@ public class AssetController extends BaseController {
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
     @RequestMapping(value = "/customer/public/asset/{assetId}", method = RequestMethod.POST)
     @ResponseBody
-    public Asset assignAssetToPublicCustomer(@ApiParam(value = ControllerConstants.ASSET_ID_PARAM_DESCRIPTION) @PathVariable(ASSET_ID) String strAssetId) throws ThingsboardException {
+    public Asset assignAssetToPublicCustomer(@ApiParam(value = ControllerConstants.ASSET_ID_PARAM_DESCRIPTION) @PathVariable(ASSET_ID) String strAssetId) throws EchoiotException {
         checkParameter(ASSET_ID, strAssetId);
         AssetId assetId = new AssetId(toUUID(strAssetId));
         checkAssetId(assetId, Operation.ASSIGN_TO_CUSTOMER);
@@ -188,7 +176,7 @@ public class AssetController extends BaseController {
             @ApiParam(value = ControllerConstants.SORT_PROPERTY_DESCRIPTION, allowableValues = ControllerConstants.ASSET_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
             @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
-            @RequestParam(required = false) String sortOrder) throws ThingsboardException {
+            @RequestParam(required = false) String sortOrder) throws EchoiotException {
         try {
             TenantId tenantId = getCurrentUser().getTenantId();
             PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
@@ -222,7 +210,7 @@ public class AssetController extends BaseController {
             @ApiParam(value = ControllerConstants.SORT_PROPERTY_DESCRIPTION, allowableValues = ControllerConstants.ASSET_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
             @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
-            @RequestParam(required = false) String sortOrder) throws ThingsboardException {
+            @RequestParam(required = false) String sortOrder) throws EchoiotException {
         try {
             TenantId tenantId = getCurrentUser().getTenantId();
             PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
@@ -247,7 +235,7 @@ public class AssetController extends BaseController {
     @ResponseBody
     public Asset getTenantAsset(
             @ApiParam(value = ControllerConstants.ASSET_NAME_DESCRIPTION)
-            @RequestParam String assetName) throws ThingsboardException {
+            @RequestParam String assetName) throws EchoiotException {
         try {
             TenantId tenantId = getCurrentUser().getTenantId();
             return checkNotNull(assetService.findAssetByTenantIdAndName(tenantId, assetName));
@@ -276,7 +264,7 @@ public class AssetController extends BaseController {
             @ApiParam(value = ControllerConstants.SORT_PROPERTY_DESCRIPTION, allowableValues = ControllerConstants.ASSET_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
             @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
-            @RequestParam(required = false) String sortOrder) throws ThingsboardException {
+            @RequestParam(required = false) String sortOrder) throws EchoiotException {
         checkParameter("customerId", strCustomerId);
         try {
             TenantId tenantId = getCurrentUser().getTenantId();
@@ -315,7 +303,7 @@ public class AssetController extends BaseController {
             @ApiParam(value = ControllerConstants.SORT_PROPERTY_DESCRIPTION, allowableValues = ControllerConstants.ASSET_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
             @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
-            @RequestParam(required = false) String sortOrder) throws ThingsboardException {
+            @RequestParam(required = false) String sortOrder) throws EchoiotException {
         checkParameter("customerId", strCustomerId);
         try {
             TenantId tenantId = getCurrentUser().getTenantId();
@@ -342,7 +330,7 @@ public class AssetController extends BaseController {
     @ResponseBody
     public List<Asset> getAssetsByIds(
             @ApiParam(value = "A list of assets ids, separated by comma ','")
-            @RequestParam("assetIds") String[] strAssetIds) throws ThingsboardException {
+            @RequestParam("assetIds") String[] strAssetIds) throws EchoiotException {
         checkArrayParameter("assetIds", strAssetIds);
         try {
             SecurityUser user = getCurrentUser();
@@ -371,7 +359,7 @@ public class AssetController extends BaseController {
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/assets", method = RequestMethod.POST)
     @ResponseBody
-    public List<Asset> findByQuery(@RequestBody AssetSearchQuery query) throws ThingsboardException {
+    public List<Asset> findByQuery(@RequestBody AssetSearchQuery query) throws EchoiotException {
         checkNotNull(query);
         checkNotNull(query.getParameters());
         checkNotNull(query.getAssetTypes());
@@ -382,7 +370,7 @@ public class AssetController extends BaseController {
                 try {
                     accessControlService.checkPermission(getCurrentUser(), Resource.ASSET, Operation.READ, asset.getId(), asset);
                     return true;
-                } catch (ThingsboardException e) {
+                } catch (EchoiotException e) {
                     return false;
                 }
             }).collect(Collectors.toList());
@@ -397,7 +385,7 @@ public class AssetController extends BaseController {
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/asset/types", method = RequestMethod.GET)
     @ResponseBody
-    public List<EntitySubtype> getAssetTypes() throws ThingsboardException {
+    public List<EntitySubtype> getAssetTypes() throws EchoiotException {
         try {
             SecurityUser user = getCurrentUser();
             TenantId tenantId = user.getTenantId();
@@ -419,7 +407,7 @@ public class AssetController extends BaseController {
     @RequestMapping(value = "/edge/{edgeId}/asset/{assetId}", method = RequestMethod.POST)
     @ResponseBody
     public Asset assignAssetToEdge(@ApiParam(value = ControllerConstants.EDGE_ID_PARAM_DESCRIPTION) @PathVariable(EdgeController.EDGE_ID) String strEdgeId,
-                                   @ApiParam(value = ControllerConstants.ASSET_ID_PARAM_DESCRIPTION) @PathVariable(ASSET_ID) String strAssetId) throws ThingsboardException {
+                                   @ApiParam(value = ControllerConstants.ASSET_ID_PARAM_DESCRIPTION) @PathVariable(ASSET_ID) String strAssetId) throws EchoiotException {
         checkParameter(EdgeController.EDGE_ID, strEdgeId);
         checkParameter(ASSET_ID, strAssetId);
 
@@ -443,7 +431,7 @@ public class AssetController extends BaseController {
     @RequestMapping(value = "/edge/{edgeId}/asset/{assetId}", method = RequestMethod.DELETE)
     @ResponseBody
     public Asset unassignAssetFromEdge(@ApiParam(value = ControllerConstants.EDGE_ID_PARAM_DESCRIPTION) @PathVariable(EdgeController.EDGE_ID) String strEdgeId,
-                                       @ApiParam(value = ControllerConstants.ASSET_ID_PARAM_DESCRIPTION) @PathVariable(ASSET_ID) String strAssetId) throws ThingsboardException {
+                                       @ApiParam(value = ControllerConstants.ASSET_ID_PARAM_DESCRIPTION) @PathVariable(ASSET_ID) String strAssetId) throws EchoiotException {
         checkParameter(EdgeController.EDGE_ID, strEdgeId);
         checkParameter(ASSET_ID, strAssetId);
         EdgeId edgeId = new EdgeId(toUUID(strEdgeId));
@@ -479,7 +467,7 @@ public class AssetController extends BaseController {
             @ApiParam(value = "Timestamp. Assets with creation time before it won't be queried")
             @RequestParam(required = false) Long startTime,
             @ApiParam(value = "Timestamp. Assets with creation time after it won't be queried")
-            @RequestParam(required = false) Long endTime) throws ThingsboardException {
+            @RequestParam(required = false) Long endTime) throws EchoiotException {
         checkParameter(EdgeController.EDGE_ID, strEdgeId);
         try {
             TenantId tenantId = getCurrentUser().getTenantId();
@@ -496,7 +484,7 @@ public class AssetController extends BaseController {
                 try {
                     accessControlService.checkPermission(getCurrentUser(), Resource.ASSET, Operation.READ, asset.getId(), asset);
                     return true;
-                } catch (ThingsboardException e) {
+                } catch (EchoiotException e) {
                     return false;
                 }
             }).collect(Collectors.toList());

@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,41 +14,41 @@
 /// limitations under the License.
 ///
 
-import { Component, Inject, OnDestroy, SkipSelf, ViewChild } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, Validators } from '@angular/forms';
-import { DialogComponent } from '@shared/components/dialog.component';
-import { Router } from '@angular/router';
+import {Component, Inject, OnDestroy, SkipSelf, ViewChild} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, Validators} from '@angular/forms';
+import {DialogComponent} from '@shared/components/dialog.component';
+import {Router} from '@angular/router';
 import {
-  createDeviceProfileConfiguration,
-  createDeviceProfileTransportConfiguration,
-  DeviceProfile,
-  DeviceProfileInfo,
-  DeviceProfileType,
-  DeviceProvisionConfiguration,
-  DeviceProvisionType,
-  DeviceTransportType,
-  deviceTransportTypeHintMap,
-  deviceTransportTypeTranslationMap
+    createDeviceProfileConfiguration,
+    createDeviceProfileTransportConfiguration,
+    DeviceProfile,
+    DeviceProfileInfo,
+    DeviceProfileType,
+    DeviceProvisionConfiguration,
+    DeviceProvisionType,
+    DeviceTransportType,
+    deviceTransportTypeHintMap,
+    deviceTransportTypeTranslationMap
 } from '@shared/models/device.models';
-import { MatHorizontalStepper } from '@angular/material/stepper';
-import { AddEntityDialogData } from '@home/models/entity/entity-component.models';
-import { BaseData, HasId } from '@shared/models/base-data';
-import { EntityType } from '@shared/models/entity-type.models';
-import { DeviceProfileService } from '@core/http/device-profile.service';
-import { EntityId } from '@shared/models/id/entity-id';
-import { Observable, of, Subscription, throwError } from 'rxjs';
-import { catchError, map, mergeMap, tap } from 'rxjs/operators';
-import { DeviceService } from '@core/http/device.service';
-import { ErrorStateMatcher } from '@angular/material/core';
-import { StepperSelectionEvent } from '@angular/cdk/stepper';
-import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
-import { MediaBreakpoints } from '@shared/models/constants';
-import { RuleChainId } from '@shared/models/id/rule-chain-id';
-import { ServiceType } from '@shared/models/queue.models';
-import { deepTrim } from '@core/utils';
+import {MatHorizontalStepper} from '@angular/material/stepper';
+import {AddEntityDialogData} from '@home/models/entity/entity-component.models';
+import {BaseData, HasId} from '@shared/models/base-data';
+import {EntityType} from '@shared/models/entity-type.models';
+import {DeviceProfileService} from '@core/http/device-profile.service';
+import {EntityId} from '@shared/models/id/entity-id';
+import {Observable, of, Subscription, throwError} from 'rxjs';
+import {catchError, map, mergeMap, tap} from 'rxjs/operators';
+import {DeviceService} from '@core/http/device.service';
+import {ErrorStateMatcher} from '@angular/material/core';
+import {StepperSelectionEvent} from '@angular/cdk/stepper';
+import {BreakpointObserver, BreakpointState} from '@angular/cdk/layout';
+import {MediaBreakpoints} from '@shared/models/constants';
+import {RuleChainId} from '@shared/models/id/rule-chain-id';
+import {ServiceType} from '@shared/models/queue.models';
+import {deepTrim} from '@core/utils';
 
 @Component({
   selector: 'tb-device-wizard',

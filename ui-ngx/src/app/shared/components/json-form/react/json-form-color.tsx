@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016-2023 The Thingsboard Authors
+ * Copyright © 2016-2023 The Echoiot Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,23 +15,23 @@
  */
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import ThingsboardBaseComponent from './json-form-base-component';
+import EchoiotBaseComponent from './json-form-base-component';
 import reactCSS from 'reactcss';
 import * as tinycolor_ from 'tinycolor2';
 import TextField from '@material-ui/core/TextField';
-import { JsonFormFieldProps, JsonFormFieldState } from '@shared/components/json-form/react/json-form.models';
+import {JsonFormFieldProps, JsonFormFieldState} from '@shared/components/json-form/react/json-form.models';
 import IconButton from '@material-ui/core/IconButton';
 import Clear from '@material-ui/icons/Clear';
 import Tooltip from '@material-ui/core/Tooltip';
 
 const tinycolor = tinycolor_;
 
-interface ThingsboardColorState extends JsonFormFieldState {
+interface EchoiotColorState extends JsonFormFieldState {
   color: tinycolor.ColorFormats.RGBA | null;
   focused: boolean;
 }
 
-class ThingsboardColor extends React.Component<JsonFormFieldProps, ThingsboardColorState> {
+class EchoiotColor extends React.Component<JsonFormFieldProps, EchoiotColorState> {
 
     constructor(props) {
         super(props);
@@ -183,4 +183,4 @@ class ThingsboardColor extends React.Component<JsonFormFieldProps, ThingsboardCo
     }
 }
 
-export default ThingsboardBaseComponent(ThingsboardColor);
+export default EchoiotBaseComponent(EchoiotColor);

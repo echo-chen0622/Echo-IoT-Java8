@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,16 +14,16 @@
 /// limitations under the License.
 ///
 
-import { NgModule } from '@angular/core';
-import { Routes } from '@angular/router';
+import {NgModule} from '@angular/core';
+import {Routes} from '@angular/router';
 
-import { EntitiesTableComponent } from '../../components/entity/entities-table.component';
-import { Authority } from '@shared/models/authority.enum';
-import { EntityDetailsPageComponent } from '@home/components/entity/entity-details-page.component';
-import { ConfirmOnExitGuard } from '@core/guards/confirm-on-exit.guard';
-import { entityDetailsPageBreadcrumbLabelFunction } from '@home/pages/home-pages.models';
-import { BreadCrumbConfig } from '@shared/components/breadcrumb';
-import { AssetProfilesTableConfigResolver } from './asset-profiles-table-config.resolver';
+import {EntitiesTableComponent} from '../../components/entity/entities-table.component';
+import {Authority} from '@shared/models/authority.enum';
+import {EntityDetailsPageComponent} from '@home/components/entity/entity-details-page.component';
+import {ConfirmOnExitGuard} from '@core/guards/confirm-on-exit.guard';
+import {entityDetailsPageBreadcrumbLabelFunction} from '@home/pages/home-pages.models';
+import {BreadCrumbConfig} from '@shared/components/breadcrumb';
+import {AssetProfilesTableConfigResolver} from './asset-profiles-table-config.resolver';
 
 export const assetProfilesRoutes: Routes = [
   {

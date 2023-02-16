@@ -1,5 +1,7 @@
 package org.echoiot.server.dao.sql.device;
 
+import org.echoiot.server.common.data.DeviceTransportType;
+import org.echoiot.server.dao.ExportableEntityRepository;
 import org.echoiot.server.dao.model.sql.DeviceEntity;
 import org.echoiot.server.dao.model.sql.DeviceInfoEntity;
 import org.springframework.data.domain.Page;
@@ -7,8 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.echoiot.server.common.data.DeviceTransportType;
-import org.echoiot.server.dao.ExportableEntityRepository;
 
 import java.util.List;
 import java.util.UUID;
@@ -18,7 +18,7 @@ import java.util.UUID;
  */
 public interface DeviceRepository extends JpaRepository<DeviceEntity, UUID>, ExportableEntityRepository<DeviceEntity> {
 
-    @Query("SELECT new org.thingsboard.server.dao.model.sql.DeviceInfoEntity(d, c.title, c.additionalInfo, p.name) " +
+    @Query("SELECT new org.echoiot.server.dao.model.sql.DeviceInfoEntity(d, c.title, c.additionalInfo, p.name) " +
             "FROM DeviceEntity d " +
             "LEFT JOIN CustomerEntity c on c.id = d.customerId " +
             "LEFT JOIN DeviceProfileEntity p on p.id = d.deviceProfileId " +
@@ -41,7 +41,7 @@ public interface DeviceRepository extends JpaRepository<DeviceEntity, UUID>, Exp
                                                   @Param("searchText") String searchText,
                                                   Pageable pageable);
 
-    @Query("SELECT new org.thingsboard.server.dao.model.sql.DeviceInfoEntity(d, c.title, c.additionalInfo, p.name) " +
+    @Query("SELECT new org.echoiot.server.dao.model.sql.DeviceInfoEntity(d, c.title, c.additionalInfo, p.name) " +
             "FROM DeviceEntity d " +
             "LEFT JOIN CustomerEntity c on c.id = d.customerId " +
             "LEFT JOIN DeviceProfileEntity p on p.id = d.deviceProfileId " +
@@ -63,7 +63,7 @@ public interface DeviceRepository extends JpaRepository<DeviceEntity, UUID>, Exp
                                       @Param("textSearch") String textSearch,
                                       Pageable pageable);
 
-    @Query("SELECT new org.thingsboard.server.dao.model.sql.DeviceInfoEntity(d, c.title, c.additionalInfo, p.name) " +
+    @Query("SELECT new org.echoiot.server.dao.model.sql.DeviceInfoEntity(d, c.title, c.additionalInfo, p.name) " +
             "FROM DeviceEntity d " +
             "LEFT JOIN CustomerEntity c on c.id = d.customerId " +
             "LEFT JOIN DeviceProfileEntity p on p.id = d.deviceProfileId " +
@@ -114,7 +114,7 @@ public interface DeviceRepository extends JpaRepository<DeviceEntity, UUID>, Exp
     Long countByTenantIdAndDeviceProfileIdAndSoftwareIdIsNull(@Param("tenantId") UUID tenantId,
                                                               @Param("deviceProfileId") UUID deviceProfileId);
 
-    @Query("SELECT new org.thingsboard.server.dao.model.sql.DeviceInfoEntity(d, c.title, c.additionalInfo, p.name) " +
+    @Query("SELECT new org.echoiot.server.dao.model.sql.DeviceInfoEntity(d, c.title, c.additionalInfo, p.name) " +
             "FROM DeviceEntity d " +
             "LEFT JOIN CustomerEntity c on c.id = d.customerId " +
             "LEFT JOIN DeviceProfileEntity p on p.id = d.deviceProfileId " +
@@ -128,7 +128,7 @@ public interface DeviceRepository extends JpaRepository<DeviceEntity, UUID>, Exp
                                                             @Param("textSearch") String textSearch,
                                                             Pageable pageable);
 
-    @Query("SELECT new org.thingsboard.server.dao.model.sql.DeviceInfoEntity(d, c.title, c.additionalInfo, p.name) " +
+    @Query("SELECT new org.echoiot.server.dao.model.sql.DeviceInfoEntity(d, c.title, c.additionalInfo, p.name) " +
             "FROM DeviceEntity d " +
             "LEFT JOIN CustomerEntity c on c.id = d.customerId " +
             "LEFT JOIN DeviceProfileEntity p on p.id = d.deviceProfileId " +
@@ -152,7 +152,7 @@ public interface DeviceRepository extends JpaRepository<DeviceEntity, UUID>, Exp
                                                           @Param("textSearch") String textSearch,
                                                           Pageable pageable);
 
-    @Query("SELECT new org.thingsboard.server.dao.model.sql.DeviceInfoEntity(d, c.title, c.additionalInfo, p.name) " +
+    @Query("SELECT new org.echoiot.server.dao.model.sql.DeviceInfoEntity(d, c.title, c.additionalInfo, p.name) " +
             "FROM DeviceEntity d " +
             "LEFT JOIN CustomerEntity c on c.id = d.customerId " +
             "LEFT JOIN DeviceProfileEntity p on p.id = d.deviceProfileId " +
@@ -166,7 +166,7 @@ public interface DeviceRepository extends JpaRepository<DeviceEntity, UUID>, Exp
                                                                          @Param("textSearch") String textSearch,
                                                                          Pageable pageable);
 
-    @Query("SELECT new org.thingsboard.server.dao.model.sql.DeviceInfoEntity(d, c.title, c.additionalInfo, p.name) " +
+    @Query("SELECT new org.echoiot.server.dao.model.sql.DeviceInfoEntity(d, c.title, c.additionalInfo, p.name) " +
             "FROM DeviceEntity d " +
             "LEFT JOIN CustomerEntity c on c.id = d.customerId " +
             "LEFT JOIN DeviceProfileEntity p on p.id = d.deviceProfileId " +

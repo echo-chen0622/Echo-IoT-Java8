@@ -11,7 +11,7 @@ import org.echoiot.server.common.data.security.Authority;
 import org.echoiot.server.dao.device.claim.ClaimResponse;
 import org.echoiot.server.dao.device.claim.ClaimResult;
 import org.echoiot.server.dao.service.DaoSqlTest;
-import org.thingsboard.server.gen.transport.TransportApiProtos;
+import org.echoiot.server.gen.transport.TransportApiProtos;
 import org.echoiot.server.transport.mqtt.AbstractMqttIntegrationTest;
 import org.echoiot.server.transport.mqtt.MqttTestClient;
 import org.echoiot.server.transport.mqtt.MqttTestConfigProperties;
@@ -53,7 +53,7 @@ public class MqttClaimDeviceTest extends AbstractMqttIntegrationTest {
         user.setAuthority(Authority.CUSTOMER_USER);
         user.setTenantId(tenantId);
         user.setCustomerId(savedCustomer.getId());
-        user.setEmail("customer@thingsboard.org");
+        user.setEmail("customer@echoiot.org");
 
         customerAdmin = createUser(user, CUSTOMER_USER_PASSWORD);
         assertNotNull(customerAdmin);

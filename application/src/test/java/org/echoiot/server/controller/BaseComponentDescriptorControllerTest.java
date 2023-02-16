@@ -1,11 +1,7 @@
 package org.echoiot.server.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.thingsboard.rule.engine.filter.TbJsFilterNode;
+import org.echoiot.rule.engine.filter.TbJsFilterNode;
 import org.echoiot.server.common.data.Tenant;
 import org.echoiot.server.common.data.User;
 import org.echoiot.server.common.data.plugin.ComponentDescriptor;
@@ -13,6 +9,10 @@ import org.echoiot.server.common.data.plugin.ComponentScope;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.data.rule.RuleChainType;
 import org.echoiot.server.common.data.security.Authority;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.List;
 
@@ -36,7 +36,7 @@ public abstract class BaseComponentDescriptorControllerTest extends AbstractCont
         tenantAdmin = new User();
         tenantAdmin.setAuthority(Authority.TENANT_ADMIN);
         tenantAdmin.setTenantId(savedTenant.getId());
-        tenantAdmin.setEmail("tenant2@thingsboard.org");
+        tenantAdmin.setEmail("tenant2@echoiot.org");
         tenantAdmin.setFirstName("Joe");
         tenantAdmin.setLastName("Downs");
 

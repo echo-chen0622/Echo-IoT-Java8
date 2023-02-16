@@ -53,7 +53,7 @@ import org.echoiot.server.queue.util.TbLwM2mTransportComponent;
 import org.echoiot.server.transport.lwm2m.config.LwM2MTransportServerConfig;
 import org.echoiot.server.transport.lwm2m.server.LwM2mTransportContext;
 import org.echoiot.server.transport.lwm2m.server.LwM2mVersionedModelProvider;
-import org.thingsboard.server.transport.lwm2m.server.client.LwM2mClient;
+import org.echoiot.server.transport.lwm2m.server.client.LwM2mClient;
 import org.echoiot.server.transport.lwm2m.server.client.LwM2mClientContext;
 import org.echoiot.server.transport.lwm2m.server.common.LwM2MExecutorAwareService;
 import org.echoiot.server.transport.lwm2m.server.log.LwM2MTelemetryLogService;

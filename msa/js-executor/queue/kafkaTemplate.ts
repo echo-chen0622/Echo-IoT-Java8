@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -15,9 +15,9 @@
 ///
 
 import config from 'config';
-import { _logger, KafkaJsWinstonLogCreator } from '../config/logger';
-import { JsInvokeMessageProcessor } from '../api/jsInvokeMessageProcessor'
-import { IQueue } from './queue.models';
+import {_logger, KafkaJsWinstonLogCreator} from '../config/logger';
+import {JsInvokeMessageProcessor} from '../api/jsInvokeMessageProcessor'
+import {IQueue} from './queue.models';
 import {
     Admin,
     CompressionTypes,
@@ -30,7 +30,7 @@ import {
     TopicMessages
 } from 'kafkajs';
 
-import process, { kill, exit } from 'process';
+import process, {exit, kill} from 'process';
 
 export class KafkaTemplate implements IQueue {
 

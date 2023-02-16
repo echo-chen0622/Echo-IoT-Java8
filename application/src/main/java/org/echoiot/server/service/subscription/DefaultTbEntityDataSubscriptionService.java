@@ -26,7 +26,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.CloseStatus;
-import org.thingsboard.common.util.ThingsBoardThreadFactory;
+import org.echoiot.common.util.EchoiotThreadFactory;
 import org.echoiot.server.common.data.query.AlarmDataQuery;
 import org.echoiot.server.common.data.query.ComparisonTsValue;
 import org.echoiot.server.common.data.query.EntityData;
@@ -131,9 +131,9 @@ public class DefaultTbEntityDataSubscriptionService implements TbEntityDataSubsc
     @PostConstruct
     public void initExecutor() {
         serviceId = serviceInfoProvider.getServiceId();
-        wsCallBackExecutor = Executors.newSingleThreadExecutor(ThingsBoardThreadFactory.forName("ws-entity-sub-callback"));
+        wsCallBackExecutor = Executors.newSingleThreadExecutor(EchoiotThreadFactory.forName("ws-entity-sub-callback"));
         tsInSqlDB = databaseTsType.equalsIgnoreCase("sql") || databaseTsType.equalsIgnoreCase("timescale");
-        ThreadFactory tbThreadFactory = ThingsBoardThreadFactory.forName("ws-entity-sub-scheduler");
+        ThreadFactory tbThreadFactory = EchoiotThreadFactory.forName("ws-entity-sub-scheduler");
         if (dynamicPageLinkRefreshPoolSize == 1) {
             scheduler = Executors.newSingleThreadScheduledExecutor(tbThreadFactory);
         } else {

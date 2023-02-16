@@ -2,7 +2,7 @@ package org.echoiot.server.service.ota;
 
 import org.echoiot.server.common.data.Device;
 import org.echoiot.server.common.data.DeviceProfile;
-import org.thingsboard.server.gen.transport.TransportProtos.ToOtaPackageStateServiceMsg;
+import org.echoiot.server.gen.transport.TransportProtos.ToOtaPackageStateServiceMsg;
 
 public interface OtaPackageStateService {
 

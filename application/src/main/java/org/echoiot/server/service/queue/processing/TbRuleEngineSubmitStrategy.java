@@ -1,7 +1,7 @@
 package org.echoiot.server.service.queue.processing;
 
 import org.echoiot.server.queue.common.TbProtoQueueMsg;
-import org.thingsboard.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.transport.TransportProtos;
 
 import java.util.List;
 import java.util.UUID;

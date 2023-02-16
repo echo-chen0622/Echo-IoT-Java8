@@ -6,7 +6,7 @@ import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.dao.tenant.TbTenantProfileCache;
-import org.echoiot.server.exception.ThingsboardErrorResponseHandler;
+import org.echoiot.server.exception.EchoiotErrorResponseHandler;
 import org.echoiot.server.service.security.model.SecurityUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -33,7 +33,7 @@ import java.util.concurrent.ConcurrentMap;
 public class RateLimitProcessingFilter extends OncePerRequestFilter {
 
     @Autowired
-    private ThingsboardErrorResponseHandler errorResponseHandler;
+    private EchoiotErrorResponseHandler errorResponseHandler;
 
     @Autowired
     @Lazy

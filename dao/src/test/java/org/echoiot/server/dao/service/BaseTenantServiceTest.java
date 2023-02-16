@@ -1,6 +1,8 @@
 package org.echoiot.server.dao.service;
 
+import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.cache.TbTransactionalCache;
+import org.echoiot.server.common.data.*;
 import org.echoiot.server.common.data.asset.Asset;
 import org.echoiot.server.common.data.device.profile.DeviceProfileData;
 import org.echoiot.server.common.data.device.profile.MqttDeviceProfileTransportConfiguration;
@@ -24,25 +26,6 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.thingsboard.common.util.JacksonUtil;
-import org.echoiot.server.common.data.Customer;
-import org.echoiot.server.common.data.Dashboard;
-import org.echoiot.server.common.data.DashboardInfo;
-import org.echoiot.server.common.data.Device;
-import org.echoiot.server.common.data.DeviceProfile;
-import org.echoiot.server.common.data.DeviceProfileType;
-import org.echoiot.server.common.data.DeviceTransportType;
-import org.echoiot.server.common.data.EntityView;
-import org.echoiot.server.common.data.OtaPackage;
-import org.echoiot.server.common.data.OtaPackageInfo;
-import org.echoiot.server.common.data.ResourceType;
-import org.echoiot.server.common.data.StringUtils;
-import org.echoiot.server.common.data.TbResource;
-import org.echoiot.server.common.data.TbResourceInfo;
-import org.echoiot.server.common.data.Tenant;
-import org.echoiot.server.common.data.TenantInfo;
-import org.echoiot.server.common.data.TenantProfile;
-import org.echoiot.server.common.data.User;
 
 import java.util.ArrayList;
 import java.util.Collections;

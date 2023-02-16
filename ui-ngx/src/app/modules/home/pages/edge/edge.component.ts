@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,18 +14,18 @@
 /// limitations under the License.
 ///
 
-import { ChangeDetectorRef, Component, Inject } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { EntityComponent } from '@home/components/entity/entity.component';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { EntityType } from '@shared/models/entity-type.models';
-import { EdgeInfo } from '@shared/models/edge.models';
-import { TranslateService } from '@ngx-translate/core';
-import { NULL_UUID } from '@shared/models/id/has-uuid';
-import { ActionNotificationShow } from '@core/notification/notification.actions';
-import { generateSecret, guid } from '@core/utils';
-import { EntityTableConfig } from '@home/models/entity/entities-table-config.models';
+import {ChangeDetectorRef, Component, Inject} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {EntityComponent} from '@home/components/entity/entity.component';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {EntityType} from '@shared/models/entity-type.models';
+import {EdgeInfo} from '@shared/models/edge.models';
+import {TranslateService} from '@ngx-translate/core';
+import {NULL_UUID} from '@shared/models/id/has-uuid';
+import {ActionNotificationShow} from '@core/notification/notification.actions';
+import {generateSecret, guid} from '@core/utils';
+import {EntityTableConfig} from '@home/models/entity/entities-table-config.models';
 
 @Component({
   selector: 'tb-edge',

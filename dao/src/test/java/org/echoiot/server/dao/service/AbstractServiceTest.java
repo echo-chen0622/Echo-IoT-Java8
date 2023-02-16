@@ -3,6 +3,8 @@ package org.echoiot.server.dao.service;
 import com.datastax.oss.driver.api.core.uuid.Uuids;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.echoiot.common.util.JacksonUtil;
+import org.echoiot.server.common.data.*;
 import org.echoiot.server.common.data.asset.AssetProfile;
 import org.echoiot.server.common.data.device.profile.DefaultDeviceProfileConfiguration;
 import org.echoiot.server.common.data.device.profile.DefaultDeviceProfileTransportConfiguration;
@@ -55,14 +57,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
-import org.thingsboard.common.util.JacksonUtil;
-import org.echoiot.server.common.data.DeviceProfile;
-import org.echoiot.server.common.data.DeviceProfileType;
-import org.echoiot.server.common.data.DeviceTransportType;
-import org.echoiot.server.common.data.EntityType;
-import org.echoiot.server.common.data.OtaPackage;
-import org.echoiot.server.common.data.StringUtils;
-import org.echoiot.server.common.data.Tenant;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -77,7 +71,7 @@ import static org.junit.Assert.assertNotNull;
 @ContextConfiguration(classes = AbstractServiceTest.class, loader = AnnotationConfigContextLoader.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @Configuration
-@ComponentScan("org.thingsboard.server")
+@ComponentScan("org.echoiot.server")
 public abstract class AbstractServiceTest {
 
     protected ObjectMapper mapper = new ObjectMapper();

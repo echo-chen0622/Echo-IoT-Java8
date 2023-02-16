@@ -7,6 +7,21 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.common.util.EchoiotExecutors;
+import org.echoiot.server.common.data.*;
+import org.echoiot.server.common.data.audit.ActionType;
+import org.echoiot.server.common.data.edge.Edge;
+import org.echoiot.server.common.data.id.CustomerId;
+import org.echoiot.server.common.data.id.EntityViewId;
+import org.echoiot.server.common.data.objects.AttributesEntityView;
+import org.echoiot.server.common.data.objects.TelemetryEntityView;
+import org.echoiot.server.common.data.page.PageData;
+import org.echoiot.server.common.data.page.PageLink;
+import org.echoiot.server.common.data.query.DeviceTypeFilter;
+import org.echoiot.server.common.data.query.EntityKey;
+import org.echoiot.server.common.data.query.EntityKeyType;
+import org.echoiot.server.common.data.security.Authority;
+import org.echoiot.server.common.data.security.DeviceCredentials;
 import org.echoiot.server.dao.entityview.EntityViewDao;
 import org.echoiot.server.dao.exception.DataValidationException;
 import org.echoiot.server.dao.model.ModelConstants;
@@ -27,39 +42,12 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.ResultActions;
-import org.thingsboard.common.util.ThingsBoardExecutors;
-import org.echoiot.server.common.data.Customer;
-import org.echoiot.server.common.data.Device;
-import org.echoiot.server.common.data.EntityView;
-import org.echoiot.server.common.data.EntityViewInfo;
-import org.echoiot.server.common.data.StringUtils;
-import org.echoiot.server.common.data.Tenant;
-import org.echoiot.server.common.data.User;
-import org.echoiot.server.common.data.audit.ActionType;
-import org.echoiot.server.common.data.edge.Edge;
-import org.echoiot.server.common.data.id.CustomerId;
-import org.echoiot.server.common.data.id.EntityViewId;
-import org.echoiot.server.common.data.objects.AttributesEntityView;
-import org.echoiot.server.common.data.objects.TelemetryEntityView;
-import org.echoiot.server.common.data.page.PageData;
-import org.echoiot.server.common.data.page.PageLink;
-import org.echoiot.server.common.data.query.DeviceTypeFilter;
-import org.echoiot.server.common.data.query.EntityKey;
-import org.echoiot.server.common.data.query.EntityKeyType;
-import org.echoiot.server.common.data.security.Authority;
-import org.echoiot.server.common.data.security.DeviceCredentials;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import static java.util.concurrent.TimeUnit.HOURS;
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static java.util.concurrent.TimeUnit.SECONDS;
+import static java.util.concurrent.TimeUnit.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 import static org.hamcrest.Matchers.containsString;
@@ -98,7 +86,7 @@ public abstract class BaseEntityViewControllerTest extends AbstractControllerTes
 
     @Before
     public void beforeTest() throws Exception {
-        executor = MoreExecutors.listeningDecorator(ThingsBoardExecutors.newWorkStealingPool(8, getClass()));
+        executor = MoreExecutors.listeningDecorator(EchoiotExecutors.newWorkStealingPool(8, getClass()));
 
         loginTenantAdmin();
 
@@ -323,7 +311,7 @@ public abstract class BaseEntityViewControllerTest extends AbstractControllerTes
         User tenantAdmin2 = new User();
         tenantAdmin2.setAuthority(Authority.TENANT_ADMIN);
         tenantAdmin2.setTenantId(savedTenant2.getId());
-        tenantAdmin2.setEmail("tenant3@thingsboard.org");
+        tenantAdmin2.setEmail("tenant3@echoiot.org");
         tenantAdmin2.setFirstName("Joe");
         tenantAdmin2.setLastName("Downs");
         createUserAndLogin(tenantAdmin2, "testPassword1");

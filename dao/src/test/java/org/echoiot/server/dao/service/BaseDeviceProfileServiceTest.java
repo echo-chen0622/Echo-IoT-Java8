@@ -5,24 +5,15 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import org.assertj.core.api.Assertions;
+import org.echoiot.common.util.EchoiotThreadFactory;
+import org.echoiot.server.common.data.*;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.ota.ChecksumAlgorithm;
 import org.echoiot.server.common.data.ota.OtaPackageType;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.dao.exception.DataValidationException;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.thingsboard.common.util.ThingsBoardThreadFactory;
-import org.echoiot.server.common.data.Device;
-import org.echoiot.server.common.data.DeviceProfile;
-import org.echoiot.server.common.data.DeviceProfileInfo;
-import org.echoiot.server.common.data.DeviceTransportType;
-import org.echoiot.server.common.data.OtaPackage;
-import org.echoiot.server.common.data.Tenant;
+import org.junit.*;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -146,7 +137,7 @@ public abstract class BaseDeviceProfileServiceTest extends AbstractServiceTest {
 
     @Test
     public void testFindOrCreateDeviceProfile() throws ExecutionException, InterruptedException {
-        ListeningExecutorService testExecutor = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(100, ThingsBoardThreadFactory.forName(getClass().getSimpleName() + "-test-scope")));
+        ListeningExecutorService testExecutor = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(100, EchoiotThreadFactory.forName(getClass().getSimpleName() + "-test-scope")));
         try {
             List<ListenableFuture<DeviceProfile>> futures = new ArrayList<>();
             for (int i = 0; i < 50; i++) {

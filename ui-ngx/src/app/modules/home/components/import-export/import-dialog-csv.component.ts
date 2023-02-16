@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,32 +14,32 @@
 /// limitations under the License.
 ///
 
-import { AfterViewInit, Component, ElementRef, Inject, OnDestroy, Renderer2, ViewChild } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { DialogComponent } from '@app/shared/components/dialog.component';
-import { EntityType } from '@shared/models/entity-type.models';
-import { TranslateService } from '@ngx-translate/core';
-import { ActionNotificationShow } from '@core/notification/notification.actions';
-import { MatVerticalStepper } from '@angular/material/stepper';
+import {AfterViewInit, Component, ElementRef, Inject, OnDestroy, Renderer2, ViewChild} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Router} from '@angular/router';
+import {DialogComponent} from '@app/shared/components/dialog.component';
+import {EntityType} from '@shared/models/entity-type.models';
+import {TranslateService} from '@ngx-translate/core';
+import {ActionNotificationShow} from '@core/notification/notification.actions';
+import {MatVerticalStepper} from '@angular/material/stepper';
 import {
-  BulkImportRequest,
-  BulkImportResult,
-  ColumnMapping,
-  convertCSVToJson,
-  CsvColumnParam,
-  CSVDelimiter,
-  CsvToJsonConfig,
-  CsvToJsonResult,
-  ImportEntityColumnType
+    BulkImportRequest,
+    BulkImportResult,
+    ColumnMapping,
+    convertCSVToJson,
+    CsvColumnParam,
+    CSVDelimiter,
+    CsvToJsonConfig,
+    CsvToJsonResult,
+    ImportEntityColumnType
 } from '@home/components/import-export/import-export.models';
-import { ImportExportService } from '@home/components/import-export/import-export.service';
-import { TableColumnsAssignmentComponent } from '@home/components/import-export/table-columns-assignment.component';
-import { Ace } from 'ace-builds';
-import { getAce } from '@shared/models/ace/ace.models';
+import {ImportExportService} from '@home/components/import-export/import-export.service';
+import {TableColumnsAssignmentComponent} from '@home/components/import-export/table-columns-assignment.component';
+import {Ace} from 'ace-builds';
+import {getAce} from '@shared/models/ace/ace.models';
 
 export interface ImportDialogCsvData {
   entityType: EntityType;

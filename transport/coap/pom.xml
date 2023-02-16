@@ -10,7 +10,7 @@
     <artifactId>coap</artifactId>
     <packaging>jar</packaging>
 
-    <name>Thingsboard CoAP Transport Service</name>
+    <name>Echoiot CoAP Transport Service</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -22,8 +22,8 @@
         <echo.name>tb-coap-transport</echo.name>
         <echo.copyInstallScripts>false</echo.copyInstallScripts>
         <echo.win.dist>${project.build.directory}/windows</echo.win.dist>
-        <echo.implementationTitle>ThingsBoard CoAP Transport Service</echo.implementationTitle>
-        <echo.mainClass>org.echoiot.server.coap.ThingsboardCoapTransportApplication</echo.mainClass>
+        <echo.implementationTitle>Echoiot CoAP Transport Service</echo.implementationTitle>
+        <echo.mainClass>org.echoiot.server.coap.EchoiotCoapTransportApplication</echo.mainClass>
     </properties>
 
     <dependencies>
@@ -88,7 +88,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
             <plugin>
-                <groupId>org.echoiot</groupId>
+                <groupId>org.thingsboard</groupId>
                 <artifactId>gradle-maven-plugin</artifactId>
             </plugin>
             <plugin>

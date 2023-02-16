@@ -10,7 +10,7 @@ import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.data.id.DeviceProfileId;
 import org.echoiot.server.common.data.security.DeviceCredentials;
 import org.echoiot.server.queue.util.DataDecodingEncodingService;
-import org.thingsboard.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.queue.util.TbSnmpTransportComponent;
 
 import java.util.UUID;

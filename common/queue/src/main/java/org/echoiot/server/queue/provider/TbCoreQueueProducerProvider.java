@@ -2,13 +2,13 @@ package org.echoiot.server.queue.provider;
 
 import org.echoiot.server.queue.TbQueueProducer;
 import org.springframework.stereotype.Service;
-import org.thingsboard.server.gen.transport.TransportProtos.ToCoreMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.ToCoreNotificationMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.ToRuleEngineMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.ToRuleEngineNotificationMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.ToTransportMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.ToUsageStatsServiceMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.ToVersionControlServiceMsg;
+import org.echoiot.server.gen.transport.TransportProtos.ToCoreMsg;
+import org.echoiot.server.gen.transport.TransportProtos.ToCoreNotificationMsg;
+import org.echoiot.server.gen.transport.TransportProtos.ToRuleEngineMsg;
+import org.echoiot.server.gen.transport.TransportProtos.ToRuleEngineNotificationMsg;
+import org.echoiot.server.gen.transport.TransportProtos.ToTransportMsg;
+import org.echoiot.server.gen.transport.TransportProtos.ToUsageStatsServiceMsg;
+import org.echoiot.server.gen.transport.TransportProtos.ToVersionControlServiceMsg;
 import org.echoiot.server.queue.common.TbProtoQueueMsg;
 import org.echoiot.server.queue.util.TbCoreComponent;
 

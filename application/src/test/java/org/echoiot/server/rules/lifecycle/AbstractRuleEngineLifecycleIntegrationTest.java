@@ -2,16 +2,7 @@ package org.echoiot.server.rules.lifecycle;
 
 import lombok.extern.slf4j.Slf4j;
 import org.awaitility.Awaitility;
-import org.echoiot.server.common.msg.TbMsg;
-import org.echoiot.server.common.msg.TbMsgMetaData;
-import org.echoiot.server.controller.AbstractRuleEngineControllerTest;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.thingsboard.rule.engine.metadata.TbGetAttributesNodeConfiguration;
+import org.echoiot.rule.engine.metadata.TbGetAttributesNodeConfiguration;
 import org.echoiot.server.actors.ActorSystemContext;
 import org.echoiot.server.common.data.DataConstants;
 import org.echoiot.server.common.data.Device;
@@ -22,10 +13,19 @@ import org.echoiot.server.common.data.kv.StringDataEntry;
 import org.echoiot.server.common.data.rule.RuleChain;
 import org.echoiot.server.common.data.rule.RuleChainMetaData;
 import org.echoiot.server.common.data.rule.RuleNode;
+import org.echoiot.server.common.msg.TbMsg;
+import org.echoiot.server.common.msg.TbMsgMetaData;
 import org.echoiot.server.common.msg.queue.QueueToRuleEngineMsg;
 import org.echoiot.server.common.msg.queue.TbMsgCallback;
+import org.echoiot.server.controller.AbstractRuleEngineControllerTest;
 import org.echoiot.server.dao.attributes.AttributesService;
 import org.echoiot.server.dao.event.EventService;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collections;
 import java.util.List;
@@ -75,7 +75,7 @@ public abstract class AbstractRuleEngineLifecycleIntegrationTest extends Abstrac
 
         RuleNode ruleNode = new RuleNode();
         ruleNode.setName("Simple Rule Node");
-        ruleNode.setType(org.thingsboard.rule.engine.metadata.TbGetAttributesNode.class.getName());
+        ruleNode.setType(org.echoiot.rule.engine.metadata.TbGetAttributesNode.class.getName());
         ruleNode.setDebugMode(true);
         TbGetAttributesNodeConfiguration configuration = new TbGetAttributesNodeConfiguration();
         configuration.setServerAttributeNames(Collections.singletonList("serverAttributeKey"));

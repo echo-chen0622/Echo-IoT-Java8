@@ -2,6 +2,7 @@ package org.echoiot.server.service.sync.ie.importing.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
+import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.common.data.Dashboard;
 import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.ShortCustomerInfo;
@@ -10,17 +11,11 @@ import org.echoiot.server.common.data.id.DashboardId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.sync.ie.EntityExportData;
 import org.echoiot.server.dao.dashboard.DashboardService;
-import org.springframework.stereotype.Service;
-import org.thingsboard.common.util.JacksonUtil;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.sync.vc.data.EntitiesImportCtx;
+import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service

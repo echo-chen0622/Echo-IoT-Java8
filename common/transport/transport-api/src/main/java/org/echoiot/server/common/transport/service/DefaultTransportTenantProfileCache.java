@@ -2,9 +2,6 @@ package org.echoiot.server.common.transport.service;
 
 import com.google.protobuf.ByteString;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Component;
 import org.echoiot.server.common.data.ApiUsageState;
 import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.TenantProfile;
@@ -14,9 +11,12 @@ import org.echoiot.server.common.transport.TransportService;
 import org.echoiot.server.common.transport.TransportTenantProfileCache;
 import org.echoiot.server.common.transport.limits.TransportRateLimitService;
 import org.echoiot.server.common.transport.profile.TenantProfileUpdateResult;
+import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.queue.util.DataDecodingEncodingService;
-import org.thingsboard.server.gen.transport.TransportProtos;
 import org.echoiot.server.queue.util.TbTransportComponent;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.Optional;

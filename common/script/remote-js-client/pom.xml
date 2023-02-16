@@ -2,16 +2,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.thingsboard.common</groupId>
+        <groupId>org.echoiot.common</groupId>
         <version>3.4.4</version>
         <artifactId>script</artifactId>
     </parent>
-    <groupId>org.thingsboard.common.script</groupId>
+    <groupId>org.echoiot.common.script</groupId>
     <artifactId>remote-js-client</artifactId>
     <packaging>jar</packaging>
 
-    <name>Thingsboard Server JS Client for remote JS execution</name>
-    <url>https://thingsboard.io</url>
+    <name>Echoiot Server JS Client for remote JS execution</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -20,23 +19,23 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.thingsboard.common</groupId>
+            <groupId>org.echoiot.common</groupId>
             <artifactId>queue</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard.common.script</groupId>
+            <groupId>org.echoiot.common.script</groupId>
             <artifactId>script-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard.rule-engine</groupId>
+            <groupId>org.echoiot.rule-engine</groupId>
             <artifactId>rule-engine-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard.common</groupId>
+            <groupId>org.echoiot.common</groupId>
             <artifactId>data</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard.common</groupId>
+            <groupId>org.echoiot.common</groupId>
             <artifactId>message</artifactId>
         </dependency>
         <dependency>
@@ -63,9 +62,9 @@
 
     <distributionManagement>
         <repository>
-            <id>thingsboard-repo-deploy</id>
-            <name>ThingsBoard Repo Deployment</name>
-            <url>https://repo.thingsboard.io/artifactory/libs-release-public</url>
+            <id>echoiot-repo-deploy</id>
+            <name>Echoiot Repo Deployment</name>
+            <url>https://repo.echoiot.io/artifactory/libs-release-public</url>
         </repository>
     </distributionManagement>
 

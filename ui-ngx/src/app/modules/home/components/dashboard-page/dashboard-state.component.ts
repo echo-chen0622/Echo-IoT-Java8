@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,17 +14,17 @@
 /// limitations under the License.
 ///
 
-import { ChangeDetectorRef, Component, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
-import { PageComponent } from '@shared/components/page.component';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { Dashboard, DashboardLayoutId } from '@shared/models/dashboard.models';
-import { IAliasController, StateObject } from '@core/api/widget-api.models';
-import { updateEntityParams, WidgetContext } from '@home/models/widget-component.models';
-import { deepClone, isDefinedAndNotNull, isNotEmptyStr, objToBase64 } from '@core/utils';
-import { IDashboardComponent } from '@home/models/dashboard-component.models';
-import { EntityId } from '@shared/models/id/entity-id';
-import { Subscription } from 'rxjs';
+import {ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {PageComponent} from '@shared/components/page.component';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {Dashboard, DashboardLayoutId} from '@shared/models/dashboard.models';
+import {IAliasController, StateObject} from '@core/api/widget-api.models';
+import {updateEntityParams, WidgetContext} from '@home/models/widget-component.models';
+import {deepClone, isDefinedAndNotNull, isNotEmptyStr, objToBase64} from '@core/utils';
+import {IDashboardComponent} from '@home/models/dashboard-component.models';
+import {EntityId} from '@shared/models/id/entity-id';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'tb-dashboard-state',

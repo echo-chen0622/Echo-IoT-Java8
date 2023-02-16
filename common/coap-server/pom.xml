@@ -12,7 +12,7 @@
     <artifactId>coap-server</artifactId>
     <packaging>jar</packaging>
 
-    <name>Thingsboard CoAP server</name>
+    <name>Echoiot CoAP server</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

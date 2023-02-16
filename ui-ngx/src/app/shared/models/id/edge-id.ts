@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,8 +14,8 @@
 /// limitations under the License.
 ///
 
-import { EntityId } from './entity-id';
-import { EntityType } from '@shared/models/entity-type.models';
+import {EntityId} from './entity-id';
+import {EntityType} from '@shared/models/entity-type.models';
 
 export class EdgeId implements EntityId {
   entityType = EntityType.EDGE;

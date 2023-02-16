@@ -1,7 +1,7 @@
 package org.echoiot.server.transport.lwm2m.server.store;
 
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.thingsboard.common.util.JacksonUtil;
+import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.common.data.ota.OtaPackageType;
 import org.echoiot.server.transport.lwm2m.server.ota.LwM2MClientOtaInfo;
 import org.echoiot.server.transport.lwm2m.server.ota.firmware.LwM2MClientFwOtaInfo;

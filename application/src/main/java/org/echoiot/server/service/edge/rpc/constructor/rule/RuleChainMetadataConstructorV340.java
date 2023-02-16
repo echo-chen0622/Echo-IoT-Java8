@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.rule.RuleChainMetaData;
-import org.thingsboard.server.gen.edge.v1.RuleChainMetadataUpdateMsg;
+import org.echoiot.server.gen.edge.v1.RuleChainMetadataUpdateMsg;
 
 import java.util.TreeSet;
 

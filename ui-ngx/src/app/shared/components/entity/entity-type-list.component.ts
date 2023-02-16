@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,18 +14,18 @@
 /// limitations under the License.
 ///
 
-import { AfterViewInit, Component, ElementRef, forwardRef, Input, OnInit, ViewChild } from '@angular/core';
-import { ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
-import { Observable, of } from 'rxjs';
-import { filter, map, mergeMap, share, tap } from 'rxjs/operators';
-import { Store } from '@ngrx/store';
-import { AppState } from '@app/core/core.state';
-import { TranslateService } from '@ngx-translate/core';
-import { AliasEntityType, EntityType, entityTypeTranslations } from '@shared/models/entity-type.models';
-import { EntityService } from '@core/http/entity.service';
-import { MatAutocomplete } from '@angular/material/autocomplete';
-import { MatChipList } from '@angular/material/chips';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import {AfterViewInit, Component, ElementRef, forwardRef, Input, OnInit, ViewChild} from '@angular/core';
+import {ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR, Validators} from '@angular/forms';
+import {Observable, of} from 'rxjs';
+import {filter, map, mergeMap, share, tap} from 'rxjs/operators';
+import {Store} from '@ngrx/store';
+import {AppState} from '@app/core/core.state';
+import {TranslateService} from '@ngx-translate/core';
+import {AliasEntityType, EntityType, entityTypeTranslations} from '@shared/models/entity-type.models';
+import {EntityService} from '@core/http/entity.service';
+import {MatAutocomplete} from '@angular/material/autocomplete';
+import {MatChipList} from '@angular/material/chips';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
 
 interface EntityTypeInfo {
   name: string;

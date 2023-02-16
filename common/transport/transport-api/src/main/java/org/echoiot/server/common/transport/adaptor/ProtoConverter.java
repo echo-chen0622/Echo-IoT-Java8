@@ -13,8 +13,8 @@ import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.DataConstants;
 import org.echoiot.server.common.data.DynamicProtoUtils;
 import org.echoiot.server.common.data.id.DeviceId;
-import org.thingsboard.server.gen.transport.TransportApiProtos;
-import org.thingsboard.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.transport.TransportApiProtos;
+import org.echoiot.server.gen.transport.TransportProtos;
 
 import java.util.ArrayList;
 import java.util.Arrays;

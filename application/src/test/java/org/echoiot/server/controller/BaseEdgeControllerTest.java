@@ -2,7 +2,21 @@ package org.echoiot.server.controller;
 
 import com.datastax.oss.driver.api.core.uuid.Uuids;
 import com.fasterxml.jackson.core.type.TypeReference;
+import org.echoiot.server.common.data.*;
+import org.echoiot.server.common.data.asset.Asset;
+import org.echoiot.server.common.data.audit.ActionType;
+import org.echoiot.server.common.data.edge.Edge;
+import org.echoiot.server.common.data.id.CustomerId;
+import org.echoiot.server.common.data.id.EdgeId;
+import org.echoiot.server.common.data.id.TenantId;
+import org.echoiot.server.common.data.page.PageData;
+import org.echoiot.server.common.data.page.PageLink;
+import org.echoiot.server.common.data.security.Authority;
+import org.echoiot.server.dao.edge.EdgeDao;
 import org.echoiot.server.dao.exception.DataValidationException;
+import org.echoiot.server.dao.model.ModelConstants;
+import org.echoiot.server.edge.imitator.EdgeImitator;
+import org.echoiot.server.gen.edge.v1.*;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -14,42 +28,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
-import org.echoiot.server.common.data.Customer;
-import org.echoiot.server.common.data.Device;
-import org.echoiot.server.common.data.EntitySubtype;
-import org.echoiot.server.common.data.StringUtils;
-import org.echoiot.server.common.data.Tenant;
-import org.echoiot.server.common.data.User;
-import org.echoiot.server.common.data.asset.Asset;
-import org.echoiot.server.common.data.audit.ActionType;
-import org.echoiot.server.common.data.edge.Edge;
-import org.echoiot.server.common.data.id.CustomerId;
-import org.echoiot.server.common.data.id.EdgeId;
-import org.echoiot.server.common.data.id.TenantId;
-import org.echoiot.server.common.data.page.PageData;
-import org.echoiot.server.common.data.page.PageLink;
-import org.echoiot.server.common.data.security.Authority;
-import org.echoiot.server.dao.edge.EdgeDao;
-import org.echoiot.server.dao.model.ModelConstants;
-import org.echoiot.server.edge.imitator.EdgeImitator;
-import org.thingsboard.server.gen.edge.v1.AdminSettingsUpdateMsg;
-import org.thingsboard.server.gen.edge.v1.AssetProfileUpdateMsg;
-import org.thingsboard.server.gen.edge.v1.AssetUpdateMsg;
-import org.thingsboard.server.gen.edge.v1.DeviceProfileUpdateMsg;
-import org.thingsboard.server.gen.edge.v1.DeviceUpdateMsg;
-import org.thingsboard.server.gen.edge.v1.QueueUpdateMsg;
-import org.thingsboard.server.gen.edge.v1.RuleChainUpdateMsg;
-import org.thingsboard.server.gen.edge.v1.UserCredentialsUpdateMsg;
-import org.thingsboard.server.gen.edge.v1.UserUpdateMsg;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.echoiot.server.dao.model.ModelConstants.NULL_UUID;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.echoiot.server.dao.model.ModelConstants.NULL_UUID;
 
 @TestPropertySource(properties = {
         "edges.enabled=true",
@@ -90,7 +77,7 @@ public abstract class BaseEdgeControllerTest extends AbstractControllerTest {
         tenantAdmin = new User();
         tenantAdmin.setAuthority(Authority.TENANT_ADMIN);
         tenantAdmin.setTenantId(savedTenant.getId());
-        tenantAdmin.setEmail("tenant2@thingsboard.org");
+        tenantAdmin.setEmail("tenant2@echoiot.org");
         tenantAdmin.setFirstName("Joe");
         tenantAdmin.setLastName("Downs");
 
@@ -332,7 +319,7 @@ public abstract class BaseEdgeControllerTest extends AbstractControllerTest {
         User tenantAdmin2 = new User();
         tenantAdmin2.setAuthority(Authority.TENANT_ADMIN);
         tenantAdmin2.setTenantId(savedTenant2.getId());
-        tenantAdmin2.setEmail("tenant3@thingsboard.org");
+        tenantAdmin2.setEmail("tenant3@echoiot.org");
         tenantAdmin2.setFirstName("Joe");
         tenantAdmin2.setLastName("Downs");
 

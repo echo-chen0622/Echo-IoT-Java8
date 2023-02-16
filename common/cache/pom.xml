@@ -10,7 +10,7 @@
     <artifactId>cache</artifactId>
     <packaging>jar</packaging>
 
-    <name>Thingsboard Server Common Cache</name>
+    <name>Echoiot Server Common Cache</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

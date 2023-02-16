@@ -9,11 +9,11 @@ import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.edge.rpc.constructor.rule.RuleChainMetadataConstructor;
 import org.echoiot.server.service.edge.rpc.constructor.rule.RuleChainMetadataConstructorFactory;
 import org.springframework.stereotype.Component;
-import org.thingsboard.common.util.JacksonUtil;
-import org.thingsboard.server.gen.edge.v1.EdgeVersion;
-import org.thingsboard.server.gen.edge.v1.RuleChainMetadataUpdateMsg;
-import org.thingsboard.server.gen.edge.v1.RuleChainUpdateMsg;
-import org.thingsboard.server.gen.edge.v1.UpdateMsgType;
+import org.echoiot.common.util.JacksonUtil;
+import org.echoiot.server.gen.edge.v1.EdgeVersion;
+import org.echoiot.server.gen.edge.v1.RuleChainMetadataUpdateMsg;
+import org.echoiot.server.gen.edge.v1.RuleChainUpdateMsg;
+import org.echoiot.server.gen.edge.v1.UpdateMsgType;
 
 @Component
 @Slf4j

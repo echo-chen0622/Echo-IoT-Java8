@@ -1,16 +1,14 @@
 package org.echoiot.server.actors.device;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.thingsboard.common.util.LinkedHashMapRemoveEldest;
+import org.echoiot.common.util.LinkedHashMapRemoveEldest;
 import org.echoiot.server.actors.ActorSystemContext;
 import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.dao.device.DeviceService;
+import org.junit.Before;
+import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.Mockito.mock;

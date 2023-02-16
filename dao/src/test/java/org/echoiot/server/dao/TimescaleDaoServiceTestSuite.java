@@ -6,7 +6,7 @@ import org.junit.runner.RunWith;
 
 @RunWith(ClasspathSuite.class)
 @ClassnameFilters({
-        "org.thingsboard.server.dao.service.*.nosql.*ServiceTimescaleTest",
+        "org.echoiot.server.dao.service.*.nosql.*ServiceTimescaleTest",
 })
 public class TimescaleDaoServiceTestSuite {
 

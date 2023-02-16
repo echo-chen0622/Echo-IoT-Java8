@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,29 +14,29 @@
 /// limitations under the License.
 ///
 
-import { AfterViewInit, Component, ElementRef, forwardRef, Input, OnInit, SkipSelf, ViewChild } from '@angular/core';
+import {AfterViewInit, Component, ElementRef, forwardRef, Input, OnInit, SkipSelf, ViewChild} from '@angular/core';
 import {
-  ControlValueAccessor,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  FormGroupDirective,
-  NG_VALUE_ACCESSOR,
-  NgForm
+    ControlValueAccessor,
+    FormBuilder,
+    FormControl,
+    FormGroup,
+    FormGroupDirective,
+    NG_VALUE_ACCESSOR,
+    NgForm
 } from '@angular/forms';
-import { Observable, of } from 'rxjs';
-import { map, mergeMap, share, tap } from 'rxjs/operators';
-import { Store } from '@ngrx/store';
-import { AppState } from '@app/core/core.state';
-import { TranslateService } from '@ngx-translate/core';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { IAliasController } from '@core/api/widget-api.models';
-import { TruncatePipe } from '@shared/pipe/truncate.pipe';
-import { MatAutocomplete, MatAutocompleteTrigger } from '@angular/material/autocomplete';
-import { ENTER } from '@angular/cdk/keycodes';
-import { ErrorStateMatcher } from '@angular/material/core';
-import { FilterSelectCallbacks } from '@home/components/filter/filter-select.component.models';
-import { Filter } from '@shared/models/query/query.models';
+import {Observable, of} from 'rxjs';
+import {map, mergeMap, share, tap} from 'rxjs/operators';
+import {Store} from '@ngrx/store';
+import {AppState} from '@app/core/core.state';
+import {TranslateService} from '@ngx-translate/core';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {IAliasController} from '@core/api/widget-api.models';
+import {TruncatePipe} from '@shared/pipe/truncate.pipe';
+import {MatAutocomplete, MatAutocompleteTrigger} from '@angular/material/autocomplete';
+import {ENTER} from '@angular/cdk/keycodes';
+import {ErrorStateMatcher} from '@angular/material/core';
+import {FilterSelectCallbacks} from '@home/components/filter/filter-select.component.models';
+import {Filter} from '@shared/models/query/query.models';
 
 @Component({
   selector: 'tb-filter-select',

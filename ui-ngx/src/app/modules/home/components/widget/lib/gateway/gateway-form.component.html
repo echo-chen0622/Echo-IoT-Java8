@@ -6,7 +6,7 @@
     <mat-expansion-panel>
       <mat-expansion-panel-header>
         <mat-panel-title>
-          <div class="tb-panel-title">{{ 'gateway.thingsboard' | translate | uppercase }}</div>
+          <div class="tb-panel-title">{{ 'gateway.echoiot' | translate | uppercase }}</div>
         </mat-panel-title>
       </mat-expansion-panel-header>
         <tb-entity-gateway-select
@@ -30,26 +30,26 @@
       </div>
       <div [fxLayout]="alignment" [fxLayoutGap]="layoutGap">
         <mat-form-field fxFlex>
-          <mat-label>{{ 'gateway.thingsboard-host' | translate }}</mat-label>
+          <mat-label>{{ 'gateway.echoiot-host' | translate }}</mat-label>
           <input matInput type="text" formControlName="host">
           <mat-error *ngIf="gatewayConfigurationGroup.get('host').hasError('required')" translate>
-            gateway.thingsboard-host-required
+            gateway.echoiot-host-required
           </mat-error>
         </mat-form-field>
         <mat-form-field fxFlex>
-          <mat-label>{{ 'gateway.thingsboard-port' | translate }}</mat-label>
+          <mat-label>{{ 'gateway.echoiot-port' | translate }}</mat-label>
           <input matInput type="number" formControlName="port">
           <mat-error *ngIf="gatewayConfigurationGroup.get('port').hasError('required')" translate>
-            gateway.thingsboard-port-required
+            gateway.echoiot-port-required
           </mat-error>
           <mat-error *ngIf="gatewayConfigurationGroup.get('port').hasError('min')" translate>
-            gateway.thingsboard-port-min
+            gateway.echoiot-port-min
           </mat-error>
           <mat-error *ngIf="gatewayConfigurationGroup.get('port').hasError('max')" translate>
-            gateway.thingsboard-port-max
+            gateway.echoiot-port-max
           </mat-error>
           <mat-error *ngIf="gatewayConfigurationGroup.get('port').hasError('pattern')" translate>
-            gateway.thingsboard-port-pattern
+            gateway.echoiot-port-pattern
           </mat-error>
         </mat-form-field>
       </div>

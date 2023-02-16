@@ -10,9 +10,9 @@ import org.echoiot.server.dao.util.TbAutoConfiguration;
 
 @Configuration
 @TbAutoConfiguration
-@ComponentScan({"org.thingsboard.server.dao.sqlts.sql"})
-@EnableJpaRepositories({"org.thingsboard.server.dao.sqlts.insert.latest.sql", "org.thingsboard.server.dao.sqlts.latest"})
-@EntityScan({"org.thingsboard.server.dao.model.sqlts.latest"})
+@ComponentScan({"org.echoiot.server.dao.sqlts.sql"})
+@EnableJpaRepositories({"org.echoiot.server.dao.sqlts.insert.latest.sql", "org.echoiot.server.dao.sqlts.latest"})
+@EntityScan({"org.echoiot.server.dao.model.sqlts.latest"})
 @EnableTransactionManagement
 @SqlTsLatestDao
 public class SqlTsLatestDaoConfig {

@@ -2,31 +2,19 @@ package org.echoiot.server.controller;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.page.PageData;
+import org.echoiot.server.common.data.query.*;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.query.EntityQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
-import org.echoiot.server.common.data.query.AlarmData;
-import org.echoiot.server.common.data.query.AlarmDataQuery;
-import org.echoiot.server.common.data.query.EntityCountQuery;
-import org.echoiot.server.common.data.query.EntityData;
-import org.echoiot.server.common.data.query.EntityDataPageLink;
-import org.echoiot.server.common.data.query.EntityDataQuery;
 
-import static org.echoiot.server.controller.ControllerConstants.ALARM_DATA_QUERY_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.ENTITY_COUNT_QUERY_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.ENTITY_DATA_QUERY_DESCRIPTION;
+import static org.echoiot.server.controller.ControllerConstants.*;
 
 @RestController
 @TbCoreComponent
@@ -44,7 +32,7 @@ public class EntityQueryController extends BaseController {
     @ResponseBody
     public long countEntitiesByQuery(
             @ApiParam(value = "A JSON value representing the entity count query. See API call notes above for more details.")
-            @RequestBody EntityCountQuery query) throws ThingsboardException {
+            @RequestBody EntityCountQuery query) throws EchoiotException {
         checkNotNull(query);
         try {
             return this.entityQueryService.countEntitiesByQuery(getCurrentUser(), query);
@@ -59,7 +47,7 @@ public class EntityQueryController extends BaseController {
     @ResponseBody
     public PageData<EntityData> findEntityDataByQuery(
             @ApiParam(value = "A JSON value representing the entity data query. See API call notes above for more details.")
-            @RequestBody EntityDataQuery query) throws ThingsboardException {
+            @RequestBody EntityDataQuery query) throws EchoiotException {
         checkNotNull(query);
         try {
             return this.entityQueryService.findEntityDataByQuery(getCurrentUser(), query);
@@ -74,7 +62,7 @@ public class EntityQueryController extends BaseController {
     @ResponseBody
     public PageData<AlarmData> findAlarmDataByQuery(
             @ApiParam(value = "A JSON value representing the alarm data query. See API call notes above for more details.")
-            @RequestBody AlarmDataQuery query) throws ThingsboardException {
+            @RequestBody AlarmDataQuery query) throws EchoiotException {
         checkNotNull(query);
         try {
             return this.entityQueryService.findAlarmDataByQuery(getCurrentUser(), query);
@@ -94,7 +82,7 @@ public class EntityQueryController extends BaseController {
             @ApiParam(value = "Include all unique time-series keys to the result.")
             @RequestParam("timeseries") boolean isTimeseries,
             @ApiParam(value = "Include all unique attribute keys to the result.")
-            @RequestParam("attributes") boolean isAttributes) throws ThingsboardException {
+            @RequestParam("attributes") boolean isAttributes) throws EchoiotException {
         TenantId tenantId = getTenantId();
         checkNotNull(query);
         try {

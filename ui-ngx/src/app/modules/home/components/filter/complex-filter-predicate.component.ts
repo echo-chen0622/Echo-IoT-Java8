@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,14 +14,14 @@
 /// limitations under the License.
 ///
 
-import { Component, forwardRef, Inject, Input, OnInit } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { ComplexFilterPredicateInfo, EntityKeyValueType } from '@shared/models/query/query.models';
-import { MatDialog } from '@angular/material/dialog';
-import { deepClone } from '@core/utils';
-import { ComplexFilterPredicateDialogData } from '@home/components/filter/filter-component.models';
-import { COMPLEX_FILTER_PREDICATE_DIALOG_COMPONENT_TOKEN } from '@home/components/tokens';
-import { ComponentType } from '@angular/cdk/portal';
+import {Component, forwardRef, Inject, Input, OnInit} from '@angular/core';
+import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {ComplexFilterPredicateInfo, EntityKeyValueType} from '@shared/models/query/query.models';
+import {MatDialog} from '@angular/material/dialog';
+import {deepClone} from '@core/utils';
+import {ComplexFilterPredicateDialogData} from '@home/components/filter/filter-component.models';
+import {COMPLEX_FILTER_PREDICATE_DIALOG_COMPONENT_TOKEN} from '@home/components/tokens';
+import {ComponentType} from '@angular/cdk/portal';
 
 @Component({
   selector: 'tb-complex-filter-predicate',

@@ -1,7 +1,10 @@
 package org.echoiot.server.service.transport;
 
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.server.common.msg.queue.ServiceType;
+import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
 import org.echoiot.server.dao.model.ModelConstants;
+import org.echoiot.server.gen.transport.TransportProtos.ToTransportMsg;
 import org.echoiot.server.queue.TbQueueCallback;
 import org.echoiot.server.queue.TbQueueMsgMetadata;
 import org.echoiot.server.queue.TbQueueProducer;
@@ -10,9 +13,6 @@ import org.echoiot.server.queue.discovery.NotificationsTopicService;
 import org.echoiot.server.queue.provider.TbQueueProducerProvider;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.springframework.stereotype.Service;
-import org.echoiot.server.common.msg.queue.ServiceType;
-import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
-import org.thingsboard.server.gen.transport.TransportProtos.ToTransportMsg;
 
 import java.util.UUID;
 import java.util.function.Consumer;

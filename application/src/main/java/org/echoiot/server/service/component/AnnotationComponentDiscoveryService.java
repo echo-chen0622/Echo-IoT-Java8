@@ -4,6 +4,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.rule.engine.api.NodeConfiguration;
+import org.echoiot.rule.engine.api.NodeDefinition;
+import org.echoiot.rule.engine.api.RuleNode;
+import org.echoiot.rule.engine.api.TbRelationTypes;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.plugin.ComponentDescriptor;
 import org.echoiot.server.common.data.plugin.ComponentType;
@@ -17,22 +21,10 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.env.Profiles;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.stereotype.Service;
-import org.thingsboard.rule.engine.api.NodeConfiguration;
-import org.thingsboard.rule.engine.api.NodeDefinition;
-import org.thingsboard.rule.engine.api.RuleNode;
-import org.thingsboard.rule.engine.api.TbRelationTypes;
 
 import javax.annotation.PostConstruct;
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @Slf4j

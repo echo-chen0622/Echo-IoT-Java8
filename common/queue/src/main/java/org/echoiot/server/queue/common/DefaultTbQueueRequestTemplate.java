@@ -1,4 +1,4 @@
-package org.thingsboard.server.queue.common;
+package org.echoiot.server.queue.common;
 
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -6,26 +6,16 @@ import com.google.common.util.concurrent.SettableFuture;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.echoiot.server.common.stats.MessagesStats;
-import org.thingsboard.common.util.TbStopWatch;
-import org.thingsboard.common.util.ThingsBoardThreadFactory;
+import org.echoiot.common.util.EchoiotThreadFactory;
+import org.echoiot.common.util.TbStopWatch;
 import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
-import org.echoiot.server.queue.TbQueueAdmin;
-import org.echoiot.server.queue.TbQueueCallback;
-import org.echoiot.server.queue.TbQueueConsumer;
-import org.echoiot.server.queue.TbQueueMsg;
-import org.echoiot.server.queue.TbQueueMsgMetadata;
-import org.echoiot.server.queue.TbQueueProducer;
-import org.echoiot.server.queue.TbQueueRequestTemplate;
+import org.echoiot.server.common.stats.MessagesStats;
+import org.echoiot.server.queue.*;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.concurrent.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.LockSupport;
 import java.util.concurrent.locks.ReentrantLock;
@@ -70,7 +60,7 @@ public class DefaultTbQueueRequestTemplate<Request extends TbQueueMsg, Response 
     }
 
     ExecutorService createExecutor() {
-        return Executors.newSingleThreadExecutor(ThingsBoardThreadFactory.forName("tb-queue-request-template-" + responseTemplate.getTopic()));
+        return Executors.newSingleThreadExecutor(EchoiotThreadFactory.forName("tb-queue-request-template-" + responseTemplate.getTopic()));
     }
 
     @Override

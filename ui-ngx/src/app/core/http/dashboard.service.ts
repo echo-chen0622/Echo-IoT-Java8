@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,16 +14,16 @@
 /// limitations under the License.
 ///
 
-import { Inject, Injectable } from '@angular/core';
-import { defaultHttpOptions, defaultHttpOptionsFromConfig, RequestConfig } from './http-utils';
-import { Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
-import { PageLink } from '@shared/models/page/page-link';
-import { PageData } from '@shared/models/page/page-data';
-import { Dashboard, DashboardInfo, HomeDashboard, HomeDashboardInfo } from '@shared/models/dashboard.models';
-import { WINDOW } from '@core/services/window.service';
-import { NavigationEnd, Router } from '@angular/router';
-import { filter, map, publishReplay, refCount } from 'rxjs/operators';
+import {Inject, Injectable} from '@angular/core';
+import {defaultHttpOptions, defaultHttpOptionsFromConfig, RequestConfig} from './http-utils';
+import {Observable} from 'rxjs';
+import {HttpClient} from '@angular/common/http';
+import {PageLink} from '@shared/models/page/page-link';
+import {PageData} from '@shared/models/page/page-data';
+import {Dashboard, DashboardInfo, HomeDashboard, HomeDashboardInfo} from '@shared/models/dashboard.models';
+import {WINDOW} from '@core/services/window.service';
+import {NavigationEnd, Router} from '@angular/router';
+import {filter, map, publishReplay, refCount} from 'rxjs/operators';
 
 // @dynamic
 @Injectable({

@@ -5,25 +5,16 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningScheduledExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.common.util.DonAsynchron;
+import org.echoiot.common.util.EchoiotThreadFactory;
 import org.echoiot.server.common.data.id.EntityId;
-import org.echoiot.server.queue.discovery.TbApplicationEventListener;
-import org.echoiot.server.queue.discovery.event.PartitionChangeEvent;
-import org.thingsboard.common.util.DonAsynchron;
-import org.thingsboard.common.util.ThingsBoardThreadFactory;
 import org.echoiot.server.common.msg.queue.ServiceType;
 import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
+import org.echoiot.server.queue.discovery.TbApplicationEventListener;
+import org.echoiot.server.queue.discovery.event.PartitionChangeEvent;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Set;
-import java.util.concurrent.CancellationException;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.Executors;
+import java.util.*;
+import java.util.concurrent.*;
 
 @Slf4j
 public abstract class AbstractPartitionBasedService<T extends EntityId> extends TbApplicationEventListener<PartitionChangeEvent> {
@@ -48,7 +39,7 @@ public abstract class AbstractPartitionBasedService<T extends EntityId> extends 
 
     protected void init() {
         // Should be always single threaded due to absence of locks.
-        scheduledExecutor = MoreExecutors.listeningDecorator(Executors.newSingleThreadScheduledExecutor(ThingsBoardThreadFactory.forName(getSchedulerExecutorName())));
+        scheduledExecutor = MoreExecutors.listeningDecorator(Executors.newSingleThreadScheduledExecutor(EchoiotThreadFactory.forName(getSchedulerExecutorName())));
     }
 
     protected ServiceType getServiceType() {

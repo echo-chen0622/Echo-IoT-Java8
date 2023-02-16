@@ -1,23 +1,18 @@
 package org.echoiot.server.queue.provider;
 
+import org.echoiot.server.gen.transport.TransportProtos.ToCoreNotificationMsg;
+import org.echoiot.server.gen.transport.TransportProtos.ToUsageStatsServiceMsg;
+import org.echoiot.server.gen.transport.TransportProtos.ToVersionControlServiceMsg;
 import org.echoiot.server.queue.TbQueueAdmin;
 import org.echoiot.server.queue.TbQueueConsumer;
 import org.echoiot.server.queue.TbQueueProducer;
+import org.echoiot.server.queue.common.TbProtoQueueMsg;
 import org.echoiot.server.queue.discovery.TbServiceInfoProvider;
+import org.echoiot.server.queue.kafka.*;
 import org.echoiot.server.queue.settings.TbQueueCoreSettings;
 import org.echoiot.server.queue.settings.TbQueueVersionControlSettings;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Component;
-import org.thingsboard.server.gen.transport.TransportProtos.ToCoreNotificationMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.ToUsageStatsServiceMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.ToVersionControlServiceMsg;
-import org.echoiot.server.queue.common.TbProtoQueueMsg;
-import org.echoiot.server.queue.kafka.TbKafkaAdmin;
-import org.echoiot.server.queue.kafka.TbKafkaConsumerStatsService;
-import org.echoiot.server.queue.kafka.TbKafkaConsumerTemplate;
-import org.echoiot.server.queue.kafka.TbKafkaProducerTemplate;
-import org.echoiot.server.queue.kafka.TbKafkaSettings;
-import org.echoiot.server.queue.kafka.TbKafkaTopicConfigs;
 
 import javax.annotation.PreDestroy;
 

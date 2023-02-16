@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,23 +14,23 @@
 /// limitations under the License.
 ///
 
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { PageLink } from '@shared/models/page/page-link';
-import { defaultHttpOptionsFromConfig, RequestConfig } from './http-utils';
-import { Observable, of, throwError } from 'rxjs';
-import { PageData } from '@shared/models/page/page-data';
-import { DeviceProfile, DeviceProfileInfo, DeviceTransportType } from '@shared/models/device.models';
-import { deepClone, isDefinedAndNotNull, isEmptyStr } from '@core/utils';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {PageLink} from '@shared/models/page/page-link';
+import {defaultHttpOptionsFromConfig, RequestConfig} from './http-utils';
+import {Observable, of, throwError} from 'rxjs';
+import {PageData} from '@shared/models/page/page-data';
+import {DeviceProfile, DeviceProfileInfo, DeviceTransportType} from '@shared/models/device.models';
+import {deepClone, isDefinedAndNotNull, isEmptyStr} from '@core/utils';
 import {
-  ObjectLwM2M,
-  ServerSecurityConfig,
-  ServerSecurityConfigInfo
+    ObjectLwM2M,
+    ServerSecurityConfig,
+    ServerSecurityConfigInfo
 } from '@home/components/profile/device/lwm2m/lwm2m-profile-config.models';
-import { SortOrder } from '@shared/models/page/sort-order';
-import { OtaPackageService } from '@core/http/ota-package.service';
-import { map, mergeMap, tap } from 'rxjs/operators';
-import { Lwm2mSecurityType } from '@shared/models/lwm2m-security-config.models';
+import {SortOrder} from '@shared/models/page/sort-order';
+import {OtaPackageService} from '@core/http/ota-package.service';
+import {map, mergeMap, tap} from 'rxjs/operators';
+import {Lwm2mSecurityType} from '@shared/models/lwm2m-security-config.models';
 
 @Injectable({
   providedIn: 'root'

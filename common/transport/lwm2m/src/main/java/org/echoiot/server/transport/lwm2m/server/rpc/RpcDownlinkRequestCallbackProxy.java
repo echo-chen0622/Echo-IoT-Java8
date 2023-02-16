@@ -6,11 +6,11 @@ import org.echoiot.server.common.transport.TransportServiceCallback;
 import org.echoiot.server.transport.lwm2m.server.downlink.DownlinkRequestCallback;
 import org.eclipse.leshan.core.ResponseCode;
 import org.eclipse.leshan.core.request.exception.ClientSleepingException;
-import org.thingsboard.common.util.JacksonUtil;
+import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.rpc.RpcStatus;
-import org.thingsboard.server.gen.transport.TransportProtos;
-import org.thingsboard.server.transport.lwm2m.server.client.LwM2mClient;
+import org.echoiot.server.gen.transport.TransportProtos;
+import org.echoiot.server.transport.lwm2m.server.client.LwM2mClient;
 
 import java.util.UUID;
 import java.util.concurrent.TimeoutException;

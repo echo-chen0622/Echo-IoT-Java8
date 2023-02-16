@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,51 +14,51 @@
 /// limitations under the License.
 ///
 
-import { Component, ElementRef, Inject, Input, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { PageComponent } from '@shared/components/page.component';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { AbstractControl, FormArray, FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
-import { WidgetContext } from '@home/models/widget-component.models';
-import { UtilsService } from '@core/services/utils.service';
+import {Component, ElementRef, Inject, Input, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {PageComponent} from '@shared/components/page.component';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {AbstractControl, FormArray, FormBuilder, FormGroup, NgForm, Validators} from '@angular/forms';
+import {WidgetContext} from '@home/models/widget-component.models';
+import {UtilsService} from '@core/services/utils.service';
 import {
-  CONFIGURATION_ATTRIBUTE,
-  CONFIGURATION_DRAFT_ATTRIBUTE,
-  ConnectorType,
-  createFormConfig,
-  CURRENT_CONFIGURATION_ATTRIBUTE,
-  DEFAULT_CONNECTOR,
-  gatewayConfigJSON,
-  GatewayFormConnectorModel,
-  GatewayFormModels,
-  GatewayLogLevel,
-  generateConnectorConfigFiles,
-  generateLogConfigFile,
-  generateYAMLConfigFile,
-  getDraftConnectorsJSON,
-  getEntityId,
-  REMOTE_LOGGING_LEVEL_ATTRIBUTE,
-  SecurityType,
-  SecurityTypeTranslationMap,
-  StorageType,
-  StorageTypeTranslationMap,
-  ValidateJSON,
-  WidgetSetting
+    CONFIGURATION_ATTRIBUTE,
+    CONFIGURATION_DRAFT_ATTRIBUTE,
+    ConnectorType,
+    createFormConfig,
+    CURRENT_CONFIGURATION_ATTRIBUTE,
+    DEFAULT_CONNECTOR,
+    gatewayConfigJSON,
+    GatewayFormConnectorModel,
+    GatewayFormModels,
+    GatewayLogLevel,
+    generateConnectorConfigFiles,
+    generateLogConfigFile,
+    generateYAMLConfigFile,
+    getDraftConnectorsJSON,
+    getEntityId,
+    REMOTE_LOGGING_LEVEL_ATTRIBUTE,
+    SecurityType,
+    SecurityTypeTranslationMap,
+    StorageType,
+    StorageTypeTranslationMap,
+    ValidateJSON,
+    WidgetSetting
 } from './gateway-form.models';
-import { WINDOW } from '@core/services/window.service';
-import { MatDialog } from '@angular/material/dialog';
+import {WINDOW} from '@core/services/window.service';
+import {MatDialog} from '@angular/material/dialog';
 import {
-  JsonObjectEditDialogComponent,
-  JsonObjectEditDialogData
+    JsonObjectEditDialogComponent,
+    JsonObjectEditDialogData
 } from '@shared/components/dialog/json-object-edit-dialog.component';
-import { TranslateService } from '@ngx-translate/core';
-import { DeviceService } from '@core/http/device.service';
-import { AttributeService } from '@core/http/attribute.service';
-import { AttributeData, AttributeScope } from '@shared/models/telemetry/telemetry.models';
-import { forkJoin, Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
-import { ImportExportService } from '@home/components/import-export/import-export.service';
-import { ResizeObserver } from '@juggle/resize-observer';
+import {TranslateService} from '@ngx-translate/core';
+import {DeviceService} from '@core/http/device.service';
+import {AttributeService} from '@core/http/attribute.service';
+import {AttributeData, AttributeScope} from '@shared/models/telemetry/telemetry.models';
+import {forkJoin, Observable} from 'rxjs';
+import {tap} from 'rxjs/operators';
+import {ImportExportService} from '@home/components/import-export/import-export.service';
+import {ResizeObserver} from '@juggle/resize-observer';
 
 // @dynamic
 @Component({
@@ -205,9 +205,9 @@ export class GatewayFormComponent extends PageComponent implements OnInit, OnDes
       host: [this.window.location.hostname, [Validators.required]],
       port: [1883, [Validators.required, Validators.min(1), Validators.max(65535), Validators.pattern(/^-?[0-9]+$/)]],
       remoteConfiguration: [true],
-      caCertPath: ['/etc/thingsboard-gateway/ca.pem'],
-      privateKeyPath: ['/etc/thingsboard-gateway/privateKey.pem'],
-      certPath: ['/etc/thingsboard-gateway/certificate.pem'],
+      caCertPath: ['/etc/echoiot-gateway/ca.pem'],
+      privateKeyPath: ['/etc/echoiot-gateway/privateKey.pem'],
+      certPath: ['/etc/echoiot-gateway/certificate.pem'],
       remoteLoggingLevel: [GatewayLogLevel.debug],
       remoteLoggingPathToLogs: ['./logs/', [Validators.required]],
       storageType: [StorageType.memory],
@@ -378,7 +378,7 @@ export class GatewayFormComponent extends PageComponent implements OnInit, OnDes
       const attribute = JSON.parse(window.atob(response[0].value));
       for (const attributeKey of Object.keys(attribute)) {
         const keyValue = attribute[attributeKey];
-        if (attributeKey === 'thingsboard') {
+        if (attributeKey === 'echoiot') {
           if (keyValue !== null && Object.keys(keyValue).length > 0) {
             this.gatewayConfigurationGroup.patchValue(createFormConfig(keyValue));
           }

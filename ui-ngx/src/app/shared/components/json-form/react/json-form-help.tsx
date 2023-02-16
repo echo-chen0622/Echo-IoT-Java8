@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016-2023 The Thingsboard Authors
+ * Copyright © 2016-2023 The Echoiot Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 import * as React from 'react';
-import { JsonFormFieldProps, JsonFormFieldState } from '@shared/components/json-form/react/json-form.models';
+import {JsonFormFieldProps, JsonFormFieldState} from '@shared/components/json-form/react/json-form.models';
 
-class ThingsboardHelp extends React.Component<JsonFormFieldProps, JsonFormFieldState> {
+class EchoiotHelp extends React.Component<JsonFormFieldProps, JsonFormFieldState> {
   render() {
     return (
       <div className={this.props.form.htmlClass} dangerouslySetInnerHTML={{__html: this.props.form.description}} ></div>
@@ -24,4 +24,4 @@ class ThingsboardHelp extends React.Component<JsonFormFieldProps, JsonFormFieldS
   }
 }
 
-export default ThingsboardHelp;
+export default EchoiotHelp;

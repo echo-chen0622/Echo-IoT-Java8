@@ -3,9 +3,9 @@ package org.echoiot.server.transport.coap;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.transport.TransportService;
 import org.echoiot.server.common.transport.TransportServiceCallback;
+import org.echoiot.server.gen.transport.TransportProtos;
 import org.eclipse.californium.core.CoapResource;
 import org.eclipse.californium.core.server.resources.CoapExchange;
-import org.thingsboard.server.gen.transport.TransportProtos;
 
 @Slf4j
 public abstract class AbstractCoapTransportResource extends CoapResource {

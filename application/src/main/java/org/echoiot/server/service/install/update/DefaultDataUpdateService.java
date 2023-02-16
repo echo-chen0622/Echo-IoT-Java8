@@ -6,6 +6,11 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.MoreExecutors;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.common.util.JacksonUtil;
+import org.echoiot.rule.engine.flow.TbRuleChainInputNode;
+import org.echoiot.rule.engine.flow.TbRuleChainInputNodeConfiguration;
+import org.echoiot.rule.engine.profile.TbDeviceProfileNode;
+import org.echoiot.rule.engine.profile.TbDeviceProfileNodeConfiguration;
 import org.echoiot.server.common.data.*;
 import org.echoiot.server.common.data.alarm.Alarm;
 import org.echoiot.server.common.data.alarm.AlarmInfo;
@@ -23,6 +28,7 @@ import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.common.data.page.TimePageLink;
 import org.echoiot.server.common.data.query.DynamicValue;
 import org.echoiot.server.common.data.query.FilterPredicateValue;
+import org.echoiot.server.common.data.queue.*;
 import org.echoiot.server.common.data.relation.EntityRelation;
 import org.echoiot.server.common.data.relation.RelationTypeGroup;
 import org.echoiot.server.common.data.rule.RuleChain;
@@ -45,27 +51,13 @@ import org.echoiot.server.dao.sql.device.DeviceProfileRepository;
 import org.echoiot.server.dao.tenant.TenantProfileService;
 import org.echoiot.server.dao.tenant.TenantService;
 import org.echoiot.server.dao.timeseries.TimeseriesService;
+import org.echoiot.server.service.install.InstallScripts;
+import org.echoiot.server.service.install.SystemDataLoaderService;
+import org.echoiot.server.service.install.TbRuleEngineQueueConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
-import org.thingsboard.common.util.JacksonUtil;
-import org.thingsboard.rule.engine.flow.TbRuleChainInputNode;
-import org.thingsboard.rule.engine.flow.TbRuleChainInputNodeConfiguration;
-import org.thingsboard.rule.engine.profile.TbDeviceProfileNode;
-import org.thingsboard.rule.engine.profile.TbDeviceProfileNodeConfiguration;
-import org.echoiot.server.common.data.DataConstants;
-import org.echoiot.server.common.data.EntityView;
-import org.echoiot.server.common.data.Tenant;
-import org.echoiot.server.common.data.TenantProfile;
-import org.echoiot.server.common.data.queue.ProcessingStrategy;
-import org.echoiot.server.common.data.queue.ProcessingStrategyType;
-import org.echoiot.server.common.data.queue.Queue;
-import org.echoiot.server.common.data.queue.SubmitStrategy;
-import org.echoiot.server.common.data.queue.SubmitStrategyType;
-import org.echoiot.server.service.install.InstallScripts;
-import org.echoiot.server.service.install.SystemDataLoaderService;
-import org.echoiot.server.service.install.TbRuleEngineQueueConfigService;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -590,7 +582,7 @@ public class DefaultDataUpdateService implements DataUpdateService {
     }
 
     private void updateOAuth2Params() {
-        log.warn("CAUTION: Update of Oauth2 parameters from 3.2.2 to 3.3.0 available only in ThingsBoard versions 3.3.0/3.3.1");
+        log.warn("CAUTION: Update of Oauth2 parameters from 3.2.2 to 3.3.0 available only in Echoiot versions 3.3.0/3.3.1");
     }
 
     private final PaginatedUpdater<String, TenantProfile> tenantsProfileQueueConfigurationUpdater =

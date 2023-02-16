@@ -78,7 +78,7 @@ public abstract class BaseDeviceProfileControllerTest extends AbstractController
         tenantAdmin = new User();
         tenantAdmin.setAuthority(Authority.TENANT_ADMIN);
         tenantAdmin.setTenantId(savedTenant.getId());
-        tenantAdmin.setEmail("tenant2@thingsboard.org");
+        tenantAdmin.setEmail("tenant2@echoiot.org");
         tenantAdmin.setFirstName("Joe");
         tenantAdmin.setLastName("Downs");
 
@@ -179,7 +179,7 @@ public abstract class BaseDeviceProfileControllerTest extends AbstractController
         customerUser.setAuthority(Authority.CUSTOMER_USER);
         customerUser.setTenantId(savedTenant.getId());
         customerUser.setCustomerId(savedCustomer.getId());
-        customerUser.setEmail("customer2@thingsboard.org");
+        customerUser.setEmail("customer2@echoiot.org");
 
         createUserAndLogin(customerUser, "customer");
 

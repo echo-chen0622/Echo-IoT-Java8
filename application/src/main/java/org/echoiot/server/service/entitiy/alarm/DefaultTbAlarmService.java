@@ -4,17 +4,17 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.MoreExecutors;
 import lombok.AllArgsConstructor;
+import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.User;
 import org.echoiot.server.common.data.alarm.Alarm;
 import org.echoiot.server.common.data.alarm.AlarmStatus;
 import org.echoiot.server.common.data.audit.ActionType;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.EdgeId;
 import org.echoiot.server.common.data.id.TenantId;
-import org.springframework.stereotype.Service;
-import org.thingsboard.common.util.JacksonUtil;
 import org.echoiot.server.service.entitiy.AbstractTbEntityService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ import java.util.List;
 public class DefaultTbAlarmService extends AbstractTbEntityService implements TbAlarmService {
 
     @Override
-    public Alarm save(Alarm alarm, User user) throws ThingsboardException {
+    public Alarm save(Alarm alarm, User user) throws EchoiotException {
         ActionType actionType = alarm.getId() == null ? ActionType.ADDED : ActionType.UPDATED;
         TenantId tenantId = alarm.getTenantId();
         try {

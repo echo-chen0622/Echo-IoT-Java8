@@ -1,7 +1,7 @@
 package org.echoiot.server.controller;
 
 import io.swagger.annotations.ApiOperation;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,7 +24,7 @@ public class UiSettingsController extends BaseController {
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/uiSettings/helpBaseUrl", method = RequestMethod.GET)
     @ResponseBody
-    public String getHelpBaseUrl() throws ThingsboardException {
+    public String getHelpBaseUrl() throws EchoiotException {
         return helpBaseUrl;
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016-2023 The Thingsboard Authors
+ * Copyright © 2016-2023 The Echoiot Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 import * as React from 'react';
-import { JsonFormFieldProps, JsonFormFieldState } from '@shared/components/json-form/react/json-form.models';
+import {JsonFormFieldProps, JsonFormFieldState} from '@shared/components/json-form/react/json-form.models';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
-import ThingsboardBaseComponent from '@shared/components/json-form/react/json-form-base-component';
+import EchoiotBaseComponent from '@shared/components/json-form/react/json-form-base-component';
 
-interface ThingsboardSelectState extends JsonFormFieldState {
+interface EchoiotSelectState extends JsonFormFieldState {
   currentValue: any;
 }
 
-class ThingsboardSelect extends React.Component<JsonFormFieldProps, ThingsboardSelectState> {
+class EchoiotSelect extends React.Component<JsonFormFieldProps, EchoiotSelectState> {
 
   constructor(props) {
     super(props);
@@ -83,4 +83,4 @@ class ThingsboardSelect extends React.Component<JsonFormFieldProps, ThingsboardS
   }
 }
 
-export default ThingsboardBaseComponent(ThingsboardSelect);
+export default EchoiotBaseComponent(EchoiotSelect);

@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,15 +14,15 @@
 /// limitations under the License.
 ///
 
-import { Component, Inject, SkipSelf } from '@angular/core';
-import { ErrorStateMatcher } from '@angular/material/core';
-import { DialogComponent } from '@shared/components/dialog.component';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { Router } from '@angular/router';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm } from '@angular/forms';
-import { AttributesNameValueMap } from '@home/components/profile/device/lwm2m/lwm2m-profile-config.models';
+import {Component, Inject, SkipSelf} from '@angular/core';
+import {ErrorStateMatcher} from '@angular/material/core';
+import {DialogComponent} from '@shared/components/dialog.component';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {Router} from '@angular/router';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm} from '@angular/forms';
+import {AttributesNameValueMap} from '@home/components/profile/device/lwm2m/lwm2m-profile-config.models';
 
 export interface Lwm2mAttributesDialogData {
   readonly: boolean;

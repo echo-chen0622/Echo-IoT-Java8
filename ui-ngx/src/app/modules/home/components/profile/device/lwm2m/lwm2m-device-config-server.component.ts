@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,29 +14,26 @@
 /// limitations under the License.
 ///
 
-import { Component, EventEmitter, forwardRef, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {Component, EventEmitter, forwardRef, OnDestroy, OnInit, Output} from '@angular/core';
 import {
-  ControlValueAccessor,
-  FormBuilder,
-  FormGroup,
-  NG_VALIDATORS,
-  NG_VALUE_ACCESSOR,
-  ValidationErrors,
-  Validator,
-  Validators
+    ControlValueAccessor,
+    FormBuilder,
+    FormGroup,
+    NG_VALIDATORS,
+    NG_VALUE_ACCESSOR,
+    ValidationErrors,
+    Validator,
+    Validators
 } from '@angular/forms';
+import {BingingMode, BingingModeTranslationsMap, ServerSecurityConfig} from './lwm2m-profile-config.models';
+import {DeviceProfileService} from '@core/http/device-profile.service';
+import {Subject} from 'rxjs';
+import {mergeMap, takeUntil, tap} from 'rxjs/operators';
+import {Observable} from 'rxjs/internal/Observable';
 import {
-  BingingMode, BingingModeTranslationsMap,
-  ServerSecurityConfig
-} from './lwm2m-profile-config.models';
-import { DeviceProfileService } from '@core/http/device-profile.service';
-import { Subject } from 'rxjs';
-import { mergeMap, takeUntil, tap } from 'rxjs/operators';
-import { Observable } from 'rxjs/internal/Observable';
-import {
-  Lwm2mPublicKeyOrIdTooltipTranslationsMap,
-  Lwm2mSecurityType,
-  Lwm2mSecurityTypeTranslationMap
+    Lwm2mPublicKeyOrIdTooltipTranslationsMap,
+    Lwm2mSecurityType,
+    Lwm2mSecurityTypeTranslationMap
 } from '@shared/models/lwm2m-security-config.models';
 
 @Component({

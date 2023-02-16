@@ -1,16 +1,16 @@
 package org.echoiot.server.service.security.auth.mfa.provider.impl;
 
 import org.echoiot.server.common.data.User;
-import org.echoiot.server.common.data.exception.ThingsboardErrorCode;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotErrorCode;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.security.model.mfa.account.SmsTwoFaAccountConfig;
 import org.echoiot.server.common.data.security.model.mfa.provider.SmsTwoFaProviderConfig;
 import org.echoiot.server.common.data.security.model.mfa.provider.TwoFaProviderType;
 import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
-import org.thingsboard.rule.engine.api.SmsService;
-import org.thingsboard.rule.engine.api.util.TbNodeUtils;
+import org.echoiot.rule.engine.api.SmsService;
+import org.echoiot.rule.engine.api.util.TbNodeUtils;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.security.model.SecurityUser;
 
@@ -34,7 +34,7 @@ public class SmsTwoFaProvider extends OtpBasedTwoFaProvider<SmsTwoFaProviderConf
     }
 
     @Override
-    protected void sendVerificationCode(SecurityUser user, String verificationCode, SmsTwoFaProviderConfig providerConfig, SmsTwoFaAccountConfig accountConfig) throws ThingsboardException {
+    protected void sendVerificationCode(SecurityUser user, String verificationCode, SmsTwoFaProviderConfig providerConfig, SmsTwoFaAccountConfig accountConfig) throws EchoiotException {
         Map<String, String> messageData = Map.of(
                 "code", verificationCode,
                 "userEmail", user.getEmail()
@@ -46,9 +46,9 @@ public class SmsTwoFaProvider extends OtpBasedTwoFaProvider<SmsTwoFaProviderConf
     }
 
     @Override
-    public void check(TenantId tenantId) throws ThingsboardException {
+    public void check(TenantId tenantId) throws EchoiotException {
         if (!smsService.isConfigured(tenantId)) {
-            throw new ThingsboardException("SMS service is not configured", ThingsboardErrorCode.BAD_REQUEST_PARAMS);
+            throw new EchoiotException("SMS service is not configured", EchoiotErrorCode.BAD_REQUEST_PARAMS);
         }
     }
 

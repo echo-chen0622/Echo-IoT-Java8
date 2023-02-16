@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "thingsboard": {
+    "echoiot": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -27,7 +27,7 @@
             "tsConfig": "src/tsconfig.app.json",
             "aot": true,
             "assets": [
-              "src/thingsboard.ico",
+              "src/echoiot.ico",
               "src/assets",
               {
                 "glob": "worker-html.js",
@@ -185,15 +185,15 @@
         "serve": {
           "builder": "@angular-builders/custom-webpack:dev-server",
           "options": {
-            "browserTarget": "thingsboard:build",
+            "browserTarget": "echoiot:build",
             "proxyConfig": "proxy.conf.js"
           },
           "configurations": {
             "production": {
-              "browserTarget": "thingsboard:build:production"
+              "browserTarget": "echoiot:build:production"
             },
             "development": {
-              "browserTarget": "thingsboard:build:development"
+              "browserTarget": "echoiot:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -201,7 +201,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "thingsboard:build"
+            "browserTarget": "echoiot:build"
           }
         },
         "test": {
@@ -235,7 +235,7 @@
         }
       }
     },
-    "thingsboard-e2e": {
+    "echoiot-e2e": {
       "root": "e2e/",
       "projectType": "application",
       "prefix": "",
@@ -244,11 +244,11 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "thingsboard:serve"
+            "devServerTarget": "echoiot:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "thingsboard:serve:production"
+              "devServerTarget": "echoiot:serve:production"
             }
           }
         },
@@ -264,7 +264,7 @@
       }
     }
   },
-  "defaultProject": "thingsboard",
+  "defaultProject": "echoiot",
   "cli": {
     "packageManager": "yarn",
     "analytics": false

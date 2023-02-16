@@ -48,7 +48,7 @@ import static org.mockito.Mockito.when;
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = TokenOutdatingTest.class, loader = SpringBootContextLoader.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-@ComponentScan({"org.thingsboard.server"})
+@ComponentScan({"org.echoiot.server"})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DaoSqlTest
 @TestPropertySource(properties = {

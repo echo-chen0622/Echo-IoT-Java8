@@ -2,28 +2,12 @@ package org.echoiot.server.transport.mqtt;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.test.context.TestPropertySource;
-import org.echoiot.server.common.data.Device;
-import org.echoiot.server.common.data.DeviceProfile;
-import org.echoiot.server.common.data.DeviceProfileInfo;
-import org.echoiot.server.common.data.DeviceProfileProvisionType;
-import org.echoiot.server.common.data.DeviceProfileType;
-import org.echoiot.server.common.data.DeviceTransportType;
-import org.echoiot.server.common.data.StringUtils;
-import org.echoiot.server.common.data.TransportPayloadType;
-import org.echoiot.server.common.data.device.profile.AllowCreateNewDevicesDeviceProfileProvisionConfiguration;
-import org.echoiot.server.common.data.device.profile.CheckPreProvisionedDevicesDeviceProfileProvisionConfiguration;
-import org.echoiot.server.common.data.device.profile.DefaultDeviceProfileConfiguration;
-import org.echoiot.server.common.data.device.profile.DeviceProfileData;
-import org.echoiot.server.common.data.device.profile.DeviceProfileProvisionConfiguration;
-import org.echoiot.server.common.data.device.profile.DisabledDeviceProfileProvisionConfiguration;
-import org.echoiot.server.common.data.device.profile.JsonTransportPayloadConfiguration;
-import org.echoiot.server.common.data.device.profile.MqttDeviceProfileTransportConfiguration;
-import org.echoiot.server.common.data.device.profile.ProtoTransportPayloadConfiguration;
-import org.echoiot.server.common.data.device.profile.TransportPayloadTypeConfiguration;
+import org.echoiot.server.common.data.*;
+import org.echoiot.server.common.data.device.profile.*;
 import org.echoiot.server.common.data.security.DeviceCredentials;
-import org.thingsboard.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.transport.AbstractTransportIntegrationTest;
+import org.springframework.test.context.TestPropertySource;
 
 import java.util.List;
 

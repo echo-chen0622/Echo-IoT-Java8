@@ -2,15 +2,15 @@ package org.echoiot.server.queue.discovery;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.TbTransportService;
+import org.echoiot.server.common.msg.queue.ServiceType;
+import org.echoiot.server.gen.transport.TransportProtos.ServiceInfo;
+import org.echoiot.server.queue.util.AfterContextReady;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
-import org.echoiot.server.common.data.StringUtils;
-import org.echoiot.server.common.msg.queue.ServiceType;
-import org.thingsboard.server.gen.transport.TransportProtos.ServiceInfo;
-import org.echoiot.server.queue.util.AfterContextReady;
 
 import javax.annotation.PostConstruct;
 import java.net.InetAddress;

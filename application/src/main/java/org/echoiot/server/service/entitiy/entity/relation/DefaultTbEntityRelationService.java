@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.User;
 import org.echoiot.server.common.data.audit.ActionType;
-import org.echoiot.server.common.data.exception.ThingsboardErrorCode;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotErrorCode;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.TenantId;
@@ -24,7 +24,7 @@ public class DefaultTbEntityRelationService extends AbstractTbEntityService impl
     private final RelationService relationService;
 
     @Override
-    public void save(TenantId tenantId, CustomerId customerId, EntityRelation relation, User user) throws ThingsboardException {
+    public void save(TenantId tenantId, CustomerId customerId, EntityRelation relation, User user) throws EchoiotException {
         try {
             relationService.saveRelation(tenantId, relation);
             notificationEntityService.notifyRelation(tenantId, customerId,
@@ -39,11 +39,11 @@ public class DefaultTbEntityRelationService extends AbstractTbEntityService impl
     }
 
     @Override
-    public void delete(TenantId tenantId, CustomerId customerId, EntityRelation relation, User user) throws ThingsboardException {
+    public void delete(TenantId tenantId, CustomerId customerId, EntityRelation relation, User user) throws EchoiotException {
         try {
             boolean found = relationService.deleteRelation(tenantId, relation.getFrom(), relation.getTo(), relation.getType(), relation.getTypeGroup());
             if (!found) {
-                throw new ThingsboardException("Requested item wasn't found!", ThingsboardErrorCode.ITEM_NOT_FOUND);
+                throw new EchoiotException("Requested item wasn't found!", EchoiotErrorCode.ITEM_NOT_FOUND);
             }
             notificationEntityService.notifyRelation(tenantId, customerId,
                     relation, user, ActionType.RELATION_DELETED, relation);
@@ -57,7 +57,7 @@ public class DefaultTbEntityRelationService extends AbstractTbEntityService impl
     }
 
     @Override
-    public void deleteRelations(TenantId tenantId, CustomerId customerId, EntityId entityId, User user) throws ThingsboardException {
+    public void deleteRelations(TenantId tenantId, CustomerId customerId, EntityId entityId, User user) throws EchoiotException {
         try {
             relationService.deleteEntityRelations(tenantId, entityId);
             notificationEntityService.logEntityAction(tenantId, entityId, null, customerId, ActionType.RELATIONS_DELETED, user);

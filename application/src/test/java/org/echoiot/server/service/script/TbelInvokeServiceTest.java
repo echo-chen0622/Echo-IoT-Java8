@@ -8,10 +8,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.TestPropertySource;
-import org.thingsboard.common.util.JacksonUtil;
-import org.thingsboard.script.api.ScriptType;
-import org.thingsboard.script.api.tbel.TbelInvokeService;
-import org.thingsboard.script.api.tbel.TbelScript;
+import org.echoiot.common.util.JacksonUtil;
+import org.echoiot.script.api.ScriptType;
+import org.echoiot.script.api.tbel.TbelInvokeService;
+import org.echoiot.script.api.tbel.TbelScript;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.dao.service.DaoSqlTest;
 

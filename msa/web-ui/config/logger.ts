@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -18,8 +18,9 @@
 import config from 'config';
 import path from 'path';
 import DailyRotateFile from 'winston-daily-rotate-file';
-import { createLogger, format, transports }  from 'winston';
+import {createLogger, format, transports} from 'winston';
 import * as Transport from 'winston-transport';
+
 const { combine, timestamp, label, printf, splat } = format;
 
 const loggerTransports: Array<Transport> = [];

@@ -10,13 +10,13 @@ import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.thingsboard.rule.engine.api.SmsService;
+import org.echoiot.rule.engine.api.SmsService;
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.User;
 import org.echoiot.server.common.data.audit.ActionStatus;
 import org.echoiot.server.common.data.audit.ActionType;
 import org.echoiot.server.common.data.audit.AuditLog;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.common.data.page.SortOrder;
@@ -315,7 +315,7 @@ public abstract class TwoFactorAuthTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testAuthWithoutTwoFaAccountConfig() throws ThingsboardException {
+    public void testAuthWithoutTwoFaAccountConfig() throws EchoiotException {
         configureTotpTwoFa();
         twoFaConfigManager.deleteTwoFaAccountConfig(tenantId, user.getId(), TwoFaProviderType.TOTP);
 
@@ -346,7 +346,7 @@ public abstract class TwoFactorAuthTest extends AbstractControllerTest {
         User twoFaUser = new User();
         twoFaUser.setAuthority(Authority.TENANT_ADMIN);
         twoFaUser.setTenantId(tenantId);
-        twoFaUser.setEmail("2fa@thingsboard.org");
+        twoFaUser.setEmail("2fa@echoiot.org");
         twoFaUser = createUserAndLogin(twoFaUser, "12345678");
 
         TotpTwoFaAccountConfig totpTwoFaAccountConfig = (TotpTwoFaAccountConfig) twoFactorAuthService.generateNewAccountConfig(twoFaUser, TwoFaProviderType.TOTP);
@@ -389,7 +389,7 @@ public abstract class TwoFactorAuthTest extends AbstractControllerTest {
         this.token = response.getToken();
     }
 
-    private TotpTwoFaAccountConfig configureTotpTwoFa(Consumer<PlatformTwoFaSettings>... customizer) throws ThingsboardException {
+    private TotpTwoFaAccountConfig configureTotpTwoFa(Consumer<PlatformTwoFaSettings>... customizer) throws EchoiotException {
         TotpTwoFaProviderConfig totpTwoFaProviderConfig = new TotpTwoFaProviderConfig();
         totpTwoFaProviderConfig.setIssuerName("tb");
 
@@ -405,7 +405,7 @@ public abstract class TwoFactorAuthTest extends AbstractControllerTest {
         return totpTwoFaAccountConfig;
     }
 
-    private SmsTwoFaAccountConfig configureSmsTwoFa(Consumer<SmsTwoFaProviderConfig>... customizer) throws ThingsboardException {
+    private SmsTwoFaAccountConfig configureSmsTwoFa(Consumer<SmsTwoFaProviderConfig>... customizer) throws EchoiotException {
         SmsTwoFaProviderConfig smsTwoFaProviderConfig = new SmsTwoFaProviderConfig();
         smsTwoFaProviderConfig.setVerificationCodeLifetime(60);
         smsTwoFaProviderConfig.setSmsVerificationMessageTemplate("${code}");

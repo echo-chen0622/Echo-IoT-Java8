@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.stats.StatsCounter;
 import org.echoiot.server.common.stats.StatsFactory;
 import org.echoiot.server.common.stats.StatsType;
-import org.thingsboard.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.transport.TransportProtos;
 
 import java.util.ArrayList;
 import java.util.List;

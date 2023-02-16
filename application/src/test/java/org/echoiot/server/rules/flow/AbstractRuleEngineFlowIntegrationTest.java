@@ -2,26 +2,10 @@ package org.echoiot.server.rules.flow;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import lombok.extern.slf4j.Slf4j;
-import org.echoiot.server.common.data.security.Authority;
-import org.echoiot.server.common.msg.TbMsg;
-import org.echoiot.server.common.msg.TbMsgMetaData;
-import org.echoiot.server.controller.AbstractRuleEngineControllerTest;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mockito;
-import org.mockito.stubbing.Answer;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.util.ReflectionTestUtils;
-import org.thingsboard.rule.engine.flow.TbRuleChainInputNodeConfiguration;
-import org.thingsboard.rule.engine.metadata.TbGetAttributesNodeConfiguration;
+import org.echoiot.rule.engine.flow.TbRuleChainInputNodeConfiguration;
+import org.echoiot.rule.engine.metadata.TbGetAttributesNodeConfiguration;
 import org.echoiot.server.actors.ActorSystemContext;
-import org.echoiot.server.common.data.DataConstants;
-import org.echoiot.server.common.data.Device;
-import org.echoiot.server.common.data.EventInfo;
-import org.echoiot.server.common.data.Tenant;
-import org.echoiot.server.common.data.User;
+import org.echoiot.server.common.data.*;
 import org.echoiot.server.common.data.event.Event;
 import org.echoiot.server.common.data.kv.BaseAttributeKvEntry;
 import org.echoiot.server.common.data.kv.StringDataEntry;
@@ -30,10 +14,22 @@ import org.echoiot.server.common.data.rule.NodeConnectionInfo;
 import org.echoiot.server.common.data.rule.RuleChain;
 import org.echoiot.server.common.data.rule.RuleChainMetaData;
 import org.echoiot.server.common.data.rule.RuleNode;
+import org.echoiot.server.common.data.security.Authority;
+import org.echoiot.server.common.msg.TbMsg;
+import org.echoiot.server.common.msg.TbMsgMetaData;
 import org.echoiot.server.common.msg.queue.QueueToRuleEngineMsg;
 import org.echoiot.server.common.msg.queue.TbMsgCallback;
+import org.echoiot.server.controller.AbstractRuleEngineControllerTest;
 import org.echoiot.server.dao.attributes.AttributesService;
 import org.echoiot.server.dao.event.EventService;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mockito;
+import org.mockito.stubbing.Answer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -89,7 +85,7 @@ public abstract class AbstractRuleEngineFlowIntegrationTest extends AbstractRule
         tenantAdmin = new User();
         tenantAdmin.setAuthority(Authority.TENANT_ADMIN);
         tenantAdmin.setTenantId(savedTenant.getId());
-        tenantAdmin.setEmail("tenant2@thingsboard.org");
+        tenantAdmin.setEmail("tenant2@echoiot.org");
         tenantAdmin.setFirstName("Joe");
         tenantAdmin.setLastName("Downs");
 
@@ -120,7 +116,7 @@ public abstract class AbstractRuleEngineFlowIntegrationTest extends AbstractRule
 
         RuleNode ruleNode1 = new RuleNode();
         ruleNode1.setName("Simple Rule Node 1");
-        ruleNode1.setType(org.thingsboard.rule.engine.metadata.TbGetAttributesNode.class.getName());
+        ruleNode1.setType(org.echoiot.rule.engine.metadata.TbGetAttributesNode.class.getName());
         ruleNode1.setDebugMode(true);
         TbGetAttributesNodeConfiguration configuration1 = new TbGetAttributesNodeConfiguration();
         configuration1.setServerAttributeNames(Collections.singletonList("serverAttributeKey1"));
@@ -128,7 +124,7 @@ public abstract class AbstractRuleEngineFlowIntegrationTest extends AbstractRule
 
         RuleNode ruleNode2 = new RuleNode();
         ruleNode2.setName("Simple Rule Node 2");
-        ruleNode2.setType(org.thingsboard.rule.engine.metadata.TbGetAttributesNode.class.getName());
+        ruleNode2.setType(org.echoiot.rule.engine.metadata.TbGetAttributesNode.class.getName());
         ruleNode2.setDebugMode(true);
         TbGetAttributesNodeConfiguration configuration2 = new TbGetAttributesNodeConfiguration();
         configuration2.setServerAttributeNames(Collections.singletonList("serverAttributeKey2"));
@@ -222,7 +218,7 @@ public abstract class AbstractRuleEngineFlowIntegrationTest extends AbstractRule
 
         RuleNode ruleNode1 = new RuleNode();
         ruleNode1.setName("Simple Rule Node 1");
-        ruleNode1.setType(org.thingsboard.rule.engine.metadata.TbGetAttributesNode.class.getName());
+        ruleNode1.setType(org.echoiot.rule.engine.metadata.TbGetAttributesNode.class.getName());
         ruleNode1.setDebugMode(true);
         TbGetAttributesNodeConfiguration configuration1 = new TbGetAttributesNodeConfiguration();
         configuration1.setServerAttributeNames(Collections.singletonList("serverAttributeKey1"));
@@ -230,7 +226,7 @@ public abstract class AbstractRuleEngineFlowIntegrationTest extends AbstractRule
 
         RuleNode ruleNode12 = new RuleNode();
         ruleNode12.setName("Simple Rule Node 1");
-        ruleNode12.setType(org.thingsboard.rule.engine.flow.TbRuleChainInputNode.class.getName());
+        ruleNode12.setType(org.echoiot.rule.engine.flow.TbRuleChainInputNode.class.getName());
         ruleNode12.setDebugMode(true);
         TbRuleChainInputNodeConfiguration configuration12 = new TbRuleChainInputNodeConfiguration();
         configuration12.setRuleChainId(secondaryRuleChain.getId().getId().toString());
@@ -254,7 +250,7 @@ public abstract class AbstractRuleEngineFlowIntegrationTest extends AbstractRule
 
         RuleNode ruleNode2 = new RuleNode();
         ruleNode2.setName("Simple Rule Node 2");
-        ruleNode2.setType(org.thingsboard.rule.engine.metadata.TbGetAttributesNode.class.getName());
+        ruleNode2.setType(org.echoiot.rule.engine.metadata.TbGetAttributesNode.class.getName());
         ruleNode2.setDebugMode(true);
         TbGetAttributesNodeConfiguration configuration2 = new TbGetAttributesNodeConfiguration();
         configuration2.setServerAttributeNames(Collections.singletonList("serverAttributeKey2"));

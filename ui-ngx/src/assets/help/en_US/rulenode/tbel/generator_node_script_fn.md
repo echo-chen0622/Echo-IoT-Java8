@@ -14,7 +14,7 @@
   </li>
   <li><b>prevMetadata:</b> <code>{[key: string]: string}</code> - is a previously generated Message metadata key/value object.
   </li>
-  <li><b>prevMsgType:</b> <code>string</code> - is a previously generated string Message type. See <a href="https://github.com/thingsboard/thingsboard/blob/ea039008b148453dfa166cf92bc40b26e487e660/ui-ngx/src/app/shared/models/rule-node.models.ts#L338" target="_blank">MessageType</a> enum for common used values.
+  <li><b>prevMsgType:</b> <code>string</code> - is a previously generated string Message type. See <a href="https://github.com/echoiot/echoiot/blob/ea039008b148453dfa166cf92bc40b26e487e660/ui-ngx/src/app/shared/models/rule-node.models.ts#L338" target="_blank">MessageType</a> enum for common used values.
   </li>
 </ul>
 

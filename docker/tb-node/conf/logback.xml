@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
 
-    Copyright © 2016-2018 The Thingsboard Authors
+    Copyright © 2016-2018 The Echoiot Authors
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -21,10 +21,10 @@
 
     <appender name="fileLogAppender"
               class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>/var/log/thingsboard/${TB_SERVICE_ID}/thingsboard.log</file>
+        <file>/var/log/echoiot/${TB_SERVICE_ID}/echoiot.log</file>
         <rollingPolicy
                 class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>/var/log/thingsboard/${TB_SERVICE_ID}/thingsboard.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>/var/log/echoiot/${TB_SERVICE_ID}/echoiot.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <maxFileSize>100MB</maxFileSize>
             <maxHistory>30</maxHistory>
             <totalSizeCap>3GB</totalSizeCap>
@@ -40,7 +40,7 @@
         </encoder>
     </appender>
 
-    <logger name="org.thingsboard.server" level="INFO" />
+    <logger name="org.echoiot.server" level="INFO" />
     <logger name="com.google.common.util.concurrent.AggregateFuture" level="OFF" />
     <logger name="org.apache.kafka.common.utils.AppInfoParser" level="WARN"/>
     <logger name="org.apache.kafka.clients" level="WARN"/>
@@ -51,13 +51,13 @@
     <!--    <logger name="org.hibernate.SQL" level="DEBUG" />-->
     <!--    <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="TRACE" />-->
 
-    <!--    <logger name="org.thingsboard.server.service.queue" level="TRACE" />-->
-    <!--    <logger name="org.thingsboard.server.service.transport" level="TRACE" />-->
+    <!--    <logger name="org.echoiot.server.service.queue" level="TRACE" />-->
+    <!--    <logger name="org.echoiot.server.service.transport" level="TRACE" />-->
     <!--    <logger name="memory.queue.org.echoiot.server.InMemoryStorage" level="DEBUG" />-->
     <!--    <logger name="ttl.service.org.echoiot.server.AbstractCleanUpService" level="DEBUG" />-->
 
-    <!--    <logger name="org.thingsboard.server.service.subscription" level="TRACE"/>-->
-    <!--    <logger name="org.thingsboard.server.service.telemetry" level="TRACE"/>-->
+    <!--    <logger name="org.echoiot.server.service.subscription" level="TRACE"/>-->
+    <!--    <logger name="org.echoiot.server.service.telemetry" level="TRACE"/>-->
     <!--    <logger name="org.eclipse.californium.scandium.DTLSConnector" level="TRACE" />-->
     <!--    <logger name="org.eclipse.californium.scandium.dtls.Handshaker" level="DEBUG" />-->
 
@@ -65,7 +65,7 @@
     <!--    <logger name="queue.service.org.echoiot.server.TbMsgPackProcessingContext" level="DEBUG" /> -->
 
     <!-- MQTT transport debug -->
-    <!--    <logger name="org.thingsboard.server.transport.mqtt.MqttTransportHandler" level="DEBUG" /> -->
+    <!--    <logger name="org.echoiot.server.transport.mqtt.MqttTransportHandler" level="DEBUG" /> -->
 
     <logger name="com.microsoft.azure.servicebus.primitives.CoreMessageReceiver" level="OFF" />
 

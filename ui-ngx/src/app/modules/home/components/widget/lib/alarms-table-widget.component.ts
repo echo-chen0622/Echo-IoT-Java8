@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -15,118 +15,110 @@
 ///
 
 import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  EventEmitter,
-  Injector,
-  Input,
-  NgZone,
-  OnInit,
-  StaticProvider,
-  ViewChild,
-  ViewContainerRef
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    EventEmitter,
+    Injector,
+    Input,
+    NgZone,
+    OnInit,
+    StaticProvider,
+    ViewChild,
+    ViewContainerRef
 } from '@angular/core';
-import { PageComponent } from '@shared/components/page.component';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { WidgetAction, WidgetContext } from '@home/models/widget-component.models';
-import { DataKey, WidgetActionDescriptor, WidgetConfig } from '@shared/models/widget.models';
-import { IWidgetSubscription } from '@core/api/widget-api.models';
-import { UtilsService } from '@core/services/utils.service';
-import { TranslateService } from '@ngx-translate/core';
-import {
-  createLabelFromDatasource,
-  deepClone,
-  hashCode,
-  isDefined,
-  isNumber,
-  isObject,
-  isUndefined
-} from '@core/utils';
+import {PageComponent} from '@shared/components/page.component';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {WidgetAction, WidgetContext} from '@home/models/widget-component.models';
+import {DataKey, WidgetActionDescriptor, WidgetConfig} from '@shared/models/widget.models';
+import {IWidgetSubscription} from '@core/api/widget-api.models';
+import {UtilsService} from '@core/services/utils.service';
+import {TranslateService} from '@ngx-translate/core';
+import {createLabelFromDatasource, deepClone, hashCode, isDefined, isNumber, isObject, isUndefined} from '@core/utils';
 import cssjs from '@core/css/css';
-import { sortItems } from '@shared/models/page/page-link';
-import { Direction } from '@shared/models/page/sort-order';
-import { CollectionViewer, DataSource, SelectionModel } from '@angular/cdk/collections';
-import { BehaviorSubject, forkJoin, fromEvent, merge, Observable, Subscription } from 'rxjs';
-import { emptyPageData, PageData } from '@shared/models/page/page-data';
-import { entityTypeTranslations } from '@shared/models/entity-type.models';
-import { debounceTime, distinctUntilChanged, map, take, tap } from 'rxjs/operators';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort, SortDirection } from '@angular/material/sort';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import {sortItems} from '@shared/models/page/page-link';
+import {Direction} from '@shared/models/page/sort-order';
+import {CollectionViewer, DataSource, SelectionModel} from '@angular/cdk/collections';
+import {BehaviorSubject, forkJoin, fromEvent, merge, Observable, Subscription} from 'rxjs';
+import {emptyPageData, PageData} from '@shared/models/page/page-data';
+import {entityTypeTranslations} from '@shared/models/entity-type.models';
+import {debounceTime, distinctUntilChanged, map, take, tap} from 'rxjs/operators';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatSort, SortDirection} from '@angular/material/sort';
+import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {
-  CellContentInfo,
-  CellStyleInfo,
-  checkHasActions,
-  constructTableCssString,
-  DisplayColumn,
-  EntityColumn,
-  entityDataSortOrderFromString,
-  findColumnByEntityKey,
-  findEntityKeyByColumnDef,
-  fromEntityColumnDef,
-  getAlarmValue,
-  getCellContentInfo,
-  getCellStyleInfo,
-  getColumnDefaultVisibility,
-  getColumnSelectionAvailability,
-  getColumnWidth,
-  getRowStyleInfo,
-  getTableCellButtonActions,
-  getHeaderTitle,
-  noDataMessage,
-  prepareTableCellButtonActions,
-  RowStyleInfo,
-  TableCellButtonActionDescriptor,
-  TableWidgetDataKeySettings,
-  TableWidgetSettings,
-  widthStyle
+    CellContentInfo,
+    CellStyleInfo,
+    checkHasActions,
+    constructTableCssString,
+    DisplayColumn,
+    EntityColumn,
+    entityDataSortOrderFromString,
+    findColumnByEntityKey,
+    findEntityKeyByColumnDef,
+    fromEntityColumnDef,
+    getAlarmValue,
+    getCellContentInfo,
+    getCellStyleInfo,
+    getColumnDefaultVisibility,
+    getColumnSelectionAvailability,
+    getColumnWidth,
+    getHeaderTitle,
+    getRowStyleInfo,
+    getTableCellButtonActions,
+    noDataMessage,
+    prepareTableCellButtonActions,
+    RowStyleInfo,
+    TableCellButtonActionDescriptor,
+    TableWidgetDataKeySettings,
+    TableWidgetSettings,
+    widthStyle
 } from '@home/components/widget/lib/table-widget.models';
-import { ConnectedPosition, Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
-import { ComponentPortal } from '@angular/cdk/portal';
+import {ConnectedPosition, Overlay, OverlayConfig, OverlayRef} from '@angular/cdk/overlay';
+import {ComponentPortal} from '@angular/cdk/portal';
 import {
-  DISPLAY_COLUMNS_PANEL_DATA,
-  DisplayColumnsPanelComponent,
-  DisplayColumnsPanelData
+    DISPLAY_COLUMNS_PANEL_DATA,
+    DisplayColumnsPanelComponent,
+    DisplayColumnsPanelData
 } from '@home/components/widget/lib/display-columns-panel.component';
 import {
-  AlarmDataInfo,
-  alarmFields,
-  AlarmSearchStatus,
-  alarmSeverityColors,
-  alarmSeverityTranslations,
-  AlarmStatus,
-  alarmStatusTranslations
+    AlarmDataInfo,
+    alarmFields,
+    AlarmSearchStatus,
+    alarmSeverityColors,
+    alarmSeverityTranslations,
+    AlarmStatus,
+    alarmStatusTranslations
 } from '@shared/models/alarm.models';
-import { DatePipe } from '@angular/common';
+import {DatePipe} from '@angular/common';
 import {
-  AlarmDetailsDialogComponent,
-  AlarmDetailsDialogData
+    AlarmDetailsDialogComponent,
+    AlarmDetailsDialogData
 } from '@home/components/alarm/alarm-details-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
-import { NULL_UUID } from '@shared/models/id/has-uuid';
-import { DialogService } from '@core/services/dialog.service';
-import { AlarmService } from '@core/http/alarm.service';
+import {MatDialog} from '@angular/material/dialog';
+import {NULL_UUID} from '@shared/models/id/has-uuid';
+import {DialogService} from '@core/services/dialog.service';
+import {AlarmService} from '@core/http/alarm.service';
 import {
-  AlarmData,
-  AlarmDataPageLink,
-  dataKeyToEntityKey,
-  dataKeyTypeToEntityKeyType,
-  entityDataPageLinkSortDirection,
-  KeyFilter
+    AlarmData,
+    AlarmDataPageLink,
+    dataKeyToEntityKey,
+    dataKeyTypeToEntityKeyType,
+    entityDataPageLinkSortDirection,
+    KeyFilter
 } from '@app/shared/models/query/query.models';
-import { DataKeyType } from '@shared/models/telemetry/telemetry.models';
+import {DataKeyType} from '@shared/models/telemetry/telemetry.models';
 import {
-  ALARM_FILTER_PANEL_DATA,
-  AlarmFilterPanelComponent,
-  AlarmFilterPanelData
+    ALARM_FILTER_PANEL_DATA,
+    AlarmFilterPanelComponent,
+    AlarmFilterPanelData
 } from '@home/components/widget/lib/alarm-filter-panel.component';
-import { entityFields } from '@shared/models/entity.models';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ResizeObserver } from '@juggle/resize-observer';
-import { hidePageSizePixelValue } from '@shared/models/constants';
+import {entityFields} from '@shared/models/entity.models';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {ResizeObserver} from '@juggle/resize-observer';
+import {hidePageSizePixelValue} from '@shared/models/constants';
 
 interface AlarmsTableWidgetSettings extends TableWidgetSettings {
   alarmsTitle: string;

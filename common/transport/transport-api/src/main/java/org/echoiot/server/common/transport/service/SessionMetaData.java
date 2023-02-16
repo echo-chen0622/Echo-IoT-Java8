@@ -2,7 +2,7 @@ package org.echoiot.server.common.transport.service;
 
 import lombok.Data;
 import org.echoiot.server.common.transport.SessionMsgListener;
-import org.thingsboard.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.transport.TransportProtos;
 
 import java.util.concurrent.ScheduledFuture;
 

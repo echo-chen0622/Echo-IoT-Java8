@@ -7,8 +7,8 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.audit.ActionType;
-import org.echoiot.server.common.data.exception.ThingsboardErrorCode;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotErrorCode;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.security.model.JwtPair;
 import org.echoiot.server.common.data.security.model.mfa.PlatformTwoFaSettings;
 import org.echoiot.server.common.data.security.model.mfa.account.EmailTwoFaAccountConfig;
@@ -81,7 +81,7 @@ public class TwoFactorAuthController extends BaseController {
             user = new SecurityUser(userService.findUserById(user.getTenantId(), user.getId()), true, user.getUserPrincipal());
             return tokenFactory.createTokenPair(user);
         } else {
-            ThingsboardException error = new ThingsboardException("Verification code is incorrect", ThingsboardErrorCode.BAD_REQUEST_PARAMS);
+            EchoiotException error = new EchoiotException("Verification code is incorrect", EchoiotErrorCode.BAD_REQUEST_PARAMS);
             systemSecurityService.logLoginAction(user, new RestAuthenticationDetails(servletRequest), ActionType.LOGIN, error);
             throw error;
         }
@@ -97,7 +97,7 @@ public class TwoFactorAuthController extends BaseController {
                     "]\n```")
     @GetMapping("/providers")
     @PreAuthorize("hasAuthority('PRE_VERIFICATION_TOKEN')")
-    public List<TwoFaProviderInfo> getAvailableTwoFaProviders() throws ThingsboardException {
+    public List<TwoFaProviderInfo> getAvailableTwoFaProviders() throws EchoiotException {
         SecurityUser user = getCurrentUser();
         Optional<PlatformTwoFaSettings> platformTwoFaSettings = twoFaConfigManager.getPlatformTwoFaSettings(user.getTenantId(), true);
         return twoFaConfigManager.getAccountTwoFaSettings(user.getTenantId(), user.getId())

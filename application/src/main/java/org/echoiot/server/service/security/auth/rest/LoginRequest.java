@@ -18,7 +18,7 @@ public class LoginRequest {
         this.password = password;
     }
 
-    @ApiModelProperty(position = 1, required = true, value = "User email", example = "tenant@thingsboard.org")
+    @ApiModelProperty(position = 1, required = true, value = "User email", example = "tenant@echoiot.org")
     public String getUsername() {
         return username;
     }

@@ -7,7 +7,7 @@ import org.echoiot.server.queue.common.TbProtoQueueMsg;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.echoiot.server.common.msg.queue.TbMsgCallback;
-import org.thingsboard.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.transport.TransportProtos;
 
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;

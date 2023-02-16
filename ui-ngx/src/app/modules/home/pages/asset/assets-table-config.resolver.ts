@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,54 +14,53 @@
 /// limitations under the License.
 ///
 
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 
-import { ActivatedRouteSnapshot, Resolve, Router } from '@angular/router';
+import {ActivatedRouteSnapshot, Resolve, Router} from '@angular/router';
 import {
-  CellActionDescriptor,
-  checkBoxCell,
-  DateEntityTableColumn,
-  EntityTableColumn,
-  EntityTableConfig,
-  GroupActionDescriptor,
-  HeaderActionDescriptor
+    CellActionDescriptor,
+    checkBoxCell,
+    DateEntityTableColumn,
+    EntityTableColumn,
+    EntityTableConfig,
+    GroupActionDescriptor,
+    HeaderActionDescriptor
 } from '@home/models/entity/entities-table-config.models';
-import { TranslateService } from '@ngx-translate/core';
-import { DatePipe } from '@angular/common';
-import { EntityType, entityTypeResources, entityTypeTranslations } from '@shared/models/entity-type.models';
-import { EntityAction } from '@home/models/entity/entity-component.models';
-import { forkJoin, Observable, of } from 'rxjs';
-import { select, Store } from '@ngrx/store';
-import { selectAuthUser } from '@core/auth/auth.selectors';
-import { map, mergeMap, take, tap } from 'rxjs/operators';
-import { AppState } from '@core/core.state';
-import { Authority } from '@app/shared/models/authority.enum';
-import { CustomerService } from '@core/http/customer.service';
-import { Customer } from '@app/shared/models/customer.model';
-import { NULL_UUID } from '@shared/models/id/has-uuid';
-import { BroadcastService } from '@core/services/broadcast.service';
-import { MatDialog } from '@angular/material/dialog';
-import { DialogService } from '@core/services/dialog.service';
+import {TranslateService} from '@ngx-translate/core';
+import {DatePipe} from '@angular/common';
+import {EntityType, entityTypeResources, entityTypeTranslations} from '@shared/models/entity-type.models';
+import {EntityAction} from '@home/models/entity/entity-component.models';
+import {forkJoin, Observable, of} from 'rxjs';
+import {select, Store} from '@ngrx/store';
+import {selectAuthUser} from '@core/auth/auth.selectors';
+import {map, mergeMap, take, tap} from 'rxjs/operators';
+import {AppState} from '@core/core.state';
+import {Authority} from '@app/shared/models/authority.enum';
+import {CustomerService} from '@core/http/customer.service';
+import {Customer} from '@app/shared/models/customer.model';
+import {NULL_UUID} from '@shared/models/id/has-uuid';
+import {BroadcastService} from '@core/services/broadcast.service';
+import {MatDialog} from '@angular/material/dialog';
+import {DialogService} from '@core/services/dialog.service';
 import {
-  AssignToCustomerDialogComponent,
-  AssignToCustomerDialogData
+    AssignToCustomerDialogComponent,
+    AssignToCustomerDialogData
 } from '@modules/home/dialogs/assign-to-customer-dialog.component';
 import {
-  AddEntitiesToCustomerDialogComponent,
-  AddEntitiesToCustomerDialogData
+    AddEntitiesToCustomerDialogComponent,
+    AddEntitiesToCustomerDialogData
 } from '../../dialogs/add-entities-to-customer-dialog.component';
-import { Asset, AssetInfo } from '@app/shared/models/asset.models';
-import { AssetService } from '@app/core/http/asset.service';
-import { AssetComponent } from '@modules/home/pages/asset/asset.component';
-import { AssetTableHeaderComponent } from '@modules/home/pages/asset/asset-table-header.component';
-import { AssetId } from '@app/shared/models/id/asset-id';
-import { AssetTabsComponent } from '@home/pages/asset/asset-tabs.component';
-import { HomeDialogsService } from '@home/dialogs/home-dialogs.service';
-import { DeviceInfo } from '@shared/models/device.models';
-import { EdgeService } from '@core/http/edge.service';
+import {Asset, AssetInfo} from '@app/shared/models/asset.models';
+import {AssetService} from '@app/core/http/asset.service';
+import {AssetComponent} from '@modules/home/pages/asset/asset.component';
+import {AssetTableHeaderComponent} from '@modules/home/pages/asset/asset-table-header.component';
+import {AssetId} from '@app/shared/models/id/asset-id';
+import {AssetTabsComponent} from '@home/pages/asset/asset-tabs.component';
+import {HomeDialogsService} from '@home/dialogs/home-dialogs.service';
+import {EdgeService} from '@core/http/edge.service';
 import {
-  AddEntitiesToEdgeDialogComponent,
-  AddEntitiesToEdgeDialogData
+    AddEntitiesToEdgeDialogComponent,
+    AddEntitiesToEdgeDialogData
 } from '@home/dialogs/add-entities-to-edge-dialog.component';
 
 @Injectable()

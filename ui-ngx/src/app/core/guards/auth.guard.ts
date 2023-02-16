@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,22 +14,22 @@
 /// limitations under the License.
 ///
 
-import { Injectable, NgZone } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router, RouterStateSnapshot } from '@angular/router';
-import { AuthService } from '../auth/auth.service';
-import { select, Store } from '@ngrx/store';
-import { AppState } from '../core.state';
-import { selectAuth } from '../auth/auth.selectors';
-import { catchError, map, mergeMap, skipWhile, take } from 'rxjs/operators';
-import { AuthState } from '../auth/auth.models';
-import { forkJoin, Observable, of } from 'rxjs';
-import { enterZone } from '@core/operator/enterZone';
-import { Authority } from '@shared/models/authority.enum';
-import { DialogService } from '@core/services/dialog.service';
-import { TranslateService } from '@ngx-translate/core';
-import { UtilsService } from '@core/services/utils.service';
-import { isObject } from '@core/utils';
-import { MobileService } from '@core/services/mobile.service';
+import {Injectable, NgZone} from '@angular/core';
+import {ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router, RouterStateSnapshot} from '@angular/router';
+import {AuthService} from '../auth/auth.service';
+import {select, Store} from '@ngrx/store';
+import {AppState} from '../core.state';
+import {selectAuth} from '../auth/auth.selectors';
+import {catchError, map, mergeMap, skipWhile, take} from 'rxjs/operators';
+import {AuthState} from '../auth/auth.models';
+import {forkJoin, Observable, of} from 'rxjs';
+import {enterZone} from '@core/operator/enterZone';
+import {Authority} from '@shared/models/authority.enum';
+import {DialogService} from '@core/services/dialog.service';
+import {TranslateService} from '@ngx-translate/core';
+import {UtilsService} from '@core/services/utils.service';
+import {isObject} from '@core/utils';
+import {MobileService} from '@core/services/mobile.service';
 
 @Injectable({
   providedIn: 'root'

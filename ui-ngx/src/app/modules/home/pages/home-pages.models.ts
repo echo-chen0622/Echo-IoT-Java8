@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,11 +14,10 @@
 /// limitations under the License.
 ///
 
-import { BreadCrumbLabelFunction } from '@shared/components/breadcrumb';
-import { EntityDetailsPageComponent } from '@home/components/entity/entity-details-page.component';
+import {BreadCrumbLabelFunction} from '@shared/components/breadcrumb';
+import {EntityDetailsPageComponent} from '@home/components/entity/entity-details-page.component';
 
 export const entityDetailsPageBreadcrumbLabelFunction: BreadCrumbLabelFunction<EntityDetailsPageComponent>
   = ((route, translate, component) => {
   return component.entity?.name || component.headerSubtitle;
 });
-

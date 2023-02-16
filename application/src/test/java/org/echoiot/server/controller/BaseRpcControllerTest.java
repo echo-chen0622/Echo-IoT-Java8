@@ -3,20 +3,19 @@ package org.echoiot.server.controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.common.data.Device;
 import org.echoiot.server.common.data.Tenant;
 import org.echoiot.server.common.data.User;
+import org.echoiot.server.common.data.page.PageData;
+import org.echoiot.server.common.data.rpc.Rpc;
+import org.echoiot.server.common.data.rpc.RpcStatus;
+import org.echoiot.server.common.data.security.Authority;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.test.web.servlet.MvcResult;
-import org.thingsboard.common.util.JacksonUtil;
-import org.thingsboard.server.common.data.*;
-import org.echoiot.server.common.data.page.PageData;
-import org.echoiot.server.common.data.rpc.Rpc;
-import org.echoiot.server.common.data.rpc.RpcStatus;
-import org.echoiot.server.common.data.security.Authority;
 
 import java.util.List;
 
@@ -39,7 +38,7 @@ public abstract class BaseRpcControllerTest extends AbstractControllerTest {
         tenantAdmin = new User();
         tenantAdmin.setAuthority(Authority.TENANT_ADMIN);
         tenantAdmin.setTenantId(savedTenant.getId());
-        tenantAdmin.setEmail("tenant2@thingsboard.org");
+        tenantAdmin.setEmail("tenant2@echoiot.org");
         tenantAdmin.setFirstName("Joe");
         tenantAdmin.setLastName("Downs");
 

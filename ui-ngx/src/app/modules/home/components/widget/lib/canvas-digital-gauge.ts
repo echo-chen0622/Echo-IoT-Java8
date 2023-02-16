@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -15,10 +15,10 @@
 ///
 
 import * as CanvasGauges from 'canvas-gauges';
-import { FontStyle, FontWeight } from '@home/components/widget/lib/settings.models';
+import {FontStyle, FontWeight} from '@home/components/widget/lib/settings.models';
 import * as tinycolor_ from 'tinycolor2';
-import { ColorFormats } from 'tinycolor2';
-import { isDefined, isDefinedAndNotNull, isString, isUndefined, padValue } from '@core/utils';
+import {ColorFormats} from 'tinycolor2';
+import {isDefined, isDefinedAndNotNull, isString, isUndefined, padValue} from '@core/utils';
 import GenericOptions = CanvasGauges.GenericOptions;
 import BaseGauge = CanvasGauges.BaseGauge;
 

@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,12 +14,12 @@
 /// limitations under the License.
 ///
 
-import { BaseData, ExportableEntity } from '@shared/models/base-data';
-import { TenantId } from '@shared/models/id/tenant-id';
-import { CustomerId } from '@shared/models/id/customer-id';
-import { EntityViewId } from '@shared/models/id/entity-view-id';
-import { EntityId } from '@shared/models/id/entity-id';
-import { EntitySearchQuery } from '@shared/models/relation.models';
+import {BaseData, ExportableEntity} from '@shared/models/base-data';
+import {TenantId} from '@shared/models/id/tenant-id';
+import {CustomerId} from '@shared/models/id/customer-id';
+import {EntityViewId} from '@shared/models/id/entity-view-id';
+import {EntityId} from '@shared/models/id/entity-id';
+import {EntitySearchQuery} from '@shared/models/relation.models';
 
 export interface AttributesEntityView {
   cs: Array<string>;

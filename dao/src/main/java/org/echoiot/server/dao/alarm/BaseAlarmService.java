@@ -7,21 +7,8 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.MoreExecutors;
 import lombok.extern.slf4j.Slf4j;
-import org.echoiot.server.dao.entity.AbstractEntityService;
-import org.echoiot.server.dao.service.DataValidator;
-import org.echoiot.server.dao.service.Validator;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
-import org.thingsboard.common.util.ThingsBoardThreadFactory;
-import org.echoiot.server.common.data.alarm.Alarm;
-import org.echoiot.server.common.data.alarm.AlarmInfo;
-import org.echoiot.server.common.data.alarm.AlarmQuery;
-import org.echoiot.server.common.data.alarm.AlarmSearchStatus;
-import org.echoiot.server.common.data.alarm.AlarmSeverity;
-import org.echoiot.server.common.data.alarm.AlarmStatus;
-import org.echoiot.server.common.data.alarm.EntityAlarm;
+import org.echoiot.common.util.EchoiotThreadFactory;
+import org.echoiot.server.common.data.alarm.*;
 import org.echoiot.server.common.data.exception.ApiUsageLimitsExceededException;
 import org.echoiot.server.common.data.id.AlarmId;
 import org.echoiot.server.common.data.id.CustomerId;
@@ -34,17 +21,19 @@ import org.echoiot.server.common.data.relation.EntityRelation;
 import org.echoiot.server.common.data.relation.EntityRelationsQuery;
 import org.echoiot.server.common.data.relation.EntitySearchDirection;
 import org.echoiot.server.common.data.relation.RelationsSearchParameters;
+import org.echoiot.server.dao.entity.AbstractEntityService;
 import org.echoiot.server.dao.entity.EntityService;
+import org.echoiot.server.dao.service.DataValidator;
+import org.echoiot.server.dao.service.Validator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -73,7 +62,7 @@ public class BaseAlarmService extends AbstractEntityService implements AlarmServ
 
     @PostConstruct
     public void startExecutor() {
-        readResultsProcessingExecutor = Executors.newCachedThreadPool(ThingsBoardThreadFactory.forName("alarm-service"));
+        readResultsProcessingExecutor = Executors.newCachedThreadPool(EchoiotThreadFactory.forName("alarm-service"));
     }
 
     @PreDestroy

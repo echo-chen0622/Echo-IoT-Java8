@@ -19,7 +19,7 @@ import org.smpp.pdu.BindTransmitter;
 import org.smpp.pdu.PDUException;
 import org.smpp.pdu.SubmitSM;
 import org.smpp.pdu.SubmitSMResp;
-import org.thingsboard.rule.engine.api.sms.exception.SmsException;
+import org.echoiot.rule.engine.api.sms.exception.SmsException;
 import org.echoiot.server.service.sms.AbstractSmsSender;
 
 import java.io.IOException;

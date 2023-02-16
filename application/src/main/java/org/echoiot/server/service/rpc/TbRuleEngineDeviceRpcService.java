@@ -1,6 +1,6 @@
 package org.echoiot.server.service.rpc;
 
-import org.thingsboard.rule.engine.api.RuleEngineRpcService;
+import org.echoiot.rule.engine.api.RuleEngineRpcService;
 import org.echoiot.server.common.msg.rpc.FromDeviceRpcResponse;
 
 /**

@@ -2,7 +2,7 @@ package org.echoiot.server.common.transport.session;
 
 import org.echoiot.server.common.data.Device;
 import org.echoiot.server.common.data.DeviceProfile;
-import org.thingsboard.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.transport.TransportProtos;
 
 import java.util.Optional;
 import java.util.UUID;

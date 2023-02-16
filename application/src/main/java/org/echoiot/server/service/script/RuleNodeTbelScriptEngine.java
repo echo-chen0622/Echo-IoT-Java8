@@ -10,9 +10,9 @@ import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.TbMsgMetaData;
-import org.thingsboard.common.util.JacksonUtil;
-import org.thingsboard.script.api.RuleNodeScriptFactory;
-import org.thingsboard.script.api.tbel.TbelInvokeService;
+import org.echoiot.common.util.JacksonUtil;
+import org.echoiot.script.api.RuleNodeScriptFactory;
+import org.echoiot.script.api.tbel.TbelInvokeService;
 
 import javax.script.ScriptException;
 import java.util.ArrayList;

@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,19 +14,19 @@
 /// limitations under the License.
 ///
 
-import { Component, forwardRef, Input, OnDestroy, OnInit } from '@angular/core';
-import { ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
-import { Store } from '@ngrx/store';
-import { AppState } from '@app/core/core.state';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import {Component, forwardRef, Input, OnDestroy, OnInit} from '@angular/core';
+import {ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR, Validators} from '@angular/forms';
+import {Store} from '@ngrx/store';
+import {AppState} from '@app/core/core.state';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
-  CoapDeviceTransportConfiguration,
-  DeviceTransportConfiguration,
-  DeviceTransportType
+    CoapDeviceTransportConfiguration,
+    DeviceTransportConfiguration,
+    DeviceTransportType
 } from '@shared/models/device.models';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { isDefinedAndNotNull } from '@core/utils';
+import {Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
+import {isDefinedAndNotNull} from '@core/utils';
 
 @Component({
   selector: 'tb-coap-device-transport-configuration',

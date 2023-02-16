@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -15,32 +15,32 @@
 ///
 
 import {
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  Output,
-  SimpleChanges,
-  ViewChild,
-  ViewEncapsulation
+    Component,
+    ElementRef,
+    EventEmitter,
+    Input,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    Output,
+    SimpleChanges,
+    ViewChild,
+    ViewEncapsulation
 } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { PageComponent } from '@shared/components/page.component';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { CustomActionDescriptor } from '@shared/models/widget.models';
-import { Ace } from 'ace-builds';
-import { CancelAnimationFrame, RafService } from '@core/services/raf.service';
-import { ResizeObserver } from '@juggle/resize-observer';
-import { CustomPrettyActionEditorCompleter } from '@home/components/widget/action/custom-action.models';
-import { Observable } from 'rxjs/internal/Observable';
-import { forkJoin, from } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
-import { getAce } from '@shared/models/ace/ace.models';
-import { beautifyCss, beautifyHtml } from '@shared/models/beautify.models';
+import {TranslateService} from '@ngx-translate/core';
+import {PageComponent} from '@shared/components/page.component';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {CustomActionDescriptor} from '@shared/models/widget.models';
+import {Ace} from 'ace-builds';
+import {CancelAnimationFrame, RafService} from '@core/services/raf.service';
+import {ResizeObserver} from '@juggle/resize-observer';
+import {CustomPrettyActionEditorCompleter} from '@home/components/widget/action/custom-action.models';
+import {Observable} from 'rxjs/internal/Observable';
+import {forkJoin} from 'rxjs';
+import {map, tap} from 'rxjs/operators';
+import {getAce} from '@shared/models/ace/ace.models';
+import {beautifyCss, beautifyHtml} from '@shared/models/beautify.models';
 
 @Component({
   selector: 'tb-custom-action-pretty-resources-tabs',

@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,8 +14,8 @@
 /// limitations under the License.
 ///
 
-import { ValidatorFn, Validators } from '@angular/forms';
-import { Lwm2mSecurityType } from '@shared/models/lwm2m-security-config.models';
+import {ValidatorFn, Validators} from '@angular/forms';
+import {Lwm2mSecurityType} from '@shared/models/lwm2m-security-config.models';
 
 export const PAGE_SIZE_LIMIT = 50;
 export const INSTANCES = 'instances';

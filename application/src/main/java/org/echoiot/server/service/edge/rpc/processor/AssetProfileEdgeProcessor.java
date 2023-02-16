@@ -7,12 +7,12 @@ import org.echoiot.server.common.data.asset.AssetProfile;
 import org.echoiot.server.common.data.edge.EdgeEvent;
 import org.echoiot.server.common.data.id.AssetProfileId;
 import org.echoiot.server.common.data.id.TenantId;
+import org.echoiot.server.gen.edge.v1.AssetProfileUpdateMsg;
+import org.echoiot.server.gen.edge.v1.DownlinkMsg;
+import org.echoiot.server.gen.edge.v1.UpdateMsgType;
+import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.springframework.stereotype.Component;
-import org.thingsboard.server.gen.edge.v1.AssetProfileUpdateMsg;
-import org.thingsboard.server.gen.edge.v1.DownlinkMsg;
-import org.thingsboard.server.gen.edge.v1.UpdateMsgType;
-import org.thingsboard.server.gen.transport.TransportProtos;
 
 @Component
 @Slf4j

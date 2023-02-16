@@ -20,8 +20,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import org.thingsboard.common.util.ThingsBoardThreadFactory;
-import org.thingsboard.server.gen.transport.TransportProtos;
+import org.echoiot.common.util.EchoiotThreadFactory;
+import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.queue.util.AfterStartUp;
 
 import javax.annotation.PostConstruct;
@@ -75,7 +75,7 @@ public class ZkDiscoveryService implements DiscoveryService, PathChildrenCacheLi
         Assert.notNull(zkConnectionTimeout, missingProperty("zk.connection_timeout_ms"));
         Assert.notNull(zkSessionTimeout, missingProperty("zk.session_timeout_ms"));
 
-        reconnectExecutorService = Executors.newSingleThreadExecutor(ThingsBoardThreadFactory.forName("zk-discovery"));
+        reconnectExecutorService = Executors.newSingleThreadExecutor(EchoiotThreadFactory.forName("zk-discovery"));
 
         log.info("Initializing discovery service using ZK connect string: {}", zkUrl);
 

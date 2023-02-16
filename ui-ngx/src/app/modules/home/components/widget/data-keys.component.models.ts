@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,9 +14,9 @@
 /// limitations under the License.
 ///
 
-import { DataKeyType } from '@shared/models/telemetry/telemetry.models';
-import { DataKey, JsonSettingsSchema } from '@shared/models/widget.models';
-import { Observable } from 'rxjs';
+import {DataKeyType} from '@shared/models/telemetry/telemetry.models';
+import {DataKey, JsonSettingsSchema} from '@shared/models/widget.models';
+import {Observable} from 'rxjs';
 
 export interface DataKeysCallbacks {
   generateDataKey: (chip: any, type: DataKeyType, datakeySettingsSchema: JsonSettingsSchema) => DataKey;

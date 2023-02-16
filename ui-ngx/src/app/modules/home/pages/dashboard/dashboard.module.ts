@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,16 +14,18 @@
 /// limitations under the License.
 ///
 
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { SharedModule } from '@shared/shared.module';
-import { HomeDialogsModule } from '../../dialogs/home-dialogs.module';
-import { DashboardFormComponent } from '@modules/home/pages/dashboard/dashboard-form.component';
-import { ManageDashboardCustomersDialogComponent } from '@modules/home/pages/dashboard/manage-dashboard-customers-dialog.component';
-import { DashboardRoutingModule } from './dashboard-routing.module';
-import { MakeDashboardPublicDialogComponent } from '@modules/home/pages/dashboard/make-dashboard-public-dialog.component';
-import { HomeComponentsModule } from '@modules/home/components/home-components.module';
-import { DashboardTabsComponent } from '@home/pages/dashboard/dashboard-tabs.component';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {SharedModule} from '@shared/shared.module';
+import {HomeDialogsModule} from '../../dialogs/home-dialogs.module';
+import {DashboardFormComponent} from '@modules/home/pages/dashboard/dashboard-form.component';
+import {
+    ManageDashboardCustomersDialogComponent
+} from '@modules/home/pages/dashboard/manage-dashboard-customers-dialog.component';
+import {DashboardRoutingModule} from './dashboard-routing.module';
+import {MakeDashboardPublicDialogComponent} from '@modules/home/pages/dashboard/make-dashboard-public-dialog.component';
+import {HomeComponentsModule} from '@modules/home/components/home-components.module';
+import {DashboardTabsComponent} from '@home/pages/dashboard/dashboard-tabs.component';
 
 @NgModule({
   declarations: [

@@ -14,8 +14,8 @@ import org.echoiot.server.common.data.device.profile.MqttDeviceProfileTransportC
 import org.echoiot.server.common.data.device.profile.ProtoTransportPayloadConfiguration;
 import org.echoiot.server.common.data.device.profile.TransportPayloadTypeConfiguration;
 import org.echoiot.server.dao.service.DaoSqlTest;
-import org.thingsboard.server.gen.transport.TransportApiProtos;
-import org.thingsboard.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.transport.TransportApiProtos;
+import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.transport.mqtt.MqttTestConfigProperties;
 
 import java.util.Arrays;

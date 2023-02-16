@@ -8,8 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.User;
 import org.echoiot.server.common.data.audit.ActionType;
 import org.echoiot.server.common.data.edge.EdgeEventActionType;
-import org.echoiot.server.common.data.exception.ThingsboardErrorCode;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotErrorCode;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.security.UserCredentials;
 import org.echoiot.server.common.data.security.event.UserCredentialsInvalidationEvent;
@@ -35,8 +35,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.thingsboard.common.util.JacksonUtil;
-import org.thingsboard.rule.engine.api.MailService;
+import org.echoiot.common.util.JacksonUtil;
+import org.echoiot.rule.engine.api.MailService;
 import org.echoiot.server.service.security.model.ActivateUserRequest;
 import org.echoiot.server.service.security.model.ChangePasswordRequest;
 import org.echoiot.server.service.security.model.ResetPasswordEmailRequest;
@@ -66,7 +66,7 @@ public class AuthController extends BaseController {
             notes = "Get the information about the User which credentials are used to perform this REST API call.")
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/auth/user", method = RequestMethod.GET)
-    public @ResponseBody User getUser() throws ThingsboardException {
+    public @ResponseBody User getUser() throws EchoiotException {
         try {
             SecurityUser securityUser = getCurrentUser();
             return userService.findUserById(securityUser.getTenantId(), securityUser.getId());
@@ -80,7 +80,7 @@ public class AuthController extends BaseController {
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/auth/logout", method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.OK)
-    public void logout(HttpServletRequest request) throws ThingsboardException {
+    public void logout(HttpServletRequest request) throws EchoiotException {
         logLogoutAction(request);
     }
 
@@ -91,18 +91,18 @@ public class AuthController extends BaseController {
     @ResponseStatus(value = HttpStatus.OK)
     public ObjectNode changePassword(
             @ApiParam(value = "Change Password Request")
-            @RequestBody ChangePasswordRequest changePasswordRequest) throws ThingsboardException {
+            @RequestBody ChangePasswordRequest changePasswordRequest) throws EchoiotException {
         try {
             String currentPassword = changePasswordRequest.getCurrentPassword();
             String newPassword = changePasswordRequest.getNewPassword();
             SecurityUser securityUser = getCurrentUser();
             UserCredentials userCredentials = userService.findUserCredentialsByUserId(TenantId.SYS_TENANT_ID, securityUser.getId());
             if (!passwordEncoder.matches(currentPassword, userCredentials.getPassword())) {
-                throw new ThingsboardException("Current password doesn't match!", ThingsboardErrorCode.BAD_REQUEST_PARAMS);
+                throw new EchoiotException("Current password doesn't match!", EchoiotErrorCode.BAD_REQUEST_PARAMS);
             }
             systemSecurityService.validatePassword(securityUser.getTenantId(), newPassword, userCredentials);
             if (passwordEncoder.matches(newPassword, userCredentials.getPassword())) {
-                throw new ThingsboardException("New password should be different from existing!", ThingsboardErrorCode.BAD_REQUEST_PARAMS);
+                throw new EchoiotException("New password should be different from existing!", EchoiotErrorCode.BAD_REQUEST_PARAMS);
             }
             userCredentials.setPassword(passwordEncoder.encode(newPassword));
             userService.replaceUserCredentials(securityUser.getTenantId(), userCredentials);
@@ -123,7 +123,7 @@ public class AuthController extends BaseController {
             notes = "API call to get the password policy for the password validation form(s).")
     @RequestMapping(value = "/noauth/userPasswordPolicy", method = RequestMethod.GET)
     @ResponseBody
-    public UserPasswordPolicy getUserPasswordPolicy() throws ThingsboardException {
+    public UserPasswordPolicy getUserPasswordPolicy() throws EchoiotException {
         try {
             SecuritySettings securitySettings =
                     checkNotNull(systemSecurityService.getSecuritySettings(TenantId.SYS_TENANT_ID));
@@ -168,7 +168,7 @@ public class AuthController extends BaseController {
     public void requestResetPasswordByEmail(
             @ApiParam(value = "The JSON object representing the reset password email request.")
             @RequestBody ResetPasswordEmailRequest resetPasswordByEmailRequest,
-            HttpServletRequest request) throws ThingsboardException {
+            HttpServletRequest request) throws EchoiotException {
         try {
             String email = resetPasswordByEmailRequest.getEmail();
             UserCredentials userCredentials = userService.requestPasswordReset(TenantId.SYS_TENANT_ID, email);
@@ -224,7 +224,7 @@ public class AuthController extends BaseController {
             @ApiParam(value = "Activate user request.")
             @RequestBody ActivateUserRequest activateRequest,
             @RequestParam(required = false, defaultValue = "true") boolean sendActivationMail,
-            HttpServletRequest request) throws ThingsboardException {
+            HttpServletRequest request) throws EchoiotException {
         try {
             String activateToken = activateRequest.getActivateToken();
             String password = activateRequest.getPassword();
@@ -265,7 +265,7 @@ public class AuthController extends BaseController {
     public JwtPair resetPassword(
             @ApiParam(value = "Reset password request.")
             @RequestBody ResetPasswordRequest resetPasswordRequest,
-            HttpServletRequest request) throws ThingsboardException {
+            HttpServletRequest request) throws EchoiotException {
         try {
             String resetToken = resetPasswordRequest.getResetToken();
             String password = resetPasswordRequest.getPassword();
@@ -273,7 +273,7 @@ public class AuthController extends BaseController {
             if (userCredentials != null) {
                 systemSecurityService.validatePassword(TenantId.SYS_TENANT_ID, password, userCredentials);
                 if (passwordEncoder.matches(password, userCredentials.getPassword())) {
-                    throw new ThingsboardException("New password should be different from existing!", ThingsboardErrorCode.BAD_REQUEST_PARAMS);
+                    throw new EchoiotException("New password should be different from existing!", EchoiotErrorCode.BAD_REQUEST_PARAMS);
                 }
                 String encodedPassword = passwordEncoder.encode(password);
                 userCredentials.setPassword(encodedPassword);
@@ -291,14 +291,14 @@ public class AuthController extends BaseController {
 
                 return tokenFactory.createTokenPair(securityUser);
             } else {
-                throw new ThingsboardException("Invalid reset token!", ThingsboardErrorCode.BAD_REQUEST_PARAMS);
+                throw new EchoiotException("Invalid reset token!", EchoiotErrorCode.BAD_REQUEST_PARAMS);
             }
         } catch (Exception e) {
             throw handleException(e);
         }
     }
 
-    private void logLogoutAction(HttpServletRequest request) throws ThingsboardException {
+    private void logLogoutAction(HttpServletRequest request) throws EchoiotException {
         try {
             var user = getCurrentUser();
             systemSecurityService.logLoginAction(user, new RestAuthenticationDetails(request), ActionType.LOGOUT, null);

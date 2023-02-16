@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,24 +14,24 @@
 /// limitations under the License.
 ///
 
-import { Component, forwardRef, Input, OnInit } from '@angular/core';
+import {Component, forwardRef, Input, OnInit} from '@angular/core';
 import {
-  AbstractControl,
-  ControlValueAccessor,
-  FormArray,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  NG_VALIDATORS,
-  NG_VALUE_ACCESSOR, ValidationErrors,
-  Validator,
-  Validators
+    AbstractControl,
+    ControlValueAccessor,
+    FormArray,
+    FormBuilder,
+    FormControl,
+    FormGroup,
+    NG_VALIDATORS,
+    NG_VALUE_ACCESSOR,
+    Validator,
+    Validators
 } from '@angular/forms';
-import { AlarmRule, alarmRuleValidator } from '@shared/models/device.models';
-import { MatDialog } from '@angular/material/dialog';
-import { Subscription } from 'rxjs';
-import { AlarmSeverity, alarmSeverityTranslations } from '@shared/models/alarm.models';
-import { EntityId } from '@shared/models/id/entity-id';
+import {AlarmRule, alarmRuleValidator} from '@shared/models/device.models';
+import {MatDialog} from '@angular/material/dialog';
+import {Subscription} from 'rxjs';
+import {AlarmSeverity, alarmSeverityTranslations} from '@shared/models/alarm.models';
+import {EntityId} from '@shared/models/id/entity-id';
 
 @Component({
   selector: 'tb-create-alarm-rules',

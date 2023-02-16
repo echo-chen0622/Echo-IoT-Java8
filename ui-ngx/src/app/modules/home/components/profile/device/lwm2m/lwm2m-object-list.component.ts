@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,26 +14,26 @@
 /// limitations under the License.
 ///
 
-import { Component, ElementRef, EventEmitter, forwardRef, Input, OnInit, Output, ViewChild } from '@angular/core';
+import {Component, ElementRef, EventEmitter, forwardRef, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {
-  ControlValueAccessor,
-  FormBuilder,
-  FormGroup,
-  NG_VALIDATORS,
-  NG_VALUE_ACCESSOR,
-  ValidationErrors,
-  Validator,
-  Validators
+    ControlValueAccessor,
+    FormBuilder,
+    FormGroup,
+    NG_VALIDATORS,
+    NG_VALUE_ACCESSOR,
+    ValidationErrors,
+    Validator,
+    Validators
 } from '@angular/forms';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { Observable } from 'rxjs';
-import { distinctUntilChanged, filter, mergeMap, share, tap } from 'rxjs/operators';
-import { ObjectLwM2M, PAGE_SIZE_LIMIT } from './lwm2m-profile-config.models';
-import { DeviceProfileService } from '@core/http/device-profile.service';
-import { Direction } from '@shared/models/page/sort-order';
-import { isDefined, isDefinedAndNotNull, isString } from '@core/utils';
-import { PageLink } from '@shared/models/page/page-link';
-import { TruncatePipe } from '@shared/pipe/truncate.pipe';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {Observable} from 'rxjs';
+import {distinctUntilChanged, filter, mergeMap, share, tap} from 'rxjs/operators';
+import {ObjectLwM2M, PAGE_SIZE_LIMIT} from './lwm2m-profile-config.models';
+import {DeviceProfileService} from '@core/http/device-profile.service';
+import {Direction} from '@shared/models/page/sort-order';
+import {isDefined, isDefinedAndNotNull, isString} from '@core/utils';
+import {PageLink} from '@shared/models/page/page-link';
+import {TruncatePipe} from '@shared/pipe/truncate.pipe';
 
 @Component({
   selector: 'tb-profile-lwm2m-object-list',

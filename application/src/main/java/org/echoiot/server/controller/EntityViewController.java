@@ -11,7 +11,7 @@ import org.echoiot.server.common.data.EntityView;
 import org.echoiot.server.common.data.EntityViewInfo;
 import org.echoiot.server.common.data.edge.Edge;
 import org.echoiot.server.common.data.entityview.EntityViewSearchQuery;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.id.EdgeId;
 import org.echoiot.server.common.data.id.EntityViewId;
@@ -29,14 +29,7 @@ import org.echoiot.server.service.security.permission.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -64,7 +57,7 @@ public class EntityViewController extends BaseController {
     @ResponseBody
     public EntityView getEntityViewById(
             @ApiParam(value = ControllerConstants.ENTITY_VIEW_ID_PARAM_DESCRIPTION)
-            @PathVariable(ENTITY_VIEW_ID) String strEntityViewId) throws ThingsboardException {
+            @PathVariable(ENTITY_VIEW_ID) String strEntityViewId) throws EchoiotException {
         checkParameter(ENTITY_VIEW_ID, strEntityViewId);
         try {
             return checkEntityViewId(new EntityViewId(toUUID(strEntityViewId)), Operation.READ);
@@ -82,7 +75,7 @@ public class EntityViewController extends BaseController {
     @ResponseBody
     public EntityViewInfo getEntityViewInfoById(
             @ApiParam(value = ControllerConstants.ENTITY_VIEW_ID_PARAM_DESCRIPTION)
-            @PathVariable(ENTITY_VIEW_ID) String strEntityViewId) throws ThingsboardException {
+            @PathVariable(ENTITY_VIEW_ID) String strEntityViewId) throws EchoiotException {
         checkParameter(ENTITY_VIEW_ID, strEntityViewId);
         try {
             EntityViewId entityViewId = new EntityViewId(toUUID(strEntityViewId));
@@ -122,7 +115,7 @@ public class EntityViewController extends BaseController {
     @ResponseStatus(value = HttpStatus.OK)
     public void deleteEntityView(
             @ApiParam(value = ControllerConstants.ENTITY_VIEW_ID_PARAM_DESCRIPTION)
-            @PathVariable(ENTITY_VIEW_ID) String strEntityViewId) throws ThingsboardException {
+            @PathVariable(ENTITY_VIEW_ID) String strEntityViewId) throws EchoiotException {
         checkParameter(ENTITY_VIEW_ID, strEntityViewId);
         EntityViewId entityViewId = new EntityViewId(toUUID(strEntityViewId));
         EntityView entityView = checkEntityViewId(entityViewId, Operation.DELETE);
@@ -137,7 +130,7 @@ public class EntityViewController extends BaseController {
     @ResponseBody
     public EntityView getTenantEntityView(
             @ApiParam(value = "Entity View name")
-            @RequestParam String entityViewName) throws ThingsboardException {
+            @RequestParam String entityViewName) throws EchoiotException {
         try {
             TenantId tenantId = getCurrentUser().getTenantId();
             return checkNotNull(entityViewService.findEntityViewByTenantIdAndName(tenantId, entityViewName));
@@ -155,7 +148,7 @@ public class EntityViewController extends BaseController {
             @ApiParam(value = ControllerConstants.CUSTOMER_ID_PARAM_DESCRIPTION)
             @PathVariable(ControllerConstants.CUSTOMER_ID) String strCustomerId,
             @ApiParam(value = ControllerConstants.ENTITY_VIEW_ID_PARAM_DESCRIPTION)
-            @PathVariable(ENTITY_VIEW_ID) String strEntityViewId) throws ThingsboardException {
+            @PathVariable(ENTITY_VIEW_ID) String strEntityViewId) throws EchoiotException {
         checkParameter(ControllerConstants.CUSTOMER_ID, strCustomerId);
         checkParameter(ENTITY_VIEW_ID, strEntityViewId);
 
@@ -175,7 +168,7 @@ public class EntityViewController extends BaseController {
     @ResponseBody
     public EntityView unassignEntityViewFromCustomer(
             @ApiParam(value = ControllerConstants.ENTITY_VIEW_ID_PARAM_DESCRIPTION)
-            @PathVariable(ENTITY_VIEW_ID) String strEntityViewId) throws ThingsboardException {
+            @PathVariable(ENTITY_VIEW_ID) String strEntityViewId) throws EchoiotException {
         checkParameter(ENTITY_VIEW_ID, strEntityViewId);
         EntityViewId entityViewId = new EntityViewId(toUUID(strEntityViewId));
         EntityView entityView = checkEntityViewId(entityViewId, Operation.UNASSIGN_FROM_CUSTOMER);
@@ -208,7 +201,7 @@ public class EntityViewController extends BaseController {
             @ApiParam(value = ControllerConstants.SORT_PROPERTY_DESCRIPTION, allowableValues = ControllerConstants.ENTITY_VIEW_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
             @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
-            @RequestParam(required = false) String sortOrder) throws ThingsboardException {
+            @RequestParam(required = false) String sortOrder) throws EchoiotException {
         checkParameter(ControllerConstants.CUSTOMER_ID, strCustomerId);
         try {
             TenantId tenantId = getCurrentUser().getTenantId();
@@ -245,7 +238,7 @@ public class EntityViewController extends BaseController {
             @ApiParam(value = ControllerConstants.SORT_PROPERTY_DESCRIPTION, allowableValues = ControllerConstants.ENTITY_VIEW_INFO_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
             @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
-            @RequestParam(required = false) String sortOrder) throws ThingsboardException {
+            @RequestParam(required = false) String sortOrder) throws EchoiotException {
         checkParameter("customerId", strCustomerId);
         try {
             TenantId tenantId = getCurrentUser().getTenantId();
@@ -280,7 +273,7 @@ public class EntityViewController extends BaseController {
             @ApiParam(value = ControllerConstants.SORT_PROPERTY_DESCRIPTION, allowableValues = ControllerConstants.ENTITY_VIEW_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
             @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
-            @RequestParam(required = false) String sortOrder) throws ThingsboardException {
+            @RequestParam(required = false) String sortOrder) throws EchoiotException {
         try {
             TenantId tenantId = getCurrentUser().getTenantId();
             PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
@@ -313,7 +306,7 @@ public class EntityViewController extends BaseController {
             @ApiParam(value = ControllerConstants.SORT_PROPERTY_DESCRIPTION, allowableValues = ControllerConstants.ENTITY_VIEW_INFO_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
             @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
-            @RequestParam(required = false) String sortOrder) throws ThingsboardException {
+            @RequestParam(required = false) String sortOrder) throws EchoiotException {
         try {
             TenantId tenantId = getCurrentUser().getTenantId();
             PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
@@ -336,7 +329,7 @@ public class EntityViewController extends BaseController {
     @ResponseBody
     public List<EntityView> findByQuery(
             @ApiParam(value = "The entity view search query JSON")
-            @RequestBody EntityViewSearchQuery query) throws ThingsboardException {
+            @RequestBody EntityViewSearchQuery query) throws EchoiotException {
         checkNotNull(query);
         checkNotNull(query.getParameters());
         checkNotNull(query.getEntityViewTypes());
@@ -347,7 +340,7 @@ public class EntityViewController extends BaseController {
                 try {
                     accessControlService.checkPermission(getCurrentUser(), Resource.ENTITY_VIEW, Operation.READ, entityView.getId(), entityView);
                     return true;
-                } catch (ThingsboardException e) {
+                } catch (EchoiotException e) {
                     return false;
                 }
             }).collect(Collectors.toList());
@@ -363,7 +356,7 @@ public class EntityViewController extends BaseController {
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/entityView/types", method = RequestMethod.GET)
     @ResponseBody
-    public List<EntitySubtype> getEntityViewTypes() throws ThingsboardException {
+    public List<EntitySubtype> getEntityViewTypes() throws EchoiotException {
         try {
             SecurityUser user = getCurrentUser();
             TenantId tenantId = user.getTenantId();
@@ -383,7 +376,7 @@ public class EntityViewController extends BaseController {
     @ResponseBody
     public EntityView assignEntityViewToPublicCustomer(
             @ApiParam(value = ControllerConstants.ENTITY_VIEW_ID_PARAM_DESCRIPTION)
-            @PathVariable(ENTITY_VIEW_ID) String strEntityViewId) throws ThingsboardException {
+            @PathVariable(ENTITY_VIEW_ID) String strEntityViewId) throws EchoiotException {
         checkParameter(ENTITY_VIEW_ID, strEntityViewId);
         EntityViewId entityViewId = new EntityViewId(toUUID(strEntityViewId));
         checkEntityViewId(entityViewId, Operation.ASSIGN_TO_CUSTOMER);
@@ -405,7 +398,7 @@ public class EntityViewController extends BaseController {
     @RequestMapping(value = "/edge/{edgeId}/entityView/{entityViewId}", method = RequestMethod.POST)
     @ResponseBody
     public EntityView assignEntityViewToEdge(@PathVariable(EdgeController.EDGE_ID) String strEdgeId,
-                                             @PathVariable(ENTITY_VIEW_ID) String strEntityViewId) throws ThingsboardException {
+                                             @PathVariable(ENTITY_VIEW_ID) String strEntityViewId) throws EchoiotException {
         checkParameter(EdgeController.EDGE_ID, strEdgeId);
         checkParameter(ENTITY_VIEW_ID, strEntityViewId);
 
@@ -430,7 +423,7 @@ public class EntityViewController extends BaseController {
     @RequestMapping(value = "/edge/{edgeId}/entityView/{entityViewId}", method = RequestMethod.DELETE)
     @ResponseBody
     public EntityView unassignEntityViewFromEdge(@PathVariable(EdgeController.EDGE_ID) String strEdgeId,
-                                                 @PathVariable(ENTITY_VIEW_ID) String strEntityViewId) throws ThingsboardException {
+                                                 @PathVariable(ENTITY_VIEW_ID) String strEntityViewId) throws EchoiotException {
         checkParameter(EdgeController.EDGE_ID, strEdgeId);
         checkParameter(ENTITY_VIEW_ID, strEntityViewId);
 
@@ -456,7 +449,7 @@ public class EntityViewController extends BaseController {
             @RequestParam(required = false) String sortProperty,
             @RequestParam(required = false) String sortOrder,
             @RequestParam(required = false) Long startTime,
-            @RequestParam(required = false) Long endTime) throws ThingsboardException {
+            @RequestParam(required = false) Long endTime) throws EchoiotException {
         checkParameter(EdgeController.EDGE_ID, strEdgeId);
         try {
             TenantId tenantId = getCurrentUser().getTenantId();
@@ -473,7 +466,7 @@ public class EntityViewController extends BaseController {
                 try {
                     accessControlService.checkPermission(getCurrentUser(), Resource.ENTITY_VIEW, Operation.READ, entityView.getId(), entityView);
                     return true;
-                } catch (ThingsboardException e) {
+                } catch (EchoiotException e) {
                     return false;
                 }
             }).collect(Collectors.toList());

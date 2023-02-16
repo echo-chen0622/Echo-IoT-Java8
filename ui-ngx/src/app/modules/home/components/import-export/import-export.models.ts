@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,9 +14,9 @@
 /// limitations under the License.
 ///
 
-import { Widget, WidgetTypeDetails } from '@app/shared/models/widget.models';
-import { DashboardLayoutId } from '@shared/models/dashboard.models';
-import { WidgetsBundle } from '@shared/models/widgets-bundle.model';
+import {Widget, WidgetTypeDetails} from '@app/shared/models/widget.models';
+import {DashboardLayoutId} from '@shared/models/dashboard.models';
+import {WidgetsBundle} from '@shared/models/widgets-bundle.model';
 
 export interface ImportWidgetResult {
   widget: Widget;

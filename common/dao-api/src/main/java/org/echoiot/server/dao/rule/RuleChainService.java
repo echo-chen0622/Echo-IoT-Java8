@@ -1,7 +1,7 @@
 package org.echoiot.server.dao.rule;
 
 import com.google.common.util.concurrent.ListenableFuture;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.EdgeId;
 import org.echoiot.server.common.data.id.RuleChainId;
 import org.echoiot.server.common.data.id.RuleNodeId;
@@ -57,7 +57,7 @@ public interface RuleChainService {
 
     void deleteRuleChainsByTenantId(TenantId tenantId);
 
-    RuleChainData exportTenantRuleChains(TenantId tenantId, PageLink pageLink) throws ThingsboardException;
+    RuleChainData exportTenantRuleChains(TenantId tenantId, PageLink pageLink) throws EchoiotException;
 
     List<RuleChainImportResult> importTenantRuleChains(TenantId tenantId, RuleChainData ruleChainData, boolean overwrite);
 

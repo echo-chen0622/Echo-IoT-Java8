@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,20 +14,20 @@
 /// limitations under the License.
 ///
 
-import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { DialogComponent } from '@app/shared/components/dialog.component';
-import { DashboardId } from '@shared/models/id/dashboard-id';
-import { DashboardService } from '@core/http/dashboard.service';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import {Component, Inject} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Router} from '@angular/router';
+import {DialogComponent} from '@app/shared/components/dialog.component';
+import {DashboardId} from '@shared/models/id/dashboard-id';
+import {DashboardService} from '@core/http/dashboard.service';
+import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import html2canvas from 'html2canvas';
-import { map, share } from 'rxjs/operators';
-import { BehaviorSubject, from } from 'rxjs';
-import { isNumber } from '@core/utils';
+import {map, share} from 'rxjs/operators';
+import {BehaviorSubject, from} from 'rxjs';
+import {isNumber} from '@core/utils';
 
 export interface DashboardImageDialogData {
   dashboardId: DashboardId;

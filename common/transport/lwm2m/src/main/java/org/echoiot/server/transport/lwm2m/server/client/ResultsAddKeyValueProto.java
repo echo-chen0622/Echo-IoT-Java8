@@ -1,7 +1,7 @@
 package org.echoiot.server.transport.lwm2m.server.client;
 
 import lombok.Data;
-import org.thingsboard.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.transport.TransportProtos;
 
 import java.util.ArrayList;
 import java.util.List;

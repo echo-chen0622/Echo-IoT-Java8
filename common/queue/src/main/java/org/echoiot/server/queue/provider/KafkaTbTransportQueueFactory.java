@@ -1,31 +1,21 @@
 package org.echoiot.server.queue.provider;
 
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.server.gen.transport.TransportProtos.*;
 import org.echoiot.server.queue.TbQueueAdmin;
 import org.echoiot.server.queue.TbQueueConsumer;
 import org.echoiot.server.queue.TbQueueProducer;
 import org.echoiot.server.queue.TbQueueRequestTemplate;
+import org.echoiot.server.queue.common.DefaultTbQueueRequestTemplate;
+import org.echoiot.server.queue.common.TbProtoQueueMsg;
 import org.echoiot.server.queue.discovery.TbServiceInfoProvider;
+import org.echoiot.server.queue.kafka.*;
 import org.echoiot.server.queue.settings.TbQueueCoreSettings;
 import org.echoiot.server.queue.settings.TbQueueRuleEngineSettings;
 import org.echoiot.server.queue.settings.TbQueueTransportApiSettings;
 import org.echoiot.server.queue.settings.TbQueueTransportNotificationSettings;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Component;
-import org.thingsboard.server.gen.transport.TransportProtos.ToCoreMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.ToRuleEngineMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.ToTransportMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.ToUsageStatsServiceMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.TransportApiRequestMsg;
-import org.thingsboard.server.gen.transport.TransportProtos.TransportApiResponseMsg;
-import org.thingsboard.server.queue.common.DefaultTbQueueRequestTemplate;
-import org.echoiot.server.queue.common.TbProtoQueueMsg;
-import org.echoiot.server.queue.kafka.TbKafkaAdmin;
-import org.echoiot.server.queue.kafka.TbKafkaConsumerStatsService;
-import org.echoiot.server.queue.kafka.TbKafkaConsumerTemplate;
-import org.echoiot.server.queue.kafka.TbKafkaProducerTemplate;
-import org.echoiot.server.queue.kafka.TbKafkaSettings;
-import org.echoiot.server.queue.kafka.TbKafkaTopicConfigs;
 
 import javax.annotation.PreDestroy;
 

@@ -7,7 +7,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.echoiot.server.common.data.Customer;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.page.PageData;
@@ -47,7 +47,7 @@ public class CustomerController extends BaseController {
     @ResponseBody
     public Customer getCustomerById(
             @ApiParam(value = ControllerConstants.CUSTOMER_ID_PARAM_DESCRIPTION)
-            @PathVariable(ControllerConstants.CUSTOMER_ID) String strCustomerId) throws ThingsboardException {
+            @PathVariable(ControllerConstants.CUSTOMER_ID) String strCustomerId) throws EchoiotException {
         checkParameter(ControllerConstants.CUSTOMER_ID, strCustomerId);
         try {
             CustomerId customerId = new CustomerId(toUUID(strCustomerId));
@@ -70,7 +70,7 @@ public class CustomerController extends BaseController {
     @ResponseBody
     public JsonNode getShortCustomerInfoById(
             @ApiParam(value = ControllerConstants.CUSTOMER_ID_PARAM_DESCRIPTION)
-            @PathVariable(ControllerConstants.CUSTOMER_ID) String strCustomerId) throws ThingsboardException {
+            @PathVariable(ControllerConstants.CUSTOMER_ID) String strCustomerId) throws EchoiotException {
         checkParameter(ControllerConstants.CUSTOMER_ID, strCustomerId);
         try {
             CustomerId customerId = new CustomerId(toUUID(strCustomerId));
@@ -93,7 +93,7 @@ public class CustomerController extends BaseController {
     @ResponseBody
     public String getCustomerTitleById(
             @ApiParam(value = ControllerConstants.CUSTOMER_ID_PARAM_DESCRIPTION)
-            @PathVariable(ControllerConstants.CUSTOMER_ID) String strCustomerId) throws ThingsboardException {
+            @PathVariable(ControllerConstants.CUSTOMER_ID) String strCustomerId) throws EchoiotException {
         checkParameter(ControllerConstants.CUSTOMER_ID, strCustomerId);
         try {
             CustomerId customerId = new CustomerId(toUUID(strCustomerId));
@@ -128,7 +128,7 @@ public class CustomerController extends BaseController {
     @RequestMapping(value = "/customer/{customerId}", method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.OK)
     public void deleteCustomer(@ApiParam(value = ControllerConstants.CUSTOMER_ID_PARAM_DESCRIPTION)
-                               @PathVariable(ControllerConstants.CUSTOMER_ID) String strCustomerId) throws ThingsboardException {
+                               @PathVariable(ControllerConstants.CUSTOMER_ID) String strCustomerId) throws EchoiotException {
         checkParameter(ControllerConstants.CUSTOMER_ID, strCustomerId);
         CustomerId customerId = new CustomerId(toUUID(strCustomerId));
         Customer customer = checkCustomerId(customerId, Operation.DELETE);
@@ -151,7 +151,7 @@ public class CustomerController extends BaseController {
             @ApiParam(value = ControllerConstants.SORT_PROPERTY_DESCRIPTION, allowableValues = ControllerConstants.CUSTOMER_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
             @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
-            @RequestParam(required = false) String sortOrder) throws ThingsboardException {
+            @RequestParam(required = false) String sortOrder) throws EchoiotException {
         try {
             PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
             TenantId tenantId = getCurrentUser().getTenantId();
@@ -168,7 +168,7 @@ public class CustomerController extends BaseController {
     @ResponseBody
     public Customer getTenantCustomer(
             @ApiParam(value = "A string value representing the Customer title.")
-            @RequestParam String customerTitle) throws ThingsboardException {
+            @RequestParam String customerTitle) throws EchoiotException {
         try {
             TenantId tenantId = getCurrentUser().getTenantId();
             return checkNotNull(customerService.findCustomerByTenantIdAndTitle(tenantId, customerTitle), "Customer with title [" + customerTitle + "] is not found");

@@ -16,7 +16,7 @@ import org.echoiot.server.common.msg.TbMsgMetaData;
 import org.echoiot.server.dao.rpc.RpcService;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.springframework.stereotype.Service;
-import org.thingsboard.common.util.JacksonUtil;
+import org.echoiot.common.util.JacksonUtil;
 
 @TbCoreComponent
 @Service

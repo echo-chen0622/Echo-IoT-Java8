@@ -123,7 +123,7 @@ public class SimpleLwM2MDevice extends BaseInstanceEnabler implements Destroyabl
     }
 
     private String getManufacturer() {
-        return "Thingsboard Demo Lwm2mDevice";
+        return "Echoiot Demo Lwm2mDevice";
     }
 
     private String getModelNumber() {
@@ -131,7 +131,7 @@ public class SimpleLwM2MDevice extends BaseInstanceEnabler implements Destroyabl
     }
 
     private String getSerialNumber() {
-        return "Thingsboard-500-000-0001";
+        return "Echoiot-500-000-0001";
     }
 
     private String getFirmwareVersion() {

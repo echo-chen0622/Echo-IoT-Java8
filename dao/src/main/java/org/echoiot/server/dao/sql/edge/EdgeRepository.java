@@ -21,7 +21,7 @@ public interface EdgeRepository extends JpaRepository<EdgeEntity, UUID> {
                                                  @Param("textSearch") String textSearch,
                                                  Pageable pageable);
 
-    @Query("SELECT new org.thingsboard.server.dao.model.sql.EdgeInfoEntity(d, c.title, c.additionalInfo) " +
+    @Query("SELECT new org.echoiot.server.dao.model.sql.EdgeInfoEntity(d, c.title, c.additionalInfo) " +
             "FROM EdgeEntity d " +
             "LEFT JOIN CustomerEntity c on c.id = d.customerId " +
             "WHERE d.id = :edgeId")
@@ -33,7 +33,7 @@ public interface EdgeRepository extends JpaRepository<EdgeEntity, UUID> {
                                     @Param("textSearch") String textSearch,
                                     Pageable pageable);
 
-    @Query("SELECT new org.thingsboard.server.dao.model.sql.EdgeInfoEntity(d, c.title, c.additionalInfo) " +
+    @Query("SELECT new org.echoiot.server.dao.model.sql.EdgeInfoEntity(d, c.title, c.additionalInfo) " +
             "FROM EdgeEntity d " +
             "LEFT JOIN CustomerEntity c on c.id = d.customerId " +
             "WHERE d.tenantId = :tenantId " +
@@ -50,7 +50,7 @@ public interface EdgeRepository extends JpaRepository<EdgeEntity, UUID> {
                                            @Param("textSearch") String textSearch,
                                            Pageable pageable);
 
-    @Query("SELECT new org.thingsboard.server.dao.model.sql.EdgeInfoEntity(d, c.title, c.additionalInfo) " +
+    @Query("SELECT new org.echoiot.server.dao.model.sql.EdgeInfoEntity(d, c.title, c.additionalInfo) " +
             "FROM EdgeEntity d " +
             "LEFT JOIN CustomerEntity c on c.id = d.customerId " +
             "WHERE d.tenantId = :tenantId " +
@@ -71,7 +71,7 @@ public interface EdgeRepository extends JpaRepository<EdgeEntity, UUID> {
                                                         @Param("textSearch") String textSearch,
                                                         Pageable pageable);
 
-    @Query("SELECT new org.thingsboard.server.dao.model.sql.EdgeInfoEntity(a, c.title, c.additionalInfo) " +
+    @Query("SELECT new org.echoiot.server.dao.model.sql.EdgeInfoEntity(a, c.title, c.additionalInfo) " +
             "FROM EdgeEntity a " +
             "LEFT JOIN CustomerEntity c on c.id = a.customerId " +
             "WHERE a.tenantId = :tenantId " +
@@ -82,7 +82,7 @@ public interface EdgeRepository extends JpaRepository<EdgeEntity, UUID> {
                                                                 @Param("searchText") String searchText,
                                                                 Pageable pageable);
 
-    @Query("SELECT new org.thingsboard.server.dao.model.sql.EdgeInfoEntity(a, c.title, c.additionalInfo) " +
+    @Query("SELECT new org.echoiot.server.dao.model.sql.EdgeInfoEntity(a, c.title, c.additionalInfo) " +
             "FROM EdgeEntity a " +
             "LEFT JOIN CustomerEntity c on c.id = a.customerId " +
             "WHERE a.tenantId = :tenantId " +

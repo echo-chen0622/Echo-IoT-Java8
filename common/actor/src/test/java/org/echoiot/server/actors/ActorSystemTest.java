@@ -1,6 +1,8 @@
 package org.echoiot.server.actors;
 
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.common.util.EchoiotExecutors;
+import org.echoiot.common.util.EchoiotThreadFactory;
 import org.echoiot.server.common.data.id.DeviceId;
 import org.junit.After;
 import org.junit.Assert;
@@ -8,8 +10,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.thingsboard.common.util.ThingsBoardExecutors;
-import org.thingsboard.common.util.ThingsBoardThreadFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +41,7 @@ public class ActorSystemTest {
         parallelism = Math.max(2, cores / 2);
         TbActorSystemSettings settings = new TbActorSystemSettings(5, parallelism, 42);
         actorSystem = new DefaultTbActorSystem(settings);
-        submitPool = Executors.newFixedThreadPool(parallelism, ThingsBoardThreadFactory.forName(getClass().getSimpleName() + "-submit-test-scope")); //order guaranteed
+        submitPool = Executors.newFixedThreadPool(parallelism, EchoiotThreadFactory.forName(getClass().getSimpleName() + "-submit-test-scope")); //order guaranteed
     }
 
     @After
@@ -55,49 +55,49 @@ public class ActorSystemTest {
 
     @Test
     public void test1actorsAnd100KMessages() throws InterruptedException {
-        executor = ThingsBoardExecutors.newWorkStealingPool(parallelism, getClass());
+        executor = EchoiotExecutors.newWorkStealingPool(parallelism, getClass());
         actorSystem.createDispatcher(ROOT_DISPATCHER, executor);
         testActorsAndMessages(1, _100K, 1);
     }
 
     @Test
     public void test10actorsAnd100KMessages() throws InterruptedException {
-        executor = ThingsBoardExecutors.newWorkStealingPool(parallelism, getClass());
+        executor = EchoiotExecutors.newWorkStealingPool(parallelism, getClass());
         actorSystem.createDispatcher(ROOT_DISPATCHER, executor);
         testActorsAndMessages(10, _100K, 1);
     }
 
     @Test
     public void test100KActorsAnd1Messages5timesSingleThread() throws InterruptedException {
-        executor = Executors.newSingleThreadExecutor(ThingsBoardThreadFactory.forName(getClass().getSimpleName()));
+        executor = Executors.newSingleThreadExecutor(EchoiotThreadFactory.forName(getClass().getSimpleName()));
         actorSystem.createDispatcher(ROOT_DISPATCHER, executor);
         testActorsAndMessages(_100K, 1, 5);
     }
 
     @Test
     public void test100KActorsAnd1Messages5times() throws InterruptedException {
-        executor = ThingsBoardExecutors.newWorkStealingPool(parallelism, getClass());
+        executor = EchoiotExecutors.newWorkStealingPool(parallelism, getClass());
         actorSystem.createDispatcher(ROOT_DISPATCHER, executor);
         testActorsAndMessages(_100K, 1, 5);
     }
 
     @Test
     public void test100KActorsAnd10Messages() throws InterruptedException {
-        executor = ThingsBoardExecutors.newWorkStealingPool(parallelism, getClass());
+        executor = EchoiotExecutors.newWorkStealingPool(parallelism, getClass());
         actorSystem.createDispatcher(ROOT_DISPATCHER, executor);
         testActorsAndMessages(_100K, 10, 1);
     }
 
     @Test
     public void test1KActorsAnd1KMessages() throws InterruptedException {
-        executor = ThingsBoardExecutors.newWorkStealingPool(parallelism, getClass());
+        executor = EchoiotExecutors.newWorkStealingPool(parallelism, getClass());
         actorSystem.createDispatcher(ROOT_DISPATCHER, executor);
         testActorsAndMessages(1000, 1000, 10);
     }
 
     @Test
     public void testNoMessagesAfterDestroy() throws InterruptedException {
-        executor = ThingsBoardExecutors.newWorkStealingPool(parallelism, getClass());
+        executor = EchoiotExecutors.newWorkStealingPool(parallelism, getClass());
         actorSystem.createDispatcher(ROOT_DISPATCHER, executor);
         ActorTestCtx testCtx1 = getActorTestCtx(1);
         ActorTestCtx testCtx2 = getActorTestCtx(1);
@@ -117,7 +117,7 @@ public class ActorSystemTest {
 
     @Test
     public void testOneActorCreated() throws InterruptedException {
-        executor = ThingsBoardExecutors.newWorkStealingPool(parallelism, getClass());
+        executor = EchoiotExecutors.newWorkStealingPool(parallelism, getClass());
         actorSystem.createDispatcher(ROOT_DISPATCHER, executor);
         ActorTestCtx testCtx1 = getActorTestCtx(1);
         ActorTestCtx testCtx2 = getActorTestCtx(1);
@@ -144,7 +144,7 @@ public class ActorSystemTest {
 
     @Test
     public void testActorCreatorCalledOnce() throws InterruptedException {
-        executor = ThingsBoardExecutors.newWorkStealingPool(parallelism, getClass());
+        executor = EchoiotExecutors.newWorkStealingPool(parallelism, getClass());
         actorSystem.createDispatcher(ROOT_DISPATCHER, executor);
         ActorTestCtx testCtx = getActorTestCtx(1);
         TbActorId actorId = new TbEntityActorId(new DeviceId(UUID.randomUUID()));
@@ -169,7 +169,7 @@ public class ActorSystemTest {
 
     @Test
     public void testFailedInit() throws InterruptedException {
-        executor = ThingsBoardExecutors.newWorkStealingPool(parallelism, getClass());
+        executor = EchoiotExecutors.newWorkStealingPool(parallelism, getClass());
         actorSystem.createDispatcher(ROOT_DISPATCHER, executor);
         ActorTestCtx testCtx1 = getActorTestCtx(1);
         ActorTestCtx testCtx2 = getActorTestCtx(1);

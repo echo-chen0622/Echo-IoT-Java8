@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,19 +14,19 @@
 /// limitations under the License.
 ///
 
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { DatePipe } from '@angular/common';
-import { MatDialog } from '@angular/material/dialog';
-import { EntityId } from '@shared/models/id/entity-id';
-import { EntitiesTableComponent } from '@home/components/entity/entities-table.component';
-import { EdgeDownlinkTableConfig } from './edge-downlink-table-config';
-import { DialogService } from '@core/services/dialog.service';
-import { AttributeService } from '@core/http/attribute.service';
-import { EdgeService } from '@core/http/edge.service';
-import { EntityService } from "@core/http/entity.service";
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {TranslateService} from '@ngx-translate/core';
+import {DatePipe} from '@angular/common';
+import {MatDialog} from '@angular/material/dialog';
+import {EntityId} from '@shared/models/id/entity-id';
+import {EntitiesTableComponent} from '@home/components/entity/entities-table.component';
+import {EdgeDownlinkTableConfig} from './edge-downlink-table-config';
+import {DialogService} from '@core/services/dialog.service';
+import {AttributeService} from '@core/http/attribute.service';
+import {EdgeService} from '@core/http/edge.service';
+import {EntityService} from "@core/http/entity.service";
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
 
 @Component({
   selector: 'tb-edge-downlink-table',

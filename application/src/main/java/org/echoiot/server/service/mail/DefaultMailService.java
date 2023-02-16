@@ -5,8 +5,11 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.echoiot.server.common.data.exception.ThingsboardErrorCode;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.rule.engine.api.MailService;
+import org.echoiot.rule.engine.api.TbEmail;
+import org.echoiot.server.common.data.*;
+import org.echoiot.server.common.data.exception.EchoiotErrorCode;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.stats.TbApiUsageReportClient;
@@ -23,14 +26,6 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
-import org.thingsboard.rule.engine.api.MailService;
-import org.thingsboard.rule.engine.api.TbEmail;
-import org.echoiot.server.common.data.AdminSettings;
-import org.echoiot.server.common.data.ApiFeature;
-import org.echoiot.server.common.data.ApiUsageRecordKey;
-import org.echoiot.server.common.data.ApiUsageStateMailMessage;
-import org.echoiot.server.common.data.ApiUsageStateValue;
-import org.echoiot.server.common.data.StringUtils;
 
 import javax.annotation.PostConstruct;
 import javax.mail.internet.MimeMessage;
@@ -160,12 +155,12 @@ public class DefaultMailService implements MailService {
     }
 
     @Override
-    public void sendEmail(TenantId tenantId, String email, String subject, String message) throws ThingsboardException {
+    public void sendEmail(TenantId tenantId, String email, String subject, String message) throws EchoiotException {
         sendMail(mailSender, mailFrom, email, subject, message, timeout);
     }
 
     @Override
-    public void sendTestMail(JsonNode jsonConfig, String email) throws ThingsboardException {
+    public void sendTestMail(JsonNode jsonConfig, String email) throws EchoiotException {
         JavaMailSenderImpl testMailSender = createMailSender(jsonConfig);
         String mailFrom = jsonConfig.get("mailFrom").asText();
         String subject = messages.getMessage("test.message.subject", null, Locale.US);
@@ -180,7 +175,7 @@ public class DefaultMailService implements MailService {
     }
 
     @Override
-    public void sendActivationEmail(String activationLink, String email) throws ThingsboardException {
+    public void sendActivationEmail(String activationLink, String email) throws EchoiotException {
 
         String subject = messages.getMessage("activation.subject", null, Locale.US);
 
@@ -194,7 +189,7 @@ public class DefaultMailService implements MailService {
     }
 
     @Override
-    public void sendAccountActivatedEmail(String loginLink, String email) throws ThingsboardException {
+    public void sendAccountActivatedEmail(String loginLink, String email) throws EchoiotException {
 
         String subject = messages.getMessage("account.activated.subject", null, Locale.US);
 
@@ -208,7 +203,7 @@ public class DefaultMailService implements MailService {
     }
 
     @Override
-    public void sendResetPasswordEmail(String passwordResetLink, String email) throws ThingsboardException {
+    public void sendResetPasswordEmail(String passwordResetLink, String email) throws EchoiotException {
 
         String subject = messages.getMessage("reset.password.subject", null, Locale.US);
 
@@ -226,14 +221,14 @@ public class DefaultMailService implements MailService {
         passwordResetExecutorService.execute(() -> {
             try {
                 this.sendResetPasswordEmail(passwordResetLink, email);
-            } catch (ThingsboardException e) {
+            } catch (EchoiotException e) {
                 log.error("Error occurred: {} ", e.getMessage());
             }
         });
     }
 
     @Override
-    public void sendPasswordWasResetEmail(String loginLink, String email) throws ThingsboardException {
+    public void sendPasswordWasResetEmail(String loginLink, String email) throws EchoiotException {
 
         String subject = messages.getMessage("password.was.reset.subject", null, Locale.US);
 
@@ -247,16 +242,16 @@ public class DefaultMailService implements MailService {
     }
 
     @Override
-    public void send(TenantId tenantId, CustomerId customerId, TbEmail tbEmail) throws ThingsboardException {
+    public void send(TenantId tenantId, CustomerId customerId, TbEmail tbEmail) throws EchoiotException {
         sendMail(tenantId, customerId, tbEmail, this.mailSender, timeout);
     }
 
     @Override
-    public void send(TenantId tenantId, CustomerId customerId, TbEmail tbEmail, JavaMailSender javaMailSender, long timeout) throws ThingsboardException {
+    public void send(TenantId tenantId, CustomerId customerId, TbEmail tbEmail, JavaMailSender javaMailSender, long timeout) throws EchoiotException {
         sendMail(tenantId, customerId, tbEmail, javaMailSender, timeout);
     }
 
-    private void sendMail(TenantId tenantId, CustomerId customerId, TbEmail tbEmail, JavaMailSender javaMailSender, long timeout) throws ThingsboardException {
+    private void sendMail(TenantId tenantId, CustomerId customerId, TbEmail tbEmail, JavaMailSender javaMailSender, long timeout) throws EchoiotException {
         if (apiUsageStateService.getApiUsageState(tenantId).isEmailSendEnabled()) {
             try {
                 MimeMessage mailMsg = javaMailSender.createMimeMessage();
@@ -294,7 +289,7 @@ public class DefaultMailService implements MailService {
     }
 
     @Override
-    public void sendAccountLockoutEmail(String lockoutEmail, String email, Integer maxFailedLoginAttempts) throws ThingsboardException {
+    public void sendAccountLockoutEmail(String lockoutEmail, String email, Integer maxFailedLoginAttempts) throws EchoiotException {
         String subject = messages.getMessage("account.lockout.subject", null, Locale.US);
 
         Map<String, Object> model = new HashMap<>();
@@ -308,7 +303,7 @@ public class DefaultMailService implements MailService {
     }
 
     @Override
-    public void sendTwoFaVerificationEmail(String email, String verificationCode, int expirationTimeSeconds) throws ThingsboardException {
+    public void sendTwoFaVerificationEmail(String email, String verificationCode, int expirationTimeSeconds) throws EchoiotException {
         String subject = messages.getMessage("2fa.verification.code.subject", null, Locale.US);
         String message = mergeTemplateIntoString("2fa.verification.code.ftl", Map.of(
                 TARGET_EMAIL, email,
@@ -320,7 +315,7 @@ public class DefaultMailService implements MailService {
     }
 
     @Override
-    public void sendApiFeatureStateEmail(ApiFeature apiFeature, ApiUsageStateValue stateValue, String email, ApiUsageStateMailMessage msg) throws ThingsboardException {
+    public void sendApiFeatureStateEmail(ApiFeature apiFeature, ApiUsageStateValue stateValue, String email, ApiUsageStateMailMessage msg) throws EchoiotException {
         String subject = messages.getMessage("api.usage.state", null, Locale.US);
 
         Map<String, Object> model = new HashMap<>();
@@ -444,7 +439,7 @@ public class DefaultMailService implements MailService {
     }
 
     private void sendMail(JavaMailSenderImpl mailSender, String mailFrom, String email,
-                          String subject, String message, long timeout) throws ThingsboardException {
+                          String subject, String message, long timeout) throws EchoiotException {
         try {
             MimeMessage mimeMsg = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMsg, UTF_8);
@@ -471,7 +466,7 @@ public class DefaultMailService implements MailService {
     }
 
     private String mergeTemplateIntoString(String templateLocation,
-                                           Map<String, Object> model) throws ThingsboardException {
+                                           Map<String, Object> model) throws EchoiotException {
         try {
             Template template = freemarkerConfig.getTemplate(templateLocation);
             return FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
@@ -480,7 +475,7 @@ public class DefaultMailService implements MailService {
         }
     }
 
-    protected ThingsboardException handleException(Exception exception) {
+    protected EchoiotException handleException(Exception exception) {
         String message;
         if (exception instanceof NestedRuntimeException) {
             message = ((NestedRuntimeException) exception).getMostSpecificCause().getMessage();
@@ -488,8 +483,8 @@ public class DefaultMailService implements MailService {
             message = exception.getMessage();
         }
         log.warn("Unable to send mail: {}", message);
-        return new ThingsboardException(String.format("Unable to send mail: %s", message),
-                                        ThingsboardErrorCode.GENERAL);
+        return new EchoiotException(String.format("Unable to send mail: %s", message),
+                                        EchoiotErrorCode.GENERAL);
     }
 
 }

@@ -1,6 +1,6 @@
 package org.echoiot.server.transport.lwm2m.server.session;
 
-import org.thingsboard.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.transport.TransportProtos;
 
 public interface LwM2MSessionManager {
 

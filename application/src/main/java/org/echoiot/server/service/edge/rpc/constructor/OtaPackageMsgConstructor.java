@@ -5,9 +5,9 @@ import org.echoiot.server.common.data.OtaPackage;
 import org.echoiot.server.common.data.id.OtaPackageId;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.springframework.stereotype.Component;
-import org.thingsboard.common.util.JacksonUtil;
-import org.thingsboard.server.gen.edge.v1.OtaPackageUpdateMsg;
-import org.thingsboard.server.gen.edge.v1.UpdateMsgType;
+import org.echoiot.common.util.JacksonUtil;
+import org.echoiot.server.gen.edge.v1.OtaPackageUpdateMsg;
+import org.echoiot.server.gen.edge.v1.UpdateMsgType;
 
 @Component
 @TbCoreComponent

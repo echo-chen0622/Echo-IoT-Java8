@@ -4,19 +4,19 @@ import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.UUIDConverter;
 import org.echoiot.server.dao.cassandra.CassandraCluster;
-import org.echoiot.server.dao.util.NoSqlTsDao;
-import org.echoiot.server.dao.util.SqlTsLatestDao;
-import org.hibernate.exception.ConstraintViolationException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Service;
 import org.echoiot.server.dao.model.sqlts.dictionary.TsKvDictionary;
 import org.echoiot.server.dao.model.sqlts.dictionary.TsKvDictionaryCompositeKey;
 import org.echoiot.server.dao.model.sqlts.latest.TsKvLatestEntity;
 import org.echoiot.server.dao.sqlts.dictionary.TsKvDictionaryRepository;
 import org.echoiot.server.dao.sqlts.insert.latest.InsertLatestTsRepository;
+import org.echoiot.server.dao.util.NoSqlTsDao;
+import org.echoiot.server.dao.util.SqlTsLatestDao;
 import org.echoiot.server.service.install.InstallScripts;
+import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Service;
 
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -32,12 +32,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
-import static org.echoiot.server.service.install.migrate.CassandraToSqlColumn.bigintColumn;
-import static org.echoiot.server.service.install.migrate.CassandraToSqlColumn.booleanColumn;
-import static org.echoiot.server.service.install.migrate.CassandraToSqlColumn.doubleColumn;
-import static org.echoiot.server.service.install.migrate.CassandraToSqlColumn.idColumn;
-import static org.echoiot.server.service.install.migrate.CassandraToSqlColumn.jsonColumn;
-import static org.echoiot.server.service.install.migrate.CassandraToSqlColumn.stringColumn;
+import static org.echoiot.server.service.install.migrate.CassandraToSqlColumn.*;
 
 @Service
 @Profile("install")
@@ -85,7 +80,7 @@ public class CassandraTsLatestToSqlMigrateService implements TsLatestMigrateServ
                 table.migrateToSql(cluster.getSession(), conn);
             }
         } catch (Exception e) {
-            log.error("Unexpected error during ThingsBoard entities data migration!", e);
+            log.error("Unexpected error during Echoiot entities data migration!", e);
             throw e;
         }
     }
@@ -212,7 +207,7 @@ public class CassandraTsLatestToSqlMigrateService implements TsLatestMigrateServ
 
     private void loadSql(Path sqlFile, Connection conn) throws Exception {
         String sql = new String(Files.readAllBytes(sqlFile), Charset.forName("UTF-8"));
-        conn.createStatement().execute(sql); //NOSONAR, ignoring because method used to execute thingsboard database upgrade script
+        conn.createStatement().execute(sql); //NOSONAR, ignoring because method used to execute echoiot database upgrade script
         Thread.sleep(5000);
     }
 }

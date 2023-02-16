@@ -9,8 +9,8 @@ import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.User;
 import org.echoiot.server.common.data.alarm.AlarmInfo;
 import org.echoiot.server.common.data.alarm.AlarmQuery;
-import org.echoiot.server.common.data.exception.ThingsboardErrorCode;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotErrorCode;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.AlarmId;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.EntityIdFactory;
@@ -69,26 +69,26 @@ public abstract class AbstractTbEntityService {
         }, dbExecutor);
     }
 
-    protected <T> T checkNotNull(T reference) throws ThingsboardException {
+    protected <T> T checkNotNull(T reference) throws EchoiotException {
         return checkNotNull(reference, "Requested item wasn't found!");
     }
 
-    protected <T> T checkNotNull(T reference, String notFoundMessage) throws ThingsboardException {
+    protected <T> T checkNotNull(T reference, String notFoundMessage) throws EchoiotException {
         if (reference == null) {
-            throw new ThingsboardException(notFoundMessage, ThingsboardErrorCode.ITEM_NOT_FOUND);
+            throw new EchoiotException(notFoundMessage, EchoiotErrorCode.ITEM_NOT_FOUND);
         }
         return reference;
     }
 
-    protected <T> T checkNotNull(Optional<T> reference) throws ThingsboardException {
+    protected <T> T checkNotNull(Optional<T> reference) throws EchoiotException {
         return checkNotNull(reference, "Requested item wasn't found!");
     }
 
-    protected <T> T checkNotNull(Optional<T> reference, String notFoundMessage) throws ThingsboardException {
+    protected <T> T checkNotNull(Optional<T> reference, String notFoundMessage) throws EchoiotException {
         if (reference.isPresent()) {
             return reference.get();
         } else {
-            throw new ThingsboardException(notFoundMessage, ThingsboardErrorCode.ITEM_NOT_FOUND);
+            throw new EchoiotException(notFoundMessage, EchoiotErrorCode.ITEM_NOT_FOUND);
         }
     }
 

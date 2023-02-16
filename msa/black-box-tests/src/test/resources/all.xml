@@ -3,11 +3,11 @@
 
 <suite name="All tests">
     <listeners>
-        <listener class-name="org.thingsboard.server.msa.ui.listeners.RetryTestListener"/>
+        <listener class-name="org.echoiot.server.msa.ui.listeners.RetryTestListener"/>
     </listeners>
     <test verbose="2" name="Connectivity tests" preserve-order="false">
         <packages>
-            <package name="org.thingsboard.server.msa.connectivity" />
+            <package name="org.echoiot.server.msa.connectivity" />
         </packages>
     </test>
     <test name="Smoke rule chains tests">
@@ -17,7 +17,7 @@
             </run>
         </groups>
         <packages>
-            <package name="org.thingsboard.server.msa.ui.tests.ruleChainsSmoke"/>
+            <package name="org.echoiot.server.msa.ui.tests.ruleChainsSmoke"/>
         </packages>
     </test>
     <test name="Smoke customers tests">
@@ -27,7 +27,7 @@
             </run>
         </groups>
         <packages>
-            <package name="org.thingsboard.server.msa.ui.tests.customerSmoke"/>
+            <package name="org.echoiot.server.msa.ui.tests.customerSmoke"/>
         </packages>
     </test>
     <test name="Smoke device profile tests">
@@ -37,7 +37,7 @@
             </run>
         </groups>
         <packages>
-            <package name="org.thingsboard.server.msa.ui.tests.deviceProfileSmoke"/>
+            <package name="org.echoiot.server.msa.ui.tests.deviceProfileSmoke"/>
         </packages>
     </test>
     <test name="Smoke asset profile tests">
@@ -47,7 +47,7 @@
             </run>
         </groups>
         <packages>
-            <package name="org.thingsboard.server.msa.ui.tests.assetProfileSmoke"/>
+            <package name="org.echoiot.server.msa.ui.tests.assetProfileSmoke"/>
         </packages>
     </test>
 </suite>

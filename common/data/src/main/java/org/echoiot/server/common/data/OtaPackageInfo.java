@@ -43,7 +43,7 @@ public class OtaPackageInfo extends SearchTextBasedWithAdditionalInfo<OtaPackage
     private String tag;
     @Length(fieldName = "url")
     @NoXss
-    @ApiModelProperty(position = 9, value = "OTA Package url.", example = "http://thingsboard.org/fw/1", accessMode = ApiModelProperty.AccessMode.READ_ONLY)
+    @ApiModelProperty(position = 9, value = "OTA Package url.", example = "http://echoiot.org/fw/1", accessMode = ApiModelProperty.AccessMode.READ_ONLY)
     private String url;
     @ApiModelProperty(position = 10, value = "Indicates OTA Package 'has data'. Field is returned from DB ('true' if data exists or url is set).  If OTA Package 'has data' is 'false' we can not assign the OTA Package to the Device or Device Profile.", example = "true", accessMode = ApiModelProperty.AccessMode.READ_ONLY)
     private boolean hasData;

@@ -1,13 +1,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.thingsboard</groupId>
-    <artifactId>thingsboard</artifactId>
+    <groupId>org.echoiot</groupId>
+    <artifactId>echoiot</artifactId>
     <version>3.4.4</version>
     <packaging>pom</packaging>
 
-    <name>Thingsboard</name>
-    <url>https://thingsboard.io</url>
+    <name>Echoiot</name>
     <inceptionYear>2016</inceptionYear>
 
     <properties>
@@ -15,7 +14,7 @@
         <pkg.disabled>true</pkg.disabled>
         <pkg.process-resources.phase>none</pkg.process-resources.phase>
         <pkg.package.phase>none</pkg.package.phase>
-        <pkg.user>thingsboard</pkg.user>
+        <pkg.user>echoiot</pkg.user>
         <pkg.implementationTitle>${project.name}</pkg.implementationTitle>
         <pkg.unixLogFolder>/var/log/${pkg.name}</pkg.unixLogFolder>
         <pkg.installFolder>/usr/share/${pkg.name}</pkg.installFolder>
@@ -76,8 +75,8 @@
         <bouncycastle.version>1.69</bouncycastle.version>
         <winsw.version>2.0.1</winsw.version>
         <postgresql.driver.version>42.5.0</postgresql.driver.version>
-        <sonar.exclusions>org/thingsboard/server/gen/**/*,
-            org/thingsboard/server/extensions/core/plugin/telemetry/gen/**/*
+        <sonar.exclusions>org/echoiot/server/gen/**/*,
+            org/echoiot/server/extensions/core/plugin/telemetry/gen/**/*
         </sonar.exclusions>
         <elasticsearch.version>5.0.2</elasticsearch.version>
         <delight-nashorn-sandbox.version>0.2.1</delight-nashorn-sandbox.version>
@@ -626,11 +625,6 @@
                     <version>${spring-boot.version}</version>
                 </plugin>
                 <plugin>
-                    <groupId>org.thingsboard</groupId>
-                    <artifactId>gradle-maven-plugin</artifactId>
-                    <version>1.0.11</version>
-                </plugin>
-                <plugin>
                     <groupId>com.github.eirslett</groupId>
                     <artifactId>frontend-maven-plugin</artifactId>
                     <version>1.12.0</version>
@@ -776,200 +770,200 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>org.thingsboard</groupId>
+                <groupId>org.echoiot</groupId>
                 <artifactId>netty-mqtt</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.thingsboard.common</groupId>
+                <groupId>org.echoiot.common</groupId>
                 <artifactId>data</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.thingsboard.common</groupId>
+                <groupId>org.echoiot.common</groupId>
                 <artifactId>util</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.thingsboard.common</groupId>
+                <groupId>org.echoiot.common</groupId>
                 <artifactId>version-control</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.thingsboard.common</groupId>
+                <groupId>org.echoiot.common</groupId>
                 <artifactId>cache</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.thingsboard.common</groupId>
+                <groupId>org.echoiot.common</groupId>
                 <artifactId>actor</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.thingsboard.common</groupId>
+                <groupId>org.echoiot.common</groupId>
                 <artifactId>dao-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.thingsboard.common</groupId>
+                <groupId>org.echoiot.common</groupId>
                 <artifactId>cluster-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.thingsboard.rule-engine</groupId>
+                <groupId>org.echoiot.rule-engine</groupId>
                 <artifactId>rule-engine-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.thingsboard.rule-engine</groupId>
+                <groupId>org.echoiot.rule-engine</groupId>
                 <artifactId>rule-engine-components</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.thingsboard.common</groupId>
+                <groupId>org.echoiot.common</groupId>
                 <artifactId>message</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.thingsboard.common</groupId>
+                <groupId>org.echoiot.common</groupId>
                 <artifactId>transport</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.thingsboard.common.transport</groupId>
+                <groupId>org.echoiot.common.transport</groupId>
                 <artifactId>transport-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.thingsboard.common.transport</groupId>
+                <groupId>org.echoiot.common.transport</groupId>
                 <artifactId>mqtt</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.thingsboard.common.transport</groupId>
+                <groupId>org.echoiot.common.transport</groupId>
                 <artifactId>http</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.thingsboard.common.transport</groupId>
+                <groupId>org.echoiot.common.transport</groupId>
                 <artifactId>coap</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.thingsboard.common.transport</groupId>
+                <groupId>org.echoiot.common.transport</groupId>
                 <artifactId>snmp</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.thingsboard.common.transport</groupId>
+                <groupId>org.echoiot.common.transport</groupId>
                 <artifactId>lwm2m</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.thingsboard.common</groupId>
+                <groupId>org.echoiot.common</groupId>
                 <artifactId>edge-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.thingsboard</groupId>
+                <groupId>org.echoiot</groupId>
                 <artifactId>dao</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.thingsboard.common</groupId>
+                <groupId>org.echoiot.common</groupId>
                 <artifactId>queue</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.thingsboard.common</groupId>
+                <groupId>org.echoiot.common</groupId>
                 <artifactId>stats</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.thingsboard.common</groupId>
+                <groupId>org.echoiot.common</groupId>
                 <artifactId>coap-server</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.thingsboard.common.script</groupId>
+                <groupId>org.echoiot.common.script</groupId>
                 <artifactId>script-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.thingsboard.common.script</groupId>
+                <groupId>org.echoiot.common.script</groupId>
                 <artifactId>remote-js-client</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.thingsboard</groupId>
+                <groupId>org.echoiot</groupId>
                 <artifactId>tools</artifactId>
                 <version>${project.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>org.thingsboard</groupId>
+                <groupId>org.echoiot</groupId>
                 <artifactId>rest-client</artifactId>
                 <version>${project.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>org.thingsboard.msa</groupId>
+                <groupId>org.echoiot.msa</groupId>
                 <artifactId>js-executor</artifactId>
                 <version>${project.version}</version>
                 <type>docker-info</type>
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>org.thingsboard.msa</groupId>
+                <groupId>org.echoiot.msa</groupId>
                 <artifactId>web-ui</artifactId>
                 <version>${project.version}</version>
                 <type>docker-info</type>
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>org.thingsboard.msa</groupId>
+                <groupId>org.echoiot.msa</groupId>
                 <artifactId>tb-node</artifactId>
                 <version>${project.version}</version>
                 <type>docker-info</type>
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>org.thingsboard.msa.transport</groupId>
+                <groupId>org.echoiot.msa.transport</groupId>
                 <artifactId>coap</artifactId>
                 <version>${project.version}</version>
                 <type>docker-info</type>
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>org.thingsboard.msa.transport</groupId>
+                <groupId>org.echoiot.msa.transport</groupId>
                 <artifactId>http</artifactId>
                 <version>${project.version}</version>
                 <type>docker-info</type>
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>org.thingsboard.msa.transport</groupId>
+                <groupId>org.echoiot.msa.transport</groupId>
                 <artifactId>mqtt</artifactId>
                 <version>${project.version}</version>
                 <type>docker-info</type>
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>org.thingsboard.msa.transport</groupId>
+                <groupId>org.echoiot.msa.transport</groupId>
                 <artifactId>lwm2m</artifactId>
                 <version>${project.version}</version>
                 <type>docker-info</type>
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>org.thingsboard.msa.transport</groupId>
+                <groupId>org.echoiot.msa.transport</groupId>
                 <artifactId>snmp</artifactId>
                 <version>${project.version}</version>
                 <type>docker-info</type>
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>org.thingsboard</groupId>
+                <groupId>org.echoiot</groupId>
                 <artifactId>dao</artifactId>
                 <version>${project.version}</version>
                 <type>test-jar</type>
@@ -1782,7 +1776,7 @@
                 <version>${micrometer.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.thingsboard</groupId>
+                <groupId>org.echoiot</groupId>
                 <artifactId>protobuf-dynamic</artifactId>
                 <version>${protobuf-dynamic.version}</version>
             </dependency>
@@ -1905,9 +1899,9 @@
 
     <distributionManagement>
         <repository>
-            <id>thingsboard-repo-deploy</id>
-            <name>ThingsBoard Repo Deployment</name>
-            <url>https://repo.thingsboard.io/artifactory/libs-release-public</url>
+            <id>echoiot-repo-deploy</id>
+            <name>Echoiot Repo Deployment</name>
+            <url>https://repo.echoiot.io/artifactory/libs-release-public</url>
         </repository>
     </distributionManagement>
 

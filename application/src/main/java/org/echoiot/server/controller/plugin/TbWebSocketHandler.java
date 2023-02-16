@@ -3,7 +3,7 @@ package org.echoiot.server.controller.plugin;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.TenantProfile;
-import org.echoiot.server.common.data.exception.ThingsboardErrorCode;
+import org.echoiot.server.common.data.exception.EchoiotErrorCode;
 import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.id.UserId;
@@ -313,7 +313,7 @@ public class TbWebSocketHandler extends TextWebSocketHandler implements Telemetr
                             if (blacklistedSessions.putIfAbsent(externalId, sessionRef) == null) {
                                 log.info("[{}][{}][{}] Failed to process session update. Max session updates limit reached"
                                         , sessionRef.getSecurityCtx().getTenantId(), sessionRef.getSecurityCtx().getId(), externalId);
-                                sessionMd.sendMsg("{\"subscriptionId\":" + subscriptionId + ", \"errorCode\":" + ThingsboardErrorCode.TOO_MANY_UPDATES.getErrorCode() + ", \"errorMsg\":\"Too many updates!\"}");
+                                sessionMd.sendMsg("{\"subscriptionId\":" + subscriptionId + ", \"errorCode\":" + EchoiotErrorCode.TOO_MANY_UPDATES.getErrorCode() + ", \"errorMsg\":\"Too many updates!\"}");
                             }
                             return;
                         } else {

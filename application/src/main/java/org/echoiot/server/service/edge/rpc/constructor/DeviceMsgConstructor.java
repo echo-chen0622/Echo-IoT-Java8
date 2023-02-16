@@ -2,20 +2,15 @@ package org.echoiot.server.service.edge.rpc.constructor;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.protobuf.ByteString;
+import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.common.data.Device;
 import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.data.security.DeviceCredentials;
+import org.echoiot.server.gen.edge.v1.*;
 import org.echoiot.server.queue.util.DataDecodingEncodingService;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.thingsboard.common.util.JacksonUtil;
-import org.thingsboard.server.gen.edge.v1.DeviceCredentialsUpdateMsg;
-import org.thingsboard.server.gen.edge.v1.DeviceRpcCallMsg;
-import org.thingsboard.server.gen.edge.v1.DeviceUpdateMsg;
-import org.thingsboard.server.gen.edge.v1.RpcRequestMsg;
-import org.thingsboard.server.gen.edge.v1.RpcResponseMsg;
-import org.thingsboard.server.gen.edge.v1.UpdateMsgType;
 
 import java.util.UUID;
 

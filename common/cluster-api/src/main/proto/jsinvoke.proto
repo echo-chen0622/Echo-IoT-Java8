@@ -1,7 +1,7 @@
 syntax = "proto3";
 package js;
 
-option java_package = "org.thingsboard.server.gen.js";
+option java_package = "org.echoiot.server.gen.js";
 option java_outer_classname = "JsInvokeProtos";
 
 enum JsInvokeErrorCode {

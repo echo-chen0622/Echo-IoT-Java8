@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,16 +14,16 @@
 /// limitations under the License.
 ///
 
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { WidgetsBundle } from '@shared/models/widgets-bundle.model';
-import { IAliasController } from '@core/api/widget-api.models';
-import { NULL_UUID } from '@shared/models/id/has-uuid';
-import { WidgetService } from '@core/http/widget.service';
-import { WidgetInfo, widgetType } from '@shared/models/widget.models';
-import { distinctUntilChanged, map, publishReplay, refCount, share, switchMap, tap } from 'rxjs/operators';
-import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { isDefinedAndNotNull } from '@core/utils';
+import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {WidgetsBundle} from '@shared/models/widgets-bundle.model';
+import {IAliasController} from '@core/api/widget-api.models';
+import {NULL_UUID} from '@shared/models/id/has-uuid';
+import {WidgetService} from '@core/http/widget.service';
+import {WidgetInfo, widgetType} from '@shared/models/widget.models';
+import {distinctUntilChanged, map, publishReplay, refCount, share, switchMap, tap} from 'rxjs/operators';
+import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
+import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
+import {isDefinedAndNotNull} from '@core/utils';
 
 @Component({
   selector: 'tb-dashboard-widget-select',

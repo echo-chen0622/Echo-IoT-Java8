@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,39 +14,39 @@
 /// limitations under the License.
 ///
 
-import { PageComponent } from '@shared/components/page.component';
-import { Directive, Injector, OnDestroy, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { IDynamicWidgetComponent, WidgetContext } from '@home/models/widget-component.models';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { RafService } from '@core/services/raf.service';
+import {PageComponent} from '@shared/components/page.component';
+import {Directive, Injector, OnDestroy, OnInit} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {IDynamicWidgetComponent, WidgetContext} from '@home/models/widget-component.models';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {RafService} from '@core/services/raf.service';
 import {
-  NotificationHorizontalPosition,
-  NotificationType,
-  NotificationVerticalPosition
+    NotificationHorizontalPosition,
+    NotificationType,
+    NotificationVerticalPosition
 } from '@core/notification/notification.models';
-import { FormBuilder, Validators } from '@angular/forms';
-import { DeviceService } from '@core/http/device.service';
-import { AssetService } from '@core/http/asset.service';
-import { EntityViewService } from '@core/http/entity-view.service';
-import { CustomerService } from '@core/http/customer.service';
-import { DashboardService } from '@core/http/dashboard.service';
-import { UserService } from '@core/http/user.service';
-import { AttributeService } from '@core/http/attribute.service';
-import { EntityRelationService } from '@core/http/entity-relation.service';
-import { EntityService } from '@core/http/entity.service';
-import { AuthService } from '@core/auth/auth.service';
-import { DialogService } from '@core/services/dialog.service';
-import { CustomDialogService } from '@home/components/widget/dialog/custom-dialog.service';
-import { ResourceService } from '@core/http/resource.service';
-import { TelemetryWebsocketService } from '@core/ws/telemetry-websocket.service';
-import { DatePipe } from '@angular/common';
-import { TranslateService } from '@ngx-translate/core';
-import { DomSanitizer } from '@angular/platform-browser';
-import { Router } from '@angular/router';
-import { TbInject } from '@shared/decorators/tb-inject';
-import { MillisecondsToTimeStringPipe } from '@shared/pipe/milliseconds-to-time-string.pipe';
+import {FormBuilder, Validators} from '@angular/forms';
+import {DeviceService} from '@core/http/device.service';
+import {AssetService} from '@core/http/asset.service';
+import {EntityViewService} from '@core/http/entity-view.service';
+import {CustomerService} from '@core/http/customer.service';
+import {DashboardService} from '@core/http/dashboard.service';
+import {UserService} from '@core/http/user.service';
+import {AttributeService} from '@core/http/attribute.service';
+import {EntityRelationService} from '@core/http/entity-relation.service';
+import {EntityService} from '@core/http/entity.service';
+import {AuthService} from '@core/auth/auth.service';
+import {DialogService} from '@core/services/dialog.service';
+import {CustomDialogService} from '@home/components/widget/dialog/custom-dialog.service';
+import {ResourceService} from '@core/http/resource.service';
+import {TelemetryWebsocketService} from '@core/ws/telemetry-websocket.service';
+import {DatePipe} from '@angular/common';
+import {TranslateService} from '@ngx-translate/core';
+import {DomSanitizer} from '@angular/platform-browser';
+import {Router} from '@angular/router';
+import {TbInject} from '@shared/decorators/tb-inject';
+import {MillisecondsToTimeStringPipe} from '@shared/pipe/milliseconds-to-time-string.pipe';
 
 @Directive()
 // tslint:disable-next-line:directive-class-suffix

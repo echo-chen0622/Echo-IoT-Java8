@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.transport.adaptor.AdaptorException;
 import org.echoiot.server.common.transport.adaptor.JsonConverter;
 import org.springframework.stereotype.Component;
-import org.thingsboard.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.transport.coap.efento.CoapEfentoTransportResource;
 
 import java.util.List;

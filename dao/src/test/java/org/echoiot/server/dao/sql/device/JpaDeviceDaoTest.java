@@ -4,6 +4,7 @@ import com.datastax.oss.driver.api.core.uuid.Uuids;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
+import org.echoiot.common.util.EchoiotThreadFactory;
 import org.echoiot.server.common.data.Device;
 import org.echoiot.server.common.data.DeviceProfile;
 import org.echoiot.server.common.data.DeviceProfileType;
@@ -13,14 +14,13 @@ import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
+import org.echoiot.server.dao.AbstractJpaDaoTest;
 import org.echoiot.server.dao.device.DeviceDao;
 import org.echoiot.server.dao.device.DeviceProfileDao;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.thingsboard.common.util.ThingsBoardThreadFactory;
-import org.echoiot.server.dao.AbstractJpaDaoTest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -111,7 +111,7 @@ public class JpaDeviceDaoTest extends AbstractJpaDaoTest {
         assertNotNull(entity);
         assertEquals(uuid, entity.getId().getId());
 
-        executor = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(10, ThingsBoardThreadFactory.forName(getClass().getSimpleName() + "-test-scope")));
+        executor = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(10, EchoiotThreadFactory.forName(getClass().getSimpleName() + "-test-scope")));
         ListenableFuture<Device> future = executor.submit(() -> deviceDao.findById(TenantId.fromUUID(tenantId), uuid));
         Device asyncDevice = future.get(30, TimeUnit.SECONDS);
         assertNotNull("Async device expected to be not null", asyncDevice);

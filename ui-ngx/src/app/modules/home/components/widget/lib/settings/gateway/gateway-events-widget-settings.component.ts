@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,13 +14,13 @@
 /// limitations under the License.
 ///
 
-import { Component } from '@angular/core';
-import { WidgetSettings, WidgetSettingsComponent } from '@shared/models/widget.models';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { MatChipInputEvent } from '@angular/material/chips';
-import { COMMA, ENTER, SEMICOLON } from '@angular/cdk/keycodes';
+import {Component} from '@angular/core';
+import {WidgetSettings, WidgetSettingsComponent} from '@shared/models/widget.models';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {MatChipInputEvent} from '@angular/material/chips';
+import {COMMA, ENTER, SEMICOLON} from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'tb-gateway-events-widget-settings',

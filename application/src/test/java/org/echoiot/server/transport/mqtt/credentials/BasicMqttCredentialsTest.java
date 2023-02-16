@@ -1,10 +1,7 @@
 package org.echoiot.server.transport.mqtt.credentials;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import org.eclipse.paho.client.mqttv3.MqttSecurityException;
-import org.junit.Before;
-import org.junit.Test;
-import org.thingsboard.common.util.JacksonUtil;
+import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.common.data.Device;
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.device.credentials.BasicMqttCredentials;
@@ -13,17 +10,18 @@ import org.echoiot.server.common.data.security.DeviceCredentialsType;
 import org.echoiot.server.dao.service.DaoSqlTest;
 import org.echoiot.server.transport.mqtt.AbstractMqttIntegrationTest;
 import org.echoiot.server.transport.mqtt.MqttTestClient;
+import org.eclipse.paho.client.mqttv3.MqttSecurityException;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.echoiot.server.common.data.device.profile.MqttTopics.DEVICE_TELEMETRY_TOPIC;
+import static org.junit.Assert.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DaoSqlTest
 public class BasicMqttCredentialsTest extends AbstractMqttIntegrationTest {

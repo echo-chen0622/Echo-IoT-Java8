@@ -2,6 +2,14 @@ package org.echoiot.server.controller;
 
 import com.datastax.oss.driver.api.core.uuid.Uuids;
 import com.fasterxml.jackson.core.type.TypeReference;
+import org.echoiot.server.common.data.*;
+import org.echoiot.server.common.data.audit.ActionType;
+import org.echoiot.server.common.data.edge.Edge;
+import org.echoiot.server.common.data.id.CustomerId;
+import org.echoiot.server.common.data.id.DashboardId;
+import org.echoiot.server.common.data.page.PageData;
+import org.echoiot.server.common.data.page.PageLink;
+import org.echoiot.server.common.data.security.Authority;
 import org.echoiot.server.dao.dashboard.DashboardDao;
 import org.echoiot.server.dao.exception.DataValidationException;
 import org.junit.After;
@@ -14,19 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.test.context.ContextConfiguration;
-import org.echoiot.server.common.data.Customer;
-import org.echoiot.server.common.data.Dashboard;
-import org.echoiot.server.common.data.DashboardInfo;
-import org.echoiot.server.common.data.StringUtils;
-import org.echoiot.server.common.data.Tenant;
-import org.echoiot.server.common.data.User;
-import org.echoiot.server.common.data.audit.ActionType;
-import org.echoiot.server.common.data.edge.Edge;
-import org.echoiot.server.common.data.id.CustomerId;
-import org.echoiot.server.common.data.id.DashboardId;
-import org.echoiot.server.common.data.page.PageData;
-import org.echoiot.server.common.data.page.PageLink;
-import org.echoiot.server.common.data.security.Authority;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -66,7 +61,7 @@ public abstract class BaseDashboardControllerTest extends AbstractControllerTest
         tenantAdmin = new User();
         tenantAdmin.setAuthority(Authority.TENANT_ADMIN);
         tenantAdmin.setTenantId(savedTenant.getId());
-        tenantAdmin.setEmail("tenant2@thingsboard.org");
+        tenantAdmin.setEmail("tenant2@echoiot.org");
         tenantAdmin.setFirstName("Joe");
         tenantAdmin.setLastName("Downs");
 
@@ -229,7 +224,7 @@ public abstract class BaseDashboardControllerTest extends AbstractControllerTest
         User tenantAdmin2 = new User();
         tenantAdmin2.setAuthority(Authority.TENANT_ADMIN);
         tenantAdmin2.setTenantId(savedTenant2.getId());
-        tenantAdmin2.setEmail("tenant3@thingsboard.org");
+        tenantAdmin2.setEmail("tenant3@echoiot.org");
         tenantAdmin2.setFirstName("Joe");
         tenantAdmin2.setLastName("Downs");
 

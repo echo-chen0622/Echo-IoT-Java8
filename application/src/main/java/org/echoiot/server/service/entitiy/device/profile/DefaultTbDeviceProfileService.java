@@ -6,15 +6,15 @@ import org.echoiot.server.common.data.DeviceProfile;
 import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.User;
 import org.echoiot.server.common.data.audit.ActionType;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.DeviceProfileId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.plugin.ComponentLifecycleEvent;
 import org.echoiot.server.dao.device.DeviceProfileService;
 import org.echoiot.server.queue.util.TbCoreComponent;
-import org.springframework.stereotype.Service;
 import org.echoiot.server.service.entitiy.AbstractTbEntityService;
 import org.echoiot.server.service.ota.OtaPackageStateService;
+import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 
@@ -80,7 +80,7 @@ public class DefaultTbDeviceProfileService extends AbstractTbEntityService imple
     }
 
     @Override
-    public DeviceProfile setDefaultDeviceProfile(DeviceProfile deviceProfile, DeviceProfile previousDefaultDeviceProfile, User user) throws ThingsboardException {
+    public DeviceProfile setDefaultDeviceProfile(DeviceProfile deviceProfile, DeviceProfile previousDefaultDeviceProfile, User user) throws EchoiotException {
         TenantId tenantId = deviceProfile.getTenantId();
         DeviceProfileId deviceProfileId = deviceProfile.getId();
         try {

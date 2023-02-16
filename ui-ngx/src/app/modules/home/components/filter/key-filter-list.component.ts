@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,31 +14,31 @@
 /// limitations under the License.
 ///
 
-import { Component, forwardRef, Input, OnInit } from '@angular/core';
+import {Component, forwardRef, Input, OnInit} from '@angular/core';
 import {
-  AbstractControl,
-  ControlValueAccessor,
-  FormArray,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  NG_VALIDATORS,
-  NG_VALUE_ACCESSOR,
-  ValidationErrors,
-  Validator,
-  Validators
+    AbstractControl,
+    ControlValueAccessor,
+    FormArray,
+    FormBuilder,
+    FormControl,
+    FormGroup,
+    NG_VALIDATORS,
+    NG_VALUE_ACCESSOR,
+    ValidationErrors,
+    Validator,
+    Validators
 } from '@angular/forms';
-import { Observable, Subscription } from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {
-  EntityKeyType,
-  entityKeyTypeTranslationMap,
-  KeyFilterInfo,
-  keyFilterInfosToKeyFilters
+    EntityKeyType,
+    entityKeyTypeTranslationMap,
+    KeyFilterInfo,
+    keyFilterInfosToKeyFilters
 } from '@shared/models/query/query.models';
-import { MatDialog } from '@angular/material/dialog';
-import { deepClone } from '@core/utils';
-import { KeyFilterDialogComponent, KeyFilterDialogData } from '@home/components/filter/key-filter-dialog.component';
-import { EntityId } from '@shared/models/id/entity-id';
+import {MatDialog} from '@angular/material/dialog';
+import {deepClone} from '@core/utils';
+import {KeyFilterDialogComponent, KeyFilterDialogData} from '@home/components/filter/key-filter-dialog.component';
+import {EntityId} from '@shared/models/id/entity-id';
 
 @Component({
   selector: 'tb-key-filter-list',

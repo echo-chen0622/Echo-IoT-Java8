@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,22 +14,22 @@
 /// limitations under the License.
 ///
 
-import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
-import { Observable } from 'rxjs/internal/Observable';
-import { Inject, Injectable } from '@angular/core';
-import { AuthService } from '@core/auth/auth.service';
-import { Constants } from '@shared/models/constants';
-import { InterceptorHttpParams } from './interceptor-http-params';
-import { catchError, delay, finalize, mergeMap, switchMap } from 'rxjs/operators';
-import { of, throwError } from 'rxjs';
-import { InterceptorConfig } from './interceptor-config';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { ActionLoadFinish, ActionLoadStart } from './load.actions';
-import { ActionNotificationShow } from '@app/core/notification/notification.actions';
-import { DialogService } from '@core/services/dialog.service';
-import { TranslateService } from '@ngx-translate/core';
-import { parseHttpErrorMessage } from '@core/utils';
+import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
+import {Observable} from 'rxjs/internal/Observable';
+import {Inject, Injectable} from '@angular/core';
+import {AuthService} from '@core/auth/auth.service';
+import {Constants} from '@shared/models/constants';
+import {InterceptorHttpParams} from './interceptor-http-params';
+import {catchError, delay, finalize, mergeMap, switchMap} from 'rxjs/operators';
+import {of, throwError} from 'rxjs';
+import {InterceptorConfig} from './interceptor-config';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {ActionLoadFinish, ActionLoadStart} from './load.actions';
+import {ActionNotificationShow} from '@app/core/notification/notification.actions';
+import {DialogService} from '@core/services/dialog.service';
+import {TranslateService} from '@ngx-translate/core';
+import {parseHttpErrorMessage} from '@core/utils';
 
 let tmpHeaders = {};
 

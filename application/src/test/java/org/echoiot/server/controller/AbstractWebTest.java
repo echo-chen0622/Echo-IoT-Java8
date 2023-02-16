@@ -11,6 +11,22 @@ import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.server.common.data.*;
+import org.echoiot.server.common.data.asset.AssetProfile;
+import org.echoiot.server.common.data.device.profile.*;
+import org.echoiot.server.common.data.edge.Edge;
+import org.echoiot.server.common.data.id.*;
+import org.echoiot.server.common.data.page.PageData;
+import org.echoiot.server.common.data.page.PageLink;
+import org.echoiot.server.common.data.page.TimePageLink;
+import org.echoiot.server.common.data.relation.EntityRelation;
+import org.echoiot.server.common.data.security.Authority;
+import org.echoiot.server.config.EchoiotSecurityConfiguration;
+import org.echoiot.server.dao.Dao;
+import org.echoiot.server.dao.tenant.TenantProfileService;
+import org.echoiot.server.service.mail.TestMailService;
+import org.echoiot.server.service.security.auth.jwt.RefreshTokenRequest;
+import org.echoiot.server.service.security.auth.rest.LoginRequest;
 import org.hamcrest.Matcher;
 import org.hibernate.exception.ConstraintViolationException;
 import org.junit.After;
@@ -37,61 +53,18 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
-import org.echoiot.server.common.data.Customer;
-import org.echoiot.server.common.data.DeviceProfile;
-import org.echoiot.server.common.data.DeviceProfileType;
-import org.echoiot.server.common.data.DeviceTransportType;
-import org.echoiot.server.common.data.StringUtils;
-import org.echoiot.server.common.data.Tenant;
-import org.echoiot.server.common.data.User;
-import org.echoiot.server.common.data.asset.AssetProfile;
-import org.echoiot.server.common.data.device.profile.DefaultDeviceProfileConfiguration;
-import org.echoiot.server.common.data.device.profile.DefaultDeviceProfileTransportConfiguration;
-import org.echoiot.server.common.data.device.profile.DeviceProfileData;
-import org.echoiot.server.common.data.device.profile.DeviceProfileTransportConfiguration;
-import org.echoiot.server.common.data.device.profile.MqttDeviceProfileTransportConfiguration;
-import org.echoiot.server.common.data.device.profile.MqttTopics;
-import org.echoiot.server.common.data.device.profile.ProtoTransportPayloadConfiguration;
-import org.echoiot.server.common.data.device.profile.TransportPayloadTypeConfiguration;
-import org.echoiot.server.common.data.edge.Edge;
-import org.echoiot.server.common.data.id.CustomerId;
-import org.echoiot.server.common.data.id.EntityId;
-import org.echoiot.server.common.data.id.HasId;
-import org.echoiot.server.common.data.id.TenantId;
-import org.echoiot.server.common.data.id.UUIDBased;
-import org.echoiot.server.common.data.id.UserId;
-import org.echoiot.server.common.data.page.PageData;
-import org.echoiot.server.common.data.page.PageLink;
-import org.echoiot.server.common.data.page.TimePageLink;
-import org.echoiot.server.common.data.relation.EntityRelation;
-import org.echoiot.server.common.data.security.Authority;
-import org.echoiot.server.config.ThingsboardSecurityConfiguration;
-import org.echoiot.server.dao.Dao;
-import org.echoiot.server.dao.tenant.TenantProfileService;
-import org.echoiot.server.service.mail.TestMailService;
-import org.echoiot.server.service.security.auth.jwt.RefreshTokenRequest;
-import org.echoiot.server.service.security.auth.rest.LoginRequest;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 @Slf4j
@@ -103,19 +76,19 @@ public abstract class AbstractWebTest extends AbstractInMemoryStorageTest {
     protected static final String TEST_TENANT_NAME = "TEST TENANT";
     protected static final String TEST_DIFFERENT_TENANT_NAME = "TEST DIFFERENT TENANT";
 
-    protected static final String SYS_ADMIN_EMAIL = "sysadmin@thingsboard.org";
+    protected static final String SYS_ADMIN_EMAIL = "sysadmin@echoiot.org";
     private static final String SYS_ADMIN_PASSWORD = "sysadmin";
 
-    protected static final String TENANT_ADMIN_EMAIL = "testtenant@thingsboard.org";
+    protected static final String TENANT_ADMIN_EMAIL = "testtenant@echoiot.org";
     protected static final String TENANT_ADMIN_PASSWORD = "tenant";
 
-    protected static final String DIFFERENT_TENANT_ADMIN_EMAIL = "testdifftenant@thingsboard.org";
+    protected static final String DIFFERENT_TENANT_ADMIN_EMAIL = "testdifftenant@echoiot.org";
     private static final String DIFFERENT_TENANT_ADMIN_PASSWORD = "difftenant";
 
-    protected static final String CUSTOMER_USER_EMAIL = "testcustomer@thingsboard.org";
+    protected static final String CUSTOMER_USER_EMAIL = "testcustomer@echoiot.org";
     private static final String CUSTOMER_USER_PASSWORD = "customer";
 
-    protected static final String DIFFERENT_CUSTOMER_USER_EMAIL = "testdifferentcustomer@thingsboard.org";
+    protected static final String DIFFERENT_CUSTOMER_USER_EMAIL = "testdifferentcustomer@echoiot.org";
     private static final String DIFFERENT_CUSTOMER_USER_PASSWORD = "diffcustomer";
 
     /**
@@ -409,7 +382,7 @@ public abstract class AbstractWebTest extends AbstractInMemoryStorageTest {
 
     protected void setJwtToken(MockHttpServletRequestBuilder request) {
         if (this.token != null) {
-            request.header(ThingsboardSecurityConfiguration.JWT_TOKEN_HEADER_PARAM, "Bearer " + this.token);
+            request.header(EchoiotSecurityConfiguration.JWT_TOKEN_HEADER_PARAM, "Bearer " + this.token);
         }
     }
 

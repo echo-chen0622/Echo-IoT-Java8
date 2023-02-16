@@ -2,10 +2,14 @@ package org.echoiot.server.service.sms;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.common.util.JacksonUtil;
+import org.echoiot.rule.engine.api.SmsService;
+import org.echoiot.rule.engine.api.sms.SmsSender;
+import org.echoiot.rule.engine.api.sms.SmsSenderFactory;
 import org.echoiot.server.common.data.AdminSettings;
 import org.echoiot.server.common.data.ApiUsageRecordKey;
-import org.echoiot.server.common.data.exception.ThingsboardErrorCode;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotErrorCode;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.sms.config.SmsProviderConfiguration;
@@ -15,10 +19,6 @@ import org.echoiot.server.dao.settings.AdminSettingsService;
 import org.echoiot.server.service.apiusage.TbApiUsageStateService;
 import org.springframework.core.NestedRuntimeException;
 import org.springframework.stereotype.Service;
-import org.thingsboard.rule.engine.api.SmsService;
-import org.thingsboard.rule.engine.api.sms.SmsSender;
-import org.thingsboard.rule.engine.api.sms.SmsSenderFactory;
-import org.thingsboard.common.util.JacksonUtil;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -71,15 +71,15 @@ public class DefaultSmsService implements SmsService {
         }
     }
 
-    private int sendSms(String numberTo, String message) throws ThingsboardException {
+    private int sendSms(String numberTo, String message) throws EchoiotException {
         if (this.smsSender == null) {
-            throw new ThingsboardException("Unable to send SMS: no SMS provider configured!", ThingsboardErrorCode.GENERAL);
+            throw new EchoiotException("Unable to send SMS: no SMS provider configured!", EchoiotErrorCode.GENERAL);
         }
         return this.sendSms(this.smsSender, numberTo, message);
     }
 
     @Override
-    public void sendSms(TenantId tenantId, CustomerId customerId, String[] numbersTo, String message) throws ThingsboardException {
+    public void sendSms(TenantId tenantId, CustomerId customerId, String[] numbersTo, String message) throws EchoiotException {
         if (apiUsageStateService.getApiUsageState(tenantId).isSmsSendEnabled()) {
             int smsCount = 0;
             try {
@@ -97,7 +97,7 @@ public class DefaultSmsService implements SmsService {
     }
 
     @Override
-    public void sendTestSms(TestSmsRequest testSmsRequest) throws ThingsboardException {
+    public void sendTestSms(TestSmsRequest testSmsRequest) throws EchoiotException {
         SmsSender testSmsSender;
         try {
             testSmsSender = this.smsSenderFactory.createSmsSender(testSmsRequest.getProviderConfiguration());
@@ -113,7 +113,7 @@ public class DefaultSmsService implements SmsService {
         return smsSender != null;
     }
 
-    private int sendSms(SmsSender smsSender, String numberTo, String message) throws ThingsboardException {
+    private int sendSms(SmsSender smsSender, String numberTo, String message) throws EchoiotException {
         try {
             return smsSender.sendSms(numberTo, message);
         } catch (Exception e) {
@@ -121,7 +121,7 @@ public class DefaultSmsService implements SmsService {
         }
     }
 
-    private ThingsboardException handleException(Exception exception) {
+    private EchoiotException handleException(Exception exception) {
         String message;
         if (exception instanceof NestedRuntimeException) {
             message = ((NestedRuntimeException) exception).getMostSpecificCause().getMessage();
@@ -129,7 +129,7 @@ public class DefaultSmsService implements SmsService {
             message = exception.getMessage();
         }
         log.warn("Unable to send SMS: {}", message);
-        return new ThingsboardException(String.format("Unable to send SMS: %s", message),
-                ThingsboardErrorCode.GENERAL);
+        return new EchoiotException(String.format("Unable to send SMS: %s", message),
+                EchoiotErrorCode.GENERAL);
     }
 }

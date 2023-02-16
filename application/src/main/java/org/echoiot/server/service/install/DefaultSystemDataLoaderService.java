@@ -7,12 +7,18 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.common.util.EchoiotThreadFactory;
+import org.echoiot.server.common.data.*;
 import org.echoiot.server.common.data.alarm.AlarmSeverity;
+import org.echoiot.server.common.data.device.profile.*;
 import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.data.id.DeviceProfileId;
 import org.echoiot.server.common.data.id.TenantId;
+import org.echoiot.server.common.data.kv.*;
 import org.echoiot.server.common.data.page.PageLink;
+import org.echoiot.server.common.data.query.*;
+import org.echoiot.server.common.data.queue.*;
 import org.echoiot.server.common.data.rule.RuleChainType;
 import org.echoiot.server.common.data.security.Authority;
 import org.echoiot.server.common.data.security.DeviceCredentials;
@@ -43,45 +49,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.thingsboard.common.util.ThingsBoardThreadFactory;
-import org.echoiot.server.common.data.AdminSettings;
-import org.echoiot.server.common.data.Customer;
-import org.echoiot.server.common.data.DataConstants;
-import org.echoiot.server.common.data.Device;
-import org.echoiot.server.common.data.DeviceProfile;
-import org.echoiot.server.common.data.DeviceProfileProvisionType;
-import org.echoiot.server.common.data.DeviceProfileType;
-import org.echoiot.server.common.data.DeviceTransportType;
-import org.echoiot.server.common.data.Tenant;
-import org.echoiot.server.common.data.TenantProfile;
-import org.echoiot.server.common.data.User;
-import org.echoiot.server.common.data.device.profile.AlarmCondition;
-import org.echoiot.server.common.data.device.profile.AlarmConditionFilter;
-import org.echoiot.server.common.data.device.profile.AlarmConditionFilterKey;
-import org.echoiot.server.common.data.device.profile.AlarmConditionKeyType;
-import org.echoiot.server.common.data.device.profile.AlarmRule;
-import org.echoiot.server.common.data.device.profile.DefaultDeviceProfileConfiguration;
-import org.echoiot.server.common.data.device.profile.DefaultDeviceProfileTransportConfiguration;
-import org.echoiot.server.common.data.device.profile.DeviceProfileAlarm;
-import org.echoiot.server.common.data.device.profile.DeviceProfileData;
-import org.echoiot.server.common.data.device.profile.DisabledDeviceProfileProvisionConfiguration;
-import org.echoiot.server.common.data.device.profile.SimpleAlarmConditionSpec;
-import org.echoiot.server.common.data.kv.BaseAttributeKvEntry;
-import org.echoiot.server.common.data.kv.BasicTsKvEntry;
-import org.echoiot.server.common.data.kv.BooleanDataEntry;
-import org.echoiot.server.common.data.kv.DoubleDataEntry;
-import org.echoiot.server.common.data.kv.LongDataEntry;
-import org.echoiot.server.common.data.query.BooleanFilterPredicate;
-import org.echoiot.server.common.data.query.DynamicValue;
-import org.echoiot.server.common.data.query.DynamicValueSourceType;
-import org.echoiot.server.common.data.query.EntityKeyValueType;
-import org.echoiot.server.common.data.query.FilterPredicateValue;
-import org.echoiot.server.common.data.query.NumericFilterPredicate;
-import org.echoiot.server.common.data.queue.ProcessingStrategy;
-import org.echoiot.server.common.data.queue.ProcessingStrategyType;
-import org.echoiot.server.common.data.queue.Queue;
-import org.echoiot.server.common.data.queue.SubmitStrategy;
-import org.echoiot.server.common.data.queue.SubmitStrategyType;
 
 import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
@@ -165,7 +132,7 @@ public class DefaultSystemDataLoaderService implements SystemDataLoaderService {
 
     @PostConstruct
     public void initExecutor() {
-        tsCallBackExecutor = Executors.newSingleThreadExecutor(ThingsBoardThreadFactory.forName("sys-loader-ts-callback"));
+        tsCallBackExecutor = Executors.newSingleThreadExecutor(EchoiotThreadFactory.forName("sys-loader-ts-callback"));
     }
 
     @PreDestroy
@@ -177,7 +144,7 @@ public class DefaultSystemDataLoaderService implements SystemDataLoaderService {
 
     @Override
     public void createSysAdmin() {
-        createUser(Authority.SYS_ADMIN, null, null, "sysadmin@thingsboard.org", "sysadmin");
+        createUser(Authority.SYS_ADMIN, null, null, "sysadmin@echoiot.org", "sysadmin");
     }
 
     @Override
@@ -237,7 +204,7 @@ public class DefaultSystemDataLoaderService implements SystemDataLoaderService {
         mailSettings.setTenantId(TenantId.SYS_TENANT_ID);
         mailSettings.setKey("mail");
         node = objectMapper.createObjectNode();
-        node.put("mailFrom", "ThingsBoard <sysadmin@localhost.localdomain>");
+        node.put("mailFrom", "Echoiot <sysadmin@localhost.localdomain>");
         node.put("smtpProtocol", "smtp");
         node.put("smtpHost", "localhost");
         node.put("smtpPort", "25");
@@ -274,7 +241,7 @@ public class DefaultSystemDataLoaderService implements SystemDataLoaderService {
         demoTenant.setTitle("Tenant");
         demoTenant = tenantService.saveTenant(demoTenant);
         installScripts.loadDemoRuleChains(demoTenant.getId());
-        createUser(Authority.TENANT_ADMIN, demoTenant.getId(), null, "tenant@thingsboard.org", "tenant");
+        createUser(Authority.TENANT_ADMIN, demoTenant.getId(), null, "tenant@echoiot.org", "tenant");
 
         Customer customerA = new Customer();
         customerA.setTenantId(demoTenant.getId());
@@ -288,10 +255,10 @@ public class DefaultSystemDataLoaderService implements SystemDataLoaderService {
         customerC.setTenantId(demoTenant.getId());
         customerC.setTitle("Customer C");
         customerC = customerService.saveCustomer(customerC);
-        createUser(Authority.CUSTOMER_USER, demoTenant.getId(), customerA.getId(), "customer@thingsboard.org", CUSTOMER_CRED);
-        createUser(Authority.CUSTOMER_USER, demoTenant.getId(), customerA.getId(), "customerA@thingsboard.org", CUSTOMER_CRED);
-        createUser(Authority.CUSTOMER_USER, demoTenant.getId(), customerB.getId(), "customerB@thingsboard.org", CUSTOMER_CRED);
-        createUser(Authority.CUSTOMER_USER, demoTenant.getId(), customerC.getId(), "customerC@thingsboard.org", CUSTOMER_CRED);
+        createUser(Authority.CUSTOMER_USER, demoTenant.getId(), customerA.getId(), "customer@echoiot.org", CUSTOMER_CRED);
+        createUser(Authority.CUSTOMER_USER, demoTenant.getId(), customerA.getId(), "customerA@echoiot.org", CUSTOMER_CRED);
+        createUser(Authority.CUSTOMER_USER, demoTenant.getId(), customerB.getId(), "customerB@echoiot.org", CUSTOMER_CRED);
+        createUser(Authority.CUSTOMER_USER, demoTenant.getId(), customerC.getId(), "customerC@echoiot.org", CUSTOMER_CRED);
 
         DeviceProfile defaultDeviceProfile = this.deviceProfileService.findOrCreateDeviceProfile(demoTenant.getId(), DEFAULT_DEVICE_TYPE);
 

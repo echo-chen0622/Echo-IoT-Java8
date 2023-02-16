@@ -1,7 +1,7 @@
 package org.echoiot.server.config;
 
-import org.echoiot.server.common.data.exception.ThingsboardErrorCode;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotErrorCode;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.controller.plugin.TbWebSocketHandler;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.security.model.SecurityUser;
@@ -49,7 +49,7 @@ public class WebSocketConfiguration implements WebSocketConfigurer {
                         SecurityUser user = null;
                         try {
                             user = getCurrentUser();
-                        } catch (ThingsboardException ex) {
+                        } catch (EchoiotException ex) {
                         }
                         if (user == null) {
                             response.setStatusCode(HttpStatus.UNAUTHORIZED);
@@ -72,12 +72,12 @@ public class WebSocketConfiguration implements WebSocketConfigurer {
         return new TbWebSocketHandler();
     }
 
-    protected SecurityUser getCurrentUser() throws ThingsboardException {
+    protected SecurityUser getCurrentUser() throws EchoiotException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof SecurityUser) {
             return (SecurityUser) authentication.getPrincipal();
         } else {
-            throw new ThingsboardException("You aren't authorized to perform this operation!", ThingsboardErrorCode.AUTHENTICATION);
+            throw new EchoiotException("You aren't authorized to perform this operation!", EchoiotErrorCode.AUTHENTICATION);
         }
     }
 }

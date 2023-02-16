@@ -1,22 +1,18 @@
 package org.echoiot.server.service.entitiy.dashboard;
 
 import lombok.AllArgsConstructor;
+import org.echoiot.server.common.data.*;
 import org.echoiot.server.common.data.audit.ActionType;
 import org.echoiot.server.common.data.edge.Edge;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.id.DashboardId;
 import org.echoiot.server.common.data.id.EdgeId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.dao.dashboard.DashboardService;
 import org.echoiot.server.queue.util.TbCoreComponent;
-import org.springframework.stereotype.Service;
-import org.echoiot.server.common.data.Customer;
-import org.echoiot.server.common.data.Dashboard;
-import org.echoiot.server.common.data.EntityType;
-import org.echoiot.server.common.data.ShortCustomerInfo;
-import org.echoiot.server.common.data.User;
 import org.echoiot.server.service.entitiy.AbstractTbEntityService;
+import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
@@ -61,7 +57,7 @@ public class DefaultTbDashboardService extends AbstractTbEntityService implement
     }
 
     @Override
-    public Dashboard assignDashboardToCustomer(Dashboard dashboard, Customer customer, User user) throws ThingsboardException {
+    public Dashboard assignDashboardToCustomer(Dashboard dashboard, Customer customer, User user) throws EchoiotException {
         ActionType actionType = ActionType.ASSIGNED_TO_CUSTOMER;
         TenantId tenantId = dashboard.getTenantId();
         CustomerId customerId = customer.getId();
@@ -79,7 +75,7 @@ public class DefaultTbDashboardService extends AbstractTbEntityService implement
     }
 
     @Override
-    public Dashboard assignDashboardToPublicCustomer(Dashboard dashboard, User user) throws ThingsboardException {
+    public Dashboard assignDashboardToPublicCustomer(Dashboard dashboard, User user) throws EchoiotException {
         ActionType actionType = ActionType.ASSIGNED_TO_CUSTOMER;
         TenantId tenantId = dashboard.getTenantId();
         DashboardId dashboardId = dashboard.getId();
@@ -97,7 +93,7 @@ public class DefaultTbDashboardService extends AbstractTbEntityService implement
     }
 
     @Override
-    public Dashboard unassignDashboardFromPublicCustomer(Dashboard dashboard, User user) throws ThingsboardException {
+    public Dashboard unassignDashboardFromPublicCustomer(Dashboard dashboard, User user) throws EchoiotException {
         ActionType actionType = ActionType.UNASSIGNED_FROM_CUSTOMER;
         TenantId tenantId = dashboard.getTenantId();
         DashboardId dashboardId = dashboard.getId();
@@ -115,7 +111,7 @@ public class DefaultTbDashboardService extends AbstractTbEntityService implement
     }
 
     @Override
-    public Dashboard updateDashboardCustomers(Dashboard dashboard, Set<CustomerId> customerIds, User user) throws ThingsboardException {
+    public Dashboard updateDashboardCustomers(Dashboard dashboard, Set<CustomerId> customerIds, User user) throws EchoiotException {
         ActionType actionType = ActionType.ASSIGNED_TO_CUSTOMER;
         TenantId tenantId = dashboard.getTenantId();
         DashboardId dashboardId = dashboard.getId();
@@ -163,7 +159,7 @@ public class DefaultTbDashboardService extends AbstractTbEntityService implement
     }
 
     @Override
-    public Dashboard addDashboardCustomers(Dashboard dashboard, Set<CustomerId> customerIds, User user) throws ThingsboardException {
+    public Dashboard addDashboardCustomers(Dashboard dashboard, Set<CustomerId> customerIds, User user) throws EchoiotException {
         ActionType actionType = ActionType.ASSIGNED_TO_CUSTOMER;
         TenantId tenantId = dashboard.getTenantId();
         DashboardId dashboardId = dashboard.getId();
@@ -193,7 +189,7 @@ public class DefaultTbDashboardService extends AbstractTbEntityService implement
     }
 
     @Override
-    public Dashboard removeDashboardCustomers(Dashboard dashboard, Set<CustomerId> customerIds, User user) throws ThingsboardException {
+    public Dashboard removeDashboardCustomers(Dashboard dashboard, Set<CustomerId> customerIds, User user) throws EchoiotException {
         ActionType actionType = ActionType.UNASSIGNED_FROM_CUSTOMER;
         TenantId tenantId = dashboard.getTenantId();
         DashboardId dashboardId = dashboard.getId();
@@ -223,7 +219,7 @@ public class DefaultTbDashboardService extends AbstractTbEntityService implement
     }
 
     @Override
-    public Dashboard asignDashboardToEdge(TenantId tenantId, DashboardId dashboardId, Edge edge, User user) throws ThingsboardException {
+    public Dashboard asignDashboardToEdge(TenantId tenantId, DashboardId dashboardId, Edge edge, User user) throws EchoiotException {
         ActionType actionType = ActionType.ASSIGNED_TO_EDGE;
         EdgeId edgeId = edge.getId();
         try {
@@ -240,7 +236,7 @@ public class DefaultTbDashboardService extends AbstractTbEntityService implement
     }
 
     @Override
-    public Dashboard unassignDashboardFromEdge(Dashboard dashboard, Edge edge, User user) throws ThingsboardException {
+    public Dashboard unassignDashboardFromEdge(Dashboard dashboard, Edge edge, User user) throws EchoiotException {
         ActionType actionType = ActionType.UNASSIGNED_FROM_EDGE;
         TenantId tenantId = dashboard.getTenantId();
         DashboardId dashboardId = dashboard.getId();
@@ -260,7 +256,7 @@ public class DefaultTbDashboardService extends AbstractTbEntityService implement
     }
 
     @Override
-    public Dashboard unassignDashboardFromCustomer(Dashboard dashboard, Customer customer, User user) throws ThingsboardException {
+    public Dashboard unassignDashboardFromCustomer(Dashboard dashboard, Customer customer, User user) throws EchoiotException {
         ActionType actionType = ActionType.UNASSIGNED_FROM_CUSTOMER;
         TenantId tenantId = dashboard.getTenantId();
         DashboardId dashboardId = dashboard.getId();

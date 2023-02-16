@@ -5,7 +5,7 @@ import org.echoiot.server.common.data.asset.Asset;
 import org.junit.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.thingsboard.common.util.JacksonUtil;
+import org.echoiot.common.util.JacksonUtil;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 

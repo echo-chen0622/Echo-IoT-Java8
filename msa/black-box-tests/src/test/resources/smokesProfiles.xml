@@ -3,7 +3,7 @@
 
 <suite name="Profiles Smoke Tests">
     <listeners>
-        <listener class-name="org.thingsboard.server.msa.ui.listeners.RetryTestListener"/>
+        <listener class-name="org.echoiot.server.msa.ui.listeners.RetryTestListener"/>
     </listeners>
     <test name="Profiles ui smoke tests">
         <groups>
@@ -12,8 +12,8 @@
             </run>
         </groups>
         <packages>
-            <package name="org.thingsboard.server.msa.ui.tests.deviceProfileSmoke"/>
-            <package name="org.thingsboard.server.msa.ui.tests.assetProfileSmoke"/>
+            <package name="org.echoiot.server.msa.ui.tests.deviceProfileSmoke"/>
+            <package name="org.echoiot.server.msa.ui.tests.assetProfileSmoke"/>
         </packages>
     </test>
 </suite>

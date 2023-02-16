@@ -1,11 +1,6 @@
 package org.echoiot.server.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mockito;
 import org.echoiot.server.common.data.Customer;
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.Tenant;
@@ -16,14 +11,19 @@ import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.common.data.security.Authority;
 import org.echoiot.server.common.data.widget.WidgetsBundle;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static org.echoiot.server.dao.model.ModelConstants.SYSTEM_TENANT;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.echoiot.server.dao.model.ModelConstants.SYSTEM_TENANT;
 
 public abstract class BaseWidgetsBundleControllerTest extends AbstractControllerTest {
 
@@ -44,7 +44,7 @@ public abstract class BaseWidgetsBundleControllerTest extends AbstractController
         tenantAdmin = new User();
         tenantAdmin.setAuthority(Authority.TENANT_ADMIN);
         tenantAdmin.setTenantId(savedTenant.getId());
-        tenantAdmin.setEmail("tenant2@thingsboard.org");
+        tenantAdmin.setEmail("tenant2@echoiot.org");
         tenantAdmin.setFirstName("Joe");
         tenantAdmin.setLastName("Downs");
 

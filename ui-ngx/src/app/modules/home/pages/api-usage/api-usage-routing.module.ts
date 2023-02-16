@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,10 +14,10 @@
 /// limitations under the License.
 ///
 
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { Authority } from '@shared/models/authority.enum';
-import { ApiUsageComponent } from '@home/pages/api-usage/api-usage.component';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
+import {Authority} from '@shared/models/authority.enum';
+import {ApiUsageComponent} from '@home/pages/api-usage/api-usage.component';
 
 const routes: Routes = [
   {

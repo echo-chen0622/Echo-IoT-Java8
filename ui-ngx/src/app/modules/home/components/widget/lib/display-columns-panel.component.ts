@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,8 +14,8 @@
 /// limitations under the License.
 ///
 
-import { Component, Inject, InjectionToken } from '@angular/core';
-import { DisplayColumn } from '@home/components/widget/lib/table-widget.models';
+import {Component, Inject, InjectionToken} from '@angular/core';
+import {DisplayColumn} from '@home/components/widget/lib/table-widget.models';
 
 export const DISPLAY_COLUMNS_PANEL_DATA = new InjectionToken<any>('DisplayColumnsPanelData');
 

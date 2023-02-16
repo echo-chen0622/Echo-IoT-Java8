@@ -314,10 +314,10 @@ public class DeviceProfileDataValidator extends AbstractHasOtaPackageValidator<D
     private void validateLwm2mServersCredentialOfBootstrapForClient(LwM2MBootstrapServerCredential bootstrapServerConfig) {
         String server;
         switch (bootstrapServerConfig.getSecurityMode()) {
-            case LwM2MSecurityMode.NO_SEC:
-            case LwM2MSecurityMode.PSK:
+            case NO_SEC:
+            case PSK:
                 break;
-            case LwM2MSecurityMode.RPK:
+            case RPK:
                 RPKLwM2MBootstrapServerCredential rpkServerCredentials = (RPKLwM2MBootstrapServerCredential) bootstrapServerConfig;
                 server = rpkServerCredentials.isBootstrapServerIs() ? "Bootstrap Server" : "LwM2M Server";
                 if (StringUtils.isEmpty(rpkServerCredentials.getServerPublicKey())) {
@@ -331,7 +331,7 @@ public class DeviceProfileDataValidator extends AbstractHasOtaPackageValidator<D
                     throw new DeviceCredentialsValidationException(server + " RPK public key must be in standard [RFC7250] and then encoded to Base64 format!");
                 }
                 break;
-            case LwM2MSecurityMode.X509:
+            case X509:
                 X509LwM2MBootstrapServerCredential x509ServerCredentials = (X509LwM2MBootstrapServerCredential) bootstrapServerConfig;
                 server = x509ServerCredentials.isBootstrapServerIs() ? "Bootstrap Server" : "LwM2M Server";
                 if (StringUtils.isEmpty(x509ServerCredentials.getServerPublicKey())) {

@@ -1,12 +1,12 @@
 package org.echoiot.server.transport.coap.client;
 
 import org.echoiot.server.common.data.DeviceProfile;
+import org.echoiot.server.common.msg.session.SessionMsgType;
 import org.echoiot.server.common.transport.adaptor.AdaptorException;
 import org.echoiot.server.common.transport.auth.ValidateDeviceCredentialsResponse;
+import org.echoiot.server.gen.transport.TransportProtos;
 import org.eclipse.californium.core.observe.ObserveRelation;
 import org.eclipse.californium.core.server.resources.CoapExchange;
-import org.echoiot.server.common.msg.session.SessionMsgType;
-import org.thingsboard.server.gen.transport.TransportProtos;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

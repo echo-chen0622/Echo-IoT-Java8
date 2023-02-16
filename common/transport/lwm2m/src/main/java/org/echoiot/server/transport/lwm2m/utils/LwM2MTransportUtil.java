@@ -38,8 +38,8 @@ import org.eclipse.leshan.core.request.SimpleDownlinkRequest;
 import org.eclipse.leshan.core.request.WriteAttributesRequest;
 import org.eclipse.leshan.core.util.Hex;
 import org.eclipse.leshan.server.registration.Registration;
-import org.thingsboard.common.util.JacksonUtil;
-import org.thingsboard.server.transport.lwm2m.server.client.LwM2mClient;
+import org.echoiot.common.util.JacksonUtil;
+import org.echoiot.server.transport.lwm2m.server.client.LwM2mClient;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -162,7 +162,7 @@ public class LwM2MTransportUtil {
         }
     }
 
-    public static List<LwM2MBootstrapServerCredential> getBootstrapParametersFromThingsboard(DeviceProfile deviceProfile) {
+    public static List<LwM2MBootstrapServerCredential> getBootstrapParametersFromEchoiot(DeviceProfile deviceProfile) {
         return toLwM2MClientProfile(deviceProfile).getBootstrap();
     }
 

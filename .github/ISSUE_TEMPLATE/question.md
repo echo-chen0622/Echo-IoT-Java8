@@ -19,7 +19,7 @@ assignees: Echo
 A clear and concise details.
 
 **Environment**
-<!-- Add information about your environment and ThingsBoard version if applicable -->
+<!-- Add information about your environment and Echoiot version if applicable -->
  * OS:  name and version
- * ThingsBoard: version
+ * Echoiot: version
  * Browser: name and version

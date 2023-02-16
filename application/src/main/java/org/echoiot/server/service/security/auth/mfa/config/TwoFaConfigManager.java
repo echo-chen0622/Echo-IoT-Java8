@@ -1,6 +1,6 @@
 package org.echoiot.server.service.security.auth.mfa.config;
 
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.id.UserId;
 import org.echoiot.server.common.data.security.model.mfa.PlatformTwoFaSettings;
@@ -24,7 +24,7 @@ public interface TwoFaConfigManager {
 
     Optional<PlatformTwoFaSettings> getPlatformTwoFaSettings(TenantId tenantId, boolean sysadminSettingsAsDefault);
 
-    PlatformTwoFaSettings savePlatformTwoFaSettings(TenantId tenantId, PlatformTwoFaSettings twoFactorAuthSettings) throws ThingsboardException;
+    PlatformTwoFaSettings savePlatformTwoFaSettings(TenantId tenantId, PlatformTwoFaSettings twoFactorAuthSettings) throws EchoiotException;
 
     void deletePlatformTwoFaSettings(TenantId tenantId);
 

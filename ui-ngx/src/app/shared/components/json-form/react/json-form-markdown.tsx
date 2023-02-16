@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016-2023 The Thingsboard Authors
+ * Copyright © 2016-2023 The Echoiot Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 import * as React from 'react';
-import ThingsboardAceEditor from './json-form-ace-editor';
-import { JsonFormFieldProps, JsonFormFieldState } from '@shared/components/json-form/react/json-form.models';
+import EchoiotAceEditor from './json-form-ace-editor';
+import {JsonFormFieldProps, JsonFormFieldState} from '@shared/components/json-form/react/json-form.models';
 
-class ThingsboardMarkdown extends React.Component<JsonFormFieldProps, JsonFormFieldState> {
+class EchoiotMarkdown extends React.Component<JsonFormFieldProps, JsonFormFieldState> {
 
   constructor(props) {
     super(props);
@@ -25,9 +25,9 @@ class ThingsboardMarkdown extends React.Component<JsonFormFieldProps, JsonFormFi
 
   render() {
     return (
-      <ThingsboardAceEditor {...this.props} mode='markdown' {...this.state}></ThingsboardAceEditor>
+      <EchoiotAceEditor {...this.props} mode='markdown' {...this.state}></EchoiotAceEditor>
     );
   }
 }
 
-export default ThingsboardMarkdown;
+export default EchoiotMarkdown;

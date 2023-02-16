@@ -11,9 +11,9 @@ import org.eclipse.leshan.server.registration.Registration;
 import org.echoiot.server.common.data.Device;
 import org.echoiot.server.common.data.DeviceProfile;
 import org.echoiot.server.common.data.id.DeviceId;
-import org.thingsboard.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.transport.lwm2m.config.LwM2MTransportServerConfig;
-import org.thingsboard.server.transport.lwm2m.server.client.LwM2mClient;
+import org.echoiot.server.transport.lwm2m.server.client.LwM2mClient;
 
 import java.util.Collection;
 import java.util.Optional;

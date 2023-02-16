@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,25 +14,25 @@
 /// limitations under the License.
 ///
 
-import { GridsterComponent, GridsterConfig, GridsterItem, GridsterItemComponentInterface } from 'angular-gridster2';
+import {GridsterComponent, GridsterConfig, GridsterItem, GridsterItemComponentInterface} from 'angular-gridster2';
 import {
-  datasourcesHasAggregation,
-  datasourcesHasOnlyComparisonAggregation,
-  FormattedData,
-  Widget,
-  WidgetPosition,
-  widgetType
+    datasourcesHasAggregation,
+    datasourcesHasOnlyComparisonAggregation,
+    FormattedData,
+    Widget,
+    WidgetPosition,
+    widgetType
 } from '@app/shared/models/widget.models';
-import { WidgetLayout, WidgetLayouts } from '@app/shared/models/dashboard.models';
-import { IDashboardWidget, WidgetAction, WidgetContext, WidgetHeaderAction } from './widget-component.models';
-import { Timewindow } from '@shared/models/time/time.models';
-import { Observable, of, Subject } from 'rxjs';
-import { formattedDataFormDatasourceData, guid, isDefined, isEqual, isUndefined } from '@app/core/utils';
-import { IterableDiffer, KeyValueDiffer } from '@angular/core';
-import { IAliasController, IStateController } from '@app/core/api/widget-api.models';
-import { enumerable } from '@shared/decorators/enumerable';
-import { UtilsService } from '@core/services/utils.service';
-import { TbPopoverComponent } from '@shared/components/popover.component';
+import {WidgetLayout, WidgetLayouts} from '@app/shared/models/dashboard.models';
+import {IDashboardWidget, WidgetAction, WidgetContext, WidgetHeaderAction} from './widget-component.models';
+import {Timewindow} from '@shared/models/time/time.models';
+import {Observable, of, Subject} from 'rxjs';
+import {formattedDataFormDatasourceData, guid, isDefined, isEqual, isUndefined} from '@app/core/utils';
+import {IterableDiffer, KeyValueDiffer} from '@angular/core';
+import {IAliasController, IStateController} from '@app/core/api/widget-api.models';
+import {enumerable} from '@shared/decorators/enumerable';
+import {UtilsService} from '@core/services/utils.service';
+import {TbPopoverComponent} from '@shared/components/popover.component';
 
 export interface WidgetsData {
   widgets: Array<Widget>;

@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,15 +14,15 @@
 /// limitations under the License.
 ///
 
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
-import { ContactBased } from '@shared/models/contact-based.model';
-import { AfterViewInit, ChangeDetectorRef, Directive } from '@angular/core';
-import { POSTAL_CODE_PATTERNS } from '@home/models/contact.models';
-import { HasId } from '@shared/models/base-data';
-import { EntityComponent } from './entity.component';
-import { EntityTableConfig } from '@home/models/entity/entities-table-config.models';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {FormBuilder, FormGroup, ValidatorFn, Validators} from '@angular/forms';
+import {ContactBased} from '@shared/models/contact-based.model';
+import {AfterViewInit, ChangeDetectorRef, Directive} from '@angular/core';
+import {POSTAL_CODE_PATTERNS} from '@home/models/contact.models';
+import {HasId} from '@shared/models/base-data';
+import {EntityComponent} from './entity.component';
+import {EntityTableConfig} from '@home/models/entity/entities-table-config.models';
 
 @Directive()
 export abstract class ContactBasedComponent<T extends ContactBased<HasId>> extends EntityComponent<T> implements AfterViewInit {

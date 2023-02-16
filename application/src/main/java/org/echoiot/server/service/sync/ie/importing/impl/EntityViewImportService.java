@@ -4,18 +4,18 @@ import lombok.RequiredArgsConstructor;
 import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.EntityView;
 import org.echoiot.server.common.data.User;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.EntityViewId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.plugin.ComponentLifecycleEvent;
 import org.echoiot.server.common.data.sync.ie.EntityExportData;
 import org.echoiot.server.dao.entityview.EntityViewService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Service;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.entitiy.entityview.TbEntityViewService;
 import org.echoiot.server.service.sync.vc.data.EntitiesImportCtx;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Service;
 
 @Service
 @TbCoreComponent
@@ -46,7 +46,7 @@ public class EntityViewImportService extends BaseEntityImportService<EntityViewI
     }
 
     @Override
-    protected void onEntitySaved(User user, EntityView savedEntityView, EntityView oldEntityView) throws ThingsboardException {
+    protected void onEntitySaved(User user, EntityView savedEntityView, EntityView oldEntityView) throws EchoiotException {
         tbEntityViewService.updateEntityViewAttributes(user.getTenantId(), savedEntityView, oldEntityView, user);
         super.onEntitySaved(user, savedEntityView, oldEntityView);
         clusterService.broadcastEntityStateChangeEvent(savedEntityView.getTenantId(), savedEntityView.getId(),

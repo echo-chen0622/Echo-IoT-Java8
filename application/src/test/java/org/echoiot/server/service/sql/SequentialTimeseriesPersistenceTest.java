@@ -11,8 +11,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.thingsboard.rule.engine.telemetry.TbMsgTimeseriesNode;
-import org.thingsboard.rule.engine.telemetry.TbMsgTimeseriesNodeConfiguration;
+import org.echoiot.rule.engine.telemetry.TbMsgTimeseriesNode;
+import org.echoiot.rule.engine.telemetry.TbMsgTimeseriesNodeConfiguration;
 import org.echoiot.server.common.data.Device;
 import org.echoiot.server.common.data.Tenant;
 import org.echoiot.server.common.data.User;
@@ -68,7 +68,7 @@ public class SequentialTimeseriesPersistenceTest extends AbstractControllerTest 
         tenantAdmin = new User();
         tenantAdmin.setAuthority(Authority.TENANT_ADMIN);
         tenantAdmin.setTenantId(savedTenant.getId());
-        tenantAdmin.setEmail("tenant2@thingsboard.org");
+        tenantAdmin.setEmail("tenant2@echoiot.org");
         tenantAdmin.setFirstName("Joe");
         tenantAdmin.setLastName("Downs");
 

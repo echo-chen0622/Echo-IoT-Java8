@@ -7,7 +7,7 @@ import org.echoiot.server.queue.settings.TbQueueCoreSettings;
 import org.echoiot.server.queue.settings.TbQueueVersionControlSettings;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Component;
-import org.thingsboard.server.gen.transport.TransportProtos;
+import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.queue.common.TbProtoQueueMsg;
 import org.echoiot.server.queue.rabbitmq.TbRabbitMqAdmin;
 import org.echoiot.server.queue.rabbitmq.TbRabbitMqConsumerTemplate;

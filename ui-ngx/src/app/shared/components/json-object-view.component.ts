@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,15 +14,15 @@
 /// limitations under the License.
 ///
 
-import { Component, ElementRef, forwardRef, Input, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Ace } from 'ace-builds';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { RafService } from '@core/services/raf.service';
-import { isDefinedAndNotNull, isUndefined } from '@core/utils';
-import { getAce } from '@shared/models/ace/ace.models';
+import {Component, ElementRef, forwardRef, Input, OnDestroy, OnInit, Renderer2, ViewChild} from '@angular/core';
+import {NG_VALUE_ACCESSOR} from '@angular/forms';
+import {Ace} from 'ace-builds';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {RafService} from '@core/services/raf.service';
+import {isDefinedAndNotNull, isUndefined} from '@core/utils';
+import {getAce} from '@shared/models/ace/ace.models';
 
 @Component({
   selector: 'tb-json-object-view',

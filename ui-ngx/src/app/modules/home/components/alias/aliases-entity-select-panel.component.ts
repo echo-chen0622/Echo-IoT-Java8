@@ -1,5 +1,5 @@
 ///
-/// Copyright © 2016-2023 The Thingsboard Authors
+/// Copyright © 2016-2023 The Echoiot Authors
 ///
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -14,9 +14,9 @@
 /// limitations under the License.
 ///
 
-import { Component, Inject, InjectionToken } from '@angular/core';
-import { AliasInfo, IAliasController } from '@core/api/widget-api.models';
-import { EntityInfo } from '@shared/models/entity.models';
+import {Component, Inject, InjectionToken} from '@angular/core';
+import {AliasInfo, IAliasController} from '@core/api/widget-api.models';
+import {EntityInfo} from '@shared/models/entity.models';
 
 export const ALIASES_ENTITY_SELECT_PANEL_DATA = new InjectionToken<any>('AliasesEntitySelectPanelData');
 

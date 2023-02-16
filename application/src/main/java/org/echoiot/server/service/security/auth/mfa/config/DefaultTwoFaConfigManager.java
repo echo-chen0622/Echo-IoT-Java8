@@ -1,8 +1,9 @@
 package org.echoiot.server.service.security.auth.mfa.config;
 
 import lombok.RequiredArgsConstructor;
+import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.common.data.AdminSettings;
-import org.echoiot.server.common.data.exception.ThingsboardException;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.id.UserId;
 import org.echoiot.server.common.data.security.UserAuthSettings;
@@ -15,11 +16,10 @@ import org.echoiot.server.dao.service.ConstraintValidator;
 import org.echoiot.server.dao.settings.AdminSettingsDao;
 import org.echoiot.server.dao.settings.AdminSettingsService;
 import org.echoiot.server.dao.user.UserAuthSettingsDao;
+import org.echoiot.server.service.security.auth.mfa.TwoFactorAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-import org.thingsboard.common.util.JacksonUtil;
-import org.echoiot.server.service.security.auth.mfa.TwoFactorAuthService;
 
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -146,7 +146,7 @@ public class DefaultTwoFaConfigManager implements TwoFaConfigManager {
     }
 
     @Override
-    public PlatformTwoFaSettings savePlatformTwoFaSettings(TenantId tenantId, PlatformTwoFaSettings twoFactorAuthSettings) throws ThingsboardException {
+    public PlatformTwoFaSettings savePlatformTwoFaSettings(TenantId tenantId, PlatformTwoFaSettings twoFactorAuthSettings) throws EchoiotException {
         ConstraintValidator.validateFields(twoFactorAuthSettings);
         for (TwoFaProviderConfig providerConfig : twoFactorAuthSettings.getProviders()) {
             twoFactorAuthService.checkProvider(tenantId, providerConfig.getProviderType());

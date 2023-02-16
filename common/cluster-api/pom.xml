@@ -10,7 +10,7 @@
     <artifactId>cluster-api</artifactId>
     <packaging>jar</packaging>
 
-    <name>Thingsboard Server Common Cluster API</name>
+    <name>Echoiot Server Common Cluster API</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

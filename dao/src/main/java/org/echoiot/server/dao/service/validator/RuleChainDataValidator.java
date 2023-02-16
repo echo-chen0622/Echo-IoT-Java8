@@ -18,7 +18,7 @@ import org.echoiot.server.dao.tenant.TenantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
-import org.thingsboard.common.util.JacksonUtil;
+import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.common.data.rule.NodeConnectionInfo;
 import org.echoiot.server.common.data.rule.RuleChain;
 import org.echoiot.server.common.data.rule.RuleChainMetaData;
@@ -99,7 +99,7 @@ public class RuleChainDataValidator extends DataValidator<RuleChain> {
         Object nodeConfig;
         try {
             Class<Object> nodeConfigType = ReflectionUtils.getAnnotationProperty(ruleNode.getType(),
-                                                                                 "org.thingsboard.rule.engine.api.RuleNode", "configClazz");
+                                                                                 "org.echoiot.rule.engine.api.RuleNode", "configClazz");
             nodeConfig = JacksonUtil.treeToValue(ruleNode.getConfiguration(), nodeConfigType);
         } catch (Exception e) {
             log.warn("Failed to validate node configuration: {}", ExceptionUtils.getRootCauseMessage(e));
