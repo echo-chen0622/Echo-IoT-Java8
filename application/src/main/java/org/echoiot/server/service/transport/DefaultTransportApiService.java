@@ -474,10 +474,10 @@ public class DefaultTransportApiService implements TransportApiService {
 
         PowerSavingConfiguration psmConfiguration = null;
         switch (device.getDeviceData().getTransportConfiguration().getType()) {
-            case DeviceTransportType.LWM2M:
+            case LWM2M:
                 psmConfiguration = (Lwm2mDeviceTransportConfiguration) device.getDeviceData().getTransportConfiguration();
                 break;
-            case DeviceTransportType.COAP:
+            case COAP:
                 psmConfiguration = (CoapDeviceTransportConfiguration) device.getDeviceData().getTransportConfiguration();
                 break;
         }

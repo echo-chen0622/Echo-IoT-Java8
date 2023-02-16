@@ -19,7 +19,7 @@
         <echo.disabled>false</echo.disabled>
         <echo.process-resources.phase>process-resources</echo.process-resources.phase>
         <echo.package.phase>package</echo.package.phase>
-        <echo.name>tb-coap-transport</echo.name>
+        <pkg.name>tb-coap-transport</pkg.name>
         <echo.copyInstallScripts>false</echo.copyInstallScripts>
         <echo.win.dist>${project.build.directory}/windows</echo.win.dist>
         <echo.implementationTitle>Echoiot CoAP Transport Service</echo.implementationTitle>
@@ -64,7 +64,7 @@
     </dependencies>
 
     <build>
-        <finalName>${echo.name}-${project.version}</finalName>
+        <finalName>${pkg.name}-${project.version}</finalName>
         <resources>
             <resource>
                 <directory>${project.basedir}/src/main/resources</directory>

@@ -12,28 +12,15 @@ import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.id.UserId;
 import org.echoiot.server.common.data.kv.AttributeKvEntry;
+import org.echoiot.server.common.data.query.*;
 import org.echoiot.server.dao.attributes.AttributesService;
 import org.echoiot.server.dao.entity.EntityService;
-import org.echoiot.server.service.telemetry.cmd.v2.CmdUpdate;
-import org.echoiot.server.service.telemetry.sub.TelemetrySubscriptionUpdate;
-import org.echoiot.server.common.data.query.ComplexFilterPredicate;
-import org.echoiot.server.common.data.query.DynamicValue;
-import org.echoiot.server.common.data.query.DynamicValueSourceType;
-import org.echoiot.server.common.data.query.EntityCountQuery;
-import org.echoiot.server.common.data.query.FilterPredicateType;
-import org.echoiot.server.common.data.query.KeyFilter;
-import org.echoiot.server.common.data.query.KeyFilterPredicate;
-import org.echoiot.server.common.data.query.SimpleKeyFilterPredicate;
-import org.echoiot.server.common.data.query.TsValue;
 import org.echoiot.server.service.telemetry.TelemetryWebSocketService;
 import org.echoiot.server.service.telemetry.TelemetryWebSocketSessionRef;
+import org.echoiot.server.service.telemetry.cmd.v2.CmdUpdate;
+import org.echoiot.server.service.telemetry.sub.TelemetrySubscriptionUpdate;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ScheduledFuture;
@@ -95,7 +82,7 @@ public abstract class TbAbstractSubCtx<T extends EntityCountQuery> {
         List<ListenableFuture<DynamicValueKeySub>> futures = new ArrayList<>();
         for (DynamicValueKey key : dynamicValues.keySet()) {
             switch (key.getSourceType()) {
-                case DynamicValueSourceType.CURRENT_TENANT:
+                case CURRENT_TENANT:
                     futures.add(resolveEntityValue(tenantId, tenantId, key));
                     break;
                 case CURRENT_CUSTOMER:

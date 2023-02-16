@@ -16,10 +16,10 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <main.dir>${basedir}/../../..</main.dir>
-        <echo.name>tb-coap-transport</echo.name>
+        <pkg.name>tb-coap-transport</pkg.name>
         <docker.name>tb-coap-transport</docker.name>
-        <echo.logFolder>/var/log/${echo.name}</echo.logFolder>
-        <echo.installFolder>/usr/share/${echo.name}</echo.installFolder>
+        <echo.logFolder>/var/log/${pkg.name}</echo.logFolder>
+        <echo.installFolder>/usr/share/${pkg.name}</echo.installFolder>
         <docker.push-arm-amd-image.phase>pre-integration-test</docker.push-arm-amd-image.phase>
     </properties>
 
@@ -53,7 +53,7 @@
                                     <artifactId>coap</artifactId>
                                     <classifier>deb</classifier>
                                     <type>deb</type>
-                                    <destFileName>${echo.name}.deb</destFileName>
+                                    <destFileName>${pkg.name}.deb</destFileName>
                                     <outputDirectory>${project.build.directory}</outputDirectory>
                                 </artifactItem>
                             </artifactItems>

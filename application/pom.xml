@@ -20,7 +20,7 @@
         <echo.disabled>false</echo.disabled>
         <echo.process-resources.phase>process-resources</echo.process-resources.phase>
         <echo.package.phase>package</echo.package.phase>
-        <echo.name>echoiot</echo.name>
+        <pkg.name>echoiot</pkg.name>
         <echo.win.dist>${project.build.directory}/windows</echo.win.dist>
         <echo.copyInstallScripts>true</echo.copyInstallScripts>
         <echo.implementationTitle>Echoiot</echo.implementationTitle>
@@ -341,7 +341,7 @@
     </dependencies>
 
     <build>
-        <finalName>${echo.name}-${project.version}</finalName>
+        <finalName>${pkg.name}-${project.version}</finalName>
         <resources>
             <resource>
                 <directory>${project.basedir}/src/main/resources</directory>
