@@ -7,7 +7,6 @@
     <packaging>pom</packaging>
 
     <name>Echoiot</name>
-    <inceptionYear>2016</inceptionYear>
 
     <properties>
         <main.dir>${basedir}</main.dir>
@@ -1777,7 +1776,7 @@
                 <version>${micrometer.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.echoiot</groupId>
+                <groupId>org.thingsboard</groupId>
                 <artifactId>protobuf-dynamic</artifactId>
                 <version>${protobuf-dynamic.version}</version>
             </dependency>
@@ -1897,14 +1896,6 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <distributionManagement>
-        <repository>
-            <id>echoiot-repo-deploy</id>
-            <name>Echoiot Repo Deployment</name>
-            <url>https://repo.echoiot.io/artifactory/libs-release-public</url>
-        </repository>
-    </distributionManagement>
 
     <repositories>
         <repository>
