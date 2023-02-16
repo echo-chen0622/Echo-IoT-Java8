@@ -24,9 +24,9 @@ import org.thingsboard.common.util.ThingsBoardExecutors;
 import org.thingsboard.script.api.AbstractScriptInvokeService;
 import org.thingsboard.script.api.ScriptType;
 import org.thingsboard.script.api.TbScriptException;
-import org.thingsboard.server.common.data.id.TenantId;
-import org.thingsboard.server.common.stats.TbApiUsageReportClient;
-import org.thingsboard.server.common.stats.TbApiUsageStateClient;
+import org.echoiot.server.common.data.id.TenantId;
+import org.echoiot.server.common.stats.TbApiUsageReportClient;
+import org.echoiot.server.common.stats.TbApiUsageStateClient;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;

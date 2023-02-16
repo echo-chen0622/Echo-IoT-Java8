@@ -1,0 +1,17 @@
+package org.echoiot.server.service.sync.vc;
+
+import lombok.Getter;
+import org.echoiot.server.common.data.id.EntityId;
+
+@SuppressWarnings("rawtypes")
+public class LoadEntityException extends RuntimeException {
+
+    private static final long serialVersionUID = -1749719992370409504L;
+    @Getter
+    private final EntityId externalId;
+
+    public LoadEntityException(EntityId externalId, Throwable cause) {
+        super(cause);
+        this.externalId = externalId;
+    }
+}

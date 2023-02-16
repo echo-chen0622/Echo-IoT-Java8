@@ -2,7 +2,7 @@ package org.thingsboard.rule.engine.filter;
 
 import lombok.Data;
 import org.thingsboard.rule.engine.api.NodeConfiguration;
-import org.thingsboard.server.common.data.alarm.AlarmStatus;
+import org.echoiot.server.common.data.alarm.AlarmStatus;
 
 import java.util.Arrays;
 import java.util.List;

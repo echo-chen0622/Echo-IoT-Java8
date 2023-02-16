@@ -24,7 +24,7 @@ package org.apache.kafka.common.network;
 import org.apache.kafka.common.memory.MemoryPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.thingsboard.server.common.data.exception.ThingsboardKafkaClientError;
+import org.echoiot.server.common.data.exception.ThingsboardKafkaClientError;
 
 import java.io.EOFException;
 import java.io.IOException;

@@ -15,10 +15,10 @@ import org.mockserver.integration.ClientAndServer;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.AsyncRestTemplate;
 import org.thingsboard.rule.engine.api.TbContext;
-import org.thingsboard.server.common.data.id.DeviceId;
-import org.thingsboard.server.common.data.id.EntityId;
-import org.thingsboard.server.common.msg.TbMsg;
-import org.thingsboard.server.common.msg.TbMsgMetaData;
+import org.echoiot.server.common.data.id.DeviceId;
+import org.echoiot.server.common.data.id.EntityId;
+import org.echoiot.server.common.msg.TbMsg;
+import org.echoiot.server.common.msg.TbMsgMetaData;
 
 import java.net.URI;
 import java.util.List;

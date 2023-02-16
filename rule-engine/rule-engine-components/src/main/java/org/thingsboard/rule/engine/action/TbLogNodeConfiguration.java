@@ -2,7 +2,7 @@ package org.thingsboard.rule.engine.action;
 
 import lombok.Data;
 import org.thingsboard.rule.engine.api.NodeConfiguration;
-import org.thingsboard.server.common.data.script.ScriptLanguage;
+import org.echoiot.server.common.data.script.ScriptLanguage;
 
 @Data
 public class TbLogNodeConfiguration implements NodeConfiguration {

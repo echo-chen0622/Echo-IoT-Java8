@@ -2,7 +2,7 @@ package org.thingsboard.rule.engine.action;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.thingsboard.server.common.data.alarm.Alarm;
+import org.echoiot.server.common.data.alarm.Alarm;
 
 @Data
 @AllArgsConstructor

@@ -3,9 +3,9 @@ package org.thingsboard.rule.engine.transform;
 import lombok.Data;
 import org.thingsboard.rule.engine.api.NodeConfiguration;
 import org.thingsboard.rule.engine.data.RelationsQuery;
-import org.thingsboard.server.common.data.relation.EntityRelation;
-import org.thingsboard.server.common.data.relation.EntitySearchDirection;
-import org.thingsboard.server.common.data.relation.RelationEntityTypeFilter;
+import org.echoiot.server.common.data.relation.EntityRelation;
+import org.echoiot.server.common.data.relation.EntitySearchDirection;
+import org.echoiot.server.common.data.relation.RelationEntityTypeFilter;
 
 import java.util.Collections;
 

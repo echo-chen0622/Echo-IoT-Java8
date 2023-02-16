@@ -26,7 +26,7 @@
         <pkg.copyInstallScripts>false</pkg.copyInstallScripts>
         <pkg.win.dist>${project.build.directory}/windows</pkg.win.dist>
         <pkg.implementationTitle>ThingsBoard SNMP Transport Service</pkg.implementationTitle>
-        <pkg.mainClass>org.thingsboard.server.snmp.ThingsboardSnmpTransportApplication</pkg.mainClass>
+        <pkg.mainClass>org.echoiot.server.snmp.ThingsboardSnmpTransportApplication</pkg.mainClass>
     </properties>
 
     <dependencies>

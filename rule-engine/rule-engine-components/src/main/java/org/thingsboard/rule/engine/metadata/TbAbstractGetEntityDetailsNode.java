@@ -16,15 +16,14 @@ import org.thingsboard.rule.engine.api.TbNode;
 import org.thingsboard.rule.engine.api.TbNodeConfiguration;
 import org.thingsboard.rule.engine.api.TbNodeException;
 import org.thingsboard.rule.engine.util.EntityDetails;
-import org.thingsboard.server.common.data.ContactBased;
-import org.thingsboard.server.common.msg.TbMsg;
-import org.thingsboard.server.common.msg.TbMsgMetaData;
+import org.echoiot.server.common.data.ContactBased;
+import org.echoiot.server.common.msg.TbMsg;
+import org.echoiot.server.common.msg.TbMsgMetaData;
 
 import java.lang.reflect.Type;
 import java.util.Map;
 
 import static org.thingsboard.common.util.DonAsynchron.withCallback;
-import static org.thingsboard.rule.engine.api.TbRelationTypes.SUCCESS;
 
 @Slf4j
 public abstract class TbAbstractGetEntityDetailsNode<C extends TbAbstractGetEntityDetailsNodeConfiguration> implements TbNode {

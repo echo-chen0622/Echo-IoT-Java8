@@ -2,8 +2,8 @@ package org.thingsboard.rule.engine.debug;
 
 import lombok.Data;
 import org.thingsboard.rule.engine.api.NodeConfiguration;
-import org.thingsboard.server.common.data.EntityType;
-import org.thingsboard.server.common.data.script.ScriptLanguage;
+import org.echoiot.server.common.data.EntityType;
+import org.echoiot.server.common.data.script.ScriptLanguage;
 
 @Data
 public class TbMsgGeneratorNodeConfiguration implements NodeConfiguration<TbMsgGeneratorNodeConfiguration> {

@@ -2,7 +2,7 @@ package org.thingsboard.rule.engine.telemetry;
 
 import lombok.extern.slf4j.Slf4j;
 import org.thingsboard.rule.engine.api.TbContext;
-import org.thingsboard.server.common.msg.TbMsg;
+import org.echoiot.server.common.msg.TbMsg;
 
 import javax.annotation.Nullable;
 import java.util.List;

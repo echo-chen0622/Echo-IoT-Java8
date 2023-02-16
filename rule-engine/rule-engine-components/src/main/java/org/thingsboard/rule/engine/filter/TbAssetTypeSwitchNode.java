@@ -5,11 +5,11 @@ import org.thingsboard.rule.engine.api.EmptyNodeConfiguration;
 import org.thingsboard.rule.engine.api.RuleNode;
 import org.thingsboard.rule.engine.api.TbContext;
 import org.thingsboard.rule.engine.api.TbNodeException;
-import org.thingsboard.server.common.data.EntityType;
-import org.thingsboard.server.common.data.asset.AssetProfile;
-import org.thingsboard.server.common.data.id.AssetId;
-import org.thingsboard.server.common.data.id.EntityId;
-import org.thingsboard.server.common.data.plugin.ComponentType;
+import org.echoiot.server.common.data.EntityType;
+import org.echoiot.server.common.data.asset.AssetProfile;
+import org.echoiot.server.common.data.id.AssetId;
+import org.echoiot.server.common.data.id.EntityId;
+import org.echoiot.server.common.data.plugin.ComponentType;
 
 @Slf4j
 @RuleNode(

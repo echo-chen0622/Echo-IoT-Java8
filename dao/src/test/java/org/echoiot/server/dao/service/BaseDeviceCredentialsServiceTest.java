@@ -1,0 +1,171 @@
+package org.echoiot.server.dao.service;
+
+import com.datastax.oss.driver.api.core.uuid.Uuids;
+import org.echoiot.server.common.data.Device;
+import org.echoiot.server.common.data.Tenant;
+import org.echoiot.server.common.data.id.DeviceCredentialsId;
+import org.echoiot.server.common.data.id.DeviceId;
+import org.echoiot.server.common.data.id.TenantId;
+import org.echoiot.server.common.data.security.DeviceCredentials;
+import org.echoiot.server.common.data.security.DeviceCredentialsType;
+import org.echoiot.server.dao.exception.DataValidationException;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+public abstract class BaseDeviceCredentialsServiceTest extends AbstractServiceTest {
+
+    private TenantId tenantId;
+
+    @Before
+    public void before() {
+        Tenant tenant = new Tenant();
+        tenant.setTitle("My tenant");
+        Tenant savedTenant = tenantService.saveTenant(tenant);
+        Assert.assertNotNull(savedTenant);
+        tenantId = savedTenant.getId();
+    }
+
+    @After
+    public void after() {
+        tenantService.deleteTenant(tenantId);
+    }
+
+    @Test(expected = DataValidationException.class)
+    public void testCreateDeviceCredentials() {
+        DeviceCredentials deviceCredentials = new DeviceCredentials();
+        deviceCredentialsService.updateDeviceCredentials(tenantId, deviceCredentials);
+    }
+
+    @Test(expected = DataValidationException.class)
+    public void testSaveDeviceCredentialsWithEmptyDevice() {
+        Device device = new Device();
+        device.setName("My device");
+        device.setType("default");
+        device.setTenantId(tenantId);
+        device = deviceService.saveDevice(device);
+        DeviceCredentials deviceCredentials = deviceCredentialsService.findDeviceCredentialsByDeviceId(tenantId, device.getId());
+        deviceCredentials.setDeviceId(null);
+        try {
+            deviceCredentialsService.updateDeviceCredentials(tenantId, deviceCredentials);
+        } finally {
+            deviceService.deleteDevice(tenantId, device.getId());
+        }
+    }
+
+    @Test(expected = DataValidationException.class)
+    public void testSaveDeviceCredentialsWithEmptyCredentialsType() {
+        Device device = new Device();
+        device.setName("My device");
+        device.setType("default");
+        device.setTenantId(tenantId);
+        device = deviceService.saveDevice(device);
+        DeviceCredentials deviceCredentials = deviceCredentialsService.findDeviceCredentialsByDeviceId(tenantId, device.getId());
+        deviceCredentials.setCredentialsType(null);
+        try {
+            deviceCredentialsService.updateDeviceCredentials(tenantId, deviceCredentials);
+        } finally {
+            deviceService.deleteDevice(tenantId, device.getId());
+        }
+    }
+
+    @Test(expected = DataValidationException.class)
+    public void testSaveDeviceCredentialsWithEmptyCredentialsId() {
+        Device device = new Device();
+        device.setName("My device");
+        device.setType("default");
+        device.setTenantId(tenantId);
+        device = deviceService.saveDevice(device);
+        DeviceCredentials deviceCredentials = deviceCredentialsService.findDeviceCredentialsByDeviceId(tenantId, device.getId());
+        deviceCredentials.setCredentialsId(null);
+        try {
+            deviceCredentialsService.updateDeviceCredentials(tenantId, deviceCredentials);
+        } finally {
+            deviceService.deleteDevice(tenantId, device.getId());
+        }
+    }
+
+    @Test(expected = DataValidationException.class)
+    public void testSaveNonExistentDeviceCredentials() {
+        Device device = new Device();
+        device.setName("My device");
+        device.setType("default");
+        device.setTenantId(tenantId);
+        device = deviceService.saveDevice(device);
+        DeviceCredentials deviceCredentials = deviceCredentialsService.findDeviceCredentialsByDeviceId(tenantId, device.getId());
+        DeviceCredentials newDeviceCredentials = new DeviceCredentials(new DeviceCredentialsId(Uuids.timeBased()));
+        newDeviceCredentials.setCreatedTime(deviceCredentials.getCreatedTime());
+        newDeviceCredentials.setDeviceId(deviceCredentials.getDeviceId());
+        newDeviceCredentials.setCredentialsType(deviceCredentials.getCredentialsType());
+        newDeviceCredentials.setCredentialsId(deviceCredentials.getCredentialsId());
+        try {
+            deviceCredentialsService.updateDeviceCredentials(tenantId, newDeviceCredentials);
+        } finally {
+            deviceService.deleteDevice(tenantId, device.getId());
+        }
+    }
+
+    @Test(expected = DataValidationException.class)
+    public void testSaveDeviceCredentialsWithNonExistentDevice() {
+        Device device = new Device();
+        device.setName("My device");
+        device.setType("default");
+        device.setTenantId(tenantId);
+        device = deviceService.saveDevice(device);
+        DeviceCredentials deviceCredentials = deviceCredentialsService.findDeviceCredentialsByDeviceId(tenantId, device.getId());
+        deviceCredentials.setDeviceId(new DeviceId(Uuids.timeBased()));
+        try {
+            deviceCredentialsService.updateDeviceCredentials(tenantId, deviceCredentials);
+        } finally {
+            deviceService.deleteDevice(tenantId, device.getId());
+        }
+    }
+
+    @Test
+    public void testFindDeviceCredentialsByDeviceId() {
+        Device device = new Device();
+        device.setTenantId(tenantId);
+        device.setName("My device");
+        device.setType("default");
+        Device savedDevice = deviceService.saveDevice(device);
+        DeviceCredentials deviceCredentials = deviceCredentialsService.findDeviceCredentialsByDeviceId(tenantId, savedDevice.getId());
+        Assert.assertEquals(savedDevice.getId(), deviceCredentials.getDeviceId());
+        deviceService.deleteDevice(tenantId, savedDevice.getId());
+        deviceCredentials = deviceCredentialsService.findDeviceCredentialsByDeviceId(tenantId, savedDevice.getId());
+        Assert.assertNull(deviceCredentials);
+    }
+
+    @Test
+    public void testFindDeviceCredentialsByCredentialsId() {
+        Device device = new Device();
+        device.setTenantId(tenantId);
+        device.setName("My device");
+        device.setType("default");
+        Device savedDevice = deviceService.saveDevice(device);
+        DeviceCredentials deviceCredentials = deviceCredentialsService.findDeviceCredentialsByDeviceId(tenantId, savedDevice.getId());
+        Assert.assertEquals(savedDevice.getId(), deviceCredentials.getDeviceId());
+        DeviceCredentials foundDeviceCredentials = deviceCredentialsService.findDeviceCredentialsByCredentialsId(deviceCredentials.getCredentialsId());
+        Assert.assertEquals(deviceCredentials, foundDeviceCredentials);
+        deviceService.deleteDevice(tenantId, savedDevice.getId());
+        foundDeviceCredentials = deviceCredentialsService.findDeviceCredentialsByCredentialsId(deviceCredentials.getCredentialsId());
+        Assert.assertNull(foundDeviceCredentials);
+    }
+
+    @Test
+    public void testSaveDeviceCredentials() {
+        Device device = new Device();
+        device.setTenantId(tenantId);
+        device.setName("My device");
+        device.setType("default");
+        Device savedDevice = deviceService.saveDevice(device);
+        DeviceCredentials deviceCredentials = deviceCredentialsService.findDeviceCredentialsByDeviceId(tenantId, savedDevice.getId());
+        Assert.assertEquals(savedDevice.getId(), deviceCredentials.getDeviceId());
+        deviceCredentials.setCredentialsType(DeviceCredentialsType.ACCESS_TOKEN);
+        deviceCredentials.setCredentialsId("access_token");
+        deviceCredentialsService.updateDeviceCredentials(tenantId, deviceCredentials);
+        DeviceCredentials foundDeviceCredentials = deviceCredentialsService.findDeviceCredentialsByDeviceId(tenantId, savedDevice.getId());
+        Assert.assertEquals(deviceCredentials, foundDeviceCredentials);
+        deviceService.deleteDevice(tenantId, savedDevice.getId());
+    }
+}

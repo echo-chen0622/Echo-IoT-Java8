@@ -18,10 +18,10 @@ import org.thingsboard.rule.engine.api.TbNodeConfiguration;
 import org.thingsboard.rule.engine.api.TbNodeException;
 import org.thingsboard.rule.engine.api.TbRelationTypes;
 import org.thingsboard.rule.engine.api.util.TbNodeUtils;
-import org.thingsboard.server.common.data.exception.ThingsboardKafkaClientError;
-import org.thingsboard.server.common.data.plugin.ComponentType;
-import org.thingsboard.server.common.msg.TbMsg;
-import org.thingsboard.server.common.msg.TbMsgMetaData;
+import org.echoiot.server.common.data.exception.ThingsboardKafkaClientError;
+import org.echoiot.server.common.data.plugin.ComponentType;
+import org.echoiot.server.common.msg.TbMsg;
+import org.echoiot.server.common.msg.TbMsgMetaData;
 
 import java.lang.reflect.Field;
 import java.nio.charset.Charset;

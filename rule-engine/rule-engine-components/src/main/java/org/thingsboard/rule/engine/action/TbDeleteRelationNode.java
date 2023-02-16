@@ -9,10 +9,10 @@ import org.thingsboard.rule.engine.api.TbNodeConfiguration;
 import org.thingsboard.rule.engine.api.TbNodeException;
 import org.thingsboard.rule.engine.api.util.TbNodeUtils;
 import org.thingsboard.rule.engine.util.EntityContainer;
-import org.thingsboard.server.common.data.plugin.ComponentType;
-import org.thingsboard.server.common.data.relation.EntityRelation;
-import org.thingsboard.server.common.data.relation.RelationTypeGroup;
-import org.thingsboard.server.common.msg.TbMsg;
+import org.echoiot.server.common.data.plugin.ComponentType;
+import org.echoiot.server.common.data.relation.EntityRelation;
+import org.echoiot.server.common.data.relation.RelationTypeGroup;
+import org.echoiot.server.common.msg.TbMsg;
 
 import java.util.ArrayList;
 import java.util.List;

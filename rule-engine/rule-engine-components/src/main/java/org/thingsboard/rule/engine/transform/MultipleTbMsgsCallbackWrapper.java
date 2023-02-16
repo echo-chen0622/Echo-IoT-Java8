@@ -1,7 +1,7 @@
 package org.thingsboard.rule.engine.transform;
 
-import org.thingsboard.server.common.msg.queue.RuleEngineException;
-import org.thingsboard.server.common.msg.queue.TbMsgCallback;
+import org.echoiot.server.common.msg.queue.RuleEngineException;
+import org.echoiot.server.common.msg.queue.TbMsgCallback;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

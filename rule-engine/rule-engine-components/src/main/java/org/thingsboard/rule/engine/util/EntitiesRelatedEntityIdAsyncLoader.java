@@ -6,12 +6,12 @@ import com.google.common.util.concurrent.MoreExecutors;
 import org.apache.commons.collections.CollectionUtils;
 import org.thingsboard.rule.engine.api.TbContext;
 import org.thingsboard.rule.engine.data.RelationsQuery;
-import org.thingsboard.server.common.data.id.EntityId;
-import org.thingsboard.server.common.data.relation.EntityRelation;
-import org.thingsboard.server.common.data.relation.EntityRelationsQuery;
-import org.thingsboard.server.common.data.relation.EntitySearchDirection;
-import org.thingsboard.server.common.data.relation.RelationsSearchParameters;
-import org.thingsboard.server.dao.relation.RelationService;
+import org.echoiot.server.common.data.id.EntityId;
+import org.echoiot.server.common.data.relation.EntityRelation;
+import org.echoiot.server.common.data.relation.EntityRelationsQuery;
+import org.echoiot.server.common.data.relation.EntitySearchDirection;
+import org.echoiot.server.common.data.relation.RelationsSearchParameters;
+import org.echoiot.server.dao.relation.RelationService;
 
 import java.util.List;
 

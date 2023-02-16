@@ -3,8 +3,8 @@ package org.thingsboard.rule.engine.math;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.Getter;
-import org.thingsboard.server.common.data.StringUtils;
-import org.thingsboard.server.common.msg.TbMsgMetaData;
+import org.echoiot.server.common.data.StringUtils;
+import org.echoiot.server.common.msg.TbMsgMetaData;
 
 import java.util.Optional;
 

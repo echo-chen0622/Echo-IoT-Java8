@@ -13,10 +13,10 @@ import org.thingsboard.rule.engine.api.TbNode;
 import org.thingsboard.rule.engine.api.TbNodeConfiguration;
 import org.thingsboard.rule.engine.api.TbNodeException;
 import org.thingsboard.rule.engine.api.util.TbNodeUtils;
-import org.thingsboard.server.common.data.Customer;
-import org.thingsboard.server.common.data.id.CustomerId;
-import org.thingsboard.server.common.msg.TbMsg;
-import org.thingsboard.server.dao.customer.CustomerService;
+import org.echoiot.server.common.data.Customer;
+import org.echoiot.server.common.data.id.CustomerId;
+import org.echoiot.server.common.msg.TbMsg;
+import org.echoiot.server.dao.customer.CustomerService;
 
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;

@@ -7,13 +7,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.thingsboard.rule.engine.api.TbNodeException;
-import org.thingsboard.server.common.data.Device;
-import org.thingsboard.server.common.data.User;
-import org.thingsboard.server.common.data.asset.Asset;
-import org.thingsboard.server.common.data.id.AssetId;
-import org.thingsboard.server.common.data.id.DeviceId;
-import org.thingsboard.server.common.data.id.EntityId;
-import org.thingsboard.server.common.data.id.UserId;
+import org.echoiot.server.common.data.Device;
+import org.echoiot.server.common.data.User;
+import org.echoiot.server.common.data.asset.Asset;
+import org.echoiot.server.common.data.id.AssetId;
+import org.echoiot.server.common.data.id.DeviceId;
+import org.echoiot.server.common.data.id.EntityId;
+import org.echoiot.server.common.data.id.UserId;
 
 import java.util.UUID;
 

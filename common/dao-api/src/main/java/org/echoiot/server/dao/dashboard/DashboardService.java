@@ -1,0 +1,57 @@
+package org.echoiot.server.dao.dashboard;
+
+import com.google.common.util.concurrent.ListenableFuture;
+import org.echoiot.server.common.data.Dashboard;
+import org.echoiot.server.common.data.DashboardInfo;
+import org.echoiot.server.common.data.id.CustomerId;
+import org.echoiot.server.common.data.id.DashboardId;
+import org.echoiot.server.common.data.id.EdgeId;
+import org.echoiot.server.common.data.id.TenantId;
+import org.echoiot.server.common.data.page.PageData;
+import org.echoiot.server.common.data.page.PageLink;
+
+import java.util.List;
+
+public interface DashboardService {
+
+    Dashboard findDashboardById(TenantId tenantId, DashboardId dashboardId);
+
+    ListenableFuture<Dashboard> findDashboardByIdAsync(TenantId tenantId, DashboardId dashboardId);
+
+    DashboardInfo findDashboardInfoById(TenantId tenantId, DashboardId dashboardId);
+
+    ListenableFuture<DashboardInfo> findDashboardInfoByIdAsync(TenantId tenantId, DashboardId dashboardId);
+
+    Dashboard saveDashboard(Dashboard dashboard);
+
+    Dashboard assignDashboardToCustomer(TenantId tenantId, DashboardId dashboardId, CustomerId customerId);
+
+    Dashboard unassignDashboardFromCustomer(TenantId tenantId, DashboardId dashboardId, CustomerId customerId);
+
+    void deleteDashboard(TenantId tenantId, DashboardId dashboardId);
+
+    PageData<DashboardInfo> findDashboardsByTenantId(TenantId tenantId, PageLink pageLink);
+
+    PageData<DashboardInfo> findMobileDashboardsByTenantId(TenantId tenantId, PageLink pageLink);
+
+    void deleteDashboardsByTenantId(TenantId tenantId);
+
+    PageData<DashboardInfo> findDashboardsByTenantIdAndCustomerId(TenantId tenantId, CustomerId customerId, PageLink pageLink);
+
+    PageData<DashboardInfo> findMobileDashboardsByTenantIdAndCustomerId(TenantId tenantId, CustomerId customerId, PageLink pageLink);
+
+    void unassignCustomerDashboards(TenantId tenantId, CustomerId customerId);
+
+    void updateCustomerDashboards(TenantId tenantId, CustomerId customerId);
+
+    Dashboard assignDashboardToEdge(TenantId tenantId, DashboardId dashboardId, EdgeId edgeId);
+
+    Dashboard unassignDashboardFromEdge(TenantId tenantId, DashboardId dashboardId, EdgeId edgeId);
+
+    PageData<DashboardInfo> findDashboardsByTenantIdAndEdgeId(TenantId tenantId, EdgeId edgeId, PageLink pageLink);
+
+    DashboardInfo findFirstDashboardInfoByTenantIdAndName(TenantId tenantId, String name);
+
+    List<Dashboard> findTenantDashboardsByTitle(TenantId tenantId, String title);
+
+}

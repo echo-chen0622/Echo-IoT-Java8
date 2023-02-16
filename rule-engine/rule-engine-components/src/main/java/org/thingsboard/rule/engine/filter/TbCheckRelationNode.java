@@ -10,13 +10,13 @@ import org.thingsboard.rule.engine.api.TbNode;
 import org.thingsboard.rule.engine.api.TbNodeConfiguration;
 import org.thingsboard.rule.engine.api.TbNodeException;
 import org.thingsboard.rule.engine.api.util.TbNodeUtils;
-import org.thingsboard.server.common.data.id.EntityId;
-import org.thingsboard.server.common.data.id.EntityIdFactory;
-import org.thingsboard.server.common.data.plugin.ComponentType;
-import org.thingsboard.server.common.data.relation.EntityRelation;
-import org.thingsboard.server.common.data.relation.EntitySearchDirection;
-import org.thingsboard.server.common.data.relation.RelationTypeGroup;
-import org.thingsboard.server.common.msg.TbMsg;
+import org.echoiot.server.common.data.id.EntityId;
+import org.echoiot.server.common.data.id.EntityIdFactory;
+import org.echoiot.server.common.data.plugin.ComponentType;
+import org.echoiot.server.common.data.relation.EntityRelation;
+import org.echoiot.server.common.data.relation.EntitySearchDirection;
+import org.echoiot.server.common.data.relation.RelationTypeGroup;
+import org.echoiot.server.common.msg.TbMsg;
 
 import java.util.List;
 

@@ -5,13 +5,12 @@ import com.google.common.util.concurrent.ListenableFuture;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.util.Pair;
 import org.thingsboard.script.api.AbstractScriptInvokeService;
 import org.thingsboard.script.api.RuleNodeScriptFactory;
 import org.thingsboard.script.api.ScriptType;
-import org.thingsboard.server.common.data.id.TenantId;
-import org.thingsboard.server.common.stats.TbApiUsageReportClient;
-import org.thingsboard.server.common.stats.TbApiUsageStateClient;
+import org.echoiot.server.common.data.id.TenantId;
+import org.echoiot.server.common.stats.TbApiUsageReportClient;
+import org.echoiot.server.common.stats.TbApiUsageStateClient;
 
 import java.util.Map;
 import java.util.Optional;

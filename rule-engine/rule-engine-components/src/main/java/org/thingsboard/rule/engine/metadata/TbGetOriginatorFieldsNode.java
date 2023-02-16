@@ -11,9 +11,9 @@ import org.thingsboard.rule.engine.api.TbNodeConfiguration;
 import org.thingsboard.rule.engine.api.TbNodeException;
 import org.thingsboard.rule.engine.api.util.TbNodeUtils;
 import org.thingsboard.rule.engine.util.EntitiesFieldsAsyncLoader;
-import org.thingsboard.server.common.data.id.EntityId;
-import org.thingsboard.server.common.data.plugin.ComponentType;
-import org.thingsboard.server.common.msg.TbMsg;
+import org.echoiot.server.common.data.id.EntityId;
+import org.echoiot.server.common.data.plugin.ComponentType;
+import org.echoiot.server.common.msg.TbMsg;
 
 import static org.thingsboard.common.util.DonAsynchron.withCallback;
 

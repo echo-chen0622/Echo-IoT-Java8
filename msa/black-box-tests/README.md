@@ -41,7 +41,3 @@ As result, in REPOSITORY column, next images should be present:
 - To run all tests in the [msa/black-box-tests](../black-box-tests) directory specifying suite name:
 
         mvn clean install -DblackBoxTests.skip=false -Dsuite=all 
-
-
-
-

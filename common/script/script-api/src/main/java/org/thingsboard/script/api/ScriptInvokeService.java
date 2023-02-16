@@ -1,9 +1,9 @@
 package org.thingsboard.script.api;
 
 import com.google.common.util.concurrent.ListenableFuture;
-import org.thingsboard.server.common.data.id.CustomerId;
-import org.thingsboard.server.common.data.id.TenantId;
-import org.thingsboard.server.common.data.script.ScriptLanguage;
+import org.echoiot.server.common.data.id.CustomerId;
+import org.echoiot.server.common.data.id.TenantId;
+import org.echoiot.server.common.data.script.ScriptLanguage;
 
 import java.util.UUID;
 

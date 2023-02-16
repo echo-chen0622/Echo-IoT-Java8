@@ -10,14 +10,14 @@ import org.thingsboard.rule.engine.api.TbNode;
 import org.thingsboard.rule.engine.api.TbNodeConfiguration;
 import org.thingsboard.rule.engine.api.TbNodeException;
 import org.thingsboard.rule.engine.api.util.TbNodeUtils;
-import org.thingsboard.server.common.data.EntityType;
-import org.thingsboard.server.common.data.id.DeviceId;
-import org.thingsboard.server.common.data.id.EntityId;
-import org.thingsboard.server.common.data.plugin.ComponentType;
-import org.thingsboard.server.common.data.security.DeviceCredentials;
-import org.thingsboard.server.common.data.security.DeviceCredentialsType;
-import org.thingsboard.server.common.msg.TbMsg;
-import org.thingsboard.server.common.msg.TbMsgMetaData;
+import org.echoiot.server.common.data.EntityType;
+import org.echoiot.server.common.data.id.DeviceId;
+import org.echoiot.server.common.data.id.EntityId;
+import org.echoiot.server.common.data.plugin.ComponentType;
+import org.echoiot.server.common.data.security.DeviceCredentials;
+import org.echoiot.server.common.data.security.DeviceCredentialsType;
+import org.echoiot.server.common.msg.TbMsg;
+import org.echoiot.server.common.msg.TbMsgMetaData;
 
 import java.util.concurrent.ExecutionException;
 

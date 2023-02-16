@@ -2,10 +2,10 @@ package org.thingsboard.rule.engine.profile;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.thingsboard.server.common.data.device.profile.AlarmConditionFilterKey;
-import org.thingsboard.server.common.data.device.profile.AlarmConditionKeyType;
-import org.thingsboard.server.common.data.query.EntityKey;
-import org.thingsboard.server.common.data.query.EntityKeyType;
+import org.echoiot.server.common.data.device.profile.AlarmConditionFilterKey;
+import org.echoiot.server.common.data.device.profile.AlarmConditionKeyType;
+import org.echoiot.server.common.data.query.EntityKey;
+import org.echoiot.server.common.data.query.EntityKeyType;
 
 import java.util.Map;
 import java.util.Set;

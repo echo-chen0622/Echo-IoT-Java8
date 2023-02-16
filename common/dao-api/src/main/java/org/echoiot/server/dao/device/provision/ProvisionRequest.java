@@ -1,0 +1,16 @@
+package org.echoiot.server.dao.device.provision;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import org.echoiot.server.common.data.device.credentials.ProvisionDeviceCredentialsData;
+import org.echoiot.server.common.data.device.profile.ProvisionDeviceProfileCredentials;
+import org.echoiot.server.common.data.security.DeviceCredentialsType;
+
+@Data
+@AllArgsConstructor
+public class ProvisionRequest {
+    private String deviceName;
+    private DeviceCredentialsType credentialsType;
+    private ProvisionDeviceCredentialsData credentialsData;
+    private ProvisionDeviceProfileCredentials credentials;
+}

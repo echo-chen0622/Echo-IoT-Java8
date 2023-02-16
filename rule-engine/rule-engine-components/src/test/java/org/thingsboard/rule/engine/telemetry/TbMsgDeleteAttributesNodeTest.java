@@ -10,10 +10,10 @@ import org.thingsboard.rule.engine.api.RuleEngineTelemetryService;
 import org.thingsboard.rule.engine.api.TbContext;
 import org.thingsboard.rule.engine.api.TbNodeConfiguration;
 import org.thingsboard.rule.engine.api.TbNodeException;
-import org.thingsboard.server.common.data.id.DeviceId;
-import org.thingsboard.server.common.msg.TbMsg;
-import org.thingsboard.server.common.msg.TbMsgMetaData;
-import org.thingsboard.server.common.msg.queue.TbMsgCallback;
+import org.echoiot.server.common.data.id.DeviceId;
+import org.echoiot.server.common.msg.TbMsg;
+import org.echoiot.server.common.msg.TbMsgMetaData;
+import org.echoiot.server.common.msg.queue.TbMsgCallback;
 
 import java.util.Collections;
 import java.util.List;
@@ -34,10 +34,10 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.thingsboard.server.common.data.DataConstants.NOTIFY_DEVICE_METADATA_KEY;
-import static org.thingsboard.server.common.data.DataConstants.SCOPE;
-import static org.thingsboard.server.common.data.DataConstants.SERVER_SCOPE;
-import static org.thingsboard.server.common.data.DataConstants.SHARED_SCOPE;
+import static org.echoiot.server.common.data.DataConstants.NOTIFY_DEVICE_METADATA_KEY;
+import static org.echoiot.server.common.data.DataConstants.SCOPE;
+import static org.echoiot.server.common.data.DataConstants.SERVER_SCOPE;
+import static org.echoiot.server.common.data.DataConstants.SHARED_SCOPE;
 
 @Slf4j
 public class TbMsgDeleteAttributesNodeTest {

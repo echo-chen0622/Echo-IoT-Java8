@@ -2,7 +2,7 @@ package org.thingsboard.rule.engine.action;
 
 import lombok.Data;
 import org.thingsboard.rule.engine.api.NodeConfiguration;
-import org.thingsboard.server.common.data.relation.EntitySearchDirection;
+import org.echoiot.server.common.data.relation.EntitySearchDirection;
 
 @Data
 public class TbCreateRelationNodeConfiguration extends TbAbstractRelationActionNodeConfiguration implements NodeConfiguration<TbCreateRelationNodeConfiguration> {

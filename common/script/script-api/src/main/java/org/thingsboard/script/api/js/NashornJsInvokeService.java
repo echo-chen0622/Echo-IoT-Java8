@@ -13,8 +13,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.thingsboard.common.util.ThingsBoardExecutors;
 import org.thingsboard.script.api.TbScriptException;
-import org.thingsboard.server.common.stats.TbApiUsageReportClient;
-import org.thingsboard.server.common.stats.TbApiUsageStateClient;
+import org.echoiot.server.common.stats.TbApiUsageReportClient;
+import org.echoiot.server.common.stats.TbApiUsageStateClient;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;

@@ -2,30 +2,29 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.thingsboard</groupId>
+        <groupId>org.echoiot</groupId>
         <version>3.4.4</version>
-        <artifactId>thingsboard</artifactId>
+        <artifactId>echoiot</artifactId>
     </parent>
     <artifactId>application</artifactId>
     <packaging>jar</packaging>
 
     <name>ThingsBoard Server Application</name>
-    <url>https://thingsboard.io</url>
     <description>Open-source IoT Platform - Device management, data collection, processing and visualization
     </description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <main.dir>${basedir}/..</main.dir>
-        <pkg.type>java</pkg.type>
-        <pkg.disabled>false</pkg.disabled>
-        <pkg.process-resources.phase>process-resources</pkg.process-resources.phase>
-        <pkg.package.phase>package</pkg.package.phase>
-        <pkg.name>thingsboard</pkg.name>
-        <pkg.win.dist>${project.build.directory}/windows</pkg.win.dist>
-        <pkg.copyInstallScripts>true</pkg.copyInstallScripts>
-        <pkg.implementationTitle>ThingsBoard</pkg.implementationTitle>
-        <pkg.mainClass>org.thingsboard.server.ThingsboardServerApplication</pkg.mainClass>
+        <echo.type>java</echo.type>
+        <echo.disabled>false</echo.disabled>
+        <echo.process-resources.phase>process-resources</echo.process-resources.phase>
+        <echo.package.phase>package</echo.package.phase>
+        <echo.name>echoiot</echo.name>
+        <echo.win.dist>${project.build.directory}/windows</echo.win.dist>
+        <echo.copyInstallScripts>true</echo.copyInstallScripts>
+        <echo.implementationTitle>ThingsBoard</echo.implementationTitle>
+        <echo.mainClass>org.echoiot.server.server.ThingsboardServerApplication</echo.mainClass>
     </properties>
 
     <dependencies>
@@ -37,79 +36,79 @@
             <classifier>linux-x86_64</classifier>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard.common</groupId>
+            <groupId>org.echoiot.common</groupId>
             <artifactId>actor</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard.common</groupId>
+            <groupId>org.echoiot.common</groupId>
             <artifactId>util</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard.rule-engine</groupId>
+            <groupId>org.echoiot.rule-engine</groupId>
             <artifactId>rule-engine-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard.common</groupId>
+            <groupId>org.echoiot.common</groupId>
             <artifactId>cluster-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard.common</groupId>
+            <groupId>org.echoiot.common</groupId>
             <artifactId>version-control</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard.rule-engine</groupId>
+            <groupId>org.echoiot.rule-engine</groupId>
             <artifactId>rule-engine-components</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard.common.transport</groupId>
+            <groupId>org.echoiot.common.transport</groupId>
             <artifactId>transport-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard.common.transport</groupId>
+            <groupId>org.echoiot.common.transport</groupId>
             <artifactId>mqtt</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard.common.transport</groupId>
+            <groupId>org.echoiot.common.transport</groupId>
             <artifactId>http</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard.common.transport</groupId>
+            <groupId>org.echoiot.common.transport</groupId>
             <artifactId>coap</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard.common.transport</groupId>
+            <groupId>org.echoiot.common.transport</groupId>
             <artifactId>lwm2m</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard.common.transport</groupId>
+            <groupId>org.echoiot.common.transport</groupId>
             <artifactId>snmp</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard</groupId>
+            <groupId>org.echoiot</groupId>
             <artifactId>dao</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard.common</groupId>
+            <groupId>org.echoiot.common</groupId>
             <artifactId>queue</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard.common.script</groupId>
+            <groupId>org.echoiot.common.script</groupId>
             <artifactId>script-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard.common.script</groupId>
+            <groupId>org.echoiot.common.script</groupId>
             <artifactId>remote-js-client</artifactId>
         </dependency>
         <dependency>
-        <groupId>org.thingsboard.common</groupId>
+        <groupId>org.echoiot.common</groupId>
             <artifactId>stats</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard.common</groupId>
+            <groupId>org.echoiot.common</groupId>
             <artifactId>edge-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard</groupId>
+            <groupId>org.echoiot</groupId>
             <artifactId>dao</artifactId>
             <type>test-jar</type>
             <scope>test</scope>
@@ -139,7 +138,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard</groupId>
+            <groupId>org.echoiot</groupId>
             <artifactId>ui-ngx</artifactId>
             <version>${project.version}</version>
             <scope>runtime</scope>
@@ -249,7 +248,7 @@
             <artifactId>opensmpp-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard</groupId>
+            <groupId>org.echoiot</groupId>
             <artifactId>springfox-boot-starter</artifactId>
         </dependency>
         <dependency>
@@ -260,12 +259,12 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard</groupId>
+            <groupId>org.echoiot</groupId>
             <artifactId>tools</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard</groupId>
+            <groupId>org.echoiot</groupId>
             <artifactId>rest-client</artifactId>
             <scope>test</scope>
         </dependency>
@@ -342,20 +341,20 @@
     </dependencies>
 
     <build>
-        <finalName>${pkg.name}-${project.version}</finalName>
+        <finalName>${echo.name}-${project.version}</finalName>
         <resources>
             <resource>
                 <directory>${project.basedir}/src/main/resources</directory>
                 <filtering>true</filtering>
                 <includes>
-                    <include>thingsboard.yml</include>
+                    <include>echoiot.yml</include>
                 </includes>
             </resource>
             <resource>
                 <directory>${project.basedir}/src/main/resources</directory>
                 <filtering>false</filtering>
                 <excludes>
-                    <exclude>thingsboard.yml</exclude>
+                    <exclude>echoiot.yml</exclude>
                 </excludes>
             </resource>
         </resources>
@@ -369,7 +368,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <systemPropertyVariables>
-                        <spring.config.name>thingsboard</spring.config.name>
+                        <spring.config.name>echoiot</spring.config.name>
                     </systemPropertyVariables>
                     <excludes>
                         <exclude>**/nosql/*Test.java</exclude>
@@ -397,7 +396,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
             <plugin>
-                <groupId>org.thingsboard</groupId>
+                <groupId>org.echoiot</groupId>
                 <artifactId>gradle-maven-plugin</artifactId>
             </plugin>
             <plugin>

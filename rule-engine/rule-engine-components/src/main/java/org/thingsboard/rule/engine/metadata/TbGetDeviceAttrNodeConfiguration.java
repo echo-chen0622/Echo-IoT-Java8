@@ -2,8 +2,8 @@ package org.thingsboard.rule.engine.metadata;
 
 import lombok.Data;
 import org.thingsboard.rule.engine.data.DeviceRelationsQuery;
-import org.thingsboard.server.common.data.relation.EntityRelation;
-import org.thingsboard.server.common.data.relation.EntitySearchDirection;
+import org.echoiot.server.common.data.relation.EntityRelation;
+import org.echoiot.server.common.data.relation.EntitySearchDirection;
 
 import java.util.Collections;
 

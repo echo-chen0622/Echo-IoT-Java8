@@ -1,0 +1,21 @@
+package org.echoiot.server.dao.rule;
+
+import org.echoiot.server.common.data.id.EntityId;
+import org.echoiot.server.common.data.id.RuleNodeId;
+import org.echoiot.server.common.data.id.TenantId;
+import org.echoiot.server.common.data.page.PageData;
+import org.echoiot.server.common.data.page.PageLink;
+import org.echoiot.server.common.data.rule.RuleNodeState;
+
+public interface RuleNodeStateService {
+
+    PageData<RuleNodeState> findByRuleNodeId(TenantId tenantId, RuleNodeId ruleNodeId, PageLink pageLink);
+
+    RuleNodeState findByRuleNodeIdAndEntityId(TenantId tenantId, RuleNodeId ruleNodeId, EntityId entityId);
+
+    RuleNodeState save(TenantId tenantId, RuleNodeState ruleNodeState);
+
+    void removeByRuleNodeId(TenantId tenantId, RuleNodeId selfId);
+
+    void removeByRuleNodeIdAndEntityId(TenantId tenantId, RuleNodeId selfId, EntityId entityId);
+}

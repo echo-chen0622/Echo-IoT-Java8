@@ -12,17 +12,17 @@ import org.thingsboard.rule.engine.api.TbNode;
 import org.thingsboard.rule.engine.api.TbNodeConfiguration;
 import org.thingsboard.rule.engine.api.TbNodeException;
 import org.thingsboard.rule.engine.api.util.TbNodeUtils;
-import org.thingsboard.server.common.data.DataConstants;
-import org.thingsboard.server.common.data.EdgeUtils;
-import org.thingsboard.server.common.data.EntityType;
-import org.thingsboard.server.common.data.StringUtils;
-import org.thingsboard.server.common.data.edge.EdgeEvent;
-import org.thingsboard.server.common.data.edge.EdgeEventActionType;
-import org.thingsboard.server.common.data.edge.EdgeEventType;
-import org.thingsboard.server.common.data.id.DeviceId;
-import org.thingsboard.server.common.data.id.EdgeId;
-import org.thingsboard.server.common.data.plugin.ComponentType;
-import org.thingsboard.server.common.msg.TbMsg;
+import org.echoiot.server.common.data.DataConstants;
+import org.echoiot.server.common.data.EdgeUtils;
+import org.echoiot.server.common.data.EntityType;
+import org.echoiot.server.common.data.StringUtils;
+import org.echoiot.server.common.data.edge.EdgeEvent;
+import org.echoiot.server.common.data.edge.EdgeEventActionType;
+import org.echoiot.server.common.data.edge.EdgeEventType;
+import org.echoiot.server.common.data.id.DeviceId;
+import org.echoiot.server.common.data.id.EdgeId;
+import org.echoiot.server.common.data.plugin.ComponentType;
+import org.echoiot.server.common.msg.TbMsg;
 
 import java.util.UUID;
 

@@ -7,8 +7,8 @@ import org.thingsboard.rule.engine.api.TbNode;
 import org.thingsboard.rule.engine.api.TbNodeConfiguration;
 import org.thingsboard.rule.engine.api.TbNodeException;
 import org.thingsboard.rule.engine.api.util.TbNodeUtils;
-import org.thingsboard.server.common.data.id.EntityId;
-import org.thingsboard.server.common.msg.TbMsg;
+import org.echoiot.server.common.data.id.EntityId;
+import org.echoiot.server.common.msg.TbMsg;
 
 @Slf4j
 public abstract class TbAbstractTypeSwitchNode implements TbNode {

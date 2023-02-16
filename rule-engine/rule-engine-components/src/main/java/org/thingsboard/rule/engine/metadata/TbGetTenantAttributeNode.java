@@ -5,9 +5,9 @@ import com.google.common.util.concurrent.ListenableFuture;
 import lombok.extern.slf4j.Slf4j;
 import org.thingsboard.rule.engine.api.RuleNode;
 import org.thingsboard.rule.engine.api.TbContext;
-import org.thingsboard.server.common.data.id.EntityId;
-import org.thingsboard.server.common.data.id.TenantId;
-import org.thingsboard.server.common.data.plugin.ComponentType;
+import org.echoiot.server.common.data.id.EntityId;
+import org.echoiot.server.common.data.id.TenantId;
+import org.echoiot.server.common.data.plugin.ComponentType;
 
 @Slf4j
 @RuleNode(

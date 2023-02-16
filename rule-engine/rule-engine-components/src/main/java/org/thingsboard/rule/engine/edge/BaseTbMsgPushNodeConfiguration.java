@@ -2,7 +2,7 @@ package org.thingsboard.rule.engine.edge;
 
 import lombok.Data;
 import org.thingsboard.rule.engine.api.NodeConfiguration;
-import org.thingsboard.server.common.data.DataConstants;
+import org.echoiot.server.common.data.DataConstants;
 
 @Data
 public class BaseTbMsgPushNodeConfiguration implements NodeConfiguration<BaseTbMsgPushNodeConfiguration> {

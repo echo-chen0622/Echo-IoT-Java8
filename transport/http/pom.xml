@@ -24,7 +24,7 @@
         <pkg.copyInstallScripts>false</pkg.copyInstallScripts>
         <pkg.win.dist>${project.build.directory}/windows</pkg.win.dist>
         <pkg.implementationTitle>ThingsBoard HTTP Transport Service</pkg.implementationTitle>
-        <pkg.mainClass>org.thingsboard.server.http.ThingsboardHttpTransportApplication</pkg.mainClass>
+        <pkg.mainClass>org.echoiot.server.http.ThingsboardHttpTransportApplication</pkg.mainClass>
     </properties>
 
     <dependencies>

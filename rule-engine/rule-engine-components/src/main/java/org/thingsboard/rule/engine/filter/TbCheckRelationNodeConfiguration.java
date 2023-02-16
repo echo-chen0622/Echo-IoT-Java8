@@ -2,7 +2,7 @@ package org.thingsboard.rule.engine.filter;
 
 import lombok.Data;
 import org.thingsboard.rule.engine.api.NodeConfiguration;
-import org.thingsboard.server.common.data.relation.EntitySearchDirection;
+import org.echoiot.server.common.data.relation.EntitySearchDirection;
 
 /**
  * Created by Echo on 19.01.18.

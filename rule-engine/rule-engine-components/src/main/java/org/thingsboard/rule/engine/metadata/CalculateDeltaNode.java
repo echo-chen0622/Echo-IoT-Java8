@@ -13,12 +13,12 @@ import org.thingsboard.rule.engine.api.TbNodeConfiguration;
 import org.thingsboard.rule.engine.api.TbNodeException;
 import org.thingsboard.rule.engine.api.TbRelationTypes;
 import org.thingsboard.rule.engine.api.util.TbNodeUtils;
-import org.thingsboard.server.common.data.id.EntityId;
-import org.thingsboard.server.common.data.kv.TsKvEntry;
-import org.thingsboard.server.common.data.plugin.ComponentType;
-import org.thingsboard.server.common.msg.TbMsg;
-import org.thingsboard.server.common.msg.session.SessionMsgType;
-import org.thingsboard.server.dao.timeseries.TimeseriesService;
+import org.echoiot.server.common.data.id.EntityId;
+import org.echoiot.server.common.data.kv.TsKvEntry;
+import org.echoiot.server.common.data.plugin.ComponentType;
+import org.echoiot.server.common.msg.TbMsg;
+import org.echoiot.server.common.msg.session.SessionMsgType;
+import org.echoiot.server.dao.timeseries.TimeseriesService;
 import org.thingsboard.common.util.JacksonUtil;
 
 import java.math.BigDecimal;

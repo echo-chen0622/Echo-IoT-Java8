@@ -2,38 +2,37 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.thingsboard</groupId>
+        <groupId>org.echoiot</groupId>
         <version>3.4.4</version>
         <artifactId>transport</artifactId>
     </parent>
-    <groupId>org.thingsboard.transport</groupId>
+    <groupId>org.echoiot.transport</groupId>
     <artifactId>coap</artifactId>
     <packaging>jar</packaging>
 
     <name>Thingsboard CoAP Transport Service</name>
-    <url>https://thingsboard.io</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <main.dir>${basedir}/../..</main.dir>
-        <pkg.type>java</pkg.type>
-        <pkg.disabled>false</pkg.disabled>
-        <pkg.process-resources.phase>process-resources</pkg.process-resources.phase>
-        <pkg.package.phase>package</pkg.package.phase>
-        <pkg.name>tb-coap-transport</pkg.name>
-        <pkg.copyInstallScripts>false</pkg.copyInstallScripts>
-        <pkg.win.dist>${project.build.directory}/windows</pkg.win.dist>
-        <pkg.implementationTitle>ThingsBoard CoAP Transport Service</pkg.implementationTitle>
-        <pkg.mainClass>org.thingsboard.server.coap.ThingsboardCoapTransportApplication</pkg.mainClass>
+        <echo.type>java</echo.type>
+        <echo.disabled>false</echo.disabled>
+        <echo.process-resources.phase>process-resources</echo.process-resources.phase>
+        <echo.package.phase>package</echo.package.phase>
+        <echo.name>tb-coap-transport</echo.name>
+        <echo.copyInstallScripts>false</echo.copyInstallScripts>
+        <echo.win.dist>${project.build.directory}/windows</echo.win.dist>
+        <echo.implementationTitle>ThingsBoard CoAP Transport Service</echo.implementationTitle>
+        <echo.mainClass>org.echoiot.server.coap.ThingsboardCoapTransportApplication</echo.mainClass>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>org.thingsboard.common.transport</groupId>
+            <groupId>org.echoiot.common.transport</groupId>
             <artifactId>coap</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard.common</groupId>
+            <groupId>org.echoiot.common</groupId>
             <artifactId>queue</artifactId>
         </dependency>
         <dependency>
@@ -65,7 +64,7 @@
     </dependencies>
 
     <build>
-        <finalName>${pkg.name}-${project.version}</finalName>
+        <finalName>${echo.name}-${project.version}</finalName>
         <resources>
             <resource>
                 <directory>${project.basedir}/src/main/resources</directory>
@@ -89,7 +88,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
             <plugin>
-                <groupId>org.thingsboard</groupId>
+                <groupId>org.echoiot</groupId>
                 <artifactId>gradle-maven-plugin</artifactId>
             </plugin>
             <plugin>

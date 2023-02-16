@@ -2,13 +2,13 @@ package org.thingsboard.rule.engine.profile;
 
 import lombok.extern.slf4j.Slf4j;
 import org.thingsboard.rule.engine.api.TbContext;
-import org.thingsboard.server.common.data.DataConstants;
-import org.thingsboard.server.common.data.Device;
-import org.thingsboard.server.common.data.id.CustomerId;
-import org.thingsboard.server.common.data.id.DeviceId;
-import org.thingsboard.server.common.data.id.EntityId;
-import org.thingsboard.server.common.data.id.TenantId;
-import org.thingsboard.server.common.data.kv.AttributeKvEntry;
+import org.echoiot.server.common.data.DataConstants;
+import org.echoiot.server.common.data.Device;
+import org.echoiot.server.common.data.id.CustomerId;
+import org.echoiot.server.common.data.id.DeviceId;
+import org.echoiot.server.common.data.id.EntityId;
+import org.echoiot.server.common.data.id.TenantId;
+import org.echoiot.server.common.data.kv.AttributeKvEntry;
 
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;

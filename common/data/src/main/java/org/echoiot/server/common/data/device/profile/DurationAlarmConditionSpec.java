@@ -1,0 +1,20 @@
+package org.echoiot.server.common.data.device.profile;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Data;
+import org.echoiot.server.common.data.query.FilterPredicateValue;
+
+import java.util.concurrent.TimeUnit;
+
+@Data
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class DurationAlarmConditionSpec implements AlarmConditionSpec {
+
+    private TimeUnit unit;
+    private FilterPredicateValue<Long> predicate;
+
+    @Override
+    public AlarmConditionSpecType getType() {
+        return AlarmConditionSpecType.DURATION;
+    }
+}

@@ -8,9 +8,9 @@ import org.thingsboard.rule.engine.api.TbNodeConfiguration;
 import org.thingsboard.rule.engine.api.TbNodeException;
 import org.thingsboard.rule.engine.api.util.TbNodeUtils;
 import org.thingsboard.rule.engine.util.EntitiesRelatedDeviceIdAsyncLoader;
-import org.thingsboard.server.common.data.id.DeviceId;
-import org.thingsboard.server.common.data.plugin.ComponentType;
-import org.thingsboard.server.common.msg.TbMsg;
+import org.echoiot.server.common.data.id.DeviceId;
+import org.echoiot.server.common.data.plugin.ComponentType;
+import org.echoiot.server.common.msg.TbMsg;
 
 @Slf4j
 @RuleNode(type = ComponentType.ENRICHMENT,

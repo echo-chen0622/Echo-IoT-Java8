@@ -4,12 +4,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import lombok.extern.slf4j.Slf4j;
 import org.thingsboard.rule.engine.api.RuleNode;
 import org.thingsboard.rule.engine.api.TbContext;
-import org.thingsboard.server.common.data.EntityType;
-import org.thingsboard.server.common.data.edge.EdgeEventActionType;
-import org.thingsboard.server.common.data.id.TenantId;
-import org.thingsboard.server.common.data.plugin.ComponentType;
-import org.thingsboard.server.common.data.rule.RuleChainType;
-import org.thingsboard.server.common.msg.TbMsg;
+import org.echoiot.server.common.data.EntityType;
+import org.echoiot.server.common.data.edge.EdgeEventActionType;
+import org.echoiot.server.common.data.id.TenantId;
+import org.echoiot.server.common.data.plugin.ComponentType;
+import org.echoiot.server.common.data.rule.RuleChainType;
+import org.echoiot.server.common.msg.TbMsg;
 
 import java.util.UUID;
 

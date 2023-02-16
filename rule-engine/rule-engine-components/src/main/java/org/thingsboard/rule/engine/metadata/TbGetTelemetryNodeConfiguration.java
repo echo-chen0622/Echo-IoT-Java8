@@ -2,7 +2,7 @@ package org.thingsboard.rule.engine.metadata;
 
 import lombok.Data;
 import org.thingsboard.rule.engine.api.NodeConfiguration;
-import org.thingsboard.server.common.data.kv.Aggregation;
+import org.echoiot.server.common.data.kv.Aggregation;
 
 import java.util.Collections;
 import java.util.List;

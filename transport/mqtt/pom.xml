@@ -24,7 +24,7 @@
         <pkg.copyInstallScripts>false</pkg.copyInstallScripts>
         <pkg.win.dist>${project.build.directory}/windows</pkg.win.dist>
         <pkg.implementationTitle>ThingsBoard MQTT Transport Service</pkg.implementationTitle>
-        <pkg.mainClass>org.thingsboard.server.mqtt.ThingsboardMqttTransportApplication</pkg.mainClass>
+        <pkg.mainClass>org.echoiot.server.mqtt.ThingsboardMqttTransportApplication</pkg.mainClass>
     </properties>
 
     <dependencies>

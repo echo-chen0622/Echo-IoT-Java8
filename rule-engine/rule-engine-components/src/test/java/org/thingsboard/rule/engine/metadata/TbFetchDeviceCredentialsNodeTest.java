@@ -9,14 +9,14 @@ import org.thingsboard.common.util.JacksonUtil;
 import org.thingsboard.rule.engine.api.TbContext;
 import org.thingsboard.rule.engine.api.TbNodeConfiguration;
 import org.thingsboard.rule.engine.api.TbNodeException;
-import org.thingsboard.server.common.data.id.CustomerId;
-import org.thingsboard.server.common.data.id.DeviceId;
-import org.thingsboard.server.common.data.id.EntityId;
-import org.thingsboard.server.common.data.security.DeviceCredentials;
-import org.thingsboard.server.common.msg.TbMsg;
-import org.thingsboard.server.common.msg.TbMsgMetaData;
-import org.thingsboard.server.common.msg.queue.TbMsgCallback;
-import org.thingsboard.server.dao.device.DeviceCredentialsService;
+import org.echoiot.server.common.data.id.CustomerId;
+import org.echoiot.server.common.data.id.DeviceId;
+import org.echoiot.server.common.data.id.EntityId;
+import org.echoiot.server.common.data.security.DeviceCredentials;
+import org.echoiot.server.common.msg.TbMsg;
+import org.echoiot.server.common.msg.TbMsgMetaData;
+import org.echoiot.server.common.msg.queue.TbMsgCallback;
+import org.echoiot.server.dao.device.DeviceCredentialsService;
 
 import java.util.Map;
 import java.util.UUID;
@@ -30,7 +30,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.thingsboard.server.common.data.security.DeviceCredentialsType.ACCESS_TOKEN;
+import static org.echoiot.server.common.data.security.DeviceCredentialsType.ACCESS_TOKEN;
 
 public class TbFetchDeviceCredentialsNodeTest {
     final ObjectMapper mapper = new ObjectMapper();

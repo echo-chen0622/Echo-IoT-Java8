@@ -13,11 +13,11 @@ import org.thingsboard.rule.engine.util.EntitiesAlarmOriginatorIdAsyncLoader;
 import org.thingsboard.rule.engine.util.EntitiesByNameAndTypeLoader;
 import org.thingsboard.rule.engine.util.EntitiesCustomerIdAsyncLoader;
 import org.thingsboard.rule.engine.util.EntitiesRelatedEntityIdAsyncLoader;
-import org.thingsboard.server.common.data.EntityType;
-import org.thingsboard.server.common.data.StringUtils;
-import org.thingsboard.server.common.data.id.EntityId;
-import org.thingsboard.server.common.data.plugin.ComponentType;
-import org.thingsboard.server.common.msg.TbMsg;
+import org.echoiot.server.common.data.EntityType;
+import org.echoiot.server.common.data.StringUtils;
+import org.echoiot.server.common.data.id.EntityId;
+import org.echoiot.server.common.data.plugin.ComponentType;
+import org.echoiot.server.common.msg.TbMsg;
 
 import java.util.Collections;
 import java.util.HashSet;

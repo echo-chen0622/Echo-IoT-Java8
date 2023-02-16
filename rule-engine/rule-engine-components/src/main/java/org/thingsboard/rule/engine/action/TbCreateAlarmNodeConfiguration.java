@@ -2,9 +2,9 @@ package org.thingsboard.rule.engine.action;
 
 import lombok.Data;
 import org.thingsboard.rule.engine.api.NodeConfiguration;
-import org.thingsboard.server.common.data.alarm.AlarmSeverity;
-import org.thingsboard.server.common.data.script.ScriptLanguage;
-import org.thingsboard.server.common.data.validation.NoXss;
+import org.echoiot.server.common.data.alarm.AlarmSeverity;
+import org.echoiot.server.common.data.script.ScriptLanguage;
+import org.echoiot.server.common.data.validation.NoXss;
 
 import java.util.Collections;
 import java.util.List;

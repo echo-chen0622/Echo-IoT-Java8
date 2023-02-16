@@ -1,8 +1,8 @@
 package org.thingsboard.rule.engine.telemetry;
 
 import org.thingsboard.rule.engine.api.TbContext;
-import org.thingsboard.server.common.data.kv.AttributeKvEntry;
-import org.thingsboard.server.common.msg.TbMsg;
+import org.echoiot.server.common.data.kv.AttributeKvEntry;
+import org.echoiot.server.common.msg.TbMsg;
 
 import javax.annotation.Nullable;
 import java.util.List;

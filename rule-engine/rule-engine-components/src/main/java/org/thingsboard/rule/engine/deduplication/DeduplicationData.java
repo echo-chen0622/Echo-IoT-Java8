@@ -1,7 +1,7 @@
 package org.thingsboard.rule.engine.deduplication;
 
 import lombok.Data;
-import org.thingsboard.server.common.msg.TbMsg;
+import org.echoiot.server.common.msg.TbMsg;
 
 import java.util.LinkedList;
 import java.util.List;

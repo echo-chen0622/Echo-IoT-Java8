@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.thingsboard.server.common.transport.adaptor.JsonConverter;
+import org.echoiot.server.common.transport.adaptor.JsonConverter;
 
 import java.util.ArrayList;
 

@@ -5,17 +5,17 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.MoreExecutors;
 import org.thingsboard.rule.engine.api.TbContext;
 import org.thingsboard.rule.engine.api.TbNodeException;
-import org.thingsboard.server.common.data.BaseData;
-import org.thingsboard.server.common.data.EntityFieldsData;
-import org.thingsboard.server.common.data.id.AlarmId;
-import org.thingsboard.server.common.data.id.AssetId;
-import org.thingsboard.server.common.data.id.CustomerId;
-import org.thingsboard.server.common.data.id.DeviceId;
-import org.thingsboard.server.common.data.id.EntityId;
-import org.thingsboard.server.common.data.id.EntityViewId;
-import org.thingsboard.server.common.data.id.RuleChainId;
-import org.thingsboard.server.common.data.id.TenantId;
-import org.thingsboard.server.common.data.id.UserId;
+import org.echoiot.server.common.data.BaseData;
+import org.echoiot.server.common.data.EntityFieldsData;
+import org.echoiot.server.common.data.id.AlarmId;
+import org.echoiot.server.common.data.id.AssetId;
+import org.echoiot.server.common.data.id.CustomerId;
+import org.echoiot.server.common.data.id.DeviceId;
+import org.echoiot.server.common.data.id.EntityId;
+import org.echoiot.server.common.data.id.EntityViewId;
+import org.echoiot.server.common.data.id.RuleChainId;
+import org.echoiot.server.common.data.id.TenantId;
+import org.echoiot.server.common.data.id.UserId;
 
 import java.util.function.Function;
 
