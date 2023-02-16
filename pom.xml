@@ -1897,6 +1897,14 @@
         </dependencies>
     </dependencyManagement>
 
+    <distributionManagement>
+        <repository>
+            <id>echoiot-repo-deploy</id>
+            <name>Echoiot Repo Deployment</name>
+            <url>https://repo.echoiot.io/artifactory/libs-release-public</url>
+        </repository>
+    </distributionManagement>
+
     <repositories>
         <repository>
             <id>central</id>
