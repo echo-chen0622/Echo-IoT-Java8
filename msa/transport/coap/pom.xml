@@ -18,8 +18,8 @@
         <main.dir>${basedir}/../../..</main.dir>
         <pkg.name>tb-coap-transport</pkg.name>
         <docker.name>tb-coap-transport</docker.name>
-        <echo.logFolder>/var/log/${pkg.name}</echo.logFolder>
-        <echo.installFolder>/usr/share/${pkg.name}</echo.installFolder>
+        <pkg.logFolder>/var/log/${pkg.name}</pkg.logFolder>
+        <pkg.installFolder>/usr/share/${pkg.name}</pkg.installFolder>
         <docker.push-arm-amd-image.phase>pre-integration-test</docker.push-arm-amd-image.phase>
     </properties>
 

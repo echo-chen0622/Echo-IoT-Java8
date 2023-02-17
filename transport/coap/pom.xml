@@ -15,15 +15,15 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <main.dir>${basedir}/../..</main.dir>
-        <echo.type>java</echo.type>
-        <echo.disabled>false</echo.disabled>
-        <echo.process-resources.phase>process-resources</echo.process-resources.phase>
-        <echo.package.phase>package</echo.package.phase>
+        <pkg.type>java</pkg.type>
+        <pkg.disabled>false</pkg.disabled>
+        <pkg.process-resources.phase>process-resources</pkg.process-resources.phase>
+        <pkg.package.phase>package</pkg.package.phase>
         <pkg.name>tb-coap-transport</pkg.name>
-        <echo.copyInstallScripts>false</echo.copyInstallScripts>
-        <echo.win.dist>${project.build.directory}/windows</echo.win.dist>
-        <echo.implementationTitle>Echoiot CoAP Transport Service</echo.implementationTitle>
-        <echo.mainClass>org.echoiot.server.coap.EchoiotCoapTransportApplication</echo.mainClass>
+        <pkg.copyInstallScripts>false</pkg.copyInstallScripts>
+        <pkg.win.dist>${project.build.directory}/windows</pkg.win.dist>
+        <pkg.implementationTitle>Echoiot CoAP Transport Service</pkg.implementationTitle>
+        <pkg.mainClass>org.echoiot.server.coap.EchoiotCoapTransportApplication</pkg.mainClass>
     </properties>
 
     <dependencies>
