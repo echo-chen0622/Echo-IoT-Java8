@@ -5,6 +5,6 @@ package org.echoiot.server.common.data.alarm;
  */
 public enum AlarmSeverity {
 
-    CRITICAL, MAJOR, MINOR, WARNING, INDETERMINATE;
+    CRITICAL, MAJOR, MINOR, WARNING, INDETERMINATE
 
 }

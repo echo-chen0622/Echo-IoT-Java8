@@ -9,6 +9,8 @@ import com.datastax.oss.driver.api.core.cql.Statement;
 import com.datastax.oss.driver.internal.core.util.CountingIterator;
 import com.datastax.oss.driver.internal.core.util.concurrent.BlockingOperation;
 import edu.umd.cs.findbugs.annotations.NonNull;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -17,6 +19,7 @@ import java.util.List;
 
 public class GuavaMultiPageResultSet implements ResultSet {
 
+    @NotNull
     private final RowIterator iterator;
     private final List<ExecutionInfo> executionInfos = new ArrayList<>();
     private ColumnDefinitions columnDefinitions;
@@ -62,12 +65,12 @@ public class GuavaMultiPageResultSet implements ResultSet {
     }
 
     private class RowIterator extends CountingIterator<Row> {
-        private GuavaSession session;
+        private final GuavaSession session;
         private Statement statement;
         private AsyncResultSet currentPage;
         private Iterator<Row> currentRows;
 
-        private RowIterator(GuavaSession session, Statement statement, AsyncResultSet firstPage) {
+        private RowIterator(GuavaSession session, Statement statement, @NotNull AsyncResultSet firstPage) {
             super(firstPage.remaining());
             this.session = session;
             this.statement = statement;
@@ -84,7 +87,7 @@ public class GuavaMultiPageResultSet implements ResultSet {
         private void maybeMoveToNextPage() {
             if (!currentRows.hasNext() && currentPage.hasMorePages()) {
                 BlockingOperation.checkNotDriverThread();
-                ByteBuffer nextPagingState = currentPage.getExecutionInfo().getPagingState();
+                @Nullable ByteBuffer nextPagingState = currentPage.getExecutionInfo().getPagingState();
                 this.statement = this.statement.setPagingState(nextPagingState);
                 AsyncResultSet nextPage = GuavaSession.getSafe(this.session.executeAsync(this.statement));
                 currentPage = nextPage;

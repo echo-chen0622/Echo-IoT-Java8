@@ -8,6 +8,8 @@ import org.echoiot.server.common.data.edge.EdgeEvent;
 import org.echoiot.server.common.data.id.DeviceProfileId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.queue.util.TbCoreComponent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Component;
 import org.echoiot.server.gen.edge.v1.DeviceProfileUpdateMsg;
 import org.echoiot.server.gen.edge.v1.DownlinkMsg;
@@ -19,15 +21,16 @@ import org.echoiot.server.gen.transport.TransportProtos;
 @TbCoreComponent
 public class DeviceProfileEdgeProcessor extends BaseEdgeProcessor {
 
-    public DownlinkMsg convertDeviceProfileEventToDownlink(EdgeEvent edgeEvent) {
-        DeviceProfileId deviceProfileId = new DeviceProfileId(edgeEvent.getEntityId());
-        DownlinkMsg downlinkMsg = null;
+    @Nullable
+    public DownlinkMsg convertDeviceProfileEventToDownlink(@NotNull EdgeEvent edgeEvent) {
+        @NotNull DeviceProfileId deviceProfileId = new DeviceProfileId(edgeEvent.getEntityId());
+        @Nullable DownlinkMsg downlinkMsg = null;
         switch (edgeEvent.getAction()) {
             case ADDED:
             case UPDATED:
                 DeviceProfile deviceProfile = deviceProfileService.findDeviceProfileById(edgeEvent.getTenantId(), deviceProfileId);
                 if (deviceProfile != null) {
-                    UpdateMsgType msgType = getUpdateMsgType(edgeEvent.getAction());
+                    @NotNull UpdateMsgType msgType = getUpdateMsgType(edgeEvent.getAction());
                     DeviceProfileUpdateMsg deviceProfileUpdateMsg =
                             deviceProfileMsgConstructor.constructDeviceProfileUpdatedMsg(msgType, deviceProfile);
                     downlinkMsg = DownlinkMsg.newBuilder()
@@ -48,7 +51,7 @@ public class DeviceProfileEdgeProcessor extends BaseEdgeProcessor {
         return downlinkMsg;
     }
 
-    public ListenableFuture<Void> processDeviceProfileNotification(TenantId tenantId, TransportProtos.EdgeNotificationMsgProto edgeNotificationMsg) {
+    public ListenableFuture<Void> processDeviceProfileNotification(TenantId tenantId, @NotNull TransportProtos.EdgeNotificationMsgProto edgeNotificationMsg) {
         return processEntityNotificationForAllEdges(tenantId, edgeNotificationMsg);
     }
 }

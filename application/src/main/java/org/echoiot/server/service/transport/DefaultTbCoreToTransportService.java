@@ -12,6 +12,8 @@ import org.echoiot.server.queue.common.TbProtoQueueMsg;
 import org.echoiot.server.queue.discovery.NotificationsTopicService;
 import org.echoiot.server.queue.provider.TbQueueProducerProvider;
 import org.echoiot.server.queue.util.TbCoreComponent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -25,18 +27,18 @@ public class DefaultTbCoreToTransportService implements TbCoreToTransportService
     private final NotificationsTopicService notificationsTopicService;
     private final TbQueueProducer<TbProtoQueueMsg<ToTransportMsg>> tbTransportProducer;
 
-    public DefaultTbCoreToTransportService(NotificationsTopicService notificationsTopicService, TbQueueProducerProvider tbQueueProducerProvider) {
+    public DefaultTbCoreToTransportService(NotificationsTopicService notificationsTopicService, @NotNull TbQueueProducerProvider tbQueueProducerProvider) {
         this.notificationsTopicService = notificationsTopicService;
         this.tbTransportProducer = tbQueueProducerProvider.getTransportNotificationsMsgProducer();
     }
 
     @Override
-    public void process(String nodeId, ToTransportMsg msg) {
+    public void process(String nodeId, @NotNull ToTransportMsg msg) {
         process(nodeId, msg, null, null);
     }
 
     @Override
-    public void process(String nodeId, ToTransportMsg msg, Runnable onSuccess, Consumer<Throwable> onFailure) {
+    public void process(@Nullable String nodeId, @NotNull ToTransportMsg msg, @Nullable Runnable onSuccess, Consumer<Throwable> onFailure) {
         if (nodeId == null || nodeId.isEmpty()) {
             log.trace("process: skipping message without nodeId [{}], (ToTransportMsg) msg [{}]", nodeId, msg);
             if (onSuccess != null) {
@@ -44,10 +46,10 @@ public class DefaultTbCoreToTransportService implements TbCoreToTransportService
             }
             return;
         }
-        TopicPartitionInfo tpi = notificationsTopicService.getNotificationsTopic(ServiceType.TB_TRANSPORT, nodeId);
-        UUID sessionId = new UUID(msg.getSessionIdMSB(), msg.getSessionIdLSB());
+        @NotNull TopicPartitionInfo tpi = notificationsTopicService.getNotificationsTopic(ServiceType.TB_TRANSPORT, nodeId);
+        @NotNull UUID sessionId = new UUID(msg.getSessionIdMSB(), msg.getSessionIdLSB());
         log.trace("[{}][{}] Pushing session data to topic: {}", tpi.getFullTopicName(), sessionId, msg);
-        TbProtoQueueMsg<ToTransportMsg> queueMsg = new TbProtoQueueMsg<>(ModelConstants.NULL_UUID, msg);
+        @NotNull TbProtoQueueMsg<ToTransportMsg> queueMsg = new TbProtoQueueMsg<>(ModelConstants.NULL_UUID, msg);
         tbTransportProducer.send(tpi, queueMsg, new QueueCallbackAdaptor(onSuccess, onFailure));
     }
 

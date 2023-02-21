@@ -15,6 +15,8 @@ import org.echoiot.server.dao.asset.AssetProfileService;
 import org.echoiot.server.dao.asset.BaseAssetService;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.entitiy.AbstractTbEntityService;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,11 +25,13 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class DefaultTbAssetProfileService extends AbstractTbEntityService implements TbAssetProfileService {
 
+    @NotNull
     private final AssetProfileService assetProfileService;
 
+    @NotNull
     @Override
-    public AssetProfile save(AssetProfile assetProfile, User user) throws Exception {
-        ActionType actionType = assetProfile.getId() == null ? ActionType.ADDED : ActionType.UPDATED;
+    public AssetProfile save(@NotNull AssetProfile assetProfile, User user) throws Exception {
+        @NotNull ActionType actionType = assetProfile.getId() == null ? ActionType.ADDED : ActionType.UPDATED;
         TenantId tenantId = assetProfile.getTenantId();
         try {
             if (BaseAssetService.TB_SERVICE_QUEUE.equals(assetProfile.getName())) {
@@ -53,7 +57,7 @@ public class DefaultTbAssetProfileService extends AbstractTbEntityService implem
     }
 
     @Override
-    public void delete(AssetProfile assetProfile, User user) {
+    public void delete(@NotNull AssetProfile assetProfile, User user) {
         AssetProfileId assetProfileId = assetProfile.getId();
         TenantId tenantId = assetProfile.getTenantId();
         try {
@@ -70,7 +74,7 @@ public class DefaultTbAssetProfileService extends AbstractTbEntityService implem
     }
 
     @Override
-    public AssetProfile setDefaultAssetProfile(AssetProfile assetProfile, AssetProfile previousDefaultAssetProfile, User user) throws EchoiotException {
+    public AssetProfile setDefaultAssetProfile(@NotNull AssetProfile assetProfile, @Nullable AssetProfile previousDefaultAssetProfile, User user) throws EchoiotException {
         TenantId tenantId = assetProfile.getTenantId();
         AssetProfileId assetProfileId = assetProfile.getId();
         try {

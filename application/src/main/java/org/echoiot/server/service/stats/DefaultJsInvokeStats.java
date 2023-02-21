@@ -19,7 +19,7 @@ public class DefaultJsInvokeStats implements JsInvokeStats {
     private StatsCounter responsesCounter;
     private StatsCounter failuresCounter;
 
-    @Autowired
+    @Resource
     private StatsFactory statsFactory;
 
     @PostConstruct

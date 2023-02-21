@@ -5,6 +5,7 @@ import com.google.protobuf.Descriptors;
 import com.google.protobuf.DynamicMessage;
 import com.squareup.wire.schema.internal.parser.ProtoFileElement;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.echoiot.server.common.data.DynamicProtoUtils;
@@ -47,7 +48,7 @@ public class MqttAttributesProtoIntegrationTest extends MqttAttributesIntegratio
                 .attributesTopicFilter(POST_DATA_ATTRIBUTES_TOPIC)
                 .build();
         processBeforeTest(configProperties);
-        DynamicMessage postAttributesMsg = getDefaultDynamicMessage();
+        @NotNull DynamicMessage postAttributesMsg = getDefaultDynamicMessage();
         processAttributesTest(POST_DATA_ATTRIBUTES_TOPIC, Arrays.asList("key1", "key2", "key3", "key4", "key5"), postAttributesMsg.toByteArray(), false);
     }
 
@@ -76,12 +77,12 @@ public class MqttAttributesProtoIntegrationTest extends MqttAttributesIntegratio
         DynamicMessage.Builder nestedJsonObjectBuilder = attributesSchema.newMessageBuilder("PostAttributes.JsonObject.NestedJsonObject");
         Descriptors.Descriptor nestedJsonObjectBuilderDescriptor = nestedJsonObjectBuilder.getDescriptorForType();
         assertNotNull(nestedJsonObjectBuilderDescriptor);
-        DynamicMessage nestedJsonObject = nestedJsonObjectBuilder.setField(nestedJsonObjectBuilderDescriptor.findFieldByName("key"), "value").build();
+        @NotNull DynamicMessage nestedJsonObject = nestedJsonObjectBuilder.setField(nestedJsonObjectBuilderDescriptor.findFieldByName("key"), "value").build();
 
         DynamicMessage.Builder jsonObjectBuilder = attributesSchema.newMessageBuilder("PostAttributes.JsonObject");
         Descriptors.Descriptor jsonObjectBuilderDescriptor = jsonObjectBuilder.getDescriptorForType();
         assertNotNull(jsonObjectBuilderDescriptor);
-        DynamicMessage jsonObject = jsonObjectBuilder
+        @NotNull DynamicMessage jsonObject = jsonObjectBuilder
                 .addRepeatedField(jsonObjectBuilderDescriptor.findFieldByName("someArray"), 1)
                 .addRepeatedField(jsonObjectBuilderDescriptor.findFieldByName("someArray"), 2)
                 .addRepeatedField(jsonObjectBuilderDescriptor.findFieldByName("someArray"), 3)
@@ -91,7 +92,7 @@ public class MqttAttributesProtoIntegrationTest extends MqttAttributesIntegratio
         DynamicMessage.Builder postAttributesBuilder = attributesSchema.newMessageBuilder("PostAttributes");
         Descriptors.Descriptor postAttributesMsgDescriptor = postAttributesBuilder.getDescriptorForType();
         assertNotNull(postAttributesMsgDescriptor);
-        DynamicMessage postAttributesMsg = postAttributesBuilder
+        @NotNull DynamicMessage postAttributesMsg = postAttributesBuilder
                 .setField(postAttributesMsgDescriptor.findFieldByName("key1"), "")
                 .setField(postAttributesMsgDescriptor.findFieldByName("key2"), false)
                 .setField(postAttributesMsgDescriptor.findFieldByName("key3"), 0.0)
@@ -109,7 +110,7 @@ public class MqttAttributesProtoIntegrationTest extends MqttAttributesIntegratio
                 .attributesTopicFilter(POST_DATA_ATTRIBUTES_TOPIC)
                 .build();
         processBeforeTest(configProperties);
-        DynamicMessage postAttributesMsg = getDefaultDynamicMessage();
+        @NotNull DynamicMessage postAttributesMsg = getDefaultDynamicMessage();
         processAttributesTest(DEVICE_ATTRIBUTES_SHORT_TOPIC, Arrays.asList("key1", "key2", "key3", "key4", "key5"), postAttributesMsg.toByteArray(), false);
     }
 
@@ -132,7 +133,7 @@ public class MqttAttributesProtoIntegrationTest extends MqttAttributesIntegratio
                 .attributesTopicFilter(POST_DATA_ATTRIBUTES_TOPIC)
                 .build();
         processBeforeTest(configProperties);
-        DynamicMessage postAttributesMsg = getDefaultDynamicMessage();
+        @NotNull DynamicMessage postAttributesMsg = getDefaultDynamicMessage();
         processAttributesTest(DEVICE_ATTRIBUTES_SHORT_PROTO_TOPIC, Arrays.asList("key1", "key2", "key3", "key4", "key5"), postAttributesMsg.toByteArray(), false);
     }
 
@@ -145,40 +146,41 @@ public class MqttAttributesProtoIntegrationTest extends MqttAttributesIntegratio
                 .build();
         processBeforeTest(configProperties);
         TransportApiProtos.GatewayAttributesMsg.Builder gatewayAttributesMsgProtoBuilder = TransportApiProtos.GatewayAttributesMsg.newBuilder();
-        List<String> expectedKeys = Arrays.asList("key1", "key2", "key3", "key4", "key5");
-        String deviceName1 = "Device A";
-        String deviceName2 = "Device B";
-        TransportApiProtos.AttributesMsg firstDeviceAttributesMsgProto = getDeviceAttributesMsgProto(deviceName1, expectedKeys);
-        TransportApiProtos.AttributesMsg secondDeviceAttributesMsgProto = getDeviceAttributesMsgProto(deviceName2, expectedKeys);
+        @NotNull List<String> expectedKeys = Arrays.asList("key1", "key2", "key3", "key4", "key5");
+        @NotNull String deviceName1 = "Device A";
+        @NotNull String deviceName2 = "Device B";
+        @NotNull TransportApiProtos.AttributesMsg firstDeviceAttributesMsgProto = getDeviceAttributesMsgProto(deviceName1, expectedKeys);
+        @NotNull TransportApiProtos.AttributesMsg secondDeviceAttributesMsgProto = getDeviceAttributesMsgProto(deviceName2, expectedKeys);
         gatewayAttributesMsgProtoBuilder.addAllMsg(Arrays.asList(firstDeviceAttributesMsgProto, secondDeviceAttributesMsgProto));
-        TransportApiProtos.GatewayAttributesMsg gatewayAttributesMsg = gatewayAttributesMsgProtoBuilder.build();
+        @NotNull TransportApiProtos.GatewayAttributesMsg gatewayAttributesMsg = gatewayAttributesMsgProtoBuilder.build();
         processGatewayAttributesTest(expectedKeys, gatewayAttributesMsg.toByteArray(), deviceName1, deviceName2);
     }
 
     private DynamicSchema getDynamicSchema() {
         DeviceProfileTransportConfiguration transportConfiguration = deviceProfile.getProfileData().getTransportConfiguration();
         assertTrue(transportConfiguration instanceof MqttDeviceProfileTransportConfiguration);
-        MqttDeviceProfileTransportConfiguration mqttTransportConfiguration = (MqttDeviceProfileTransportConfiguration) transportConfiguration;
-        TransportPayloadTypeConfiguration transportPayloadTypeConfiguration = mqttTransportConfiguration.getTransportPayloadTypeConfiguration();
+        @NotNull MqttDeviceProfileTransportConfiguration mqttTransportConfiguration = (MqttDeviceProfileTransportConfiguration) transportConfiguration;
+        @NotNull TransportPayloadTypeConfiguration transportPayloadTypeConfiguration = mqttTransportConfiguration.getTransportPayloadTypeConfiguration();
         assertTrue(transportPayloadTypeConfiguration instanceof ProtoTransportPayloadConfiguration);
-        ProtoTransportPayloadConfiguration protoTransportPayloadConfiguration = (ProtoTransportPayloadConfiguration) transportPayloadTypeConfiguration;
+        @NotNull ProtoTransportPayloadConfiguration protoTransportPayloadConfiguration = (ProtoTransportPayloadConfiguration) transportPayloadTypeConfiguration;
         String deviceAttributesProtoSchema = protoTransportPayloadConfiguration.getDeviceAttributesProtoSchema();
-        ProtoFileElement protoFileElement = DynamicProtoUtils.getProtoFileElement(deviceAttributesProtoSchema);
+        @NotNull ProtoFileElement protoFileElement = DynamicProtoUtils.getProtoFileElement(deviceAttributesProtoSchema);
         return DynamicProtoUtils.getDynamicSchema(protoFileElement, ProtoTransportPayloadConfiguration.ATTRIBUTES_PROTO_SCHEMA);
     }
 
+    @NotNull
     private DynamicMessage getDefaultDynamicMessage() {
         DynamicSchema attributesSchema = getDynamicSchema();
 
         DynamicMessage.Builder nestedJsonObjectBuilder = attributesSchema.newMessageBuilder("PostAttributes.JsonObject.NestedJsonObject");
         Descriptors.Descriptor nestedJsonObjectBuilderDescriptor = nestedJsonObjectBuilder.getDescriptorForType();
         assertNotNull(nestedJsonObjectBuilderDescriptor);
-        DynamicMessage nestedJsonObject = nestedJsonObjectBuilder.setField(nestedJsonObjectBuilderDescriptor.findFieldByName("key"), "value").build();
+        @NotNull DynamicMessage nestedJsonObject = nestedJsonObjectBuilder.setField(nestedJsonObjectBuilderDescriptor.findFieldByName("key"), "value").build();
 
         DynamicMessage.Builder jsonObjectBuilder = attributesSchema.newMessageBuilder("PostAttributes.JsonObject");
         Descriptors.Descriptor jsonObjectBuilderDescriptor = jsonObjectBuilder.getDescriptorForType();
         assertNotNull(jsonObjectBuilderDescriptor);
-        DynamicMessage jsonObject = jsonObjectBuilder
+        @NotNull DynamicMessage jsonObject = jsonObjectBuilder
                 .setField(jsonObjectBuilderDescriptor.findFieldByName("someNumber"), 42)
                 .addRepeatedField(jsonObjectBuilderDescriptor.findFieldByName("someArray"), 1)
                 .addRepeatedField(jsonObjectBuilderDescriptor.findFieldByName("someArray"), 2)
@@ -198,6 +200,7 @@ public class MqttAttributesProtoIntegrationTest extends MqttAttributesIntegratio
                 .build();
     }
 
+    @NotNull
     private TransportApiProtos.AttributesMsg getDeviceAttributesMsgProto(String deviceName, List<String> expectedKeys) {
         TransportApiProtos.AttributesMsg.Builder deviceAttributesMsgBuilder = TransportApiProtos.AttributesMsg.newBuilder();
         TransportProtos.PostAttributeMsg msg = getPostAttributeMsg(expectedKeys);

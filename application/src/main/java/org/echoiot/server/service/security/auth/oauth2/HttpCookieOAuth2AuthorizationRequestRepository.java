@@ -1,5 +1,7 @@
 package org.echoiot.server.service.security.auth.oauth2;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.stereotype.Component;
@@ -14,15 +16,16 @@ public class HttpCookieOAuth2AuthorizationRequestRepository implements Authoriza
     public static final String PREV_URI_COOKIE_NAME = "prev_uri";
     private static final int cookieExpireSeconds = 180;
 
+    @Nullable
     @Override
-    public OAuth2AuthorizationRequest loadAuthorizationRequest(HttpServletRequest request) {
+    public OAuth2AuthorizationRequest loadAuthorizationRequest(@NotNull HttpServletRequest request) {
         return CookieUtils.getCookie(request, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME)
                 .map(cookie -> CookieUtils.deserialize(cookie, OAuth2AuthorizationRequest.class))
                 .orElse(null);
     }
 
     @Override
-    public void saveAuthorizationRequest(OAuth2AuthorizationRequest authorizationRequest, HttpServletRequest request, HttpServletResponse response) {
+    public void saveAuthorizationRequest(@Nullable OAuth2AuthorizationRequest authorizationRequest, @NotNull HttpServletRequest request, @NotNull HttpServletResponse response) {
         if (authorizationRequest == null) {
             CookieUtils.deleteCookie(request, response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME);
             return;
@@ -35,11 +38,11 @@ public class HttpCookieOAuth2AuthorizationRequestRepository implements Authoriza
 
     @SuppressWarnings("deprecation")
     @Override
-    public OAuth2AuthorizationRequest removeAuthorizationRequest(HttpServletRequest request) {
+    public OAuth2AuthorizationRequest removeAuthorizationRequest(@NotNull HttpServletRequest request) {
         return this.loadAuthorizationRequest(request);
     }
 
-    public void removeAuthorizationRequestCookies(HttpServletRequest request, HttpServletResponse response) {
+    public void removeAuthorizationRequestCookies(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response) {
         CookieUtils.deleteCookie(request, response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME);
     }
 }

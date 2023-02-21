@@ -17,6 +17,8 @@ import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.query.AlarmData;
 import org.echoiot.server.common.data.query.EntityDataPageLink;
 import org.echoiot.server.dao.model.ModelConstants;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -32,23 +34,26 @@ public class AlarmDataAdapter {
 
     private final static ObjectMapper mapper = new ObjectMapper();
 
-    public static PageData<AlarmData> createAlarmData(EntityDataPageLink pageLink,
-                                                      List<Map<String, Object>> rows,
-                                                      int totalElements, Collection<EntityId> orderedEntityIds) {
-        Map<UUID, EntityId> entityIdMap = orderedEntityIds.stream().collect(Collectors.toMap(EntityId::getId, Function.identity()));
+    @NotNull
+    public static PageData<AlarmData> createAlarmData(@NotNull EntityDataPageLink pageLink,
+                                                      @NotNull List<Map<String, Object>> rows,
+                                                      int totalElements, @NotNull Collection<EntityId> orderedEntityIds) {
+        @NotNull Map<UUID, EntityId> entityIdMap = orderedEntityIds.stream().collect(Collectors.toMap(EntityId::getId, Function.identity()));
         int totalPages = pageLink.getPageSize() > 0 ? (int) Math.ceil((float) totalElements / pageLink.getPageSize()) : 1;
         int startIndex = pageLink.getPageSize() * pageLink.getPage();
         boolean hasNext = pageLink.getPageSize() > 0 && totalElements > startIndex + rows.size();
-        List<AlarmData> entitiesData = convertListToAlarmData(rows, entityIdMap);
+        @NotNull List<AlarmData> entitiesData = convertListToAlarmData(rows, entityIdMap);
         return new PageData<>(entitiesData, totalPages, totalElements, hasNext);
     }
 
-    private static List<AlarmData> convertListToAlarmData(List<Map<String, Object>> result, Map<UUID, EntityId> entityIdMap) {
+    @NotNull
+    private static List<AlarmData> convertListToAlarmData(@NotNull List<Map<String, Object>> result, @NotNull Map<UUID, EntityId> entityIdMap) {
         return result.stream().map(tmp -> toEntityData(tmp, entityIdMap)).collect(Collectors.toList());
     }
 
-    private static AlarmData toEntityData(Map<String, Object> row, Map<UUID, EntityId> entityIdMap) {
-        Alarm alarm = new Alarm();
+    @NotNull
+    private static AlarmData toEntityData(@NotNull Map<String, Object> row, @NotNull Map<UUID, EntityId> entityIdMap) {
+        @NotNull Alarm alarm = new Alarm();
         alarm.setId(new AlarmId((UUID) row.get(ModelConstants.ID_PROPERTY)));
         alarm.setCreatedTime((long) row.get(ModelConstants.CREATED_TIME_PROPERTY));
         alarm.setAckTs((long) row.get(ModelConstants.ALARM_ACK_TS_PROPERTY));
@@ -74,7 +79,7 @@ public class AlarmDataAdapter {
         alarm.setStatus(AlarmStatus.valueOf(row.get(ModelConstants.ALARM_STATUS_PROPERTY).toString()));
         alarm.setTenantId(TenantId.fromUUID((UUID) row.get(ModelConstants.TENANT_ID_PROPERTY)));
         Object customerIdObj = row.get(ModelConstants.CUSTOMER_ID_PROPERTY);
-        CustomerId customerId = customerIdObj != null ? new CustomerId((UUID) customerIdObj) : null;
+        @Nullable CustomerId customerId = customerIdObj != null ? new CustomerId((UUID) customerIdObj) : null;
         alarm.setCustomerId(customerId);
         if (row.get(ModelConstants.ALARM_PROPAGATE_RELATION_TYPES) != null) {
             String propagateRelationTypes = row.get(ModelConstants.ALARM_PROPAGATE_RELATION_TYPES).toString();

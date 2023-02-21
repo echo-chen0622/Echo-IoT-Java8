@@ -2,6 +2,7 @@ package org.echoiot.server.common.data.sms.config;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.jetbrains.annotations.NotNull;
 
 @Data
 public class SmppSmsProviderConfiguration implements SmsProviderConfiguration {
@@ -90,6 +91,7 @@ public class SmppSmsProviderConfiguration implements SmsProviderConfiguration {
                     "14 - Korean Graphic Character Set (KS C 5601/KS X 1001)", required = false)
     private Byte codingScheme;
 
+    @NotNull
     @Override
     public SmsProviderType getType() {
         return SmsProviderType.SMPP;

@@ -16,6 +16,7 @@ import org.echoiot.server.common.data.kv.StringDataEntry;
 import org.echoiot.server.common.data.kv.TsKvEntry;
 import org.echoiot.server.common.data.kv.TsKvEntryAggWrapper;
 import org.echoiot.server.dao.nosql.TbResultSet;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -54,6 +55,7 @@ public class AggregatePartitionsFunction implements com.google.common.util.concu
         this.executor = executor;
     }
 
+    @NotNull
     @Override
     public ListenableFuture<Optional<TsKvEntryAggWrapper>> apply(@Nullable List<TbResultSet> rsList) {
         log.trace("[{}][{}][{}] Going to aggregate data", key, ts, aggregation);
@@ -66,9 +68,9 @@ public class AggregatePartitionsFunction implements com.google.common.util.concu
                                 .collect(Collectors.toList())),
                 rowsList -> {
                     try {
-                        AggregationResult aggResult = new AggregationResult();
-                        for (List<Row> rs : rowsList) {
-                            for (Row row : rs) {
+                        @NotNull AggregationResult aggResult = new AggregationResult();
+                        for (@NotNull List<Row> rs : rowsList) {
+                            for (@NotNull Row row : rs) {
                                 processResultSetRow(row, aggResult);
                             }
                         }
@@ -80,14 +82,14 @@ public class AggregatePartitionsFunction implements com.google.common.util.concu
                 }, this.executor);
     }
 
-    private void processResultSetRow(Row row, AggregationResult aggResult) {
+    private void processResultSetRow(@NotNull Row row, @NotNull AggregationResult aggResult) {
         long curCount = 0L;
 
-        Long curLValue = null;
-        Double curDValue = null;
-        Boolean curBValue = null;
-        String curSValue = null;
-        String curJValue = null;
+        @org.jetbrains.annotations.Nullable Long curLValue = null;
+        @org.jetbrains.annotations.Nullable Double curDValue = null;
+        @org.jetbrains.annotations.Nullable Boolean curBValue = null;
+        @org.jetbrains.annotations.Nullable String curSValue = null;
+        @org.jetbrains.annotations.Nullable String curJValue = null;
 
         long longCount = row.getLong(LONG_CNT_POS);
         long doubleCount = row.getLong(DOUBLE_CNT_POS);
@@ -137,7 +139,7 @@ public class AggregatePartitionsFunction implements com.google.common.util.concu
         }
     }
 
-    private void processAvgOrSumAggregation(AggregationResult aggResult, long curCount, Long curLValue, Double curDValue) {
+    private void processAvgOrSumAggregation(@NotNull AggregationResult aggResult, long curCount, @org.jetbrains.annotations.Nullable Long curLValue, @org.jetbrains.annotations.Nullable Double curDValue) {
         aggResult.count += curCount;
         if (curDValue != null) {
             aggResult.dValue = aggResult.dValue == null ? curDValue : aggResult.dValue + curDValue;
@@ -147,7 +149,7 @@ public class AggregatePartitionsFunction implements com.google.common.util.concu
         }
     }
 
-    private void processMinAggregation(AggregationResult aggResult, Long curLValue, Double curDValue, Boolean curBValue, String curSValue, String curJValue) {
+    private void processMinAggregation(@NotNull AggregationResult aggResult, @org.jetbrains.annotations.Nullable Long curLValue, @org.jetbrains.annotations.Nullable Double curDValue, @org.jetbrains.annotations.Nullable Boolean curBValue, @org.jetbrains.annotations.Nullable String curSValue, @org.jetbrains.annotations.Nullable String curJValue) {
         if (curDValue != null || curLValue != null) {
             if (curDValue != null) {
                 aggResult.dValue = aggResult.dValue == null ? curDValue : Math.min(aggResult.dValue, curDValue);
@@ -164,7 +166,7 @@ public class AggregatePartitionsFunction implements com.google.common.util.concu
         }
     }
 
-    private void processMaxAggregation(AggregationResult aggResult, Long curLValue, Double curDValue, Boolean curBValue, String curSValue, String curJValue) {
+    private void processMaxAggregation(@NotNull AggregationResult aggResult, @org.jetbrains.annotations.Nullable Long curLValue, @org.jetbrains.annotations.Nullable Double curDValue, @org.jetbrains.annotations.Nullable Boolean curBValue, @org.jetbrains.annotations.Nullable String curSValue, @org.jetbrains.annotations.Nullable String curJValue) {
         if (curDValue != null || curLValue != null) {
             if (curDValue != null) {
                 aggResult.dValue = aggResult.dValue == null ? curDValue : Math.max(aggResult.dValue, curDValue);
@@ -181,7 +183,8 @@ public class AggregatePartitionsFunction implements com.google.common.util.concu
         }
     }
 
-    private Boolean getBooleanValue(Row row) {
+    @org.jetbrains.annotations.Nullable
+    private Boolean getBooleanValue(@NotNull Row row) {
         if (aggregation == Aggregation.MIN || aggregation == Aggregation.MAX) {
             return row.getBoolean(BOOL_POS);
         } else {
@@ -189,7 +192,8 @@ public class AggregatePartitionsFunction implements com.google.common.util.concu
         }
     }
 
-    private String getStringValue(Row row) {
+    @org.jetbrains.annotations.Nullable
+    private String getStringValue(@NotNull Row row) {
         if (aggregation == Aggregation.MIN || aggregation == Aggregation.MAX) {
             return row.getString(STR_POS);
         } else {
@@ -197,7 +201,8 @@ public class AggregatePartitionsFunction implements com.google.common.util.concu
         }
     }
 
-    private String getJsonValue(Row row) {
+    @org.jetbrains.annotations.Nullable
+    private String getJsonValue(@NotNull Row row) {
         if (aggregation == Aggregation.MIN || aggregation == Aggregation.MAX) {
             return row.getString(JSON_POS);
         } else {
@@ -205,7 +210,8 @@ public class AggregatePartitionsFunction implements com.google.common.util.concu
         }
     }
 
-    private Long getLongValue(Row row) {
+    @org.jetbrains.annotations.Nullable
+    private Long getLongValue(@NotNull Row row) {
         if (aggregation == Aggregation.MIN || aggregation == Aggregation.MAX
                 || aggregation == Aggregation.SUM || aggregation == Aggregation.AVG) {
             return row.getLong(LONG_POS);
@@ -214,7 +220,8 @@ public class AggregatePartitionsFunction implements com.google.common.util.concu
         }
     }
 
-    private Double getDoubleValue(Row row) {
+    @org.jetbrains.annotations.Nullable
+    private Double getDoubleValue(@NotNull Row row) {
         if (aggregation == Aggregation.MIN || aggregation == Aggregation.MAX
                 || aggregation == Aggregation.SUM || aggregation == Aggregation.AVG) {
             return row.getDouble(DOUBLE_POS);
@@ -223,7 +230,8 @@ public class AggregatePartitionsFunction implements com.google.common.util.concu
         }
     }
 
-    private Optional<TsKvEntryAggWrapper> processAggregationResult(AggregationResult aggResult) {
+    @NotNull
+    private Optional<TsKvEntryAggWrapper> processAggregationResult(@NotNull AggregationResult aggResult) {
         Optional<TsKvEntry> result;
         if (aggResult.dataType == null) {
             result = Optional.empty();
@@ -242,24 +250,26 @@ public class AggregatePartitionsFunction implements com.google.common.util.concu
         return result.map(tsKvEntry -> new TsKvEntryAggWrapper(tsKvEntry, aggResult.aggValuesLastTs));
     }
 
-    private Optional<TsKvEntry> processAvgOrSumResult(Aggregation aggregation, AggregationResult aggResult) {
+    @NotNull
+    private Optional<TsKvEntry> processAvgOrSumResult(Aggregation aggregation, @NotNull AggregationResult aggResult) {
         if (aggResult.count == 0 || (aggResult.dataType == DataType.DOUBLE && aggResult.dValue == null) || (aggResult.dataType == DataType.LONG && aggResult.lValue == null)) {
             return Optional.empty();
         } else if (aggResult.dataType == DataType.DOUBLE || aggResult.dataType == DataType.LONG) {
             if (aggregation == Aggregation.AVG || aggResult.hasDouble) {
                 double sum = Optional.ofNullable(aggResult.dValue).orElse(0.0d) + Optional.ofNullable(aggResult.lValue).orElse(0L);
-                DoubleDataEntry doubleDataEntry = new DoubleDataEntry(key, aggregation == Aggregation.SUM ? sum : (sum / aggResult.count));
-                TsKvEntry result = aggregation == Aggregation.AVG ? new AggTsKvEntry(ts, doubleDataEntry, aggResult.count) : new BasicTsKvEntry(ts, doubleDataEntry);
+                @NotNull DoubleDataEntry doubleDataEntry = new DoubleDataEntry(key, aggregation == Aggregation.SUM ? sum : (sum / aggResult.count));
+                @NotNull TsKvEntry result = aggregation == Aggregation.AVG ? new AggTsKvEntry(ts, doubleDataEntry, aggResult.count) : new BasicTsKvEntry(ts, doubleDataEntry);
                 return Optional.of(result);
             } else {
-                LongDataEntry longDataEntry = new LongDataEntry(key, aggregation == Aggregation.SUM ? aggResult.lValue : (aggResult.lValue / aggResult.count));
+                @NotNull LongDataEntry longDataEntry = new LongDataEntry(key, aggregation == Aggregation.SUM ? aggResult.lValue : (aggResult.lValue / aggResult.count));
                 return Optional.of(new BasicTsKvEntry(ts, longDataEntry));
             }
         }
         return Optional.empty();
     }
 
-    private Optional<TsKvEntry> processMinOrMaxResult(AggregationResult aggResult) {
+    @NotNull
+    private Optional<TsKvEntry> processMinOrMaxResult(@NotNull AggregationResult aggResult) {
         if (aggResult.dataType == DataType.DOUBLE || aggResult.dataType == DataType.LONG) {
             if (aggResult.hasDouble) {
                 double currentD = aggregation == Aggregation.MIN ? Optional.ofNullable(aggResult.dValue).orElse(Double.MAX_VALUE) : Optional.ofNullable(aggResult.dValue).orElse(Double.MIN_VALUE);
@@ -278,11 +288,17 @@ public class AggregatePartitionsFunction implements com.google.common.util.concu
     }
 
     private class AggregationResult {
+        @org.jetbrains.annotations.Nullable
         DataType dataType = null;
+        @org.jetbrains.annotations.Nullable
         Boolean bValue = null;
+        @org.jetbrains.annotations.Nullable
         String sValue = null;
+        @org.jetbrains.annotations.Nullable
         String jValue = null;
+        @org.jetbrains.annotations.Nullable
         Double dValue = null;
+        @org.jetbrains.annotations.Nullable
         Long lValue = null;
         long count = 0;
         boolean hasDouble = false;

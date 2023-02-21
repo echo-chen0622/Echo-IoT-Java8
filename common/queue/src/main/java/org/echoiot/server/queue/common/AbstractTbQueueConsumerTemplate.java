@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.queue.TbQueueConsumer;
 import org.echoiot.server.queue.TbQueueMsg;
 import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -79,7 +80,7 @@ public abstract class AbstractTbQueueConsumerTemplate<R, T extends TbQueueMsg> i
                 partitions = subscribeQueue.poll();
             }
             if (!subscribed) {
-                List<String> topicNames = partitions.stream().map(TopicPartitionInfo::getFullTopicName).collect(Collectors.toList());
+                @NotNull List<String> topicNames = partitions.stream().map(TopicPartitionInfo::getFullTopicName).collect(Collectors.toList());
                 doSubscribe(topicNames);
                 subscribed = true;
             }
@@ -95,7 +96,7 @@ public abstract class AbstractTbQueueConsumerTemplate<R, T extends TbQueueMsg> i
 
     @Nonnull
     List<T> decodeRecords(@Nonnull List<R> records) {
-        List<T> result = new ArrayList<>(records.size());
+        @NotNull List<T> result = new ArrayList<>(records.size());
         records.forEach(record -> {
             try {
                 if (record != null) {
@@ -109,11 +110,13 @@ public abstract class AbstractTbQueueConsumerTemplate<R, T extends TbQueueMsg> i
         return result;
     }
 
+    @NotNull
     List<T> errorAndReturnEmpty() {
         log.error("poll invoked but consumer stopped for topic" + topic, new RuntimeException("stacktrace"));
         return emptyList();
     }
 
+    @NotNull
     List<T> sleepAndReturnEmpty(final long startNanos, final long durationInMillis) {
         long durationNanos = TimeUnit.MILLISECONDS.toNanos(durationInMillis);
         long spentNanos = System.nanoTime() - startNanos;

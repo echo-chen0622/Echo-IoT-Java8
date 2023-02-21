@@ -1,6 +1,8 @@
 package org.echoiot.server.service.install.migrate;
 
 import lombok.Data;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Data
 public class CassandraToSqlColumnData {
@@ -18,9 +20,10 @@ public class CassandraToSqlColumnData {
         return ++constraintCounter;
     }
 
-    public String getNextConstraintStringValue(CassandraToSqlColumn column) {
+    @NotNull
+    public String getNextConstraintStringValue(@NotNull CassandraToSqlColumn column) {
         int counter = this.nextContraintCounter();
-        String newValue = this.originalValue + counter;
+        @NotNull String newValue = this.originalValue + counter;
         int overflow = newValue.length() - column.getSize();
         if (overflow > 0) {
             newValue = this.originalValue.substring(0, this.originalValue.length()-overflow) + counter;
@@ -28,10 +31,11 @@ public class CassandraToSqlColumnData {
         return newValue;
     }
 
-    public String getNextConstraintEmailValue(CassandraToSqlColumn column) {
+    @NotNull
+    public String getNextConstraintEmailValue(@NotNull CassandraToSqlColumn column) {
         int counter = this.nextContraintCounter();
-        String[] emailValues = this.originalValue.split("@");
-        String newValue = emailValues[0] + "+" + counter + "@" + emailValues[1];
+        @NotNull String[] emailValues = this.originalValue.split("@");
+        @NotNull String newValue = emailValues[0] + "+" + counter + "@" + emailValues[1];
         int overflow = newValue.length() - column.getSize();
         if (overflow > 0) {
             newValue = emailValues[0].substring(0, emailValues[0].length()-overflow) + "+" + counter + "@" + emailValues[1];
@@ -39,6 +43,7 @@ public class CassandraToSqlColumnData {
         return newValue;
     }
 
+    @Nullable
     public String getLogValue() {
         if (this.value != null && this.value.length() > 255) {
             return this.value.substring(0, 255) + "...[truncated " + (this.value.length() - 255) + " symbols]";

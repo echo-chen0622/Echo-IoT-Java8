@@ -1,5 +1,7 @@
 package org.echoiot.server.dao.sql.event;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
@@ -40,10 +42,10 @@ public class EventInsertRepository {
 
     private final Map<EventType, String> insertStmtMap = new ConcurrentHashMap<>();
 
-    @Autowired
+    @Resource
     protected JdbcTemplate jdbcTemplate;
 
-    @Autowired
+    @Resource
     private TransactionTemplate transactionTemplate;
 
     @Value("${sql.remove_null_chars:true}")
@@ -68,19 +70,20 @@ public class EventInsertRepository {
                 "VALUES (?, ?, ?, ?, ?, ?, ?) ON CONFLICT DO NOTHING;");
     }
 
-    public void save(List<Event> entities) {
-        Map<EventType, List<Event>> eventsByType = entities.stream().collect(Collectors.groupingBy(Event::getType, Collectors.toList()));
+    public void save(@NotNull List<Event> entities) {
+        @NotNull Map<EventType, List<Event>> eventsByType = entities.stream().collect(Collectors.groupingBy(Event::getType, Collectors.toList()));
         transactionTemplate.execute(new TransactionCallbackWithoutResult() {
             @Override
             protected void doInTransactionWithoutResult(TransactionStatus status) {
-                for (var entry : eventsByType.entrySet()) {
+                for (@NotNull var entry : eventsByType.entrySet()) {
                     jdbcTemplate.batchUpdate(insertStmtMap.get(entry.getKey()), getStatementSetter(entry.getKey(), entry.getValue()));
                 }
             }
         });
     }
 
-    private BatchPreparedStatementSetter getStatementSetter(EventType eventType, List<Event> events) {
+    @NotNull
+    private BatchPreparedStatementSetter getStatementSetter(@NotNull EventType eventType, @NotNull List<Event> events) {
         switch (eventType) {
             case ERROR:
                 return getErrorEventSetter(events);
@@ -97,7 +100,8 @@ public class EventInsertRepository {
         }
     }
 
-    private BatchPreparedStatementSetter getErrorEventSetter(List<Event> events) {
+    @NotNull
+    private BatchPreparedStatementSetter getErrorEventSetter(@NotNull List<Event> events) {
         return new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
@@ -114,7 +118,8 @@ public class EventInsertRepository {
         };
     }
 
-    private BatchPreparedStatementSetter getLcEventSetter(List<Event> events) {
+    @NotNull
+    private BatchPreparedStatementSetter getLcEventSetter(@NotNull List<Event> events) {
         return new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
@@ -132,7 +137,8 @@ public class EventInsertRepository {
         };
     }
 
-    private BatchPreparedStatementSetter getStatsEventSetter(List<Event> events) {
+    @NotNull
+    private BatchPreparedStatementSetter getStatsEventSetter(@NotNull List<Event> events) {
         return new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
@@ -149,7 +155,8 @@ public class EventInsertRepository {
         };
     }
 
-    private BatchPreparedStatementSetter getRuleNodeEventSetter(List<Event> events) {
+    @NotNull
+    private BatchPreparedStatementSetter getRuleNodeEventSetter(@NotNull List<Event> events) {
         return new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
@@ -174,7 +181,8 @@ public class EventInsertRepository {
         };
     }
 
-    private BatchPreparedStatementSetter getRuleChainEventSetter(List<Event> events) {
+    @NotNull
+    private BatchPreparedStatementSetter getRuleChainEventSetter(@NotNull List<Event> events) {
         return new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
@@ -191,7 +199,7 @@ public class EventInsertRepository {
         };
     }
 
-    void safePutString(PreparedStatement ps, int parameterIdx, String value) throws SQLException {
+    void safePutString(@NotNull PreparedStatement ps, int parameterIdx, @Nullable String value) throws SQLException {
         if (value != null) {
             ps.setString(parameterIdx, replaceNullChars(value));
         } else {
@@ -199,7 +207,7 @@ public class EventInsertRepository {
         }
     }
 
-    void safePutUUID(PreparedStatement ps, int parameterIdx, UUID value) throws SQLException {
+    void safePutUUID(@NotNull PreparedStatement ps, int parameterIdx, @Nullable UUID value) throws SQLException {
         if (value != null) {
             ps.setObject(parameterIdx, value);
         } else {
@@ -207,7 +215,7 @@ public class EventInsertRepository {
         }
     }
 
-    private void setCommonEventFields(PreparedStatement ps, Event event) throws SQLException {
+    private void setCommonEventFields(@NotNull PreparedStatement ps, @NotNull Event event) throws SQLException {
         ps.setObject(1, event.getId().getId());
         ps.setObject(2, event.getTenantId().getId());
         ps.setLong(3, event.getCreatedTime());
@@ -215,7 +223,8 @@ public class EventInsertRepository {
         ps.setString(5, event.getServiceId());
     }
 
-    private String replaceNullChars(String strValue) {
+    @Nullable
+    private String replaceNullChars(@Nullable String strValue) {
         if (removeNullChars && strValue != null) {
             return PATTERN_THREAD_LOCAL.get().matcher(strValue).replaceAll(EMPTY_STR);
         }

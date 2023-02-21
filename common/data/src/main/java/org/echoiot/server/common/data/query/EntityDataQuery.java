@@ -2,6 +2,7 @@ package org.echoiot.server.common.data.query;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.ToString;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -19,6 +20,7 @@ public class EntityDataQuery extends AbstractDataQuery<EntityDataPageLink> {
         super(entityFilter, pageLink, entityFields, latestValues, keyFilters);
     }
 
+    @NotNull
     @JsonIgnore
     public EntityDataQuery next() {
         return new EntityDataQuery(getEntityFilter(), getPageLink().nextPageLink(), entityFields, latestValues, keyFilters);

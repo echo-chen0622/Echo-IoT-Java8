@@ -5,6 +5,7 @@ import org.echoiot.server.common.data.queue.ProcessingStrategy;
 import org.echoiot.server.common.data.queue.Queue;
 import org.echoiot.server.common.data.queue.SubmitStrategy;
 import org.echoiot.server.queue.util.TbCoreComponent;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import org.echoiot.server.gen.edge.v1.ProcessingStrategyProto;
 import org.echoiot.server.gen.edge.v1.QueueUpdateMsg;
@@ -15,25 +16,27 @@ import org.echoiot.server.gen.edge.v1.UpdateMsgType;
 @TbCoreComponent
 public class QueueMsgConstructor {
 
-    public QueueUpdateMsg constructQueueUpdatedMsg(UpdateMsgType msgType, Queue queue) {
-        QueueUpdateMsg.Builder builder = QueueUpdateMsg.newBuilder()
-                .setMsgType(msgType)
-                .setIdMSB(queue.getId().getId().getMostSignificantBits())
-                .setIdLSB(queue.getId().getId().getLeastSignificantBits())
-                .setTenantIdMSB(queue.getTenantId().getId().getMostSignificantBits())
-                .setTenantIdLSB(queue.getTenantId().getId().getLeastSignificantBits())
-                .setName(queue.getName())
-                .setTopic(queue.getTopic())
-                .setPollInterval(queue.getPollInterval())
-                .setPartitions(queue.getPartitions())
-                .setConsumerPerPartition(queue.isConsumerPerPartition())
-                .setPackProcessingTimeout(queue.getPackProcessingTimeout())
-                .setSubmitStrategy(createSubmitStrategyProto(queue.getSubmitStrategy()))
-                .setProcessingStrategy(createProcessingStrategyProto(queue.getProcessingStrategy()));
+    @NotNull
+    public QueueUpdateMsg constructQueueUpdatedMsg(UpdateMsgType msgType, @NotNull Queue queue) {
+        @NotNull QueueUpdateMsg.Builder builder = QueueUpdateMsg.newBuilder()
+                                                                .setMsgType(msgType)
+                                                                .setIdMSB(queue.getId().getId().getMostSignificantBits())
+                                                                .setIdLSB(queue.getId().getId().getLeastSignificantBits())
+                                                                .setTenantIdMSB(queue.getTenantId().getId().getMostSignificantBits())
+                                                                .setTenantIdLSB(queue.getTenantId().getId().getLeastSignificantBits())
+                                                                .setName(queue.getName())
+                                                                .setTopic(queue.getTopic())
+                                                                .setPollInterval(queue.getPollInterval())
+                                                                .setPartitions(queue.getPartitions())
+                                                                .setConsumerPerPartition(queue.isConsumerPerPartition())
+                                                                .setPackProcessingTimeout(queue.getPackProcessingTimeout())
+                                                                .setSubmitStrategy(createSubmitStrategyProto(queue.getSubmitStrategy()))
+                                                                .setProcessingStrategy(createProcessingStrategyProto(queue.getProcessingStrategy()));
         return builder.build();
     }
 
-    private ProcessingStrategyProto createProcessingStrategyProto(ProcessingStrategy processingStrategy) {
+    @NotNull
+    private ProcessingStrategyProto createProcessingStrategyProto(@NotNull ProcessingStrategy processingStrategy) {
         return ProcessingStrategyProto.newBuilder()
                 .setType(processingStrategy.getType().name())
                 .setRetries(processingStrategy.getRetries())
@@ -43,14 +46,16 @@ public class QueueMsgConstructor {
                 .build();
     }
 
-    private SubmitStrategyProto createSubmitStrategyProto(SubmitStrategy submitStrategy) {
+    @NotNull
+    private SubmitStrategyProto createSubmitStrategyProto(@NotNull SubmitStrategy submitStrategy) {
         return SubmitStrategyProto.newBuilder()
                 .setType(submitStrategy.getType().name())
                 .setBatchSize(submitStrategy.getBatchSize())
                 .build();
     }
 
-    public QueueUpdateMsg constructQueueDeleteMsg(QueueId queueId) {
+    @NotNull
+    public QueueUpdateMsg constructQueueDeleteMsg(@NotNull QueueId queueId) {
         return QueueUpdateMsg.newBuilder()
                 .setMsgType(UpdateMsgType.ENTITY_DELETED_RPC_MESSAGE)
                 .setIdMSB(queueId.getId().getMostSignificantBits())

@@ -13,6 +13,7 @@ import org.echoiot.rule.engine.api.sms.exception.SmsSendException;
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.sms.config.AwsSnsSmsProviderConfiguration;
 import org.echoiot.server.service.sms.AbstractSmsSender;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,14 +29,14 @@ public class AwsSmsSender extends AbstractSmsSender {
                 .withDataType("String"));
     }
 
-    private AmazonSNS snsClient;
+    private final AmazonSNS snsClient;
 
-    public AwsSmsSender(AwsSnsSmsProviderConfiguration config) {
+    public AwsSmsSender(@NotNull AwsSnsSmsProviderConfiguration config) {
         if (StringUtils.isEmpty(config.getAccessKeyId()) || StringUtils.isEmpty(config.getSecretAccessKey()) || StringUtils.isEmpty(config.getRegion())) {
             throw new IllegalArgumentException("Invalid AWS sms provider configuration: aws accessKeyId, aws secretAccessKey and aws region should be specified!");
         }
-        AWSCredentials awsCredentials = new BasicAWSCredentials(config.getAccessKeyId(), config.getSecretAccessKey());
-        AWSStaticCredentialsProvider credProvider = new AWSStaticCredentialsProvider(awsCredentials);
+        @NotNull AWSCredentials awsCredentials = new BasicAWSCredentials(config.getAccessKeyId(), config.getSecretAccessKey());
+        @NotNull AWSStaticCredentialsProvider credProvider = new AWSStaticCredentialsProvider(awsCredentials);
         this.snsClient = AmazonSNSClient.builder()
                 .withCredentials(credProvider)
                 .withRegion(config.getRegion())

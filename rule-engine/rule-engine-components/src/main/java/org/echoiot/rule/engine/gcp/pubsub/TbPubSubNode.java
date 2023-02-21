@@ -20,6 +20,7 @@ import org.echoiot.rule.engine.api.util.TbNodeUtils;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.TbMsgMetaData;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -47,7 +48,7 @@ public class TbPubSubNode implements TbNode {
     private Publisher pubSubClient;
 
     @Override
-    public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
+    public void init(TbContext ctx, @NotNull TbNodeConfiguration configuration) throws TbNodeException {
         try {
             this.config = TbNodeUtils.convert(configuration, TbPubSubNodeConfiguration.class);
             this.pubSubClient = initPubSubClient();
@@ -57,7 +58,7 @@ public class TbPubSubNode implements TbNode {
     }
 
     @Override
-    public void onMsg(TbContext ctx, TbMsg msg) {
+    public void onMsg(@NotNull TbContext ctx, @NotNull TbMsg msg) {
         publishMessage(ctx, msg);
     }
 
@@ -73,9 +74,9 @@ public class TbPubSubNode implements TbNode {
         }
     }
 
-    private void publishMessage(TbContext ctx, TbMsg msg) {
-        ByteString data = ByteString.copyFromUtf8(msg.getData());
-        PubsubMessage.Builder pubsubMessageBuilder = PubsubMessage.newBuilder();
+    private void publishMessage(@NotNull TbContext ctx, @NotNull TbMsg msg) {
+        @NotNull ByteString data = ByteString.copyFromUtf8(msg.getData());
+        @NotNull PubsubMessage.Builder pubsubMessageBuilder = PubsubMessage.newBuilder();
         pubsubMessageBuilder.setData(data);
         this.config.getMessageAttributes().forEach((k, v) -> {
             String name = TbNodeUtils.processPattern(k, msg);
@@ -89,7 +90,7 @@ public class TbPubSubNode implements TbNode {
                         ctx.tellSuccess(next);
                     }
 
-                    public void onFailure(Throwable t) {
+                    public void onFailure(@NotNull Throwable t) {
                         TbMsg next = processException(ctx, msg, t);
                         ctx.tellFailure(next, t);
                     }
@@ -97,24 +98,25 @@ public class TbPubSubNode implements TbNode {
                 ctx.getExternalCallExecutor());
     }
 
-    private TbMsg processPublishResult(TbContext ctx, TbMsg origMsg, String messageId) {
-        TbMsgMetaData metaData = origMsg.getMetaData().copy();
+    private TbMsg processPublishResult(@NotNull TbContext ctx, @NotNull TbMsg origMsg, String messageId) {
+        @NotNull TbMsgMetaData metaData = origMsg.getMetaData().copy();
         metaData.putValue(MESSAGE_ID, messageId);
         return ctx.transformMsg(origMsg, origMsg.getType(), origMsg.getOriginator(), metaData, origMsg.getData());
     }
 
-    private TbMsg processException(TbContext ctx, TbMsg origMsg, Throwable t) {
-        TbMsgMetaData metaData = origMsg.getMetaData().copy();
+    private TbMsg processException(@NotNull TbContext ctx, @NotNull TbMsg origMsg, @NotNull Throwable t) {
+        @NotNull TbMsgMetaData metaData = origMsg.getMetaData().copy();
         metaData.putValue(ERROR, t.getClass() + ": " + t.getMessage());
         return ctx.transformMsg(origMsg, origMsg.getType(), origMsg.getOriginator(), metaData, origMsg.getData());
     }
 
+    @NotNull
     private Publisher initPubSubClient() throws IOException {
         ProjectTopicName topicName = ProjectTopicName.of(config.getProjectId(), config.getTopicName());
         ServiceAccountCredentials credentials =
                 ServiceAccountCredentials.fromStream(
                         new ByteArrayInputStream(config.getServiceAccountKey().getBytes()));
-        CredentialsProvider credProvider = FixedCredentialsProvider.create(credentials);
+        @NotNull CredentialsProvider credProvider = FixedCredentialsProvider.create(credentials);
 
         return Publisher.newBuilder(topicName)
                 .setCredentialsProvider(credProvider)

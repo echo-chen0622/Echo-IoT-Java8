@@ -8,9 +8,9 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel
 public class LoginRequest {
 
-    private String username;
+    private final String username;
 
-    private String password;
+    private final String password;
 
     @JsonCreator
     public LoginRequest(@JsonProperty("username") String username, @JsonProperty("password") String password) {

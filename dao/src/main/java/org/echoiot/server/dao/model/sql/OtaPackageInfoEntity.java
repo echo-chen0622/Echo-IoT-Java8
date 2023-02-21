@@ -16,6 +16,8 @@ import org.echoiot.server.dao.model.BaseSqlEntity;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.model.SearchTextEntity;
 import org.echoiot.server.dao.util.mapping.JsonStringType;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -85,6 +87,7 @@ public class OtaPackageInfoEntity extends BaseSqlEntity<OtaPackageInfo> implemen
     @Column(name = OTA_PACKAGE_DATA_SIZE_COLUMN)
     private Long dataSize;
 
+    @Nullable
     @Type(type = "json")
     @Column(name = ModelConstants.OTA_PACKAGE_ADDITIONAL_INFO_COLUMN)
     private JsonNode additionalInfo;
@@ -99,7 +102,7 @@ public class OtaPackageInfoEntity extends BaseSqlEntity<OtaPackageInfo> implemen
         super();
     }
 
-    public OtaPackageInfoEntity(OtaPackageInfo otaPackageInfo) {
+    public OtaPackageInfoEntity(@NotNull OtaPackageInfo otaPackageInfo) {
         this.createdTime = otaPackageInfo.getCreatedTime();
         this.setUuid(otaPackageInfo.getUuidId());
         this.tenantId = otaPackageInfo.getTenantId().getId();
@@ -150,9 +153,10 @@ public class OtaPackageInfoEntity extends BaseSqlEntity<OtaPackageInfo> implemen
         this.searchText = searchText;
     }
 
+    @NotNull
     @Override
     public OtaPackageInfo toData() {
-        OtaPackageInfo otaPackageInfo = new OtaPackageInfo(new OtaPackageId(id));
+        @NotNull OtaPackageInfo otaPackageInfo = new OtaPackageInfo(new OtaPackageId(id));
         otaPackageInfo.setCreatedTime(createdTime);
         otaPackageInfo.setTenantId(TenantId.fromUUID(tenantId));
         if (deviceProfileId != null) {

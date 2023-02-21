@@ -8,6 +8,7 @@ import org.echoiot.server.common.data.widget.WidgetsBundle;
 import org.echoiot.server.gen.edge.v1.UpdateMsgType;
 import org.echoiot.server.gen.edge.v1.WidgetTypeUpdateMsg;
 import org.echoiot.server.gen.edge.v1.WidgetsBundleUpdateMsg;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -19,13 +20,13 @@ abstract public class BaseWidgetEdgeTest extends AbstractEdgeTest {
     public void testWidgetsBundleAndWidgetType() throws Exception {
         // create widget bundle
         edgeImitator.expectMessageAmount(1);
-        WidgetsBundle widgetsBundle = new WidgetsBundle();
+        @NotNull WidgetsBundle widgetsBundle = new WidgetsBundle();
         widgetsBundle.setTitle("Test Widget Bundle");
         WidgetsBundle savedWidgetsBundle = doPost("/api/widgetsBundle", widgetsBundle, WidgetsBundle.class);
         Assert.assertTrue(edgeImitator.waitForMessages());
         AbstractMessage latestMessage = edgeImitator.getLatestMessage();
         Assert.assertTrue(latestMessage instanceof WidgetsBundleUpdateMsg);
-        WidgetsBundleUpdateMsg widgetsBundleUpdateMsg = (WidgetsBundleUpdateMsg) latestMessage;
+        @NotNull WidgetsBundleUpdateMsg widgetsBundleUpdateMsg = (WidgetsBundleUpdateMsg) latestMessage;
         Assert.assertEquals(UpdateMsgType.ENTITY_CREATED_RPC_MESSAGE, widgetsBundleUpdateMsg.getMsgType());
         Assert.assertEquals(savedWidgetsBundle.getUuidId().getMostSignificantBits(), widgetsBundleUpdateMsg.getIdMSB());
         Assert.assertEquals(savedWidgetsBundle.getUuidId().getLeastSignificantBits(), widgetsBundleUpdateMsg.getIdLSB());
@@ -35,7 +36,7 @@ abstract public class BaseWidgetEdgeTest extends AbstractEdgeTest {
 
         // create widget type
         edgeImitator.expectMessageAmount(1);
-        WidgetType widgetType = new WidgetType();
+        @NotNull WidgetType widgetType = new WidgetType();
         widgetType.setName("Test Widget Type");
         widgetType.setBundleAlias(savedWidgetsBundle.getAlias());
         ObjectNode descriptor = mapper.createObjectNode();
@@ -45,7 +46,7 @@ abstract public class BaseWidgetEdgeTest extends AbstractEdgeTest {
         Assert.assertTrue(edgeImitator.waitForMessages());
         latestMessage = edgeImitator.getLatestMessage();
         Assert.assertTrue(latestMessage instanceof WidgetTypeUpdateMsg);
-        WidgetTypeUpdateMsg widgetTypeUpdateMsg = (WidgetTypeUpdateMsg) latestMessage;
+        @NotNull WidgetTypeUpdateMsg widgetTypeUpdateMsg = (WidgetTypeUpdateMsg) latestMessage;
         Assert.assertEquals(UpdateMsgType.ENTITY_CREATED_RPC_MESSAGE, widgetTypeUpdateMsg.getMsgType());
         Assert.assertEquals(savedWidgetType.getUuidId().getMostSignificantBits(), widgetTypeUpdateMsg.getIdMSB());
         Assert.assertEquals(savedWidgetType.getUuidId().getLeastSignificantBits(), widgetTypeUpdateMsg.getIdLSB());

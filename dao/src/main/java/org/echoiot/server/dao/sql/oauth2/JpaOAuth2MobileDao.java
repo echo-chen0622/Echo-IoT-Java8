@@ -2,6 +2,7 @@ package org.echoiot.server.dao.sql.oauth2;
 
 import lombok.RequiredArgsConstructor;
 import org.echoiot.server.dao.model.sql.OAuth2MobileEntity;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 import org.echoiot.server.common.data.oauth2.OAuth2Mobile;
@@ -18,8 +19,10 @@ import java.util.UUID;
 @SqlDao
 public class JpaOAuth2MobileDao extends JpaAbstractDao<OAuth2MobileEntity, OAuth2Mobile> implements OAuth2MobileDao {
 
+    @NotNull
     private final OAuth2MobileRepository repository;
 
+    @NotNull
     @Override
     protected Class<OAuth2MobileEntity> getEntityClass() {
         return OAuth2MobileEntity.class;

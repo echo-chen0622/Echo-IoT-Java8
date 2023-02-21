@@ -9,6 +9,7 @@ import org.echoiot.server.common.data.oauth2.OAuth2ClientRegistrationTemplate;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.security.permission.Operation;
 import org.echoiot.server.service.security.permission.Resource;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,12 +50,12 @@ public class OAuth2ConfigTemplateController extends BaseController {
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN')")
     @RequestMapping(value = "/{clientRegistrationTemplateId}", method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.OK)
-    public void deleteClientRegistrationTemplate(@ApiParam(value = "String representation of client registration template id to delete", example = "139b1f81-2f5d-11ec-9dbe-9b627e1a88f4")
+    public void deleteClientRegistrationTemplate(@NotNull @ApiParam(value = "String representation of client registration template id to delete", example = "139b1f81-2f5d-11ec-9dbe-9b627e1a88f4")
                                                  @PathVariable(CLIENT_REGISTRATION_TEMPLATE_ID) String strClientRegistrationTemplateId) throws EchoiotException {
         checkParameter(CLIENT_REGISTRATION_TEMPLATE_ID, strClientRegistrationTemplateId);
         try {
             accessControlService.checkPermission(getCurrentUser(), Resource.OAUTH2_CONFIGURATION_TEMPLATE, Operation.DELETE);
-            OAuth2ClientRegistrationTemplateId clientRegistrationTemplateId = new OAuth2ClientRegistrationTemplateId(toUUID(strClientRegistrationTemplateId));
+            @NotNull OAuth2ClientRegistrationTemplateId clientRegistrationTemplateId = new OAuth2ClientRegistrationTemplateId(toUUID(strClientRegistrationTemplateId));
             oAuth2ConfigTemplateService.deleteClientRegistrationTemplateById(clientRegistrationTemplateId);
         } catch (Exception e) {
             throw handleException(e);

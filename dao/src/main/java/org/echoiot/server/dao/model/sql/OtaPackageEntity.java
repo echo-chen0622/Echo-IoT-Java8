@@ -15,6 +15,7 @@ import org.echoiot.server.dao.model.BaseSqlEntity;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.model.SearchTextEntity;
 import org.echoiot.server.dao.util.mapping.JsonStringType;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -101,7 +102,7 @@ public class OtaPackageEntity extends BaseSqlEntity<OtaPackage> implements Searc
         super();
     }
 
-    public OtaPackageEntity(OtaPackage otaPackage) {
+    public OtaPackageEntity(@NotNull OtaPackage otaPackage) {
         this.createdTime = otaPackage.getCreatedTime();
         this.setUuid(otaPackage.getUuidId());
         this.tenantId = otaPackage.getTenantId().getId();
@@ -132,9 +133,10 @@ public class OtaPackageEntity extends BaseSqlEntity<OtaPackage> implements Searc
         this.searchText = searchText;
     }
 
+    @NotNull
     @Override
     public OtaPackage toData() {
-        OtaPackage otaPackage = new OtaPackage(new OtaPackageId(id));
+        @NotNull OtaPackage otaPackage = new OtaPackage(new OtaPackageId(id));
         otaPackage.setCreatedTime(createdTime);
         otaPackage.setTenantId(TenantId.fromUUID(tenantId));
         if (deviceProfileId != null) {

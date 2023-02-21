@@ -1,6 +1,7 @@
 package org.echoiot.rule.engine.geo;
 
 import lombok.Data;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.TimeUnit;
 
@@ -16,9 +17,10 @@ public class TbGpsGeofencingActionNodeConfiguration extends TbGpsGeofencingFilte
     private String minInsideDurationTimeUnit;
     private String minOutsideDurationTimeUnit;
 
+    @NotNull
     @Override
     public TbGpsGeofencingActionNodeConfiguration defaultConfiguration() {
-        TbGpsGeofencingActionNodeConfiguration configuration = new TbGpsGeofencingActionNodeConfiguration();
+        @NotNull TbGpsGeofencingActionNodeConfiguration configuration = new TbGpsGeofencingActionNodeConfiguration();
         configuration.setLatitudeKeyName("latitude");
         configuration.setLongitudeKeyName("longitude");
         configuration.setPerimeterType(PerimeterType.POLYGON);

@@ -1,6 +1,7 @@
 package org.echoiot.server.transport.mqtt.rpc;
 
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.echoiot.server.common.data.TransportPayloadType;
@@ -67,10 +68,10 @@ public class MqttServerSideRpcJsonIntegrationTest extends AbstractMqttServerSide
     }
 
     protected void processJsonOneWayRpcTestGateway(String deviceName) throws Exception {
-        MqttTestClient client = new MqttTestClient();
+        @NotNull MqttTestClient client = new MqttTestClient();
         client.connectAndWait(gatewayAccessToken);
-        String payload = "{\"device\": \"" + deviceName + "\", \"type\": \"" + TransportPayloadType.JSON.name() + "\"}";
-        byte[] payloadBytes = payload.getBytes();
+        @NotNull String payload = "{\"device\": \"" + deviceName + "\", \"type\": \"" + TransportPayloadType.JSON.name() + "\"}";
+        @NotNull byte[] payloadBytes = payload.getBytes();
         validateOneWayRpcGatewayResponse(deviceName, client, payloadBytes);
         client.disconnect();
     }

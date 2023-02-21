@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.echoiot.server.common.data.id.EntityId;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
@@ -11,9 +12,13 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class EntityData {
 
+    @NotNull
     private final EntityId entityId;
+    @NotNull
     private final Map<EntityKeyType, Map<String, TsValue>> latest;
+    @NotNull
     private final Map<String, TsValue[]> timeseries;
+    @NotNull
     private final Map<Integer, ComparisonTsValue> aggLatest;
 
     public EntityData(EntityId entityId, Map<EntityKeyType, Map<String, TsValue>> latest, Map<String, TsValue[]> timeseries) {

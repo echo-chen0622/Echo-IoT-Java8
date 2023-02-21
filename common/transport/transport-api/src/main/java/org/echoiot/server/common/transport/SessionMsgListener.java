@@ -32,7 +32,7 @@ public interface SessionMsgListener {
 
     void onDeviceDeleted(DeviceId deviceId);
 
-    default void onUplinkNotification(UplinkNotificationMsg notificationMsg){};
+    default void onUplinkNotification(UplinkNotificationMsg notificationMsg){}
 
     default void onToTransportUpdateCredentials(ToTransportUpdateCredentialsProto toTransportUpdateCredentials){}
 

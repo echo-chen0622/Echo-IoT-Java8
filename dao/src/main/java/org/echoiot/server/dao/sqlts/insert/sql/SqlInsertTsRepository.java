@@ -1,6 +1,7 @@
 package org.echoiot.server.dao.sqlts.insert.sql;
 
 import org.echoiot.server.dao.util.SqlTsDao;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +23,7 @@ public class SqlInsertTsRepository extends AbstractInsertRepository implements I
             "ON CONFLICT (entity_id, key, ts) DO UPDATE SET bool_v = ?, str_v = ?, long_v = ?, dbl_v = ?, json_v = cast(? AS json);";
 
     @Override
-    public void saveOrUpdate(List<TsKvEntity> entities) {
+    public void saveOrUpdate(@NotNull List<TsKvEntity> entities) {
         jdbcTemplate.batchUpdate(INSERT_ON_CONFLICT_DO_UPDATE, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {

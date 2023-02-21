@@ -6,6 +6,7 @@ import com.datastax.oss.driver.api.core.cql.BoundStatement;
 import com.datastax.oss.driver.api.core.cql.PreparedStatement;
 import com.datastax.oss.driver.api.core.cql.Statement;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.echoiot.server.common.data.id.TenantId;
@@ -19,16 +20,15 @@ import java.util.concurrent.ConcurrentMap;
 @Slf4j
 public abstract class CassandraAbstractDao {
 
-    @Autowired
-    @Qualifier("CassandraCluster")
+    @Resource(name = "CassandraCluster")
     protected CassandraCluster cluster;
 
-    private ConcurrentMap<String, PreparedStatement> preparedStatementMap = new ConcurrentHashMap<>();
+    private final ConcurrentMap<String, PreparedStatement> preparedStatementMap = new ConcurrentHashMap<>();
 
-    @Autowired
+    @Resource
     private CassandraBufferedRateReadExecutor rateReadLimiter;
 
-    @Autowired
+    @Resource
     private CassandraBufferedRateWriteExecutor rateWriteLimiter;
 
     private GuavaSession session;
@@ -45,36 +45,37 @@ public abstract class CassandraAbstractDao {
         return session;
     }
 
+    @NotNull
     protected PreparedStatement prepare(String query) {
         return preparedStatementMap.computeIfAbsent(query, i -> getSession().prepare(i));
     }
 
-    protected AsyncResultSet executeRead(TenantId tenantId, Statement statement) {
+    protected AsyncResultSet executeRead(TenantId tenantId, @NotNull Statement statement) {
         return execute(tenantId, statement, defaultReadLevel, rateReadLimiter);
     }
 
-    protected AsyncResultSet executeWrite(TenantId tenantId, Statement statement) {
+    protected AsyncResultSet executeWrite(TenantId tenantId, @NotNull Statement statement) {
         return execute(tenantId, statement, defaultWriteLevel, rateWriteLimiter);
     }
 
-    protected TbResultSetFuture executeAsyncRead(TenantId tenantId, Statement statement) {
+    protected TbResultSetFuture executeAsyncRead(TenantId tenantId, @NotNull Statement statement) {
         return executeAsync(tenantId, statement, defaultReadLevel, rateReadLimiter);
     }
 
-    protected TbResultSetFuture executeAsyncWrite(TenantId tenantId, Statement statement) {
+    protected TbResultSetFuture executeAsyncWrite(TenantId tenantId, @NotNull Statement statement) {
         return executeAsync(tenantId, statement, defaultWriteLevel, rateWriteLimiter);
     }
 
-    private AsyncResultSet execute(TenantId tenantId, Statement statement, ConsistencyLevel level,
-                                   BufferedRateExecutor<CassandraStatementTask, TbResultSetFuture> rateExecutor) {
+    private AsyncResultSet execute(TenantId tenantId, @NotNull Statement statement, ConsistencyLevel level,
+                                   @NotNull BufferedRateExecutor<CassandraStatementTask, TbResultSetFuture> rateExecutor) {
         if (log.isDebugEnabled()) {
             log.debug("Execute cassandra statement {}", statementToString(statement));
         }
         return executeAsync(tenantId, statement, level, rateExecutor).getUninterruptibly();
     }
 
-    private TbResultSetFuture executeAsync(TenantId tenantId, Statement statement, ConsistencyLevel level,
-                                           BufferedRateExecutor<CassandraStatementTask, TbResultSetFuture> rateExecutor) {
+    private TbResultSetFuture executeAsync(TenantId tenantId, @NotNull Statement statement, ConsistencyLevel level,
+                                           @NotNull BufferedRateExecutor<CassandraStatementTask, TbResultSetFuture> rateExecutor) {
         if (log.isDebugEnabled()) {
             log.debug("Execute cassandra async statement {}", statementToString(statement));
         }

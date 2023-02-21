@@ -4,6 +4,7 @@ import lombok.EqualsAndHashCode;
 import org.echoiot.server.common.data.BaseData;
 import org.echoiot.server.common.data.id.UserCredentialsId;
 import org.echoiot.server.common.data.id.UserId;
+import org.jetbrains.annotations.NotNull;
 
 @EqualsAndHashCode(callSuper = true)
 public class UserCredentials extends BaseData<UserCredentialsId> {
@@ -24,7 +25,7 @@ public class UserCredentials extends BaseData<UserCredentialsId> {
         super(id);
     }
 
-    public UserCredentials(UserCredentials userCredentials) {
+    public UserCredentials(@NotNull UserCredentials userCredentials) {
         super(userCredentials);
         this.userId = userCredentials.getUserId();
         this.password = userCredentials.getPassword();
@@ -73,25 +74,25 @@ public class UserCredentials extends BaseData<UserCredentialsId> {
         this.resetToken = resetToken;
     }
 
+    @NotNull
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("UserCredentials [userId=");
-        builder.append(userId);
-        builder.append(", enabled=");
-        builder.append(enabled);
-        builder.append(", password=");
-        builder.append(password);
-        builder.append(", activateToken=");
-        builder.append(activateToken);
-        builder.append(", resetToken=");
-        builder.append(resetToken);
-        builder.append(", createdTime=");
-        builder.append(createdTime);
-        builder.append(", id=");
-        builder.append(id);
-        builder.append("]");
-        return builder.toString();
+        String builder = "UserCredentials [userId=" +
+                         userId +
+                         ", enabled=" +
+                         enabled +
+                         ", password=" +
+                         password +
+                         ", activateToken=" +
+                         activateToken +
+                         ", resetToken=" +
+                         resetToken +
+                         ", createdTime=" +
+                         createdTime +
+                         ", id=" +
+                         id +
+                         "]";
+        return builder;
     }
 
 }

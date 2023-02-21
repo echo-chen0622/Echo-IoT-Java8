@@ -9,6 +9,7 @@ import org.echoiot.server.common.data.relation.EntityRelation;
 import org.echoiot.server.common.data.relation.RelationTypeGroup;
 import org.echoiot.server.dao.model.ToData;
 import org.echoiot.server.dao.util.mapping.JsonStringType;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -65,7 +66,7 @@ public final class RelationEntity implements ToData<EntityRelation> {
         super();
     }
 
-    public RelationEntity(EntityRelation relation) {
+    public RelationEntity(@NotNull EntityRelation relation) {
         if (relation.getTo() != null) {
             this.toId = relation.getTo().getId();
             this.toType = relation.getTo().getEntityType().name();
@@ -79,9 +80,10 @@ public final class RelationEntity implements ToData<EntityRelation> {
         this.additionalInfo = relation.getAdditionalInfo();
     }
 
+    @NotNull
     @Override
     public EntityRelation toData() {
-        EntityRelation relation = new EntityRelation();
+        @NotNull EntityRelation relation = new EntityRelation();
         if (toId != null && toType != null) {
             relation.setTo(EntityIdFactory.getByTypeAndUuid(toType, toId));
         }

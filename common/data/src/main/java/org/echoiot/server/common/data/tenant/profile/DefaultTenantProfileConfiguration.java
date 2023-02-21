@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.echoiot.server.common.data.ApiUsageRecordKey;
 import org.echoiot.server.common.data.TenantProfileType;
+import org.jetbrains.annotations.NotNull;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -65,7 +66,7 @@ public class DefaultTenantProfileConfiguration implements TenantProfileConfigura
     private double warnThreshold;
 
     @Override
-    public long getProfileThreshold(ApiUsageRecordKey key) {
+    public long getProfileThreshold(@NotNull ApiUsageRecordKey key) {
         switch (key) {
             case TRANSPORT_MSG_COUNT:
                 return maxTransportMessages;
@@ -88,10 +89,11 @@ public class DefaultTenantProfileConfiguration implements TenantProfileConfigura
     }
 
     @Override
-    public long getWarnThreshold(ApiUsageRecordKey key) {
+    public long getWarnThreshold(@NotNull ApiUsageRecordKey key) {
         return (long) (getProfileThreshold(key) * (warnThreshold > 0.0 ? warnThreshold : 0.8));
     }
 
+    @NotNull
     @Override
     public TenantProfileType getType() {
         return TenantProfileType.DEFAULT;

@@ -15,6 +15,7 @@ import org.echoiot.server.dao.user.UserService;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.entitiy.AbstractTbEntityService;
 import org.echoiot.server.service.security.system.SystemSecurityService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,14 +28,18 @@ import static org.echoiot.server.controller.UserController.ACTIVATE_URL_PATTERN;
 @Slf4j
 public class DefaultUserService extends AbstractTbEntityService implements TbUserService {
 
+    @NotNull
     private final UserService userService;
+    @NotNull
     private final MailService mailService;
+    @NotNull
     private final SystemSecurityService systemSecurityService;
 
+    @NotNull
     @Override
-    public User save(TenantId tenantId, CustomerId customerId, User tbUser, boolean sendActivationMail,
+    public User save(TenantId tenantId, CustomerId customerId, @NotNull User tbUser, boolean sendActivationMail,
                      HttpServletRequest request, User user) throws EchoiotException {
-        ActionType actionType = tbUser.getId() == null ? ActionType.ADDED : ActionType.UPDATED;
+        @NotNull ActionType actionType = tbUser.getId() == null ? ActionType.ADDED : ActionType.UPDATED;
         try {
             boolean sendEmail = tbUser.getId() == null && sendActivationMail;
             User savedUser = checkNotNull(userService.saveUser(tbUser));
@@ -61,7 +66,7 @@ public class DefaultUserService extends AbstractTbEntityService implements TbUse
     }
 
     @Override
-    public void delete(TenantId tenantId, CustomerId customerId, User tbUser, User user) throws EchoiotException {
+    public void delete(TenantId tenantId, @NotNull CustomerId customerId, @NotNull User tbUser, User user) throws EchoiotException {
         UserId userId = tbUser.getId();
 
         try {

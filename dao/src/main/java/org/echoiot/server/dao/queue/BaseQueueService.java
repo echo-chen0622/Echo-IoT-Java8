@@ -8,6 +8,8 @@ import org.echoiot.server.dao.service.DataValidator;
 import org.echoiot.server.dao.service.PaginatedRemover;
 import org.echoiot.server.dao.service.Validator;
 import org.hibernate.exception.ConstraintViolationException;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -26,33 +28,33 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BaseQueueService extends AbstractEntityService implements QueueService {
 
-    @Autowired
+    @Resource
     private QueueDao queueDao;
 
     @Lazy
-    @Autowired
+    @Resource
     private TbTenantProfileCache tenantProfileCache;
 
-    @Autowired
+    @Resource
     private DataValidator<Queue> queueValidator;
 
-//    @Autowired
+//    @Resource
 //    private QueueStatsService queueStatsService;
 
     @Override
-    public Queue saveQueue(Queue queue) {
+    public Queue saveQueue(@NotNull Queue queue) {
         log.trace("Executing createOrUpdateQueue [{}]", queue);
         queueValidator.validate(queue, Queue::getTenantId);
         return queueDao.save(queue.getTenantId(), queue);
     }
 
     @Override
-    public void deleteQueue(TenantId tenantId, QueueId queueId) {
+    public void deleteQueue(TenantId tenantId, @NotNull QueueId queueId) {
         log.trace("Executing deleteQueue, queueId: [{}]", queueId);
         try {
             queueDao.removeById(tenantId, queueId.getId());
         } catch (Exception t) {
-            ConstraintViolationException e = extractConstraintViolationException(t).orElse(null);
+            @Nullable ConstraintViolationException e = extractConstraintViolationException(t).orElse(null);
             if (e != null && e.getConstraintName() != null && e.getConstraintName().equalsIgnoreCase("fk_default_queue_device_profile")) {
                 throw new DataValidationException("The queue referenced by the device profiles cannot be deleted!");
             } else {
@@ -62,13 +64,13 @@ public class BaseQueueService extends AbstractEntityService implements QueueServ
     }
 
     @Override
-    public List<Queue> findQueuesByTenantId(TenantId tenantId) {
+    public List<Queue> findQueuesByTenantId(@NotNull TenantId tenantId) {
         log.trace("Executing findQueues, tenantId: [{}]", tenantId);
         return queueDao.findAllByTenantId(getSystemOrIsolatedTenantId(tenantId));
     }
 
     @Override
-    public PageData<Queue> findQueuesByTenantId(TenantId tenantId, PageLink pageLink) {
+    public PageData<Queue> findQueuesByTenantId(@NotNull TenantId tenantId, PageLink pageLink) {
         log.trace("Executing findQueues pageLink [{}]", pageLink);
         Validator.validatePageLink(pageLink);
         return queueDao.findQueuesByTenantId(getSystemOrIsolatedTenantId(tenantId), pageLink);
@@ -81,13 +83,13 @@ public class BaseQueueService extends AbstractEntityService implements QueueServ
     }
 
     @Override
-    public Queue findQueueById(TenantId tenantId, QueueId queueId) {
+    public Queue findQueueById(TenantId tenantId, @NotNull QueueId queueId) {
         log.trace("Executing findQueueById, queueId: [{}]", queueId);
         return queueDao.findById(tenantId, queueId.getId());
     }
 
     @Override
-    public Queue findQueueByTenantIdAndName(TenantId tenantId, String queueName) {
+    public Queue findQueueByTenantIdAndName(@NotNull TenantId tenantId, String queueName) {
         log.trace("Executing findQueueByTenantIdAndName, tenantId: [{}] queueName: [{}]", tenantId, queueName);
         return queueDao.findQueueByTenantIdAndName(getSystemOrIsolatedTenantId(tenantId), queueName);
     }
@@ -104,7 +106,7 @@ public class BaseQueueService extends AbstractEntityService implements QueueServ
         tenantQueuesRemover.removeEntities(tenantId, tenantId);
     }
 
-    private PaginatedRemover<TenantId, Queue> tenantQueuesRemover =
+    private final PaginatedRemover<TenantId, Queue> tenantQueuesRemover =
             new PaginatedRemover<>() {
 
                 @Override
@@ -113,12 +115,13 @@ public class BaseQueueService extends AbstractEntityService implements QueueServ
                 }
 
                 @Override
-                protected void removeEntity(TenantId tenantId, Queue entity) {
+                protected void removeEntity(TenantId tenantId, @NotNull Queue entity) {
                     deleteQueue(tenantId, entity.getId());
                 }
             };
 
-    private TenantId getSystemOrIsolatedTenantId(TenantId tenantId) {
+    @Nullable
+    private TenantId getSystemOrIsolatedTenantId(@NotNull TenantId tenantId) {
         if (!tenantId.equals(TenantId.SYS_TENANT_ID)) {
             TenantProfile tenantProfile = tenantProfileCache.get(tenantId);
             if (tenantProfile.isIsolatedTbRuleEngine()) {

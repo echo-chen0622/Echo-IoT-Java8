@@ -8,6 +8,7 @@ import org.echoiot.server.common.data.validation.Length;
 import org.echoiot.server.common.data.validation.NoXss;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.jetbrains.annotations.NotNull;
 
 @ApiModel
 public class AdminSettings extends BaseData<AdminSettingsId> implements HasTenantId {
@@ -29,7 +30,7 @@ public class AdminSettings extends BaseData<AdminSettingsId> implements HasTenan
         super(id);
     }
 
-    public AdminSettings(AdminSettings adminSettings) {
+    public AdminSettings(@NotNull AdminSettings adminSettings) {
         super(adminSettings);
         this.tenantId = adminSettings.getTenantId();
         this.key = adminSettings.getKey();
@@ -85,40 +86,29 @@ public class AdminSettings extends BaseData<AdminSettingsId> implements HasTenan
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(@NotNull Object obj) {
         if (this == obj)
             return true;
         if (!super.equals(obj))
             return false;
         if (getClass() != obj.getClass())
             return false;
-        AdminSettings other = (AdminSettings) obj;
+        @NotNull AdminSettings other = (AdminSettings) obj;
         if (jsonValue == null) {
             if (other.jsonValue != null)
                 return false;
         } else if (!jsonValue.equals(other.jsonValue))
             return false;
         if (key == null) {
-            if (other.key != null)
-                return false;
-        } else if (!key.equals(other.key))
-            return false;
-        return true;
+            return other.key == null;
+        } else return key.equals(other.key);
     }
 
+    @NotNull
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("AdminSettings [key=");
-        builder.append(key);
-        builder.append(", jsonValue=");
-        builder.append(jsonValue);
-        builder.append(", createdTime=");
-        builder.append(createdTime);
-        builder.append(", id=");
-        builder.append(id);
-        builder.append("]");
-        return builder.toString();
+        String builder = "AdminSettings [key=" + key + ", jsonValue=" + jsonValue + ", createdTime=" + createdTime + ", id=" + id + "]";
+        return builder;
     }
 
 }

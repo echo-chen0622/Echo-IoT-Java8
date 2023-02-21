@@ -7,6 +7,7 @@ import delight.nashornsandbox.NashornSandbox;
 import delight.nashornsandbox.NashornSandboxes;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -73,11 +74,13 @@ public class NashornJsInvokeService extends AbstractJsInvokeService {
         super(apiUsageStateClient, apiUsageReportClient);
     }
 
+    @NotNull
     @Override
     protected String getStatsName() {
         return "Nashorn JS Invoke Stats";
     }
 
+    @NotNull
     @Override
     protected Executor getCallbackExecutor() {
         return MoreExecutors.directExecutor();
@@ -101,7 +104,7 @@ public class NashornJsInvokeService extends AbstractJsInvokeService {
             sandbox.allowLoadFunctions(true);
             sandbox.setMaxPreparedStatements(30);
         } else {
-            ScriptEngineManager factory = new ScriptEngineManager();
+            @NotNull ScriptEngineManager factory = new ScriptEngineManager();
             engine = factory.getEngineByName("nashorn");
         }
     }
@@ -114,8 +117,9 @@ public class NashornJsInvokeService extends AbstractJsInvokeService {
         }
     }
 
+    @NotNull
     @Override
-    protected ListenableFuture<UUID> doEval(UUID scriptId, JsScriptInfo scriptInfo, String jsScript) {
+    protected ListenableFuture<UUID> doEval(@NotNull UUID scriptId, JsScriptInfo scriptInfo, String jsScript) {
         return jsExecutor.submit(() -> {
             try {
                 evalLock.lock();
@@ -136,8 +140,9 @@ public class NashornJsInvokeService extends AbstractJsInvokeService {
         });
     }
 
+    @NotNull
     @Override
-    protected ListenableFuture<Object> doInvokeFunction(UUID scriptId, JsScriptInfo scriptInfo, Object[] args) {
+    protected ListenableFuture<Object> doInvokeFunction(UUID scriptId, @NotNull JsScriptInfo scriptInfo, Object[] args) {
         return jsExecutor.submit(() -> {
             try {
                 if (useJsSandbox) {
@@ -153,7 +158,7 @@ public class NashornJsInvokeService extends AbstractJsInvokeService {
         });
     }
 
-    protected void doRelease(UUID scriptId, JsScriptInfo scriptInfo) throws ScriptException {
+    protected void doRelease(UUID scriptId, @NotNull JsScriptInfo scriptInfo) throws ScriptException {
         if (useJsSandbox) {
             sandbox.eval(scriptInfo.getFunctionName() + " = undefined;");
         } else {

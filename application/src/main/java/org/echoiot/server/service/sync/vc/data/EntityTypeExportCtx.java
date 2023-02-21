@@ -7,6 +7,7 @@ import org.echoiot.server.common.data.sync.ie.EntityExportSettings;
 import org.echoiot.server.common.data.sync.vc.request.create.EntityTypeVersionCreateConfig;
 import org.echoiot.server.common.data.sync.vc.request.create.SyncStrategy;
 import org.echoiot.server.common.data.sync.vc.request.create.VersionCreateRequest;
+import org.jetbrains.annotations.NotNull;
 
 public class EntityTypeExportCtx extends EntitiesExportCtx<VersionCreateRequest> {
 
@@ -17,7 +18,7 @@ public class EntityTypeExportCtx extends EntitiesExportCtx<VersionCreateRequest>
     @Getter
     private final EntityExportSettings settings;
 
-    public EntityTypeExportCtx(EntitiesExportCtx<?> parent, EntityTypeVersionCreateConfig config, SyncStrategy defaultSyncStrategy, EntityType entityType) {
+    public EntityTypeExportCtx(@NotNull EntitiesExportCtx<?> parent, @NotNull EntityTypeVersionCreateConfig config, SyncStrategy defaultSyncStrategy, EntityType entityType) {
         super(parent);
         this.entityType = entityType;
         this.settings = EntityExportSettings.builder()

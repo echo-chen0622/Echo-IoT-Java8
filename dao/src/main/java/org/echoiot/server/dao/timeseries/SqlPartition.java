@@ -1,6 +1,7 @@
 package org.echoiot.server.dao.timeseries;
 
 import lombok.Data;
+import org.jetbrains.annotations.NotNull;
 
 @Data
 public class SqlPartition {
@@ -19,6 +20,7 @@ public class SqlPartition {
         this.query = createStatement(table, start, end, partitionDate);
     }
 
+    @NotNull
     private String createStatement(String table, long start, long end, String partitionDate) {
         return "CREATE TABLE IF NOT EXISTS " + table + "_" + partitionDate + " PARTITION OF " + table + " FOR VALUES FROM (" + start + ") TO (" + end + ")";
     }

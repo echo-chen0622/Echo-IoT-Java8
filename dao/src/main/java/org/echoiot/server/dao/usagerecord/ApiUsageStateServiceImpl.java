@@ -1,6 +1,7 @@
 package org.echoiot.server.dao.usagerecord;
 
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.echoiot.server.common.data.ApiFeature;
@@ -52,25 +53,26 @@ public class ApiUsageStateServiceImpl extends AbstractEntityService implements A
     }
 
     @Override
-    public void deleteApiUsageStateByTenantId(TenantId tenantId) {
+    public void deleteApiUsageStateByTenantId(@NotNull TenantId tenantId) {
         log.trace("Executing deleteUsageRecordsByTenantId [{}]", tenantId);
         validateId(tenantId, INCORRECT_TENANT_ID + tenantId);
         apiUsageStateDao.deleteApiUsageStateByTenantId(tenantId);
     }
 
     @Override
-    public void deleteApiUsageStateByEntityId(EntityId entityId) {
+    public void deleteApiUsageStateByEntityId(@NotNull EntityId entityId) {
         log.trace("Executing deleteApiUsageStateByEntityId [{}]", entityId);
         validateId(entityId.getId(), "Invalid entity id");
         apiUsageStateDao.deleteApiUsageStateByEntityId(entityId);
     }
 
+    @NotNull
     @Override
-    public ApiUsageState createDefaultApiUsageState(TenantId tenantId, EntityId entityId) {
+    public ApiUsageState createDefaultApiUsageState(@NotNull TenantId tenantId, EntityId entityId) {
         entityId = Objects.requireNonNullElse(entityId, tenantId);
         log.trace("Executing createDefaultUsageRecord [{}]", entityId);
         validateId(tenantId, INCORRECT_TENANT_ID + tenantId);
-        ApiUsageState apiUsageState = new ApiUsageState();
+        @NotNull ApiUsageState apiUsageState = new ApiUsageState();
         apiUsageState.setTenantId(tenantId);
         apiUsageState.setEntityId(entityId);
         apiUsageState.setTransportState(ApiUsageStateValue.ENABLED);
@@ -84,7 +86,7 @@ public class ApiUsageStateServiceImpl extends AbstractEntityService implements A
 
         ApiUsageState saved = apiUsageStateDao.save(apiUsageState.getTenantId(), apiUsageState);
 
-        List<TsKvEntry> apiUsageStates = new ArrayList<>();
+        @NotNull List<TsKvEntry> apiUsageStates = new ArrayList<>();
         apiUsageStates.add(new BasicTsKvEntry(saved.getCreatedTime(),
                 new StringDataEntry(ApiFeature.TRANSPORT.getApiStateKey(), ApiUsageStateValue.ENABLED.name())));
         apiUsageStates.add(new BasicTsKvEntry(saved.getCreatedTime(),
@@ -107,8 +109,8 @@ public class ApiUsageStateServiceImpl extends AbstractEntityService implements A
             TenantProfile tenantProfile = tenantProfileDao.findById(tenantId, tenant.getTenantProfileId().getId());
             TenantProfileConfiguration configuration = tenantProfile.getProfileData().getConfiguration();
 
-            List<TsKvEntry> profileThresholds = new ArrayList<>();
-            for (ApiUsageRecordKey key : ApiUsageRecordKey.values()) {
+            @NotNull List<TsKvEntry> profileThresholds = new ArrayList<>();
+            for (@NotNull ApiUsageRecordKey key : ApiUsageRecordKey.values()) {
                 profileThresholds.add(new BasicTsKvEntry(saved.getCreatedTime(), new LongDataEntry(key.getApiLimitKey(), configuration.getProfileThreshold(key))));
             }
             tsService.save(tenantId, saved.getId(), profileThresholds, 0L);
@@ -118,7 +120,7 @@ public class ApiUsageStateServiceImpl extends AbstractEntityService implements A
     }
 
     @Override
-    public ApiUsageState update(ApiUsageState apiUsageState) {
+    public ApiUsageState update(@NotNull ApiUsageState apiUsageState) {
         log.trace("Executing save [{}]", apiUsageState.getTenantId());
         validateId(apiUsageState.getTenantId(), INCORRECT_TENANT_ID + apiUsageState.getTenantId());
         validateId(apiUsageState.getId(), "Can't save new usage state. Only update is allowed!");
@@ -126,20 +128,20 @@ public class ApiUsageStateServiceImpl extends AbstractEntityService implements A
     }
 
     @Override
-    public ApiUsageState findTenantApiUsageState(TenantId tenantId) {
+    public ApiUsageState findTenantApiUsageState(@NotNull TenantId tenantId) {
         log.trace("Executing findTenantUsageRecord, tenantId [{}]", tenantId);
         validateId(tenantId, INCORRECT_TENANT_ID + tenantId);
         return apiUsageStateDao.findTenantApiUsageState(tenantId.getId());
     }
 
     @Override
-    public ApiUsageState findApiUsageStateByEntityId(EntityId entityId) {
+    public ApiUsageState findApiUsageStateByEntityId(@NotNull EntityId entityId) {
         validateId(entityId.getId(), "Invalid entity id");
         return apiUsageStateDao.findApiUsageStateByEntityId(entityId);
     }
 
     @Override
-    public ApiUsageState findApiUsageStateById(TenantId tenantId, ApiUsageStateId id) {
+    public ApiUsageState findApiUsageStateById(@NotNull TenantId tenantId, @NotNull ApiUsageStateId id) {
         log.trace("Executing findApiUsageStateById, tenantId [{}], apiUsageStateId [{}]", tenantId, id);
         validateId(tenantId, INCORRECT_TENANT_ID + tenantId);
         validateId(id, "Incorrect apiUsageStateId " + id);

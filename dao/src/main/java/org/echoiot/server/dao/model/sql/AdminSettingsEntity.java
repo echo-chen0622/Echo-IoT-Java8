@@ -12,6 +12,7 @@ import org.echoiot.server.dao.model.BaseEntity;
 import org.echoiot.server.dao.model.BaseSqlEntity;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.util.mapping.JsonStringType;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -43,7 +44,7 @@ public final class AdminSettingsEntity extends BaseSqlEntity<AdminSettings> impl
         super();
     }
 
-    public AdminSettingsEntity(AdminSettings adminSettings) {
+    public AdminSettingsEntity(@NotNull AdminSettings adminSettings) {
         if (adminSettings.getId() != null) {
             this.setUuid(adminSettings.getId().getId());
         }
@@ -53,9 +54,10 @@ public final class AdminSettingsEntity extends BaseSqlEntity<AdminSettings> impl
         this.jsonValue = adminSettings.getJsonValue();
     }
 
+    @NotNull
     @Override
     public AdminSettings toData() {
-        AdminSettings adminSettings = new AdminSettings(new AdminSettingsId(id));
+        @NotNull AdminSettings adminSettings = new AdminSettings(new AdminSettingsId(id));
         adminSettings.setCreatedTime(createdTime);
         adminSettings.setTenantId(TenantId.fromUUID(tenantId));
         adminSettings.setKey(key);

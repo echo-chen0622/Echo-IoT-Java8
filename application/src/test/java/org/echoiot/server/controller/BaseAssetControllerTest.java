@@ -16,6 +16,8 @@ import org.echoiot.server.dao.asset.AssetDao;
 import org.echoiot.server.dao.exception.DataValidationException;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.service.stats.DefaultRuleEngineStatisticsService;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -38,12 +40,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = {BaseAssetControllerTest.Config.class})
 public abstract class BaseAssetControllerTest extends AbstractControllerTest {
 
-    private IdComparator<Asset> idComparator = new IdComparator<>();
+    private final IdComparator<Asset> idComparator = new IdComparator<>();
 
     private Tenant savedTenant;
     private User tenantAdmin;
 
-    @Autowired
+    @Resource
     private AssetDao assetDao;
 
     static class Config {
@@ -58,7 +60,7 @@ public abstract class BaseAssetControllerTest extends AbstractControllerTest {
     public void beforeTest() throws Exception {
         loginSysAdmin();
 
-        Tenant tenant = new Tenant();
+        @NotNull Tenant tenant = new Tenant();
         tenant.setTitle("My tenant");
         savedTenant = doPost("/api/tenant", tenant, Tenant.class);
         Assert.assertNotNull(savedTenant);
@@ -83,7 +85,7 @@ public abstract class BaseAssetControllerTest extends AbstractControllerTest {
 
     @Test
     public void testSaveAsset() throws Exception {
-        Asset asset = new Asset();
+        @NotNull Asset asset = new Asset();
         asset.setName("My asset");
         asset.setType("default");
 
@@ -116,7 +118,7 @@ public abstract class BaseAssetControllerTest extends AbstractControllerTest {
 
     @Test
     public void testSaveAssetWithViolationOfLengthValidation() throws Exception {
-        Asset asset = new Asset();
+        @NotNull Asset asset = new Asset();
         asset.setName(StringUtils.randomAlphabetic(300));
         asset.setType("default");
 
@@ -155,7 +157,7 @@ public abstract class BaseAssetControllerTest extends AbstractControllerTest {
 
     @Test
     public void testUpdateAssetFromDifferentTenant() throws Exception {
-        Asset asset = new Asset();
+        @NotNull Asset asset = new Asset();
         asset.setName("My asset");
         asset.setType("default");
         Asset savedAsset = doPost("/api/asset", asset, Asset.class);
@@ -186,7 +188,7 @@ public abstract class BaseAssetControllerTest extends AbstractControllerTest {
         differentProfile = doPost("/api/assetProfile", differentProfile, AssetProfile.class);
 
         loginTenantAdmin();
-        Asset asset = new Asset();
+        @NotNull Asset asset = new Asset();
         asset.setName("My device");
         asset.setAssetProfileId(differentProfile.getId());
         doPost("/api/asset", asset).andExpect(status().isBadRequest())
@@ -195,7 +197,7 @@ public abstract class BaseAssetControllerTest extends AbstractControllerTest {
 
     @Test
     public void testFindAssetById() throws Exception {
-        Asset asset = new Asset();
+        @NotNull Asset asset = new Asset();
         asset.setName("My asset");
         asset.setType("default");
         Asset savedAsset = doPost("/api/asset", asset, Asset.class);
@@ -206,13 +208,13 @@ public abstract class BaseAssetControllerTest extends AbstractControllerTest {
 
     @Test
     public void testFindAssetTypesByTenantId() throws Exception {
-        List<Asset> assets = new ArrayList<>();
+        @NotNull List<Asset> assets = new ArrayList<>();
 
         Mockito.reset(tbClusterService, auditLogService);
 
         int cntTime = 3;
         for (int i = 0; i < cntTime; i++) {
-            Asset asset = new Asset();
+            @NotNull Asset asset = new Asset();
             asset.setName("My asset B" + i);
             asset.setType("typeB");
             assets.add(doPost("/api/asset", asset, Asset.class));
@@ -223,13 +225,13 @@ public abstract class BaseAssetControllerTest extends AbstractControllerTest {
                 ActionType.ADDED, cntTime);
 
         for (int i = 0; i < 7; i++) {
-            Asset asset = new Asset();
+            @NotNull Asset asset = new Asset();
             asset.setName("My asset C" + i);
             asset.setType("typeC");
             assets.add(doPost("/api/asset", asset, Asset.class));
         }
         for (int i = 0; i < 9; i++) {
-            Asset asset = new Asset();
+            @NotNull Asset asset = new Asset();
             asset.setName("My asset A" + i);
             asset.setType("typeA");
             assets.add(doPost("/api/asset", asset, Asset.class));
@@ -247,7 +249,7 @@ public abstract class BaseAssetControllerTest extends AbstractControllerTest {
 
     @Test
     public void testDeleteAsset() throws Exception {
-        Asset asset = new Asset();
+        @NotNull Asset asset = new Asset();
         asset.setName("My asset");
         asset.setType("default");
         Asset savedAsset = doPost("/api/asset", asset, Asset.class);
@@ -269,17 +271,17 @@ public abstract class BaseAssetControllerTest extends AbstractControllerTest {
 
     @Test
     public void testDeleteAssetAssignedToEntityView() throws Exception {
-        Asset asset1 = new Asset();
+        @NotNull Asset asset1 = new Asset();
         asset1.setName("My asset 1");
         asset1.setType("default");
         Asset savedAsset1 = doPost("/api/asset", asset1, Asset.class);
 
-        Asset asset2 = new Asset();
+        @NotNull Asset asset2 = new Asset();
         asset2.setName("My asset 2");
         asset2.setType("default");
         Asset savedAsset2 = doPost("/api/asset", asset2, Asset.class);
 
-        EntityView view = new EntityView();
+        @NotNull EntityView view = new EntityView();
         view.setEntityId(savedAsset1.getId());
         view.setTenantId(savedTenant.getId());
         view.setName("My entity view");
@@ -288,7 +290,7 @@ public abstract class BaseAssetControllerTest extends AbstractControllerTest {
 
         Mockito.reset(tbClusterService, auditLogService);
 
-        String msgError = "Can't delete asset that has entity views";
+        @NotNull String msgError = "Can't delete asset that has entity views";
         doDelete("/api/asset/" + savedAsset1.getId().getId().toString())
                 .andExpect(status().isBadRequest())
                 .andExpect(statusReason(containsString(msgError)));
@@ -311,7 +313,7 @@ public abstract class BaseAssetControllerTest extends AbstractControllerTest {
 
     @Test
     public void testSaveAssetWithEmptyType() throws Exception {
-        Asset asset = new Asset();
+        @NotNull Asset asset = new Asset();
         asset.setName("My asset");
 
         Mockito.reset(tbClusterService, auditLogService);
@@ -326,12 +328,12 @@ public abstract class BaseAssetControllerTest extends AbstractControllerTest {
 
     @Test
     public void testSaveAssetWithEmptyName() throws Exception {
-        Asset asset = new Asset();
+        @NotNull Asset asset = new Asset();
         asset.setType("default");
 
         Mockito.reset(tbClusterService, auditLogService);
 
-        String msgError = "Asset name " + msgErrorShouldBeSpecified;
+        @NotNull String msgError = "Asset name " + msgErrorShouldBeSpecified;
         doPost("/api/asset", asset)
                 .andExpect(status().isBadRequest())
                 .andExpect(statusReason(containsString(msgError)));
@@ -342,12 +344,12 @@ public abstract class BaseAssetControllerTest extends AbstractControllerTest {
 
     @Test
     public void testAssignUnassignAssetToCustomer() throws Exception {
-        Asset asset = new Asset();
+        @NotNull Asset asset = new Asset();
         asset.setName("My asset");
         asset.setType("default");
         Asset savedAsset = doPost("/api/asset", asset, Asset.class);
 
-        Customer customer = new Customer();
+        @NotNull Customer customer = new Customer();
         customer.setTitle("My customer");
         Customer savedCustomer = doPost("/api/customer", customer, Customer.class);
 
@@ -380,7 +382,7 @@ public abstract class BaseAssetControllerTest extends AbstractControllerTest {
 
     @Test
     public void testAssignAssetToNonExistentCustomer() throws Exception {
-        Asset asset = new Asset();
+        @NotNull Asset asset = new Asset();
         asset.setName("My asset");
         asset.setType("default");
         Asset savedAsset = doPost("/api/asset", asset, Asset.class);
@@ -400,12 +402,12 @@ public abstract class BaseAssetControllerTest extends AbstractControllerTest {
     public void testAssignAssetToCustomerFromDifferentTenant() throws Exception {
         loginSysAdmin();
 
-        Tenant tenant2 = new Tenant();
+        @NotNull Tenant tenant2 = new Tenant();
         tenant2.setTitle("Different tenant");
         Tenant savedTenant2 = doPost("/api/tenant", tenant2, Tenant.class);
         Assert.assertNotNull(savedTenant2);
 
-        User tenantAdmin2 = new User();
+        @NotNull User tenantAdmin2 = new User();
         tenantAdmin2.setAuthority(Authority.TENANT_ADMIN);
         tenantAdmin2.setTenantId(savedTenant2.getId());
         tenantAdmin2.setEmail("tenant3@echoiot.org");
@@ -414,13 +416,13 @@ public abstract class BaseAssetControllerTest extends AbstractControllerTest {
 
         createUserAndLogin(tenantAdmin2, "testPassword1");
 
-        Customer customer = new Customer();
+        @NotNull Customer customer = new Customer();
         customer.setTitle("Different customer");
         Customer savedCustomer = doPost("/api/customer", customer, Customer.class);
 
         login(tenantAdmin.getEmail(), "testPassword1");
 
-        Asset asset = new Asset();
+        @NotNull Asset asset = new Asset();
         asset.setName("My asset");
         asset.setType("default");
         Asset savedAsset = doPost("/api/asset", asset, Asset.class);
@@ -442,20 +444,20 @@ public abstract class BaseAssetControllerTest extends AbstractControllerTest {
 
     @Test
     public void testFindTenantAssets() throws Exception {
-        List<Asset> assets = new ArrayList<>();
+        @NotNull List<Asset> assets = new ArrayList<>();
         int cntEntity = 178;
 
         Mockito.reset(tbClusterService, auditLogService);
 
         for (int i = 0; i < cntEntity; i++) {
-            Asset asset = new Asset();
+            @NotNull Asset asset = new Asset();
             asset.setName("Asset" + i);
             asset.setType("default");
             assets.add(doPost("/api/asset", asset, Asset.class));
         }
-        List<Asset> loadedAssets = new ArrayList<>();
+        @NotNull List<Asset> loadedAssets = new ArrayList<>();
         PageLink pageLink = new PageLink(23);
-        PageData<Asset> pageData = null;
+        @Nullable PageData<Asset> pageData = null;
         do {
             pageData = doGetTypedWithPageLink("/api/tenant/assets?",
                     new TypeReference<PageData<Asset>>() {
@@ -480,32 +482,32 @@ public abstract class BaseAssetControllerTest extends AbstractControllerTest {
 
     @Test
     public void testFindTenantAssetsByName() throws Exception {
-        String title1 = "Asset title 1";
-        List<Asset> assetsTitle1 = new ArrayList<>();
+        @NotNull String title1 = "Asset title 1";
+        @NotNull List<Asset> assetsTitle1 = new ArrayList<>();
         for (int i = 0; i < 143; i++) {
-            Asset asset = new Asset();
-            String suffix = StringUtils.randomAlphanumeric(15);
-            String name = title1 + suffix;
+            @NotNull Asset asset = new Asset();
+            @NotNull String suffix = StringUtils.randomAlphanumeric(15);
+            @NotNull String name = title1 + suffix;
             name = i % 2 == 0 ? name.toLowerCase() : name.toUpperCase();
             asset.setName(name);
             asset.setType("default");
             assetsTitle1.add(doPost("/api/asset", asset, Asset.class));
         }
-        String title2 = "Asset title 2";
-        List<Asset> assetsTitle2 = new ArrayList<>();
+        @NotNull String title2 = "Asset title 2";
+        @NotNull List<Asset> assetsTitle2 = new ArrayList<>();
         for (int i = 0; i < 75; i++) {
-            Asset asset = new Asset();
-            String suffix = StringUtils.randomAlphanumeric(15);
-            String name = title2 + suffix;
+            @NotNull Asset asset = new Asset();
+            @NotNull String suffix = StringUtils.randomAlphanumeric(15);
+            @NotNull String name = title2 + suffix;
             name = i % 2 == 0 ? name.toLowerCase() : name.toUpperCase();
             asset.setName(name);
             asset.setType("default");
             assetsTitle2.add(doPost("/api/asset", asset, Asset.class));
         }
 
-        List<Asset> loadedAssetsTitle1 = new ArrayList<>();
+        @NotNull List<Asset> loadedAssetsTitle1 = new ArrayList<>();
         PageLink pageLink = new PageLink(15, 0, title1);
-        PageData<Asset> pageData = null;
+        @Nullable PageData<Asset> pageData = null;
         do {
             pageData = doGetTypedWithPageLink("/api/tenant/assets?",
                     new TypeReference<PageData<Asset>>() {
@@ -521,7 +523,7 @@ public abstract class BaseAssetControllerTest extends AbstractControllerTest {
 
         Assert.assertEquals(assetsTitle1, loadedAssetsTitle1);
 
-        List<Asset> loadedAssetsTitle2 = new ArrayList<>();
+        @NotNull List<Asset> loadedAssetsTitle2 = new ArrayList<>();
         pageLink = new PageLink(4, 0, title2);
         do {
             pageData = doGetTypedWithPageLink("/api/tenant/assets?",
@@ -538,7 +540,7 @@ public abstract class BaseAssetControllerTest extends AbstractControllerTest {
 
         Assert.assertEquals(assetsTitle2, loadedAssetsTitle2);
 
-        for (Asset asset : loadedAssetsTitle1) {
+        for (@NotNull Asset asset : loadedAssetsTitle1) {
             doDelete("/api/asset/" + asset.getId().getId().toString())
                     .andExpect(status().isOk());
         }
@@ -550,7 +552,7 @@ public abstract class BaseAssetControllerTest extends AbstractControllerTest {
         Assert.assertFalse(pageData.hasNext());
         Assert.assertEquals(0, pageData.getData().size());
 
-        for (Asset asset : loadedAssetsTitle2) {
+        for (@NotNull Asset asset : loadedAssetsTitle2) {
             doDelete("/api/asset/" + asset.getId().getId().toString())
                     .andExpect(status().isOk());
         }
@@ -565,34 +567,34 @@ public abstract class BaseAssetControllerTest extends AbstractControllerTest {
 
     @Test
     public void testFindTenantAssetsByType() throws Exception {
-        String title1 = "Asset title 1";
-        String type1 = "typeA";
-        List<Asset> assetsType1 = new ArrayList<>();
+        @NotNull String title1 = "Asset title 1";
+        @NotNull String type1 = "typeA";
+        @NotNull List<Asset> assetsType1 = new ArrayList<>();
         for (int i = 0; i < 143; i++) {
-            Asset asset = new Asset();
-            String suffix = StringUtils.randomAlphanumeric(15);
-            String name = title1 + suffix;
+            @NotNull Asset asset = new Asset();
+            @NotNull String suffix = StringUtils.randomAlphanumeric(15);
+            @NotNull String name = title1 + suffix;
             name = i % 2 == 0 ? name.toLowerCase() : name.toUpperCase();
             asset.setName(name);
             asset.setType(type1);
             assetsType1.add(doPost("/api/asset", asset, Asset.class));
         }
-        String title2 = "Asset title 2";
-        String type2 = "typeB";
-        List<Asset> assetsType2 = new ArrayList<>();
+        @NotNull String title2 = "Asset title 2";
+        @NotNull String type2 = "typeB";
+        @NotNull List<Asset> assetsType2 = new ArrayList<>();
         for (int i = 0; i < 75; i++) {
-            Asset asset = new Asset();
-            String suffix = StringUtils.randomAlphanumeric(15);
-            String name = title2 + suffix;
+            @NotNull Asset asset = new Asset();
+            @NotNull String suffix = StringUtils.randomAlphanumeric(15);
+            @NotNull String name = title2 + suffix;
             name = i % 2 == 0 ? name.toLowerCase() : name.toUpperCase();
             asset.setName(name);
             asset.setType(type2);
             assetsType2.add(doPost("/api/asset", asset, Asset.class));
         }
 
-        List<Asset> loadedAssetsType1 = new ArrayList<>();
+        @NotNull List<Asset> loadedAssetsType1 = new ArrayList<>();
         PageLink pageLink = new PageLink(15);
-        PageData<Asset> pageData = null;
+        @Nullable PageData<Asset> pageData = null;
         do {
             pageData = doGetTypedWithPageLink("/api/tenant/assets?type={type}&",
                     new TypeReference<PageData<Asset>>() {
@@ -608,7 +610,7 @@ public abstract class BaseAssetControllerTest extends AbstractControllerTest {
 
         Assert.assertEquals(assetsType1, loadedAssetsType1);
 
-        List<Asset> loadedAssetsType2 = new ArrayList<>();
+        @NotNull List<Asset> loadedAssetsType2 = new ArrayList<>();
         pageLink = new PageLink(4);
         do {
             pageData = doGetTypedWithPageLink("/api/tenant/assets?type={type}&",
@@ -625,7 +627,7 @@ public abstract class BaseAssetControllerTest extends AbstractControllerTest {
 
         Assert.assertEquals(assetsType2, loadedAssetsType2);
 
-        for (Asset asset : loadedAssetsType1) {
+        for (@NotNull Asset asset : loadedAssetsType1) {
             doDelete("/api/asset/" + asset.getId().getId().toString())
                     .andExpect(status().isOk());
         }
@@ -637,7 +639,7 @@ public abstract class BaseAssetControllerTest extends AbstractControllerTest {
         Assert.assertFalse(pageData.hasNext());
         Assert.assertEquals(0, pageData.getData().size());
 
-        for (Asset asset : loadedAssetsType2) {
+        for (@NotNull Asset asset : loadedAssetsType2) {
             doDelete("/api/asset/" + asset.getId().getId().toString())
                     .andExpect(status().isOk());
         }
@@ -657,7 +659,7 @@ public abstract class BaseAssetControllerTest extends AbstractControllerTest {
         customer = doPost("/api/customer", customer, Customer.class);
         CustomerId customerId = customer.getId();
 
-        List<Asset> assets = new ArrayList<>();
+        @NotNull List<Asset> assets = new ArrayList<>();
         for (int i = 0; i < 128; i++) {
             Asset asset = new Asset();
             asset.setName("Asset" + i);
@@ -667,9 +669,9 @@ public abstract class BaseAssetControllerTest extends AbstractControllerTest {
                     + "/asset/" + asset.getId().getId().toString(), Asset.class));
         }
 
-        List<Asset> loadedAssets = new ArrayList<>();
+        @NotNull List<Asset> loadedAssets = new ArrayList<>();
         PageLink pageLink = new PageLink(23);
-        PageData<Asset> pageData = null;
+        @Nullable PageData<Asset> pageData = null;
         do {
             pageData = doGetTypedWithPageLink("/api/customer/" + customerId.getId().toString() + "/assets?",
                     new TypeReference<PageData<Asset>>() {
@@ -693,12 +695,12 @@ public abstract class BaseAssetControllerTest extends AbstractControllerTest {
         customer = doPost("/api/customer", customer, Customer.class);
         CustomerId customerId = customer.getId();
 
-        String title1 = "Asset title 1";
-        List<Asset> assetsTitle1 = new ArrayList<>();
+        @NotNull String title1 = "Asset title 1";
+        @NotNull List<Asset> assetsTitle1 = new ArrayList<>();
         for (int i = 0; i < 125; i++) {
             Asset asset = new Asset();
-            String suffix = StringUtils.randomAlphanumeric(15);
-            String name = title1 + suffix;
+            @NotNull String suffix = StringUtils.randomAlphanumeric(15);
+            @NotNull String name = title1 + suffix;
             name = i % 2 == 0 ? name.toLowerCase() : name.toUpperCase();
             asset.setName(name);
             asset.setType("default");
@@ -706,12 +708,12 @@ public abstract class BaseAssetControllerTest extends AbstractControllerTest {
             assetsTitle1.add(doPost("/api/customer/" + customerId.getId().toString()
                     + "/asset/" + asset.getId().getId().toString(), Asset.class));
         }
-        String title2 = "Asset title 2";
-        List<Asset> assetsTitle2 = new ArrayList<>();
+        @NotNull String title2 = "Asset title 2";
+        @NotNull List<Asset> assetsTitle2 = new ArrayList<>();
         for (int i = 0; i < 143; i++) {
             Asset asset = new Asset();
-            String suffix = StringUtils.randomAlphanumeric(15);
-            String name = title2 + suffix;
+            @NotNull String suffix = StringUtils.randomAlphanumeric(15);
+            @NotNull String name = title2 + suffix;
             name = i % 2 == 0 ? name.toLowerCase() : name.toUpperCase();
             asset.setName(name);
             asset.setType("default");
@@ -720,9 +722,9 @@ public abstract class BaseAssetControllerTest extends AbstractControllerTest {
                     + "/asset/" + asset.getId().getId().toString(), Asset.class));
         }
 
-        List<Asset> loadedAssetsTitle1 = new ArrayList<>();
+        @NotNull List<Asset> loadedAssetsTitle1 = new ArrayList<>();
         PageLink pageLink = new PageLink(15, 0, title1);
-        PageData<Asset> pageData = null;
+        @Nullable PageData<Asset> pageData = null;
         do {
             pageData = doGetTypedWithPageLink("/api/customer/" + customerId.getId().toString() + "/assets?",
                     new TypeReference<PageData<Asset>>() {
@@ -738,7 +740,7 @@ public abstract class BaseAssetControllerTest extends AbstractControllerTest {
 
         Assert.assertEquals(assetsTitle1, loadedAssetsTitle1);
 
-        List<Asset> loadedAssetsTitle2 = new ArrayList<>();
+        @NotNull List<Asset> loadedAssetsTitle2 = new ArrayList<>();
         pageLink = new PageLink(4, 0, title2);
         do {
             pageData = doGetTypedWithPageLink("/api/customer/" + customerId.getId().toString() + "/assets?",
@@ -755,7 +757,7 @@ public abstract class BaseAssetControllerTest extends AbstractControllerTest {
 
         Assert.assertEquals(assetsTitle2, loadedAssetsTitle2);
 
-        for (Asset asset : loadedAssetsTitle1) {
+        for (@NotNull Asset asset : loadedAssetsTitle1) {
             doDelete("/api/customer/asset/" + asset.getId().getId().toString())
                     .andExpect(status().isOk());
         }
@@ -767,7 +769,7 @@ public abstract class BaseAssetControllerTest extends AbstractControllerTest {
         Assert.assertFalse(pageData.hasNext());
         Assert.assertEquals(0, pageData.getData().size());
 
-        for (Asset asset : loadedAssetsTitle2) {
+        for (@NotNull Asset asset : loadedAssetsTitle2) {
             doDelete("/api/customer/asset/" + asset.getId().getId().toString())
                     .andExpect(status().isOk());
         }
@@ -787,13 +789,13 @@ public abstract class BaseAssetControllerTest extends AbstractControllerTest {
         customer = doPost("/api/customer", customer, Customer.class);
         CustomerId customerId = customer.getId();
 
-        String title1 = "Asset title 1";
-        String type1 = "typeC";
-        List<Asset> assetsType1 = new ArrayList<>();
+        @NotNull String title1 = "Asset title 1";
+        @NotNull String type1 = "typeC";
+        @NotNull List<Asset> assetsType1 = new ArrayList<>();
         for (int i = 0; i < 125; i++) {
             Asset asset = new Asset();
-            String suffix = StringUtils.randomAlphanumeric(15);
-            String name = title1 + suffix;
+            @NotNull String suffix = StringUtils.randomAlphanumeric(15);
+            @NotNull String name = title1 + suffix;
             name = i % 2 == 0 ? name.toLowerCase() : name.toUpperCase();
             asset.setName(name);
             asset.setType(type1);
@@ -801,13 +803,13 @@ public abstract class BaseAssetControllerTest extends AbstractControllerTest {
             assetsType1.add(doPost("/api/customer/" + customerId.getId().toString()
                     + "/asset/" + asset.getId().getId().toString(), Asset.class));
         }
-        String title2 = "Asset title 2";
-        String type2 = "typeD";
-        List<Asset> assetsType2 = new ArrayList<>();
+        @NotNull String title2 = "Asset title 2";
+        @NotNull String type2 = "typeD";
+        @NotNull List<Asset> assetsType2 = new ArrayList<>();
         for (int i = 0; i < 143; i++) {
             Asset asset = new Asset();
-            String suffix = StringUtils.randomAlphanumeric(15);
-            String name = title2 + suffix;
+            @NotNull String suffix = StringUtils.randomAlphanumeric(15);
+            @NotNull String name = title2 + suffix;
             name = i % 2 == 0 ? name.toLowerCase() : name.toUpperCase();
             asset.setName(name);
             asset.setType(type2);
@@ -816,9 +818,9 @@ public abstract class BaseAssetControllerTest extends AbstractControllerTest {
                     + "/asset/" + asset.getId().getId().toString(), Asset.class));
         }
 
-        List<Asset> loadedAssetsType1 = new ArrayList<>();
+        @NotNull List<Asset> loadedAssetsType1 = new ArrayList<>();
         PageLink pageLink = new PageLink(15);
-        PageData<Asset> pageData = null;
+        @Nullable PageData<Asset> pageData = null;
         do {
             pageData = doGetTypedWithPageLink("/api/customer/" + customerId.getId().toString() + "/assets?type={type}&",
                     new TypeReference<PageData<Asset>>() {
@@ -834,7 +836,7 @@ public abstract class BaseAssetControllerTest extends AbstractControllerTest {
 
         Assert.assertEquals(assetsType1, loadedAssetsType1);
 
-        List<Asset> loadedAssetsType2 = new ArrayList<>();
+        @NotNull List<Asset> loadedAssetsType2 = new ArrayList<>();
         pageLink = new PageLink(4);
         do {
             pageData = doGetTypedWithPageLink("/api/customer/" + customerId.getId().toString() + "/assets?type={type}&",
@@ -851,7 +853,7 @@ public abstract class BaseAssetControllerTest extends AbstractControllerTest {
 
         Assert.assertEquals(assetsType2, loadedAssetsType2);
 
-        for (Asset asset : loadedAssetsType1) {
+        for (@NotNull Asset asset : loadedAssetsType1) {
             doDelete("/api/customer/asset/" + asset.getId().getId().toString())
                     .andExpect(status().isOk());
         }
@@ -863,7 +865,7 @@ public abstract class BaseAssetControllerTest extends AbstractControllerTest {
         Assert.assertFalse(pageData.hasNext());
         Assert.assertEquals(0, pageData.getData().size());
 
-        for (Asset asset : loadedAssetsType2) {
+        for (@NotNull Asset asset : loadedAssetsType2) {
             doDelete("/api/customer/asset/" + asset.getId().getId().toString())
                     .andExpect(status().isOk());
         }
@@ -881,7 +883,7 @@ public abstract class BaseAssetControllerTest extends AbstractControllerTest {
         Edge edge = constructEdge("My edge", "default");
         Edge savedEdge = doPost("/api/edge", edge, Edge.class);
 
-        Asset asset = new Asset();
+        @NotNull Asset asset = new Asset();
         asset.setName("My asset");
         asset.setType("default");
         Asset savedAsset = doPost("/api/asset", asset, Asset.class);
@@ -932,7 +934,7 @@ public abstract class BaseAssetControllerTest extends AbstractControllerTest {
     }
 
     private Asset createAsset(String name) {
-        Asset asset = new Asset();
+        @NotNull Asset asset = new Asset();
         asset.setName(name);
         asset.setType("default");
         return doPost("/api/asset", asset, Asset.class);

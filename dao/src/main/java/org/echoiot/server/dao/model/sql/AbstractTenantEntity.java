@@ -12,6 +12,7 @@ import org.echoiot.server.dao.model.BaseSqlEntity;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.model.SearchTextEntity;
 import org.echoiot.server.dao.util.mapping.JsonStringType;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
@@ -67,7 +68,7 @@ public abstract class AbstractTenantEntity<T extends Tenant> extends BaseSqlEnti
         super();
     }
 
-    public AbstractTenantEntity(Tenant tenant) {
+    public AbstractTenantEntity(@NotNull Tenant tenant) {
         if (tenant.getId() != null) {
             this.setUuid(tenant.getId().getId());
         }
@@ -88,7 +89,7 @@ public abstract class AbstractTenantEntity<T extends Tenant> extends BaseSqlEnti
         }
     }
 
-    public AbstractTenantEntity(TenantEntity tenantEntity) {
+    public AbstractTenantEntity(@NotNull TenantEntity tenantEntity) {
         this.setId(tenantEntity.getId());
         this.setCreatedTime(tenantEntity.getCreatedTime());
         this.title = tenantEntity.getTitle();
@@ -119,8 +120,9 @@ public abstract class AbstractTenantEntity<T extends Tenant> extends BaseSqlEnti
         return searchText;
     }
 
+    @NotNull
     protected Tenant toTenant() {
-        Tenant tenant = new Tenant(TenantId.fromUUID(this.getUuid()));
+        @NotNull Tenant tenant = new Tenant(TenantId.fromUUID(this.getUuid()));
         tenant.setCreatedTime(createdTime);
         tenant.setTitle(title);
         tenant.setRegion(region);

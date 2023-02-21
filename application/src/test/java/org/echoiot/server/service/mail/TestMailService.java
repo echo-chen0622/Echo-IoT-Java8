@@ -1,5 +1,7 @@
 package org.echoiot.server.service.mail;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -22,7 +24,8 @@ public class TestMailService {
     public MailService mailService() throws EchoiotException {
         MailService mailService = Mockito.mock(MailService.class);
         Mockito.doAnswer(new Answer<Void>() {
-            public Void answer(InvocationOnMock invocation) {
+            @Nullable
+            public Void answer(@NotNull InvocationOnMock invocation) {
                 Object[] args = invocation.getArguments();
                 String activationLink = (String) args[0];
                 currentActivateToken = activationLink.split("=")[1];
@@ -30,7 +33,8 @@ public class TestMailService {
             }
         }).when(mailService).sendActivationEmail(Mockito.anyString(), Mockito.anyString());
         Mockito.doAnswer(new Answer<Void>() {
-            public Void answer(InvocationOnMock invocation) {
+            @Nullable
+            public Void answer(@NotNull InvocationOnMock invocation) {
                 Object[] args = invocation.getArguments();
                 String passwordResetLink = (String) args[0];
                 currentResetPasswordToken = passwordResetLink.split("=")[1];

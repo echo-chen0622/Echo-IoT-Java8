@@ -6,6 +6,7 @@ import org.echoiot.rule.engine.api.TbContext;
 import org.echoiot.rule.engine.api.TbNodeException;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.msg.TbMsg;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by Echo on 19.01.18.
@@ -48,10 +49,11 @@ import org.echoiot.server.common.msg.TbMsg;
 public class TbGpsGeofencingFilterNode extends AbstractGeofencingNode<TbGpsGeofencingFilterNodeConfiguration> {
 
     @Override
-    public void onMsg(TbContext ctx, TbMsg msg) throws TbNodeException {
+    public void onMsg(@NotNull TbContext ctx, @NotNull TbMsg msg) throws TbNodeException {
         ctx.tellNext(msg, checkMatches(msg) ? "True" : "False");
     }
 
+    @NotNull
     @Override
     protected Class<TbGpsGeofencingFilterNodeConfiguration> getConfigClazz() {
         return TbGpsGeofencingFilterNodeConfiguration.class;

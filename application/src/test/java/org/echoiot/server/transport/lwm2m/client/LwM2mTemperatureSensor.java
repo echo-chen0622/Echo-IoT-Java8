@@ -6,6 +6,8 @@ import org.eclipse.leshan.client.servers.ServerIdentity;
 import org.eclipse.leshan.core.model.ObjectModel;
 import org.eclipse.leshan.core.response.ExecuteResponse;
 import org.eclipse.leshan.core.response.ReadResponse;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.security.auth.Destroyable;
 import java.math.BigDecimal;
@@ -30,7 +32,7 @@ public class LwM2mTemperatureSensor extends BaseInstanceEnabler implements Destr
 
     }
 
-    public LwM2mTemperatureSensor(ScheduledExecutorService executorService, Integer id) {
+    public LwM2mTemperatureSensor(@NotNull ScheduledExecutorService executorService, @Nullable Integer id) {
         try {
             if (id != null) this.setId(id);
         executorService.scheduleWithFixedDelay(this::adjustTemperature, 2000, 2000, TimeUnit.MILLISECONDS);
@@ -60,30 +62,29 @@ public class LwM2mTemperatureSensor extends BaseInstanceEnabler implements Destr
     @Override
     public synchronized ExecuteResponse execute(ServerIdentity identity, int resourceId, String params) {
         log.info("Execute on Temperature resource /[{}]/[{}]/[{}]", getModel().id, getId(), resourceId);
-        switch (resourceId) {
-            case 5605:
-                resetMinMaxMeasuredValues();
-                return ExecuteResponse.success();
-            default:
-                return super.execute(identity, resourceId, params);
+        if (resourceId == 5605) {
+            resetMinMaxMeasuredValues();
+            return ExecuteResponse.success();
         }
+        return super.execute(identity, resourceId, params);
     }
 
     private double getTwoDigitValue(double value) {
-        BigDecimal toBeTruncated = BigDecimal.valueOf(value);
+        @NotNull BigDecimal toBeTruncated = BigDecimal.valueOf(value);
         return toBeTruncated.setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
 
     private void adjustTemperature() {
         float delta = (RANDOM.nextInt(20) - 10) / 10f;
         currentTemp += delta;
-        Integer changedResource = adjustMinMaxMeasuredValue(currentTemp);
+        @Nullable Integer changedResource = adjustMinMaxMeasuredValue(currentTemp);
         fireResourceChange(5700);
         if (changedResource != null) {
             fireResourceChange(changedResource);
         }
     }
 
+    @Nullable
     private synchronized Integer adjustMinMaxMeasuredValue(double newTemperature) {
         if (newTemperature > maxMeasuredValue) {
             maxMeasuredValue = newTemperature;

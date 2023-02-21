@@ -2,6 +2,7 @@ package org.echoiot.server.dao.sql.user;
 
 import lombok.RequiredArgsConstructor;
 import org.echoiot.server.dao.model.sql.UserAuthSettingsEntity;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 import org.echoiot.server.common.data.id.UserId;
@@ -18,18 +19,20 @@ import java.util.UUID;
 @SqlDao
 public class JpaUserAuthSettingsDao extends JpaAbstractDao<UserAuthSettingsEntity, UserAuthSettings> implements UserAuthSettingsDao {
 
+    @NotNull
     private final UserAuthSettingsRepository repository;
 
     @Override
-    public UserAuthSettings findByUserId(UserId userId) {
+    public UserAuthSettings findByUserId(@NotNull UserId userId) {
         return DaoUtil.getData(repository.findByUserId(userId.getId()));
     }
 
     @Override
-    public void removeByUserId(UserId userId) {
+    public void removeByUserId(@NotNull UserId userId) {
         repository.deleteByUserId(userId.getId());
     }
 
+    @NotNull
     @Override
     protected Class<UserAuthSettingsEntity> getEntityClass() {
         return UserAuthSettingsEntity.class;

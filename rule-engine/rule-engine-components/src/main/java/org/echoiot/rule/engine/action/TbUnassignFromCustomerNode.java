@@ -14,6 +14,7 @@ import org.echoiot.server.common.data.id.EdgeId;
 import org.echoiot.server.common.data.id.EntityViewId;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.msg.TbMsg;
+import org.jetbrains.annotations.NotNull;
 
 @RuleNode(
         type = ComponentType.ACTION,
@@ -33,12 +34,12 @@ public class TbUnassignFromCustomerNode extends TbAbstractCustomerActionNode<TbU
     }
 
     @Override
-    protected TbUnassignFromCustomerNodeConfiguration loadCustomerNodeActionConfig(TbNodeConfiguration configuration) throws TbNodeException {
+    protected TbUnassignFromCustomerNodeConfiguration loadCustomerNodeActionConfig(@NotNull TbNodeConfiguration configuration) throws TbNodeException {
         return TbNodeUtils.convert(configuration, TbUnassignFromCustomerNodeConfiguration.class);
     }
 
     @Override
-    protected void doProcessCustomerAction(TbContext ctx, TbMsg msg, CustomerId customerId) {
+    protected void doProcessCustomerAction(@NotNull TbContext ctx, @NotNull TbMsg msg, CustomerId customerId) {
         EntityType originatorType = msg.getOriginator().getEntityType();
         switch (originatorType) {
             case DEVICE:
@@ -63,23 +64,23 @@ public class TbUnassignFromCustomerNode extends TbAbstractCustomerActionNode<TbU
         }
     }
 
-    private void processUnnasignAsset(TbContext ctx, TbMsg msg) {
+    private void processUnnasignAsset(@NotNull TbContext ctx, @NotNull TbMsg msg) {
         ctx.getAssetService().unassignAssetFromCustomer(ctx.getTenantId(), new AssetId(msg.getOriginator().getId()));
     }
 
-    private void processUnnasignDevice(TbContext ctx, TbMsg msg) {
+    private void processUnnasignDevice(@NotNull TbContext ctx, @NotNull TbMsg msg) {
         ctx.getDeviceService().unassignDeviceFromCustomer(ctx.getTenantId(), new DeviceId(msg.getOriginator().getId()));
     }
 
-    private void processUnnasignDashboard(TbContext ctx, TbMsg msg, CustomerId customerId) {
+    private void processUnnasignDashboard(@NotNull TbContext ctx, @NotNull TbMsg msg, CustomerId customerId) {
         ctx.getDashboardService().unassignDashboardFromCustomer(ctx.getTenantId(), new DashboardId(msg.getOriginator().getId()), customerId);
     }
 
-    private void processUnassignEntityView(TbContext ctx, TbMsg msg) {
+    private void processUnassignEntityView(@NotNull TbContext ctx, @NotNull TbMsg msg) {
         ctx.getEntityViewService().unassignEntityViewFromCustomer(ctx.getTenantId(), new EntityViewId(msg.getOriginator().getId()));
     }
 
-    private void processUnassignEdge(TbContext ctx, TbMsg msg) {
+    private void processUnassignEdge(@NotNull TbContext ctx, @NotNull TbMsg msg) {
         ctx.getEdgeService().unassignEdgeFromCustomer(ctx.getTenantId(), new EdgeId(msg.getOriginator().getId()));
     }
 }

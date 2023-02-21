@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.common.util.EchoiotThreadFactory;
 import org.echoiot.server.common.msg.TbActorMsg;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -26,17 +28,18 @@ public class DefaultTbActorSystem implements TbActorSystem {
 
     @Getter
     private final TbActorSystemSettings settings;
+    @NotNull
     @Getter
     private final ScheduledExecutorService scheduler;
 
-    public DefaultTbActorSystem(TbActorSystemSettings settings) {
+    public DefaultTbActorSystem(@NotNull TbActorSystemSettings settings) {
         this.settings = settings;
         this.scheduler = Executors.newScheduledThreadPool(settings.getSchedulerPoolSize(), EchoiotThreadFactory.forName("actor-system-scheduler"));
     }
 
     @Override
-    public void createDispatcher(String dispatcherId, ExecutorService executor) {
-        Dispatcher current = dispatchers.putIfAbsent(dispatcherId, new Dispatcher(dispatcherId, executor));
+    public void createDispatcher(@NotNull String dispatcherId, ExecutorService executor) {
+        @Nullable Dispatcher current = dispatchers.putIfAbsent(dispatcherId, new Dispatcher(dispatcherId, executor));
         if (current != null) {
             throw new RuntimeException("Dispatcher with id [" + dispatcherId + "] is already registered!");
         }
@@ -58,16 +61,17 @@ public class DefaultTbActorSystem implements TbActorSystem {
     }
 
     @Override
-    public TbActorRef createRootActor(String dispatcherId, TbActorCreator creator) {
+    public TbActorRef createRootActor(String dispatcherId, @NotNull TbActorCreator creator) {
         return createActor(dispatcherId, creator, null);
     }
 
     @Override
-    public TbActorRef createChildActor(String dispatcherId, TbActorCreator creator, TbActorId parent) {
+    public TbActorRef createChildActor(String dispatcherId, @NotNull TbActorCreator creator, TbActorId parent) {
         return createActor(dispatcherId, creator, parent);
     }
 
-    private TbActorRef createActor(String dispatcherId, TbActorCreator creator, TbActorId parent) {
+    @NotNull
+    private TbActorRef createActor(String dispatcherId, @NotNull TbActorCreator creator, @Nullable TbActorId parent) {
         Dispatcher dispatcher = dispatchers.get(dispatcherId);
         if (dispatcher == null) {
             log.warn("Dispatcher with id [{}] is not registered!", dispatcherId);
@@ -79,21 +83,21 @@ public class DefaultTbActorSystem implements TbActorSystem {
         if (actorMailbox != null) {
             log.debug("Actor with id [{}] is already registered!", actorId);
         } else {
-            Lock actorCreationLock = actorCreationLocks.computeIfAbsent(actorId, id -> new ReentrantLock());
+            @NotNull Lock actorCreationLock = actorCreationLocks.computeIfAbsent(actorId, id -> new ReentrantLock());
             actorCreationLock.lock();
             try {
                 actorMailbox = actors.get(actorId);
                 if (actorMailbox == null) {
                     log.debug("Creating actor with id [{}]!", actorId);
                     TbActor actor = creator.createActor();
-                    TbActorRef parentRef = null;
+                    @Nullable TbActorRef parentRef = null;
                     if (parent != null) {
                         parentRef = getActor(parent);
                         if (parentRef == null) {
                             throw new TbActorNotRegisteredException(parent, "Parent Actor with id [" + parent + "] is not registered!");
                         }
                     }
-                    TbActorMailbox mailbox = new TbActorMailbox(this, settings, actorId, parentRef, actor, dispatcher);
+                    @NotNull TbActorMailbox mailbox = new TbActorMailbox(this, settings, actorId, parentRef, actor, dispatcher);
                     actors.put(actorId, mailbox);
                     mailbox.initActor();
                     actorMailbox = mailbox;
@@ -112,16 +116,16 @@ public class DefaultTbActorSystem implements TbActorSystem {
     }
 
     @Override
-    public void tellWithHighPriority(TbActorId target, TbActorMsg actorMsg) {
+    public void tellWithHighPriority(TbActorId target, @NotNull TbActorMsg actorMsg) {
         tell(target, actorMsg, true);
     }
 
     @Override
-    public void tell(TbActorId target, TbActorMsg actorMsg) {
+    public void tell(TbActorId target, @NotNull TbActorMsg actorMsg) {
         tell(target, actorMsg, false);
     }
 
-    private void tell(TbActorId target, TbActorMsg actorMsg, boolean highPriority) {
+    private void tell(TbActorId target, @NotNull TbActorMsg actorMsg, boolean highPriority) {
         TbActorMailbox mailbox = actors.get(target);
         if (mailbox == null) {
             throw new TbActorNotRegisteredException(target, "Actor with id [" + target + "] is not registered!");
@@ -135,18 +139,19 @@ public class DefaultTbActorSystem implements TbActorSystem {
 
 
     @Override
-    public void broadcastToChildren(TbActorId parent, TbActorMsg msg) {
+    public void broadcastToChildren(TbActorId parent, @NotNull TbActorMsg msg) {
         broadcastToChildren(parent, id -> true, msg);
     }
 
     @Override
-    public void broadcastToChildren(TbActorId parent, Predicate<TbActorId> childFilter, TbActorMsg msg) {
+    public void broadcastToChildren(TbActorId parent, Predicate<TbActorId> childFilter, @NotNull TbActorMsg msg) {
         Set<TbActorId> children = parentChildMap.get(parent);
         if (children != null) {
             children.stream().filter(childFilter).forEach(id -> tell(id, msg));
         }
     }
 
+    @NotNull
     @Override
     public List<TbActorId> filterChildren(TbActorId parent, Predicate<TbActorId> childFilter) {
         Set<TbActorId> children = parentChildMap.get(parent);
@@ -158,7 +163,7 @@ public class DefaultTbActorSystem implements TbActorSystem {
     }
 
     @Override
-    public void stop(TbActorRef actorRef) {
+    public void stop(@NotNull TbActorRef actorRef) {
         stop(actorRef.getActorId());
     }
 

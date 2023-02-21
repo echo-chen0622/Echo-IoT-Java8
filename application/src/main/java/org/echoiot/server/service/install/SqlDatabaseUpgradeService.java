@@ -17,6 +17,7 @@ import org.echoiot.server.dao.sql.tenant.TenantRepository;
 import org.echoiot.server.dao.tenant.TenantService;
 import org.echoiot.server.dao.usagerecord.ApiUsageStateService;
 import org.echoiot.server.queue.settings.TbRuleEngineQueueConfiguration;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
@@ -29,6 +30,7 @@ import org.echoiot.server.common.data.queue.SubmitStrategy;
 import org.echoiot.server.common.data.queue.SubmitStrategyType;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -59,128 +61,126 @@ public class SqlDatabaseUpgradeService implements DatabaseEntitiesUpgradeService
     @Value("${spring.datasource.password}")
     private String dbPassword;
 
-    @Autowired
+    @Resource
     private DashboardService dashboardService;
 
-    @Autowired
+    @Resource
     private InstallScripts installScripts;
 
-    @Autowired
+    @Resource
     private SystemDataLoaderService systemDataLoaderService;
 
-    @Autowired
+    @Resource
     private TenantService tenantService;
 
-    @Autowired
+    @Resource
     private TenantRepository tenantRepository;
 
-    @Autowired
+    @Resource
     private DeviceService deviceService;
 
-    @Autowired
+    @Resource
     private AssetDao assetDao;
 
-    @Autowired
+    @Resource
     private DeviceProfileService deviceProfileService;
 
-    @Autowired
+    @Resource
     private AssetProfileService assetProfileService;
 
-    @Autowired
+    @Resource
     private ApiUsageStateService apiUsageStateService;
 
     @Lazy
-    @Autowired
+    @Resource
     private QueueService queueService;
 
-    @Autowired
+    @Resource
     private TbRuleEngineQueueConfigService queueConfig;
 
-    @Autowired
+    @Resource
     private DbUpgradeExecutorService dbUpgradeExecutor;
 
     @Override
-    public void upgradeDatabase(String fromVersion) throws Exception {
+    public void upgradeDatabase(@NotNull String fromVersion) throws Exception {
         Path schemaUpdateFile;
-        switch (fromVersion) {
-            case "3.4.1":
-                try (Connection conn = DriverManager.getConnection(dbUrl, dbUserName, dbPassword)) {
-                    log.info("Updating schema ...");
-                    runSchemaUpdateScript(conn, "3.4.1");
-                    if (isOldSchema(conn, 3004001)) {
-                        try {
-                            conn.createStatement().execute("ALTER TABLE asset ADD COLUMN asset_profile_id uuid");
-                        } catch (Exception e) {
+        if (fromVersion.equals("3.4.1")) {
+            try (Connection conn = DriverManager.getConnection(dbUrl, dbUserName, dbPassword)) {
+                log.info("Updating schema ...");
+                runSchemaUpdateScript(conn, "3.4.1");
+                if (isOldSchema(conn, 3004001)) {
+                    try {
+                        conn.createStatement().execute("ALTER TABLE asset ADD COLUMN asset_profile_id uuid");
+                    } catch (Exception e) {
+                    }
+
+                    schemaUpdateFile = Paths.get(installScripts.getDataDir(), "upgrade", "3.4.1", "schema_update_before.sql");
+                    loadSql(schemaUpdateFile, conn);
+
+                    conn.createStatement().execute("DELETE FROM asset a WHERE NOT exists(SELECT id FROM tenant WHERE id = a.tenant_id);");
+
+                    log.info("Creating default asset profiles...");
+
+                    PageLink pageLink = new PageLink(1000);
+                    PageData<TenantId> tenantIds;
+                    do {
+                        List<ListenableFuture<?>> futures = new ArrayList<>();
+                        tenantIds = tenantService.findTenantsIds(pageLink);
+                        for (TenantId tenantId : tenantIds.getData()) {
+                            futures.add(dbUpgradeExecutor.submit(() -> {
+                                try {
+                                    assetProfileService.createDefaultAssetProfile(tenantId);
+                                } catch (Exception e) {}
+                            }));
                         }
+                        Futures.allAsList(futures).get();
+                        pageLink = pageLink.nextPageLink();
+                    } while (tenantIds.hasNext());
 
-                        schemaUpdateFile = Paths.get(installScripts.getDataDir(), "upgrade", "3.4.1", "schema_update_before.sql");
-                        loadSql(schemaUpdateFile, conn);
-
-                        conn.createStatement().execute("DELETE FROM asset a WHERE NOT exists(SELECT id FROM tenant WHERE id = a.tenant_id);");
-
-                        log.info("Creating default asset profiles...");
-
-                        PageLink pageLink = new PageLink(1000);
-                        PageData<TenantId> tenantIds;
-                        do {
-                            List<ListenableFuture<?>> futures = new ArrayList<>();
-                            tenantIds = tenantService.findTenantsIds(pageLink);
-                            for (TenantId tenantId : tenantIds.getData()) {
+                    pageLink = new PageLink(1000);
+                    PageData<TbPair<UUID, String>> pairs;
+                    do {
+                        List<ListenableFuture<?>> futures = new ArrayList<>();
+                        pairs = assetDao.getAllAssetTypes(pageLink);
+                        for (TbPair<UUID, String> pair : pairs.getData()) {
+                            TenantId tenantId = new TenantId(pair.getFirst());
+                            String assetType = pair.getSecond();
+                            if (!"default".equals(assetType)) {
                                 futures.add(dbUpgradeExecutor.submit(() -> {
                                     try {
-                                        assetProfileService.createDefaultAssetProfile(tenantId);
+                                        assetProfileService.findOrCreateAssetProfile(tenantId, assetType);
                                     } catch (Exception e) {}
                                 }));
                             }
-                            Futures.allAsList(futures).get();
-                            pageLink = pageLink.nextPageLink();
-                        } while (tenantIds.hasNext());
+                        }
+                        Futures.allAsList(futures).get();
+                        pageLink = pageLink.nextPageLink();
+                    } while (pairs.hasNext());
 
-                        pageLink = new PageLink(1000);
-                        PageData<TbPair<UUID, String>> pairs;
-                        do {
-                            List<ListenableFuture<?>> futures = new ArrayList<>();
-                            pairs = assetDao.getAllAssetTypes(pageLink);
-                            for (TbPair<UUID, String> pair : pairs.getData()) {
-                                TenantId tenantId = new TenantId(pair.getFirst());
-                                String assetType = pair.getSecond();
-                                if (!"default".equals(assetType)) {
-                                    futures.add(dbUpgradeExecutor.submit(() -> {
-                                        try {
-                                            assetProfileService.findOrCreateAssetProfile(tenantId, assetType);
-                                        } catch (Exception e) {}
-                                    }));
-                                }
-                            }
-                            Futures.allAsList(futures).get();
-                            pageLink = pageLink.nextPageLink();
-                        } while (pairs.hasNext());
+                    log.info("Updating asset profiles...");
+                    conn.createStatement().execute("call update_asset_profiles()");
 
-                        log.info("Updating asset profiles...");
-                        conn.createStatement().execute("call update_asset_profiles()");
+                    schemaUpdateFile = Paths.get(installScripts.getDataDir(), "upgrade", "3.4.1", "schema_update_after.sql");
+                    loadSql(schemaUpdateFile, conn);
 
-                        schemaUpdateFile = Paths.get(installScripts.getDataDir(), "upgrade", "3.4.1", "schema_update_after.sql");
-                        loadSql(schemaUpdateFile, conn);
-
-                        conn.createStatement().execute("UPDATE tb_schema_settings SET schema_version = 3004002;");
-                    }
-                    log.info("Schema updated.");
-                } catch (Exception e) {
-                    log.error("Failed updating schema!!!", e);
+                    conn.createStatement().execute("UPDATE tb_schema_settings SET schema_version = 3004002;");
                 }
-                break;
-            default:
-                throw new RuntimeException("Unable to upgrade SQL database, unsupported fromVersion: " + fromVersion);
+                log.info("Schema updated.");
+            } catch (Exception e) {
+                log.error("Failed updating schema!!!", e);
+            }
+        } else {
+            throw new RuntimeException("Unable to upgrade SQL database, unsupported fromVersion: " + fromVersion);
         }
     }
 
-    private void runSchemaUpdateScript(Connection connection, String version) throws Exception {
-        Path schemaUpdateFile = Paths.get(installScripts.getDataDir(), "upgrade", version, SCHEMA_UPDATE_SQL);
+    private void runSchemaUpdateScript(@NotNull Connection connection, String version) throws Exception {
+        @NotNull Path schemaUpdateFile = Paths.get(installScripts.getDataDir(), "upgrade", version, SCHEMA_UPDATE_SQL);
         loadSql(schemaUpdateFile, connection);
     }
 
-    private void loadSql(Path sqlFile, Connection conn) throws Exception {
-        String sql = new String(Files.readAllBytes(sqlFile), Charset.forName("UTF-8"));
+    private void loadSql(@NotNull Path sqlFile, @NotNull Connection conn) throws Exception {
+        @NotNull String sql = new String(Files.readAllBytes(sqlFile), StandardCharsets.UTF_8);
         Statement st = conn.createStatement();
         st.setQueryTimeout((int) TimeUnit.HOURS.toSeconds(3));
         st.execute(sql);//NOSONAR, ignoring because method used to execute echoiot database upgrade script
@@ -188,7 +188,7 @@ public class SqlDatabaseUpgradeService implements DatabaseEntitiesUpgradeService
         Thread.sleep(5000);
     }
 
-    protected void printWarnings(Statement statement) throws SQLException {
+    protected void printWarnings(@NotNull Statement statement) throws SQLException {
         SQLWarning warnings = statement.getWarnings();
         if (warnings != null) {
             log.info("{}", warnings.getMessage());
@@ -200,7 +200,7 @@ public class SqlDatabaseUpgradeService implements DatabaseEntitiesUpgradeService
         }
     }
 
-    protected boolean isOldSchema(Connection conn, long fromVersion) {
+    protected boolean isOldSchema(@NotNull Connection conn, long fromVersion) {
         boolean isOldSchema = true;
         try {
             Statement statement = conn.createStatement();
@@ -220,19 +220,20 @@ public class SqlDatabaseUpgradeService implements DatabaseEntitiesUpgradeService
         return isOldSchema;
     }
 
-    private Queue queueConfigToQueue(TbRuleEngineQueueConfiguration queueSettings) {
-        Queue queue = new Queue();
+    @NotNull
+    private Queue queueConfigToQueue(@NotNull TbRuleEngineQueueConfiguration queueSettings) {
+        @NotNull Queue queue = new Queue();
         queue.setTenantId(TenantId.SYS_TENANT_ID);
         queue.setName(queueSettings.getName());
         queue.setTopic(queueSettings.getTopic());
         queue.setPollInterval(queueSettings.getPollInterval());
         queue.setPartitions(queueSettings.getPartitions());
         queue.setPackProcessingTimeout(queueSettings.getPackProcessingTimeout());
-        SubmitStrategy submitStrategy = new SubmitStrategy();
+        @NotNull SubmitStrategy submitStrategy = new SubmitStrategy();
         submitStrategy.setBatchSize(queueSettings.getSubmitStrategy().getBatchSize());
         submitStrategy.setType(SubmitStrategyType.valueOf(queueSettings.getSubmitStrategy().getType()));
         queue.setSubmitStrategy(submitStrategy);
-        ProcessingStrategy processingStrategy = new ProcessingStrategy();
+        @NotNull ProcessingStrategy processingStrategy = new ProcessingStrategy();
         processingStrategy.setType(ProcessingStrategyType.valueOf(queueSettings.getProcessingStrategy().getType()));
         processingStrategy.setRetries(queueSettings.getProcessingStrategy().getRetries());
         processingStrategy.setFailurePercentage(queueSettings.getProcessingStrategy().getFailurePercentage());

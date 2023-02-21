@@ -2,11 +2,13 @@ package org.echoiot.server.service.telemetry.sub;
 
 import lombok.Getter;
 import org.echoiot.server.common.data.alarm.Alarm;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class AlarmSubscriptionUpdate {
 
     @Getter
-    private int subscriptionId;
+    private final int subscriptionId;
     @Getter
     private int errorCode;
     @Getter
@@ -27,17 +29,18 @@ public class AlarmSubscriptionUpdate {
         this.alarmDeleted = alarmDeleted;
     }
 
-    public AlarmSubscriptionUpdate(int subscriptionId, SubscriptionErrorCode errorCode) {
+    public AlarmSubscriptionUpdate(int subscriptionId, @NotNull SubscriptionErrorCode errorCode) {
         this(subscriptionId, errorCode, null);
     }
 
-    public AlarmSubscriptionUpdate(int subscriptionId, SubscriptionErrorCode errorCode, String errorMsg) {
+    public AlarmSubscriptionUpdate(int subscriptionId, @NotNull SubscriptionErrorCode errorCode, @Nullable String errorMsg) {
         super();
         this.subscriptionId = subscriptionId;
         this.errorCode = errorCode.getCode();
         this.errorMsg = errorMsg != null ? errorMsg : errorCode.getDefaultMsg();
     }
 
+    @NotNull
     @Override
     public String toString() {
         return "AlarmUpdate [subscriptionId=" + subscriptionId + ", errorCode=" + errorCode + ", errorMsg=" + errorMsg + ", alarm="

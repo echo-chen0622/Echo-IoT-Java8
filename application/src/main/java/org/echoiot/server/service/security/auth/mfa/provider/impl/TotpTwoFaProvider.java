@@ -10,6 +10,8 @@ import org.echoiot.server.common.data.security.model.mfa.provider.TotpTwoFaProvi
 import org.echoiot.server.common.data.security.model.mfa.provider.TwoFaProviderType;
 import org.jboss.aerogear.security.otp.Totp;
 import org.jboss.aerogear.security.otp.api.Base32;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.echoiot.server.queue.util.TbCoreComponent;
@@ -21,22 +23,23 @@ import org.echoiot.server.service.security.model.SecurityUser;
 @TbCoreComponent
 public class TotpTwoFaProvider implements TwoFaProvider<TotpTwoFaProviderConfig, TotpTwoFaAccountConfig> {
 
+    @NotNull
     @Override
-    public final TotpTwoFaAccountConfig generateNewAccountConfig(User user, TotpTwoFaProviderConfig providerConfig) {
-        TotpTwoFaAccountConfig config = new TotpTwoFaAccountConfig();
+    public final TotpTwoFaAccountConfig generateNewAccountConfig(@NotNull User user, @NotNull TotpTwoFaProviderConfig providerConfig) {
+        @NotNull TotpTwoFaAccountConfig config = new TotpTwoFaAccountConfig();
         String secretKey = generateSecretKey();
         config.setAuthUrl(getTotpAuthUrl(user, secretKey, providerConfig));
         return config;
     }
 
     @Override
-    public final boolean checkVerificationCode(SecurityUser user, String code, TotpTwoFaProviderConfig providerConfig, TotpTwoFaAccountConfig accountConfig) {
-        String secretKey = UriComponentsBuilder.fromUriString(accountConfig.getAuthUrl()).build().getQueryParams().getFirst("secret");
+    public final boolean checkVerificationCode(SecurityUser user, String code, TotpTwoFaProviderConfig providerConfig, @NotNull TotpTwoFaAccountConfig accountConfig) {
+        @Nullable String secretKey = UriComponentsBuilder.fromUriString(accountConfig.getAuthUrl()).build().getQueryParams().getFirst("secret");
         return new Totp(secretKey).verify(code);
     }
 
     @SneakyThrows
-    private String getTotpAuthUrl(User user, String secretKey, TotpTwoFaProviderConfig providerConfig) {
+    private String getTotpAuthUrl(@NotNull User user, String secretKey, @NotNull TotpTwoFaProviderConfig providerConfig) {
         URIBuilder uri = new URIBuilder()
                 .setScheme("otpauth")
                 .setHost("totp")
@@ -51,6 +54,7 @@ public class TotpTwoFaProvider implements TwoFaProvider<TotpTwoFaProviderConfig,
     }
 
 
+    @NotNull
     @Override
     public TwoFaProviderType getType() {
         return TwoFaProviderType.TOTP;

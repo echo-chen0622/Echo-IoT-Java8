@@ -1,6 +1,7 @@
 package org.echoiot.server.dao.service.install.sql;
 
 import org.assertj.core.api.Assertions;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,7 +22,7 @@ public class EntitiesSchemaSqlTest extends AbstractServiceTest {
     @Value("${classpath:sql/schema-entities.sql}")
     private Path installScriptPath;
 
-    @Autowired
+    @Resource
     private JdbcTemplate jdbcTemplate;
 
     @Test
@@ -38,8 +39,8 @@ public class EntitiesSchemaSqlTest extends AbstractServiceTest {
 
     @Test
     public void testRepeatedInstall_badScript() {
-        String illegalInstallScript = "CREATE TABLE IF NOT EXISTS qwerty ();\n" +
-                "ALTER TABLE qwerty ADD COLUMN first VARCHAR(10);";
+        @NotNull String illegalInstallScript = "CREATE TABLE IF NOT EXISTS qwerty ();\n" +
+                                               "ALTER TABLE qwerty ADD COLUMN first VARCHAR(10);";
 
         assertDoesNotThrow(() -> {
             jdbcTemplate.execute(illegalInstallScript);

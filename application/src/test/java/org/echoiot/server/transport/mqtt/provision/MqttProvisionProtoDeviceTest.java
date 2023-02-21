@@ -2,6 +2,8 @@ package org.echoiot.server.transport.mqtt.provision;
 
 import io.netty.handler.codec.mqtt.MqttQoS;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,10 +41,10 @@ import static org.echoiot.server.common.data.device.profile.MqttTopics.DEVICE_PR
 @DaoSqlTest
 public class MqttProvisionProtoDeviceTest extends AbstractMqttIntegrationTest {
 
-    @Autowired
+    @Resource
     DeviceCredentialsService deviceCredentialsService;
 
-    @Autowired
+    @Resource
     DeviceService deviceService;
 
     @Test
@@ -168,7 +170,7 @@ public class MqttProvisionProtoDeviceTest extends AbstractMqttIntegrationTest {
         Assert.assertEquals(deviceCredentials.getCredentialsType().name(), response.getCredentialsType().toString());
         Assert.assertEquals(deviceCredentials.getCredentialsType(), DeviceCredentialsType.X509_CERTIFICATE);
 
-        String cert = EncryptionUtil.certTrimNewLines(deviceCredentials.getCredentialsValue());
+        @NotNull String cert = EncryptionUtil.certTrimNewLines(deviceCredentials.getCredentialsValue());
         String sha3Hash = EncryptionUtil.getSha3Hash(cert);
 
         Assert.assertEquals(deviceCredentials.getCredentialsId(), sha3Hash);
@@ -207,7 +209,7 @@ public class MqttProvisionProtoDeviceTest extends AbstractMqttIntegrationTest {
         Assert.assertEquals(deviceCredentials.getCredentialsType(), DeviceCredentialsType.MQTT_BASIC);
         Assert.assertEquals(deviceCredentials.getCredentialsId(), EncryptionUtil.getSha3Hash("|", "test_clientId", "test_username"));
 
-        BasicMqttCredentials mqttCredentials = new BasicMqttCredentials();
+        @NotNull BasicMqttCredentials mqttCredentials = new BasicMqttCredentials();
         mqttCredentials.setClientId("test_clientId");
         mqttCredentials.setUserName("test_username");
         mqttCredentials.setPassword("test_password");
@@ -252,9 +254,9 @@ public class MqttProvisionProtoDeviceTest extends AbstractMqttIntegrationTest {
     }
 
     protected byte[] createMqttClientAndPublish(byte[] provisionRequestMsg) throws Exception {
-        MqttTestClient client = new MqttTestClient();
+        @NotNull MqttTestClient client = new MqttTestClient();
         client.connectAndWait("provision");
-        MqttTestCallback onProvisionCallback = new MqttTestCallback(DEVICE_PROVISION_RESPONSE_TOPIC);
+        @NotNull MqttTestCallback onProvisionCallback = new MqttTestCallback(DEVICE_PROVISION_RESPONSE_TOPIC);
         client.setCallback(onProvisionCallback);
         client.subscribe(DEVICE_PROVISION_RESPONSE_TOPIC, MqttQoS.AT_MOST_ONCE);
         client.publishAndWait(DEVICE_PROVISION_REQUEST_TOPIC, provisionRequestMsg);
@@ -263,7 +265,7 @@ public class MqttProvisionProtoDeviceTest extends AbstractMqttIntegrationTest {
         return onProvisionCallback.getPayloadBytes();
     }
 
-    protected byte[] createTestsProvisionMessage(CredentialsType credentialsType, CredentialsDataProto credentialsData) throws Exception {
+    protected byte[] createTestsProvisionMessage(@Nullable CredentialsType credentialsType, @Nullable CredentialsDataProto credentialsData) throws Exception {
         return ProvisionDeviceRequestMsg.newBuilder()
                 .setDeviceName("Test Provision device")
                 .setCredentialsType(credentialsType != null ? credentialsType : CredentialsType.ACCESS_TOKEN)

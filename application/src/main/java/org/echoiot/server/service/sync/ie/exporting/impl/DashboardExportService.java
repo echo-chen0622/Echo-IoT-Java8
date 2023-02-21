@@ -9,6 +9,7 @@ import org.echoiot.server.common.data.id.DashboardId;
 import org.echoiot.server.common.data.sync.ie.EntityExportData;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.sync.vc.data.EntitiesExportCtx;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -19,7 +20,7 @@ import java.util.Set;
 public class DashboardExportService extends BaseEntityExportService<DashboardId, Dashboard, EntityExportData<Dashboard>> {
 
     @Override
-    protected void setRelatedEntities(EntitiesExportCtx<?> ctx, Dashboard dashboard, EntityExportData<Dashboard> exportData) {
+    protected void setRelatedEntities(EntitiesExportCtx<?> ctx, @NotNull Dashboard dashboard, EntityExportData<Dashboard> exportData) {
         if (CollectionUtils.isNotEmpty(dashboard.getAssignedCustomers())) {
             dashboard.getAssignedCustomers().forEach(customerInfo -> {
                 customerInfo.setCustomerId(getExternalIdOrElseInternal(ctx, customerInfo.getCustomerId()));
@@ -33,6 +34,7 @@ public class DashboardExportService extends BaseEntityExportService<DashboardId,
         }
     }
 
+    @NotNull
     @Override
     public Set<EntityType> getSupportedEntityTypes() {
         return Set.of(EntityType.DASHBOARD);

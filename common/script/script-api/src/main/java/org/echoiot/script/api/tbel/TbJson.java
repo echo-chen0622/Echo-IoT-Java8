@@ -1,6 +1,7 @@
 package org.echoiot.script.api.tbel;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.jetbrains.annotations.Nullable;
 import org.mvel2.ExecutionContext;
 import org.mvel2.util.ArgsRepackUtil;
 import org.echoiot.common.util.JacksonUtil;
@@ -11,11 +12,12 @@ import java.util.Map;
 
 public class TbJson {
 
-    public static String stringify(Object value) {
+    @Nullable
+    public static String stringify(@Nullable Object value) {
         return value != null ? JacksonUtil.toString(value) : "null";
     }
 
-    public static Object parse(ExecutionContext ctx, String value) throws IOException {
+    public static Object parse(ExecutionContext ctx, @Nullable String value) throws IOException {
         if (value != null) {
             JsonNode node = JacksonUtil.toJsonNode(value);
             if (node.isObject()) {

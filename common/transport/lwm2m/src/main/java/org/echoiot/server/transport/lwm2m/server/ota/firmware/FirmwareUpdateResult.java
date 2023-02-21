@@ -1,6 +1,7 @@
 package org.echoiot.server.transport.lwm2m.server.ota.firmware;
 
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * FW Update Result
@@ -28,11 +29,11 @@ public enum FirmwareUpdateResult {
     UNSUPPORTED_PROTOCOL(9, "Unsupported protocol", false);
 
     @Getter
-    private int code;
+    private final int code;
     @Getter
-    private String type;
+    private final String type;
     @Getter
-    private boolean again;
+    private final boolean again;
 
     FirmwareUpdateResult(int code, String type, boolean isAgain) {
         this.code = code;
@@ -40,8 +41,9 @@ public enum FirmwareUpdateResult {
         this.again = isAgain;
     }
 
+    @NotNull
     public static FirmwareUpdateResult fromUpdateResultFwByType(String type) {
-        for (FirmwareUpdateResult to : FirmwareUpdateResult.values()) {
+        for (@NotNull FirmwareUpdateResult to : FirmwareUpdateResult.values()) {
             if (to.type.equals(type)) {
                 return to;
             }
@@ -49,8 +51,9 @@ public enum FirmwareUpdateResult {
         throw new IllegalArgumentException(String.format("Unsupported FW Update Result type  : %s", type));
     }
 
+    @NotNull
     public static FirmwareUpdateResult fromUpdateResultFwByCode(int code) {
-        for (FirmwareUpdateResult to : FirmwareUpdateResult.values()) {
+        for (@NotNull FirmwareUpdateResult to : FirmwareUpdateResult.values()) {
             if (to.code == code) {
                 return to;
             }

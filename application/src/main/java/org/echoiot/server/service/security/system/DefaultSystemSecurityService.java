@@ -29,6 +29,8 @@ import org.echoiot.server.service.security.auth.rest.RestAuthenticationDetails;
 import org.echoiot.server.service.security.exception.UserPasswordExpiredException;
 import org.echoiot.server.service.security.model.SecurityUser;
 import org.echoiot.server.utils.MiscUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.passay.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -53,28 +55,29 @@ import java.util.concurrent.TimeUnit;
 @TbCoreComponent
 public class DefaultSystemSecurityService implements SystemSecurityService {
 
-    @Autowired
+    @Resource
     private AdminSettingsService adminSettingsService;
 
-    @Autowired
+    @Resource
     private BCryptPasswordEncoder encoder;
 
-    @Autowired
+    @Resource
     private UserService userService;
 
-    @Autowired
+    @Resource
     private MailService mailService;
 
-    @Autowired
+    @Resource
     private AuditLogService auditLogService;
 
     @Resource
     private SystemSecurityService self;
 
+    @Nullable
     @Cacheable(cacheNames = CacheConstants.SECURITY_SETTINGS_CACHE, key = "'securitySettings'")
     @Override
     public SecuritySettings getSecuritySettings(TenantId tenantId) {
-        SecuritySettings securitySettings = null;
+        @Nullable SecuritySettings securitySettings = null;
         AdminSettings adminSettings = adminSettingsService.findAdminSettingsByKey(tenantId, "securitySettings");
         if (adminSettings != null) {
             try {
@@ -90,6 +93,7 @@ public class DefaultSystemSecurityService implements SystemSecurityService {
         return securitySettings;
     }
 
+    @Nullable
     @CacheEvict(cacheNames = CacheConstants.SECURITY_SETTINGS_CACHE, key = "'securitySettings'")
     @Override
     public SecuritySettings saveSecuritySettings(TenantId tenantId, SecuritySettings securitySettings) {
@@ -109,7 +113,7 @@ public class DefaultSystemSecurityService implements SystemSecurityService {
     }
 
     @Override
-    public void validateUserCredentials(TenantId tenantId, UserCredentials userCredentials, String username, String password) throws AuthenticationException {
+    public void validateUserCredentials(TenantId tenantId, @NotNull UserCredentials userCredentials, String username, String password) throws AuthenticationException {
         if (!encoder.matches(password, userCredentials.getPassword())) {
             int failedLoginAttempts = userService.increaseFailedLoginAttempts(tenantId, userCredentials.getUserId());
             SecuritySettings securitySettings = self.getSecuritySettings(tenantId);
@@ -140,7 +144,7 @@ public class DefaultSystemSecurityService implements SystemSecurityService {
     }
 
     @Override
-    public void validateTwoFaVerification(SecurityUser securityUser, boolean verificationSuccess, PlatformTwoFaSettings twoFaSettings) {
+    public void validateTwoFaVerification(@NotNull SecurityUser securityUser, boolean verificationSuccess, @NotNull PlatformTwoFaSettings twoFaSettings) {
         TenantId tenantId = securityUser.getTenantId();
         UserId userId = securityUser.getId();
 
@@ -174,11 +178,11 @@ public class DefaultSystemSecurityService implements SystemSecurityService {
     }
 
     @Override
-    public void validatePassword(TenantId tenantId, String password, UserCredentials userCredentials) throws DataValidationException {
+    public void validatePassword(TenantId tenantId, String password, @Nullable UserCredentials userCredentials) throws DataValidationException {
         SecuritySettings securitySettings = self.getSecuritySettings(tenantId);
         UserPasswordPolicy passwordPolicy = securitySettings.getPasswordPolicy();
 
-        List<Rule> passwordRules = new ArrayList<>();
+        @NotNull List<Rule> passwordRules = new ArrayList<>();
         passwordRules.add(new LengthRule(passwordPolicy.getMinimumLength(), Integer.MAX_VALUE));
         if (isPositiveInteger(passwordPolicy.getMinimumUppercaseLetters())) {
             passwordRules.add(new CharacterRule(EnglishCharacterData.UpperCase, passwordPolicy.getMinimumUppercaseLetters()));
@@ -195,11 +199,11 @@ public class DefaultSystemSecurityService implements SystemSecurityService {
         if (passwordPolicy.getAllowWhitespaces() != null && !passwordPolicy.getAllowWhitespaces()) {
             passwordRules.add(new WhitespaceRule());
         }
-        PasswordValidator validator = new PasswordValidator(passwordRules);
-        PasswordData passwordData = new PasswordData(password);
+        @NotNull PasswordValidator validator = new PasswordValidator(passwordRules);
+        @NotNull PasswordData passwordData = new PasswordData(password);
         RuleResult result = validator.validate(passwordData);
         if (!result.isValid()) {
-            String message = String.join("\n", validator.getMessages(result));
+            @NotNull String message = String.join("\n", validator.getMessages(result));
             throw new DataValidationException(message);
         }
 
@@ -209,8 +213,8 @@ public class DefaultSystemSecurityService implements SystemSecurityService {
             JsonNode additionalInfo = user.getAdditionalInfo();
             if (additionalInfo instanceof ObjectNode && additionalInfo.has(UserServiceImpl.USER_PASSWORD_HISTORY)) {
                 JsonNode userPasswordHistoryJson = additionalInfo.get(UserServiceImpl.USER_PASSWORD_HISTORY);
-                Map<String, String> userPasswordHistoryMap = JacksonUtil.convertValue(userPasswordHistoryJson, new TypeReference<>() {});
-                for (Map.Entry<String, String> entry : userPasswordHistoryMap.entrySet()) {
+                @Nullable Map<String, String> userPasswordHistoryMap = JacksonUtil.convertValue(userPasswordHistoryJson, new TypeReference<>() {});
+                for (@NotNull Map.Entry<String, String> entry : userPasswordHistoryMap.entrySet()) {
                     if (encoder.matches(password, entry.getValue()) && Long.parseLong(entry.getKey()) > passwordReuseFrequencyTs) {
                         throw new DataValidationException("Password was already used for the last " + passwordPolicy.getPasswordReuseFrequencyDays() + " days");
                     }
@@ -221,8 +225,8 @@ public class DefaultSystemSecurityService implements SystemSecurityService {
     }
 
     @Override
-    public String getBaseUrl(TenantId tenantId, CustomerId customerId, HttpServletRequest httpServletRequest) {
-        String baseUrl = null;
+    public String getBaseUrl(TenantId tenantId, CustomerId customerId, @NotNull HttpServletRequest httpServletRequest) {
+        @Nullable String baseUrl = null;
         AdminSettings generalSettings = adminSettingsService.findAdminSettingsByKey(TenantId.SYS_TENANT_ID, "general");
 
         JsonNode prohibitDifferentUrl = generalSettings.getJsonValue().get("prohibitDifferentUrl");
@@ -239,21 +243,21 @@ public class DefaultSystemSecurityService implements SystemSecurityService {
     }
 
     @Override
-    public void logLoginAction(User user, Object authenticationDetails, ActionType actionType, Exception e) {
+    public void logLoginAction(@NotNull User user, Object authenticationDetails, ActionType actionType, Exception e) {
         logLoginAction(user, authenticationDetails, actionType, null, e);
     }
 
     @Override
-    public void logLoginAction(User user, Object authenticationDetails, ActionType actionType, String provider, Exception e) {
+    public void logLoginAction(@NotNull User user, Object authenticationDetails, ActionType actionType, String provider, @Nullable Exception e) {
         String clientAddress = "Unknown";
         String browser = "Unknown";
         String os = "Unknown";
         String device = "Unknown";
         if (authenticationDetails instanceof RestAuthenticationDetails) {
-            RestAuthenticationDetails details = (RestAuthenticationDetails) authenticationDetails;
+            @NotNull RestAuthenticationDetails details = (RestAuthenticationDetails) authenticationDetails;
             clientAddress = details.getClientAddress();
             if (details.getUserAgent() != null) {
-                Client userAgent = details.getUserAgent();
+                @NotNull Client userAgent = details.getUserAgent();
                 if (userAgent.userAgent != null) {
                     browser = userAgent.userAgent.family;
                     if (userAgent.userAgent.major != null) {
@@ -294,7 +298,7 @@ public class DefaultSystemSecurityService implements SystemSecurityService {
                 user.getName(), user.getId(), null, actionType, e, clientAddress, browser, os, device, provider);
     }
 
-    private static boolean isPositiveInteger(Integer val) {
+    private static boolean isPositiveInteger(@Nullable Integer val) {
         return val != null && val.intValue() > 0;
     }
 }

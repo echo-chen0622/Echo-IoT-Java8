@@ -2,6 +2,7 @@ package org.echoiot.server.service.queue;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -63,7 +64,7 @@ public class TbTenantRuleEngineStats {
     public void printStats() {
         int total = totalMsgCounter.get();
         if (total > 0) {
-            StringBuilder stats = new StringBuilder();
+            @NotNull StringBuilder stats = new StringBuilder();
             counters.forEach((label, value) -> {
                 stats.append(label).append(" = [").append(value.get()).append("]");
             });

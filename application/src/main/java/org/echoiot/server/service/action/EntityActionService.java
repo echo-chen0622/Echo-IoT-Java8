@@ -20,6 +20,8 @@ import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.TbMsgDataType;
 import org.echoiot.server.common.msg.TbMsgMetaData;
 import org.echoiot.server.dao.audit.AuditLogService;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,14 +32,16 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class EntityActionService {
+    @NotNull
     private final TbClusterService tbClusterService;
+    @NotNull
     private final AuditLogService auditLogService;
 
     private static final ObjectMapper json = new ObjectMapper();
 
-    public void pushEntityActionToRuleEngine(EntityId entityId, HasName entity, TenantId tenantId, CustomerId customerId,
-                                             ActionType actionType, User user, Object... additionalInfo) {
-        String msgType = null;
+    public void pushEntityActionToRuleEngine(@NotNull EntityId entityId, @Nullable HasName entity, @Nullable TenantId tenantId, @Nullable CustomerId customerId,
+                                             @NotNull ActionType actionType, @Nullable User user, Object... additionalInfo) {
+        @Nullable String msgType = null;
         switch (actionType) {
             case ADDED:
                 msgType = DataConstants.ENTITY_CREATED;
@@ -105,7 +109,7 @@ public class EntityActionService {
         }
         if (!StringUtils.isEmpty(msgType)) {
             try {
-                TbMsgMetaData metaData = new TbMsgMetaData();
+                @NotNull TbMsgMetaData metaData = new TbMsgMetaData();
                 if (user != null) {
                     metaData.putValue("userId", user.getId().toString());
                     metaData.putValue("userName", user.getName());
@@ -114,33 +118,33 @@ public class EntityActionService {
                     metaData.putValue("customerId", customerId.toString());
                 }
                 if (actionType == ActionType.ASSIGNED_TO_CUSTOMER) {
-                    String strCustomerId = extractParameter(String.class, 1, additionalInfo);
-                    String strCustomerName = extractParameter(String.class, 2, additionalInfo);
+                    @Nullable String strCustomerId = extractParameter(String.class, 1, additionalInfo);
+                    @Nullable String strCustomerName = extractParameter(String.class, 2, additionalInfo);
                     metaData.putValue("assignedCustomerId", strCustomerId);
                     metaData.putValue("assignedCustomerName", strCustomerName);
                 } else if (actionType == ActionType.UNASSIGNED_FROM_CUSTOMER) {
-                    String strCustomerId = extractParameter(String.class, 1, additionalInfo);
-                    String strCustomerName = extractParameter(String.class, 2, additionalInfo);
+                    @Nullable String strCustomerId = extractParameter(String.class, 1, additionalInfo);
+                    @Nullable String strCustomerName = extractParameter(String.class, 2, additionalInfo);
                     metaData.putValue("unassignedCustomerId", strCustomerId);
                     metaData.putValue("unassignedCustomerName", strCustomerName);
                 } else if (actionType == ActionType.ASSIGNED_FROM_TENANT) {
-                    String strTenantId = extractParameter(String.class, 0, additionalInfo);
-                    String strTenantName = extractParameter(String.class, 1, additionalInfo);
+                    @Nullable String strTenantId = extractParameter(String.class, 0, additionalInfo);
+                    @Nullable String strTenantName = extractParameter(String.class, 1, additionalInfo);
                     metaData.putValue("assignedFromTenantId", strTenantId);
                     metaData.putValue("assignedFromTenantName", strTenantName);
                 } else if (actionType == ActionType.ASSIGNED_TO_TENANT) {
-                    String strTenantId = extractParameter(String.class, 0, additionalInfo);
-                    String strTenantName = extractParameter(String.class, 1, additionalInfo);
+                    @Nullable String strTenantId = extractParameter(String.class, 0, additionalInfo);
+                    @Nullable String strTenantName = extractParameter(String.class, 1, additionalInfo);
                     metaData.putValue("assignedToTenantId", strTenantId);
                     metaData.putValue("assignedToTenantName", strTenantName);
                 } else if (actionType == ActionType.ASSIGNED_TO_EDGE) {
-                    String strEdgeId = extractParameter(String.class, 1, additionalInfo);
-                    String strEdgeName = extractParameter(String.class, 2, additionalInfo);
+                    @Nullable String strEdgeId = extractParameter(String.class, 1, additionalInfo);
+                    @Nullable String strEdgeName = extractParameter(String.class, 2, additionalInfo);
                     metaData.putValue("assignedEdgeId", strEdgeId);
                     metaData.putValue("assignedEdgeName", strEdgeName);
                 } else if (actionType == ActionType.UNASSIGNED_FROM_EDGE) {
-                    String strEdgeId = extractParameter(String.class, 1, additionalInfo);
-                    String strEdgeName = extractParameter(String.class, 2, additionalInfo);
+                    @Nullable String strEdgeId = extractParameter(String.class, 1, additionalInfo);
+                    @Nullable String strEdgeName = extractParameter(String.class, 2, additionalInfo);
                     metaData.putValue("unassignedEdgeId", strEdgeId);
                     metaData.putValue("unassignedEdgeName", strEdgeName);
                 }
@@ -153,18 +157,18 @@ public class EntityActionService {
                 } else {
                     entityNode = json.createObjectNode();
                     if (actionType == ActionType.ATTRIBUTES_UPDATED) {
-                        String scope = extractParameter(String.class, 0, additionalInfo);
-                        @SuppressWarnings("unchecked")
+                        @Nullable String scope = extractParameter(String.class, 0, additionalInfo);
+                        @Nullable @SuppressWarnings("unchecked")
                         List<AttributeKvEntry> attributes = extractParameter(List.class, 1, additionalInfo);
                         metaData.putValue(DataConstants.SCOPE, scope);
                         if (attributes != null) {
-                            for (AttributeKvEntry attr : attributes) {
+                            for (@NotNull AttributeKvEntry attr : attributes) {
                                 JacksonUtil.addKvEntry(entityNode, attr);
                             }
                         }
                     } else if (actionType == ActionType.ATTRIBUTES_DELETED) {
-                        String scope = extractParameter(String.class, 0, additionalInfo);
-                        @SuppressWarnings("unchecked")
+                        @Nullable String scope = extractParameter(String.class, 0, additionalInfo);
+                        @Nullable @SuppressWarnings("unchecked")
                         List<String> keys = extractParameter(List.class, 1, additionalInfo);
                         metaData.putValue(DataConstants.SCOPE, scope);
                         ArrayNode attrsArrayNode = entityNode.putArray("attributes");
@@ -172,11 +176,11 @@ public class EntityActionService {
                             keys.forEach(attrsArrayNode::add);
                         }
                     } else if (actionType == ActionType.TIMESERIES_UPDATED) {
-                        @SuppressWarnings("unchecked")
+                        @Nullable @SuppressWarnings("unchecked")
                         List<TsKvEntry> timeseries = extractParameter(List.class, 0, additionalInfo);
                         addTimeseries(entityNode, timeseries);
                     } else if (actionType == ActionType.TIMESERIES_DELETED) {
-                        @SuppressWarnings("unchecked")
+                        @Nullable @SuppressWarnings("unchecked")
                         List<String> keys = extractParameter(List.class, 0, additionalInfo);
                         if (keys != null) {
                             ArrayNode timeseriesArrayNode = entityNode.putArray("timeseries");
@@ -188,7 +192,7 @@ public class EntityActionService {
                         entityNode = json.valueToTree(extractParameter(EntityRelation.class, 0, additionalInfo));
                     }
                 }
-                TbMsg tbMsg = TbMsg.newMsg(msgType, entityId, customerId, metaData, TbMsgDataType.JSON, json.writeValueAsString(entityNode));
+                @NotNull TbMsg tbMsg = TbMsg.newMsg(msgType, entityId, customerId, metaData, TbMsgDataType.JSON, json.writeValueAsString(entityNode));
                 if (tenantId == null || tenantId.isNullUid()) {
                     if (entity instanceof HasTenantId) {
                         tenantId = ((HasTenantId) entity).getTenantId();
@@ -201,8 +205,8 @@ public class EntityActionService {
         }
     }
 
-    public <E extends HasName, I extends EntityId> void logEntityAction(User user, I entityId, E entity, CustomerId customerId,
-                                                                           ActionType actionType, Exception e, Object... additionalInfo) {
+    public <E extends HasName, I extends EntityId> void logEntityAction(@NotNull User user, @NotNull I entityId, E entity, @Nullable CustomerId customerId,
+                                                                        @NotNull ActionType actionType, @Nullable Exception e, Object... additionalInfo) {
         if (customerId == null || customerId.isNullUid()) {
             customerId = user.getCustomerId();
         }
@@ -216,8 +220,9 @@ public class EntityActionService {
         tbClusterService.sendNotificationMsgToEdge(tenantId, null, entityId, null, null, action);
     }
 
-    private <T> T extractParameter(Class<T> clazz, int index, Object... additionalInfo) {
-        T result = null;
+    @Nullable
+    private <T> T extractParameter(@NotNull Class<T> clazz, int index, @Nullable Object... additionalInfo) {
+        @Nullable T result = null;
         if (additionalInfo != null && additionalInfo.length > index) {
             Object paramObject = additionalInfo[index];
             if (clazz.isInstance(paramObject)) {
@@ -227,16 +232,16 @@ public class EntityActionService {
         return result;
     }
 
-    private void addTimeseries(ObjectNode entityNode, List<TsKvEntry> timeseries) throws Exception {
+    private void addTimeseries(@NotNull ObjectNode entityNode, @Nullable List<TsKvEntry> timeseries) throws Exception {
         if (timeseries != null && !timeseries.isEmpty()) {
             ArrayNode result = entityNode.putArray("timeseries");
-            Map<Long, List<TsKvEntry>> groupedTelemetry = timeseries.stream()
-                    .collect(Collectors.groupingBy(TsKvEntry::getTs));
-            for (Map.Entry<Long, List<TsKvEntry>> entry : groupedTelemetry.entrySet()) {
+            @NotNull Map<Long, List<TsKvEntry>> groupedTelemetry = timeseries.stream()
+                                                                             .collect(Collectors.groupingBy(TsKvEntry::getTs));
+            for (@NotNull Map.Entry<Long, List<TsKvEntry>> entry : groupedTelemetry.entrySet()) {
                 ObjectNode element = json.createObjectNode();
                 element.put("ts", entry.getKey());
                 ObjectNode values = element.putObject("values");
-                for (TsKvEntry tsKvEntry : entry.getValue()) {
+                for (@NotNull TsKvEntry tsKvEntry : entry.getValue()) {
                     JacksonUtil.addKvEntry(values, tsKvEntry);
                 }
                 result.add(element);

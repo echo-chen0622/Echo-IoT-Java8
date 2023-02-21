@@ -14,6 +14,7 @@ import org.echoiot.server.dao.model.BaseSqlEntity;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.model.SearchTextEntity;
 import org.echoiot.server.dao.util.mapping.JsonStringType;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
@@ -70,7 +71,7 @@ public abstract class AbstractEdgeEntity<T extends Edge> extends BaseSqlEntity<T
         super();
     }
 
-    public AbstractEdgeEntity(Edge edge) {
+    public AbstractEdgeEntity(@NotNull Edge edge) {
         if (edge.getId() != null) {
             this.setUuid(edge.getId().getId());
         }
@@ -92,7 +93,7 @@ public abstract class AbstractEdgeEntity<T extends Edge> extends BaseSqlEntity<T
         this.additionalInfo = edge.getAdditionalInfo();
     }
 
-    public AbstractEdgeEntity(EdgeEntity edgeEntity) {
+    public AbstractEdgeEntity(@NotNull EdgeEntity edgeEntity) {
         this.setId(edgeEntity.getId());
         this.setCreatedTime(edgeEntity.getCreatedTime());
         this.tenantId = edgeEntity.getTenantId();
@@ -121,8 +122,9 @@ public abstract class AbstractEdgeEntity<T extends Edge> extends BaseSqlEntity<T
         this.searchText = searchText;
     }
 
+    @NotNull
     protected Edge toEdge() {
-        Edge edge = new Edge(new EdgeId(getUuid()));
+        @NotNull Edge edge = new Edge(new EdgeId(getUuid()));
         edge.setCreatedTime(createdTime);
         if (tenantId != null) {
             edge.setTenantId(TenantId.fromUUID(tenantId));

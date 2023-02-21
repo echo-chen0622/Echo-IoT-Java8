@@ -19,6 +19,8 @@ import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.queue.discovery.PartitionService;
 import org.echoiot.server.queue.discovery.TbServiceInfoProvider;
 import org.echoiot.server.queue.util.TbRuleEngineComponent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -74,7 +76,7 @@ public class DefaultTbRuleEngineRpcService implements TbRuleEngineDeviceRpcServi
     }
 
     @Override
-    public void sendRpcReplyToDevice(String serviceId, UUID sessionId, int requestId, String body) {
+    public void sendRpcReplyToDevice(@Nullable String serviceId, @NotNull UUID sessionId, int requestId, String body) {
         if (serviceId == null || serviceId.isEmpty()){
             log.trace("sendRpcReplyToDevice: skipping message without serviceId [{}], sessionId[{}], requestId[{}], body[{}]", serviceId, sessionId, requestId, body);
             return;
@@ -91,9 +93,9 @@ public class DefaultTbRuleEngineRpcService implements TbRuleEngineDeviceRpcServi
     }
 
     @Override
-    public void sendRpcRequestToDevice(RuleEngineDeviceRpcRequest src, Consumer<RuleEngineDeviceRpcResponse> consumer) {
-        ToDeviceRpcRequest request = new ToDeviceRpcRequest(src.getRequestUUID(), src.getTenantId(), src.getDeviceId(),
-                                                            src.isOneway(), src.getExpirationTime(), new ToDeviceRpcRequestBody(src.getMethod(), src.getBody()), src.isPersisted(), src.getRetries(), src.getAdditionalInfo());
+    public void sendRpcRequestToDevice(@NotNull RuleEngineDeviceRpcRequest src, @NotNull Consumer<RuleEngineDeviceRpcResponse> consumer) {
+        @NotNull ToDeviceRpcRequest request = new ToDeviceRpcRequest(src.getRequestUUID(), src.getTenantId(), src.getDeviceId(),
+                                                                     src.isOneway(), src.getExpirationTime(), new ToDeviceRpcRequestBody(src.getMethod(), src.getBody()), src.isPersisted(), src.getRetries(), src.getAdditionalInfo());
         forwardRpcRequestToDeviceActor(request, response -> {
             if (src.isRestApiCall()) {
                 sendRpcResponseToTbCore(src.getOriginServiceId(), response);
@@ -113,7 +115,7 @@ public class DefaultTbRuleEngineRpcService implements TbRuleEngineDeviceRpcServi
     }
 
     @Override
-    public void processRpcResponseFromDevice(FromDeviceRpcResponse response) {
+    public void processRpcResponseFromDevice(@NotNull FromDeviceRpcResponse response) {
         log.trace("[{}] Received response to server-side RPC request from Core RPC Service", response.getId());
         UUID requestId = response.getId();
         Consumer<FromDeviceRpcResponse> consumer = toDeviceRpcRequests.remove(requestId);
@@ -124,7 +126,7 @@ public class DefaultTbRuleEngineRpcService implements TbRuleEngineDeviceRpcServi
         }
     }
 
-    private void forwardRpcRequestToDeviceActor(ToDeviceRpcRequest request, Consumer<FromDeviceRpcResponse> responseConsumer) {
+    private void forwardRpcRequestToDeviceActor(@NotNull ToDeviceRpcRequest request, Consumer<FromDeviceRpcResponse> responseConsumer) {
         log.trace("[{}][{}] Processing local rpc call to device actor [{}]", request.getTenantId(), request.getId(), request.getDeviceId());
         UUID requestId = request.getId();
         toDeviceRpcRequests.put(requestId, responseConsumer);
@@ -132,9 +134,9 @@ public class DefaultTbRuleEngineRpcService implements TbRuleEngineDeviceRpcServi
         scheduleTimeout(request, requestId);
     }
 
-    private void sendRpcRequestToDevice(ToDeviceRpcRequest msg) {
+    private void sendRpcRequestToDevice(@NotNull ToDeviceRpcRequest msg) {
         TopicPartitionInfo tpi = partitionService.resolve(ServiceType.TB_CORE, msg.getTenantId(), msg.getDeviceId());
-        ToDeviceRpcRequestActorMsg rpcMsg = new ToDeviceRpcRequestActorMsg(serviceId, msg);
+        @NotNull ToDeviceRpcRequestActorMsg rpcMsg = new ToDeviceRpcRequestActorMsg(serviceId, msg);
         if (tpi.isMyPartition()) {
             log.trace("[{}] Forwarding msg {} to device actor!", msg.getDeviceId(), msg);
             if (tbCoreRpcService.isPresent()) {
@@ -160,7 +162,7 @@ public class DefaultTbRuleEngineRpcService implements TbRuleEngineDeviceRpcServi
         }
     }
 
-    private void scheduleTimeout(ToDeviceRpcRequest request, UUID requestId) {
+    private void scheduleTimeout(@NotNull ToDeviceRpcRequest request, UUID requestId) {
         long timeout = Math.max(0, request.getExpirationTime() - System.currentTimeMillis()) + TimeUnit.SECONDS.toMillis(1);
         log.trace("[{}] processing the request: [{}]", this.hashCode(), requestId);
         scheduler.schedule(() -> {

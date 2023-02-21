@@ -14,24 +14,27 @@ import org.echoiot.server.actors.service.ContextBasedCreator;
 import org.echoiot.server.common.msg.plugin.ComponentLifecycleMsg;
 import org.echoiot.server.common.msg.queue.PartitionChangeMsg;
 import org.echoiot.server.common.msg.queue.QueueToRuleEngineMsg;
+import org.jetbrains.annotations.NotNull;
 
 public class RuleChainActor extends ComponentActor<RuleChainId, RuleChainActorMessageProcessor> {
 
+    @NotNull
     private final RuleChain ruleChain;
 
-    private RuleChainActor(ActorSystemContext systemContext, TenantId tenantId, RuleChain ruleChain) {
+    private RuleChainActor(ActorSystemContext systemContext, TenantId tenantId, @NotNull RuleChain ruleChain) {
         super(systemContext, tenantId, ruleChain.getId());
         this.ruleChain = ruleChain;
     }
 
+    @NotNull
     @Override
-    protected RuleChainActorMessageProcessor createProcessor(TbActorCtx ctx) {
+    protected RuleChainActorMessageProcessor createProcessor(@NotNull TbActorCtx ctx) {
         return new RuleChainActorMessageProcessor(tenantId, ruleChain, systemContext,
                 ctx.getParentRef(), ctx);
     }
 
     @Override
-    protected boolean doProcess(TbActorMsg msg) {
+    protected boolean doProcess(@NotNull TbActorMsg msg) {
         switch (msg.getMsgType()) {
             case COMPONENT_LIFE_CYCLE_MSG:
                 onComponentLifecycleMsg((ComponentLifecycleMsg) msg);
@@ -75,11 +78,13 @@ public class RuleChainActor extends ComponentActor<RuleChainId, RuleChainActorMe
             this.ruleChain = ruleChain;
         }
 
+        @NotNull
         @Override
         public TbActorId createActorId() {
             return new TbEntityActorId(ruleChain.getId());
         }
 
+        @NotNull
         @Override
         public TbActor createActor() {
             return new RuleChainActor(context, tenantId, ruleChain);

@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.echoiot.server.common.data.transport.snmp.SnmpCommunicationSpec;
 import org.echoiot.server.common.data.transport.snmp.config.RepeatingQueryingSnmpCommunicationConfig;
+import org.jetbrains.annotations.NotNull;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -11,6 +12,7 @@ public class TelemetryQueryingSnmpCommunicationConfig extends RepeatingQueryingS
 
     private static final long serialVersionUID = -1367743866881596885L;
 
+    @NotNull
     @Override
     public SnmpCommunicationSpec getSpec() {
         return SnmpCommunicationSpec.TELEMETRY_QUERYING;

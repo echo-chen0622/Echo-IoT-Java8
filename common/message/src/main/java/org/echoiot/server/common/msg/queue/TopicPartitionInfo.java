@@ -4,6 +4,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 import org.echoiot.server.common.data.id.TenantId;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -20,7 +22,7 @@ public class TopicPartitionInfo {
     private final boolean myPartition;
 
     @Builder
-    public TopicPartitionInfo(String topic, TenantId tenantId, Integer partition, boolean myPartition) {
+    public TopicPartitionInfo(String topic, @Nullable TenantId tenantId, @Nullable Integer partition, boolean myPartition) {
         this.topic = topic;
         this.tenantId = tenantId;
         this.partition = partition;
@@ -35,6 +37,7 @@ public class TopicPartitionInfo {
         this.fullTopicName = tmp;
     }
 
+    @NotNull
     public TopicPartitionInfo newByTopic(String topic) {
         return new TopicPartitionInfo(topic, this.tenantId, this.partition, this.myPartition);
     }
@@ -43,19 +46,21 @@ public class TopicPartitionInfo {
         return topic;
     }
 
+    @NotNull
     public Optional<TenantId> getTenantId() {
         return Optional.ofNullable(tenantId);
     }
 
+    @NotNull
     public Optional<Integer> getPartition() {
         return Optional.ofNullable(partition);
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        TopicPartitionInfo that = (TopicPartitionInfo) o;
+        @NotNull TopicPartitionInfo that = (TopicPartitionInfo) o;
         return topic.equals(that.topic) &&
                 Objects.equals(tenantId, that.tenantId) &&
                 Objects.equals(partition, that.partition) &&

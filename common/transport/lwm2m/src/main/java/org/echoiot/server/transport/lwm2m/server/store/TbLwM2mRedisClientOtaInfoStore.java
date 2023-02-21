@@ -1,5 +1,7 @@
 package org.echoiot.server.transport.lwm2m.server.store;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.common.data.ota.OtaPackageType;
@@ -16,8 +18,8 @@ public class TbLwM2mRedisClientOtaInfoStore implements TbLwM2MClientOtaInfoStore
         this.connectionFactory = connectionFactory;
     }
 
-    private void put(OtaPackageType type, LwM2MClientOtaInfo<?, ?, ?> info) {
-        try (var connection = connectionFactory.getConnection()) {
+    private void put(OtaPackageType type, @NotNull LwM2MClientOtaInfo<?, ?, ?> info) {
+        try (@NotNull var connection = connectionFactory.getConnection()) {
             connection.set((OTA_EP + type + info.getEndpoint()).getBytes(), JacksonUtil.toString(info).getBytes());
         }
     }
@@ -28,7 +30,7 @@ public class TbLwM2mRedisClientOtaInfoStore implements TbLwM2MClientOtaInfoStore
     }
 
     @Override
-    public void putFw(LwM2MClientFwOtaInfo info) {
+    public void putFw(@NotNull LwM2MClientFwOtaInfo info) {
         put(OtaPackageType.FIRMWARE, info);
     }
 
@@ -38,13 +40,14 @@ public class TbLwM2mRedisClientOtaInfoStore implements TbLwM2MClientOtaInfoStore
     }
 
     @Override
-    public void putSw(LwM2MClientSwOtaInfo info) {
+    public void putSw(@NotNull LwM2MClientSwOtaInfo info) {
         put(OtaPackageType.SOFTWARE, info);
     }
 
+    @Nullable
     private <T extends LwM2MClientOtaInfo<?, ?, ?>> T getLwM2MClientOtaInfo(OtaPackageType type, String endpoint, Class<T> clazz) {
-        try (var connection = connectionFactory.getConnection()) {
-            byte[] data = connection.get((OTA_EP + type + endpoint).getBytes());
+        try (@NotNull var connection = connectionFactory.getConnection()) {
+            @Nullable byte[] data = connection.get((OTA_EP + type + endpoint).getBytes());
             return JacksonUtil.fromBytes(data, clazz);
         }
     }

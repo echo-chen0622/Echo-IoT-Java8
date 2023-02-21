@@ -5,6 +5,7 @@ import org.echoiot.server.service.telemetry.exception.AccessDeniedException;
 import org.echoiot.server.service.telemetry.exception.EntityNotFoundException;
 import org.echoiot.server.service.telemetry.exception.InternalErrorException;
 import org.echoiot.server.service.telemetry.exception.UnauthorizedException;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by Echo on 31.03.18.
@@ -20,7 +21,7 @@ public class ValidationCallback<T> implements FutureCallback<ValidationResult> {
     }
 
     @Override
-    public void onSuccess(ValidationResult result) {
+    public void onSuccess(@NotNull ValidationResult result) {
         if (result.getResultCode() == ValidationResultCode.OK) {
             action.onSuccess(response);
         } else {
@@ -33,7 +34,8 @@ public class ValidationCallback<T> implements FutureCallback<ValidationResult> {
         action.onFailure(e);
     }
 
-    public static Exception getException(ValidationResult result) {
+    @NotNull
+    public static Exception getException(@NotNull ValidationResult result) {
         ValidationResultCode resultCode = result.getResultCode();
         Exception e;
         switch (resultCode) {

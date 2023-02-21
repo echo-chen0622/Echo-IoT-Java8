@@ -1,10 +1,12 @@
 package org.echoiot.server.service.edge.rpc.constructor.rule;
 
 import org.echoiot.server.gen.edge.v1.EdgeVersion;
+import org.jetbrains.annotations.NotNull;
 
 public final class RuleChainMetadataConstructorFactory {
 
-    public static RuleChainMetadataConstructor getByEdgeVersion(EdgeVersion edgeVersion) {
+    @NotNull
+    public static RuleChainMetadataConstructor getByEdgeVersion(@NotNull EdgeVersion edgeVersion) {
         switch (edgeVersion) {
             case V_3_3_0:
                 return new RuleChainMetadataConstructorV330();

@@ -11,6 +11,8 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.plugin.ComponentLifecycleEvent;
 import org.echoiot.server.common.data.sync.ie.EntityExportData;
 import org.echoiot.server.dao.device.DeviceProfileService;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.ota.OtaPackageStateService;
@@ -23,16 +25,19 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class DeviceProfileImportService extends BaseEntityImportService<DeviceProfileId, DeviceProfile, EntityExportData<DeviceProfile>> {
 
+    @NotNull
     private final DeviceProfileService deviceProfileService;
+    @NotNull
     private final OtaPackageStateService otaPackageStateService;
 
     @Override
-    protected void setOwner(TenantId tenantId, DeviceProfile deviceProfile, IdProvider idProvider) {
+    protected void setOwner(TenantId tenantId, @NotNull DeviceProfile deviceProfile, IdProvider idProvider) {
         deviceProfile.setTenantId(tenantId);
     }
 
+    @NotNull
     @Override
-    protected DeviceProfile prepare(EntitiesImportCtx ctx, DeviceProfile deviceProfile, DeviceProfile old, EntityExportData<DeviceProfile> exportData, IdProvider idProvider) {
+    protected DeviceProfile prepare(EntitiesImportCtx ctx, @NotNull DeviceProfile deviceProfile, DeviceProfile old, EntityExportData<DeviceProfile> exportData, @NotNull IdProvider idProvider) {
         deviceProfile.setDefaultRuleChainId(idProvider.getInternalId(deviceProfile.getDefaultRuleChainId()));
         deviceProfile.setDefaultDashboardId(idProvider.getInternalId(deviceProfile.getDefaultDashboardId()));
         deviceProfile.setFirmwareId(getOldEntityField(old, DeviceProfile::getFirmwareId));
@@ -46,7 +51,7 @@ public class DeviceProfileImportService extends BaseEntityImportService<DevicePr
     }
 
     @Override
-    protected void onEntitySaved(User user, DeviceProfile savedDeviceProfile, DeviceProfile oldDeviceProfile) throws EchoiotException {
+    protected void onEntitySaved(@NotNull User user, @NotNull DeviceProfile savedDeviceProfile, @Nullable DeviceProfile oldDeviceProfile) throws EchoiotException {
         clusterService.onDeviceProfileChange(savedDeviceProfile, null);
         clusterService.broadcastEntityStateChangeEvent(user.getTenantId(), savedDeviceProfile.getId(),
                 oldDeviceProfile == null ? ComponentLifecycleEvent.CREATED : ComponentLifecycleEvent.UPDATED);
@@ -57,18 +62,20 @@ public class DeviceProfileImportService extends BaseEntityImportService<DevicePr
                                                                savedDeviceProfile.getId(), savedDeviceProfile, user, oldDeviceProfile == null ? ActionType.ADDED : ActionType.UPDATED, true, null);
     }
 
+    @NotNull
     @Override
-    protected DeviceProfile deepCopy(DeviceProfile deviceProfile) {
+    protected DeviceProfile deepCopy(@NotNull DeviceProfile deviceProfile) {
         return new DeviceProfile(deviceProfile);
     }
 
     @Override
-    protected void cleanupForComparison(DeviceProfile deviceProfile) {
+    protected void cleanupForComparison(@NotNull DeviceProfile deviceProfile) {
         super.cleanupForComparison(deviceProfile);
         deviceProfile.setFirmwareId(null);
         deviceProfile.setSoftwareId(null);
     }
 
+    @NotNull
     @Override
     public EntityType getEntityType() {
         return EntityType.DEVICE_PROFILE;

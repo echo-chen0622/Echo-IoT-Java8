@@ -12,15 +12,17 @@ import org.echoiot.server.common.data.relation.EntityRelationsQuery;
 import org.echoiot.server.common.data.relation.EntitySearchDirection;
 import org.echoiot.server.common.data.relation.RelationsSearchParameters;
 import org.echoiot.server.dao.relation.RelationService;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 public class EntitiesRelatedEntityIdAsyncLoader {
 
-    public static ListenableFuture<EntityId> findEntityAsync(TbContext ctx, EntityId originator,
-                                                             RelationsQuery relationsQuery) {
+    @NotNull
+    public static ListenableFuture<EntityId> findEntityAsync(@NotNull TbContext ctx, @NotNull EntityId originator,
+                                                             @NotNull RelationsQuery relationsQuery) {
         RelationService relationService = ctx.getRelationService();
-        EntityRelationsQuery query = buildQuery(originator, relationsQuery);
+        @NotNull EntityRelationsQuery query = buildQuery(originator, relationsQuery);
         ListenableFuture<List<EntityRelation>> asyncRelation = relationService.findByQuery(ctx.getTenantId(), query);
         if (relationsQuery.getDirection() == EntitySearchDirection.FROM) {
             return Futures.transformAsync(asyncRelation, r -> CollectionUtils.isNotEmpty(r) ? Futures.immediateFuture(r.get(0).getTo())
@@ -32,10 +34,11 @@ public class EntitiesRelatedEntityIdAsyncLoader {
         return Futures.immediateFailedFuture(new IllegalStateException("Unknown direction"));
     }
 
-    private static EntityRelationsQuery buildQuery(EntityId originator, RelationsQuery relationsQuery) {
-        EntityRelationsQuery query = new EntityRelationsQuery();
-        RelationsSearchParameters parameters = new RelationsSearchParameters(originator,
-                relationsQuery.getDirection(), relationsQuery.getMaxLevel(), relationsQuery.isFetchLastLevelOnly());
+    @NotNull
+    private static EntityRelationsQuery buildQuery(@NotNull EntityId originator, @NotNull RelationsQuery relationsQuery) {
+        @NotNull EntityRelationsQuery query = new EntityRelationsQuery();
+        @NotNull RelationsSearchParameters parameters = new RelationsSearchParameters(originator,
+                                                                                      relationsQuery.getDirection(), relationsQuery.getMaxLevel(), relationsQuery.isFetchLastLevelOnly());
         query.setParameters(parameters);
         query.setFilters(relationsQuery.getFilters());
         return query;

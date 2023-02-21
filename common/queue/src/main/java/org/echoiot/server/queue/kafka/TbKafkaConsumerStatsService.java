@@ -13,6 +13,7 @@ import org.apache.kafka.common.TopicPartition;
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.queue.discovery.PartitionService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Lazy;
@@ -40,11 +41,13 @@ import java.util.concurrent.TimeUnit;
 public class TbKafkaConsumerStatsService {
     private final Set<String> monitoredGroups = ConcurrentHashMap.newKeySet();
 
+    @NotNull
     private final TbKafkaSettings kafkaSettings;
+    @NotNull
     private final TbKafkaConsumerStatisticConfig statsConfig;
 
     @Lazy
-    @Autowired
+    @Resource
     private PartitionService partitionService;
 
     private AdminClient adminClient;
@@ -59,7 +62,7 @@ public class TbKafkaConsumerStatsService {
         this.adminClient = AdminClient.create(kafkaSettings.toAdminProps());
         this.statsPrintScheduler = Executors.newSingleThreadScheduledExecutor(EchoiotThreadFactory.forName("kafka-consumer-stats"));
 
-        Properties consumerProps = kafkaSettings.toConsumerProps(null);
+        @NotNull Properties consumerProps = kafkaSettings.toConsumerProps(null);
         consumerProps.put(ConsumerConfig.CLIENT_ID_CONFIG, "consumer-stats-loader-client");
         consumerProps.put(ConsumerConfig.GROUP_ID_CONFIG, "consumer-stats-loader-client-group");
         this.consumer = new KafkaConsumer<>(consumerProps);
@@ -79,16 +82,16 @@ public class TbKafkaConsumerStatsService {
                             .get(statsConfig.getKafkaResponseTimeoutMs(), TimeUnit.MILLISECONDS);
                     Map<TopicPartition, Long> endOffsets = consumer.endOffsets(groupOffsets.keySet(), timeoutDuration);
 
-                    List<GroupTopicStats> lagTopicsStats = getTopicsStatsWithLag(groupOffsets, endOffsets);
+                    @NotNull List<GroupTopicStats> lagTopicsStats = getTopicsStatsWithLag(groupOffsets, endOffsets);
                     if (!lagTopicsStats.isEmpty()) {
-                        StringBuilder builder = new StringBuilder();
+                        @NotNull StringBuilder builder = new StringBuilder();
                         for (int i = 0; i < lagTopicsStats.size(); i++) {
                             builder.append(lagTopicsStats.get(i).toString());
                             if (i != lagTopicsStats.size() - 1) {
                                 builder.append(", ");
                             }
                         }
-                        log.info("[{}] Topic partitions with lag: [{}].", groupId, builder.toString());
+                        log.info("[{}] Topic partitions with lag: [{}].", groupId, builder);
                     }
                 } catch (Exception e) {
                     log.warn("[{}] Failed to get consumer group stats. Reason - {}.", groupId, e.getMessage());
@@ -105,9 +108,10 @@ public class TbKafkaConsumerStatsService {
         return log.isInfoEnabled() && (isMyRuleEnginePartition || isMyCorePartition);
     }
 
-    private List<GroupTopicStats> getTopicsStatsWithLag(Map<TopicPartition, OffsetAndMetadata> groupOffsets, Map<TopicPartition, Long> endOffsets) {
-        List<GroupTopicStats> consumerGroupStats = new ArrayList<>();
-        for (TopicPartition topicPartition : groupOffsets.keySet()) {
+    @NotNull
+    private List<GroupTopicStats> getTopicsStatsWithLag(@NotNull Map<TopicPartition, OffsetAndMetadata> groupOffsets, @NotNull Map<TopicPartition, Long> endOffsets) {
+        @NotNull List<GroupTopicStats> consumerGroupStats = new ArrayList<>();
+        for (@NotNull TopicPartition topicPartition : groupOffsets.keySet()) {
             long endOffset = endOffsets.get(topicPartition);
             long committedOffset = groupOffsets.get(topicPartition).offset();
             long lag = endOffset - committedOffset;
@@ -160,6 +164,7 @@ public class TbKafkaConsumerStatsService {
         private long endOffset;
         private long lag;
 
+        @NotNull
         @Override
         public String toString() {
             return "[" +

@@ -2,6 +2,7 @@ package org.echoiot.rule.engine.mail;
 
 import lombok.Data;
 import org.echoiot.rule.engine.api.NodeConfiguration;
+import org.jetbrains.annotations.NotNull;
 
 @Data
 public class TbMsgToEmailNodeConfiguration implements NodeConfiguration {
@@ -15,9 +16,10 @@ public class TbMsgToEmailNodeConfiguration implements NodeConfiguration {
     private String isHtmlTemplate;
     private String mailBodyType;
 
+    @NotNull
     @Override
     public TbMsgToEmailNodeConfiguration defaultConfiguration() {
-        TbMsgToEmailNodeConfiguration configuration = new TbMsgToEmailNodeConfiguration();
+        @NotNull TbMsgToEmailNodeConfiguration configuration = new TbMsgToEmailNodeConfiguration();
         configuration.fromTemplate = "info@testmail.org";
         configuration.toTemplate = "${userEmail}";
         configuration.subjectTemplate = "Device ${deviceType} temperature high";

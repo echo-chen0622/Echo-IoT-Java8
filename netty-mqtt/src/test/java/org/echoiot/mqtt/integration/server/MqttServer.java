@@ -14,6 +14,7 @@ import io.netty.handler.codec.mqtt.MqttEncoder;
 import io.netty.handler.codec.mqtt.MqttMessageType;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -34,17 +35,17 @@ public class MqttServer {
         log.info("Starting MQTT server...");
         bossGroup = new NioEventLoopGroup();
         workerGroup = new NioEventLoopGroup();
-        ServerBootstrap b = new ServerBootstrap();
+        @NotNull ServerBootstrap b = new ServerBootstrap();
         b.group(bossGroup, workerGroup)
                 .channel(NioServerSocketChannel.class)
                 .childHandler(new ChannelInitializer<SocketChannel>() {
                     @Override
-                    protected void initChannel(SocketChannel ch) throws Exception {
+                    protected void initChannel(@NotNull SocketChannel ch) throws Exception {
                         ChannelPipeline pipeline = ch.pipeline();
                         pipeline.addLast("decoder", new MqttDecoder(65536));
                         pipeline.addLast("encoder", MqttEncoder.INSTANCE);
 
-                        MqttTransportHandler handler = new MqttTransportHandler(eventsFromClient);
+                        @NotNull MqttTransportHandler handler = new MqttTransportHandler(eventsFromClient);
 
                         pipeline.addLast(handler);
                         ch.closeFuture().addListener(handler);

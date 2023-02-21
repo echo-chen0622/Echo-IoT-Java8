@@ -9,6 +9,7 @@ import org.echoiot.server.common.data.security.DeviceCredentialsType;
 import org.echoiot.server.dao.model.BaseEntity;
 import org.echoiot.server.dao.model.BaseSqlEntity;
 import org.echoiot.server.dao.model.ModelConstants;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -40,7 +41,7 @@ public final class DeviceCredentialsEntity extends BaseSqlEntity<DeviceCredentia
         super();
     }
 
-    public DeviceCredentialsEntity(DeviceCredentials deviceCredentials) {
+    public DeviceCredentialsEntity(@NotNull DeviceCredentials deviceCredentials) {
         if (deviceCredentials.getId() != null) {
             this.setUuid(deviceCredentials.getId().getId());
         }
@@ -53,9 +54,10 @@ public final class DeviceCredentialsEntity extends BaseSqlEntity<DeviceCredentia
         this.credentialsValue = deviceCredentials.getCredentialsValue();
     }
 
+    @NotNull
     @Override
     public DeviceCredentials toData() {
-        DeviceCredentials deviceCredentials = new DeviceCredentials(new DeviceCredentialsId(this.getUuid()));
+        @NotNull DeviceCredentials deviceCredentials = new DeviceCredentials(new DeviceCredentialsId(this.getUuid()));
         deviceCredentials.setCreatedTime(createdTime);
         if (deviceId != null) {
             deviceCredentials.setDeviceId(new DeviceId(deviceId));

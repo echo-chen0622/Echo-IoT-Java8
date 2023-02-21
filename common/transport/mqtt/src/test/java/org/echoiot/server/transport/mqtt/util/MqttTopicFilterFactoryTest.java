@@ -1,5 +1,6 @@
 package org.echoiot.server.transport.mqtt.util;
 
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -12,16 +13,16 @@ import static org.junit.Assert.assertTrue;
 @RunWith(MockitoJUnitRunner.class)
 public class MqttTopicFilterFactoryTest {
 
-    private static String TEST_STR_1 = "Sensor/Temperature/House/48";
-    private static String TEST_STR_2 = "Sensor/Temperature";
-    private static String TEST_STR_3 = "Sensor/Temperature2/House/48";
-    private static String TEST_STR_4 = "/Sensor/Temperature2/House/48";
-    private static String TEST_STR_5 = "Sensor/ Temperature";
-    private static String TEST_STR_6 = "/";
+    private static final String TEST_STR_1 = "Sensor/Temperature/House/48";
+    private static final String TEST_STR_2 = "Sensor/Temperature";
+    private static final String TEST_STR_3 = "Sensor/Temperature2/House/48";
+    private static final String TEST_STR_4 = "/Sensor/Temperature2/House/48";
+    private static final String TEST_STR_5 = "Sensor/ Temperature";
+    private static final String TEST_STR_6 = "/";
 
     @Test
     public void metadataCanBeUpdated() throws ScriptException {
-        MqttTopicFilter filter = MqttTopicFilterFactory.toFilter("Sensor/Temperature/House/+");
+        @NotNull MqttTopicFilter filter = MqttTopicFilterFactory.toFilter("Sensor/Temperature/House/+");
         assertTrue(filter.filter(TEST_STR_1));
         assertFalse(filter.filter(TEST_STR_2));
 

@@ -7,6 +7,7 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.dao.customer.CustomerDao;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.echoiot.server.dao.AbstractJpaDaoTest;
@@ -22,13 +23,13 @@ import static org.junit.Assert.assertTrue;
  */
 public class JpaCustomerDaoTest extends AbstractJpaDaoTest {
 
-    @Autowired
+    @Resource
     private CustomerDao customerDao;
 
     @Test
     public void testFindByTenantId() {
-        UUID tenantId1 = Uuids.timeBased();
-        UUID tenantId2 = Uuids.timeBased();
+        @NotNull UUID tenantId1 = Uuids.timeBased();
+        @NotNull UUID tenantId2 = Uuids.timeBased();
 
         for (int i = 0; i < 20; i++) {
             createCustomer(tenantId1, i);
@@ -46,7 +47,7 @@ public class JpaCustomerDaoTest extends AbstractJpaDaoTest {
 
     @Test
     public void testFindCustomersByTenantIdAndTitle() {
-        UUID tenantId = Uuids.timeBased();
+        @NotNull UUID tenantId = Uuids.timeBased();
 
         for (int i = 0; i < 10; i++) {
             createCustomer(tenantId, i);
@@ -58,7 +59,7 @@ public class JpaCustomerDaoTest extends AbstractJpaDaoTest {
     }
 
     private void createCustomer(UUID tenantId, int index) {
-        Customer customer = new Customer();
+        @NotNull Customer customer = new Customer();
         customer.setId(new CustomerId(Uuids.timeBased()));
         customer.setTenantId(TenantId.fromUUID(tenantId));
         customer.setTitle("CUSTOMER_" + index);

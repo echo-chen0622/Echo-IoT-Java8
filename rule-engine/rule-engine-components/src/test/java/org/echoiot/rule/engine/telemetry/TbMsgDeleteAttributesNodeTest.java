@@ -10,6 +10,7 @@ import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.TbMsgMetaData;
 import org.echoiot.server.common.msg.queue.TbMsgCallback;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -69,7 +70,7 @@ public class TbMsgDeleteAttributesNodeTest {
 
     @Test
     void givenDefaultConfig_whenVerify_thenOK() {
-        TbMsgDeleteAttributesNodeConfiguration defaultConfig = new TbMsgDeleteAttributesNodeConfiguration().defaultConfiguration();
+        @NotNull TbMsgDeleteAttributesNodeConfiguration defaultConfig = new TbMsgDeleteAttributesNodeConfiguration().defaultConfiguration();
         assertThat(defaultConfig.getScope()).isEqualTo(SERVER_SCOPE);
         assertThat(defaultConfig.getKeys()).isEqualTo(Collections.emptyList());
     }
@@ -105,23 +106,23 @@ public class TbMsgDeleteAttributesNodeTest {
     }
 
     void onMsg_thenVerifyOutput(boolean sendAttributesDeletedNotification, boolean notifyDevice, boolean notifyDeviceMetadata) throws Exception {
-        final Map<String, String> mdMap = Map.of(
+        @NotNull final Map<String, String> mdMap = Map.of(
                 "TestAttribute_1", "temperature",
                 "city", "NY"
-        );
-        TbMsgMetaData metaData = new TbMsgMetaData(mdMap);
+                                                         );
+        @NotNull TbMsgMetaData metaData = new TbMsgMetaData(mdMap);
         if (notifyDeviceMetadata) {
             metaData.putValue(NOTIFY_DEVICE_METADATA_KEY, "true");
             metaData.putValue(SCOPE, SHARED_SCOPE);
         }
-        final String data = "{\"TestAttribute_2\": \"humidity\", \"TestAttribute_3\": \"voltage\"}";
+        @NotNull final String data = "{\"TestAttribute_2\": \"humidity\", \"TestAttribute_3\": \"voltage\"}";
 
-        TbMsg msg = TbMsg.newMsg("POST_ATTRIBUTES_REQUEST", deviceId, metaData, data, callback);
+        @NotNull TbMsg msg = TbMsg.newMsg("POST_ATTRIBUTES_REQUEST", deviceId, metaData, data, callback);
         node.onMsg(ctx, msg);
 
-        ArgumentCaptor<Runnable> successCaptor = ArgumentCaptor.forClass(Runnable.class);
-        ArgumentCaptor<Consumer<Throwable>> failureCaptor = ArgumentCaptor.forClass(Consumer.class);
-        ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        @NotNull ArgumentCaptor<Runnable> successCaptor = ArgumentCaptor.forClass(Runnable.class);
+        @NotNull ArgumentCaptor<Consumer<Throwable>> failureCaptor = ArgumentCaptor.forClass(Consumer.class);
+        @NotNull ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
 
         if (sendAttributesDeletedNotification) {
             verify(ctx, times(1)).enqueue(any(), successCaptor.capture(), failureCaptor.capture());

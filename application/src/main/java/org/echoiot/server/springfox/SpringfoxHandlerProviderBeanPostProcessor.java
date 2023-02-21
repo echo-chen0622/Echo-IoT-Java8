@@ -1,5 +1,7 @@
 package org.echoiot.server.springfox;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Component;
@@ -23,18 +25,18 @@ public class SpringfoxHandlerProviderBeanPostProcessor implements BeanPostProces
         return bean;
     }
 
-    private <T extends RequestMappingInfoHandlerMapping> void customizeSpringfoxHandlerMappings(List<T> mappings) {
-        List<T> copy = mappings.stream()
-                .filter(mapping -> mapping.getPatternParser() == null)
-                .collect(Collectors.toList());
+    private <T extends RequestMappingInfoHandlerMapping> void customizeSpringfoxHandlerMappings(@NotNull List<T> mappings) {
+        @NotNull List<T> copy = mappings.stream()
+                                        .filter(mapping -> mapping.getPatternParser() == null)
+                                        .collect(Collectors.toList());
         mappings.clear();
         mappings.addAll(copy);
     }
 
     @SuppressWarnings("unchecked")
-    private List<RequestMappingInfoHandlerMapping> getHandlerMappings(Object bean) {
+    private List<RequestMappingInfoHandlerMapping> getHandlerMappings(@NotNull Object bean) {
         try {
-            Field field = ReflectionUtils.findField(bean.getClass(), "handlerMappings");
+            @Nullable Field field = ReflectionUtils.findField(bean.getClass(), "handlerMappings");
             field.setAccessible(true);
             return (List<RequestMappingInfoHandlerMapping>) field.get(bean);
         } catch (IllegalArgumentException | IllegalAccessException e) {

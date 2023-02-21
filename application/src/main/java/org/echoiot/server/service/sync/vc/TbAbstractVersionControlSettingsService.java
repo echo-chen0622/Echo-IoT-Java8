@@ -5,6 +5,7 @@ import org.echoiot.server.common.data.AdminSettings;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.dao.settings.AdminSettingsService;
 import org.echoiot.common.util.JacksonUtil;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 
@@ -22,6 +23,7 @@ public abstract class TbAbstractVersionControlSettingsService<T extends Serializ
         this.settingsKey = settingsKey;
     }
 
+    @Nullable
     public T get(TenantId tenantId) {
         return cache.getAndPutInTransaction(tenantId, () -> {
             AdminSettings adminSettings = adminSettingsService.findAdminSettingsByTenantIdAndKey(tenantId, settingsKey);
@@ -36,6 +38,7 @@ public abstract class TbAbstractVersionControlSettingsService<T extends Serializ
         }, true);
     }
 
+    @Nullable
     public T save(TenantId tenantId, T settings) {
         AdminSettings adminSettings = adminSettingsService.findAdminSettingsByTenantIdAndKey(tenantId, settingsKey);
         if (adminSettings == null) {
@@ -45,7 +48,7 @@ public abstract class TbAbstractVersionControlSettingsService<T extends Serializ
         }
         adminSettings.setJsonValue(JacksonUtil.valueToTree(settings));
         AdminSettings savedAdminSettings = adminSettingsService.saveAdminSettings(tenantId, adminSettings);
-        T savedSettings;
+        @Nullable T savedSettings;
         try {
             savedSettings = JacksonUtil.convertValue(savedAdminSettings.getJsonValue(), clazz);
         } catch (Exception e) {

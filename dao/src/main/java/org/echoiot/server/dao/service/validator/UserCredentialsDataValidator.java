@@ -9,6 +9,7 @@ import org.echoiot.server.dao.exception.IncorrectParameterException;
 import org.echoiot.server.dao.service.DataValidator;
 import org.echoiot.server.dao.user.UserCredentialsDao;
 import org.echoiot.server.dao.user.UserService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -16,10 +17,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserCredentialsDataValidator extends DataValidator<UserCredentials> {
 
-    @Autowired
+    @Resource
     private UserCredentialsDao userCredentialsDao;
 
-    @Autowired
+    @Resource
     @Lazy
     private UserService userService;
 
@@ -29,7 +30,7 @@ public class UserCredentialsDataValidator extends DataValidator<UserCredentials>
     }
 
     @Override
-    protected void validateDataImpl(TenantId tenantId, UserCredentials userCredentials) {
+    protected void validateDataImpl(TenantId tenantId, @NotNull UserCredentials userCredentials) {
         if (userCredentials.getUserId() == null) {
             throw new DataValidationException("User credentials should be assigned to user!");
         }

@@ -2,6 +2,7 @@ package org.echoiot.server.dao.sql.tenant;
 
 import org.echoiot.server.dao.model.sql.TenantEntity;
 import org.echoiot.server.dao.model.sql.TenantInfoEntity;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
@@ -30,9 +31,10 @@ import java.util.stream.Collectors;
 @SqlDao
 public class JpaTenantDao extends JpaAbstractSearchTextDao<TenantEntity, Tenant> implements TenantDao {
 
-    @Autowired
+    @Resource
     private TenantRepository tenantRepository;
 
+    @NotNull
     @Override
     protected Class<TenantEntity> getEntityClass() {
         return TenantEntity.class;
@@ -48,16 +50,18 @@ public class JpaTenantDao extends JpaAbstractSearchTextDao<TenantEntity, Tenant>
         return DaoUtil.getData(tenantRepository.findTenantInfoById(id));
     }
 
+    @NotNull
     @Override
-    public PageData<Tenant> findTenants(TenantId tenantId, PageLink pageLink) {
+    public PageData<Tenant> findTenants(TenantId tenantId, @NotNull PageLink pageLink) {
         return DaoUtil.toPageData(tenantRepository
                 .findTenantsNextPage(
                         Objects.toString(pageLink.getTextSearch(), ""),
                         DaoUtil.toPageable(pageLink)));
     }
 
+    @NotNull
     @Override
-    public PageData<TenantInfo> findTenantInfos(TenantId tenantId, PageLink pageLink) {
+    public PageData<TenantInfo> findTenantInfos(TenantId tenantId, @NotNull PageLink pageLink) {
         return DaoUtil.toPageData(tenantRepository
                 .findTenantInfosNextPage(
                         Objects.toString(pageLink.getTextSearch(), ""),
@@ -69,13 +73,15 @@ public class JpaTenantDao extends JpaAbstractSearchTextDao<TenantEntity, Tenant>
         return DaoUtil.pageToPageData(tenantRepository.findTenantsIds(DaoUtil.toPageable(pageLink))).mapData(TenantId::fromUUID);
     }
 
+    @NotNull
     @Override
     public EntityType getEntityType() {
         return EntityType.TENANT;
     }
 
+    @NotNull
     @Override
-    public List<TenantId> findTenantIdsByTenantProfileId(TenantProfileId tenantProfileId) {
+    public List<TenantId> findTenantIdsByTenantProfileId(@NotNull TenantProfileId tenantProfileId) {
         return tenantRepository.findTenantIdsByTenantProfileId(tenantProfileId.getId()).stream()
                 .map(TenantId::fromUUID)
                 .collect(Collectors.toList());

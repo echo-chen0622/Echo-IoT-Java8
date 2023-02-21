@@ -3,6 +3,8 @@ package org.echoiot.server.transport.lwm2m.secure;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.leshan.core.util.Hex;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.math.BigInteger;
 import java.security.AlgorithmParameters;
@@ -38,27 +40,27 @@ public class LwM2mRPkCredentials {
         generatePublicKeyRPK(publX, publY, privS);
     }
 
-    private void generatePublicKeyRPK(String publX, String publY, String privS) {
+    private void generatePublicKeyRPK(@Nullable String publX, @Nullable String publY, @Nullable String privS) {
         try {
             /*Get Elliptic Curve Parameter spec for secp256r1 */
-            AlgorithmParameters algoParameters = AlgorithmParameters.getInstance("EC");
+            @NotNull AlgorithmParameters algoParameters = AlgorithmParameters.getInstance("EC");
             algoParameters.init(new ECGenParameterSpec("secp256r1"));
             ECParameterSpec parameterSpec = algoParameters.getParameterSpec(ECParameterSpec.class);
              if (publX != null && !publX.isEmpty() && publY != null && !publY.isEmpty()) {
                 // Get point values
-                byte[] publicX = Hex.decodeHex(publX.toCharArray());
-                byte[] publicY = Hex.decodeHex(publY.toCharArray());
+                @NotNull byte[] publicX = Hex.decodeHex(publX.toCharArray());
+                @NotNull byte[] publicY = Hex.decodeHex(publY.toCharArray());
                  /* Create key specs */
-                KeySpec publicKeySpec = new ECPublicKeySpec(new ECPoint(new BigInteger(publicX), new BigInteger(publicY)),
-                        parameterSpec);
+                @NotNull KeySpec publicKeySpec = new ECPublicKeySpec(new ECPoint(new BigInteger(publicX), new BigInteger(publicY)),
+                                                                     parameterSpec);
                  /* Get keys */
                 this.serverPublicKey = KeyFactory.getInstance("EC").generatePublic(publicKeySpec);
             }
             if (privS != null && !privS.isEmpty()) {
                 /* Get point values */
-                byte[] privateS = Hex.decodeHex(privS.toCharArray());
+                @NotNull byte[] privateS = Hex.decodeHex(privS.toCharArray());
                 /* Create key specs */
-                KeySpec privateKeySpec = new ECPrivateKeySpec(new BigInteger(privateS), parameterSpec);
+                @NotNull KeySpec privateKeySpec = new ECPrivateKeySpec(new BigInteger(privateS), parameterSpec);
                 /* Get keys */
                 this.serverPrivateKey = KeyFactory.getInstance("EC").generatePrivate(privateKeySpec);
             }

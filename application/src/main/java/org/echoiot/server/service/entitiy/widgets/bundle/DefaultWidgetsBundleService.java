@@ -8,6 +8,7 @@ import org.echoiot.server.common.data.widget.WidgetsBundle;
 import org.echoiot.server.dao.widget.WidgetsBundleService;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.entitiy.AbstractTbEntityService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,10 +16,12 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class DefaultWidgetsBundleService extends AbstractTbEntityService implements TbWidgetsBundleService {
 
+    @NotNull
     private final WidgetsBundleService widgetsBundleService;
 
+    @NotNull
     @Override
-    public WidgetsBundle save(WidgetsBundle widgetsBundle, User user) throws Exception {
+    public WidgetsBundle save(@NotNull WidgetsBundle widgetsBundle, User user) throws Exception {
         WidgetsBundle savedWidgetsBundle = checkNotNull(widgetsBundleService.saveWidgetsBundle(widgetsBundle));
         autoCommit(user, savedWidgetsBundle.getId());
         notificationEntityService.notifySendMsgToEdgeService(widgetsBundle.getTenantId(), savedWidgetsBundle.getId(),
@@ -27,7 +30,7 @@ public class DefaultWidgetsBundleService extends AbstractTbEntityService impleme
     }
 
     @Override
-    public void delete(WidgetsBundle widgetsBundle) throws EchoiotException {
+    public void delete(@NotNull WidgetsBundle widgetsBundle) throws EchoiotException {
         widgetsBundleService.deleteWidgetsBundle(widgetsBundle.getTenantId(), widgetsBundle.getId());
         notificationEntityService.notifySendMsgToEdgeService(widgetsBundle.getTenantId(), widgetsBundle.getId(),
                 EdgeEventActionType.DELETED);

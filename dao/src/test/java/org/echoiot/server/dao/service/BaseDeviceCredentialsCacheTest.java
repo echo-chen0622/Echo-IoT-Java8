@@ -10,6 +10,8 @@ import org.echoiot.server.common.data.security.DeviceCredentialsType;
 import org.echoiot.server.dao.device.DeviceCredentialsDao;
 import org.echoiot.server.dao.device.DeviceCredentialsService;
 import org.echoiot.server.dao.device.DeviceService;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,19 +33,19 @@ public abstract class BaseDeviceCredentialsCacheTest extends AbstractServiceTest
     private static final String CREDENTIALS_ID_1 = StringUtils.randomAlphanumeric(20);
     private static final String CREDENTIALS_ID_2 = StringUtils.randomAlphanumeric(20);
 
-    @Autowired
+    @Resource
     private DeviceCredentialsService deviceCredentialsService;
 
-    @Autowired
+    @Resource
     private DataValidator<DeviceCredentials> credentialsValidator;
 
     private DeviceCredentialsDao deviceCredentialsDao;
     private DeviceService deviceService;
 
-    @Autowired
+    @Resource
     private CacheManager cacheManager;
 
-    private UUID deviceId = UUID.randomUUID();
+    private final UUID deviceId = UUID.randomUUID();
 
     @Before
     public void setup() throws Exception {
@@ -100,11 +102,11 @@ public abstract class BaseDeviceCredentialsCacheTest extends AbstractServiceTest
 
         when(deviceCredentialsDao.findByDeviceId(SYSTEM_TENANT_ID, deviceId)).thenReturn(createDummyDeviceCredentialsEntity(CREDENTIALS_ID_1));
 
-        UUID deviceCredentialsId = UUID.randomUUID();
+        @NotNull UUID deviceCredentialsId = UUID.randomUUID();
         when(deviceCredentialsDao.findById(SYSTEM_TENANT_ID, deviceCredentialsId)).thenReturn(createDummyDeviceCredentialsEntity(CREDENTIALS_ID_1));
         when(deviceService.findDeviceById(SYSTEM_TENANT_ID, new DeviceId(deviceId))).thenReturn(new Device());
 
-        var dummy = createDummyDeviceCredentials(deviceCredentialsId, CREDENTIALS_ID_2, deviceId);
+        @NotNull var dummy = createDummyDeviceCredentials(deviceCredentialsId, CREDENTIALS_ID_2, deviceId);
         when(deviceCredentialsDao.saveAndFlush(SYSTEM_TENANT_ID, dummy)).thenReturn(dummy);
 
         deviceCredentialsService.updateDeviceCredentials(SYSTEM_TENANT_ID, dummy);
@@ -117,26 +119,30 @@ public abstract class BaseDeviceCredentialsCacheTest extends AbstractServiceTest
         verify(deviceCredentialsDao, times(3)).findByCredentialsId(SYSTEM_TENANT_ID, CREDENTIALS_ID_1);
     }
 
+    @Nullable
     private DeviceCredentialsService unwrapDeviceCredentialsService() throws Exception {
         if (AopUtils.isAopProxy(deviceCredentialsService) && deviceCredentialsService instanceof Advised) {
-            Object target = ((Advised) deviceCredentialsService).getTargetSource().getTarget();
+            @Nullable Object target = ((Advised) deviceCredentialsService).getTargetSource().getTarget();
             return (DeviceCredentialsService) target;
         }
         return deviceCredentialsService;
     }
 
+    @NotNull
     private DeviceCredentials createDummyDeviceCredentialsEntity(String deviceCredentialsId) {
-        DeviceCredentials result = new DeviceCredentials(new DeviceCredentialsId(UUID.randomUUID()));
+        @NotNull DeviceCredentials result = new DeviceCredentials(new DeviceCredentialsId(UUID.randomUUID()));
         result.setCredentialsId(deviceCredentialsId);
         return result;
     }
 
+    @NotNull
     private DeviceCredentials createDummyDeviceCredentials(String deviceCredentialsId, UUID deviceId) {
         return createDummyDeviceCredentials(null, deviceCredentialsId, deviceId);
     }
 
+    @NotNull
     private DeviceCredentials createDummyDeviceCredentials(UUID id, String deviceCredentialsId, UUID deviceId) {
-        DeviceCredentials result = new DeviceCredentials();
+        @NotNull DeviceCredentials result = new DeviceCredentials();
         result.setId(new DeviceCredentialsId(id));
         result.setDeviceId(new DeviceId(deviceId));
         result.setCredentialsId(deviceCredentialsId);

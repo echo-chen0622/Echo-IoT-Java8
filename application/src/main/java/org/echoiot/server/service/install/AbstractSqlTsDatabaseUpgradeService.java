@@ -1,6 +1,7 @@
 package org.echoiot.server.service.install;
 
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -28,17 +29,17 @@ public abstract class AbstractSqlTsDatabaseUpgradeService {
     @Value("${spring.datasource.password}")
     protected String dbPassword;
 
-    @Autowired
+    @Resource
     protected InstallScripts installScripts;
 
     protected abstract void loadSql(Connection conn, String fileName, String version);
 
-    protected void loadFunctions(Path sqlFile, Connection conn) throws Exception {
-        String sql = new String(Files.readAllBytes(sqlFile), StandardCharsets.UTF_8);
+    protected void loadFunctions(@NotNull Path sqlFile, @NotNull Connection conn) throws Exception {
+        @NotNull String sql = new String(Files.readAllBytes(sqlFile), StandardCharsets.UTF_8);
         conn.createStatement().execute(sql); //NOSONAR, ignoring because method used to execute echoiot database upgrade script
     }
 
-    protected boolean checkVersion(Connection conn) {
+    protected boolean checkVersion(@NotNull Connection conn) {
         boolean versionValid = false;
         try {
             Statement statement = conn.createStatement();
@@ -54,7 +55,7 @@ public abstract class AbstractSqlTsDatabaseUpgradeService {
         return versionValid;
     }
 
-    protected boolean isOldSchema(Connection conn, long fromVersion) {
+    protected boolean isOldSchema(@NotNull Connection conn, long fromVersion) {
         boolean isOldSchema = true;
         try {
             Statement statement = conn.createStatement();
@@ -74,7 +75,7 @@ public abstract class AbstractSqlTsDatabaseUpgradeService {
         return isOldSchema;
     }
 
-    protected void executeQuery(Connection conn, String query) {
+    protected void executeQuery(@NotNull Connection conn, String query) {
         try {
             Statement statement = conn.createStatement();
             statement.execute(query); //NOSONAR, ignoring because method used to execute echoiot database upgrade script

@@ -17,6 +17,8 @@ import org.echoiot.server.dao.resource.ResourceService;
 import org.echoiot.server.dao.rule.RuleChainService;
 import org.echoiot.server.dao.widget.WidgetTypeService;
 import org.echoiot.server.dao.widget.WidgetsBundleService;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -61,32 +63,35 @@ public class InstallScripts {
     @Value("${install.data_dir:}")
     private String dataDir;
 
-    @Autowired
+    @Resource
     private RuleChainService ruleChainService;
 
-    @Autowired
+    @Resource
     private DashboardService dashboardService;
 
-    @Autowired
+    @Resource
     private WidgetTypeService widgetTypeService;
 
-    @Autowired
+    @Resource
     private WidgetsBundleService widgetsBundleService;
 
-    @Autowired
+    @Resource
     private OAuth2ConfigTemplateService oAuth2TemplateService;
 
-    @Autowired
+    @Resource
     private ResourceService resourceService;
 
+    @NotNull
     private Path getTenantRuleChainsDir() {
         return Paths.get(getDataDir(), JSON_DIR, TENANT_DIR, RULE_CHAINS_DIR);
     }
 
+    @NotNull
     private Path getDeviceProfileDefaultRuleChainTemplateFilePath() {
         return Paths.get(getDataDir(), JSON_DIR, TENANT_DIR, DEVICE_PROFILE_DIR, "rule_chain_template.json");
     }
 
+    @NotNull
     private Path getEdgeRuleChainsDir() {
         return Paths.get(getDataDir(), JSON_DIR, TENANT_DIR, EDGE_MANAGEMENT, RULE_CHAINS_DIR);
     }
@@ -102,7 +107,7 @@ public class InstallScripts {
             if (workDir.endsWith("application")) {
                 return Paths.get(workDir, SRC_DIR, MAIN_DIR, DATA_DIR).toString();
             } else {
-                Path dataDirPath = Paths.get(workDir, APP_DIR, SRC_DIR, MAIN_DIR, DATA_DIR);
+                @NotNull Path dataDirPath = Paths.get(workDir, APP_DIR, SRC_DIR, MAIN_DIR, DATA_DIR);
                 if (Files.exists(dataDirPath)) {
                     return dataDirPath.toString();
                 } else {
@@ -113,16 +118,16 @@ public class InstallScripts {
     }
 
     public void createDefaultRuleChains(TenantId tenantId) throws IOException {
-        Path tenantChainsDir = getTenantRuleChainsDir();
+        @NotNull Path tenantChainsDir = getTenantRuleChainsDir();
         loadRuleChainsFromPath(tenantId, tenantChainsDir);
     }
 
     public void createDefaultEdgeRuleChains(TenantId tenantId) throws IOException {
-        Path edgeChainsDir = getEdgeRuleChainsDir();
+        @NotNull Path edgeChainsDir = getEdgeRuleChainsDir();
         loadRuleChainsFromPath(tenantId, edgeChainsDir);
     }
 
-    private void loadRuleChainsFromPath(TenantId tenantId, Path ruleChainsPath) throws IOException {
+    private void loadRuleChainsFromPath(TenantId tenantId, @NotNull Path ruleChainsPath) throws IOException {
         try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(ruleChainsPath, path -> path.toString().endsWith(InstallScripts.JSON_EXT))) {
             dirStream.forEach(
                     path -> {
@@ -141,7 +146,8 @@ public class InstallScripts {
         return createRuleChainFromFile(tenantId, getDeviceProfileDefaultRuleChainTemplateFilePath(), ruleChainName);
     }
 
-    public RuleChain createRuleChainFromFile(TenantId tenantId, Path templateFilePath, String newRuleChainName) throws IOException {
+    @NotNull
+    public RuleChain createRuleChainFromFile(TenantId tenantId, @NotNull Path templateFilePath, String newRuleChainName) throws IOException {
         JsonNode ruleChainJson = objectMapper.readTree(templateFilePath.toFile());
         RuleChain ruleChain = objectMapper.treeToValue(ruleChainJson.get("ruleChain"), RuleChain.class);
         RuleChainMetaData ruleChainMetaData = objectMapper.treeToValue(ruleChainJson.get("metadata"), RuleChainMetaData.class);
@@ -159,7 +165,7 @@ public class InstallScripts {
     }
 
     public void loadSystemWidgets() throws Exception {
-        Path widgetBundlesDir = Paths.get(getDataDir(), JSON_DIR, SYSTEM_DIR, WIDGET_BUNDLES_DIR);
+        @NotNull Path widgetBundlesDir = Paths.get(getDataDir(), JSON_DIR, SYSTEM_DIR, WIDGET_BUNDLES_DIR);
         try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(widgetBundlesDir, path -> path.toString().endsWith(JSON_EXT))) {
             dirStream.forEach(
                     path -> {
@@ -176,7 +182,7 @@ public class InstallScripts {
                                             widgetTypeDetails.setBundleAlias(savedWidgetsBundle.getAlias());
                                             widgetTypeService.saveWidgetType(widgetTypeDetails);
                                         } catch (Exception e) {
-                                            log.error("Unable to load widget type from json: [{}]", path.toString());
+                                            log.error("Unable to load widget type from json: [{}]", path);
                                             throw new RuntimeException("Unable to load widget type from json", e);
                                         }
                                     }
@@ -190,8 +196,8 @@ public class InstallScripts {
         }
     }
 
-    public void loadDashboards(TenantId tenantId, CustomerId customerId) throws Exception {
-        Path dashboardsDir = Paths.get(getDataDir(), JSON_DIR, DEMO_DIR, DASHBOARDS_DIR);
+    public void loadDashboards(TenantId tenantId, @Nullable CustomerId customerId) throws Exception {
+        @NotNull Path dashboardsDir = Paths.get(getDataDir(), JSON_DIR, DEMO_DIR, DASHBOARDS_DIR);
         try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(dashboardsDir, path -> path.toString().endsWith(JSON_EXT))) {
             dirStream.forEach(
                     path -> {
@@ -224,7 +230,7 @@ public class InstallScripts {
     }
 
     public void createOAuth2Templates() throws Exception {
-        Path oauth2ConfigTemplatesDir = Paths.get(getDataDir(), JSON_DIR, SYSTEM_DIR, OAUTH2_CONFIG_TEMPLATES_DIR);
+        @NotNull Path oauth2ConfigTemplatesDir = Paths.get(getDataDir(), JSON_DIR, SYSTEM_DIR, OAUTH2_CONFIG_TEMPLATES_DIR);
         try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(oauth2ConfigTemplatesDir, path -> path.toString().endsWith(JSON_EXT))) {
             dirStream.forEach(
                     path -> {

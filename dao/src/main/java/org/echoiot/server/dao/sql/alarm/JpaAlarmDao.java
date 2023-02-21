@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.dao.model.sql.AlarmEntity;
 import org.echoiot.server.dao.model.sql.EntityAlarmEntity;
 import org.echoiot.server.dao.sql.query.AlarmQueryRepository;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -44,15 +46,16 @@ import java.util.UUID;
 @SqlDao
 public class JpaAlarmDao extends JpaAbstractDao<AlarmEntity, Alarm> implements AlarmDao {
 
-    @Autowired
+    @Resource
     private AlarmRepository alarmRepository;
 
-    @Autowired
+    @Resource
     private AlarmQueryRepository alarmQueryRepository;
 
-    @Autowired
+    @Resource
     private EntityAlarmRepository entityAlarmRepository;
 
+    @NotNull
     @Override
     protected Class<AlarmEntity> getEntityClass() {
         return AlarmEntity.class;
@@ -63,8 +66,9 @@ public class JpaAlarmDao extends JpaAbstractDao<AlarmEntity, Alarm> implements A
         return alarmRepository;
     }
 
+    @Nullable
     @Override
-    public Alarm findLatestByOriginatorAndType(TenantId tenantId, EntityId originator, String type) {
+    public Alarm findLatestByOriginatorAndType(TenantId tenantId, @NotNull EntityId originator, String type) {
         List<AlarmEntity> latest = alarmRepository.findLatestByOriginatorAndType(
                 originator.getId(),
                 type,
@@ -73,7 +77,7 @@ public class JpaAlarmDao extends JpaAbstractDao<AlarmEntity, Alarm> implements A
     }
 
     @Override
-    public ListenableFuture<Alarm> findLatestByOriginatorAndTypeAsync(TenantId tenantId, EntityId originator, String type) {
+    public ListenableFuture<Alarm> findLatestByOriginatorAndTypeAsync(TenantId tenantId, @NotNull EntityId originator, String type) {
         return service.submit(() -> findLatestByOriginatorAndType(tenantId, originator, type));
     }
 
@@ -87,11 +91,12 @@ public class JpaAlarmDao extends JpaAbstractDao<AlarmEntity, Alarm> implements A
         return findByIdAsync(tenantId, key);
     }
 
+    @NotNull
     @Override
-    public PageData<AlarmInfo> findAlarms(TenantId tenantId, AlarmQuery query) {
+    public PageData<AlarmInfo> findAlarms(@NotNull TenantId tenantId, @NotNull AlarmQuery query) {
         log.trace("Try to find alarms by entity [{}], status [{}] and pageLink [{}]", query.getAffectedEntityId(), query.getStatus(), query.getPageLink());
         EntityId affectedEntity = query.getAffectedEntityId();
-        Set<AlarmStatus> statusSet = null;
+        @Nullable Set<AlarmStatus> statusSet = null;
         if (query.getSearchStatus() != null) {
             statusSet = query.getSearchStatus().getStatuses();
         } else if (query.getStatus() != null) {
@@ -124,10 +129,11 @@ public class JpaAlarmDao extends JpaAbstractDao<AlarmEntity, Alarm> implements A
         }
     }
 
+    @NotNull
     @Override
-    public PageData<AlarmInfo> findCustomerAlarms(TenantId tenantId, CustomerId customerId, AlarmQuery query) {
+    public PageData<AlarmInfo> findCustomerAlarms(@NotNull TenantId tenantId, @NotNull CustomerId customerId, @NotNull AlarmQuery query) {
         log.trace("Try to find customer alarms by status [{}] and pageLink [{}]", query.getStatus(), query.getPageLink());
-        Set<AlarmStatus> statusSet = null;
+        @Nullable Set<AlarmStatus> statusSet = null;
         if (query.getSearchStatus() != null) {
             statusSet = query.getSearchStatus().getStatuses();
         } else if (query.getStatus() != null) {
@@ -152,34 +158,35 @@ public class JpaAlarmDao extends JpaAbstractDao<AlarmEntity, Alarm> implements A
     }
 
     @Override
-    public Set<AlarmSeverity> findAlarmSeverities(TenantId tenantId, EntityId entityId, Set<AlarmStatus> statuses) {
+    public Set<AlarmSeverity> findAlarmSeverities(@NotNull TenantId tenantId, @NotNull EntityId entityId, Set<AlarmStatus> statuses) {
         return alarmRepository.findAlarmSeverities(tenantId.getId(), entityId.getId(), entityId.getEntityType().name(), statuses);
     }
 
     @Override
-    public PageData<AlarmId> findAlarmsIdsByEndTsBeforeAndTenantId(Long time, TenantId tenantId, PageLink pageLink) {
+    public PageData<AlarmId> findAlarmsIdsByEndTsBeforeAndTenantId(Long time, @NotNull TenantId tenantId, PageLink pageLink) {
         return DaoUtil.pageToPageData(alarmRepository.findAlarmsIdsByEndTsBeforeAndTenantId(time, tenantId.getId(), DaoUtil.toPageable(pageLink)))
                 .mapData(AlarmId::new);
     }
 
     @Override
-    public void createEntityAlarmRecord(EntityAlarm entityAlarm) {
+    public void createEntityAlarmRecord(@NotNull EntityAlarm entityAlarm) {
         log.debug("Saving entity {}", entityAlarm);
         entityAlarmRepository.save(new EntityAlarmEntity(entityAlarm));
     }
 
     @Override
-    public List<EntityAlarm> findEntityAlarmRecords(TenantId tenantId, AlarmId id) {
+    public List<EntityAlarm> findEntityAlarmRecords(TenantId tenantId, @NotNull AlarmId id) {
         log.trace("[{}] Try to find entity alarm records using [{}]", tenantId, id);
         return DaoUtil.convertDataList(entityAlarmRepository.findAllByAlarmId(id.getId()));
     }
 
     @Override
-    public void deleteEntityAlarmRecords(TenantId tenantId, EntityId entityId) {
+    public void deleteEntityAlarmRecords(TenantId tenantId, @NotNull EntityId entityId) {
         log.trace("[{}] Try to delete entity alarm records using [{}]", tenantId, entityId);
         entityAlarmRepository.deleteByEntityId(entityId.getId());
     }
 
+    @NotNull
     @Override
     public EntityType getEntityType() {
         return EntityType.ALARM;

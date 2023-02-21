@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.echoiot.server.common.data.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -14,6 +15,7 @@ public class RuleChainDebugEventFilter extends DebugEventFilter {
     @ApiModelProperty(position = 2, value = "String value representing the message")
     protected String message;
 
+    @NotNull
     @Override
     public EventType getEventType() {
         return EventType.DEBUG_RULE_CHAIN;

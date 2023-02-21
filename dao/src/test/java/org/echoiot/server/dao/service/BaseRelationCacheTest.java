@@ -7,6 +7,7 @@ import org.echoiot.server.common.data.relation.EntityRelation;
 import org.echoiot.server.common.data.relation.RelationTypeGroup;
 import org.echoiot.server.dao.relation.RelationDao;
 import org.echoiot.server.dao.relation.RelationService;
+import org.jetbrains.annotations.Nullable;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,9 +31,9 @@ public abstract class BaseRelationCacheTest extends AbstractServiceTest {
     private static final EntityId ENTITY_ID_TO = new DeviceId(UUID.randomUUID());
     private static final String RELATION_TYPE = "Contains";
 
-    @Autowired
+    @Resource
     private RelationService relationService;
-    @Autowired
+    @Resource
     private CacheManager cacheManager;
 
     private RelationDao relationDao;
@@ -48,9 +49,10 @@ public abstract class BaseRelationCacheTest extends AbstractServiceTest {
         cacheManager.getCache(CacheConstants.RELATIONS_CACHE).clear();
     }
 
+    @Nullable
     private RelationService unwrapRelationService() throws Exception {
         if (AopUtils.isAopProxy(relationService) && relationService instanceof Advised) {
-            Object target = ((Advised) relationService).getTargetSource().getTarget();
+            @Nullable Object target = ((Advised) relationService).getTargetSource().getTarget();
             return (RelationService) target;
         }
         return relationService;

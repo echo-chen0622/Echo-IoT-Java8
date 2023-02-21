@@ -5,6 +5,7 @@ import lombok.Getter;
 import org.eclipse.leshan.core.request.ContentFormat;
 import org.eclipse.leshan.core.response.WriteResponse;
 import org.echoiot.server.transport.lwm2m.server.LwM2MOperationType;
+import org.jetbrains.annotations.NotNull;
 
 public class TbLwM2MWriteReplaceRequest extends AbstractTbLwM2MTargetedDownlinkRequest<WriteResponse> {
 
@@ -20,6 +21,7 @@ public class TbLwM2MWriteReplaceRequest extends AbstractTbLwM2MTargetedDownlinkR
         this.value = value;
     }
 
+    @NotNull
     @Override
     public LwM2MOperationType getType() {
         return LwM2MOperationType.WRITE_REPLACE;

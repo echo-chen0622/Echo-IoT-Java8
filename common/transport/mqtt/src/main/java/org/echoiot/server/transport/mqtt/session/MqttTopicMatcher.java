@@ -1,13 +1,18 @@
 package org.echoiot.server.transport.mqtt.session;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.regex.Pattern;
 
 public class MqttTopicMatcher {
 
+    @NotNull
     private final String topic;
+    @NotNull
     private final Pattern topicRegex;
 
-    public MqttTopicMatcher(String topic) {
+    public MqttTopicMatcher(@NotNull String topic) {
         if(topic == null){
             throw new NullPointerException("topic");
         }
@@ -19,16 +24,16 @@ public class MqttTopicMatcher {
         return topic;
     }
 
-    public boolean matches(String topic){
+    public boolean matches(@NotNull String topic){
         return this.topicRegex.matcher(topic).matches();
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        MqttTopicMatcher that = (MqttTopicMatcher) o;
+        @NotNull MqttTopicMatcher that = (MqttTopicMatcher) o;
 
         return topic.equals(that.topic);
     }

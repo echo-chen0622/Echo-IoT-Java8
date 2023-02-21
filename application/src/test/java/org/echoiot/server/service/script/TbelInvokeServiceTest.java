@@ -3,6 +3,8 @@ package org.echoiot.server.service.script;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.benmanes.caffeine.cache.Cache;
 import org.echoiot.server.controller.AbstractControllerTest;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +39,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 })
 class TbelInvokeServiceTest extends AbstractControllerTest {
 
-    @Autowired
+    @Resource
     private TbelInvokeService invokeService;
 
     @Value("${tbel.max_errors}")
@@ -69,7 +71,7 @@ class TbelInvokeServiceTest extends AbstractControllerTest {
 
     @Test
     void givenTooBigScriptForEval_thenReturnError() {
-        String hugeScript = "var a = 'qwertyqwertywertyqwabababerqwertyqwertywertyqwabababerqwertyqwertywertyqwabababerqwertyqwertywertyqwabababerqwertyqwertywertyqwabababer'; return {a: a};";
+        @NotNull String hugeScript = "var a = 'qwertyqwertywertyqwabababerqwertyqwertywertyqwabababerqwertyqwertywertyqwabababerqwertyqwertywertyqwabababerqwertyqwertywertyqwabababer'; return {a: a};";
 
         assertThatThrownBy(() -> {
             evalScript(hugeScript);
@@ -78,8 +80,8 @@ class TbelInvokeServiceTest extends AbstractControllerTest {
 
     @Test
     void givenTooBigScriptInputArgs_thenReturnErrorAndReportScriptExecutionError() throws Exception {
-        String script = "return { msg: msg };";
-        String hugeMsg = "{\"input\":\"123456781234349\"}";
+        @NotNull String script = "return { msg: msg };";
+        @NotNull String hugeMsg = "{\"input\":\"123456781234349\"}";
         UUID scriptId = evalScript(script);
 
         for (int i = 0; i < maxJsErrors; i++) {
@@ -92,7 +94,7 @@ class TbelInvokeServiceTest extends AbstractControllerTest {
 
     @Test
     void whenScriptInvocationResultIsTooBig_thenReturnErrorAndReportScriptExecutionError() throws Exception {
-        String script = "var s = 'a'; for(int i=0; i<50; i++){ s +='a';} return { s: s};";
+        @NotNull String script = "var s = 'a'; for(int i=0; i<50; i++){ s +='a';} return { s: s};";
         UUID scriptId = evalScript(script);
 
         for (int i = 0; i < maxJsErrors; i++) {
@@ -105,8 +107,8 @@ class TbelInvokeServiceTest extends AbstractControllerTest {
 
     @Test
     void givenScriptsWithSameBody_thenCompileAndCacheOnlyOnce() throws Exception {
-        String script = "return msg.temperature > 20;";
-        List<UUID> scriptsIds = new ArrayList<>();
+        @NotNull String script = "return msg.temperature > 20;";
+        @NotNull List<UUID> scriptsIds = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
             UUID scriptId = evalScript(script);
             scriptsIds.add(scriptId);
@@ -125,8 +127,8 @@ class TbelInvokeServiceTest extends AbstractControllerTest {
 
     @Test
     public void whenReleasingScript_thenCheckForScriptHashUsages() throws Exception {
-        String script = "return msg.temperature > 20;";
-        List<UUID> scriptsIds = new ArrayList<>();
+        @NotNull String script = "return msg.temperature > 20;";
+        @NotNull List<UUID> scriptsIds = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             UUID scriptId = evalScript(script);
             scriptsIds.add(scriptId);
@@ -156,9 +158,9 @@ class TbelInvokeServiceTest extends AbstractControllerTest {
         Map<UUID, String> scriptIdToHash = getFieldValue(invokeService, "scriptIdToHash");
         Cache<String, Serializable> compiledScriptsCache = getFieldValue(invokeService, "compiledScriptsCache");
 
-        List<UUID> scriptsIds = new ArrayList<>();
+        @NotNull List<UUID> scriptsIds = new ArrayList<>();
         for (int i = 0; i < 110; i++) { // tbel.compiled_scripts_cache_size = 100
-            String script = "return msg.temperature > " + i;
+            @NotNull String script = "return msg.temperature > " + i;
             UUID scriptId = evalScript(script);
             scriptsIds.add(scriptId);
 
@@ -167,7 +169,7 @@ class TbelInvokeServiceTest extends AbstractControllerTest {
             }
         }
 
-        ConcurrentMap<String, Serializable> cache = compiledScriptsCache.asMap();
+        @NotNull ConcurrentMap<String, Serializable> cache = compiledScriptsCache.asMap();
 
         for (int i = 0; i < 10; i++) { // iterating rarely used scripts
             UUID scriptId = scriptsIds.get(i);
@@ -197,7 +199,7 @@ class TbelInvokeServiceTest extends AbstractControllerTest {
     }
 
     private String invokeScript(UUID scriptId, String str) throws ExecutionException, InterruptedException {
-        var msg = JacksonUtil.fromString(str, Map.class);
+        @Nullable var msg = JacksonUtil.fromString(str, Map.class);
         return invokeService.invokeScript(TenantId.SYS_TENANT_ID, null, scriptId, msg, "{}", "POST_TELEMETRY_REQUEST").get().toString();
     }
 

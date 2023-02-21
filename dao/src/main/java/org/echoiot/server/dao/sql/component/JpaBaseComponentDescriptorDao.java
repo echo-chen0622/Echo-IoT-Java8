@@ -2,6 +2,7 @@ package org.echoiot.server.dao.sql.component;
 
 import com.datastax.oss.driver.api.core.uuid.Uuids;
 import org.echoiot.server.dao.model.sql.ComponentDescriptorEntity;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
@@ -28,12 +29,13 @@ import java.util.UUID;
 public class JpaBaseComponentDescriptorDao extends JpaAbstractSearchTextDao<ComponentDescriptorEntity, ComponentDescriptor>
         implements ComponentDescriptorDao {
 
-    @Autowired
+    @Resource
     private ComponentDescriptorRepository componentDescriptorRepository;
 
-    @Autowired
+    @Resource
     private ComponentDescriptorInsertRepository componentDescriptorInsertRepository;
 
+    @NotNull
     @Override
     protected Class<ComponentDescriptorEntity> getEntityClass() {
         return ComponentDescriptorEntity.class;
@@ -44,15 +46,16 @@ public class JpaBaseComponentDescriptorDao extends JpaAbstractSearchTextDao<Comp
         return componentDescriptorRepository;
     }
 
+    @NotNull
     @Override
-    public Optional<ComponentDescriptor> saveIfNotExist(TenantId tenantId, ComponentDescriptor component) {
+    public Optional<ComponentDescriptor> saveIfNotExist(TenantId tenantId, @NotNull ComponentDescriptor component) {
         if (component.getId() == null) {
-            UUID uuid = Uuids.timeBased();
+            @NotNull UUID uuid = Uuids.timeBased();
             component.setId(new ComponentDescriptorId(uuid));
             component.setCreatedTime(Uuids.unixTimestamp(uuid));
         }
         if (!componentDescriptorRepository.existsById(component.getId().getId())) {
-            ComponentDescriptorEntity componentDescriptorEntity = new ComponentDescriptorEntity(component);
+            @NotNull ComponentDescriptorEntity componentDescriptorEntity = new ComponentDescriptorEntity(component);
             ComponentDescriptorEntity savedEntity = componentDescriptorInsertRepository.saveOrUpdate(componentDescriptorEntity);
             return Optional.of(savedEntity.toData());
         }
@@ -60,7 +63,7 @@ public class JpaBaseComponentDescriptorDao extends JpaAbstractSearchTextDao<Comp
     }
 
     @Override
-    public ComponentDescriptor findById(TenantId tenantId, ComponentDescriptorId componentId) {
+    public ComponentDescriptor findById(TenantId tenantId, @NotNull ComponentDescriptorId componentId) {
         return findById(tenantId, componentId.getId());
     }
 
@@ -69,8 +72,9 @@ public class JpaBaseComponentDescriptorDao extends JpaAbstractSearchTextDao<Comp
         return DaoUtil.getData(componentDescriptorRepository.findByClazz(clazz));
     }
 
+    @NotNull
     @Override
-    public PageData<ComponentDescriptor> findByTypeAndPageLink(TenantId tenantId, ComponentType type, PageLink pageLink) {
+    public PageData<ComponentDescriptor> findByTypeAndPageLink(TenantId tenantId, ComponentType type, @NotNull PageLink pageLink) {
         return DaoUtil.toPageData(componentDescriptorRepository
                 .findByType(
                         type,
@@ -78,8 +82,9 @@ public class JpaBaseComponentDescriptorDao extends JpaAbstractSearchTextDao<Comp
                         DaoUtil.toPageable(pageLink)));
     }
 
+    @NotNull
     @Override
-    public PageData<ComponentDescriptor> findByScopeAndTypeAndPageLink(TenantId tenantId, ComponentScope scope, ComponentType type, PageLink pageLink) {
+    public PageData<ComponentDescriptor> findByScopeAndTypeAndPageLink(TenantId tenantId, ComponentScope scope, ComponentType type, @NotNull PageLink pageLink) {
         return DaoUtil.toPageData(componentDescriptorRepository
                 .findByScopeAndType(
                         type,
@@ -90,7 +95,7 @@ public class JpaBaseComponentDescriptorDao extends JpaAbstractSearchTextDao<Comp
 
     @Override
     @Transactional
-    public void deleteById(TenantId tenantId, ComponentDescriptorId componentId) {
+    public void deleteById(TenantId tenantId, @NotNull ComponentDescriptorId componentId) {
         removeById(tenantId, componentId.getId());
     }
 

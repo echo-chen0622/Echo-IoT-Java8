@@ -12,6 +12,7 @@ import org.echoiot.server.gen.edge.v1.AttributeDeleteMsg;
 import org.echoiot.server.gen.edge.v1.EntityDataProto;
 import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.queue.util.TbCoreComponent;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -21,7 +22,8 @@ import java.util.List;
 @TbCoreComponent
 public class EntityDataMsgConstructor {
 
-    public EntityDataProto constructEntityDataMsg(EntityId entityId, EdgeEventActionType actionType, JsonElement entityData) {
+    @NotNull
+    public EntityDataProto constructEntityDataMsg(@NotNull EntityId entityId, @NotNull EdgeEventActionType actionType, @NotNull JsonElement entityData) {
         EntityDataProto.Builder builder = EntityDataProto.newBuilder()
                 .setEntityIdMSB(entityId.getId().getMostSignificantBits())
                 .setEntityIdLSB(entityId.getId().getLeastSignificantBits())
@@ -78,7 +80,7 @@ public class EntityDataMsgConstructor {
         return builder.build();
     }
 
-    private String getScopeOfDefault(JsonObject data) {
+    private String getScopeOfDefault(@NotNull JsonObject data) {
         JsonPrimitive scope = data.getAsJsonPrimitive("scope");
         String result = DataConstants.SERVER_SCOPE;
         if (scope != null && StringUtils.isNotBlank(scope.getAsString())) {

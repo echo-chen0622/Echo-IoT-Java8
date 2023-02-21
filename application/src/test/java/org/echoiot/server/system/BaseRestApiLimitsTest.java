@@ -11,6 +11,7 @@ import org.echoiot.server.common.data.tenant.profile.DefaultTenantProfileConfigu
 import org.echoiot.server.common.data.tenant.profile.TenantProfileConfiguration;
 import org.echoiot.server.common.data.tenant.profile.TenantProfileData;
 import org.echoiot.server.controller.AbstractControllerTest;
+import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -37,11 +38,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Slf4j
 public abstract class BaseRestApiLimitsTest extends AbstractControllerTest {
 
-    private static int MESSAGES_LIMIT = 10;
-    private static int TIME_FOR_LIMIT = 5;
+    private static final int MESSAGES_LIMIT = 10;
+    private static final int TIME_FOR_LIMIT = 5;
 
     TenantProfile tenantProfile;
 
+    @NotNull
     ListeningExecutorService service = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(10));
 
     @Before
@@ -64,7 +66,7 @@ public abstract class BaseRestApiLimitsTest extends AbstractControllerTest {
     public void testCustomerRestApiLimits() throws Exception {
         loginSysAdmin();
 
-        String customerRestLimit = MESSAGES_LIMIT + ":" + TIME_FOR_LIMIT;
+        @NotNull String customerRestLimit = MESSAGES_LIMIT + ":" + TIME_FOR_LIMIT;
 
         DefaultTenantProfileConfiguration configurationWithCustomerRestLimits = createTenantProfileConfigurationWithRestLimits(null, customerRestLimit);
 
@@ -84,7 +86,7 @@ public abstract class BaseRestApiLimitsTest extends AbstractControllerTest {
     public void testTenantRestApiLimits() throws Exception {
         loginSysAdmin();
 
-        String tenantRestLimit = MESSAGES_LIMIT + ":" + TIME_FOR_LIMIT;
+        @NotNull String tenantRestLimit = MESSAGES_LIMIT + ":" + TIME_FOR_LIMIT;
 
         DefaultTenantProfileConfiguration configurationWithTenantRestLimits = createTenantProfileConfigurationWithRestLimits(tenantRestLimit, null);
 
@@ -104,7 +106,7 @@ public abstract class BaseRestApiLimitsTest extends AbstractControllerTest {
     public void testCustomerRestApiLimitsWithAsyncMethod() throws Exception {
         loginSysAdmin();
 
-        String tenantRestLimit = MESSAGES_LIMIT + ":" + TIME_FOR_LIMIT;
+        @NotNull String tenantRestLimit = MESSAGES_LIMIT + ":" + TIME_FOR_LIMIT;
 
         DefaultTenantProfileConfiguration configurationWithTenantRestLimits = createTenantProfileConfigurationWithRestLimits(tenantRestLimit, null);
 
@@ -114,7 +116,7 @@ public abstract class BaseRestApiLimitsTest extends AbstractControllerTest {
 
         loginTenantAdmin();
 
-        List<ListenableFuture<ResultActions>> attributesRequests = new ArrayList<>();
+        @NotNull List<ListenableFuture<ResultActions>> attributesRequests = new ArrayList<>();
 
         doGet("/api/plugins/telemetry/" + tenantId.getEntityType() + "/" + tenantId.getId().toString() + "/values/attributes").andExpect(status().isOk());
         Thread.sleep(TimeUnit.SECONDS.toMillis(TIME_FOR_LIMIT)); // Wait to initialization for bucket4j
@@ -125,36 +127,37 @@ public abstract class BaseRestApiLimitsTest extends AbstractControllerTest {
 
         List<ResultActions> lists = blockForResponses(attributesRequests);
 
-        for (ResultActions resultActions : lists) {
+        for (@NotNull ResultActions resultActions : lists) {
             resultActions.andExpect(status().isOk());
         }
 
         doGet("/api/plugins/telemetry/" + tenantId.getEntityType() + "/" + tenantId.getId().toString() + "/values/attributes").andExpect(status().is4xxClientError());
     }
 
+    @NotNull
     private TenantProfile getDefaultTenantProfile() throws Exception {
 
-        PageLink pageLink = new PageLink(17);
+        @NotNull PageLink pageLink = new PageLink(17);
         PageData<TenantProfile> pageData = doGetTypedWithPageLink("/api/tenantProfiles?",
                 new TypeReference<>(){}, pageLink);
         Assert.assertFalse(pageData.hasNext());
         Assert.assertEquals(1, pageData.getTotalElements());
-        List<TenantProfile> tenantProfiles = new ArrayList<>(pageData.getData());
+        @NotNull List<TenantProfile> tenantProfiles = new ArrayList<>(pageData.getData());
 
-        Optional<TenantProfile> optionalDefaultProfile = tenantProfiles.stream().filter(TenantProfile::isDefault).reduce((a, b) -> null);
+        @NotNull Optional<TenantProfile> optionalDefaultProfile = tenantProfiles.stream().filter(TenantProfile::isDefault).reduce((a, b) -> null);
         Assert.assertTrue(optionalDefaultProfile.isPresent());
 
         return optionalDefaultProfile.get();
     }
 
-    List<ResultActions> blockForResponses(List<ListenableFuture<ResultActions>> futures) throws ExecutionException {
-        ListenableFuture<List<ResultActions>> futureOfList = Futures.allAsList(futures);
+    List<ResultActions> blockForResponses(@NotNull List<ListenableFuture<ResultActions>> futures) throws ExecutionException {
+        @NotNull ListenableFuture<List<ResultActions>> futureOfList = Futures.allAsList(futures);
         List<ResultActions> responses;
         try {
             responses = futureOfList.get(20, TimeUnit.SECONDS);
         } catch (TimeoutException | InterruptedException | ExecutionException e) {
             responses = new ArrayList<>();
-            for (ListenableFuture<ResultActions> future : futures) {
+            for (@NotNull ListenableFuture<ResultActions> future : futures) {
                 if (future.isDone()) {
                     responses.add(Uninterruptibles.getUninterruptibly(future));
                 }
@@ -171,7 +174,7 @@ public abstract class BaseRestApiLimitsTest extends AbstractControllerTest {
 
     }
 
-    private void saveTenantProfileWitConfiguration(TenantProfile tenantProfile, TenantProfileConfiguration tenantProfileConfiguration) {
+    private void saveTenantProfileWitConfiguration(@NotNull TenantProfile tenantProfile, TenantProfileConfiguration tenantProfileConfiguration) {
         TenantProfileData tenantProfileData = tenantProfile.getProfileData();
         tenantProfileData.setConfiguration(tenantProfileConfiguration);
         TenantProfile savedTenantProfile = doPost("/api/tenantProfile", tenantProfile, TenantProfile.class);

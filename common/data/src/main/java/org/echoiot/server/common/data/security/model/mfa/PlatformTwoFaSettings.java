@@ -32,6 +32,7 @@ public class PlatformTwoFaSettings {
     private Integer totalAllowedTimeForVerification;
 
 
+    @org.jetbrains.annotations.NotNull
     public Optional<TwoFaProviderConfig> getProviderConfig(TwoFaProviderType providerType) {
         return Optional.ofNullable(providers)
                 .flatMap(providersConfigs -> providersConfigs.stream()

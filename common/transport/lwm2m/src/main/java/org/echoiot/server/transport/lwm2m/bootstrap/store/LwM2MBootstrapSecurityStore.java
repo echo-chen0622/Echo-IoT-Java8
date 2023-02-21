@@ -18,6 +18,8 @@ import org.eclipse.leshan.server.bootstrap.EditableBootstrapConfigStore;
 import org.eclipse.leshan.server.bootstrap.InvalidConfigurationException;
 import org.eclipse.leshan.server.security.BootstrapSecurityStore;
 import org.eclipse.leshan.server.security.SecurityInfo;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -48,17 +50,19 @@ public class LwM2MBootstrapSecurityStore implements BootstrapSecurityStore {
         this.helper = helper;
     }
 
+    @Nullable
     @Override
     public Iterator<SecurityInfo> getAllByEndpoint(String endpoint) {
-            TbLwM2MSecurityInfo store = lwM2MCredentialsSecurityInfoValidator.getEndpointSecurityInfoByCredentialsId(endpoint, BOOTSTRAP);
-            SecurityInfo securityInfo = this.addValueToStore(store, endpoint);
+            @NotNull TbLwM2MSecurityInfo store = lwM2MCredentialsSecurityInfoValidator.getEndpointSecurityInfoByCredentialsId(endpoint, BOOTSTRAP);
+            @Nullable SecurityInfo securityInfo = this.addValueToStore(store, endpoint);
             return securityInfo == null ? null : Collections.singletonList(store.getSecurityInfo()).iterator();
     }
 
+    @Nullable
     @Override
     public SecurityInfo getByIdentity(String identity) {
         try {
-            TbLwM2MSecurityInfo store = lwM2MCredentialsSecurityInfoValidator.getEndpointSecurityInfoByCredentialsId(identity, BOOTSTRAP);
+            @NotNull TbLwM2MSecurityInfo store = lwM2MCredentialsSecurityInfoValidator.getEndpointSecurityInfoByCredentialsId(identity, BOOTSTRAP);
             if (store.getBootstrapCredentialConfig() != null && store.getSecurityMode() != null) {
                 /* add value to store  from BootstrapJson */
                 this.setBootstrapConfigSecurityInfo(store);
@@ -79,26 +83,28 @@ public class LwM2MBootstrapSecurityStore implements BootstrapSecurityStore {
         }
     }
 
+    @NotNull
     public TbLwM2MSecurityInfo getX509ByEndpoint(String endPoint) {
-            TbLwM2MSecurityInfo store = lwM2MCredentialsSecurityInfoValidator.getEndpointSecurityInfoByCredentialsId(endPoint, BOOTSTRAP);
+            @NotNull TbLwM2MSecurityInfo store = lwM2MCredentialsSecurityInfoValidator.getEndpointSecurityInfoByCredentialsId(endPoint, BOOTSTRAP);
             this.addValueToStore(store, store.getEndpoint());
             return store;
     }
 
 
-    private void setBootstrapConfigSecurityInfo(TbLwM2MSecurityInfo store) {
+    private void setBootstrapConfigSecurityInfo(@NotNull TbLwM2MSecurityInfo store) {
         /* BootstrapConfig */
-        LwM2MBootstrapConfig lwM2MBootstrapConfig = this.getParametersBootstrap(store);
+        @Nullable LwM2MBootstrapConfig lwM2MBootstrapConfig = this.getParametersBootstrap(store);
         if (lwM2MBootstrapConfig != null) {
             BootstrapConfig bootstrapConfig = lwM2MBootstrapConfig.getLwM2MBootstrapConfig();
             store.setBootstrapConfig(bootstrapConfig);
         }
     }
 
-    private LwM2MBootstrapConfig getParametersBootstrap(TbLwM2MSecurityInfo store) {
+    @Nullable
+    private LwM2MBootstrapConfig getParametersBootstrap(@NotNull TbLwM2MSecurityInfo store) {
         LwM2MBootstrapConfig lwM2MBootstrapConfig = store.getBootstrapCredentialConfig();
         if (lwM2MBootstrapConfig != null) {
-            UUID sessionUUiD = UUID.randomUUID();
+            @NotNull UUID sessionUUiD = UUID.randomUUID();
             TransportProtos.SessionInfoProto sessionInfo = helper.getValidateSessionInfo(store.getMsg(), sessionUUiD.getMostSignificantBits(), sessionUUiD.getLeastSignificantBits());
             bsSessions.put(store.getEndpoint(), sessionInfo);
             context.getTransportService().registerAsyncSession(sessionInfo, new LwM2mSessionMsgListener(null, null, null, sessionInfo, context.getTransportService()));
@@ -122,11 +128,11 @@ public class LwM2MBootstrapSecurityStore implements BootstrapSecurityStore {
      *
      * @return false if not sync between SecurityMode of Bootstrap credential and profile
      */
-    private boolean getValidatedSecurityMode(LwM2MBootstrapConfig lwM2MBootstrapConfig) {
+    private boolean getValidatedSecurityMode(@NotNull LwM2MBootstrapConfig lwM2MBootstrapConfig) {
         LwM2MSecurityMode bootstrapServerSecurityMode = lwM2MBootstrapConfig.getBootstrapServer().getSecurityMode();
         LwM2MSecurityMode lwm2mServerSecurityMode = lwM2MBootstrapConfig.getLwm2mServer().getSecurityMode();
-        AtomicBoolean validBs = new AtomicBoolean(true);
-        AtomicBoolean validLw = new AtomicBoolean(true);
+        @NotNull AtomicBoolean validBs = new AtomicBoolean(true);
+        @NotNull AtomicBoolean validLw = new AtomicBoolean(true);
         lwM2MBootstrapConfig.getServerConfiguration().forEach(serverCredential -> {
             if (((AbstractLwM2MBootstrapServerCredential) serverCredential).isBootstrapServerIs()) {
                 if (!bootstrapServerSecurityMode.equals(serverCredential.getSecurityMode())) {
@@ -153,9 +159,10 @@ public class LwM2MBootstrapSecurityStore implements BootstrapSecurityStore {
         return bootstrapConfigStore.getAll().get(endpoint);
     }
 
-    public SecurityInfo addValueToStore(TbLwM2MSecurityInfo store, String endpoint) {
+    @Nullable
+    public SecurityInfo addValueToStore(@Nullable TbLwM2MSecurityInfo store, String endpoint) {
         /* add value to store  from BootstrapJson */
-        SecurityInfo securityInfo = null;
+        @Nullable SecurityInfo securityInfo = null;
         if (store != null && store.getBootstrapCredentialConfig() != null && store.getSecurityMode() != null) {
             securityInfo = store.getSecurityInfo();
             this.setBootstrapConfigSecurityInfo(store);
@@ -164,17 +171,17 @@ public class LwM2MBootstrapSecurityStore implements BootstrapSecurityStore {
                 try {
                     boolean bootstrapServerUpdateEnable = ((Lwm2mDeviceProfileTransportConfiguration) store.getDeviceProfile().getProfileData().getTransportConfiguration()).isBootstrapServerUpdateEnable();
                     if (!bootstrapServerUpdateEnable) {
-                        Optional<Map.Entry<Integer, BootstrapConfig.ServerSecurity>> securities = bsConfigNew.security.entrySet().stream().filter(sec -> sec.getValue().bootstrapServer).findAny();
+                        @NotNull Optional<Map.Entry<Integer, BootstrapConfig.ServerSecurity>> securities = bsConfigNew.security.entrySet().stream().filter(sec -> sec.getValue().bootstrapServer).findAny();
                         if (securities.isPresent()) {
                             bsConfigNew.security.entrySet().remove(securities.get());
                             int serverSortId = securities.get().getValue().serverId;
-                            Optional<Map.Entry<Integer, BootstrapConfig.ServerConfig>> serverConfigs = bsConfigNew.servers.entrySet().stream().filter(serv -> (serv.getValue()).shortId == serverSortId).findAny();
+                            @NotNull Optional<Map.Entry<Integer, BootstrapConfig.ServerConfig>> serverConfigs = bsConfigNew.servers.entrySet().stream().filter(serv -> (serv.getValue()).shortId == serverSortId).findAny();
                             if (serverConfigs.isPresent()) {
                                 bsConfigNew.servers.entrySet().remove(serverConfigs.get());
                             }
                         }
                     }
-                    for (String config : bootstrapConfigStore.getAll().keySet()) {
+                    for (@NotNull String config : bootstrapConfigStore.getAll().keySet()) {
                         if (config.equals(endpoint)) {
                             bootstrapConfigStore.remove(config);
                         }

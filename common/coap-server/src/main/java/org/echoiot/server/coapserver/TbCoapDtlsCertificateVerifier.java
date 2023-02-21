@@ -22,6 +22,7 @@ import org.echoiot.server.common.transport.auth.ValidateDeviceCredentialsRespons
 import org.echoiot.server.common.transport.util.SslUtil;
 import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.queue.discovery.TbServiceInfoProvider;
+import org.jetbrains.annotations.NotNull;
 
 import javax.security.auth.x500.X500Principal;
 import java.net.InetSocketAddress;
@@ -40,6 +41,7 @@ import java.util.concurrent.TimeUnit;
 @Data
 public class TbCoapDtlsCertificateVerifier implements NewAdvancedCertificateVerifier {
 
+    @NotNull
     private final TbCoapDtlsSessionInMemoryStorage tbCoapDtlsSessionInMemoryStorage;
 
     private TransportService transportService;
@@ -53,30 +55,32 @@ public class TbCoapDtlsCertificateVerifier implements NewAdvancedCertificateVeri
         this.tbCoapDtlsSessionInMemoryStorage = new TbCoapDtlsSessionInMemoryStorage(dtlsSessionInactivityTimeout, dtlsSessionReportTimeout);
     }
 
+    @NotNull
     @Override
     public List<CertificateType> getSupportedCertificateTypes() {
         return Collections.singletonList(CertificateType.X_509);
     }
 
+    @NotNull
     @Override
-    public CertificateVerificationResult verifyCertificate(ConnectionId cid, ServerNames serverName, InetSocketAddress remotePeer, boolean clientUsage, boolean verifySubject, boolean truncateCertificatePath, CertificateMessage message) {
+    public CertificateVerificationResult verifyCertificate(@NotNull ConnectionId cid, ServerNames serverName, InetSocketAddress remotePeer, boolean clientUsage, boolean verifySubject, boolean truncateCertificatePath, @NotNull CertificateMessage message) {
         try {
             CertPath certpath = message.getCertificateChain();
-            X509Certificate[] chain = certpath.getCertificates().toArray(new X509Certificate[0]);
-            for (X509Certificate cert : chain) {
+            @NotNull X509Certificate[] chain = certpath.getCertificates().toArray(new X509Certificate[0]);
+            for (@NotNull X509Certificate cert : chain) {
                 try {
                     if (!skipValidityCheckForClientCert) {
                         cert.checkValidity();
                     }
 
-                    String strCert = SslUtil.getCertificateString(cert);
+                    @NotNull String strCert = SslUtil.getCertificateString(cert);
                     String sha3Hash = EncryptionUtil.getSha3Hash(strCert);
-                    final ValidateDeviceCredentialsResponse[] deviceCredentialsResponse = new ValidateDeviceCredentialsResponse[1];
-                    CountDownLatch latch = new CountDownLatch(1);
+                    @NotNull final ValidateDeviceCredentialsResponse[] deviceCredentialsResponse = new ValidateDeviceCredentialsResponse[1];
+                    @NotNull CountDownLatch latch = new CountDownLatch(1);
                     transportService.process(DeviceTransportType.COAP, TransportProtos.ValidateDeviceX509CertRequestMsg.newBuilder().setHash(sha3Hash).build(),
                             new TransportServiceCallback<>() {
                                 @Override
-                                public void onSuccess(ValidateDeviceCredentialsResponse msg) {
+                                public void onSuccess(@NotNull ValidateDeviceCredentialsResponse msg) {
                                     if (!StringUtils.isEmpty(msg.getCredentials())) {
                                         deviceCredentialsResponse[0] = msg;
                                     }
@@ -84,7 +88,7 @@ public class TbCoapDtlsCertificateVerifier implements NewAdvancedCertificateVeri
                                 }
 
                                 @Override
-                                public void onError(Throwable e) {
+                                public void onError(@NotNull Throwable e) {
                                     log.error(e.getMessage(), e);
                                     latch.countDown();
                                 }
@@ -103,7 +107,7 @@ public class TbCoapDtlsCertificateVerifier implements NewAdvancedCertificateVeri
                         CertificateExpiredException |
                         CertificateNotYetValidException e) {
                     log.error(e.getMessage(), e);
-                    AlertMessage alert = new AlertMessage(AlertMessage.AlertLevel.FATAL, AlertMessage.AlertDescription.BAD_CERTIFICATE);
+                    @NotNull AlertMessage alert = new AlertMessage(AlertMessage.AlertLevel.FATAL, AlertMessage.AlertDescription.BAD_CERTIFICATE);
                     throw new HandshakeException("Certificate chain could not be validated", alert);
                 }
             }

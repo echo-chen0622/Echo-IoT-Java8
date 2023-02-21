@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.echoiot.server.common.data.id.TenantProfileId;
 import org.echoiot.server.common.data.tenant.profile.TenantProfileData;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.data.util.Pair;
 import org.echoiot.server.common.data.ApiFeature;
 import org.echoiot.server.common.data.ApiUsageRecordKey;
@@ -26,7 +28,7 @@ public class TenantApiUsageState extends BaseApiUsageState {
     @Setter
     private TenantProfileData tenantProfileData;
 
-    public TenantApiUsageState(TenantProfile tenantProfile, ApiUsageState apiUsageState) {
+    public TenantApiUsageState(@NotNull TenantProfile tenantProfile, ApiUsageState apiUsageState) {
         super(apiUsageState);
         this.tenantProfileId = tenantProfile.getId();
         this.tenantProfileData = tenantProfile.getProfileData();
@@ -44,8 +46,9 @@ public class TenantApiUsageState extends BaseApiUsageState {
         return tenantProfileData.getConfiguration().getWarnThreshold(key);
     }
 
-    private Pair<ApiFeature, ApiUsageStateValue> checkStateUpdatedDueToThreshold(ApiFeature feature) {
-        ApiUsageStateValue featureValue = ApiUsageStateValue.ENABLED;
+    @Nullable
+    private Pair<ApiFeature, ApiUsageStateValue> checkStateUpdatedDueToThreshold(@NotNull ApiFeature feature) {
+        @NotNull ApiUsageStateValue featureValue = ApiUsageStateValue.ENABLED;
         for (ApiUsageRecordKey recordKey : ApiUsageRecordKey.getKeys(feature)) {
             long value = get(recordKey);
             long threshold = getProfileThreshold(recordKey);
@@ -68,10 +71,11 @@ public class TenantApiUsageState extends BaseApiUsageState {
         return checkStateUpdatedDueToThreshold(new HashSet<>(Arrays.asList(ApiFeature.values())));
     }
 
-    public Map<ApiFeature, ApiUsageStateValue> checkStateUpdatedDueToThreshold(Set<ApiFeature> features) {
-        Map<ApiFeature, ApiUsageStateValue> result = new HashMap<>();
-        for (ApiFeature feature : features) {
-            Pair<ApiFeature, ApiUsageStateValue> tmp = checkStateUpdatedDueToThreshold(feature);
+    @NotNull
+    public Map<ApiFeature, ApiUsageStateValue> checkStateUpdatedDueToThreshold(@NotNull Set<ApiFeature> features) {
+        @NotNull Map<ApiFeature, ApiUsageStateValue> result = new HashMap<>();
+        for (@NotNull ApiFeature feature : features) {
+            @Nullable Pair<ApiFeature, ApiUsageStateValue> tmp = checkStateUpdatedDueToThreshold(feature);
             if (tmp != null) {
                 result.put(tmp.getFirst(), tmp.getSecond());
             }
@@ -79,6 +83,7 @@ public class TenantApiUsageState extends BaseApiUsageState {
         return result;
     }
 
+    @NotNull
     @Override
     public EntityType getEntityType() {
         return EntityType.TENANT;

@@ -3,6 +3,7 @@ package org.echoiot.server.common.data.sms.config;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.jetbrains.annotations.NotNull;
 
 @ApiModel
 @Data
@@ -15,6 +16,7 @@ public class AwsSnsSmsProviderConfiguration implements SmsProviderConfiguration 
     @ApiModelProperty(position = 3, value = "The AWS region.")
     private String region;
 
+    @NotNull
     @Override
     public SmsProviderType getType() {
         return SmsProviderType.AWS_SNS;

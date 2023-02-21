@@ -1,6 +1,7 @@
 package org.echoiot.server.service.queue;
 
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
@@ -48,18 +49,18 @@ public class TbMsgPackProcessingContextTest {
         int parallelCount = 5;
         executorService = Executors.newFixedThreadPool(parallelCount, EchoiotThreadFactory.forName(getClass().getSimpleName() + "-test-scope"));
 
-        ConcurrentMap<UUID, TbProtoQueueMsg<TransportProtos.ToRuleEngineMsg>> messages = new ConcurrentHashMap<>(msgCount);
+        @NotNull ConcurrentMap<UUID, TbProtoQueueMsg<TransportProtos.ToRuleEngineMsg>> messages = new ConcurrentHashMap<>(msgCount);
         for (int i = 0; i < msgCount; i++) {
             messages.put(UUID.randomUUID(), new TbProtoQueueMsg<>(UUID.randomUUID(), null));
         }
         TbRuleEngineSubmitStrategy strategyMock = mock(TbRuleEngineSubmitStrategy.class);
         when(strategyMock.getPendingMap()).thenReturn(messages);
 
-        TbMsgPackProcessingContext context = new TbMsgPackProcessingContext(DataConstants.MAIN_QUEUE_NAME, strategyMock, false);
+        @NotNull TbMsgPackProcessingContext context = new TbMsgPackProcessingContext(DataConstants.MAIN_QUEUE_NAME, strategyMock, false);
         for (UUID uuid : messages.keySet()) {
-            final CountDownLatch readyLatch = new CountDownLatch(parallelCount);
-            final CountDownLatch startLatch = new CountDownLatch(1);
-            final CountDownLatch finishLatch = new CountDownLatch(parallelCount);
+            @NotNull final CountDownLatch readyLatch = new CountDownLatch(parallelCount);
+            @NotNull final CountDownLatch startLatch = new CountDownLatch(1);
+            @NotNull final CountDownLatch finishLatch = new CountDownLatch(parallelCount);
             for (int i = 0; i < parallelCount; i++) {
                 //final String taskName = "" + uuid + " " + i;
                 executorService.submit(() -> {

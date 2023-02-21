@@ -18,6 +18,7 @@ import org.echoiot.server.queue.util.DataDecodingEncodingService;
 import org.echoiot.server.service.gateway_device.GatewayNotificationsService;
 import org.echoiot.server.service.profile.TbAssetProfileCache;
 import org.echoiot.server.service.profile.TbDeviceProfileCache;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -86,8 +87,8 @@ public class DefaultTbClusterServiceTest {
 
     @Test
     public void testOnQueueChangeMultipleMonoliths() {
-        String monolith1 = MONOLITH + 1;
-        String monolith2 = MONOLITH + 2;
+        @NotNull String monolith1 = MONOLITH + 1;
+        @NotNull String monolith2 = MONOLITH + 2;
         when(partitionService.getAllServiceIds(ServiceType.TB_RULE_ENGINE)).thenReturn(Sets.newHashSet(monolith1, monolith2));
         when(partitionService.getAllServiceIds(ServiceType.TB_CORE)).thenReturn(Sets.newHashSet(monolith1, monolith2));
         when(partitionService.getAllServiceIds(ServiceType.TB_TRANSPORT)).thenReturn(Sets.newHashSet(monolith1, monolith2));
@@ -146,17 +147,17 @@ public class DefaultTbClusterServiceTest {
 
     @Test
     public void testOnQueueChangeMultipleMicroservices() {
-        String monolith1 = MONOLITH + 1;
-        String monolith2 = MONOLITH + 2;
+        @NotNull String monolith1 = MONOLITH + 1;
+        @NotNull String monolith2 = MONOLITH + 2;
 
-        String core1 = CORE + 1;
-        String core2 = CORE + 2;
+        @NotNull String core1 = CORE + 1;
+        @NotNull String core2 = CORE + 2;
 
-        String ruleEngine1 = RULE_ENGINE + 1;
-        String ruleEngine2 = RULE_ENGINE + 2;
+        @NotNull String ruleEngine1 = RULE_ENGINE + 1;
+        @NotNull String ruleEngine2 = RULE_ENGINE + 2;
 
-        String transport1 = TRANSPORT + 1;
-        String transport2 = TRANSPORT + 2;
+        @NotNull String transport1 = TRANSPORT + 1;
+        @NotNull String transport2 = TRANSPORT + 2;
 
         when(partitionService.getAllServiceIds(ServiceType.TB_RULE_ENGINE)).thenReturn(Sets.newHashSet(monolith1, monolith2, ruleEngine1, ruleEngine2));
         when(partitionService.getAllServiceIds(ServiceType.TB_CORE)).thenReturn(Sets.newHashSet(monolith1, monolith2, core1, core2));
@@ -215,9 +216,10 @@ public class DefaultTbClusterServiceTest {
                 .send(eq(notificationsTopicService.getNotificationsTopic(ServiceType.TB_TRANSPORT, monolith2)), any(TbProtoQueueMsg.class), isNull());
     }
 
+    @NotNull
     protected Queue createTestQueue() {
         TenantId tenantId = TenantId.SYS_TENANT_ID;
-        Queue queue = new Queue(new QueueId(UUID.randomUUID()));
+        @NotNull Queue queue = new Queue(new QueueId(UUID.randomUUID()));
         queue.setTenantId(tenantId);
         queue.setName(DataConstants.MAIN_QUEUE_NAME);
         queue.setTopic("main");

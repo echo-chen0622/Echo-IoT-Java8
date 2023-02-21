@@ -14,6 +14,7 @@ import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.entitiy.widgets.bundle.TbWidgetsBundleService;
 import org.echoiot.server.service.security.permission.Operation;
 import org.echoiot.server.service.security.permission.Resource;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,6 +34,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WidgetsBundleController extends BaseController {
 
+    @NotNull
     private final TbWidgetsBundleService tbWidgetsBundleService;
 
     private static final String WIDGET_BUNDLE_DESCRIPTION = "Widget Bundle represents a group(bundle) of widgets. Widgets are grouped into bundle by type or use case. ";
@@ -43,11 +45,11 @@ public class WidgetsBundleController extends BaseController {
     @RequestMapping(value = "/widgetsBundle/{widgetsBundleId}", method = RequestMethod.GET)
     @ResponseBody
     public WidgetsBundle getWidgetsBundleById(
-            @ApiParam(value = ControllerConstants.WIDGET_BUNDLE_ID_PARAM_DESCRIPTION, required = true)
+            @NotNull @ApiParam(value = ControllerConstants.WIDGET_BUNDLE_ID_PARAM_DESCRIPTION, required = true)
             @PathVariable("widgetsBundleId") String strWidgetsBundleId) throws EchoiotException {
         checkParameter("widgetsBundleId", strWidgetsBundleId);
         try {
-            WidgetsBundleId widgetsBundleId = new WidgetsBundleId(toUUID(strWidgetsBundleId));
+            @NotNull WidgetsBundleId widgetsBundleId = new WidgetsBundleId(toUUID(strWidgetsBundleId));
             return checkWidgetsBundleId(widgetsBundleId, Operation.READ);
         } catch (Exception e) {
             throw handleException(e);
@@ -68,7 +70,7 @@ public class WidgetsBundleController extends BaseController {
     @RequestMapping(value = "/widgetsBundle", method = RequestMethod.POST)
     @ResponseBody
     public WidgetsBundle saveWidgetsBundle(
-            @ApiParam(value = "A JSON value representing the Widget Bundle.", required = true)
+            @NotNull @ApiParam(value = "A JSON value representing the Widget Bundle.", required = true)
             @RequestBody WidgetsBundle widgetsBundle) throws Exception {
         var currentUser = getCurrentUser();
         if (Authority.SYS_ADMIN.equals(currentUser.getAuthority())) {
@@ -88,10 +90,10 @@ public class WidgetsBundleController extends BaseController {
     @RequestMapping(value = "/widgetsBundle/{widgetsBundleId}", method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.OK)
     public void deleteWidgetsBundle(
-            @ApiParam(value = ControllerConstants.WIDGET_BUNDLE_ID_PARAM_DESCRIPTION, required = true)
+            @NotNull @ApiParam(value = ControllerConstants.WIDGET_BUNDLE_ID_PARAM_DESCRIPTION, required = true)
             @PathVariable("widgetsBundleId") String strWidgetsBundleId) throws EchoiotException {
         checkParameter("widgetsBundleId", strWidgetsBundleId);
-        WidgetsBundleId widgetsBundleId = new WidgetsBundleId(toUUID(strWidgetsBundleId));
+        @NotNull WidgetsBundleId widgetsBundleId = new WidgetsBundleId(toUUID(strWidgetsBundleId));
         WidgetsBundle widgetsBundle = checkWidgetsBundleId(widgetsBundleId, Operation.DELETE);
         tbWidgetsBundleService.delete(widgetsBundle);
     }
@@ -111,10 +113,10 @@ public class WidgetsBundleController extends BaseController {
             @RequestParam(required = false) String textSearch,
             @ApiParam(value = ControllerConstants.SORT_PROPERTY_DESCRIPTION, allowableValues = ControllerConstants.WIDGET_BUNDLE_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
-            @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
+            @NotNull @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortOrder) throws EchoiotException {
         try {
-            PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
+            @NotNull PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
             if (Authority.SYS_ADMIN.equals(getCurrentUser().getAuthority())) {
                 return checkNotNull(widgetsBundleService.findSystemWidgetsBundlesByPageLink(getTenantId(), pageLink));
             } else {

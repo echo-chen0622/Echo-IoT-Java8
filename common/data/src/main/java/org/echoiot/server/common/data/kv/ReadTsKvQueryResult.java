@@ -2,6 +2,7 @@ package org.echoiot.server.common.data.kv;
 
 import lombok.Data;
 import org.echoiot.server.common.data.query.TsValue;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,14 +12,16 @@ public class ReadTsKvQueryResult {
 
     private final int queryId;
     // Holds the data list;
+    @NotNull
     private final List<TsKvEntry> data;
     // Holds the max ts of the records that match aggregation intervals (not the ts of the aggregation window, but the ts of the last record among all the intervals)
     private final long lastEntryTs;
 
+    @NotNull
     public TsValue[] toTsValues() {
         if (data != null && !data.isEmpty()) {
-            List<TsValue> queryValues = new ArrayList<>();
-            for (TsKvEntry v : data) {
+            @NotNull List<TsValue> queryValues = new ArrayList<>();
+            for (@NotNull TsKvEntry v : data) {
                 queryValues.add(v.toTsValue()); // TODO: add count here.
             }
             return queryValues.toArray(new TsValue[queryValues.size()]);
@@ -27,7 +30,7 @@ public class ReadTsKvQueryResult {
         }
     }
 
-    public TsValue toTsValue(ReadTsKvQuery query) {
+    public TsValue toTsValue(@NotNull ReadTsKvQuery query) {
         if (data == null || data.isEmpty()) {
             if (Aggregation.SUM.equals(query.getAggregation()) || Aggregation.COUNT.equals(query.getAggregation())) {
                 long ts = query.getStartTs() + (query.getEndTs() - query.getStartTs()) / 2;

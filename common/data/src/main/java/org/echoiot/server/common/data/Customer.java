@@ -12,6 +12,7 @@ import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.validation.Length;
 import org.echoiot.server.common.data.validation.NoXss;
+import org.jetbrains.annotations.NotNull;
 
 @EqualsAndHashCode(callSuper = true)
 public class Customer extends ContactBased<CustomerId> implements HasTenantId, ExportableEntity<CustomerId> {
@@ -36,7 +37,7 @@ public class Customer extends ContactBased<CustomerId> implements HasTenantId, E
         super(id);
     }
 
-    public Customer(Customer customer) {
+    public Customer(@NotNull Customer customer) {
         super(customer);
         this.tenantId = customer.getTenantId();
         this.title = customer.getTitle();
@@ -137,6 +138,7 @@ public class Customer extends ContactBased<CustomerId> implements HasTenantId, E
         return false;
     }
 
+    @NotNull
     @JsonIgnore
     public ShortCustomerInfo toShortCustomerInfo() {
         return new ShortCustomerInfo(id, title, isPublic());
@@ -154,36 +156,36 @@ public class Customer extends ContactBased<CustomerId> implements HasTenantId, E
         return getTitle();
     }
 
+    @NotNull
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Customer [title=");
-        builder.append(title);
-        builder.append(", tenantId=");
-        builder.append(tenantId);
-        builder.append(", additionalInfo=");
-        builder.append(getAdditionalInfo());
-        builder.append(", country=");
-        builder.append(country);
-        builder.append(", state=");
-        builder.append(state);
-        builder.append(", city=");
-        builder.append(city);
-        builder.append(", address=");
-        builder.append(address);
-        builder.append(", address2=");
-        builder.append(address2);
-        builder.append(", zip=");
-        builder.append(zip);
-        builder.append(", phone=");
-        builder.append(phone);
-        builder.append(", email=");
-        builder.append(email);
-        builder.append(", createdTime=");
-        builder.append(createdTime);
-        builder.append(", id=");
-        builder.append(id);
-        builder.append("]");
-        return builder.toString();
+        String builder = "Customer [title=" +
+                         title +
+                         ", tenantId=" +
+                         tenantId +
+                         ", additionalInfo=" +
+                         getAdditionalInfo() +
+                         ", country=" +
+                         country +
+                         ", state=" +
+                         state +
+                         ", city=" +
+                         city +
+                         ", address=" +
+                         address +
+                         ", address2=" +
+                         address2 +
+                         ", zip=" +
+                         zip +
+                         ", phone=" +
+                         phone +
+                         ", email=" +
+                         email +
+                         ", createdTime=" +
+                         createdTime +
+                         ", id=" +
+                         id +
+                         "]";
+        return builder;
     }
 }

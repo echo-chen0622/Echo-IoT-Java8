@@ -4,6 +4,7 @@ import io.netty.channel.Channel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.mqtt.MqttVersion;
 import io.netty.handler.ssl.SslContext;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -13,10 +14,12 @@ import java.util.Random;
 public final class MqttClientConfig {
 
     private final SslContext sslContext;
+    @NotNull
     private final String randomClientId;
 
     private String clientId;
     private int timeoutSeconds = 60;
+    @NotNull
     private MqttVersion protocolVersion = MqttVersion.MQTT_3_1;
     @Nullable private String username = null;
     @Nullable private String password = null;
@@ -34,9 +37,9 @@ public final class MqttClientConfig {
 
     public MqttClientConfig(SslContext sslContext) {
         this.sslContext = sslContext;
-        Random random = new Random();
+        @NotNull Random random = new Random();
         String id = "netty-mqtt/";
-        String[] options = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".split("");
+        @NotNull String[] options = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".split("");
         for(int i = 0; i < 8; i++){
             id += options[random.nextInt(options.length)];
         }
@@ -72,7 +75,7 @@ public final class MqttClientConfig {
         return protocolVersion;
     }
 
-    public void setProtocolVersion(MqttVersion protocolVersion) {
+    public void setProtocolVersion(@NotNull MqttVersion protocolVersion) {
         if(protocolVersion == null){
             throw new NullPointerException("protocolVersion");
         }

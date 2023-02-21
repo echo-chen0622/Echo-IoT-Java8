@@ -17,6 +17,8 @@ import org.eclipse.californium.scandium.dtls.HandshakeResultHandler;
 import org.eclipse.californium.scandium.dtls.x509.NewAdvancedCertificateVerifier;
 import org.eclipse.californium.scandium.dtls.x509.StaticNewAdvancedCertificateVerifier;
 import org.eclipse.californium.scandium.util.ServerNames;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.echoiot.server.common.data.StringUtils;
@@ -44,7 +46,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TbLwM2MDtlsBootstrapCertificateVerifier implements NewAdvancedCertificateVerifier {
 
+    @NotNull
     private final LwM2MTransportServerConfig config;
+    @NotNull
     private final LwM2MBootstrapSecurityStore bsSecurityStore;
 
     private StaticNewAdvancedCertificateVerifier staticCertificateVerifier;
@@ -52,6 +56,7 @@ public class TbLwM2MDtlsBootstrapCertificateVerifier implements NewAdvancedCerti
     @Value("${transport.lwm2m.server.security.skip_validity_check_for_client_cert:false}")
     private boolean skipValidityCheckForClientCert;
 
+    @NotNull
     @Override
     public List<CertificateType> getSupportedCertificateTypes() {
         return Arrays.asList(CertificateType.X_509, CertificateType.RAW_PUBLIC_KEY);
@@ -71,10 +76,11 @@ public class TbLwM2MDtlsBootstrapCertificateVerifier implements NewAdvancedCerti
         }
     }
 
+    @NotNull
     @Override
-    public CertificateVerificationResult verifyCertificate(ConnectionId cid, ServerNames serverName, InetSocketAddress remotePeer,
+    public CertificateVerificationResult verifyCertificate(@NotNull ConnectionId cid, ServerNames serverName, InetSocketAddress remotePeer,
                                                            boolean clientUsage, boolean verifySubject, boolean truncateCertificatePath,
-                                                           CertificateMessage message) {
+                                                           @NotNull CertificateMessage message) {
         CertPath certChain = message.getCertificateChain();
         if (certChain == null) {
             //We trust all RPK on this layer, and use TbLwM2MAuthorizer
@@ -83,13 +89,13 @@ public class TbLwM2MDtlsBootstrapCertificateVerifier implements NewAdvancedCerti
         } else {
             try {
                 boolean x509CredentialsFound = false;
-                X509Certificate[] chain = certChain.getCertificates().toArray(new X509Certificate[0]);
-                for (X509Certificate cert : chain) {
+                @NotNull X509Certificate[] chain = certChain.getCertificates().toArray(new X509Certificate[0]);
+                for (@NotNull X509Certificate cert : chain) {
                     try {
                         if (!skipValidityCheckForClientCert) {
                             cert.checkValidity();
                         }
-                        TbLwM2MSecurityInfo securityInfo = null;
+                        @Nullable TbLwM2MSecurityInfo securityInfo = null;
                         // verify if trust
                         if (staticCertificateVerifier != null) {
                             HandshakeException exception = staticCertificateVerifier.verifyCertificate(cid, serverName, remotePeer, clientUsage, verifySubject, truncateCertificatePath, message).getException();
@@ -104,7 +110,7 @@ public class TbLwM2MDtlsBootstrapCertificateVerifier implements NewAdvancedCerti
                         }
                         // if not trust or cert trust securityInfo == null
                         if (securityInfo == null || securityInfo.getMsg() == null) {
-                            String strCert = SslUtil.getCertificateString(cert);
+                            @NotNull String strCert = SslUtil.getCertificateString(cert);
                             String sha3Hash = EncryptionUtil.getSha3Hash(strCert);
                             try {
                                 securityInfo = bsSecurityStore.getX509ByEndpoint(sha3Hash);
@@ -124,7 +130,7 @@ public class TbLwM2MDtlsBootstrapCertificateVerifier implements NewAdvancedCerti
                     }
                 }
                 if (!x509CredentialsFound) {
-                    AlertMessage alert = new AlertMessage(AlertMessage.AlertLevel.FATAL, AlertMessage.AlertDescription.INTERNAL_ERROR);
+                    @NotNull AlertMessage alert = new AlertMessage(AlertMessage.AlertLevel.FATAL, AlertMessage.AlertDescription.INTERNAL_ERROR);
                     throw new HandshakeException("x509 verification not enabled!", alert);
                 }
                 return new CertificateVerificationResult(cid, certChain, null);

@@ -17,6 +17,7 @@ import org.echoiot.server.common.data.id.AssetId;
 import org.echoiot.server.common.data.id.AssetProfileId;
 import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.id.TenantId;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
@@ -51,7 +52,7 @@ public class Asset extends SearchTextBasedWithAdditionalInfo<AssetId> implements
         super(id);
     }
 
-    public Asset(Asset asset) {
+    public Asset(@NotNull Asset asset) {
         super(asset);
         this.tenantId = asset.getTenantId();
         this.customerId = asset.getCustomerId();
@@ -62,7 +63,7 @@ public class Asset extends SearchTextBasedWithAdditionalInfo<AssetId> implements
         this.externalId = asset.getExternalId();
     }
 
-    public void update(Asset asset) {
+    public void update(@NotNull Asset asset) {
         this.tenantId = asset.getTenantId();
         this.customerId = asset.getCustomerId();
         this.name = asset.getName();
@@ -157,27 +158,26 @@ public class Asset extends SearchTextBasedWithAdditionalInfo<AssetId> implements
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Asset [tenantId=");
-        builder.append(tenantId);
-        builder.append(", customerId=");
-        builder.append(customerId);
-        builder.append(", name=");
-        builder.append(name);
-        builder.append(", type=");
-        builder.append(type);
-        builder.append(", label=");
-        builder.append(label);
-        builder.append(", assetProfileId=");
-        builder.append(assetProfileId);
-        builder.append(", additionalInfo=");
-        builder.append(getAdditionalInfo());
-        builder.append(", createdTime=");
-        builder.append(createdTime);
-        builder.append(", id=");
-        builder.append(id);
-        builder.append("]");
-        return builder.toString();
+        String builder = "Asset [tenantId=" +
+                         tenantId +
+                         ", customerId=" +
+                         customerId +
+                         ", name=" +
+                         name +
+                         ", type=" +
+                         type +
+                         ", label=" +
+                         label +
+                         ", assetProfileId=" +
+                         assetProfileId +
+                         ", additionalInfo=" +
+                         getAdditionalInfo() +
+                         ", createdTime=" +
+                         createdTime +
+                         ", id=" +
+                         id +
+                         "]";
+        return builder;
     }
 
 }

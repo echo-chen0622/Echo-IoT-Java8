@@ -5,6 +5,8 @@ import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.queue.util.TbCoreComponent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
@@ -26,7 +28,7 @@ public class Oauth2AuthenticationFailureHandler extends SimpleUrlAuthenticationF
     private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
     private final SystemSecurityService systemSecurityService;
 
-    @Autowired
+    @Resource
     public Oauth2AuthenticationFailureHandler(final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository,
                                               final SystemSecurityService systemSecurityService) {
         this.httpCookieOAuth2AuthorizationRequestRepository = httpCookieOAuth2AuthorizationRequestRepository;
@@ -35,11 +37,11 @@ public class Oauth2AuthenticationFailureHandler extends SimpleUrlAuthenticationF
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request,
-                                        HttpServletResponse response, AuthenticationException exception)
+                                        HttpServletResponse response, @NotNull AuthenticationException exception)
             throws IOException, ServletException {
         String baseUrl;
         String errorPrefix;
-        String callbackUrlScheme = null;
+        @Nullable String callbackUrlScheme = null;
         OAuth2AuthorizationRequest authorizationRequest = httpCookieOAuth2AuthorizationRequestRepository.loadAuthorizationRequest(request);
         if (authorizationRequest != null) {
             callbackUrlScheme = authorizationRequest.getAttribute(TbOAuth2ParameterNames.CALLBACK_URL_SCHEME);
@@ -53,6 +55,6 @@ public class Oauth2AuthenticationFailureHandler extends SimpleUrlAuthenticationF
         }
         httpCookieOAuth2AuthorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
         getRedirectStrategy().sendRedirect(request, response, baseUrl + errorPrefix +
-                URLEncoder.encode(exception.getMessage(), StandardCharsets.UTF_8.toString()));
+                URLEncoder.encode(exception.getMessage(), StandardCharsets.UTF_8));
     }
 }

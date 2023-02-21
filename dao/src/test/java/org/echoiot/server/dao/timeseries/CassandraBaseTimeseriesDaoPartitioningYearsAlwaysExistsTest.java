@@ -35,7 +35,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Slf4j
 public class CassandraBaseTimeseriesDaoPartitioningYearsAlwaysExistsTest {
 
-    @Autowired
+    @Resource
     CassandraBaseTimeseriesDao tsDao;
 
     @MockBean(answer = Answers.RETURNS_MOCKS)

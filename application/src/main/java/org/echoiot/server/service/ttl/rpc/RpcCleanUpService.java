@@ -11,6 +11,7 @@ import org.echoiot.server.dao.tenant.TbTenantProfileCache;
 import org.echoiot.server.dao.tenant.TenantService;
 import org.echoiot.server.queue.discovery.PartitionService;
 import org.echoiot.server.queue.util.TbCoreComponent;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -28,9 +29,13 @@ public class RpcCleanUpService {
     @Value("${sql.ttl.rpc.enabled}")
     private boolean ttlTaskExecutionEnabled;
 
+    @NotNull
     private final TenantService tenantService;
+    @NotNull
     private final PartitionService partitionService;
+    @NotNull
     private final TbTenantProfileCache tenantProfileCache;
+    @NotNull
     private final RpcDao rpcDao;
 
     @Scheduled(initialDelayString = "#{T(org.apache.commons.lang3.RandomUtils).nextLong(0, ${sql.ttl.rpc.checking_interval})}", fixedDelayString = "${sql.ttl.rpc.checking_interval}")
@@ -45,7 +50,7 @@ public class RpcCleanUpService {
                         continue;
                     }
 
-                    Optional<DefaultTenantProfileConfiguration> tenantProfileConfiguration = tenantProfileCache.get(tenantId).getProfileConfiguration();
+                    @NotNull Optional<DefaultTenantProfileConfiguration> tenantProfileConfiguration = tenantProfileCache.get(tenantId).getProfileConfiguration();
                     if (tenantProfileConfiguration.isEmpty() || tenantProfileConfiguration.get().getRpcTtlDays() == 0) {
                         continue;
                     }

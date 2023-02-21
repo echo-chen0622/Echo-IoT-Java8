@@ -11,6 +11,8 @@ import org.echoiot.server.common.data.sync.ThrowingRunnable;
 import org.echoiot.server.common.data.sync.ie.EntityImportResult;
 import org.echoiot.server.common.data.sync.ie.EntityImportSettings;
 import org.echoiot.server.common.data.sync.vc.EntityTypeLoadResult;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -75,19 +77,20 @@ public class EntitiesImportCtx {
         return getSettings().isSaveCredentials();
     }
 
-    public EntityId getInternalId(EntityId externalId) {
+    @Nullable
+    public EntityId getInternalId(@NotNull EntityId externalId) {
         var result = externalToInternalIdMap.get(externalId);
         log.debug("[{}][{}] Local cache {} for id", externalId.getEntityType(), externalId.getId(), result != null ? "hit" : "miss");
         return result;
     }
 
-    public void putInternalId(EntityId externalId, EntityId internalId) {
+    public void putInternalId(@NotNull EntityId externalId, EntityId internalId) {
         log.debug("[{}][{}] Local cache put: {}", externalId.getEntityType(), externalId.getId(), internalId);
         externalToInternalIdMap.put(externalId, internalId);
     }
 
     public void registerResult(EntityType entityType, boolean created) {
-        EntityTypeLoadResult result = results.computeIfAbsent(entityType, EntityTypeLoadResult::new);
+        @NotNull EntityTypeLoadResult result = results.computeIfAbsent(entityType, EntityTypeLoadResult::new);
         if (created) {
             result.setCreated(result.getCreated() + 1);
         } else {
@@ -96,21 +99,21 @@ public class EntitiesImportCtx {
     }
 
     public void registerDeleted(EntityType entityType) {
-        EntityTypeLoadResult result = results.computeIfAbsent(entityType, EntityTypeLoadResult::new);
+        @NotNull EntityTypeLoadResult result = results.computeIfAbsent(entityType, EntityTypeLoadResult::new);
         result.setDeleted(result.getDeleted() + 1);
     }
 
-    public void addRelations(Collection<EntityRelation> values) {
+    public void addRelations(@NotNull Collection<EntityRelation> values) {
         relations.addAll(values);
     }
 
-    public void addReferenceCallback(EntityId externalId, ThrowingRunnable tr) {
+    public void addReferenceCallback(EntityId externalId, @Nullable ThrowingRunnable tr) {
         if (tr != null) {
             referenceCallbacks.put(externalId, tr);
         }
     }
 
-    public void addEventCallback(ThrowingRunnable tr) {
+    public void addEventCallback(@Nullable ThrowingRunnable tr) {
         if (tr != null) {
             eventCallbacks.add(tr);
         }

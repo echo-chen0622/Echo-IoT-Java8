@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.queue.util.TbCoreComponent;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,7 +31,7 @@ public class RpcV1Controller extends AbstractRpcController {
     @RequestMapping(value = "/oneway/{deviceId}", method = RequestMethod.POST)
     @ResponseBody
     public DeferredResult<ResponseEntity> handleOneWayDeviceRPCRequest(
-            @ApiParam(value = ControllerConstants.DEVICE_ID_PARAM_DESCRIPTION)
+            @NotNull @ApiParam(value = ControllerConstants.DEVICE_ID_PARAM_DESCRIPTION)
             @PathVariable("deviceId") String deviceIdStr,
             @ApiParam(value = "A JSON value representing the RPC request.")
             @RequestBody String requestBody) throws EchoiotException {
@@ -42,7 +43,7 @@ public class RpcV1Controller extends AbstractRpcController {
     @RequestMapping(value = "/twoway/{deviceId}", method = RequestMethod.POST)
     @ResponseBody
     public DeferredResult<ResponseEntity> handleTwoWayDeviceRPCRequest(
-            @ApiParam(value = ControllerConstants.DEVICE_ID_PARAM_DESCRIPTION)
+            @NotNull @ApiParam(value = ControllerConstants.DEVICE_ID_PARAM_DESCRIPTION)
             @PathVariable("deviceId") String deviceIdStr,
             @ApiParam(value = "A JSON value representing the RPC request.")
             @RequestBody String requestBody) throws EchoiotException {

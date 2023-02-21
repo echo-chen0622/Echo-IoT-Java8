@@ -3,15 +3,17 @@ package org.echoiot.server.common.transport.limits;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.echoiot.server.common.msg.tools.TbRateLimits;
+import org.jetbrains.annotations.NotNull;
 
 @RequiredArgsConstructor
 public class SimpleTransportRateLimit implements TransportRateLimit {
 
+    @NotNull
     private final TbRateLimits rateLimit;
     @Getter
     private final String configuration;
 
-    public SimpleTransportRateLimit(String configuration) {
+    public SimpleTransportRateLimit(@NotNull String configuration) {
         this.configuration = configuration;
         this.rateLimit = new TbRateLimits(configuration);
     }

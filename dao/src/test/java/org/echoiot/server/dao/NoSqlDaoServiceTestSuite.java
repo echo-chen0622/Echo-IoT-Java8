@@ -1,6 +1,7 @@
 package org.echoiot.server.dao;
 
 import org.cassandraunit.dataset.cql.ClassPathCQLDataSet;
+import org.jetbrains.annotations.NotNull;
 import org.junit.ClassRule;
 import org.junit.extensions.cpsuite.ClasspathSuite;
 import org.junit.extensions.cpsuite.ClasspathSuite.ClassnameFilters;
@@ -14,6 +15,7 @@ import java.util.Arrays;
 })
 public class NoSqlDaoServiceTestSuite {
 
+    @NotNull
     @ClassRule
     public static CustomCassandraCQLUnit cassandraUnit =
             new CustomCassandraCQLUnit(

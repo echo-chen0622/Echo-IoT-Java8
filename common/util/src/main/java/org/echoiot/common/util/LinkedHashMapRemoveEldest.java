@@ -3,6 +3,7 @@ package org.echoiot.common.util;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -28,7 +29,7 @@ public class LinkedHashMapRemoveEldest<K, V> extends LinkedHashMap<K, V> {
     }
 
     @Override
-    protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
+    protected boolean removeEldestEntry(@NotNull Map.Entry<K, V> eldest) {
         if (size() <= maxEntries) {
             return false;
         }

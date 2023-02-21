@@ -12,6 +12,7 @@ import org.echoiot.server.common.data.DataConstants;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.session.SessionMsgType;
+import org.jetbrains.annotations.NotNull;
 
 @Slf4j
 @RuleNode(
@@ -31,12 +32,12 @@ public class TbMsgTypeSwitchNode implements TbNode {
     EmptyNodeConfiguration config;
 
     @Override
-    public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
+    public void init(TbContext ctx, @NotNull TbNodeConfiguration configuration) throws TbNodeException {
         this.config = TbNodeUtils.convert(configuration, EmptyNodeConfiguration.class);
     }
 
     @Override
-    public void onMsg(TbContext ctx, TbMsg msg) {
+    public void onMsg(@NotNull TbContext ctx, @NotNull TbMsg msg) {
         String relationType;
         if (msg.getType().equals(SessionMsgType.POST_ATTRIBUTES_REQUEST.name())) {
             relationType = "Post attributes";

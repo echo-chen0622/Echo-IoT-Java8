@@ -15,6 +15,7 @@ import org.echoiot.server.dao.model.BaseSqlEntity;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.model.SearchTextEntity;
 import org.echoiot.server.dao.util.mapping.JsonStringType;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -66,7 +67,7 @@ public class RuleChainEntity extends BaseSqlEntity<RuleChain> implements SearchT
     public RuleChainEntity() {
     }
 
-    public RuleChainEntity(RuleChain ruleChain) {
+    public RuleChainEntity(@NotNull RuleChain ruleChain) {
         if (ruleChain.getId() != null) {
             this.setUuid(ruleChain.getUuidId());
         }
@@ -97,9 +98,10 @@ public class RuleChainEntity extends BaseSqlEntity<RuleChain> implements SearchT
         this.searchText = searchText;
     }
 
+    @NotNull
     @Override
     public RuleChain toData() {
-        RuleChain ruleChain = new RuleChain(new RuleChainId(this.getUuid()));
+        @NotNull RuleChain ruleChain = new RuleChain(new RuleChainId(this.getUuid()));
         ruleChain.setCreatedTime(createdTime);
         ruleChain.setTenantId(TenantId.fromUUID(tenantId));
         ruleChain.setName(name);

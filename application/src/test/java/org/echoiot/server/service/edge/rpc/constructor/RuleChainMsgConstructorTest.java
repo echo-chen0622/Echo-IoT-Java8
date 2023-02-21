@@ -3,6 +3,7 @@ package org.echoiot.server.service.edge.rpc.constructor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,8 +43,8 @@ public class RuleChainMsgConstructorTest {
 
     @Test
     public void testConstructRuleChainMetadataUpdatedMsg_V_3_4_0() throws JsonProcessingException {
-        RuleChainId ruleChainId = new RuleChainId(UUID.randomUUID());
-        RuleChainMetaData ruleChainMetaData = createRuleChainMetaData(
+        @NotNull RuleChainId ruleChainId = new RuleChainId(UUID.randomUUID());
+        @NotNull RuleChainMetaData ruleChainMetaData = createRuleChainMetaData(
                 ruleChainId, 3, createRuleNodes(ruleChainId), createConnections());
         RuleChainMetadataUpdateMsg ruleChainMetadataUpdateMsg =
                 constructor.constructRuleChainMetadataUpdatedMsg(
@@ -61,8 +62,8 @@ public class RuleChainMsgConstructorTest {
 
     @Test
     public void testConstructRuleChainMetadataUpdatedMsg_V_3_3_3() throws JsonProcessingException {
-        RuleChainId ruleChainId = new RuleChainId(UUID.randomUUID());
-        RuleChainMetaData ruleChainMetaData = createRuleChainMetaData(
+        @NotNull RuleChainId ruleChainId = new RuleChainId(UUID.randomUUID());
+        @NotNull RuleChainMetaData ruleChainMetaData = createRuleChainMetaData(
                 ruleChainId, 3, createRuleNodes(ruleChainId), createConnections());
         RuleChainMetadataUpdateMsg ruleChainMetadataUpdateMsg =
                 constructor.constructRuleChainMetadataUpdatedMsg(
@@ -78,7 +79,7 @@ public class RuleChainMsgConstructorTest {
                 "{\"queueName\":\"HighPriority\"}");
     }
 
-    private void assetV_3_3_3_and_V_3_4_0(RuleChainMetadataUpdateMsg ruleChainMetadataUpdateMsg) {
+    private void assetV_3_3_3_and_V_3_4_0(@NotNull RuleChainMetadataUpdateMsg ruleChainMetadataUpdateMsg) {
         Assert.assertEquals("First rule node index incorrect!", 3, ruleChainMetadataUpdateMsg.getFirstNodeIndex());
         Assert.assertEquals("Nodes count incorrect!", 12, ruleChainMetadataUpdateMsg.getNodesCount());
         Assert.assertEquals("Connections count incorrect!", 13, ruleChainMetadataUpdateMsg.getConnectionsCount());
@@ -101,8 +102,8 @@ public class RuleChainMsgConstructorTest {
 
     @Test
     public void testConstructRuleChainMetadataUpdatedMsg_V_3_3_0() throws JsonProcessingException {
-        RuleChainId ruleChainId = new RuleChainId(UUID.randomUUID());
-        RuleChainMetaData ruleChainMetaData = createRuleChainMetaData(ruleChainId, 3, createRuleNodes(ruleChainId), createConnections());
+        @NotNull RuleChainId ruleChainId = new RuleChainId(UUID.randomUUID());
+        @NotNull RuleChainMetaData ruleChainMetaData = createRuleChainMetaData(ruleChainId, 3, createRuleNodes(ruleChainId), createConnections());
         RuleChainMetadataUpdateMsg ruleChainMetadataUpdateMsg =
                 constructor.constructRuleChainMetadataUpdatedMsg(
                         tenantId,
@@ -126,7 +127,7 @@ public class RuleChainMsgConstructorTest {
         compareNodeConnectionInfoAndProto(createNodeConnectionInfo(5, 8, "RPC Request to Device"), ruleChainMetadataUpdateMsg.getConnections(8));
         compareNodeConnectionInfoAndProto(createNodeConnectionInfo(6, 9, "Success"), ruleChainMetadataUpdateMsg.getConnections(9));
 
-        RuleChainConnectionInfoProto ruleChainConnection = ruleChainMetadataUpdateMsg.getRuleChainConnections(0);
+        @NotNull RuleChainConnectionInfoProto ruleChainConnection = ruleChainMetadataUpdateMsg.getRuleChainConnections(0);
         Assert.assertEquals("From index incorrect!", 2, ruleChainConnection.getFromIndex());
         Assert.assertEquals("Type index incorrect!", "Success", ruleChainConnection.getType());
         Assert.assertEquals("Additional info incorrect!",
@@ -143,8 +144,8 @@ public class RuleChainMsgConstructorTest {
     @Test
     public void testConstructRuleChainMetadataUpdatedMsg_V_3_3_0_inDifferentOrder() throws JsonProcessingException {
         // same rule chain metadata, but different order of rule nodes
-        RuleChainId ruleChainId = new RuleChainId(UUID.randomUUID());
-        RuleChainMetaData ruleChainMetaData1 = createRuleChainMetaData(ruleChainId, 8, createRuleNodesInDifferentOrder(ruleChainId), createConnectionsInDifferentOrder());
+        @NotNull RuleChainId ruleChainId = new RuleChainId(UUID.randomUUID());
+        @NotNull RuleChainMetaData ruleChainMetaData1 = createRuleChainMetaData(ruleChainId, 8, createRuleNodesInDifferentOrder(ruleChainId), createConnectionsInDifferentOrder());
         RuleChainMetadataUpdateMsg ruleChainMetadataUpdateMsg =
                 constructor.constructRuleChainMetadataUpdatedMsg(
                         tenantId,
@@ -168,7 +169,7 @@ public class RuleChainMsgConstructorTest {
         compareNodeConnectionInfoAndProto(createNodeConnectionInfo(6, 0, "Success"), ruleChainMetadataUpdateMsg.getConnections(8));
         compareNodeConnectionInfoAndProto(createNodeConnectionInfo(7, 4, "Success"), ruleChainMetadataUpdateMsg.getConnections(9));
 
-        RuleChainConnectionInfoProto ruleChainConnection = ruleChainMetadataUpdateMsg.getRuleChainConnections(0);
+        @NotNull RuleChainConnectionInfoProto ruleChainConnection = ruleChainMetadataUpdateMsg.getRuleChainConnections(0);
         Assert.assertEquals("From index incorrect!", 7, ruleChainConnection.getFromIndex());
         Assert.assertEquals("Type index incorrect!", "Success", ruleChainConnection.getType());
         Assert.assertEquals("Additional info incorrect!",
@@ -182,24 +183,25 @@ public class RuleChainMsgConstructorTest {
                 "{\"queueName\":\"HighPriority\"}");
     }
 
-    private void assertCheckpointRuleNodeConfiguration(List<RuleNodeProto> nodesList,
+    private void assertCheckpointRuleNodeConfiguration(@NotNull List<RuleNodeProto> nodesList,
                                                        String expectedConfiguration) {
-        Optional<RuleNodeProto> checkpointRuleNodeOpt = nodesList.stream()
-                .filter(rn -> "org.echoiot.rule.engine.flow.TbCheckpointNode".equals(rn.getType()))
-                .findFirst();
+        @NotNull Optional<RuleNodeProto> checkpointRuleNodeOpt = nodesList.stream()
+                                                                          .filter(rn -> "org.echoiot.rule.engine.flow.TbCheckpointNode".equals(rn.getType()))
+                                                                          .findFirst();
         Assert.assertTrue(checkpointRuleNodeOpt.isPresent());
-        RuleNodeProto checkpointRuleNode = checkpointRuleNodeOpt.get();
+        @NotNull RuleNodeProto checkpointRuleNode = checkpointRuleNodeOpt.get();
         Assert.assertEquals(expectedConfiguration, checkpointRuleNode.getConfiguration());
     }
 
-    private void compareNodeConnectionInfoAndProto(NodeConnectionInfo expected, org.echoiot.server.gen.edge.v1.NodeConnectionInfoProto actual) {
+    private void compareNodeConnectionInfoAndProto(@NotNull NodeConnectionInfo expected, @NotNull org.echoiot.server.gen.edge.v1.NodeConnectionInfoProto actual) {
         Assert.assertEquals(expected.getFromIndex(), actual.getFromIndex());
         Assert.assertEquals(expected.getToIndex(), actual.getToIndex());
         Assert.assertEquals(expected.getType(), actual.getType());
     }
 
+    @NotNull
     private RuleChainMetaData createRuleChainMetaData(RuleChainId ruleChainId, Integer firstNodeIndex, List<RuleNode> nodes, List<NodeConnectionInfo> connections) {
-        RuleChainMetaData ruleChainMetaData = new RuleChainMetaData();
+        @NotNull RuleChainMetaData ruleChainMetaData = new RuleChainMetaData();
         ruleChainMetaData.setRuleChainId(ruleChainId);
         ruleChainMetaData.setFirstNodeIndex(firstNodeIndex);
         ruleChainMetaData.setNodes(nodes);
@@ -208,8 +210,9 @@ public class RuleChainMsgConstructorTest {
         return ruleChainMetaData;
     }
 
+    @NotNull
     private List<NodeConnectionInfo> createConnections() {
-        List<NodeConnectionInfo> result = new ArrayList<>();
+        @NotNull List<NodeConnectionInfo> result = new ArrayList<>();
         result.add(createNodeConnectionInfo(3, 6, "Success"));
         result.add(createNodeConnectionInfo(3, 10, "Success"));
         result.add(createNodeConnectionInfo(3, 0, "Success"));
@@ -226,16 +229,18 @@ public class RuleChainMsgConstructorTest {
         return result;
     }
 
+    @NotNull
     private NodeConnectionInfo createNodeConnectionInfo(int fromIndex, int toIndex, String type) {
-        NodeConnectionInfo result = new NodeConnectionInfo();
+        @NotNull NodeConnectionInfo result = new NodeConnectionInfo();
         result.setFromIndex(fromIndex);
         result.setToIndex(toIndex);
         result.setType(type);
         return result;
     }
 
+    @NotNull
     private List<RuleNode> createRuleNodes(RuleChainId ruleChainId) throws JsonProcessingException {
-        List<RuleNode> result = new ArrayList<>();
+        @NotNull List<RuleNode> result = new ArrayList<>();
         result.add(getOutputNode(ruleChainId));
         result.add(getAcknowledgeNode(ruleChainId));
         result.add(getCheckpointNode(ruleChainId));
@@ -251,8 +256,9 @@ public class RuleChainMsgConstructorTest {
         return result;
     }
 
+    @NotNull
     private RuleNode createRuleNode(RuleChainId ruleChainId, String type, String name, JsonNode configuration, JsonNode additionalInfo) {
-        RuleNode e = new RuleNode();
+        @NotNull RuleNode e = new RuleNode();
         e.setRuleChainId(ruleChainId);
         e.setType(type);
         e.setName(name);
@@ -263,8 +269,9 @@ public class RuleChainMsgConstructorTest {
         return e;
     }
 
+    @NotNull
     private List<NodeConnectionInfo> createConnectionsInDifferentOrder() {
-        List<NodeConnectionInfo> result = new ArrayList<>();
+        @NotNull List<NodeConnectionInfo> result = new ArrayList<>();
         result.add(createNodeConnectionInfo(0, 2, "RPC"));
         result.add(createNodeConnectionInfo(4, 1, "Success"));
         result.add(createNodeConnectionInfo(5, 1, "Attributes Updated"));
@@ -281,8 +288,9 @@ public class RuleChainMsgConstructorTest {
         return result;
     }
 
+    @NotNull
     private List<RuleNode> createRuleNodesInDifferentOrder(RuleChainId ruleChainId) throws JsonProcessingException {
-        List<RuleNode> result = new ArrayList<>();
+        @NotNull List<RuleNode> result = new ArrayList<>();
         result.add(getPushToAnalyticsNode(ruleChainId));
         result.add(getPushToCloudNode(ruleChainId));
         result.add(getRpcCallRequestNode(ruleChainId));
@@ -299,6 +307,7 @@ public class RuleChainMsgConstructorTest {
     }
 
 
+    @NotNull
     private RuleNode getOutputNode(RuleChainId ruleChainId) throws JsonProcessingException {
         return createRuleNode(ruleChainId,
                 "org.echoiot.rule.engine.flow.TbRuleChainOutputNode",
@@ -307,6 +316,7 @@ public class RuleChainMsgConstructorTest {
                 JacksonUtil.OBJECT_MAPPER.readTree("{\"description\":\"\",\"layoutX\":178,\"layoutY\":592}"));
     }
 
+    @NotNull
     private RuleNode getCheckpointNode(RuleChainId ruleChainId) throws JsonProcessingException {
         return createRuleNode(ruleChainId,
                 "org.echoiot.rule.engine.flow.TbCheckpointNode",
@@ -315,6 +325,7 @@ public class RuleChainMsgConstructorTest {
                 JacksonUtil.OBJECT_MAPPER.readTree("{\"description\":\"\",\"layoutX\":178,\"layoutY\":647}"));
     }
 
+    @NotNull
     private RuleNode getSaveTimeSeriesNode(RuleChainId ruleChainId) throws JsonProcessingException {
         return createRuleNode(ruleChainId,
                 "org.echoiot.rule.engine.telemetry.TbMsgTimeseriesNode",
@@ -323,6 +334,7 @@ public class RuleChainMsgConstructorTest {
                 JacksonUtil.OBJECT_MAPPER.readTree("{\"layoutX\":823,\"layoutY\":157}"));
     }
 
+    @NotNull
     private RuleNode getMessageTypeSwitchNode(RuleChainId ruleChainId) throws JsonProcessingException {
         return createRuleNode(ruleChainId,
                 "org.echoiot.rule.engine.filter.TbMsgTypeSwitchNode",
@@ -331,6 +343,7 @@ public class RuleChainMsgConstructorTest {
                 JacksonUtil.OBJECT_MAPPER.readTree("{\"layoutX\":347,\"layoutY\":149}"));
     }
 
+    @NotNull
     private RuleNode getLogOtherNode(RuleChainId ruleChainId) throws JsonProcessingException {
         return createRuleNode(ruleChainId,
                 "org.echoiot.rule.engine.action.TbLogNode",
@@ -339,6 +352,7 @@ public class RuleChainMsgConstructorTest {
                 JacksonUtil.OBJECT_MAPPER.readTree("{\"layoutX\":824,\"layoutY\":378}"));
     }
 
+    @NotNull
     private RuleNode getPushToCloudNode(RuleChainId ruleChainId) throws JsonProcessingException {
         return createRuleNode(ruleChainId,
                 "org.echoiot.rule.engine.edge.TbMsgPushToCloudNode",
@@ -347,6 +361,7 @@ public class RuleChainMsgConstructorTest {
                 JacksonUtil.OBJECT_MAPPER.readTree("{\"layoutX\":1129,\"layoutY\":52}"));
     }
 
+    @NotNull
     private RuleNode getAcknowledgeNode(RuleChainId ruleChainId) throws JsonProcessingException {
         return createRuleNode(ruleChainId,
                 "org.echoiot.rule.engine.flow.TbAckNode",
@@ -355,6 +370,7 @@ public class RuleChainMsgConstructorTest {
                 JacksonUtil.OBJECT_MAPPER.readTree("{\"description\":\"\",\"layoutX\":177,\"layoutY\":703}"));
     }
 
+    @NotNull
     private RuleNode getDeviceProfileNode(RuleChainId ruleChainId) throws JsonProcessingException {
         return createRuleNode(ruleChainId,
                 "org.echoiot.rule.engine.profile.TbDeviceProfileNode",
@@ -363,6 +379,7 @@ public class RuleChainMsgConstructorTest {
                 JacksonUtil.OBJECT_MAPPER.readTree("{\"description\":\"Process incoming messages from devices with the alarm rules defined in the device profile. Dispatch all incoming messages with \\\"Success\\\" relation type.\",\"layoutX\":187,\"layoutY\":468}"));
     }
 
+    @NotNull
     private RuleNode getSaveClientAttributesNode(RuleChainId ruleChainId) throws JsonProcessingException {
         return createRuleNode(ruleChainId,
                 "org.echoiot.rule.engine.telemetry.TbMsgAttributesNode",
@@ -371,6 +388,7 @@ public class RuleChainMsgConstructorTest {
                 JacksonUtil.OBJECT_MAPPER.readTree("{\"layoutX\":824,\"layoutY\":52}"));
     }
 
+    @NotNull
     private RuleNode getLogRpcFromDeviceNode(RuleChainId ruleChainId) throws JsonProcessingException {
         return createRuleNode(ruleChainId,
                 "org.echoiot.rule.engine.action.TbLogNode",
@@ -379,6 +397,7 @@ public class RuleChainMsgConstructorTest {
                 JacksonUtil.OBJECT_MAPPER.readTree("{\"layoutX\":825,\"layoutY\":266}"));
     }
 
+    @NotNull
     private RuleNode getRpcCallRequestNode(RuleChainId ruleChainId) throws JsonProcessingException {
         return createRuleNode(ruleChainId,
                 "org.echoiot.rule.engine.rpc.TbSendRPCRequestNode",
@@ -387,6 +406,7 @@ public class RuleChainMsgConstructorTest {
                 JacksonUtil.OBJECT_MAPPER.readTree("{\"layoutX\":824,\"layoutY\":466}"));
     }
 
+    @NotNull
     private RuleNode getPushToAnalyticsNode(RuleChainId ruleChainId) throws JsonProcessingException {
         return createRuleNode(ruleChainId,
                 "org.echoiot.rule.engine.flow.TbRuleChainInputNode",

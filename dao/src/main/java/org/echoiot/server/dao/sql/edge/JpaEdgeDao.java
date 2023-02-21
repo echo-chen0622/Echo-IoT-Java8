@@ -4,6 +4,8 @@ import com.google.common.util.concurrent.ListenableFuture;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.dao.model.sql.EdgeEntity;
 import org.echoiot.server.dao.model.sql.EdgeInfoEntity;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
@@ -31,9 +33,10 @@ import java.util.UUID;
 @SqlDao
 public class JpaEdgeDao extends JpaAbstractSearchTextDao<EdgeEntity, Edge> implements EdgeDao {
 
-    @Autowired
+    @Resource
     private EdgeRepository edgeRepository;
 
+    @NotNull
     @Override
     protected Class<EdgeEntity> getEntityClass() {
         return EdgeEntity.class;
@@ -49,8 +52,9 @@ public class JpaEdgeDao extends JpaAbstractSearchTextDao<EdgeEntity, Edge> imple
         return DaoUtil.getData(edgeRepository.findEdgeInfoById(edgeId));
     }
 
+    @NotNull
     @Override
-    public PageData<Edge> findEdgesByTenantId(UUID tenantId, PageLink pageLink) {
+    public PageData<Edge> findEdgesByTenantId(UUID tenantId, @NotNull PageLink pageLink) {
         return DaoUtil.toPageData(
                 edgeRepository.findByTenantId(
                         tenantId,
@@ -63,8 +67,9 @@ public class JpaEdgeDao extends JpaAbstractSearchTextDao<EdgeEntity, Edge> imple
         return service.submit(() -> DaoUtil.convertDataList(edgeRepository.findEdgesByTenantIdAndIdIn(tenantId, edgeIds)));
     }
 
+    @NotNull
     @Override
-    public PageData<Edge> findEdgesByTenantIdAndCustomerId(UUID tenantId, UUID customerId, PageLink pageLink) {
+    public PageData<Edge> findEdgesByTenantIdAndCustomerId(UUID tenantId, UUID customerId, @NotNull PageLink pageLink) {
         return DaoUtil.toPageData(
                 edgeRepository.findByTenantIdAndCustomerId(
                         tenantId,
@@ -79,14 +84,16 @@ public class JpaEdgeDao extends JpaAbstractSearchTextDao<EdgeEntity, Edge> imple
                 edgeRepository.findEdgesByTenantIdAndCustomerIdAndIdIn(tenantId, customerId, edgeIds)));
     }
 
+    @NotNull
     @Override
     public Optional<Edge> findEdgeByTenantIdAndName(UUID tenantId, String name) {
         Edge edge = DaoUtil.getData(edgeRepository.findByTenantIdAndName(tenantId, name));
         return Optional.ofNullable(edge);
     }
 
+    @NotNull
     @Override
-    public PageData<Edge> findEdgesByTenantIdAndType(UUID tenantId, String type, PageLink pageLink) {
+    public PageData<Edge> findEdgesByTenantIdAndType(UUID tenantId, String type, @NotNull PageLink pageLink) {
         return DaoUtil.toPageData(
                 edgeRepository.findByTenantIdAndType(
                         tenantId,
@@ -95,8 +102,9 @@ public class JpaEdgeDao extends JpaAbstractSearchTextDao<EdgeEntity, Edge> imple
                         DaoUtil.toPageable(pageLink)));
     }
 
+    @NotNull
     @Override
-    public PageData<Edge> findEdgesByTenantIdAndCustomerIdAndType(UUID tenantId, UUID customerId, String type, PageLink pageLink) {
+    public PageData<Edge> findEdgesByTenantIdAndCustomerIdAndType(UUID tenantId, UUID customerId, String type, @NotNull PageLink pageLink) {
         return DaoUtil.toPageData(
                 edgeRepository.findByTenantIdAndCustomerIdAndType(
                         tenantId,
@@ -106,8 +114,9 @@ public class JpaEdgeDao extends JpaAbstractSearchTextDao<EdgeEntity, Edge> imple
                         DaoUtil.toPageable(pageLink)));
     }
 
+    @NotNull
     @Override
-    public PageData<EdgeInfo> findEdgeInfosByTenantIdAndCustomerId(UUID tenantId, UUID customerId, PageLink pageLink) {
+    public PageData<EdgeInfo> findEdgeInfosByTenantIdAndCustomerId(UUID tenantId, UUID customerId, @NotNull PageLink pageLink) {
         return DaoUtil.toPageData(
                 edgeRepository.findEdgeInfosByTenantIdAndCustomerId(
                         tenantId,
@@ -116,8 +125,9 @@ public class JpaEdgeDao extends JpaAbstractSearchTextDao<EdgeEntity, Edge> imple
                         DaoUtil.toPageable(pageLink, EdgeInfoEntity.edgeInfoColumnMap)));
     }
 
+    @NotNull
     @Override
-    public PageData<EdgeInfo> findEdgeInfosByTenantIdAndCustomerIdAndType(UUID tenantId, UUID customerId, String type, PageLink pageLink) {
+    public PageData<EdgeInfo> findEdgeInfosByTenantIdAndCustomerIdAndType(UUID tenantId, UUID customerId, String type, @NotNull PageLink pageLink) {
         return DaoUtil.toPageData(
                 edgeRepository.findEdgeInfosByTenantIdAndCustomerIdAndType(
                         tenantId,
@@ -132,8 +142,9 @@ public class JpaEdgeDao extends JpaAbstractSearchTextDao<EdgeEntity, Edge> imple
         return service.submit(() -> convertTenantEdgeTypesToDto(tenantId, edgeRepository.findTenantEdgeTypes(tenantId)));
     }
 
+    @NotNull
     @Override
-    public PageData<EdgeInfo> findEdgeInfosByTenantIdAndType(UUID tenantId, String type, PageLink pageLink) {
+    public PageData<EdgeInfo> findEdgeInfosByTenantIdAndType(UUID tenantId, String type, @NotNull PageLink pageLink) {
         return DaoUtil.toPageData(
                 edgeRepository.findEdgeInfosByTenantIdAndType(
                         tenantId,
@@ -142,8 +153,9 @@ public class JpaEdgeDao extends JpaAbstractSearchTextDao<EdgeEntity, Edge> imple
                         DaoUtil.toPageable(pageLink, EdgeInfoEntity.edgeInfoColumnMap)));
     }
 
+    @NotNull
     @Override
-    public PageData<EdgeInfo> findEdgeInfosByTenantId(UUID tenantId, PageLink pageLink) {
+    public PageData<EdgeInfo> findEdgeInfosByTenantId(UUID tenantId, @NotNull PageLink pageLink) {
         return DaoUtil.toPageData(
                 edgeRepository.findEdgeInfosByTenantId(
                         tenantId,
@@ -151,14 +163,16 @@ public class JpaEdgeDao extends JpaAbstractSearchTextDao<EdgeEntity, Edge> imple
                         DaoUtil.toPageable(pageLink, EdgeInfoEntity.edgeInfoColumnMap)));
     }
 
+    @NotNull
     @Override
     public Optional<Edge> findByRoutingKey(UUID tenantId, String routingKey) {
         Edge edge = DaoUtil.getData(edgeRepository.findByRoutingKey(routingKey));
         return Optional.ofNullable(edge);
     }
 
+    @NotNull
     @Override
-    public PageData<Edge> findEdgesByTenantIdAndEntityId(UUID tenantId, UUID entityId, EntityType entityType, PageLink pageLink) {
+    public PageData<Edge> findEdgesByTenantIdAndEntityId(UUID tenantId, UUID entityId, @NotNull EntityType entityType, @NotNull PageLink pageLink) {
         log.debug("Try to find edges by tenantId [{}], entityId [{}], entityType [{}], pageLink [{}]", tenantId, entityId, entityType, pageLink);
         return DaoUtil.toPageData(
                 edgeRepository.findByTenantIdAndEntityId(
@@ -169,8 +183,9 @@ public class JpaEdgeDao extends JpaAbstractSearchTextDao<EdgeEntity, Edge> imple
                         DaoUtil.toPageable(pageLink)));
     }
 
-    private List<EntitySubtype> convertTenantEdgeTypesToDto(UUID tenantId, List<String> types) {
-        List<EntitySubtype> list = Collections.emptyList();
+    @NotNull
+    private List<EntitySubtype> convertTenantEdgeTypesToDto(UUID tenantId, @Nullable List<String> types) {
+        @NotNull List<EntitySubtype> list = Collections.emptyList();
         if (types != null && !types.isEmpty()) {
             list = new ArrayList<>();
             for (String type : types) {
@@ -180,6 +195,7 @@ public class JpaEdgeDao extends JpaAbstractSearchTextDao<EdgeEntity, Edge> imple
         return list;
     }
 
+    @NotNull
     @Override
     public EntityType getEntityType() {
         return EntityType.EDGE;

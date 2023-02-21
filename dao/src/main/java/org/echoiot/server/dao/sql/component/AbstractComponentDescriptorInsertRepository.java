@@ -3,6 +3,8 @@ package org.echoiot.server.dao.sql.component;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.dao.model.sql.ComponentDescriptorEntity;
 import org.hibernate.exception.ConstraintViolationException;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -20,12 +22,13 @@ public abstract class AbstractComponentDescriptorInsertRepository implements Com
     @PersistenceContext
     protected EntityManager entityManager;
 
-    @Autowired
+    @Resource
     protected PlatformTransactionManager transactionManager;
 
-    protected ComponentDescriptorEntity saveAndGet(ComponentDescriptorEntity entity, String insertOrUpdateOnPrimaryKeyConflict, String insertOrUpdateOnUniqueKeyConflict) {
-        ComponentDescriptorEntity componentDescriptorEntity = null;
-        TransactionStatus insertTransaction = getTransactionStatus(TransactionDefinition.PROPAGATION_REQUIRED);
+    @Nullable
+    protected ComponentDescriptorEntity saveAndGet(@NotNull ComponentDescriptorEntity entity, String insertOrUpdateOnPrimaryKeyConflict, String insertOrUpdateOnUniqueKeyConflict) {
+        @Nullable ComponentDescriptorEntity componentDescriptorEntity = null;
+        @NotNull TransactionStatus insertTransaction = getTransactionStatus(TransactionDefinition.PROPAGATION_REQUIRED);
         try {
             componentDescriptorEntity = processSaveOrUpdate(entity, insertOrUpdateOnPrimaryKeyConflict);
             transactionManager.commit(insertTransaction);
@@ -33,7 +36,7 @@ public abstract class AbstractComponentDescriptorInsertRepository implements Com
             transactionManager.rollback(insertTransaction);
             if (throwable.getCause() instanceof ConstraintViolationException) {
                 log.trace("Insert request leaded in a violation of a defined integrity constraint {} for Component Descriptor with id {}, name {} and entityType {}", throwable.getMessage(), entity.getUuid(), entity.getName(), entity.getType());
-                TransactionStatus transaction = getTransactionStatus(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+                @NotNull TransactionStatus transaction = getTransactionStatus(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
                 try {
                     componentDescriptorEntity = processSaveOrUpdate(entity, insertOrUpdateOnUniqueKeyConflict);
                     transactionManager.commit(transaction);
@@ -51,7 +54,7 @@ public abstract class AbstractComponentDescriptorInsertRepository implements Com
     @Modifying
     protected abstract ComponentDescriptorEntity doProcessSaveOrUpdate(ComponentDescriptorEntity entity, String query);
 
-    protected Query getQuery(ComponentDescriptorEntity entity, String query) {
+    protected Query getQuery(@NotNull ComponentDescriptorEntity entity, String query) {
         return entityManager.createNativeQuery(query, ComponentDescriptorEntity.class)
                 .setParameter("id", entity.getUuid())
                 .setParameter("created_time", entity.getCreatedTime())
@@ -68,8 +71,9 @@ public abstract class AbstractComponentDescriptorInsertRepository implements Com
         return doProcessSaveOrUpdate(entity, query);
     }
 
+    @NotNull
     private TransactionStatus getTransactionStatus(int propagationRequired) {
-        DefaultTransactionDefinition insertDefinition = new DefaultTransactionDefinition();
+        @NotNull DefaultTransactionDefinition insertDefinition = new DefaultTransactionDefinition();
         insertDefinition.setPropagationBehavior(propagationRequired);
         return transactionManager.getTransaction(insertDefinition);
     }

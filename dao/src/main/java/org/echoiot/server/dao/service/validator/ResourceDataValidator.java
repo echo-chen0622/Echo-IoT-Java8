@@ -11,6 +11,8 @@ import org.echoiot.server.dao.resource.TbResourceDao;
 import org.echoiot.server.dao.service.DataValidator;
 import org.echoiot.server.dao.tenant.TbTenantProfileCache;
 import org.echoiot.server.dao.tenant.TenantService;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -18,18 +20,18 @@ import org.springframework.stereotype.Component;
 @Component
 public class ResourceDataValidator extends DataValidator<TbResource> {
 
-    @Autowired
+    @Resource
     private TbResourceDao resourceDao;
 
-    @Autowired
+    @Resource
     private TenantService tenantService;
 
-    @Autowired
+    @Resource
     @Lazy
     private TbTenantProfileCache tenantProfileCache;
 
     @Override
-    protected void validateCreate(TenantId tenantId, TbResource resource) {
+    protected void validateCreate(@Nullable TenantId tenantId, @NotNull TbResource resource) {
         if (tenantId != null && !TenantId.SYS_TENANT_ID.equals(tenantId)) {
             DefaultTenantProfileConfiguration profileConfiguration =
                     (DefaultTenantProfileConfiguration) tenantProfileCache.get(tenantId).getProfileData().getConfiguration();
@@ -39,7 +41,7 @@ public class ResourceDataValidator extends DataValidator<TbResource> {
     }
 
     @Override
-    protected void validateDataImpl(TenantId tenantId, TbResource resource) {
+    protected void validateDataImpl(TenantId tenantId, @NotNull TbResource resource) {
         if (StringUtils.isEmpty(resource.getTitle())) {
             throw new DataValidationException("Resource title should be specified!");
         }

@@ -29,11 +29,11 @@ public class MqttTransportContext extends TransportContext {
     private MqttSslHandlerProvider sslHandlerProvider;
 
     @Getter
-    @Autowired
+    @Resource
     private JsonMqttAdaptor jsonMqttAdaptor;
 
     @Getter
-    @Autowired
+    @Resource
     private ProtoMqttAdaptor protoMqttAdaptor;
 
     @Getter

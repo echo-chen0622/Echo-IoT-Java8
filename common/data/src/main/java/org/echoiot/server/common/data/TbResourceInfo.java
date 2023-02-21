@@ -10,6 +10,7 @@ import org.echoiot.server.common.data.id.TbResourceId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.validation.Length;
 import org.echoiot.server.common.data.validation.NoXss;
+import org.jetbrains.annotations.NotNull;
 
 @ApiModel
 @Slf4j
@@ -42,7 +43,7 @@ public class TbResourceInfo extends SearchTextBased<TbResourceId> implements Has
         super(id);
     }
 
-    public TbResourceInfo(TbResourceInfo resourceInfo) {
+    public TbResourceInfo(@NotNull TbResourceInfo resourceInfo) {
         super(resourceInfo);
         this.tenantId = resourceInfo.getTenantId();
         this.title = resourceInfo.getTitle();
@@ -77,22 +78,22 @@ public class TbResourceInfo extends SearchTextBased<TbResourceId> implements Has
         return searchText != null ? searchText : title;
     }
 
+    @NotNull
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("ResourceInfo [tenantId=");
-        builder.append(tenantId);
-        builder.append(", id=");
-        builder.append(getUuidId());
-        builder.append(", createdTime=");
-        builder.append(createdTime);
-        builder.append(", title=");
-        builder.append(title);
-        builder.append(", resourceType=");
-        builder.append(resourceType);
-        builder.append(", resourceKey=");
-        builder.append(resourceKey);
-        builder.append("]");
-        return builder.toString();
+        String builder = "ResourceInfo [tenantId=" +
+                         tenantId +
+                         ", id=" +
+                         getUuidId() +
+                         ", createdTime=" +
+                         createdTime +
+                         ", title=" +
+                         title +
+                         ", resourceType=" +
+                         resourceType +
+                         ", resourceKey=" +
+                         resourceKey +
+                         "]";
+        return builder;
     }
 }

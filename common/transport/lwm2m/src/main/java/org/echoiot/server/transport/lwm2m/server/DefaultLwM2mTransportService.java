@@ -15,6 +15,7 @@ import org.eclipse.leshan.core.node.codec.DefaultLwM2mEncoder;
 import org.eclipse.leshan.server.californium.LeshanServer;
 import org.eclipse.leshan.server.californium.LeshanServerBuilder;
 import org.eclipse.leshan.server.californium.registration.CaliforniumRegistrationStore;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import org.echoiot.server.cache.ota.OtaPackageDataCache;
 import org.echoiot.server.queue.util.AfterStartUp;
@@ -48,14 +49,23 @@ public class DefaultLwM2mTransportService implements LwM2MTransportService {
     public static final CipherSuite[] RPK_OR_X509_CIPHER_SUITES = {TLS_PSK_WITH_AES_128_CCM_8, TLS_PSK_WITH_AES_128_CBC_SHA256, TLS_ECDHE_ECDSA_WITH_AES_128_CCM_8, TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256};
     public static final CipherSuite[] PSK_CIPHER_SUITES = {TLS_PSK_WITH_AES_128_CCM_8, TLS_PSK_WITH_AES_128_CBC_SHA256};
 
+    @NotNull
     private final LwM2mTransportContext context;
+    @NotNull
     private final LwM2MTransportServerConfig config;
+    @NotNull
     private final OtaPackageDataCache otaPackageDataCache;
+    @NotNull
     private final DefaultLwM2mUplinkMsgHandler handler;
+    @NotNull
     private final CaliforniumRegistrationStore registrationStore;
+    @NotNull
     private final TbSecurityStore securityStore;
+    @NotNull
     private final TbLwM2MDtlsCertificateVerifier certificateVerifier;
+    @NotNull
     private final TbLwM2MAuthorizer authorizer;
+    @NotNull
     private final LwM2mVersionedModelProvider modelProvider;
 
     private LeshanServer server;
@@ -70,7 +80,7 @@ public class DefaultLwM2mTransportService implements LwM2MTransportService {
          * nameFile = "BC68JAR01A09_TO_BC68JAR01A10.bin"
          * "coap://host:port/{path}/{token}/{nameFile}"
          */
-        LwM2mTransportCoapResource otaCoapResource = new LwM2mTransportCoapResource(otaPackageDataCache, DefaultLwM2MOtaUpdateService.FIRMWARE_UPDATE_COAP_RESOURCE);
+        @NotNull LwM2mTransportCoapResource otaCoapResource = new LwM2mTransportCoapResource(otaPackageDataCache, DefaultLwM2MOtaUpdateService.FIRMWARE_UPDATE_COAP_RESOURCE);
         this.server.coap().getServer().add(otaCoapResource);
         this.context.setServer(server);
         this.startLhServer();
@@ -79,7 +89,7 @@ public class DefaultLwM2mTransportService implements LwM2MTransportService {
     private void startLhServer() {
         log.info("Starting LwM2M transport server...");
         this.server.start();
-        LwM2mServerListener lhServerCertListener = new LwM2mServerListener(handler);
+        @NotNull LwM2mServerListener lhServerCertListener = new LwM2mServerListener(handler);
         this.server.getRegistrationService().addListener(lhServerCertListener.registrationListener);
         this.server.getPresenceService().addListener(lhServerCertListener.presenceListener);
         this.server.getObservationService().addListener(lhServerCertListener.observationListener);
@@ -99,7 +109,7 @@ public class DefaultLwM2mTransportService implements LwM2MTransportService {
     }
 
     private LeshanServer getLhServer() {
-        LeshanServerBuilder builder = new LeshanServerBuilder();
+        @NotNull LeshanServerBuilder builder = new LeshanServerBuilder();
         builder.setLocalAddress(config.getHost(), config.getPort());
         builder.setLocalSecureAddress(config.getSecureHost(), config.getSecurePort());
         builder.setDecoder(new DefaultLwM2mDecoder());
@@ -117,7 +127,7 @@ public class DefaultLwM2mTransportService implements LwM2MTransportService {
         builder.setRegistrationStore(registrationStore);
 
         /* Create DTLS Config */
-        DtlsConnectorConfig.Builder dtlsConfig = new DtlsConnectorConfig.Builder(getCoapConfig(config.getPort(), config.getSecurePort(), config));
+        @NotNull DtlsConnectorConfig.Builder dtlsConfig = new DtlsConnectorConfig.Builder(getCoapConfig(config.getPort(), config.getSecurePort(), config));
 
         dtlsConfig.set(DTLS_RECOMMENDED_CURVES_ONLY, config.isRecommendedSupportedGroups());
         dtlsConfig.set(DTLS_RECOMMENDED_CIPHER_SUITES_ONLY, config.isRecommendedCiphers());
@@ -134,7 +144,7 @@ public class DefaultLwM2mTransportService implements LwM2MTransportService {
         return builder.build();
     }
 
-    private void setServerWithCredentials(LeshanServerBuilder builder, DtlsConnectorConfig.Builder dtlsConfig) {
+    private void setServerWithCredentials(@NotNull LeshanServerBuilder builder, @NotNull DtlsConnectorConfig.Builder dtlsConfig) {
         if (this.config.getSslCredentials() != null) {
             SslCredentials sslCredentials = this.config.getSslCredentials();
             builder.setPublicKey(sslCredentials.getPublicKey());
@@ -151,6 +161,7 @@ public class DefaultLwM2mTransportService implements LwM2MTransportService {
         }
     }
 
+    @NotNull
     @Override
     public String getName() {
         return DataConstants.LWM2M_TRANSPORT_NAME;

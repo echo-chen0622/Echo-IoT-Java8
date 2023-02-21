@@ -2,6 +2,8 @@ package org.echoiot.server.common.data.id;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -27,6 +29,7 @@ public abstract class IdBased<I extends UUIDBased> implements HasId<I> {
 		return id;
 	}
 
+	@Nullable
 	@JsonIgnore
 	public UUID getUuidId() {
 		if (id != null) {
@@ -45,20 +48,17 @@ public abstract class IdBased<I extends UUIDBased> implements HasId<I> {
 
 	@SuppressWarnings("rawtypes")
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(@Nullable Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		IdBased other = (IdBased) obj;
+		@NotNull IdBased other = (IdBased) obj;
 		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		return true;
+			return other.id == null;
+		} else return id.equals(other.id);
 	}
 
 }

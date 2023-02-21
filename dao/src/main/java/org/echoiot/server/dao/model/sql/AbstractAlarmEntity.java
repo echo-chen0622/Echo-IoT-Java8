@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.util.CollectionUtils;
 import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.StringUtils;
@@ -98,6 +100,7 @@ public abstract class AbstractAlarmEntity<T extends Alarm> extends BaseSqlEntity
     @Column(name = ALARM_PROPAGATE_TO_TENANT_PROPERTY)
     private Boolean propagateToTenant;
 
+    @Nullable
     @Column(name = ALARM_PROPAGATE_RELATION_TYPES)
     private String propagateRelationTypes;
 
@@ -105,7 +108,7 @@ public abstract class AbstractAlarmEntity<T extends Alarm> extends BaseSqlEntity
         super();
     }
 
-    public AbstractAlarmEntity(Alarm alarm) {
+    public AbstractAlarmEntity(@NotNull Alarm alarm) {
         if (alarm.getId() != null) {
             this.setUuid(alarm.getUuidId());
         }
@@ -137,7 +140,7 @@ public abstract class AbstractAlarmEntity<T extends Alarm> extends BaseSqlEntity
         }
     }
 
-    public AbstractAlarmEntity(AlarmEntity alarmEntity) {
+    public AbstractAlarmEntity(@NotNull AlarmEntity alarmEntity) {
         this.setId(alarmEntity.getId());
         this.setCreatedTime(alarmEntity.getCreatedTime());
         this.tenantId = alarmEntity.getTenantId();
@@ -159,8 +162,9 @@ public abstract class AbstractAlarmEntity<T extends Alarm> extends BaseSqlEntity
         this.propagateRelationTypes = alarmEntity.getPropagateRelationTypes();
     }
 
+    @NotNull
     protected Alarm toAlarm() {
-        Alarm alarm = new Alarm(new AlarmId(id));
+        @NotNull Alarm alarm = new Alarm(new AlarmId(id));
         alarm.setCreatedTime(createdTime);
         if (tenantId != null) {
             alarm.setTenantId(TenantId.fromUUID(tenantId));

@@ -3,6 +3,7 @@ package org.echoiot.server.service.install.update;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,6 +20,7 @@ import static org.mockito.BDDMockito.willCallRealMethod;
 @SpringBootTest(classes = DefaultDataUpdateService.class)
 class DefaultDataUpdateServiceTest {
 
+    @NotNull
     ObjectMapper mapper = new ObjectMapper();
 
     @MockBean

@@ -21,10 +21,10 @@ public class CoapAttributesUpdatesIntegrationTest extends AbstractCoapAttributes
 
     CoapTransportResource coapTransportResource;
 
-    @Autowired
+    @Resource
     DefaultCoapServerService defaultCoapServerService;
 
-    @Autowired
+    @Resource
     DefaultTransportService defaultTransportService;
 
     @Before

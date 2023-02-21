@@ -3,6 +3,8 @@ package org.echoiot.server.common.data.page;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.data.domain.Sort;
 
 import java.util.List;
@@ -20,7 +22,7 @@ public class PageLink {
     private final int page;
     private final SortOrder sortOrder;
 
-    public PageLink(PageLink pageLink) {
+    public PageLink(@NotNull PageLink pageLink) {
         this.pageSize = pageLink.getPageSize();
         this.page = pageLink.getPage();
         this.textSearch = pageLink.getTextSearch();
@@ -51,7 +53,7 @@ public class PageLink {
         return new PageLink(this.pageSize, this.page+1, this.textSearch, this.sortOrder);
     }
 
-    public Sort toSort(SortOrder sortOrder, Map<String,String> columnMap) {
+    public Sort toSort(@Nullable SortOrder sortOrder, @NotNull Map<String,String> columnMap) {
         if (sortOrder == null) {
             return DEFAULT_SORT;
         } else {
@@ -63,11 +65,12 @@ public class PageLink {
         }
     }
 
-    public Sort toSort(List<SortOrder> sortOrders, Map<String,String> columnMap) {
+    public Sort toSort(@NotNull List<SortOrder> sortOrders, @NotNull Map<String,String> columnMap) {
         return Sort.by(sortOrders.stream().map(s -> toSortOrder(s, columnMap)).collect(Collectors.toList()));
     }
 
-    private Sort.Order toSortOrder(SortOrder sortOrder, Map<String,String> columnMap) {
+    @NotNull
+    private Sort.Order toSortOrder(@NotNull SortOrder sortOrder, @NotNull Map<String,String> columnMap) {
         String property = sortOrder.getProperty();
         if (columnMap.containsKey(property)) {
             property = columnMap.get(property);

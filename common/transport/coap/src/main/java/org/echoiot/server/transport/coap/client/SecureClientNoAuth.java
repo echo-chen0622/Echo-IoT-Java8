@@ -15,6 +15,8 @@ import org.eclipse.californium.scandium.dtls.CertificateType;
 import org.eclipse.californium.scandium.dtls.x509.SingleCertificateProvider;
 import org.eclipse.californium.scandium.dtls.x509.StaticNewAdvancedCertificateVerifier;
 import org.echoiot.common.util.EchoiotThreadFactory;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.net.URI;
@@ -29,8 +31,8 @@ import java.util.concurrent.Executors;
 public class SecureClientNoAuth {
 
     private final DTLSConnector dtlsConnector;
-    private ExecutorService executor = Executors.newFixedThreadPool(1, EchoiotThreadFactory.forName(getClass().getSimpleName()));
-    private CoapClient coapClient;
+    private final ExecutorService executor = Executors.newFixedThreadPool(1, EchoiotThreadFactory.forName(getClass().getSimpleName()));
+    private final CoapClient coapClient;
 
     public SecureClientNoAuth(DTLSConnector dtlsConnector, String host, int port, String accessToken, String clientKeys, String sharedKeys) throws URISyntaxException {
         this.dtlsConnector = dtlsConnector;
@@ -41,7 +43,7 @@ public class SecureClientNoAuth {
         executor.submit(() -> {
             try {
                 while (!Thread.interrupted()) {
-                    CoapResponse response = null;
+                    @Nullable CoapResponse response = null;
                     try {
                         response = coapClient.get();
                     } catch (ConnectorException | IOException e) {
@@ -75,21 +77,23 @@ public class SecureClientNoAuth {
         });
     }
 
+    @NotNull
     private CoapClient getCoapClient(String host, Integer port, String accessToken, String clientKeys, String sharedKeys) throws URISyntaxException {
-        URI uri = new URI(getFutureUrl(host, port, accessToken, clientKeys, sharedKeys));
-        CoapClient client = new CoapClient(uri);
-        CoapEndpoint.Builder builder = new CoapEndpoint.Builder();
+        @NotNull URI uri = new URI(getFutureUrl(host, port, accessToken, clientKeys, sharedKeys));
+        @NotNull CoapClient client = new CoapClient(uri);
+        @NotNull CoapEndpoint.Builder builder = new CoapEndpoint.Builder();
         builder.setConnector(dtlsConnector);
 
         client.setEndpoint(builder.build());
         return client;
     }
 
+    @NotNull
     private String getFutureUrl(String host, Integer port, String accessToken, String clientKeys, String sharedKeys) {
         return "coaps://" + host + ":" + port + "/api/v1/" + accessToken + "/attributes?clientKeys=" + clientKeys + "&sharedKeys=" + sharedKeys;
     }
 
-    public static void main(String[] args) throws URISyntaxException {
+    public static void main(@NotNull String[] args) throws URISyntaxException {
         System.out.println("Usage: java -cp ... client.coap.transport.org.echoiot.server.SecureClientNoAuth " +
                 "host port accessToken keyStoreUriPath keyStoreAlias trustedAliasPattern clientKeys sharedKeys");
 
@@ -105,15 +109,15 @@ public class SecureClientNoAuth {
         String keyStorePassword = args[6];
 
 
-        DtlsConnectorConfig.Builder builder = new DtlsConnectorConfig.Builder(new Configuration());
+        @NotNull DtlsConnectorConfig.Builder builder = new DtlsConnectorConfig.Builder(new Configuration());
         setupCredentials(builder, keyStoreUriPath, keyStoreAlias, trustedAliasPattern, keyStorePassword);
-        DTLSConnector dtlsConnector = new DTLSConnector(builder.build());
-        SecureClientNoAuth client = new SecureClientNoAuth(dtlsConnector, host, port, accessToken, clientKeys, sharedKeys);
+        @NotNull DTLSConnector dtlsConnector = new DTLSConnector(builder.build());
+        @NotNull SecureClientNoAuth client = new SecureClientNoAuth(dtlsConnector, host, port, accessToken, clientKeys, sharedKeys);
         client.test();
     }
 
-    private static void setupCredentials(DtlsConnectorConfig.Builder config, String keyStoreUriPath, String keyStoreAlias, String trustedAliasPattern, String keyStorePassword) {
-        StaticNewAdvancedCertificateVerifier.Builder trustBuilder = StaticNewAdvancedCertificateVerifier.builder();
+    private static void setupCredentials(@NotNull DtlsConnectorConfig.Builder config, @NotNull String keyStoreUriPath, String keyStoreAlias, String trustedAliasPattern, @NotNull String keyStorePassword) {
+        @NotNull StaticNewAdvancedCertificateVerifier.Builder trustBuilder = StaticNewAdvancedCertificateVerifier.builder();
         try {
             SslContextUtil.Credentials serverCredentials = SslContextUtil.loadCredentials(
                     keyStoreUriPath, keyStoreAlias, keyStorePassword.toCharArray(), keyStorePassword.toCharArray());

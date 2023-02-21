@@ -22,6 +22,8 @@
 package org.apache.kafka.common.network;
 
 import org.apache.kafka.common.memory.MemoryPool;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.echoiot.server.common.data.exception.EchoiotKafkaClientError;
@@ -46,10 +48,12 @@ public class NetworkReceive implements Receive {
     private static final ByteBuffer EMPTY_BUFFER = ByteBuffer.allocate(0);
 
     private final String source;
+    @Nullable
     private final ByteBuffer size;
     private final int maxSize;
     private final MemoryPool memoryPool;
     private int requestedBufferSize = -1;
+    @Nullable
     private ByteBuffer buffer;
 
 
@@ -99,7 +103,7 @@ public class NetworkReceive implements Receive {
         return !size.hasRemaining() && buffer != null && !buffer.hasRemaining();
     }
 
-    public long readFrom(ScatteringByteChannel channel) throws IOException {
+    public long readFrom(@NotNull ScatteringByteChannel channel) throws IOException {
         int read = 0;
         if (size.hasRemaining()) {
             int bytesRead = channel.read(size);

@@ -5,6 +5,8 @@ import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.controller.plugin.TbWebSocketHandler;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.security.model.SecurityUser;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -30,23 +32,24 @@ public class WebSocketConfiguration implements WebSocketConfigurer {
     public static final String WS_PLUGIN_PREFIX = "/api/ws/plugins/";
     private static final String WS_PLUGIN_MAPPING = WS_PLUGIN_PREFIX + "**";
 
+    @NotNull
     @Bean
     public ServletServerContainerFactoryBean createWebSocketContainer() {
-        ServletServerContainerFactoryBean container = new ServletServerContainerFactoryBean();
+        @NotNull ServletServerContainerFactoryBean container = new ServletServerContainerFactoryBean();
         container.setMaxTextMessageBufferSize(32768);
         container.setMaxBinaryMessageBufferSize(32768);
         return container;
     }
 
     @Override
-    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+    public void registerWebSocketHandlers(@NotNull WebSocketHandlerRegistry registry) {
         registry.addHandler(wsHandler(), WS_PLUGIN_MAPPING).setAllowedOriginPatterns("*")
                 .addInterceptors(new HttpSessionHandshakeInterceptor(), new HandshakeInterceptor() {
 
                     @Override
                     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler,
                                                    Map<String, Object> attributes) throws Exception {
-                        SecurityUser user = null;
+                        @Nullable SecurityUser user = null;
                         try {
                             user = getCurrentUser();
                         } catch (EchoiotException ex) {
@@ -67,6 +70,7 @@ public class WebSocketConfiguration implements WebSocketConfigurer {
                 });
     }
 
+    @NotNull
     @Bean
     public WebSocketHandler wsHandler() {
         return new TbWebSocketHandler();

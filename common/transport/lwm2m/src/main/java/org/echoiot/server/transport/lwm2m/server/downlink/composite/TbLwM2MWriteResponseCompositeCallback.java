@@ -6,6 +6,7 @@ import org.echoiot.server.transport.lwm2m.server.client.LwM2mClient;
 import org.echoiot.server.transport.lwm2m.server.downlink.TbLwM2MUplinkTargetedCallback;
 import org.echoiot.server.transport.lwm2m.server.log.LwM2MTelemetryLogService;
 import org.echoiot.server.transport.lwm2m.server.uplink.LwM2mUplinkMsgHandler;
+import org.jetbrains.annotations.NotNull;
 
 public class TbLwM2MWriteResponseCompositeCallback extends TbLwM2MUplinkTargetedCallback<WriteCompositeRequest, WriteCompositeResponse> {
 
@@ -14,7 +15,7 @@ public class TbLwM2MWriteResponseCompositeCallback extends TbLwM2MUplinkTargeted
     }
 
     @Override
-    public void onSuccess(WriteCompositeRequest request, WriteCompositeResponse response) {
+    public void onSuccess(WriteCompositeRequest request, @NotNull WriteCompositeResponse response) {
         super.onSuccess(request, response);
         handler.onWriteCompositeResponseOk(client, request, response.getCode().getCode());
     }

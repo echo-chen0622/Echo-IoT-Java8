@@ -8,8 +8,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.validation.Length;
 import org.echoiot.server.common.data.SearchTextBasedWithAdditionalInfo;
 import org.echoiot.server.common.data.id.EntityId;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 @Slf4j
 @ApiModel
@@ -26,6 +29,7 @@ public class EntityRelation implements Serializable {
     @Length(fieldName = "type")
     private String type;
     private RelationTypeGroup typeGroup;
+    @Nullable
     private transient JsonNode additionalInfo;
     @JsonIgnore
     private byte[] additionalInfoBytes;
@@ -50,7 +54,7 @@ public class EntityRelation implements Serializable {
         this.additionalInfo = additionalInfo;
     }
 
-    public EntityRelation(EntityRelation entityRelation) {
+    public EntityRelation(@NotNull EntityRelation entityRelation) {
         this.from = entityRelation.getFrom();
         this.to = entityRelation.getTo();
         this.type = entityRelation.getType();
@@ -94,6 +98,7 @@ public class EntityRelation implements Serializable {
         this.typeGroup = typeGroup;
     }
 
+    @Nullable
     @ApiModelProperty(position = 5, value = "Additional parameters of the relation", dataType = "com.fasterxml.jackson.databind.JsonNode")
     public JsonNode getAdditionalInfo() {
         return SearchTextBasedWithAdditionalInfo.getJson(() -> additionalInfo, () -> additionalInfoBytes);
@@ -104,15 +109,15 @@ public class EntityRelation implements Serializable {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        EntityRelation that = (EntityRelation) o;
+        @NotNull EntityRelation that = (EntityRelation) o;
 
-        if (from != null ? !from.equals(that.from) : that.from != null) return false;
-        if (to != null ? !to.equals(that.to) : that.to != null) return false;
-        if (type != null ? !type.equals(that.type) : that.type != null) return false;
+        if (!Objects.equals(from, that.from)) return false;
+        if (!Objects.equals(to, that.to)) return false;
+        if (!Objects.equals(type, that.type)) return false;
         return typeGroup == that.typeGroup;
     }
 

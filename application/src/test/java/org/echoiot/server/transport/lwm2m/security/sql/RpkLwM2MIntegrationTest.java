@@ -3,6 +3,7 @@ package org.echoiot.server.transport.lwm2m.security.sql;
 import org.apache.commons.codec.binary.Base64;
 import org.eclipse.leshan.client.object.Security;
 import org.eclipse.leshan.core.util.Hex;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import org.springframework.test.web.servlet.MvcResult;
 import org.echoiot.server.common.data.device.credentials.lwm2m.LwM2MDeviceCredentials;
@@ -28,17 +29,17 @@ public class RpkLwM2MIntegrationTest extends AbstractSecurityLwM2MIntegrationTes
     //Lwm2m only
     @Test
     public void testWithRpkConnectLwm2mSuccess() throws Exception {
-        String clientEndpoint = CLIENT_ENDPOINT_RPK;
+        @NotNull String clientEndpoint = CLIENT_ENDPOINT_RPK;
         X509Certificate certificate = clientX509CertTrust;
         PrivateKey privateKey = clientPrivateKeyFromCertTrust;
-        RPKClientCredential clientCredentials = new RPKClientCredential();
+        @NotNull RPKClientCredential clientCredentials = new RPKClientCredential();
         clientCredentials.setEndpoint(clientEndpoint);
         clientCredentials.setKey(Base64.encodeBase64String(certificate.getPublicKey().getEncoded()));
-        Security securityBs = rpk(SECURE_URI,
-                shortServerId,
-                certificate.getPublicKey().getEncoded(),
-                privateKey.getEncoded(),
-                serverX509Cert.getPublicKey().getEncoded());
+        @NotNull Security securityBs = rpk(SECURE_URI,
+                                           shortServerId,
+                                           certificate.getPublicKey().getEncoded(),
+                                           privateKey.getEncoded(),
+                                           serverX509Cert.getPublicKey().getEncoded());
         Lwm2mDeviceProfileTransportConfiguration transportConfiguration = getTransportConfiguration(OBSERVE_ATTRIBUTES_WITHOUT_PARAMS, getBootstrapServerCredentialsSecure(RPK, NONE));
         LwM2MDeviceCredentials deviceCredentials = getDeviceCredentialsSecure(clientCredentials, privateKey, certificate, RPK, false);
         this.basicTestConnection(securityBs,
@@ -55,10 +56,10 @@ public class RpkLwM2MIntegrationTest extends AbstractSecurityLwM2MIntegrationTes
 
     @Test
     public void testWithRpkValidationPublicKeyBase64format_BAD_REQUEST() throws Exception {
-        String clientEndpoint = CLIENT_ENDPOINT_RPK + "BadPublicKey";
+        @NotNull String clientEndpoint = CLIENT_ENDPOINT_RPK + "BadPublicKey";
         X509Certificate certificate = clientX509CertTrust;
         PrivateKey privateKey = clientPrivateKeyFromCertTrust;
-        RPKClientCredential clientCredentials = new RPKClientCredential();
+        @NotNull RPKClientCredential clientCredentials = new RPKClientCredential();
         clientCredentials.setEndpoint(clientEndpoint);
         clientCredentials.setKey(Hex.encodeHexString(certificate.getPublicKey().getEncoded()));
         Lwm2mDeviceProfileTransportConfiguration transportConfiguration = getTransportConfiguration(OBSERVE_ATTRIBUTES_WITHOUT_PARAMS, getBootstrapServerCredentialsSecure(RPK, NONE));
@@ -66,16 +67,16 @@ public class RpkLwM2MIntegrationTest extends AbstractSecurityLwM2MIntegrationTes
         createDeviceProfile(transportConfiguration);
         MvcResult result = createDeviceWithMvcResult(deviceCredentials, clientEndpoint);
         assertEquals(HttpServletResponse.SC_BAD_REQUEST, result.getResponse().getStatus());
-        String msgExpected = "LwM2M client RPK key must be in standard [RFC7250] and support only EC algorithm and then encoded to Base64 format!";
+        @NotNull String msgExpected = "LwM2M client RPK key must be in standard [RFC7250] and support only EC algorithm and then encoded to Base64 format!";
         assertTrue(result.getResponse().getContentAsString().contains(msgExpected));
     }
 
     @Test
     public void testWithRpkValidationPrivateKeyBase64format_BAD_REQUEST() throws Exception {
-        String clientEndpoint = CLIENT_ENDPOINT_RPK + "BadPrivateKey";
+        @NotNull String clientEndpoint = CLIENT_ENDPOINT_RPK + "BadPrivateKey";
         X509Certificate certificate = clientX509CertTrust;
         PrivateKey privateKey = clientPrivateKeyFromCertTrust;
-        RPKClientCredential clientCredentials = new RPKClientCredential();
+        @NotNull RPKClientCredential clientCredentials = new RPKClientCredential();
         clientCredentials.setEndpoint(clientEndpoint);
         clientCredentials.setKey(Base64.encodeBase64String(certificate.getPublicKey().getEncoded()));
         Lwm2mDeviceProfileTransportConfiguration transportConfiguration = getTransportConfiguration(OBSERVE_ATTRIBUTES_WITHOUT_PARAMS, getBootstrapServerCredentialsSecure(RPK, NONE));
@@ -83,23 +84,23 @@ public class RpkLwM2MIntegrationTest extends AbstractSecurityLwM2MIntegrationTes
         createDeviceProfile(transportConfiguration);
         MvcResult result = createDeviceWithMvcResult(deviceCredentials, clientEndpoint);
         assertEquals(HttpServletResponse.SC_BAD_REQUEST, result.getResponse().getStatus());
-        String msgExpected = "Bootstrap server client RPK secret key must be in PKCS#8 format (DER encoding, standard [RFC5958]) and then encoded to Base64 format!";
+        @NotNull String msgExpected = "Bootstrap server client RPK secret key must be in PKCS#8 format (DER encoding, standard [RFC5958]) and then encoded to Base64 format!";
         assertTrue(result.getResponse().getContentAsString().contains(msgExpected));
     }
 
     // Bootstrap + Lwm2m
     @Test
     public void testWithRpkConnectBsSuccess_UpdateTwoSectionsBootstrapAndLm2m_ConnectLwm2mSuccess() throws Exception {
-        String clientEndpoint = CLIENT_ENDPOINT_RPK_BS;
+        @NotNull String clientEndpoint = CLIENT_ENDPOINT_RPK_BS;
         X509Certificate certificate = clientX509CertTrust;
         PrivateKey privateKey = clientPrivateKeyFromCertTrust;
-        RPKClientCredential clientCredentials = new RPKClientCredential();
+        @NotNull RPKClientCredential clientCredentials = new RPKClientCredential();
         clientCredentials.setEndpoint(clientEndpoint);
         clientCredentials.setKey(Base64.encodeBase64String(certificate.getPublicKey().getEncoded()));
-        Security securityBs = rpkBootstrap(SECURE_URI_BS,
-                certificate.getPublicKey().getEncoded(),
-                privateKey.getEncoded(),
-                serverX509CertBs.getPublicKey().getEncoded());
+        @NotNull Security securityBs = rpkBootstrap(SECURE_URI_BS,
+                                                    certificate.getPublicKey().getEncoded(),
+                                                    privateKey.getEncoded(),
+                                                    serverX509CertBs.getPublicKey().getEncoded());
         Lwm2mDeviceProfileTransportConfiguration transportConfiguration = getTransportConfiguration(OBSERVE_ATTRIBUTES_WITHOUT_PARAMS, getBootstrapServerCredentialsSecure(RPK, BOTH));
         LwM2MDeviceCredentials deviceCredentials = getDeviceCredentialsSecure(clientCredentials, clientPrivateKeyFromCertTrust, certificate, RPK, false);
         this.basicTestConnection(securityBs,

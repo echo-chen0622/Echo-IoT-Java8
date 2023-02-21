@@ -5,6 +5,7 @@ import lombok.Getter;
 import org.eclipse.leshan.core.request.ContentFormat;
 import org.eclipse.leshan.core.response.CreateResponse;
 import org.echoiot.server.transport.lwm2m.server.LwM2MOperationType;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
@@ -25,6 +26,7 @@ public class TbLwM2MCreateRequest extends AbstractTbLwM2MTargetedDownlinkRequest
         this.nodes = nodes;
     }
 
+    @NotNull
     @Override
     public LwM2MOperationType getType() {
         return LwM2MOperationType.CREATE;

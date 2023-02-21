@@ -7,6 +7,7 @@ import com.microsoft.azure.servicebus.primitives.MessagingEntityAlreadyExistsExc
 import com.microsoft.azure.servicebus.primitives.ServiceBusException;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.queue.TbQueueAdmin;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.time.Duration;
@@ -23,12 +24,13 @@ public class TbServiceBusAdmin implements TbQueueAdmin {
     private final Map<String, String> queueConfigs;
     private final Set<String> queues = ConcurrentHashMap.newKeySet();
 
+    @NotNull
     private final ManagementClient client;
 
-    public TbServiceBusAdmin(TbServiceBusSettings serviceBusSettings, Map<String, String> queueConfigs) {
+    public TbServiceBusAdmin(@NotNull TbServiceBusSettings serviceBusSettings, Map<String, String> queueConfigs) {
         this.queueConfigs = queueConfigs;
 
-        ConnectionStringBuilder builder = new ConnectionStringBuilder(
+        @NotNull ConnectionStringBuilder builder = new ConnectionStringBuilder(
                 serviceBusSettings.getNamespaceName(),
                 "queues",
                 serviceBusSettings.getSasKeyName(),
@@ -51,7 +53,7 @@ public class TbServiceBusAdmin implements TbQueueAdmin {
         }
 
         try {
-            QueueDescription queueDescription = new QueueDescription(topic);
+            @NotNull QueueDescription queueDescription = new QueueDescription(topic);
             queueDescription.setRequiresDuplicateDetection(false);
             setQueueConfigs(queueDescription);
 
@@ -92,7 +94,7 @@ public class TbServiceBusAdmin implements TbQueueAdmin {
         }
     }
 
-    private void setQueueConfigs(QueueDescription queueDescription) {
+    private void setQueueConfigs(@NotNull QueueDescription queueDescription) {
         queueConfigs.forEach((confKey, confValue) -> {
             switch (confKey) {
                 case MAX_SIZE:

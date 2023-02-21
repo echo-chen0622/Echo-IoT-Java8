@@ -13,6 +13,8 @@ import org.echoiot.rule.engine.api.util.TbNodeUtils;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.TbMsgMetaData;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -36,20 +38,20 @@ public class TbRenameKeysNode implements TbNode {
     private boolean fromMetadata;
 
     @Override
-    public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
+    public void init(TbContext ctx, @NotNull TbNodeConfiguration configuration) throws TbNodeException {
         this.config = TbNodeUtils.convert(configuration, TbRenameKeysNodeConfiguration.class);
         this.renameKeysMapping = config.getRenameKeysMapping();
         this.fromMetadata = config.isFromMetadata();
     }
 
     @Override
-    public void onMsg(TbContext ctx, TbMsg msg) throws ExecutionException, InterruptedException, TbNodeException {
+    public void onMsg(@NotNull TbContext ctx, @NotNull TbMsg msg) throws ExecutionException, InterruptedException, TbNodeException {
         TbMsgMetaData metaData = msg.getMetaData();
-        String data = msg.getData();
+        @Nullable String data = msg.getData();
         boolean msgChanged = false;
         if (fromMetadata) {
             Map<String, String> metaDataMap = metaData.getData();
-            for (Map.Entry<String, String> entry : renameKeysMapping.entrySet()) {
+            for (@NotNull Map.Entry<String, String> entry : renameKeysMapping.entrySet()) {
                 String nameKey = entry.getKey();
                 if (metaDataMap.containsKey(nameKey)) {
                     msgChanged = true;
@@ -61,8 +63,8 @@ public class TbRenameKeysNode implements TbNode {
         } else {
             JsonNode dataNode = JacksonUtil.toJsonNode(msg.getData());
             if (dataNode.isObject()) {
-                ObjectNode msgData = (ObjectNode) dataNode;
-                for (Map.Entry<String, String> entry : renameKeysMapping.entrySet()) {
+                @NotNull ObjectNode msgData = (ObjectNode) dataNode;
+                for (@NotNull Map.Entry<String, String> entry : renameKeysMapping.entrySet()) {
                     String nameKey = entry.getKey();
                     if (msgData.has(nameKey)) {
                         msgChanged = true;

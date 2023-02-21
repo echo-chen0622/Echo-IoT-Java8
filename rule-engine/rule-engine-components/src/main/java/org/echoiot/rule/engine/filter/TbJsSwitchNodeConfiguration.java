@@ -3,6 +3,7 @@ package org.echoiot.rule.engine.filter;
 import lombok.Data;
 import org.echoiot.rule.engine.api.NodeConfiguration;
 import org.echoiot.server.common.data.script.ScriptLanguage;
+import org.jetbrains.annotations.NotNull;
 
 @Data
 public class TbJsSwitchNodeConfiguration implements NodeConfiguration<TbJsSwitchNodeConfiguration> {
@@ -27,9 +28,10 @@ public class TbJsSwitchNodeConfiguration implements NodeConfiguration<TbJsSwitch
     private String jsScript;
     private String tbelScript;
 
+    @NotNull
     @Override
     public TbJsSwitchNodeConfiguration defaultConfiguration() {
-        TbJsSwitchNodeConfiguration configuration = new TbJsSwitchNodeConfiguration();
+        @NotNull TbJsSwitchNodeConfiguration configuration = new TbJsSwitchNodeConfiguration();
         configuration.setScriptLang(ScriptLanguage.TBEL);
         configuration.setJsScript(DEFAULT_JS_SCRIPT);
         configuration.setTbelScript(DEFAULT_TBEL_SCRIPT);

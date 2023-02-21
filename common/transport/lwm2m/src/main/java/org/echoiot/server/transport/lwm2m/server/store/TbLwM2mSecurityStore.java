@@ -8,6 +8,8 @@ import org.eclipse.leshan.server.security.NonUniqueSecurityInfoException;
 import org.eclipse.leshan.server.security.SecurityInfo;
 import org.echoiot.server.transport.lwm2m.secure.LwM2mCredentialsSecurityInfoValidator;
 import org.echoiot.server.transport.lwm2m.secure.TbLwM2MSecurityInfo;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -38,9 +40,10 @@ public class TbLwM2mSecurityStore implements TbMainSecurityStore {
      * return SecurityInfo.newPreSharedKeyInfo(SecurityMode.NO_SEC.toString(), SecurityMode.NO_SEC.toString(),
      * SecurityMode.NO_SEC.toString().getBytes());
      */
+    @Nullable
     @Override
     public SecurityInfo getByEndpoint(String endpoint) {
-        SecurityInfo securityInfo = securityStore.getByEndpoint(endpoint);
+        @Nullable SecurityInfo securityInfo = securityStore.getByEndpoint(endpoint);
         if (securityInfo == null) {
             securityInfo = fetchAndPutSecurityInfo(endpoint);
         } else if (securityInfo.usePSK() && securityInfo.getEndpoint().equals(SecurityMode.NO_SEC.toString())
@@ -51,9 +54,10 @@ public class TbLwM2mSecurityStore implements TbMainSecurityStore {
         return securityInfo;
     }
 
+    @Nullable
     @Override
     public SecurityInfo getByIdentity(String pskIdentity) {
-        SecurityInfo securityInfo = securityStore.getByIdentity(pskIdentity);
+        @Nullable SecurityInfo securityInfo = securityStore.getByIdentity(pskIdentity);
         if (securityInfo == null) {
             try {
                 securityInfo = fetchAndPutSecurityInfo(pskIdentity);
@@ -65,13 +69,14 @@ public class TbLwM2mSecurityStore implements TbMainSecurityStore {
         return securityInfo;
     }
 
+    @Nullable
     public SecurityInfo fetchAndPutSecurityInfo(String credentialsId) {
-        TbLwM2MSecurityInfo securityInfo = validator.getEndpointSecurityInfoByCredentialsId(credentialsId, LwM2mTypeServer.CLIENT);
+        @NotNull TbLwM2MSecurityInfo securityInfo = validator.getEndpointSecurityInfoByCredentialsId(credentialsId, LwM2mTypeServer.CLIENT);
         doPut(securityInfo);
         return securityInfo != null ? securityInfo.getSecurityInfo() : null;
     }
 
-    private void doPut(TbLwM2MSecurityInfo securityInfo) {
+    private void doPut(@Nullable TbLwM2MSecurityInfo securityInfo) {
         if (securityInfo != null) {
             try {
                 securityStore.put(securityInfo);

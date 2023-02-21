@@ -10,6 +10,7 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.id.TenantProfileId;
 import org.echoiot.server.common.data.validation.Length;
 import org.echoiot.server.common.data.validation.NoXss;
+import org.jetbrains.annotations.NotNull;
 
 @ApiModel
 @EqualsAndHashCode(callSuper = true)
@@ -37,7 +38,7 @@ public class Tenant extends ContactBased<TenantId> implements HasTenantId {
         super(id);
     }
 
-    public Tenant(Tenant tenant) {
+    public Tenant(@NotNull Tenant tenant) {
         super(tenant);
         this.title = tenant.getTitle();
         this.region = tenant.getRegion();
@@ -157,37 +158,36 @@ public class Tenant extends ContactBased<TenantId> implements HasTenantId {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Tenant [title=");
-        builder.append(title);
-        builder.append(", region=");
-        builder.append(region);
-        builder.append(", tenantProfileId=");
-        builder.append(tenantProfileId);
-        builder.append(", additionalInfo=");
-        builder.append(getAdditionalInfo());
-        builder.append(", country=");
-        builder.append(country);
-        builder.append(", state=");
-        builder.append(state);
-        builder.append(", city=");
-        builder.append(city);
-        builder.append(", address=");
-        builder.append(address);
-        builder.append(", address2=");
-        builder.append(address2);
-        builder.append(", zip=");
-        builder.append(zip);
-        builder.append(", phone=");
-        builder.append(phone);
-        builder.append(", email=");
-        builder.append(email);
-        builder.append(", createdTime=");
-        builder.append(createdTime);
-        builder.append(", id=");
-        builder.append(id);
-        builder.append("]");
-        return builder.toString();
+        String builder = "Tenant [title=" +
+                         title +
+                         ", region=" +
+                         region +
+                         ", tenantProfileId=" +
+                         tenantProfileId +
+                         ", additionalInfo=" +
+                         getAdditionalInfo() +
+                         ", country=" +
+                         country +
+                         ", state=" +
+                         state +
+                         ", city=" +
+                         city +
+                         ", address=" +
+                         address +
+                         ", address2=" +
+                         address2 +
+                         ", zip=" +
+                         zip +
+                         ", phone=" +
+                         phone +
+                         ", email=" +
+                         email +
+                         ", createdTime=" +
+                         createdTime +
+                         ", id=" +
+                         id +
+                         "]";
+        return builder;
     }
 
 }

@@ -1,6 +1,7 @@
 package org.echoiot.server.dao.sql.widget;
 
 import org.echoiot.server.dao.model.sql.WidgetTypeDetailsEntity;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
@@ -24,9 +25,10 @@ import java.util.UUID;
 @SqlDao
 public class JpaWidgetTypeDao extends JpaAbstractDao<WidgetTypeDetailsEntity, WidgetTypeDetails> implements WidgetTypeDao {
 
-    @Autowired
+    @Resource
     private WidgetTypeRepository widgetTypeRepository;
 
+    @NotNull
     @Override
     protected Class<WidgetTypeDetailsEntity> getEntityClass() {
         return WidgetTypeDetailsEntity.class;
@@ -62,6 +64,7 @@ public class JpaWidgetTypeDao extends JpaAbstractDao<WidgetTypeDetailsEntity, Wi
         return DaoUtil.getData(widgetTypeRepository.findWidgetTypeByTenantIdAndBundleAliasAndAlias(tenantId, bundleAlias, alias));
     }
 
+    @NotNull
     @Override
     public EntityType getEntityType() {
         return EntityType.WIDGET_TYPE;

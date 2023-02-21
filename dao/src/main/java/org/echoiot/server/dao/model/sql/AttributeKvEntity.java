@@ -10,6 +10,8 @@ import org.echoiot.server.common.data.kv.KvEntry;
 import org.echoiot.server.common.data.kv.LongDataEntry;
 import org.echoiot.server.common.data.kv.StringDataEntry;
 import org.echoiot.server.dao.model.ToData;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
@@ -50,9 +52,10 @@ public class AttributeKvEntity implements ToData<AttributeKvEntry>, Serializable
     @Column(name = LAST_UPDATE_TS_COLUMN)
     private Long lastUpdateTs;
 
+    @NotNull
     @Override
     public AttributeKvEntry toData() {
-        KvEntry kvEntry = null;
+        @Nullable KvEntry kvEntry = null;
         if (strValue != null) {
             kvEntry = new StringDataEntry(id.getAttributeKey(), strValue);
         } else if (booleanValue != null) {

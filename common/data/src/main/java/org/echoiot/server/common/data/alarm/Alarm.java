@@ -17,6 +17,7 @@ import org.echoiot.server.common.data.id.AlarmId;
 import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.TenantId;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -74,7 +75,7 @@ public class Alarm extends BaseData<AlarmId> implements HasName, HasTenantId, Ha
         super(id);
     }
 
-    public Alarm(Alarm alarm) {
+    public Alarm(@NotNull Alarm alarm) {
         super(alarm.getId());
         this.createdTime = alarm.getCreatedTime();
         this.tenantId = alarm.getTenantId();

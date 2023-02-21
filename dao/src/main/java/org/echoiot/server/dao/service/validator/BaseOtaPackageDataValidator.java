@@ -8,6 +8,7 @@ import org.echoiot.server.dao.device.DeviceProfileDao;
 import org.echoiot.server.dao.exception.DataValidationException;
 import org.echoiot.server.dao.service.DataValidator;
 import org.echoiot.server.dao.tenant.TenantService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 
@@ -15,14 +16,14 @@ import java.util.Objects;
 
 public abstract class BaseOtaPackageDataValidator<D extends BaseData<?>> extends DataValidator<D> {
 
-    @Autowired
+    @Resource
     @Lazy
     private TenantService tenantService;
 
-    @Autowired
+    @Resource
     private DeviceProfileDao deviceProfileDao;
 
-    protected void validateImpl(OtaPackageInfo otaPackageInfo) {
+    protected void validateImpl(@NotNull OtaPackageInfo otaPackageInfo) {
         if (otaPackageInfo.getTenantId() == null) {
             throw new DataValidationException("OtaPackage should be assigned to tenant!");
         } else {
@@ -59,7 +60,7 @@ public abstract class BaseOtaPackageDataValidator<D extends BaseData<?>> extends
         }
     }
 
-    protected void validateUpdate(OtaPackageInfo otaPackage, OtaPackageInfo otaPackageOld) {
+    protected void validateUpdate(@NotNull OtaPackageInfo otaPackage, @NotNull OtaPackageInfo otaPackageOld) {
         if (!otaPackageOld.getType().equals(otaPackage.getType())) {
             throw new DataValidationException("Updating type is prohibited!");
         }

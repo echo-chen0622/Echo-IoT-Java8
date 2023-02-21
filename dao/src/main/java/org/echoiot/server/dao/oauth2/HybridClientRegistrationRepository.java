@@ -1,5 +1,7 @@
 package org.echoiot.server.dao.oauth2;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
@@ -14,17 +16,19 @@ import java.util.UUID;
 public class HybridClientRegistrationRepository implements ClientRegistrationRepository {
     private static final String defaultRedirectUriTemplate = "{baseUrl}/login/oauth2/code/{registrationId}";
 
-    @Autowired
+    @Resource
     private OAuth2Service oAuth2Service;
 
+    @Nullable
     @Override
-    public ClientRegistration findByRegistrationId(String registrationId) {
+    public ClientRegistration findByRegistrationId(@NotNull String registrationId) {
         OAuth2Registration registration = oAuth2Service.findRegistration(UUID.fromString(registrationId));
         return registration == null ?
                 null : toSpringClientRegistration(registration);
     }
 
-    private ClientRegistration toSpringClientRegistration(OAuth2Registration registration){
+    @NotNull
+    private ClientRegistration toSpringClientRegistration(@NotNull OAuth2Registration registration){
         String registrationId = registration.getUuidId().toString();
         return ClientRegistration.withRegistrationId(registrationId)
                 .clientName(registration.getName())

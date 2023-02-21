@@ -8,6 +8,7 @@ import org.echoiot.server.common.data.oauth2.OAuth2Domain;
 import org.echoiot.server.common.data.oauth2.SchemeType;
 import org.echoiot.server.dao.model.BaseSqlEntity;
 import org.echoiot.server.dao.model.ModelConstants;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -36,7 +37,7 @@ public class OAuth2DomainEntity extends BaseSqlEntity<OAuth2Domain> {
         super();
     }
 
-    public OAuth2DomainEntity(OAuth2Domain domain) {
+    public OAuth2DomainEntity(@NotNull OAuth2Domain domain) {
         if (domain.getId() != null) {
             this.setUuid(domain.getId().getId());
         }
@@ -48,9 +49,10 @@ public class OAuth2DomainEntity extends BaseSqlEntity<OAuth2Domain> {
         this.domainScheme = domain.getDomainScheme();
     }
 
+    @NotNull
     @Override
     public OAuth2Domain toData() {
-        OAuth2Domain domain = new OAuth2Domain();
+        @NotNull OAuth2Domain domain = new OAuth2Domain();
         domain.setId(new OAuth2DomainId(id));
         domain.setCreatedTime(createdTime);
         domain.setOauth2ParamsId(new OAuth2ParamsId(oauth2ParamsId));

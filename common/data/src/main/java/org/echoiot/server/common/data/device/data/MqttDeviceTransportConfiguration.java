@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.echoiot.server.common.data.DeviceTransportType;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +13,7 @@ import java.util.Map;
 @Data
 public class MqttDeviceTransportConfiguration implements DeviceTransportConfiguration {
 
+    @NotNull
     @JsonIgnore
     private Map<String, Object> properties = new HashMap<>();
 
@@ -25,6 +27,7 @@ public class MqttDeviceTransportConfiguration implements DeviceTransportConfigur
         this.properties.put(name, value);
     }
 
+    @NotNull
     @Override
     public DeviceTransportType getType() {
         return DeviceTransportType.MQTT;

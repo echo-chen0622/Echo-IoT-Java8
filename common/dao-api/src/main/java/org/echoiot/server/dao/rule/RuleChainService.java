@@ -16,6 +16,7 @@ import org.echoiot.server.common.data.rule.RuleChainMetaData;
 import org.echoiot.server.common.data.rule.RuleChainType;
 import org.echoiot.server.common.data.rule.RuleChainUpdateResult;
 import org.echoiot.server.common.data.rule.RuleNode;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -31,6 +32,7 @@ public interface RuleChainService {
 
     RuleChainUpdateResult saveRuleChainMetaData(TenantId tenantId, RuleChainMetaData ruleChainMetaData);
 
+    @Nullable
     RuleChainMetaData loadRuleChainMetaData(TenantId tenantId, RuleChainId ruleChainId);
 
     RuleChain findRuleChainById(TenantId tenantId, RuleChainId ruleChainId);

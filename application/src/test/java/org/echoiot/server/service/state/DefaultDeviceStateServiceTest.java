@@ -2,6 +2,7 @@ package org.echoiot.server.service.state;
 
 import org.echoiot.server.cluster.TbClusterService;
 import org.hamcrest.CoreMatchers;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -53,6 +54,7 @@ public class DefaultDeviceStateServiceTest {
     @Mock
     TbServiceInfoProvider serviceInfoProvider;
 
+    @NotNull
     DeviceId deviceId = DeviceId.fromString("00797a3b-7aeb-4b5b-b57a-c2a810d0f112");
 
     DefaultDeviceStateService service;
@@ -65,7 +67,7 @@ public class DefaultDeviceStateServiceTest {
     @Test
     public void givenDeviceIdFromDeviceStatesMap_whenGetOrFetchDeviceStateData_thenNoStackOverflow() {
         service.deviceStates.put(deviceId, deviceStateDataMock);
-        DeviceStateData deviceStateData = service.getOrFetchDeviceStateData(deviceId);
+        @NotNull DeviceStateData deviceStateData = service.getOrFetchDeviceStateData(deviceId);
         assertThat(deviceStateData, CoreMatchers.is(deviceStateDataMock));
         Mockito.verify(service, never()).fetchDeviceStateDataUsingEntityDataQuery(deviceId);
     }
@@ -74,7 +76,7 @@ public class DefaultDeviceStateServiceTest {
     public void givenDeviceIdWithoutDeviceStateInMap_whenGetOrFetchDeviceStateData_thenFetchDeviceStateData() {
         service.deviceStates.clear();
         willReturn(deviceStateDataMock).given(service).fetchDeviceStateDataUsingEntityDataQuery(deviceId);
-        DeviceStateData deviceStateData = service.getOrFetchDeviceStateData(deviceId);
+        @NotNull DeviceStateData deviceStateData = service.getOrFetchDeviceStateData(deviceId);
         assertThat(deviceStateData, CoreMatchers.is(deviceStateDataMock));
         Mockito.verify(service, times(1)).fetchDeviceStateDataUsingEntityDataQuery(deviceId);
     }
@@ -82,7 +84,7 @@ public class DefaultDeviceStateServiceTest {
     @Test
     public void givenPersistToTelemetryAndDefaultInactivityTimeoutFetched_whenTransformingToDeviceStateData_thenTryGetInactivityFromAttribute() {
         var defaultInactivityTimeoutInSec = 60L;
-        var latest =
+        @NotNull var latest =
                 Map.of(
                         EntityKeyType.TIME_SERIES, Map.of(INACTIVITY_TIMEOUT, new TsValue(0, Long.toString(defaultInactivityTimeoutInSec * 1000))),
                         EntityKeyType.SERVER_ATTRIBUTE, Map.of(INACTIVITY_TIMEOUT, new TsValue(0, Long.toString(5000L)))
@@ -94,7 +96,7 @@ public class DefaultDeviceStateServiceTest {
     @Test
     public void givenPersistToTelemetryAndNoInactivityTimeoutFetchedFromTimeSeries_whenTransformingToDeviceStateData_thenTryGetInactivityFromAttribute() {
         var defaultInactivityTimeoutInSec = 60L;
-        var latest =
+        @NotNull var latest =
                 Map.of(
                         EntityKeyType.SERVER_ATTRIBUTE, Map.of(INACTIVITY_TIMEOUT, new TsValue(0, Long.toString(5000L)))
                 );
@@ -107,8 +109,8 @@ public class DefaultDeviceStateServiceTest {
         service.setDefaultInactivityTimeoutMs(defaultInactivityTimeoutInSec * 1000);
         service.setPersistToTelemetry(true);
 
-        var deviceUuid = UUID.randomUUID();
-        var deviceId = new DeviceId(deviceUuid);
+        @NotNull var deviceUuid = UUID.randomUUID();
+        @NotNull var deviceId = new DeviceId(deviceUuid);
 
         DeviceStateData deviceStateData = service.toDeviceStateData(new EntityData(deviceId, latest, Map.of()), new DeviceIdInfo(TenantId.SYS_TENANT_ID.getId(), UUID.randomUUID(), deviceUuid));
 

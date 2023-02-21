@@ -2,6 +2,7 @@ package org.echoiot.server.cache;
 
 import lombok.Data;
 import org.echoiot.server.common.data.id.EntityId;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cache.CacheManager;
@@ -73,31 +74,34 @@ public abstract class TBRedisCacheConfiguration {
      * Transaction aware RedisCacheManager.
      * Enable RedisCaches to synchronize cache put/evict operations with ongoing Spring-managed transactions.
      */
+    @NotNull
     @Bean
-    public CacheManager cacheManager(RedisConnectionFactory cf) {
-        DefaultFormattingConversionService redisConversionService = new DefaultFormattingConversionService();
+    public CacheManager cacheManager(@NotNull RedisConnectionFactory cf) {
+        @NotNull DefaultFormattingConversionService redisConversionService = new DefaultFormattingConversionService();
         RedisCacheConfiguration.registerDefaultConverters(redisConversionService);
         registerDefaultConverters(redisConversionService);
-        RedisCacheConfiguration configuration = RedisCacheConfiguration.defaultCacheConfig().withConversionService(redisConversionService);
+        @NotNull RedisCacheConfiguration configuration = RedisCacheConfiguration.defaultCacheConfig().withConversionService(redisConversionService);
         return RedisCacheManager.builder(cf).cacheDefaults(configuration)
                 .transactionAware()
                 .build();
     }
 
+    @NotNull
     @Bean
     public RedisTemplate<String, Object> redisTemplate() {
-        RedisTemplate<String, Object> template = new RedisTemplate<>();
+        @NotNull RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory());
         return template;
     }
 
-    private static void registerDefaultConverters(ConverterRegistry registry) {
+    private static void registerDefaultConverters(@NotNull ConverterRegistry registry) {
         Assert.notNull(registry, "ConverterRegistry must not be null!");
         registry.addConverter(EntityId.class, String.class, EntityId::toString);
     }
 
+    @NotNull
     protected JedisPoolConfig buildPoolConfig() {
-        final JedisPoolConfig poolConfig = new JedisPoolConfig();
+        @NotNull final JedisPoolConfig poolConfig = new JedisPoolConfig();
         poolConfig.setMaxTotal(maxTotal);
         poolConfig.setMaxIdle(maxIdle);
         poolConfig.setMinIdle(minIdle);

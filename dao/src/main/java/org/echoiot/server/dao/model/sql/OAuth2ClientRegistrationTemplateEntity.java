@@ -14,6 +14,7 @@ import org.echoiot.server.common.data.oauth2.TenantNameStrategyType;
 import org.echoiot.server.dao.model.BaseSqlEntity;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.util.mapping.JsonStringType;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -81,7 +82,7 @@ public class OAuth2ClientRegistrationTemplateEntity extends BaseSqlEntity<OAuth2
     public OAuth2ClientRegistrationTemplateEntity() {
     }
 
-    public OAuth2ClientRegistrationTemplateEntity(OAuth2ClientRegistrationTemplate clientRegistrationTemplate) {
+    public OAuth2ClientRegistrationTemplateEntity(@NotNull OAuth2ClientRegistrationTemplate clientRegistrationTemplate) {
         if (clientRegistrationTemplate.getId() != null) {
             this.setUuid(clientRegistrationTemplate.getId().getId());
         }
@@ -116,9 +117,10 @@ public class OAuth2ClientRegistrationTemplateEntity extends BaseSqlEntity<OAuth2
         }
     }
 
+    @NotNull
     @Override
     public OAuth2ClientRegistrationTemplate toData() {
-        OAuth2ClientRegistrationTemplate clientRegistrationTemplate = new OAuth2ClientRegistrationTemplate();
+        @NotNull OAuth2ClientRegistrationTemplate clientRegistrationTemplate = new OAuth2ClientRegistrationTemplate();
         clientRegistrationTemplate.setId(new OAuth2ClientRegistrationTemplateId(id));
         clientRegistrationTemplate.setCreatedTime(createdTime);
         clientRegistrationTemplate.setAdditionalInfo(additionalInfo);

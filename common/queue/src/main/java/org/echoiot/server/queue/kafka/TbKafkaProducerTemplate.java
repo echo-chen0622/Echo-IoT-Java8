@@ -14,6 +14,8 @@ import org.echoiot.server.queue.TbQueueCallback;
 import org.echoiot.server.queue.TbQueueMsg;
 import org.echoiot.server.queue.TbQueueProducer;
 import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Properties;
 import java.util.Set;
@@ -26,21 +28,24 @@ import java.util.stream.Collectors;
 @Slf4j
 public class TbKafkaProducerTemplate<T extends TbQueueMsg> implements TbQueueProducer<T> {
 
+    @NotNull
     private final KafkaProducer<String, byte[]> producer;
 
     @Getter
     private final String defaultTopic;
 
+    @NotNull
     @Getter
     private final TbKafkaSettings settings;
 
     private final TbQueueAdmin admin;
 
+    @NotNull
     private final Set<TopicPartitionInfo> topics;
 
     @Builder
-    private TbKafkaProducerTemplate(TbKafkaSettings settings, String defaultTopic, String clientId, TbQueueAdmin admin) {
-        Properties props = settings.toProducerProps();
+    private TbKafkaProducerTemplate(@NotNull TbKafkaSettings settings, String defaultTopic, String clientId, TbQueueAdmin admin) {
+        @NotNull Properties props = settings.toProducerProps();
 
         if (!StringUtils.isEmpty(clientId)) {
             props.put(ProducerConfig.CLIENT_ID_CONFIG, clientId);
@@ -58,13 +63,13 @@ public class TbKafkaProducerTemplate<T extends TbQueueMsg> implements TbQueuePro
     }
 
     @Override
-    public void send(TopicPartitionInfo tpi, T msg, TbQueueCallback callback) {
+    public void send(@NotNull TopicPartitionInfo tpi, @NotNull T msg, @Nullable TbQueueCallback callback) {
         try {
             createTopicIfNotExist(tpi);
             String key = msg.getKey().toString();
             byte[] data = msg.getData();
             ProducerRecord<String, byte[]> record;
-            Iterable<Header> headers = msg.getHeaders().getData().entrySet().stream().map(e -> new RecordHeader(e.getKey(), e.getValue())).collect(Collectors.toList());
+            @NotNull Iterable<Header> headers = msg.getHeaders().getData().entrySet().stream().map(e -> new RecordHeader(e.getKey(), e.getValue())).collect(Collectors.toList());
             record = new ProducerRecord<>(tpi.getFullTopicName(), null, key, data, headers);
             producer.send(record, (metadata, exception) -> {
                 if (exception == null) {
@@ -89,7 +94,7 @@ public class TbKafkaProducerTemplate<T extends TbQueueMsg> implements TbQueuePro
         }
     }
 
-    private void createTopicIfNotExist(TopicPartitionInfo tpi) {
+    private void createTopicIfNotExist(@NotNull TopicPartitionInfo tpi) {
         if (topics.contains(tpi)) {
             return;
         }

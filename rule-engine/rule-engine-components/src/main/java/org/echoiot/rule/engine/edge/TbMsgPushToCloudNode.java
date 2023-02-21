@@ -10,6 +10,8 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.data.rule.RuleChainType;
 import org.echoiot.server.common.msg.TbMsg;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -48,26 +50,31 @@ public class TbMsgPushToCloudNode extends AbstractTbMsgPushNode<TbMsgPushToCloud
 
     // Implementation of this node is done on the Edge
 
+    @Nullable
     @Override
     Object buildEvent(TenantId tenantId, EdgeEventActionType eventAction, UUID entityId, Object eventType, JsonNode entityBody) {
         return null;
     }
 
+    @Nullable
     @Override
     Object getEventTypeByEntityType(EntityType entityType) {
         return null;
     }
 
+    @Nullable
     @Override
     Object getAlarmEventType() {
         return null;
     }
 
+    @Nullable
     @Override
     String getIgnoredMessageSource() {
         return null;
     }
 
+    @NotNull
     @Override
     protected Class<TbMsgPushToCloudNodeConfiguration> getConfigClazz() {
         return TbMsgPushToCloudNodeConfiguration.class;

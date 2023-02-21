@@ -4,15 +4,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.Nullable;
 
 @Slf4j
 public class RuleEngineException extends Exception {
     protected static final ObjectMapper mapper = new ObjectMapper();
 
     @Getter
-    private long ts;
+    private final long ts;
 
-    public RuleEngineException(String message) {
+    public RuleEngineException(@Nullable String message) {
         super(message != null ? message : "Unknown");
         ts = System.currentTimeMillis();
     }

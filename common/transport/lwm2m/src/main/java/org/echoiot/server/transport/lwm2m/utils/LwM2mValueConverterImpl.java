@@ -9,6 +9,8 @@ import org.eclipse.leshan.core.node.ObjectLink;
 import org.eclipse.leshan.core.node.codec.CodecException;
 import org.eclipse.leshan.core.node.codec.LwM2mValueConverter;
 import org.eclipse.leshan.core.util.Hex;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.math.BigInteger;
 import java.text.DateFormat;
@@ -26,8 +28,9 @@ public class LwM2mValueConverterImpl implements LwM2mValueConverter {
         return INSTANCE;
     }
 
+    @Nullable
     @Override
-    public Object convertValue(Object value, Type currentType, Type expectedType, LwM2mPath resourcePath)
+    public Object convertValue(@Nullable Object value, @Nullable Type currentType, @Nullable Type expectedType, LwM2mPath resourcePath)
             throws CodecException {
         if (value == null) {
            return null;
@@ -50,7 +53,7 @@ public class LwM2mValueConverterImpl implements LwM2mValueConverter {
                 switch (currentType) {
                     case FLOAT:
                         log.debug("Trying to convert float value [{}] to Integer", value);
-                        Long longValue = ((Double) value).longValue();
+                        @NotNull Long longValue = ((Double) value).longValue();
                         if ((double) value == longValue.doubleValue()) {
                             return longValue;
                         }
@@ -65,7 +68,7 @@ public class LwM2mValueConverterImpl implements LwM2mValueConverter {
                 switch (currentType) {
                     case INTEGER:
                         log.debug("Trying to convert integer value [{}] to float", value);
-                        Double floatValue = ((Long) value).doubleValue();
+                        @NotNull Double floatValue = ((Long) value).doubleValue();
                         if ((long) value == floatValue.longValue()) {
                             return floatValue;
                         }
@@ -88,7 +91,7 @@ public class LwM2mValueConverterImpl implements LwM2mValueConverter {
                         break;
                     case INTEGER:
                         log.debug("Trying to convert int value {} to boolean", value);
-                        Long val = (Long) value;
+                        @NotNull Long val = (Long) value;
                         if (val == 1) {
                             return true;
                         } else if (val == 0) {
@@ -131,7 +134,7 @@ public class LwM2mValueConverterImpl implements LwM2mValueConverter {
                     case FLOAT:
                         return String.valueOf(value);
                     case TIME:
-                        String DATE_FORMAT = "MMM d, yyyy HH:mm a";
+                        @NotNull String DATE_FORMAT = "MMM d, yyyy HH:mm a";
                         Long timeValue;
                         try {
                             timeValue = ((Date) value).getTime();
@@ -139,7 +142,7 @@ public class LwM2mValueConverterImpl implements LwM2mValueConverter {
                         catch (Exception e){
                            timeValue = new BigInteger((byte [])value).longValue();
                         }
-                        DateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
+                        @NotNull DateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
                         return formatter.format(new Date(timeValue));
                     case OPAQUE:
                         return Hex.encodeHexString((byte[])value);

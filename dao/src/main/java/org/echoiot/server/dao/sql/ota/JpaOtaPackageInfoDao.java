@@ -2,6 +2,7 @@ package org.echoiot.server.dao.sql.ota;
 
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.dao.model.sql.OtaPackageInfoEntity;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
@@ -25,9 +26,10 @@ import java.util.UUID;
 @SqlDao
 public class JpaOtaPackageInfoDao extends JpaAbstractSearchTextDao<OtaPackageInfoEntity, OtaPackageInfo> implements OtaPackageInfoDao {
 
-    @Autowired
+    @Resource
     private OtaPackageInfoRepository otaPackageInfoRepository;
 
+    @NotNull
     @Override
     protected Class<OtaPackageInfoEntity> getEntityClass() {
         return OtaPackageInfoEntity.class;
@@ -44,7 +46,7 @@ public class JpaOtaPackageInfoDao extends JpaAbstractSearchTextDao<OtaPackageInf
     }
 
     @Override
-    public OtaPackageInfo save(TenantId tenantId, OtaPackageInfo otaPackageInfo) {
+    public OtaPackageInfo save(TenantId tenantId, @NotNull OtaPackageInfo otaPackageInfo) {
         OtaPackageInfo savedOtaPackage = super.save(tenantId, otaPackageInfo);
         if (otaPackageInfo.getId() == null) {
             return savedOtaPackage;
@@ -53,8 +55,9 @@ public class JpaOtaPackageInfoDao extends JpaAbstractSearchTextDao<OtaPackageInf
         }
     }
 
+    @NotNull
     @Override
-    public PageData<OtaPackageInfo> findOtaPackageInfoByTenantId(TenantId tenantId, PageLink pageLink) {
+    public PageData<OtaPackageInfo> findOtaPackageInfoByTenantId(@NotNull TenantId tenantId, @NotNull PageLink pageLink) {
         return DaoUtil.toPageData(otaPackageInfoRepository
                 .findAllByTenantId(
                         tenantId.getId(),
@@ -62,8 +65,9 @@ public class JpaOtaPackageInfoDao extends JpaAbstractSearchTextDao<OtaPackageInf
                         DaoUtil.toPageable(pageLink)));
     }
 
+    @NotNull
     @Override
-    public PageData<OtaPackageInfo> findOtaPackageInfoByTenantIdAndDeviceProfileIdAndTypeAndHasData(TenantId tenantId, DeviceProfileId deviceProfileId, OtaPackageType otaPackageType, PageLink pageLink) {
+    public PageData<OtaPackageInfo> findOtaPackageInfoByTenantIdAndDeviceProfileIdAndTypeAndHasData(@NotNull TenantId tenantId, @NotNull DeviceProfileId deviceProfileId, OtaPackageType otaPackageType, @NotNull PageLink pageLink) {
         return DaoUtil.toPageData(otaPackageInfoRepository
                 .findAllByTenantIdAndTypeAndDeviceProfileIdAndHasData(
                         tenantId.getId(),
@@ -74,7 +78,7 @@ public class JpaOtaPackageInfoDao extends JpaAbstractSearchTextDao<OtaPackageInf
     }
 
     @Override
-    public boolean isOtaPackageUsed(OtaPackageId otaPackageId, OtaPackageType otaPackageType, DeviceProfileId deviceProfileId) {
+    public boolean isOtaPackageUsed(@NotNull OtaPackageId otaPackageId, @NotNull OtaPackageType otaPackageType, @NotNull DeviceProfileId deviceProfileId) {
         return otaPackageInfoRepository.isOtaPackageUsed(otaPackageId.getId(), deviceProfileId.getId(), otaPackageType.name());
     }
 }

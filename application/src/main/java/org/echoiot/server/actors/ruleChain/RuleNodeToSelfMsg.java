@@ -5,6 +5,7 @@ import lombok.ToString;
 import org.echoiot.server.common.msg.MsgType;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.rule.engine.api.TbContext;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by Echo on 19.03.18.
@@ -17,6 +18,7 @@ final class RuleNodeToSelfMsg extends TbToRuleNodeActorMsg {
         super(ctx, tbMsg);
     }
 
+    @NotNull
     @Override
     public MsgType getMsgType() {
         return MsgType.RULE_TO_SELF_MSG;

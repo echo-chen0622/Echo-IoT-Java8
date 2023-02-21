@@ -4,6 +4,8 @@ import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.transport.adaptor.AdaptorException;
 import org.echoiot.server.gen.transport.TransportProtos;
 import org.eclipse.californium.core.coap.Request;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -12,12 +14,12 @@ import java.util.Set;
 
 public class CoapAdaptorUtils {
 
-    public static TransportProtos.GetAttributeRequestMsg toGetAttributeRequestMsg(Request inbound) throws AdaptorException {
+    public static TransportProtos.GetAttributeRequestMsg toGetAttributeRequestMsg(@NotNull Request inbound) throws AdaptorException {
         List<String> queryElements = inbound.getOptions().getUriQuery();
         TransportProtos.GetAttributeRequestMsg.Builder result = TransportProtos.GetAttributeRequestMsg.newBuilder();
         if (queryElements != null && queryElements.size() > 0) {
-            Set<String> clientKeys = toKeys(queryElements, "clientKeys");
-            Set<String> sharedKeys = toKeys(queryElements, "sharedKeys");
+            @Nullable Set<String> clientKeys = toKeys(queryElements, "clientKeys");
+            @Nullable Set<String> sharedKeys = toKeys(queryElements, "sharedKeys");
             if (clientKeys != null) {
                 result.addAllClientAttributeNames(clientKeys);
             }
@@ -29,10 +31,11 @@ public class CoapAdaptorUtils {
         return result.build();
     }
 
-    private static Set<String> toKeys(List<String> queryElements, String attributeName) throws AdaptorException {
-        String keys = null;
-        for (String queryElement : queryElements) {
-            String[] queryItem = queryElement.split("=");
+    @Nullable
+    private static Set<String> toKeys(@NotNull List<String> queryElements, String attributeName) throws AdaptorException {
+        @Nullable String keys = null;
+        for (@NotNull String queryElement : queryElements) {
+            @NotNull String[] queryItem = queryElement.split("=");
             if (queryItem.length == 2 && queryItem[0].equals(attributeName)) {
                 keys = queryItem[1];
             }

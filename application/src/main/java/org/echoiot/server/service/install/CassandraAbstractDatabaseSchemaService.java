@@ -3,6 +3,7 @@ package org.echoiot.server.service.install;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.dao.cassandra.CassandraInstallCluster;
 import org.echoiot.server.service.install.cql.CQLStatementsParser;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,11 +18,10 @@ public abstract class CassandraAbstractDatabaseSchemaService implements Database
     private static final String CASSANDRA_DIR = "cassandra";
     private static final String CASSANDRA_STANDARD_KEYSPACE = "echoiot";
 
-    @Autowired
-    @Qualifier("CassandraInstallCluster")
+    @Resource(name = "CassandraInstallCluster")
     private CassandraInstallCluster cluster;
 
-    @Autowired
+    @Resource
     private InstallScripts installScripts;
 
     @Value("${cassandra.keyspace_name}")
@@ -41,7 +41,7 @@ public abstract class CassandraAbstractDatabaseSchemaService implements Database
     @Override
     public void createDatabaseSchema(boolean createIndexes) throws Exception {
         log.info("Installing Cassandra DataBase schema part: " + schemaCql);
-        Path schemaFile = Paths.get(installScripts.getDataDir(), CASSANDRA_DIR, schemaCql);
+        @NotNull Path schemaFile = Paths.get(installScripts.getDataDir(), CASSANDRA_DIR, schemaCql);
         loadCql(schemaFile);
     }
 
@@ -49,12 +49,13 @@ public abstract class CassandraAbstractDatabaseSchemaService implements Database
     public void createDatabaseIndexes() throws Exception {
     }
 
-    private void loadCql(Path cql) throws Exception {
+    private void loadCql(@NotNull Path cql) throws Exception {
         List<String> statements = new CQLStatementsParser(cql).getStatements();
         statements.forEach(statement -> cluster.getSession().execute(getCassandraKeyspaceName(statement)));
     }
 
-    private String getCassandraKeyspaceName(String statement) {
+    @NotNull
+    private String getCassandraKeyspaceName(@NotNull String statement) {
         return statement.replaceFirst(CASSANDRA_STANDARD_KEYSPACE, keyspaceName);
     }
 }

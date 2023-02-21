@@ -5,6 +5,8 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -27,26 +29,28 @@ import static org.echoiot.server.service.install.DatabaseHelper.CSV_DUMP_FORMAT;
 @Slf4j
 public class SqlDbHelper {
 
-    public static Path dumpTableIfExists(Connection conn, String tableName,
-                                         String[] columns, String[] defaultValues, String dumpPrefix) throws Exception {
+    @Nullable
+    public static Path dumpTableIfExists(@NotNull Connection conn, String tableName,
+                                         @NotNull String[] columns, String[] defaultValues, String dumpPrefix) throws Exception {
         return dumpTableIfExists(conn, tableName, columns, defaultValues, dumpPrefix, false);
     }
 
-    public static Path dumpTableIfExists(Connection conn, String tableName,
-                                         String[] columns, String[] defaultValues, String dumpPrefix, boolean printHeader) throws Exception {
+    @Nullable
+    public static Path dumpTableIfExists(@NotNull Connection conn, String tableName,
+                                         @NotNull String[] columns, String[] defaultValues, String dumpPrefix, boolean printHeader) throws Exception {
 
         if (tableExists(conn, tableName)) {
             Path dumpFile = Files.createTempFile(dumpPrefix, null);
             Files.deleteIfExists(dumpFile);
-            CSVFormat csvFormat = CSV_DUMP_FORMAT;
+            @NotNull CSVFormat csvFormat = CSV_DUMP_FORMAT;
             if (printHeader) {
                 csvFormat = csvFormat.withHeader(columns);
             }
-            try (CSVPrinter csvPrinter = new CSVPrinter(Files.newBufferedWriter(dumpFile), csvFormat)) {
+            try (@NotNull CSVPrinter csvPrinter = new CSVPrinter(Files.newBufferedWriter(dumpFile), csvFormat)) {
                 try (PreparedStatement stmt = conn.prepareStatement("SELECT * FROM " + tableName)) {
                     try (ResultSet tableRes = stmt.executeQuery()) {
                         ResultSetMetaData resMetaData = tableRes.getMetaData();
-                        Map<String, Integer> columnIndexMap = new HashMap<>();
+                        @NotNull Map<String, Integer> columnIndexMap = new HashMap<>();
                         for (int i = 1; i <= resMetaData.getColumnCount(); i++) {
                             String columnName = resMetaData.getColumnName(i);
                             columnIndexMap.put(columnName.toUpperCase(), i);
@@ -63,7 +67,7 @@ public class SqlDbHelper {
         }
     }
 
-    private static boolean tableExists(Connection conn, String tableName) {
+    private static boolean tableExists(@NotNull Connection conn, String tableName) {
         try (Statement stmt = conn.createStatement()) {
             stmt.executeQuery("select * from " + tableName + " where 1=0");
             return true;
@@ -72,19 +76,19 @@ public class SqlDbHelper {
         }
     }
 
-    public static void loadTable(Connection conn, String tableName, String[] columns, Path sourceFile) throws Exception {
+    public static void loadTable(@NotNull Connection conn, String tableName, @NotNull String[] columns, @NotNull Path sourceFile) throws Exception {
         loadTable(conn, tableName, columns, sourceFile, false);
     }
 
-    public static void loadTable(Connection conn, String tableName, String[] columns, Path sourceFile, boolean parseHeader) throws Exception {
-        CSVFormat csvFormat = CSV_DUMP_FORMAT;
+    public static void loadTable(@NotNull Connection conn, String tableName, @NotNull String[] columns, @NotNull Path sourceFile, boolean parseHeader) throws Exception {
+        @NotNull CSVFormat csvFormat = CSV_DUMP_FORMAT;
         if (parseHeader) {
             csvFormat = csvFormat.withFirstRecordAsHeader();
         } else {
             csvFormat = CSV_DUMP_FORMAT.withHeader(columns);
         }
         try (PreparedStatement prepared = conn.prepareStatement(createInsertStatement(tableName, columns))) {
-            try (CSVParser csvParser = new CSVParser(Files.newBufferedReader(sourceFile), csvFormat)) {
+            try (@NotNull CSVParser csvParser = new CSVParser(Files.newBufferedReader(sourceFile), csvFormat)) {
                 csvParser.forEach(record -> {
                     try {
                         for (int i = 0; i < columns.length; i++) {
@@ -99,9 +103,9 @@ public class SqlDbHelper {
         }
     }
 
-    private static void dumpRow(ResultSet res, Map<String, Integer> columnIndexMap, String[] columns,
-                                String[] defaultValues, CSVPrinter csvPrinter) throws Exception {
-        List<String> record = new ArrayList<>();
+    private static void dumpRow(@NotNull ResultSet res, @NotNull Map<String, Integer> columnIndexMap, @NotNull String[] columns,
+                                @Nullable String[] defaultValues, @NotNull CSVPrinter csvPrinter) throws Exception {
+        @NotNull List<String> record = new ArrayList<>();
         for (int i=0;i<columns.length;i++) {
             String column = columns[i];
             String defaultValue;
@@ -115,7 +119,8 @@ public class SqlDbHelper {
         csvPrinter.printRecord(record);
     }
 
-    private static String getColumnValue(String column, String defaultValue, Map<String, Integer> columnIndexMap, ResultSet res) {
+    @Nullable
+    private static String getColumnValue(@NotNull String column, String defaultValue, @NotNull Map<String, Integer> columnIndexMap, @NotNull ResultSet res) {
         int index = columnIndexMap.containsKey(column.toUpperCase()) ? columnIndexMap.get(column.toUpperCase()) : -1;
         if (index > -1) {
             String str;
@@ -136,14 +141,15 @@ public class SqlDbHelper {
     }
 
     private static void setColumnValue(int index, String column,
-                                       CSVRecord record, PreparedStatement preparedStatement) throws SQLException {
+                                       @NotNull CSVRecord record, @NotNull PreparedStatement preparedStatement) throws SQLException {
         String value = record.get(column);
         int type = preparedStatement.getParameterMetaData().getParameterType(index + 1);
         preparedStatement.setObject(index + 1, value, type);
     }
 
-    private static String createInsertStatement(String tableName, String[] columns) {
-        StringBuilder insertStatementBuilder = new StringBuilder();
+    @NotNull
+    private static String createInsertStatement(String tableName, @NotNull String[] columns) {
+        @NotNull StringBuilder insertStatementBuilder = new StringBuilder();
         insertStatementBuilder.append("INSERT INTO ").append(tableName).append(" (");
         for (String column : columns) {
             insertStatementBuilder.append(column).append(",");

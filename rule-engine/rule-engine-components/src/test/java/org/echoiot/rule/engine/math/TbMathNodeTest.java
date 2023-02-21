@@ -2,6 +2,7 @@ package org.echoiot.rule.engine.math;
 
 import com.datastax.oss.driver.api.core.uuid.Uuids;
 import com.google.common.util.concurrent.Futures;
+import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -45,8 +46,8 @@ import static org.mockito.Mockito.verify;
 @RunWith(MockitoJUnitRunner.class)
 public class TbMathNodeTest {
 
-    private EntityId originator = new DeviceId(Uuids.timeBased());
-    private TenantId tenantId = TenantId.fromUUID(Uuids.timeBased());
+    private final EntityId originator = new DeviceId(Uuids.timeBased());
+    private final TenantId tenantId = TenantId.fromUUID(Uuids.timeBased());
 
     @Mock
     private TbContext ctx;
@@ -87,24 +88,27 @@ public class TbMathNodeTest {
         lenient().when(ctx.getDbCallbackExecutor()).thenReturn(dbExecutor);
     }
 
+    @NotNull
     private TbMathNode initNode(TbRuleNodeMathFunctionType operation, TbMathResult result, TbMathArgument... arguments) {
         return initNode(operation, null, result, arguments);
     }
 
+    @NotNull
     private TbMathNode initNodeWithCustomFunction(String expression, TbMathResult result, TbMathArgument... arguments) {
         return initNode(TbRuleNodeMathFunctionType.CUSTOM, expression, result, arguments);
     }
 
+    @NotNull
     private TbMathNode initNode(TbRuleNodeMathFunctionType operation, String expression, TbMathResult result, TbMathArgument... arguments) {
         try {
-            TbMathNodeConfiguration configuration = new TbMathNodeConfiguration();
+            @NotNull TbMathNodeConfiguration configuration = new TbMathNodeConfiguration();
             configuration.setOperation(operation);
             if (TbRuleNodeMathFunctionType.CUSTOM.equals(operation)) {
                 configuration.setCustomFunction(expression);
             }
             configuration.setResult(result);
             configuration.setArguments(Arrays.asList(arguments));
-            TbMathNode node = new TbMathNode();
+            @NotNull TbMathNode node = new TbMathNode();
             node.init(ctx, new TbNodeConfiguration(JacksonUtil.valueToTree(configuration)));
             return node;
         } catch (TbNodeException ex) {
@@ -114,17 +118,17 @@ public class TbMathNodeTest {
 
     @Test
     public void testExp4j() {
-        var node = initNodeWithCustomFunction("2a+3b",
-                new TbMathResult(TbMathArgumentType.MESSAGE_BODY, "result", 2, false, false, null),
-                new TbMathArgument(TbMathArgumentType.MESSAGE_BODY, "a"),
-                new TbMathArgument(TbMathArgumentType.MESSAGE_BODY, "b")
-        );
+        @NotNull var node = initNodeWithCustomFunction("2a+3b",
+                                                       new TbMathResult(TbMathArgumentType.MESSAGE_BODY, "result", 2, false, false, null),
+                                                       new TbMathArgument(TbMathArgumentType.MESSAGE_BODY, "a"),
+                                                       new TbMathArgument(TbMathArgumentType.MESSAGE_BODY, "b")
+                                                      );
 
-        TbMsg msg = TbMsg.newMsg("TEST", originator, new TbMsgMetaData(), JacksonUtil.newObjectNode().put("a", 2).put("b", 2).toString());
+        @NotNull TbMsg msg = TbMsg.newMsg("TEST", originator, new TbMsgMetaData(), JacksonUtil.newObjectNode().put("a", 2).put("b", 2).toString());
 
         node.onMsg(ctx, msg);
 
-        ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        @NotNull ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
         Mockito.verify(ctx, Mockito.timeout(5000)).tellSuccess(msgCaptor.capture());
 
         TbMsg resultMsg = msgCaptor.getValue();
@@ -188,17 +192,17 @@ public class TbMathNodeTest {
     private void testSimpleTwoArgumentFunction(TbRuleNodeMathFunctionType function, double arg1, double arg2, double result) {
         initMocks();
 
-        var node = initNode(function,
-                new TbMathResult(TbMathArgumentType.MESSAGE_BODY, "result", 2, false, false, null),
-                new TbMathArgument(TbMathArgumentType.MESSAGE_BODY, "a"),
-                new TbMathArgument(TbMathArgumentType.MESSAGE_BODY, "b")
-        );
+        @NotNull var node = initNode(function,
+                                     new TbMathResult(TbMathArgumentType.MESSAGE_BODY, "result", 2, false, false, null),
+                                     new TbMathArgument(TbMathArgumentType.MESSAGE_BODY, "a"),
+                                     new TbMathArgument(TbMathArgumentType.MESSAGE_BODY, "b")
+                                    );
 
-        TbMsg msg = TbMsg.newMsg("TEST", originator, new TbMsgMetaData(), JacksonUtil.newObjectNode().put("a", arg1).put("b", arg2).toString());
+        @NotNull TbMsg msg = TbMsg.newMsg("TEST", originator, new TbMsgMetaData(), JacksonUtil.newObjectNode().put("a", arg1).put("b", arg2).toString());
 
         node.onMsg(ctx, msg);
 
-        ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        @NotNull ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
         Mockito.verify(ctx, Mockito.timeout(5000).times(1)).tellSuccess(msgCaptor.capture());
 
         TbMsg resultMsg = msgCaptor.getValue();
@@ -212,16 +216,16 @@ public class TbMathNodeTest {
     private void testSimpleOneArgumentFunction(TbRuleNodeMathFunctionType function, double arg1, double result) {
         initMocks();
 
-        var node = initNode(function,
-                new TbMathResult(TbMathArgumentType.MESSAGE_BODY, "result", 2, false, false, null),
-                new TbMathArgument(TbMathArgumentType.MESSAGE_BODY, "a")
-        );
+        @NotNull var node = initNode(function,
+                                     new TbMathResult(TbMathArgumentType.MESSAGE_BODY, "result", 2, false, false, null),
+                                     new TbMathArgument(TbMathArgumentType.MESSAGE_BODY, "a")
+                                    );
 
-        TbMsg msg = TbMsg.newMsg("TEST", originator, new TbMsgMetaData(), JacksonUtil.newObjectNode().put("a", arg1).toString());
+        @NotNull TbMsg msg = TbMsg.newMsg("TEST", originator, new TbMsgMetaData(), JacksonUtil.newObjectNode().put("a", arg1).toString());
 
         node.onMsg(ctx, msg);
 
-        ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        @NotNull ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
         Mockito.verify(ctx, Mockito.timeout(5000)).tellSuccess(msgCaptor.capture());
 
         TbMsg resultMsg = msgCaptor.getValue();
@@ -234,17 +238,17 @@ public class TbMathNodeTest {
 
     @Test
     public void test_2_plus_2_body() {
-        var node = initNode(TbRuleNodeMathFunctionType.ADD,
-                new TbMathResult(TbMathArgumentType.MESSAGE_BODY, "result", 2, false, false, null),
-                new TbMathArgument(TbMathArgumentType.MESSAGE_BODY, "a"),
-                new TbMathArgument(TbMathArgumentType.MESSAGE_BODY, "b")
-        );
+        @NotNull var node = initNode(TbRuleNodeMathFunctionType.ADD,
+                                     new TbMathResult(TbMathArgumentType.MESSAGE_BODY, "result", 2, false, false, null),
+                                     new TbMathArgument(TbMathArgumentType.MESSAGE_BODY, "a"),
+                                     new TbMathArgument(TbMathArgumentType.MESSAGE_BODY, "b")
+                                    );
 
-        TbMsg msg = TbMsg.newMsg("TEST", originator, new TbMsgMetaData(), JacksonUtil.newObjectNode().put("a", 2).put("b", 2).toString());
+        @NotNull TbMsg msg = TbMsg.newMsg("TEST", originator, new TbMsgMetaData(), JacksonUtil.newObjectNode().put("a", 2).put("b", 2).toString());
 
         node.onMsg(ctx, msg);
 
-        ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        @NotNull ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
         Mockito.verify(ctx, Mockito.timeout(5000)).tellSuccess(msgCaptor.capture());
 
         TbMsg resultMsg = msgCaptor.getValue();
@@ -257,17 +261,17 @@ public class TbMathNodeTest {
 
     @Test
     public void test_2_plus_2_meta() {
-        var node = initNode(TbRuleNodeMathFunctionType.ADD,
-                new TbMathResult(TbMathArgumentType.MESSAGE_METADATA, "result", 0, false, false, null),
-                new TbMathArgument(TbMathArgumentType.MESSAGE_BODY, "a"),
-                new TbMathArgument(TbMathArgumentType.MESSAGE_BODY, "b")
-        );
+        @NotNull var node = initNode(TbRuleNodeMathFunctionType.ADD,
+                                     new TbMathResult(TbMathArgumentType.MESSAGE_METADATA, "result", 0, false, false, null),
+                                     new TbMathArgument(TbMathArgumentType.MESSAGE_BODY, "a"),
+                                     new TbMathArgument(TbMathArgumentType.MESSAGE_BODY, "b")
+                                    );
 
-        TbMsg msg = TbMsg.newMsg("TEST", originator, new TbMsgMetaData(), JacksonUtil.newObjectNode().put("a", 2).put("b", 2).toString());
+        @NotNull TbMsg msg = TbMsg.newMsg("TEST", originator, new TbMsgMetaData(), JacksonUtil.newObjectNode().put("a", 2).put("b", 2).toString());
 
         node.onMsg(ctx, msg);
 
-        ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        @NotNull ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
         Mockito.verify(ctx, Mockito.timeout(5000)).tellSuccess(msgCaptor.capture());
 
         TbMsg resultMsg = msgCaptor.getValue();
@@ -281,13 +285,13 @@ public class TbMathNodeTest {
 
     @Test
     public void test_2_plus_2_attr_and_ts() {
-        var node = initNode(TbRuleNodeMathFunctionType.ADD,
-                new TbMathResult(TbMathArgumentType.MESSAGE_BODY, "result", 2, false, false, null),
-                new TbMathArgument(TbMathArgumentType.ATTRIBUTE, "a"),
-                new TbMathArgument(TbMathArgumentType.TIME_SERIES, "b")
-        );
+        @NotNull var node = initNode(TbRuleNodeMathFunctionType.ADD,
+                                     new TbMathResult(TbMathArgumentType.MESSAGE_BODY, "result", 2, false, false, null),
+                                     new TbMathArgument(TbMathArgumentType.ATTRIBUTE, "a"),
+                                     new TbMathArgument(TbMathArgumentType.TIME_SERIES, "b")
+                                    );
 
-        TbMsg msg = TbMsg.newMsg("TEST", originator, new TbMsgMetaData(), JacksonUtil.newObjectNode().toString());
+        @NotNull TbMsg msg = TbMsg.newMsg("TEST", originator, new TbMsgMetaData(), JacksonUtil.newObjectNode().toString());
 
         Mockito.when(attributesService.find(tenantId, originator, DataConstants.SERVER_SCOPE, "a"))
                 .thenReturn(Futures.immediateFuture(Optional.of(new BaseAttributeKvEntry(System.currentTimeMillis(), new DoubleDataEntry("a", 2.0)))));
@@ -297,7 +301,7 @@ public class TbMathNodeTest {
 
         node.onMsg(ctx, msg);
 
-        ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        @NotNull ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
         Mockito.verify(ctx, Mockito.timeout(5000)).tellSuccess(msgCaptor.capture());
 
         TbMsg resultMsg = msgCaptor.getValue();
@@ -310,16 +314,16 @@ public class TbMathNodeTest {
 
     @Test
     public void test_sqrt_5_body() {
-        var node = initNode(TbRuleNodeMathFunctionType.SQRT,
-                new TbMathResult(TbMathArgumentType.MESSAGE_BODY, "result", 3, false, false, null),
-                new TbMathArgument(TbMathArgumentType.MESSAGE_BODY, "a")
-        );
+        @NotNull var node = initNode(TbRuleNodeMathFunctionType.SQRT,
+                                     new TbMathResult(TbMathArgumentType.MESSAGE_BODY, "result", 3, false, false, null),
+                                     new TbMathArgument(TbMathArgumentType.MESSAGE_BODY, "a")
+                                    );
 
-        TbMsg msg = TbMsg.newMsg("TEST", originator, new TbMsgMetaData(), JacksonUtil.newObjectNode().put("a", 5).toString());
+        @NotNull TbMsg msg = TbMsg.newMsg("TEST", originator, new TbMsgMetaData(), JacksonUtil.newObjectNode().put("a", 5).toString());
 
         node.onMsg(ctx, msg);
 
-        ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        @NotNull ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
         Mockito.verify(ctx, Mockito.timeout(5000)).tellSuccess(msgCaptor.capture());
 
         TbMsg resultMsg = msgCaptor.getValue();
@@ -332,16 +336,16 @@ public class TbMathNodeTest {
 
     @Test
     public void test_sqrt_5_meta() {
-        var node = initNode(TbRuleNodeMathFunctionType.SQRT,
-                new TbMathResult(TbMathArgumentType.MESSAGE_METADATA, "result", 3, false, false, null),
-                new TbMathArgument(TbMathArgumentType.MESSAGE_BODY, "a")
-        );
+        @NotNull var node = initNode(TbRuleNodeMathFunctionType.SQRT,
+                                     new TbMathResult(TbMathArgumentType.MESSAGE_METADATA, "result", 3, false, false, null),
+                                     new TbMathArgument(TbMathArgumentType.MESSAGE_BODY, "a")
+                                    );
 
-        TbMsg msg = TbMsg.newMsg("TEST", originator, new TbMsgMetaData(), JacksonUtil.newObjectNode().put("a", 5).toString());
+        @NotNull TbMsg msg = TbMsg.newMsg("TEST", originator, new TbMsgMetaData(), JacksonUtil.newObjectNode().put("a", 5).toString());
 
         node.onMsg(ctx, msg);
 
-        ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        @NotNull ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
         Mockito.verify(ctx, Mockito.timeout(5000)).tellSuccess(msgCaptor.capture());
 
         TbMsg resultMsg = msgCaptor.getValue();
@@ -354,19 +358,19 @@ public class TbMathNodeTest {
 
     @Test
     public void test_sqrt_5_to_attribute_and_metadata() {
-        var node = initNode(TbRuleNodeMathFunctionType.SQRT,
-                new TbMathResult(TbMathArgumentType.ATTRIBUTE, "result", 3, false, true, DataConstants.SERVER_SCOPE),
-                new TbMathArgument(TbMathArgumentType.MESSAGE_BODY, "a")
-        );
+        @NotNull var node = initNode(TbRuleNodeMathFunctionType.SQRT,
+                                     new TbMathResult(TbMathArgumentType.ATTRIBUTE, "result", 3, false, true, DataConstants.SERVER_SCOPE),
+                                     new TbMathArgument(TbMathArgumentType.MESSAGE_BODY, "a")
+                                    );
 
-        TbMsg msg = TbMsg.newMsg("TEST", originator, new TbMsgMetaData(), JacksonUtil.newObjectNode().put("a", 5).toString());
+        @NotNull TbMsg msg = TbMsg.newMsg("TEST", originator, new TbMsgMetaData(), JacksonUtil.newObjectNode().put("a", 5).toString());
 
         Mockito.when(telemetryService.saveAttrAndNotify(any(), any(), anyString(), anyString(), anyDouble()))
                 .thenReturn(Futures.immediateFuture(null));
 
         node.onMsg(ctx, msg);
 
-        ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        @NotNull ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
         Mockito.verify(ctx, Mockito.timeout(5000)).tellSuccess(msgCaptor.capture());
         Mockito.verify(telemetryService, times(1)).saveAttrAndNotify(any(), any(), anyString(), anyString(), anyDouble());
 
@@ -380,18 +384,18 @@ public class TbMathNodeTest {
 
     @Test
     public void test_sqrt_5_to_timeseries_and_data() {
-        var node = initNode(TbRuleNodeMathFunctionType.SQRT,
-                new TbMathResult(TbMathArgumentType.TIME_SERIES, "result", 3, true, false, DataConstants.SERVER_SCOPE),
-                new TbMathArgument(TbMathArgumentType.MESSAGE_BODY, "a")
-        );
+        @NotNull var node = initNode(TbRuleNodeMathFunctionType.SQRT,
+                                     new TbMathResult(TbMathArgumentType.TIME_SERIES, "result", 3, true, false, DataConstants.SERVER_SCOPE),
+                                     new TbMathArgument(TbMathArgumentType.MESSAGE_BODY, "a")
+                                    );
 
-        TbMsg msg = TbMsg.newMsg("TEST", originator, new TbMsgMetaData(), JacksonUtil.newObjectNode().put("a", 5).toString());
+        @NotNull TbMsg msg = TbMsg.newMsg("TEST", originator, new TbMsgMetaData(), JacksonUtil.newObjectNode().put("a", 5).toString());
         Mockito.when(telemetryService.saveAndNotify(any(), any(), any(TsKvEntry.class)))
                 .thenReturn(Futures.immediateFuture(null));
 
         node.onMsg(ctx, msg);
 
-        ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        @NotNull ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
         verify(ctx, Mockito.timeout(5000)).tellSuccess(msgCaptor.capture());
         Mockito.verify(telemetryService, times(1)).saveAndNotify(any(), any(), any(TsKvEntry.class));
 
@@ -405,18 +409,18 @@ public class TbMathNodeTest {
 
     @Test
     public void test_sqrt_5_to_timeseries_and_metadata_and_data() {
-        var node = initNode(TbRuleNodeMathFunctionType.SQRT,
-                new TbMathResult(TbMathArgumentType.TIME_SERIES, "result", 3, true, true, DataConstants.SERVER_SCOPE),
-                new TbMathArgument(TbMathArgumentType.MESSAGE_BODY, "a")
-        );
+        @NotNull var node = initNode(TbRuleNodeMathFunctionType.SQRT,
+                                     new TbMathResult(TbMathArgumentType.TIME_SERIES, "result", 3, true, true, DataConstants.SERVER_SCOPE),
+                                     new TbMathArgument(TbMathArgumentType.MESSAGE_BODY, "a")
+                                    );
 
-        TbMsg msg = TbMsg.newMsg("TEST", originator, new TbMsgMetaData(), JacksonUtil.newObjectNode().put("a", 5).toString());
+        @NotNull TbMsg msg = TbMsg.newMsg("TEST", originator, new TbMsgMetaData(), JacksonUtil.newObjectNode().put("a", 5).toString());
         Mockito.when(telemetryService.saveAndNotify(any(), any(), any(TsKvEntry.class)))
                 .thenReturn(Futures.immediateFuture(null));
 
         node.onMsg(ctx, msg);
 
-        ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        @NotNull ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
         verify(ctx, Mockito.timeout(5000)).tellSuccess(msgCaptor.capture());
         Mockito.verify(telemetryService, times(1)).saveAndNotify(any(), any(), any(TsKvEntry.class));
 
@@ -435,16 +439,16 @@ public class TbMathNodeTest {
 
     @Test
     public void test_sqrt_5_default_value() {
-        TbMathArgument tbMathArgument = new TbMathArgument(TbMathArgumentType.MESSAGE_BODY, "TestKey");
+        @NotNull TbMathArgument tbMathArgument = new TbMathArgument(TbMathArgumentType.MESSAGE_BODY, "TestKey");
         tbMathArgument.setDefaultValue(5.0);
-        var node = initNode(TbRuleNodeMathFunctionType.SQRT,
-                new TbMathResult(TbMathArgumentType.MESSAGE_METADATA, "result", 3, false, false, null),
-                tbMathArgument
-        );
-        TbMsg msg = TbMsg.newMsg("TEST", originator, new TbMsgMetaData(), JacksonUtil.newObjectNode().put("a", 10).toString());
+        @NotNull var node = initNode(TbRuleNodeMathFunctionType.SQRT,
+                                     new TbMathResult(TbMathArgumentType.MESSAGE_METADATA, "result", 3, false, false, null),
+                                     tbMathArgument
+                                    );
+        @NotNull TbMsg msg = TbMsg.newMsg("TEST", originator, new TbMsgMetaData(), JacksonUtil.newObjectNode().put("a", 10).toString());
 
         node.onMsg(ctx, msg);
-        ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        @NotNull ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
         Mockito.verify(ctx, Mockito.timeout(5000)).tellSuccess(msgCaptor.capture());
 
         TbMsg resultMsg = msgCaptor.getValue();
@@ -457,11 +461,11 @@ public class TbMathNodeTest {
 
     @Test
     public void test_sqrt_5_default_value_failure() {
-        var node = initNode(TbRuleNodeMathFunctionType.SQRT,
-                new TbMathResult(TbMathArgumentType.TIME_SERIES, "result", 3, true, false, DataConstants.SERVER_SCOPE),
-                new TbMathArgument(TbMathArgumentType.MESSAGE_BODY, "TestKey")
-        );
-        TbMsg msg = TbMsg.newMsg("TEST", originator, new TbMsgMetaData(), JacksonUtil.newObjectNode().put("a", 10).toString());
+        @NotNull var node = initNode(TbRuleNodeMathFunctionType.SQRT,
+                                     new TbMathResult(TbMathArgumentType.TIME_SERIES, "result", 3, true, false, DataConstants.SERVER_SCOPE),
+                                     new TbMathArgument(TbMathArgumentType.MESSAGE_BODY, "TestKey")
+                                    );
+        @NotNull TbMsg msg = TbMsg.newMsg("TEST", originator, new TbMsgMetaData(), JacksonUtil.newObjectNode().put("a", 10).toString());
         Throwable thrown = assertThrows(RuntimeException.class, () -> {
             node.onMsg(ctx, msg);
         });
@@ -470,12 +474,12 @@ public class TbMathNodeTest {
 
     @Test
     public void testConvertMsgBodyIfRequiredFailure() {
-        var node = initNode(TbRuleNodeMathFunctionType.SQRT,
-                new TbMathResult(TbMathArgumentType.MESSAGE_BODY, "result", 3, true, false, DataConstants.SERVER_SCOPE),
-                new TbMathArgument(TbMathArgumentType.MESSAGE_BODY, "a")
-        );
+        @NotNull var node = initNode(TbRuleNodeMathFunctionType.SQRT,
+                                     new TbMathResult(TbMathArgumentType.MESSAGE_BODY, "result", 3, true, false, DataConstants.SERVER_SCOPE),
+                                     new TbMathArgument(TbMathArgumentType.MESSAGE_BODY, "a")
+                                    );
 
-        TbMsg msg = TbMsg.newMsg("TEST", originator, new TbMsgMetaData(), "[]");
+        @NotNull TbMsg msg = TbMsg.newMsg("TEST", originator, new TbMsgMetaData(), "[]");
         Throwable thrown = assertThrows(RuntimeException.class, () -> {
             node.onMsg(ctx, msg);
         });

@@ -1,6 +1,7 @@
 package org.echoiot.rule.engine.edge;
 
 import com.google.common.util.concurrent.SettableFuture;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -53,7 +54,7 @@ public class TbMsgPushToEdgeNodeTest {
     @Before
     public void setUp() throws TbNodeException {
         node = new TbMsgPushToEdgeNode();
-        TbMsgPushToEdgeNodeConfiguration config = new TbMsgPushToEdgeNodeConfiguration().defaultConfiguration();
+        @NotNull TbMsgPushToEdgeNodeConfiguration config = new TbMsgPushToEdgeNodeConfiguration().defaultConfiguration();
         node.init(ctx, new TbNodeConfiguration(JacksonUtil.valueToTree(config)));
     }
 
@@ -63,8 +64,8 @@ public class TbMsgPushToEdgeNodeTest {
         Mockito.when(ctx.getEdgeService()).thenReturn(edgeService);
         Mockito.when(edgeService.findRelatedEdgeIdsByEntityId(tenantId, deviceId, new PageLink(TbMsgPushToEdgeNode.DEFAULT_PAGE_SIZE))).thenReturn(new PageData<>());
 
-        TbMsg msg = TbMsg.newMsg(SessionMsgType.POST_TELEMETRY_REQUEST.name(), deviceId, new TbMsgMetaData(),
-                TbMsgDataType.JSON, "{}", null, null);
+        @NotNull TbMsg msg = TbMsg.newMsg(SessionMsgType.POST_TELEMETRY_REQUEST.name(), deviceId, new TbMsgMetaData(),
+                                          TbMsgDataType.JSON, "{}", null, null);
 
         node.onMsg(ctx, msg);
 
@@ -79,13 +80,13 @@ public class TbMsgPushToEdgeNodeTest {
         Mockito.when(ctx.getDbCallbackExecutor()).thenReturn(dbCallbackExecutor);
         Mockito.when(edgeEventService.saveAsync(any())).thenReturn(SettableFuture.create());
 
-        UserId userId = new UserId(UUID.randomUUID());
-        EdgeId edgeId = new EdgeId(UUID.randomUUID());
-        PageData<EdgeId> edgePageData = new PageData<>(List.of(edgeId), 1, 1, false);
+        @NotNull UserId userId = new UserId(UUID.randomUUID());
+        @NotNull EdgeId edgeId = new EdgeId(UUID.randomUUID());
+        @NotNull PageData<EdgeId> edgePageData = new PageData<>(List.of(edgeId), 1, 1, false);
         Mockito.when(edgeService.findRelatedEdgeIdsByEntityId(tenantId, userId, new PageLink(TbMsgPushToEdgeNode.DEFAULT_PAGE_SIZE))).thenReturn(edgePageData);
 
-        TbMsg msg = TbMsg.newMsg(DataConstants.ATTRIBUTES_UPDATED, userId, new TbMsgMetaData(),
-                TbMsgDataType.JSON, "{}", null, null);
+        @NotNull TbMsg msg = TbMsg.newMsg(DataConstants.ATTRIBUTES_UPDATED, userId, new TbMsgMetaData(),
+                                          TbMsgDataType.JSON, "{}", null, null);
 
         node.onMsg(ctx, msg);
 

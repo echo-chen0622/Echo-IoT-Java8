@@ -3,6 +3,8 @@ package org.echoiot.server.service.install.migrate;
 import com.datastax.oss.driver.api.core.cql.Row;
 import lombok.Data;
 import org.echoiot.server.common.data.UUIDConverter;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -24,38 +26,47 @@ public class CassandraToSqlColumn {
     private Class<? extends Enum> enumClass;
     private boolean allowNullBoolean = false;
 
+    @NotNull
     public static CassandraToSqlColumn idColumn(String name) {
         return new CassandraToSqlColumn(name, CassandraToSqlColumnType.ID);
     }
 
+    @NotNull
     public static CassandraToSqlColumn stringColumn(String name) {
         return new CassandraToSqlColumn(name, CassandraToSqlColumnType.STRING);
     }
 
+    @NotNull
     public static CassandraToSqlColumn stringColumn(String cassandraColumnName, String sqlColumnName) {
         return new CassandraToSqlColumn(cassandraColumnName, sqlColumnName);
     }
 
+    @NotNull
     public static CassandraToSqlColumn bigintColumn(String name) {
         return new CassandraToSqlColumn(name, CassandraToSqlColumnType.BIGINT);
     }
 
+    @NotNull
     public static CassandraToSqlColumn doubleColumn(String name) {
         return new CassandraToSqlColumn(name, CassandraToSqlColumnType.DOUBLE);
     }
 
+    @NotNull
     public static CassandraToSqlColumn booleanColumn(String name) {
         return booleanColumn(name, false);
     }
 
+    @NotNull
     public static CassandraToSqlColumn booleanColumn(String name, boolean allowNullBoolean) {
         return new CassandraToSqlColumn(name, name, CassandraToSqlColumnType.BOOLEAN, null, allowNullBoolean);
     }
 
+    @NotNull
     public static CassandraToSqlColumn jsonColumn(String name) {
         return new CassandraToSqlColumn(name, CassandraToSqlColumnType.JSON);
     }
 
+    @NotNull
     public static CassandraToSqlColumn enumToIntColumn(String name, Class<? extends Enum> enumClass) {
         return new CassandraToSqlColumn(name, CassandraToSqlColumnType.ENUM_TO_INT, enumClass);
     }
@@ -85,7 +96,8 @@ public class CassandraToSqlColumn {
         this.allowNullBoolean = allowNullBoolean;
     }
 
-    public String getColumnValue(Row row) {
+    @Nullable
+    public String getColumnValue(@NotNull Row row) {
         if (row.isNull(index)) {
             if (this.type == CassandraToSqlColumnType.BOOLEAN && !this.allowNullBoolean) {
                 return Boolean.toString(false);
@@ -110,13 +122,13 @@ public class CassandraToSqlColumn {
                 case JSON:
                 case ENUM_TO_INT:
                 default:
-                    String value = row.getString(index);
+                    @Nullable String value = row.getString(index);
                     return this.replaceNullChars(value);
             }
         }
     }
 
-    public void setColumnValue(PreparedStatement sqlInsertStatement, String value) throws SQLException {
+    public void setColumnValue(@NotNull PreparedStatement sqlInsertStatement, @Nullable String value) throws SQLException {
         if (value == null) {
             sqlInsertStatement.setNull(this.sqlIndex, this.sqlType);
         } else {
@@ -137,7 +149,7 @@ public class CassandraToSqlColumn {
                     sqlInsertStatement.setBoolean(this.sqlIndex, Boolean.parseBoolean(value));
                     break;
                 case ENUM_TO_INT:
-                    @SuppressWarnings("unchecked")
+                    @NotNull @SuppressWarnings("unchecked")
                     Enum<?> enumVal = Enum.valueOf(this.enumClass, value);
                     int intValue = enumVal.ordinal();
                     sqlInsertStatement.setInt(this.sqlIndex, intValue);
@@ -152,7 +164,7 @@ public class CassandraToSqlColumn {
         }
     }
 
-    private String replaceNullChars(String strValue) {
+    private String replaceNullChars(@Nullable String strValue) {
         if (strValue != null) {
             return PATTERN_THREAD_LOCAL.get().matcher(strValue).replaceAll(EMPTY_STR);
         }

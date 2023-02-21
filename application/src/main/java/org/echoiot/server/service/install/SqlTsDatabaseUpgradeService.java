@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.SystemUtils;
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.dao.util.SqlTsDao;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -65,7 +67,7 @@ public class SqlTsDatabaseUpgradeService extends AbstractSqlTsDatabaseUpgradeSer
     private static final String DROP_FUNCTION_GET_PARTITION_DATA = "DROP FUNCTION IF EXISTS get_partitions_data;";
 
     @Override
-    public void upgradeDatabase(String fromVersion) throws Exception {
+    public void upgradeDatabase(@NotNull String fromVersion) throws Exception {
         switch (fromVersion) {
             case "2.4.3":
                 try (Connection conn = DriverManager.getConnection(dbUrl, dbUserName, dbPassword)) {
@@ -86,8 +88,8 @@ public class SqlTsDatabaseUpgradeService extends AbstractSqlTsDatabaseUpgradeSer
                             executeQuery(conn, CALL_CREATE_TS_KV_DICTIONARY_TABLE);
                             executeQuery(conn, CALL_INSERT_INTO_DICTIONARY);
 
-                            Path pathToTempTsKvFile = null;
-                            Path pathToTempTsKvLatestFile = null;
+                            @Nullable Path pathToTempTsKvFile = null;
+                            @Nullable Path pathToTempTsKvLatestFile = null;
                             if (SystemUtils.IS_OS_WINDOWS) {
                                 log.info("Lookup for environment variable: {} ...", ECHOIOT_WINDOWS_UPGRADE_DIR);
                                 Path pathToDir;
@@ -117,7 +119,7 @@ public class SqlTsDatabaseUpgradeService extends AbstractSqlTsDatabaseUpgradeSer
                             } else {
                                 try {
                                     Path tempDirPath = Files.createTempDirectory("ts_kv");
-                                    File tempDirAsFile = tempDirPath.toFile();
+                                    @NotNull File tempDirAsFile = tempDirPath.toFile();
                                     boolean writable = tempDirAsFile.setWritable(true, false);
                                     boolean readable = tempDirAsFile.setReadable(true, false);
                                     boolean executable = tempDirAsFile.setExecutable(true, false);
@@ -203,7 +205,7 @@ public class SqlTsDatabaseUpgradeService extends AbstractSqlTsDatabaseUpgradeSer
         }
     }
 
-    private void removeUpgradeFiles(Path pathToTempTsKvFile, Path pathToTempTsKvLatestFile) {
+    private void removeUpgradeFiles(@Nullable Path pathToTempTsKvFile, @Nullable Path pathToTempTsKvLatestFile) {
         if (pathToTempTsKvFile != null && pathToTempTsKvFile.toFile().exists()) {
             boolean deleteTsKvFile = pathToTempTsKvFile.toFile().delete();
             if (deleteTsKvFile) {
@@ -218,13 +220,13 @@ public class SqlTsDatabaseUpgradeService extends AbstractSqlTsDatabaseUpgradeSer
         }
     }
 
-    private void copyTimeseries(Connection conn, Path pathToTempTsKvFile, Path pathToTempTsKvLatestFile) {
+    private void copyTimeseries(@NotNull Connection conn, Path pathToTempTsKvFile, Path pathToTempTsKvLatestFile) {
         executeQuery(conn, "call insert_into_ts_kv('" + pathToTempTsKvFile + "')");
         executeQuery(conn, CALL_CREATE_NEW_TS_KV_LATEST_TABLE);
         executeQuery(conn, "call insert_into_ts_kv_latest('" + pathToTempTsKvLatestFile + "')");
     }
 
-    private void insertTimeseries(Connection conn) {
+    private void insertTimeseries(@NotNull Connection conn) {
         log.warn("Upgrade script failed using the copy to/from files strategy!" +
                 " Trying to perfrom the upgrade using Inserts strategy ...");
         executeQuery(conn, CALL_INSERT_INTO_TS_KV_CURSOR);
@@ -233,8 +235,8 @@ public class SqlTsDatabaseUpgradeService extends AbstractSqlTsDatabaseUpgradeSer
     }
 
     @Override
-    protected void loadSql(Connection conn, String fileName, String version) {
-        Path schemaUpdateFile = Paths.get(installScripts.getDataDir(), "upgrade", version, fileName);
+    protected void loadSql(@NotNull Connection conn, String fileName, String version) {
+        @NotNull Path schemaUpdateFile = Paths.get(installScripts.getDataDir(), "upgrade", version, fileName);
         try {
             loadFunctions(schemaUpdateFile, conn);
             log.info("Functions successfully loaded!");

@@ -9,6 +9,7 @@ import lombok.ToString;
 import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.EventInfo;
 import org.echoiot.server.common.data.id.TenantId;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
@@ -32,13 +33,15 @@ public class RuleChainDebugEvent extends Event {
     @Setter
     private String error;
 
+    @NotNull
     @Override
     public EventType getType() {
         return EventType.DEBUG_RULE_CHAIN;
     }
 
+    @NotNull
     @Override
-    public EventInfo toInfo(EntityType entityType) {
+    public EventInfo toInfo(@NotNull EntityType entityType) {
         EventInfo eventInfo = super.toInfo(entityType);
         var json = (ObjectNode) eventInfo.getBody();
         putNotNull(json, "message", message);

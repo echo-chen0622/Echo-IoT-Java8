@@ -3,6 +3,7 @@ package org.echoiot.server.dao.device;
 import lombok.Data;
 import org.echoiot.server.common.data.id.DeviceProfileId;
 import org.echoiot.server.common.data.id.TenantId;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 
@@ -23,14 +24,17 @@ public class DeviceProfileCacheKey implements Serializable {
         this.defaultProfile = defaultProfile;
     }
 
+    @NotNull
     public static DeviceProfileCacheKey fromName(TenantId tenantId, String name) {
         return new DeviceProfileCacheKey(tenantId, name, null, false);
     }
 
+    @NotNull
     public static DeviceProfileCacheKey fromId(DeviceProfileId id) {
         return new DeviceProfileCacheKey(null, null, id, false);
     }
 
+    @NotNull
     public static DeviceProfileCacheKey defaultProfile(TenantId tenantId) {
         return new DeviceProfileCacheKey(tenantId, null, null, true);
     }

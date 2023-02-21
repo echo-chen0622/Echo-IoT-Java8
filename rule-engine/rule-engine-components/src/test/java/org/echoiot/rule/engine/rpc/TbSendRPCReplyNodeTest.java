@@ -1,6 +1,7 @@
 package org.echoiot.rule.engine.rpc;
 
 import com.google.common.util.concurrent.SettableFuture;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -56,7 +57,7 @@ public class TbSendRPCReplyNodeTest {
     @Before
     public void setUp() throws TbNodeException {
         node = new TbSendRPCReplyNode();
-        TbSendRpcReplyNodeConfiguration config = new TbSendRpcReplyNodeConfiguration().defaultConfiguration();
+        @NotNull TbSendRpcReplyNodeConfiguration config = new TbSendRpcReplyNodeConfiguration().defaultConfiguration();
         node.init(ctx, new TbNodeConfiguration(JacksonUtil.valueToTree(config)));
     }
 
@@ -65,8 +66,8 @@ public class TbSendRPCReplyNodeTest {
         Mockito.when(ctx.getRpcService()).thenReturn(rpcService);
 
 
-        TbMsg msg = TbMsg.newMsg(SessionMsgType.POST_TELEMETRY_REQUEST.name(), deviceId, getDefaultMetadata(),
-                TbMsgDataType.JSON, DUMMY_DATA, null, null);
+        @NotNull TbMsg msg = TbMsg.newMsg(SessionMsgType.POST_TELEMETRY_REQUEST.name(), deviceId, getDefaultMetadata(),
+                                          TbMsgDataType.JSON, DUMMY_DATA, null, null);
 
         node.onMsg(ctx, msg);
 
@@ -81,11 +82,11 @@ public class TbSendRPCReplyNodeTest {
         Mockito.when(edgeEventService.saveAsync(any())).thenReturn(SettableFuture.create());
         Mockito.when(ctx.getDbCallbackExecutor()).thenReturn(listeningExecutor);
 
-        TbMsgMetaData defaultMetadata = getDefaultMetadata();
+        @NotNull TbMsgMetaData defaultMetadata = getDefaultMetadata();
         defaultMetadata.putValue(DataConstants.EDGE_ID, UUID.randomUUID().toString());
         defaultMetadata.putValue(DataConstants.DEVICE_ID, UUID.randomUUID().toString());
-        TbMsg msg = TbMsg.newMsg(SessionMsgType.POST_TELEMETRY_REQUEST.name(), deviceId, defaultMetadata,
-                TbMsgDataType.JSON, DUMMY_DATA, null, null);
+        @NotNull TbMsg msg = TbMsg.newMsg(SessionMsgType.POST_TELEMETRY_REQUEST.name(), deviceId, defaultMetadata,
+                                          TbMsgDataType.JSON, DUMMY_DATA, null, null);
 
         node.onMsg(ctx, msg);
 
@@ -93,9 +94,10 @@ public class TbSendRPCReplyNodeTest {
         verify(rpcService, never()).sendRpcReplyToDevice(DUMMY_SERVICE_ID, DUMMY_SESSION_ID, DUMMY_REQUEST_ID, DUMMY_DATA);
     }
 
+    @NotNull
     private TbMsgMetaData getDefaultMetadata() {
-        TbSendRpcReplyNodeConfiguration config = new TbSendRpcReplyNodeConfiguration().defaultConfiguration();
-        TbMsgMetaData metadata = new TbMsgMetaData();
+        @NotNull TbSendRpcReplyNodeConfiguration config = new TbSendRpcReplyNodeConfiguration().defaultConfiguration();
+        @NotNull TbMsgMetaData metadata = new TbMsgMetaData();
         metadata.putValue(config.getServiceIdMetaDataAttribute(), DUMMY_SERVICE_ID);
         metadata.putValue(config.getSessionIdMetaDataAttribute(), DUMMY_SESSION_ID.toString());
         metadata.putValue(config.getRequestIdMetaDataAttribute(), Integer.toString(DUMMY_REQUEST_ID));

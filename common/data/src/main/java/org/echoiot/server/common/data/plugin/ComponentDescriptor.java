@@ -7,6 +7,10 @@ import lombok.*;
 import org.echoiot.server.common.data.validation.Length;
 import org.echoiot.server.common.data.SearchTextBased;
 import org.echoiot.server.common.data.id.ComponentDescriptorId;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 /**
  * @author Andrew Shvayka
@@ -40,7 +44,7 @@ public class ComponentDescriptor extends SearchTextBased<ComponentDescriptorId> 
         super(id);
     }
 
-    public ComponentDescriptor(ComponentDescriptor plugin) {
+    public ComponentDescriptor(@NotNull ComponentDescriptor plugin) {
         super(plugin);
         this.type = plugin.getType();
         this.scope = plugin.getScope();
@@ -71,18 +75,18 @@ public class ComponentDescriptor extends SearchTextBased<ComponentDescriptorId> 
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ComponentDescriptor that = (ComponentDescriptor) o;
+        @NotNull ComponentDescriptor that = (ComponentDescriptor) o;
 
         if (type != that.type) return false;
         if (scope != that.scope) return false;
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
-        if (actions != null ? !actions.equals(that.actions) : that.actions != null) return false;
-        if (configurationDescriptor != null ? !configurationDescriptor.equals(that.configurationDescriptor) : that.configurationDescriptor != null) return false;
-        return clazz != null ? clazz.equals(that.clazz) : that.clazz == null;
+        if (!Objects.equals(name, that.name)) return false;
+        if (!Objects.equals(actions, that.actions)) return false;
+        if (!Objects.equals(configurationDescriptor, that.configurationDescriptor)) return false;
+        return Objects.equals(clazz, that.clazz);
     }
 
     @Override

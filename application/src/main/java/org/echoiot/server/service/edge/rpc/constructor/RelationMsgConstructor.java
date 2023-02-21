@@ -2,6 +2,7 @@ package org.echoiot.server.service.edge.rpc.constructor;
 
 import org.echoiot.server.common.data.relation.EntityRelation;
 import org.echoiot.server.queue.util.TbCoreComponent;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.gen.edge.v1.RelationUpdateMsg;
@@ -11,7 +12,8 @@ import org.echoiot.server.gen.edge.v1.UpdateMsgType;
 @TbCoreComponent
 public class RelationMsgConstructor {
 
-    public RelationUpdateMsg constructRelationUpdatedMsg(UpdateMsgType msgType, EntityRelation entityRelation) {
+    @NotNull
+    public RelationUpdateMsg constructRelationUpdatedMsg(UpdateMsgType msgType, @NotNull EntityRelation entityRelation) {
         RelationUpdateMsg.Builder builder = RelationUpdateMsg.newBuilder()
                 .setMsgType(msgType)
                 .setFromIdMSB(entityRelation.getFrom().getId().getMostSignificantBits())

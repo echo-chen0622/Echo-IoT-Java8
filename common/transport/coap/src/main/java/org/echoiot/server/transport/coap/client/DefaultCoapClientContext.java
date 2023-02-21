@@ -29,6 +29,8 @@ import org.eclipse.californium.core.coap.CoAP;
 import org.eclipse.californium.core.coap.Response;
 import org.eclipse.californium.core.observe.ObserveRelation;
 import org.eclipse.californium.core.server.resources.CoapExchange;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.event.EventListener;
@@ -66,7 +68,7 @@ public class DefaultCoapClientContext implements CoapClientContext {
     }
 
     @EventListener(DeviceProfileUpdatedEvent.class)
-    public void onApplicationEvent(DeviceProfileUpdatedEvent event) {
+    public void onApplicationEvent(@NotNull DeviceProfileUpdatedEvent event) {
         var deviceProfile = event.getDeviceProfile();
         clients.values().stream().filter(state -> state.getSession() == null).forEach(state -> {
             state.lock();
@@ -83,7 +85,7 @@ public class DefaultCoapClientContext implements CoapClientContext {
     }
 
     @EventListener(DeviceUpdatedEvent.class)
-    public void onApplicationEvent(DeviceUpdatedEvent event) {
+    public void onApplicationEvent(@NotNull DeviceUpdatedEvent event) {
         var device = event.getDevice();
         var state = clients.get(device.getId());
         if (state == null) {
@@ -100,20 +102,21 @@ public class DefaultCoapClientContext implements CoapClientContext {
     }
 
     @EventListener(DeviceDeletedEvent.class)
-    public void onApplicationEvent(DeviceDeletedEvent event) {
+    public void onApplicationEvent(@NotNull DeviceDeletedEvent event) {
         clients.remove(event.getDeviceId());
     }
 
     @Override
-    public boolean registerAttributeObservation(TbCoapClientState clientState, String token, CoapExchange exchange) {
+    public boolean registerAttributeObservation(@NotNull TbCoapClientState clientState, String token, CoapExchange exchange) {
         return registerFeatureObservation(clientState, token, exchange, FeatureType.ATTRIBUTES);
     }
 
     @Override
-    public boolean registerRpcObservation(TbCoapClientState clientState, String token, CoapExchange exchange) {
+    public boolean registerRpcObservation(@NotNull TbCoapClientState clientState, String token, CoapExchange exchange) {
         return registerFeatureObservation(clientState, token, exchange, FeatureType.RPC);
     }
 
+    @Nullable
     @Override
     public AtomicInteger getNotificationCounterByToken(String token) {
         TbCoapClientState state = clientsByToken.get(token);
@@ -174,18 +177,18 @@ public class DefaultCoapClientContext implements CoapClientContext {
 
     @Override
     public void reportActivity() {
-        for (TbCoapClientState state : clients.values()) {
+        for (@NotNull TbCoapClientState state : clients.values()) {
             if (state.getSession() != null) {
                 transportService.reportActivity(state.getSession());
             }
         }
     }
 
-    private void onUplink(TbCoapClientState client, boolean notifyOtherServers, long uplinkTs) {
+    private void onUplink(@NotNull TbCoapClientState client, boolean notifyOtherServers, long uplinkTs) {
         PowerMode powerMode = client.getPowerMode();
-        PowerSavingConfiguration profileSettings = null;
+        @Nullable PowerSavingConfiguration profileSettings = null;
         if (powerMode == null) {
-            var clientProfile = getProfile(client.getProfileId());
+            @NotNull var clientProfile = getProfile(client.getProfileId());
             if (clientProfile.isPresent()) {
                 profileSettings = clientProfile.get().getClientSettings();
                 if (profileSettings != null) {
@@ -220,7 +223,7 @@ public class DefaultCoapClientContext implements CoapClientContext {
         }
     }
 
-    private long getTimeout(TbCoapClientState client, PowerMode powerMode, PowerSavingConfiguration profileSettings) {
+    private long getTimeout(@NotNull TbCoapClientState client, PowerMode powerMode, @Nullable PowerSavingConfiguration profileSettings) {
         long timeout;
         if (PowerMode.PSM.equals(powerMode)) {
             Long psmActivityTimer = client.getPsmActivityTimer();
@@ -247,7 +250,7 @@ public class DefaultCoapClientContext implements CoapClientContext {
         return timeout;
     }
 
-    private boolean registerFeatureObservation(TbCoapClientState state, String token, CoapExchange exchange, FeatureType featureType) {
+    private boolean registerFeatureObservation(@NotNull TbCoapClientState state, String token, CoapExchange exchange, FeatureType featureType) {
         state.lock();
         try {
             boolean newObservation;
@@ -258,7 +261,7 @@ public class DefaultCoapClientContext implements CoapClientContext {
                 } else {
                     newObservation = !state.getAttrs().getToken().equals(token);
                     if (newObservation) {
-                        TbCoapObservationState old = state.getAttrs();
+                        @NotNull TbCoapObservationState old = state.getAttrs();
                         state.setAttrs(new TbCoapObservationState(exchange, token));
                         old.getExchange().respond(CoAP.ResponseCode.DELETED);
                     }
@@ -270,7 +273,7 @@ public class DefaultCoapClientContext implements CoapClientContext {
                 } else {
                     newObservation = !state.getRpc().getToken().equals(token);
                     if (newObservation) {
-                        TbCoapObservationState old = state.getRpc();
+                        @NotNull TbCoapObservationState old = state.getRpc();
                         state.setRpc(new TbCoapObservationState(exchange, token));
                         old.getExchange().respond(CoAP.ResponseCode.DELETED);
                     }
@@ -281,7 +284,7 @@ public class DefaultCoapClientContext implements CoapClientContext {
                 if (state.getSession() == null) {
                     TransportProtos.SessionInfoProto session = SessionInfoCreator.create(state.getCredentials(), transportContext, UUID.randomUUID());
                     state.setSession(session);
-                    CoapSessionListener listener = new CoapSessionListener(state);
+                    @NotNull CoapSessionListener listener = new CoapSessionListener(state);
                     state.setListener(listener);
                     transportService.registerAsyncSession(session, state.getListener());
                     transportService.process(session, getSessionEventMsg(TransportProtos.SessionEvent.OPEN), null);
@@ -306,7 +309,7 @@ public class DefaultCoapClientContext implements CoapClientContext {
     }
 
     @Override
-    public void deregisterAttributeObservation(TbCoapClientState state, String token, CoapExchange exchange) {
+    public void deregisterAttributeObservation(@NotNull TbCoapClientState state, String token, CoapExchange exchange) {
         state.lock();
         try {
             clientsByToken.remove(token);
@@ -329,7 +332,7 @@ public class DefaultCoapClientContext implements CoapClientContext {
     }
 
     @Override
-    public void deregisterRpcObservation(TbCoapClientState state, String token, CoapExchange exchange) {
+    public void deregisterRpcObservation(@NotNull TbCoapClientState state, String token, CoapExchange exchange) {
         state.lock();
         try {
             clientsByToken.remove(token);
@@ -351,10 +354,11 @@ public class DefaultCoapClientContext implements CoapClientContext {
         }
     }
 
+    @NotNull
     @Override
-    public TbCoapClientState getOrCreateClient(SessionMsgType type, ValidateDeviceCredentialsResponse deviceCredentials, DeviceProfile deviceProfile) throws AdaptorException {
+    public TbCoapClientState getOrCreateClient(SessionMsgType type, @NotNull ValidateDeviceCredentialsResponse deviceCredentials, @NotNull DeviceProfile deviceProfile) throws AdaptorException {
         DeviceId deviceId = deviceCredentials.getDeviceInfo().getDeviceId();
-        TbCoapClientState state = getClientState(deviceId);
+        @NotNull TbCoapClientState state = getClientState(deviceId);
         state.lock();
         try {
             if (state.getConfiguration() == null || state.getAdaptor() == null) {
@@ -370,10 +374,11 @@ public class DefaultCoapClientContext implements CoapClientContext {
     }
 
     @Override
-    public TransportProtos.SessionInfoProto getNewSyncSession(TbCoapClientState state) {
+    public TransportProtos.SessionInfoProto getNewSyncSession(@NotNull TbCoapClientState state) {
         return SessionInfoCreator.create(state.getCredentials(), transportContext, UUID.randomUUID());
     }
 
+    @NotNull
     private TbCoapClientState getClientState(DeviceId deviceId) {
         return clients.computeIfAbsent(deviceId, TbCoapClientState::new);
     }
@@ -384,19 +389,20 @@ public class DefaultCoapClientContext implements CoapClientContext {
                 .setEvent(event).build();
     }
 
-    private TransportConfigurationContainer getTransportConfigurationContainer(DeviceProfile deviceProfile) throws AdaptorException {
+    @NotNull
+    private TransportConfigurationContainer getTransportConfigurationContainer(@NotNull DeviceProfile deviceProfile) throws AdaptorException {
         DeviceProfileTransportConfiguration transportConfiguration = deviceProfile.getProfileData().getTransportConfiguration();
         if (transportConfiguration instanceof DefaultDeviceProfileTransportConfiguration) {
             return new TransportConfigurationContainer(true);
         } else if (transportConfiguration instanceof CoapDeviceProfileTransportConfiguration) {
-            CoapDeviceProfileTransportConfiguration coapDeviceProfileTransportConfiguration =
+            @NotNull CoapDeviceProfileTransportConfiguration coapDeviceProfileTransportConfiguration =
                     (CoapDeviceProfileTransportConfiguration) transportConfiguration;
-            CoapDeviceTypeConfiguration coapDeviceTypeConfiguration =
+            @NotNull CoapDeviceTypeConfiguration coapDeviceTypeConfiguration =
                     coapDeviceProfileTransportConfiguration.getCoapDeviceTypeConfiguration();
             if (coapDeviceTypeConfiguration instanceof DefaultCoapDeviceTypeConfiguration) {
-                DefaultCoapDeviceTypeConfiguration defaultCoapDeviceTypeConfiguration =
+                @NotNull DefaultCoapDeviceTypeConfiguration defaultCoapDeviceTypeConfiguration =
                         (DefaultCoapDeviceTypeConfiguration) coapDeviceTypeConfiguration;
-                TransportPayloadTypeConfiguration transportPayloadTypeConfiguration =
+                @NotNull TransportPayloadTypeConfiguration transportPayloadTypeConfiguration =
                         defaultCoapDeviceTypeConfiguration.getTransportPayloadTypeConfiguration();
                 if (transportPayloadTypeConfiguration instanceof JsonTransportPayloadConfiguration) {
                     return new TransportConfigurationContainer(true);
@@ -405,8 +411,8 @@ public class DefaultCoapClientContext implements CoapClientContext {
                             (ProtoTransportPayloadConfiguration) transportPayloadTypeConfiguration;
                     String deviceTelemetryProtoSchema = protoTransportPayloadConfiguration.getDeviceTelemetryProtoSchema();
                     String deviceAttributesProtoSchema = protoTransportPayloadConfiguration.getDeviceAttributesProtoSchema();
-                    String deviceRpcRequestProtoSchema = protoTransportPayloadConfiguration.getDeviceRpcRequestProtoSchema();
-                    String deviceRpcResponseProtoSchema = protoTransportPayloadConfiguration.getDeviceRpcResponseProtoSchema();
+                    @NotNull String deviceRpcRequestProtoSchema = protoTransportPayloadConfiguration.getDeviceRpcRequestProtoSchema();
+                    @NotNull String deviceRpcResponseProtoSchema = protoTransportPayloadConfiguration.getDeviceRpcResponseProtoSchema();
                     return new TransportConfigurationContainer(false,
                             protoTransportPayloadConfiguration.getTelemetryDynamicMessageDescriptor(deviceTelemetryProtoSchema),
                             protoTransportPayloadConfiguration.getAttributesDynamicMessageDescriptor(deviceAttributesProtoSchema),
@@ -422,7 +428,7 @@ public class DefaultCoapClientContext implements CoapClientContext {
         }
     }
 
-    private void initStateAdaptor(DeviceProfile deviceProfile, TbCoapClientState state) throws AdaptorException {
+    private void initStateAdaptor(@NotNull DeviceProfile deviceProfile, @NotNull TbCoapClientState state) throws AdaptorException {
         state.setConfiguration(getTransportConfigurationContainer(deviceProfile));
         state.setAdaptor(getCoapTransportAdaptor(state.getConfiguration().isJsonPayload()));
         state.setContentFormat(state.getAdaptor().getContentFormat());
@@ -435,6 +441,7 @@ public class DefaultCoapClientContext implements CoapClientContext {
     @RequiredArgsConstructor
     public class CoapSessionListener implements SessionMsgListener {
 
+        @NotNull
         private final TbCoapClientState state;
 
         @Override
@@ -455,7 +462,7 @@ public class DefaultCoapClientContext implements CoapClientContext {
         }
 
         @Override
-        public void onAttributeUpdate(UUID sessionId, TransportProtos.AttributeUpdateNotificationMsg msg) {
+        public void onAttributeUpdate(UUID sessionId, @NotNull TransportProtos.AttributeUpdateNotificationMsg msg) {
             if (!isDownlinkAllowed(state)) {
                 log.trace("[{}] ignore downlink request cause client is sleeping.", state.getDeviceId());
                 state.lock();
@@ -490,7 +497,7 @@ public class DefaultCoapClientContext implements CoapClientContext {
         }
 
         @Override
-        public void onDeviceProfileUpdate(TransportProtos.SessionInfoProto newSessionInfo, DeviceProfile deviceProfile) {
+        public void onDeviceProfileUpdate(TransportProtos.SessionInfoProto newSessionInfo, @NotNull DeviceProfile deviceProfile) {
             try {
                 initStateAdaptor(deviceProfile, state);
             } catch (AdaptorException e) {
@@ -499,7 +506,7 @@ public class DefaultCoapClientContext implements CoapClientContext {
         }
 
         @Override
-        public void onDeviceUpdate(TransportProtos.SessionInfoProto sessionInfo, Device device, Optional<DeviceProfile> deviceProfileOpt) {
+        public void onDeviceUpdate(TransportProtos.SessionInfoProto sessionInfo, @NotNull Device device, @NotNull Optional<DeviceProfile> deviceProfileOpt) {
             if (deviceProfileOpt.isPresent()) {
                 try {
                     initStateAdaptor(deviceProfileOpt.get(), state);
@@ -517,21 +524,21 @@ public class DefaultCoapClientContext implements CoapClientContext {
         }
 
         @Override
-        public void onRemoteSessionCloseCommand(UUID sessionId, TransportProtos.SessionCloseNotificationProto sessionCloseNotification) {
+        public void onRemoteSessionCloseCommand(UUID sessionId, @NotNull TransportProtos.SessionCloseNotificationProto sessionCloseNotification) {
             log.trace("[{}] Received the remote command to close the session: {}", sessionId, sessionCloseNotification.getMessage());
             cancelRpcSubscription(state);
             cancelAttributeSubscription(state);
         }
 
         @Override
-        public void onToDeviceRpcRequest(UUID sessionId, TransportProtos.ToDeviceRpcRequestMsg msg) {
+        public void onToDeviceRpcRequest(UUID sessionId, @NotNull TransportProtos.ToDeviceRpcRequestMsg msg) {
             log.trace("[{}] Received RPC command to device", sessionId);
             if (!isDownlinkAllowed(state)) {
                 log.trace("[{}] ignore downlink request cause client is sleeping.", state.getDeviceId());
                 return;
             }
             boolean sent = false;
-            String error = null;
+            @Nullable String error = null;
             boolean conRequest = AbstractSyncSessionCallback.isConRequest(state.getRpc());
             try {
                 Response response = state.getAdaptor().convertToPublish(msg, state.getConfiguration().getRpcRequestDynamicMessageBuilder());
@@ -540,9 +547,9 @@ public class DefaultCoapClientContext implements CoapClientContext {
                 response.setMID(requestId);
                 if (conRequest) {
                     PowerMode powerMode = state.getPowerMode();
-                    PowerSavingConfiguration profileSettings = null;
+                    @Nullable PowerSavingConfiguration profileSettings = null;
                     if (powerMode == null) {
-                        var clientProfile = getProfile(state.getProfileId());
+                        @NotNull var clientProfile = getProfile(state.getProfileId());
                         if (clientProfile.isPresent()) {
                             profileSettings = clientProfile.get().getClientSettings();
                             if (profileSettings != null) {
@@ -604,18 +611,18 @@ public class DefaultCoapClientContext implements CoapClientContext {
         }
 
         @Override
-        public void onUplinkNotification(TransportProtos.UplinkNotificationMsg notificationMsg) {
+        public void onUplinkNotification(@NotNull TransportProtos.UplinkNotificationMsg notificationMsg) {
             awake(state, false, notificationMsg.getUplinkTs());
         }
 
-        private void cancelObserveRelation(TbCoapObservationState attrs) {
+        private void cancelObserveRelation(@NotNull TbCoapObservationState attrs) {
             if (attrs.getObserveRelation() != null) {
                 attrs.getObserveRelation().cancel();
             }
         }
     }
 
-    private boolean asleep(TbCoapClientState client) {
+    private boolean asleep(@NotNull TbCoapClientState client) {
         boolean changed = compareAndSetSleepFlag(client, true);
         if (changed) {
             log.debug("[{}] client is sleeping", client.getDeviceId());
@@ -625,11 +632,11 @@ public class DefaultCoapClientContext implements CoapClientContext {
     }
 
     @Override
-    public boolean awake(TbCoapClientState client) {
+    public boolean awake(@NotNull TbCoapClientState client) {
         return awake(client, true, System.currentTimeMillis());
     }
 
-    private boolean awake(TbCoapClientState client, boolean notifyOtherServers, long uplinkTs) {
+    private boolean awake(@NotNull TbCoapClientState client, boolean notifyOtherServers, long uplinkTs) {
         onUplink(client, notifyOtherServers, uplinkTs);
         boolean changed = compareAndSetSleepFlag(client, false);
         if (changed) {
@@ -640,7 +647,7 @@ public class DefaultCoapClientContext implements CoapClientContext {
         return changed;
     }
 
-    private void sendMsgsAfterSleeping(TbCoapClientState client) {
+    private void sendMsgsAfterSleeping(@NotNull TbCoapClientState client) {
         if (client.getRpc() != null) {
             TransportProtos.TransportToDeviceActorMsg persistentRpcRequestMsg = TransportProtos.TransportToDeviceActorMsg
                     .newBuilder()
@@ -654,7 +661,7 @@ public class DefaultCoapClientContext implements CoapClientContext {
         }
     }
 
-    private boolean compareAndSetSleepFlag(TbCoapClientState client, boolean sleeping) {
+    private boolean compareAndSetSleepFlag(@NotNull TbCoapClientState client, boolean sleeping) {
         if (sleeping == client.isAsleep()) {
             log.trace("[{}] Client is already at sleeping: {}, ignoring event: {}", client.getDeviceId(), client.isAsleep(), sleeping);
             return false;
@@ -681,11 +688,11 @@ public class DefaultCoapClientContext implements CoapClientContext {
         }
     }
 
-    private boolean isDownlinkAllowed(TbCoapClientState client) {
+    private boolean isDownlinkAllowed(@NotNull TbCoapClientState client) {
         PowerMode powerMode = client.getPowerMode();
-        PowerSavingConfiguration profileSettings = null;
+        @Nullable PowerSavingConfiguration profileSettings = null;
         if (powerMode == null) {
-            var clientProfile = getProfile(client.getProfileId());
+            @NotNull var clientProfile = getProfile(client.getProfileId());
             if (clientProfile.isPresent()) {
                 profileSettings = clientProfile.get().getClientSettings();
                 if (profileSettings != null) {
@@ -730,10 +737,10 @@ public class DefaultCoapClientContext implements CoapClientContext {
         }
     }
 
-    private PowerMode getPowerMode(TbCoapClientState client) {
+    private PowerMode getPowerMode(@NotNull TbCoapClientState client) {
         PowerMode powerMode = client.getPowerMode();
         if (powerMode == null) {
-            Optional<CoapDeviceProfileTransportConfiguration> deviceProfile = getProfile(client.getProfileId());
+            @NotNull Optional<CoapDeviceProfileTransportConfiguration> deviceProfile = getProfile(client.getProfileId());
             if (deviceProfile.isPresent()) {
                 powerMode = deviceProfile.get().getClientSettings().getPowerMode();
             } else {
@@ -743,6 +750,7 @@ public class DefaultCoapClientContext implements CoapClientContext {
         return powerMode;
     }
 
+    @NotNull
     public Optional<CoapDeviceProfileTransportConfiguration> getProfile(DeviceProfileId profileId) {
         DeviceProfile deviceProfile = profileCache.get(profileId);
         if (deviceProfile.getTransportType().equals(DeviceTransportType.COAP)) {
@@ -759,7 +767,7 @@ public class DefaultCoapClientContext implements CoapClientContext {
         return ThreadLocalRandom.current().nextInt(NONE, MAX_MID + 1);
     }
 
-    private void cancelRpcSubscription(TbCoapClientState state) {
+    private void cancelRpcSubscription(@NotNull TbCoapClientState state) {
         if (state.getRpc() != null) {
             clientsByToken.remove(state.getRpc().getToken());
             CoapExchange exchange = state.getRpc().getExchange();
@@ -773,7 +781,7 @@ public class DefaultCoapClientContext implements CoapClientContext {
         }
     }
 
-    private void cancelAttributeSubscription(TbCoapClientState state) {
+    private void cancelAttributeSubscription(@NotNull TbCoapClientState state) {
         if (state.getAttrs() != null) {
             clientsByToken.remove(state.getAttrs().getToken());
             CoapExchange exchange = state.getAttrs().getExchange();
@@ -787,7 +795,7 @@ public class DefaultCoapClientContext implements CoapClientContext {
         }
     }
 
-    private void closeAndCleanup(TbCoapClientState state) {
+    private void closeAndCleanup(@NotNull TbCoapClientState state) {
         transportService.process(state.getSession(), getSessionEventMsg(TransportProtos.SessionEvent.CLOSED), null);
         transportService.deregisterSession(state.getSession());
         state.setSession(null);
@@ -797,7 +805,7 @@ public class DefaultCoapClientContext implements CoapClientContext {
         //TODO: add optimistic lock check that the client was already deleted and cleanup "clients" map.
     }
 
-    private void respond(CoapExchange exchange, Response response, int defContentFormat) {
+    private void respond(@NotNull CoapExchange exchange, @NotNull Response response, int defContentFormat) {
         response.getOptions().setContentFormat(TbCoapContentFormatUtil.getContentFormat(exchange.getRequestOptions().getContentFormat(), defContentFormat));
         exchange.respond(response);
     }

@@ -1,6 +1,7 @@
 package org.echoiot.server.cache;
 
 import org.echoiot.server.common.data.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -33,8 +34,9 @@ public class TBRedisClusterConfiguration extends TBRedisCacheConfiguration {
     @Value("${redis.password:}")
     private String password;
 
+    @NotNull
     public JedisConnectionFactory loadFactory() {
-        RedisClusterConfiguration clusterConfiguration = new RedisClusterConfiguration();
+        @NotNull RedisClusterConfiguration clusterConfiguration = new RedisClusterConfiguration();
         clusterConfiguration.setClusterNodes(getNodes(clusterNodes));
         clusterConfiguration.setMaxRedirects(maxRedirects);
         clusterConfiguration.setPassword(password);
@@ -45,15 +47,16 @@ public class TBRedisClusterConfiguration extends TBRedisCacheConfiguration {
         }
     }
 
-    private List<RedisNode> getNodes(String nodes) {
+    @NotNull
+    private List<RedisNode> getNodes(@NotNull String nodes) {
         List<RedisNode> result;
         if (StringUtils.isBlank(nodes)) {
             result = Collections.emptyList();
         } else {
             result = new ArrayList<>();
-            for (String hostPort : nodes.split(COMMA)) {
+            for (@NotNull String hostPort : nodes.split(COMMA)) {
                 String host = hostPort.split(COLON)[0];
-                Integer port = Integer.valueOf(hostPort.split(COLON)[1]);
+                @NotNull Integer port = Integer.valueOf(hostPort.split(COLON)[1]);
                 result.add(new RedisNode(host, port));
             }
         }

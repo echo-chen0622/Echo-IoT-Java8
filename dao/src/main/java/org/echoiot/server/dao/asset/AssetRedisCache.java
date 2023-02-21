@@ -1,5 +1,6 @@
 package org.echoiot.server.dao.asset;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ import org.echoiot.server.cache.TbFSTRedisSerializer;
 @Service("AssetCache")
 public class AssetRedisCache extends RedisTbTransactionalCache<AssetCacheKey, Asset> {
 
-    public AssetRedisCache(TBRedisCacheConfiguration configuration, CacheSpecsMap cacheSpecsMap, RedisConnectionFactory connectionFactory) {
+    public AssetRedisCache(@NotNull TBRedisCacheConfiguration configuration, CacheSpecsMap cacheSpecsMap, RedisConnectionFactory connectionFactory) {
         super(CacheConstants.ASSET_CACHE, cacheSpecsMap, connectionFactory, configuration, new TbFSTRedisSerializer<>());
     }
 }

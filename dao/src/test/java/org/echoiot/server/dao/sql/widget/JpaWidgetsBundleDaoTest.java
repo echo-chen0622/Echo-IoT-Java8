@@ -7,6 +7,7 @@ import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.common.data.widget.WidgetsBundle;
 import org.echoiot.server.dao.widget.WidgetsBundleDao;
+import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
@@ -24,12 +25,12 @@ import static org.junit.Assert.assertEquals;
 public class JpaWidgetsBundleDaoTest extends AbstractJpaDaoTest {
 
     List<WidgetsBundle> widgetsBundles;
-    @Autowired
+    @Resource
     private WidgetsBundleDao widgetsBundleDao;
 
     @After
     public void tearDown() {
-        for (WidgetsBundle widgetsBundle : widgetsBundles) {
+        for (@NotNull WidgetsBundle widgetsBundle : widgetsBundles) {
             widgetsBundleDao.removeById(widgetsBundle.getTenantId(), widgetsBundle.getUuidId());
         }
 
@@ -68,8 +69,8 @@ public class JpaWidgetsBundleDaoTest extends AbstractJpaDaoTest {
 
     @Test
     public void testFindWidgetsBundlesByTenantId() {
-        UUID tenantId1 = Uuids.timeBased();
-        UUID tenantId2 = Uuids.timeBased();
+        @NotNull UUID tenantId1 = Uuids.timeBased();
+        @NotNull UUID tenantId2 = Uuids.timeBased();
         // Create a bunch of widgetBundles
         for (int i = 0; i < 10; i++) {
             createWidgetBundles(3, tenantId1, "WB1_");
@@ -79,7 +80,7 @@ public class JpaWidgetsBundleDaoTest extends AbstractJpaDaoTest {
         widgetsBundles = widgetsBundleDao.find(TenantId.SYS_TENANT_ID);
         Assert.assertEquals(180, widgetsBundleDao.find(TenantId.SYS_TENANT_ID).size());
 
-        PageLink pageLink1 = new PageLink(40, 0, "WB");
+        @NotNull PageLink pageLink1 = new PageLink(40, 0, "WB");
         PageData<WidgetsBundle> widgetsBundles1 = widgetsBundleDao.findTenantWidgetsBundlesByTenantId(tenantId1, pageLink1);
         assertEquals(30, widgetsBundles1.getData().size());
 
@@ -94,8 +95,8 @@ public class JpaWidgetsBundleDaoTest extends AbstractJpaDaoTest {
 
     @Test
     public void testFindAllWidgetsBundlesByTenantId() {
-        UUID tenantId1 = Uuids.timeBased();
-        UUID tenantId2 = Uuids.timeBased();
+        @NotNull UUID tenantId1 = Uuids.timeBased();
+        @NotNull UUID tenantId2 = Uuids.timeBased();
         // Create a bunch of widgetBundles
         for (int i = 0; i < 10; i++) {
             createWidgetBundles(5, tenantId1, "WB1_");
@@ -124,19 +125,19 @@ public class JpaWidgetsBundleDaoTest extends AbstractJpaDaoTest {
 
     @Test
     public void testSearchTextNotFound() {
-        UUID tenantId = Uuids.timeBased();
+        @NotNull UUID tenantId = Uuids.timeBased();
         createWidgetBundles(5, tenantId, "ABC_");
         createSystemWidgetBundles(5, "SYS_");
         widgetsBundles = widgetsBundleDao.find(TenantId.SYS_TENANT_ID);
         Assert.assertEquals(10, widgetsBundleDao.find(TenantId.SYS_TENANT_ID).size());
-        PageLink textPageLink = new PageLink(30, 0, "TEXT_NOT_FOUND");
+        @NotNull PageLink textPageLink = new PageLink(30, 0, "TEXT_NOT_FOUND");
         PageData<WidgetsBundle> widgetsBundles4 = widgetsBundleDao.findAllTenantWidgetsBundlesByTenantId(tenantId, textPageLink);
         assertEquals(0, widgetsBundles4.getData().size());
     }
 
     private void createWidgetBundles(int count, UUID tenantId, String prefix) {
         for (int i = 0; i < count; i++) {
-            WidgetsBundle widgetsBundle = new WidgetsBundle();
+            @NotNull WidgetsBundle widgetsBundle = new WidgetsBundle();
             widgetsBundle.setAlias(prefix + i);
             widgetsBundle.setTitle(prefix + i);
             widgetsBundle.setId(new WidgetsBundleId(Uuids.timeBased()));
@@ -147,7 +148,7 @@ public class JpaWidgetsBundleDaoTest extends AbstractJpaDaoTest {
 
     private void createSystemWidgetBundles(int count, String prefix) {
         for (int i = 0; i < count; i++) {
-            WidgetsBundle widgetsBundle = new WidgetsBundle();
+            @NotNull WidgetsBundle widgetsBundle = new WidgetsBundle();
             widgetsBundle.setAlias(prefix + i);
             widgetsBundle.setTitle(prefix + i);
             widgetsBundle.setTenantId(TenantId.SYS_TENANT_ID);

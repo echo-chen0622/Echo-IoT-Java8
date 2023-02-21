@@ -2,6 +2,7 @@ package org.echoiot.server.dao.sql.settings;
 
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.dao.model.sql.AdminSettingsEntity;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
@@ -19,9 +20,10 @@ import java.util.UUID;
 @Slf4j
 public class JpaAdminSettingsDao extends JpaAbstractDao<AdminSettingsEntity, AdminSettings> implements AdminSettingsDao {
 
-    @Autowired
+    @Resource
     private AdminSettingsRepository adminSettingsRepository;
 
+    @NotNull
     @Override
     protected Class<AdminSettingsEntity> getEntityClass() {
         return AdminSettingsEntity.class;

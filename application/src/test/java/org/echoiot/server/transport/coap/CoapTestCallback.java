@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.eclipse.californium.core.CoapHandler;
 import org.eclipse.californium.core.CoapResponse;
 import org.eclipse.californium.core.coap.CoAP;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CountDownLatch;
 
@@ -12,6 +13,7 @@ import java.util.concurrent.CountDownLatch;
 @Data
 public class CoapTestCallback implements CoapHandler {
 
+    @NotNull
     protected final CountDownLatch latch;
     protected Integer observe;
     protected byte[] payloadBytes;
@@ -38,7 +40,7 @@ public class CoapTestCallback implements CoapHandler {
     }
 
     @Override
-    public void onLoad(CoapResponse response) {
+    public void onLoad(@NotNull CoapResponse response) {
         observe = response.getOptions().getObserve();
         payloadBytes = response.getPayload();
         responseCode = response.getCode();

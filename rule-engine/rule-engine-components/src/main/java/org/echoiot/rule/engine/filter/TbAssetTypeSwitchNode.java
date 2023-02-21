@@ -10,6 +10,8 @@ import org.echoiot.server.common.data.asset.AssetProfile;
 import org.echoiot.server.common.data.id.AssetId;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.plugin.ComponentType;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Slf4j
 @RuleNode(
@@ -25,11 +27,11 @@ import org.echoiot.server.common.data.plugin.ComponentType;
 public class TbAssetTypeSwitchNode extends TbAbstractTypeSwitchNode {
 
     @Override
-    protected String getRelationType(TbContext ctx, EntityId originator) throws TbNodeException {
+    protected String getRelationType(@NotNull TbContext ctx, @NotNull EntityId originator) throws TbNodeException {
         if (!EntityType.ASSET.equals(originator.getEntityType())) {
             throw new TbNodeException("Unsupported originator type: " + originator.getEntityType() + "! Only 'ASSET' type is allowed.");
         }
-        AssetProfile assetProfile = ctx.getAssetProfileCache().get(ctx.getTenantId(), (AssetId) originator);
+        @Nullable AssetProfile assetProfile = ctx.getAssetProfileCache().get(ctx.getTenantId(), (AssetId) originator);
         if (assetProfile == null) {
             throw new TbNodeException("Asset profile for entity id: " + originator.getId() + " wasn't found!");
         }

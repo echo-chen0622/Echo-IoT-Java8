@@ -30,6 +30,7 @@ import org.echoiot.server.service.security.system.SystemSecurityService;
 import org.echoiot.server.service.sync.vc.EntitiesVersionControlService;
 import org.echoiot.server.service.sync.vc.autocommit.TbAutoCommitSettingsService;
 import org.echoiot.server.service.update.UpdateService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
@@ -43,35 +44,36 @@ import org.springframework.web.context.request.async.DeferredResult;
 @RequestMapping("/api/admin")
 public class AdminController extends BaseController {
 
-    @Autowired
+    @Resource
     private MailService mailService;
 
-    @Autowired
+    @Resource
     private SmsService smsService;
 
-    @Autowired
+    @Resource
     private AdminSettingsService adminSettingsService;
 
-    @Autowired
+    @Resource
     private SystemSecurityService systemSecurityService;
 
     @Lazy
-    @Autowired
+    @Resource
     private JwtSettingsService jwtSettingsService;
 
     @Lazy
-    @Autowired
+    @Resource
     private JwtTokenFactory tokenFactory;
 
-    @Autowired
+    @Resource
     private EntitiesVersionControlService versionControlService;
 
-    @Autowired
+    @Resource
     private TbAutoCommitSettingsService autoCommitSettingsService;
 
-    @Autowired
+    @Resource
     private UpdateService updateService;
 
+    @NotNull
     @ApiOperation(value = "Get the Administration Settings object using key (getAdminSettings)",
             notes = "Get the Administration Settings object using specified string key. Referencing non-existing key will cause an error." + ControllerConstants.SYSTEM_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('SYS_ADMIN')")
@@ -82,7 +84,7 @@ public class AdminController extends BaseController {
             @PathVariable("key") String key) throws EchoiotException {
         try {
             accessControlService.checkPermission(getCurrentUser(), Resource.ADMIN_SETTINGS, Operation.READ);
-            AdminSettings adminSettings = checkNotNull(adminSettingsService.findAdminSettingsByKey(TenantId.SYS_TENANT_ID, key), "No Administration settings found for key: " + key);
+            @NotNull AdminSettings adminSettings = checkNotNull(adminSettingsService.findAdminSettingsByKey(TenantId.SYS_TENANT_ID, key), "No Administration settings found for key: " + key);
             if (adminSettings.getKey().equals("mail")) {
                 ((ObjectNode) adminSettings.getJsonValue()).remove("password");
             }
@@ -93,6 +95,7 @@ public class AdminController extends BaseController {
     }
 
 
+    @NotNull
     @ApiOperation(value = "Get the Administration Settings object using key (getAdminSettings)",
             notes = "Creates or Updates the Administration Settings. Platform generates random Administration Settings Id during settings creation. " +
                     "The Administration Settings Id will be present in the response. Specify the Administration Settings Id when you would like to update the Administration Settings. " +
@@ -101,7 +104,7 @@ public class AdminController extends BaseController {
     @RequestMapping(value = "/settings", method = RequestMethod.POST)
     @ResponseBody
     public AdminSettings saveAdminSettings(
-            @ApiParam(value = "A JSON value representing the Administration Settings.")
+            @NotNull @ApiParam(value = "A JSON value representing the Administration Settings.")
             @RequestBody AdminSettings adminSettings) throws EchoiotException {
         try {
             accessControlService.checkPermission(getCurrentUser(), Resource.ADMIN_SETTINGS, Operation.WRITE);
@@ -224,6 +227,7 @@ public class AdminController extends BaseController {
         }
     }
 
+    @NotNull
     @ApiOperation(value = "Get repository settings (getRepositorySettings)",
             notes = "Get the repository settings object. " + ControllerConstants.TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
@@ -241,6 +245,7 @@ public class AdminController extends BaseController {
         }
     }
 
+    @NotNull
     @ApiOperation(value = "Check repository settings exists (repositorySettingsExists)",
             notes = "Check whether the repository settings exists. " + ControllerConstants.TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
@@ -331,6 +336,7 @@ public class AdminController extends BaseController {
         }
     }
 
+    @NotNull
     @ApiOperation(value = "Check auto commit settings exists (autoCommitSettingsExists)",
             notes = "Check whether the auto commit settings exists. " + ControllerConstants.TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")

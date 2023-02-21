@@ -3,6 +3,7 @@ package org.echoiot.server.service.security.auth.oauth2;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.oauth2.MapperType;
 import org.echoiot.server.queue.util.TbCoreComponent;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -12,23 +13,19 @@ import org.springframework.stereotype.Component;
 @TbCoreComponent
 public class OAuth2ClientMapperProvider {
 
-    @Autowired
-    @Qualifier("basicOAuth2ClientMapper")
+    @Resource(name = "basicOAuth2ClientMapper")
     private OAuth2ClientMapper basicOAuth2ClientMapper;
 
-    @Autowired
-    @Qualifier("customOAuth2ClientMapper")
+    @Resource(name = "customOAuth2ClientMapper")
     private OAuth2ClientMapper customOAuth2ClientMapper;
 
-    @Autowired
-    @Qualifier("githubOAuth2ClientMapper")
+    @Resource(name = "githubOAuth2ClientMapper")
     private OAuth2ClientMapper githubOAuth2ClientMapper;
 
-    @Autowired
-    @Qualifier("appleOAuth2ClientMapper")
+    @Resource(name = "appleOAuth2ClientMapper")
     private OAuth2ClientMapper appleOAuth2ClientMapper;
 
-    public OAuth2ClientMapper getOAuth2ClientMapperByType(MapperType oauth2MapperType) {
+    public OAuth2ClientMapper getOAuth2ClientMapperByType(@NotNull MapperType oauth2MapperType) {
         switch (oauth2MapperType) {
             case CUSTOM:
                 return customOAuth2ClientMapper;

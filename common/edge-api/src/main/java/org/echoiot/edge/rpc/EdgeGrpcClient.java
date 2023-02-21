@@ -10,6 +10,7 @@ import org.echoiot.edge.exception.EdgeConnectionException;
 import org.echoiot.server.common.data.ResourceUtils;
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.gen.edge.v1.*;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -44,15 +45,15 @@ public class EdgeGrpcClient implements EdgeRpcClient {
     @Override
     public void connect(String edgeKey,
                         String edgeSecret,
-                        Consumer<UplinkResponseMsg> onUplinkResponse,
-                        Consumer<EdgeConfiguration> onEdgeUpdate,
-                        Consumer<DownlinkMsg> onDownlink,
-                        Consumer<Exception> onError) {
-        NettyChannelBuilder builder = NettyChannelBuilder.forAddress(rpcHost, rpcPort)
-                .keepAliveTime(keepAliveTimeSec, TimeUnit.SECONDS);
+                        @NotNull Consumer<UplinkResponseMsg> onUplinkResponse,
+                        @NotNull Consumer<EdgeConfiguration> onEdgeUpdate,
+                        @NotNull Consumer<DownlinkMsg> onDownlink,
+                        @NotNull Consumer<Exception> onError) {
+        @NotNull NettyChannelBuilder builder = NettyChannelBuilder.forAddress(rpcHost, rpcPort)
+                                                                  .keepAliveTime(keepAliveTimeSec, TimeUnit.SECONDS);
         if (sslEnabled) {
             try {
-                SslContextBuilder sslContextBuilder = GrpcSslContexts.forClient();
+                @NotNull SslContextBuilder sslContextBuilder = GrpcSslContexts.forClient();
                 if (StringUtils.isNotEmpty(certResource)) {
                     sslContextBuilder.trustManager(ResourceUtils.getInputStream(this, certResource));
                 }
@@ -78,16 +79,17 @@ public class EdgeGrpcClient implements EdgeRpcClient {
                 .build());
     }
 
+    @NotNull
     private StreamObserver<ResponseMsg> initOutputStream(String edgeKey,
-                                                         Consumer<UplinkResponseMsg> onUplinkResponse,
-                                                         Consumer<EdgeConfiguration> onEdgeUpdate,
-                                                         Consumer<DownlinkMsg> onDownlink,
-                                                         Consumer<Exception> onError) {
+                                                         @NotNull Consumer<UplinkResponseMsg> onUplinkResponse,
+                                                         @NotNull Consumer<EdgeConfiguration> onEdgeUpdate,
+                                                         @NotNull Consumer<DownlinkMsg> onDownlink,
+                                                         @NotNull Consumer<Exception> onError) {
         return new StreamObserver<>() {
             @Override
-            public void onNext(ResponseMsg responseMsg) {
+            public void onNext(@NotNull ResponseMsg responseMsg) {
                 if (responseMsg.hasConnectResponseMsg()) {
-                    ConnectResponseMsg connectResponseMsg = responseMsg.getConnectResponseMsg();
+                    @NotNull ConnectResponseMsg connectResponseMsg = responseMsg.getConnectResponseMsg();
                     if (connectResponseMsg.getResponseCode().equals(ConnectResponseCode.ACCEPTED)) {
                         log.info("[{}] Configuration received: {}", edgeKey, connectResponseMsg.getConfiguration());
                         onEdgeUpdate.accept(connectResponseMsg.getConfiguration());
@@ -186,10 +188,10 @@ public class EdgeGrpcClient implements EdgeRpcClient {
     public void sendSyncRequestMsg(boolean syncRequired, boolean fullSync) {
         uplinkMsgLock.lock();
         try {
-            SyncRequestMsg syncRequestMsg = SyncRequestMsg.newBuilder()
-                    .setSyncRequired(syncRequired)
-                    .setFullSync(fullSync)
-                    .build();
+            @NotNull SyncRequestMsg syncRequestMsg = SyncRequestMsg.newBuilder()
+                                                                   .setSyncRequired(syncRequired)
+                                                                   .setFullSync(fullSync)
+                                                                   .build();
             this.inputStream.onNext(RequestMsg.newBuilder()
                     .setMsgType(RequestMsgType.SYNC_REQUEST_RPC_MESSAGE)
                     .setSyncRequestMsg(syncRequestMsg)

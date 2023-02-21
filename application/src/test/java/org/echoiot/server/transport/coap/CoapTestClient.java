@@ -9,6 +9,8 @@ import org.eclipse.californium.core.coap.MediaTypeRegistry;
 import org.eclipse.californium.core.coap.Request;
 import org.eclipse.californium.elements.exception.ConnectorException;
 import org.echoiot.server.common.msg.session.FeatureType;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 
@@ -17,13 +19,14 @@ public class CoapTestClient {
     private static final String COAP_BASE_URL = "coap://localhost:5683/api/v1/";
     private static final long CLIENT_REQUEST_TIMEOUT = 60000L;
 
+    @NotNull
     private final CoapClient client;
 
     public CoapTestClient(){
         this.client = createClient();
     }
 
-    public CoapTestClient(String accessToken, FeatureType featureType) {
+    public CoapTestClient(String accessToken, @NotNull FeatureType featureType) {
         this.client = createClient(getFeatureTokenUrl(accessToken, featureType));
     }
 
@@ -45,7 +48,7 @@ public class CoapTestClient {
         }
     }
 
-    public CoapResponse postMethod(String requestBody) throws ConnectorException, IOException {
+    public CoapResponse postMethod(@NotNull String requestBody) throws ConnectorException, IOException {
         return this.postMethod(requestBody.getBytes());
     }
 
@@ -66,7 +69,7 @@ public class CoapTestClient {
     }
 
     public CoapObserveRelation getObserveRelation(CoapTestCallback callback){
-        Request request = Request.newGet().setObserve();
+        @NotNull Request request = Request.newGet().setObserve();
         request.setType(CoAP.Type.CON);
         return client.observe(request, callback);
     }
@@ -78,26 +81,30 @@ public class CoapTestClient {
         client.setURI(featureTokenUrl);
     }
 
-    public void setURI(String accessToken, FeatureType featureType) {
+    public void setURI(String accessToken, @Nullable FeatureType featureType) {
         if (featureType == null){
             featureType = FeatureType.ATTRIBUTES;
         }
         setURI(getFeatureTokenUrl(accessToken, featureType));
     }
 
+    @NotNull
     private CoapClient createClient() {
         return new CoapClient();
     }
 
+    @NotNull
     private CoapClient createClient(String featureTokenUrl) {
         return new CoapClient(featureTokenUrl);
     }
 
-    public static String getFeatureTokenUrl(String token, FeatureType featureType) {
+    @NotNull
+    public static String getFeatureTokenUrl(String token, @NotNull FeatureType featureType) {
         return COAP_BASE_URL + token + "/" + featureType.name().toLowerCase();
     }
 
-    public static String getFeatureTokenUrl(String token, FeatureType featureType, int requestId) {
+    @NotNull
+    public static String getFeatureTokenUrl(String token, @NotNull FeatureType featureType, int requestId) {
         return COAP_BASE_URL + token + "/" + featureType.name().toLowerCase() + "/" + requestId;
     }
 }

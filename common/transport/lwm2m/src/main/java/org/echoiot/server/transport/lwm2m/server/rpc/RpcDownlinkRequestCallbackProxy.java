@@ -11,6 +11,8 @@ import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.rpc.RpcStatus;
 import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.transport.lwm2m.server.client.LwM2mClient;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 import java.util.concurrent.TimeoutException;
@@ -35,7 +37,7 @@ public abstract class RpcDownlinkRequestCallbackProxy<R, T> implements DownlinkR
     public boolean onSent(R request) {
         client.lock();
         try {
-            UUID rpcId = new UUID(this.request.getRequestIdMSB(), this.request.getRequestIdLSB());
+            @NotNull UUID rpcId = new UUID(this.request.getRequestIdMSB(), this.request.getRequestIdLSB());
             if (rpcId.equals(client.getLastSentRpcId())) {
                 log.debug("[{}]][{}] Rpc has already sent!", client.getEndpoint(), rpcId);
                 return false;
@@ -78,9 +80,9 @@ public abstract class RpcDownlinkRequestCallbackProxy<R, T> implements DownlinkR
         }
     }
 
-    protected void reply(LwM2MRpcResponseBody response) {
+    protected void reply(@NotNull LwM2MRpcResponseBody response) {
         TransportProtos.ToDeviceRpcResponseMsg.Builder msg = TransportProtos.ToDeviceRpcResponseMsg.newBuilder().setRequestId(request.getRequestId());
-        String responseAsString = JacksonUtil.toString(response);
+        @Nullable String responseAsString = JacksonUtil.toString(response);
         if (StringUtils.isEmpty(response.getError())) {
             msg.setPayload(responseAsString);
         } else {
@@ -95,7 +97,7 @@ public abstract class RpcDownlinkRequestCallbackProxy<R, T> implements DownlinkR
         reply(LwM2MRpcResponseBody.builder().result(ResponseCode.BAD_REQUEST.getName()).error(msg).build());
     }
 
-    protected void sendRpcReplyOnError(Exception e) {
+    protected void sendRpcReplyOnError(@NotNull Exception e) {
         String error = e.getMessage();
         if (error == null) {
             error = e.toString();

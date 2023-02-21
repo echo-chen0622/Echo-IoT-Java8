@@ -5,6 +5,7 @@ import lombok.ToString;
 import org.echoiot.server.common.data.id.EdgeId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.msg.MsgType;
+import org.jetbrains.annotations.NotNull;
 
 @ToString
 public class EdgeEventUpdateMsg implements EdgeSessionMsg {
@@ -18,6 +19,7 @@ public class EdgeEventUpdateMsg implements EdgeSessionMsg {
         this.edgeId = edgeId;
     }
 
+    @NotNull
     @Override
     public MsgType getMsgType() {
         return MsgType.EDGE_EVENT_UPDATE_TO_EDGE_SESSION_MSG;

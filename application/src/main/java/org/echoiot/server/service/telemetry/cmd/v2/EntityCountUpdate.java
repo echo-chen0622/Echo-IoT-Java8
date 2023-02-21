@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.ToString;
 import org.echoiot.server.service.telemetry.sub.SubscriptionErrorCode;
+import org.jetbrains.annotations.NotNull;
 
 @ToString
 public class EntityCountUpdate extends CmdUpdate {
@@ -21,6 +22,7 @@ public class EntityCountUpdate extends CmdUpdate {
         super(cmdId, errorCode, errorMsg);
     }
 
+    @NotNull
     @Override
     public CmdUpdateType getCmdUpdateType() {
         return CmdUpdateType.COUNT_DATA;

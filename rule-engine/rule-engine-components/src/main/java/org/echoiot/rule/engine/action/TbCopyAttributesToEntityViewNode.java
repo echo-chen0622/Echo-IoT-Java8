@@ -51,12 +51,12 @@ public class TbCopyAttributesToEntityViewNode implements TbNode {
     EmptyNodeConfiguration config;
 
     @Override
-    public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
+    public void init(TbContext ctx, @NotNull TbNodeConfiguration configuration) throws TbNodeException {
         this.config = TbNodeUtils.convert(configuration, EmptyNodeConfiguration.class);
     }
 
     @Override
-    public void onMsg(TbContext ctx, TbMsg msg) {
+    public void onMsg(@NotNull TbContext ctx, @NotNull TbMsg msg) {
         if (DataConstants.ATTRIBUTES_UPDATED.equals(msg.getType()) ||
                 DataConstants.ATTRIBUTES_DELETED.equals(msg.getType()) ||
                 DataConstants.ACTIVITY_EVENT.equals(msg.getType()) ||
@@ -72,13 +72,13 @@ public class TbCopyAttributesToEntityViewNode implements TbNode {
 
                 DonAsynchron.withCallback(entityViewsFuture,
                         entityViews -> {
-                            for (EntityView entityView : entityViews) {
+                            for (@NotNull EntityView entityView : entityViews) {
                                 long startTime = entityView.getStartTimeMs();
                                 long endTime = entityView.getEndTimeMs();
                                 if ((endTime != 0 && endTime > now && startTime < now) || (endTime == 0 && startTime < now)) {
                                     if (DataConstants.ATTRIBUTES_DELETED.equals(msg.getType())) {
-                                        List<String> attributes = new ArrayList<>();
-                                        for (JsonElement element : new JsonParser().parse(msg.getData()).getAsJsonObject().get("attributes").getAsJsonArray()) {
+                                        @NotNull List<String> attributes = new ArrayList<>();
+                                        for (@NotNull JsonElement element : new JsonParser().parse(msg.getData()).getAsJsonObject().get("attributes").getAsJsonArray()) {
                                             if (element.isJsonPrimitive()) {
                                                 JsonPrimitive value = element.getAsJsonPrimitive();
                                                 if (value.isString()) {
@@ -86,15 +86,15 @@ public class TbCopyAttributesToEntityViewNode implements TbNode {
                                                 }
                                             }
                                         }
-                                        List<String> filteredAttributes =
+                                        @NotNull List<String> filteredAttributes =
                                                 attributes.stream().filter(attr -> attributeContainsInEntityView(scope, attr, entityView)).collect(Collectors.toList());
                                         if (!filteredAttributes.isEmpty()) {
                                             ctx.getTelemetryService().deleteAndNotify(ctx.getTenantId(), entityView.getId(), scope, filteredAttributes,
                                                     getFutureCallback(ctx, msg, entityView));
                                         }
                                     } else {
-                                        Set<AttributeKvEntry> attributes = JsonConverter.convertToAttributes(new JsonParser().parse(msg.getData()));
-                                        List<AttributeKvEntry> filteredAttributes =
+                                        @NotNull Set<AttributeKvEntry> attributes = JsonConverter.convertToAttributes(new JsonParser().parse(msg.getData()));
+                                        @NotNull List<AttributeKvEntry> filteredAttributes =
                                                 attributes.stream().filter(attr -> attributeContainsInEntityView(scope, attr.getKey(), entityView)).collect(Collectors.toList());
                                         ctx.getTelemetryService().saveAndNotify(ctx.getTenantId(), entityView.getId(), scope, filteredAttributes,
                                                 getFutureCallback(ctx, msg, entityView));
@@ -113,7 +113,7 @@ public class TbCopyAttributesToEntityViewNode implements TbNode {
     }
 
     @NotNull
-    private FutureCallback<Void> getFutureCallback(TbContext ctx, TbMsg msg, EntityView entityView) {
+    private FutureCallback<Void> getFutureCallback(@NotNull TbContext ctx, @NotNull TbMsg msg, @NotNull EntityView entityView) {
         return new FutureCallback<Void>() {
             @Override
             public void onSuccess(@Nullable Void result) {
@@ -127,13 +127,13 @@ public class TbCopyAttributesToEntityViewNode implements TbNode {
         };
     }
 
-    private void transformAndTellNext(TbContext ctx, TbMsg msg, EntityView entityView) {
+    private void transformAndTellNext(@NotNull TbContext ctx, @NotNull TbMsg msg, @NotNull EntityView entityView) {
         ctx.enqueueForTellNext(ctx.newMsg(msg.getQueueName(), msg.getType(), entityView.getId(), msg.getCustomerId(), msg.getMetaData(), msg.getData()), SUCCESS);
     }
 
-    private boolean attributeContainsInEntityView(String scope, String attrKey, EntityView entityView) {
+    private boolean attributeContainsInEntityView(@NotNull String scope, String attrKey, @NotNull EntityView entityView) {
         AttributesEntityView attributesEntityView = entityView.getKeys().getAttributes();
-        List<String> keys = null;
+        @org.jetbrains.annotations.Nullable List<String> keys = null;
         switch (scope) {
             case DataConstants.CLIENT_SCOPE:
                 keys = attributesEntityView.getCs();

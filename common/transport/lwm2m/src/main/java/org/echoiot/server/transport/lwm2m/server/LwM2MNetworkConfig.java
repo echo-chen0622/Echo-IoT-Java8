@@ -2,6 +2,7 @@ package org.echoiot.server.transport.lwm2m.server;
 
 import org.eclipse.californium.core.config.CoapConfig;
 import org.eclipse.californium.elements.config.Configuration;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.util.CollectionUtils;
 import org.echoiot.server.transport.lwm2m.config.LwM2MTransportServerConfig;
 
@@ -12,8 +13,9 @@ import static org.eclipse.californium.core.config.CoapConfig.DEFAULT_BLOCKWISE_S
 
 public class LwM2MNetworkConfig {
 
-    public static Configuration getCoapConfig(Integer serverPortNoSec, Integer serverSecurePort, LwM2MTransportServerConfig config) {
-        Configuration coapConfig = new Configuration();
+    @NotNull
+    public static Configuration getCoapConfig(Integer serverPortNoSec, Integer serverSecurePort, @NotNull LwM2MTransportServerConfig config) {
+        @NotNull Configuration coapConfig = new Configuration();
         coapConfig.set(CoapConfig.COAP_PORT, serverPortNoSec);
         coapConfig.set(CoapConfig.COAP_SECURE_PORT, serverSecurePort);
         /**
@@ -85,7 +87,7 @@ public class LwM2MNetworkConfig {
         coapConfig.set(CoapConfig.MAX_RETRANSMIT, 10);
 
         if (!CollectionUtils.isEmpty(config.getNetworkConfig())) {
-            Properties networkProps = new Properties();
+            @NotNull Properties networkProps = new Properties();
             config.getNetworkConfig().forEach(p -> networkProps.put(p.getKey(), p.getValue()));
             coapConfig.add(networkProps);
         }

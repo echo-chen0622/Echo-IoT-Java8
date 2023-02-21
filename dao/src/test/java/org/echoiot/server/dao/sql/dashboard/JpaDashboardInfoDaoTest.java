@@ -8,6 +8,7 @@ import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.dao.dashboard.DashboardInfoDao;
 import org.echoiot.server.dao.service.AbstractServiceTest;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,20 +21,20 @@ import java.util.UUID;
  */
 public class JpaDashboardInfoDaoTest extends AbstractJpaDaoTest {
 
-    @Autowired
+    @Resource
     private DashboardInfoDao dashboardInfoDao;
 
     @Test
     public void testFindDashboardsByTenantId() {
-        UUID tenantId1 = Uuids.timeBased();
-        UUID tenantId2 = Uuids.timeBased();
+        @NotNull UUID tenantId1 = Uuids.timeBased();
+        @NotNull UUID tenantId2 = Uuids.timeBased();
 
         for (int i = 0; i < 20; i++) {
             createDashboard(tenantId1, i);
             createDashboard(tenantId2, i * 2);
         }
 
-        PageLink pageLink = new PageLink(15, 0, "DASHBOARD");
+        @NotNull PageLink pageLink = new PageLink(15, 0, "DASHBOARD");
         PageData<DashboardInfo> dashboardInfos1 = dashboardInfoDao.findDashboardsByTenantId(tenantId1, pageLink);
         Assert.assertEquals(15, dashboardInfos1.getData().size());
 
@@ -42,7 +43,7 @@ public class JpaDashboardInfoDaoTest extends AbstractJpaDaoTest {
     }
 
     private void createDashboard(UUID tenantId, int index) {
-        DashboardInfo dashboardInfo = new DashboardInfo();
+        @NotNull DashboardInfo dashboardInfo = new DashboardInfo();
         dashboardInfo.setId(new DashboardId(Uuids.timeBased()));
         dashboardInfo.setTenantId(TenantId.fromUUID(tenantId));
         dashboardInfo.setTitle("DASHBOARD_" + index);

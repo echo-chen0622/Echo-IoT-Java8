@@ -13,6 +13,8 @@ import org.echoiot.server.gen.edge.v1.DownlinkMsg;
 import org.echoiot.server.gen.edge.v1.UpdateMsgType;
 import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.queue.util.TbCoreComponent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -20,9 +22,10 @@ import org.springframework.stereotype.Component;
 @TbCoreComponent
 public class AssetEdgeProcessor extends BaseEdgeProcessor {
 
-    public DownlinkMsg convertAssetEventToDownlink(EdgeEvent edgeEvent) {
-        AssetId assetId = new AssetId(edgeEvent.getEntityId());
-        DownlinkMsg downlinkMsg = null;
+    @Nullable
+    public DownlinkMsg convertAssetEventToDownlink(@NotNull EdgeEvent edgeEvent) {
+        @NotNull AssetId assetId = new AssetId(edgeEvent.getEntityId());
+        @Nullable DownlinkMsg downlinkMsg = null;
         switch (edgeEvent.getAction()) {
             case ADDED:
             case UPDATED:
@@ -31,12 +34,12 @@ public class AssetEdgeProcessor extends BaseEdgeProcessor {
             case UNASSIGNED_FROM_CUSTOMER:
                 Asset asset = assetService.findAssetById(edgeEvent.getTenantId(), assetId);
                 if (asset != null) {
-                    UpdateMsgType msgType = getUpdateMsgType(edgeEvent.getAction());
+                    @NotNull UpdateMsgType msgType = getUpdateMsgType(edgeEvent.getAction());
                     AssetUpdateMsg assetUpdateMsg =
                             assetMsgConstructor.constructAssetUpdatedMsg(msgType, asset);
-                    DownlinkMsg.Builder builder = DownlinkMsg.newBuilder()
-                            .setDownlinkMsgId(EdgeUtils.nextPositiveInt())
-                            .addAssetUpdateMsg(assetUpdateMsg);
+                    @NotNull DownlinkMsg.Builder builder = DownlinkMsg.newBuilder()
+                                                                      .setDownlinkMsgId(EdgeUtils.nextPositiveInt())
+                                                                      .addAssetUpdateMsg(assetUpdateMsg);
                     if (UpdateMsgType.ENTITY_CREATED_RPC_MESSAGE.equals(msgType)) {
                         AssetProfile assetProfile = assetProfileService.findAssetProfileById(edgeEvent.getTenantId(), asset.getAssetProfileId());
                         builder.addAssetProfileUpdateMsg(assetProfileMsgConstructor.constructAssetProfileUpdatedMsg(msgType, assetProfile));
@@ -57,7 +60,7 @@ public class AssetEdgeProcessor extends BaseEdgeProcessor {
         return downlinkMsg;
     }
 
-    public ListenableFuture<Void> processAssetNotification(TenantId tenantId, TransportProtos.EdgeNotificationMsgProto edgeNotificationMsg) {
+    public ListenableFuture<Void> processAssetNotification(TenantId tenantId, @NotNull TransportProtos.EdgeNotificationMsgProto edgeNotificationMsg) {
         return processEntityNotification(tenantId, edgeNotificationMsg);
     }
 }

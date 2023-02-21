@@ -4,6 +4,7 @@ import lombok.Data;
 import org.echoiot.rule.engine.api.NodeConfiguration;
 import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.script.ScriptLanguage;
+import org.jetbrains.annotations.NotNull;
 
 @Data
 public class TbMsgGeneratorNodeConfiguration implements NodeConfiguration<TbMsgGeneratorNodeConfiguration> {
@@ -22,9 +23,10 @@ public class TbMsgGeneratorNodeConfiguration implements NodeConfiguration<TbMsgG
     private String jsScript;
     private String tbelScript;
 
+    @NotNull
     @Override
     public TbMsgGeneratorNodeConfiguration defaultConfiguration() {
-        TbMsgGeneratorNodeConfiguration configuration = new TbMsgGeneratorNodeConfiguration();
+        @NotNull TbMsgGeneratorNodeConfiguration configuration = new TbMsgGeneratorNodeConfiguration();
         configuration.setMsgCount(UNLIMITED_MSG_COUNT);
         configuration.setPeriodInSeconds(1);
         configuration.setScriptLang(ScriptLanguage.TBEL);

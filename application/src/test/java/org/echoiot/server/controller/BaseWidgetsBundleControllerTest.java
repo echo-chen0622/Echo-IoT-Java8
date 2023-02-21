@@ -11,6 +11,7 @@ import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.common.data.security.Authority;
 import org.echoiot.server.common.data.widget.WidgetsBundle;
+import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -27,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public abstract class BaseWidgetsBundleControllerTest extends AbstractControllerTest {
 
-    private IdComparator<WidgetsBundle> idComparator = new IdComparator<>();
+    private final IdComparator<WidgetsBundle> idComparator = new IdComparator<>();
 
     private Tenant savedTenant;
     private User tenantAdmin;
@@ -36,7 +37,7 @@ public abstract class BaseWidgetsBundleControllerTest extends AbstractController
     public void beforeTest() throws Exception {
         loginSysAdmin();
 
-        Tenant tenant = new Tenant();
+        @NotNull Tenant tenant = new Tenant();
         tenant.setTitle("My tenant");
         savedTenant = doPost("/api/tenant", tenant, Tenant.class);
         Assert.assertNotNull(savedTenant);
@@ -61,7 +62,7 @@ public abstract class BaseWidgetsBundleControllerTest extends AbstractController
 
     @Test
     public void testSaveWidgetsBundle() throws Exception {
-        WidgetsBundle widgetsBundle = new WidgetsBundle();
+        @NotNull WidgetsBundle widgetsBundle = new WidgetsBundle();
         widgetsBundle.setTitle("My widgets bundle");
 
         Mockito.reset(tbClusterService);
@@ -93,12 +94,12 @@ public abstract class BaseWidgetsBundleControllerTest extends AbstractController
 
      @Test
      public void testSaveWidgetBundleWithViolationOfLengthValidation() throws Exception {
-         WidgetsBundle widgetsBundle = new WidgetsBundle();
+         @NotNull WidgetsBundle widgetsBundle = new WidgetsBundle();
          widgetsBundle.setTitle(StringUtils.randomAlphabetic(300));
 
          Mockito.reset(tbClusterService);
 
-         String msgError = msgErrorFieldLength("title");
+         @NotNull String msgError = msgErrorFieldLength("title");
          doPost("/api/widgetsBundle", widgetsBundle)
                  .andExpect(status().isBadRequest())
                  .andExpect(statusReason(containsString(msgError)));
@@ -108,7 +109,7 @@ public abstract class BaseWidgetsBundleControllerTest extends AbstractController
 
     @Test
     public void testUpdateWidgetsBundleFromDifferentTenant() throws Exception {
-        WidgetsBundle widgetsBundle = new WidgetsBundle();
+        @NotNull WidgetsBundle widgetsBundle = new WidgetsBundle();
         widgetsBundle.setTitle("My widgets bundle");
         WidgetsBundle savedWidgetsBundle = doPost("/api/widgetsBundle", widgetsBundle, WidgetsBundle.class);
 
@@ -127,7 +128,7 @@ public abstract class BaseWidgetsBundleControllerTest extends AbstractController
 
     @Test
     public void testFindWidgetsBundleById() throws Exception {
-        WidgetsBundle widgetsBundle = new WidgetsBundle();
+        @NotNull WidgetsBundle widgetsBundle = new WidgetsBundle();
         widgetsBundle.setTitle("My widgets bundle");
         WidgetsBundle savedWidgetsBundle = doPost("/api/widgetsBundle", widgetsBundle, WidgetsBundle.class);
         WidgetsBundle foundWidgetsBundle = doGet("/api/widgetsBundle/" + savedWidgetsBundle.getId().getId().toString(), WidgetsBundle.class);
@@ -137,7 +138,7 @@ public abstract class BaseWidgetsBundleControllerTest extends AbstractController
 
     @Test
     public void testDeleteWidgetsBundle() throws Exception {
-        WidgetsBundle widgetsBundle = new WidgetsBundle();
+        @NotNull WidgetsBundle widgetsBundle = new WidgetsBundle();
         widgetsBundle.setTitle("My widgets bundle");
 
         Mockito.reset(tbClusterService, auditLogService);
@@ -162,7 +163,7 @@ public abstract class BaseWidgetsBundleControllerTest extends AbstractController
 
         Mockito.reset(tbClusterService, auditLogService);
 
-        WidgetsBundle widgetsBundle = new WidgetsBundle();
+        @NotNull WidgetsBundle widgetsBundle = new WidgetsBundle();
         doPost("/api/widgetsBundle", widgetsBundle)
                 .andExpect(status().isBadRequest())
                 .andExpect(statusReason(containsString("Widgets bundle title " + msgErrorShouldBeSpecified)));
@@ -172,7 +173,7 @@ public abstract class BaseWidgetsBundleControllerTest extends AbstractController
 
     @Test
     public void testUpdateWidgetsBundleAlias() throws Exception {
-        WidgetsBundle widgetsBundle = new WidgetsBundle();
+        @NotNull WidgetsBundle widgetsBundle = new WidgetsBundle();
         widgetsBundle.setTitle("My widgets bundle");
         WidgetsBundle savedWidgetsBundle = doPost("/api/widgetsBundle", widgetsBundle, WidgetsBundle.class);
         savedWidgetsBundle.setAlias("new_alias");
@@ -197,9 +198,9 @@ public abstract class BaseWidgetsBundleControllerTest extends AbstractController
         Mockito.reset(tbClusterService);
 
         int cntEntity = 73;
-        List<WidgetsBundle> widgetsBundles = new ArrayList<>();
+        @NotNull List<WidgetsBundle> widgetsBundles = new ArrayList<>();
         for (int i=0;i<cntEntity;i++) {
-            WidgetsBundle widgetsBundle = new WidgetsBundle();
+            @NotNull WidgetsBundle widgetsBundle = new WidgetsBundle();
             widgetsBundle.setTitle("Widgets bundle"+i);
             widgetsBundles.add(doPost("/api/widgetsBundle", widgetsBundle, WidgetsBundle.class));
         }
@@ -210,7 +211,7 @@ public abstract class BaseWidgetsBundleControllerTest extends AbstractController
 
         widgetsBundles.addAll(sysWidgetsBundles);
 
-        List<WidgetsBundle> loadedWidgetsBundles = new ArrayList<>();
+        @NotNull List<WidgetsBundle> loadedWidgetsBundles = new ArrayList<>();
         PageLink pageLink = new PageLink(14);
         PageData<WidgetsBundle> pageData;
         do {
@@ -237,17 +238,17 @@ public abstract class BaseWidgetsBundleControllerTest extends AbstractController
                 new TypeReference<>(){});
 
         int cntEntity = 120;
-        List<WidgetsBundle> createdWidgetsBundles = new ArrayList<>();
+        @NotNull List<WidgetsBundle> createdWidgetsBundles = new ArrayList<>();
         for (int i=0;i<cntEntity;i++) {
-            WidgetsBundle widgetsBundle = new WidgetsBundle();
+            @NotNull WidgetsBundle widgetsBundle = new WidgetsBundle();
             widgetsBundle.setTitle("Widgets bundle"+i);
             createdWidgetsBundles.add(doPost("/api/widgetsBundle", widgetsBundle, WidgetsBundle.class));
         }
 
-        List<WidgetsBundle> widgetsBundles = new ArrayList<>(createdWidgetsBundles);
+        @NotNull List<WidgetsBundle> widgetsBundles = new ArrayList<>(createdWidgetsBundles);
         widgetsBundles.addAll(sysWidgetsBundles);
 
-        List<WidgetsBundle> loadedWidgetsBundles = new ArrayList<>();
+        @NotNull List<WidgetsBundle> loadedWidgetsBundles = new ArrayList<>();
         PageLink pageLink = new PageLink(14);
         PageData<WidgetsBundle> pageData;
         do {
@@ -266,7 +267,7 @@ public abstract class BaseWidgetsBundleControllerTest extends AbstractController
 
         Mockito.reset(tbClusterService);
 
-        for (WidgetsBundle widgetsBundle : createdWidgetsBundles) {
+        for (@NotNull WidgetsBundle widgetsBundle : createdWidgetsBundles) {
             doDelete("/api/widgetsBundle/"+widgetsBundle.getId().getId().toString())
                     .andExpect(status().isOk());
         }
@@ -301,9 +302,9 @@ public abstract class BaseWidgetsBundleControllerTest extends AbstractController
         List<WidgetsBundle> sysWidgetsBundles = doGetTyped("/api/widgetsBundles?",
                 new TypeReference<List<WidgetsBundle>>(){});
 
-        List<WidgetsBundle> widgetsBundles = new ArrayList<>();
+        @NotNull List<WidgetsBundle> widgetsBundles = new ArrayList<>();
         for (int i=0;i<73;i++) {
-            WidgetsBundle widgetsBundle = new WidgetsBundle();
+            @NotNull WidgetsBundle widgetsBundle = new WidgetsBundle();
             widgetsBundle.setTitle("Widgets bundle"+i);
             widgetsBundles.add(doPost("/api/widgetsBundle", widgetsBundle, WidgetsBundle.class));
         }
@@ -328,23 +329,23 @@ public abstract class BaseWidgetsBundleControllerTest extends AbstractController
         List<WidgetsBundle> sysWidgetsBundles = doGetTyped("/api/widgetsBundles?",
                 new TypeReference<>(){});
 
-        List<WidgetsBundle> createdSystemWidgetsBundles = new ArrayList<>();
+        @NotNull List<WidgetsBundle> createdSystemWidgetsBundles = new ArrayList<>();
         for (int i=0;i<82;i++) {
-            WidgetsBundle widgetsBundle = new WidgetsBundle();
+            @NotNull WidgetsBundle widgetsBundle = new WidgetsBundle();
             widgetsBundle.setTitle("Sys widgets bundle"+i);
             createdSystemWidgetsBundles.add(doPost("/api/widgetsBundle", widgetsBundle, WidgetsBundle.class));
         }
 
-        List<WidgetsBundle> systemWidgetsBundles = new ArrayList<>(createdSystemWidgetsBundles);
+        @NotNull List<WidgetsBundle> systemWidgetsBundles = new ArrayList<>(createdSystemWidgetsBundles);
         systemWidgetsBundles.addAll(sysWidgetsBundles);
 
-        List<WidgetsBundle> widgetsBundles = new ArrayList<>();
+        @NotNull List<WidgetsBundle> widgetsBundles = new ArrayList<>();
         widgetsBundles.addAll(systemWidgetsBundles);
 
         login(tenantAdmin.getEmail(), "testPassword1");
 
         for (int i=0;i<127;i++) {
-            WidgetsBundle widgetsBundle = new WidgetsBundle();
+            @NotNull WidgetsBundle widgetsBundle = new WidgetsBundle();
             widgetsBundle.setTitle("Tenant widgets bundle"+i);
             widgetsBundles.add(doPost("/api/widgetsBundle", widgetsBundle, WidgetsBundle.class));
         }
@@ -367,7 +368,7 @@ public abstract class BaseWidgetsBundleControllerTest extends AbstractController
 
         Assert.assertEquals(systemWidgetsBundles, loadedWidgetsBundles);
 
-        for (WidgetsBundle widgetsBundle : createdSystemWidgetsBundles) {
+        for (@NotNull WidgetsBundle widgetsBundle : createdSystemWidgetsBundles) {
             doDelete("/api/widgetsBundle/"+widgetsBundle.getId().getId().toString())
                     .andExpect(status().isOk());
         }

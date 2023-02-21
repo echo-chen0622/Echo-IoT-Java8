@@ -4,6 +4,7 @@ import org.echoiot.server.common.data.ApiUsageState;
 import org.echoiot.server.common.data.ApiUsageStateValue;
 import org.echoiot.server.common.data.Tenant;
 import org.echoiot.server.common.data.id.TenantId;
+import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -16,7 +17,7 @@ public abstract class BaseApiUsageStateServiceTest extends AbstractServiceTest {
 
     @Before
     public void before() {
-        Tenant tenant = new Tenant();
+        @NotNull Tenant tenant = new Tenant();
         tenant.setTitle("My tenant");
         Tenant savedTenant = tenantService.saveTenant(tenant);
         Assert.assertNotNull(savedTenant);

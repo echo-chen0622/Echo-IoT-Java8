@@ -8,6 +8,8 @@ import org.echoiot.server.common.data.device.profile.*;
 import org.echoiot.server.common.data.query.*;
 import org.echoiot.server.common.msg.tools.SchedulerUtils;
 import org.echoiot.server.common.transport.adaptor.JsonConverter;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.time.Instant;
 import java.time.ZoneId;
@@ -22,13 +24,14 @@ class AlarmRuleState {
 
     private final AlarmSeverity severity;
     private final AlarmRule alarmRule;
+    @NotNull
     private final AlarmConditionSpec spec;
     private final Set<AlarmConditionFilterKey> entityKeys;
     private PersistedAlarmRuleState state;
     private boolean updateFlag;
     private final DynamicPredicateValueCtx dynamicPredicateValueCtx;
 
-    AlarmRuleState(AlarmSeverity severity, AlarmRule alarmRule, Set<AlarmConditionFilterKey> entityKeys, PersistedAlarmRuleState state, DynamicPredicateValueCtx dynamicPredicateValueCtx) {
+    AlarmRuleState(AlarmSeverity severity, @NotNull AlarmRule alarmRule, Set<AlarmConditionFilterKey> entityKeys, @Nullable PersistedAlarmRuleState state, DynamicPredicateValueCtx dynamicPredicateValueCtx) {
         this.severity = severity;
         this.alarmRule = alarmRule;
         this.entityKeys = entityKeys;
@@ -41,7 +44,7 @@ class AlarmRuleState {
         this.dynamicPredicateValueCtx = dynamicPredicateValueCtx;
     }
 
-    public boolean validateTsUpdate(Set<AlarmConditionFilterKey> changedKeys) {
+    public boolean validateTsUpdate(@NotNull Set<AlarmConditionFilterKey> changedKeys) {
         for (AlarmConditionFilterKey key : changedKeys) {
             if (entityKeys.contains(key)) {
                 return true;
@@ -50,9 +53,9 @@ class AlarmRuleState {
         return false;
     }
 
-    public boolean validateAttrUpdate(Set<AlarmConditionFilterKey> changedKeys) {
+    public boolean validateAttrUpdate(@NotNull Set<AlarmConditionFilterKey> changedKeys) {
         //If the attribute was updated, but no new telemetry arrived - we ignore this until new telemetry is there.
-        for (AlarmConditionFilterKey key : entityKeys) {
+        for (@NotNull AlarmConditionFilterKey key : entityKeys) {
             if (key.getType().equals(AlarmConditionKeyType.TIME_SERIES)) {
                 return false;
             }
@@ -65,7 +68,8 @@ class AlarmRuleState {
         return false;
     }
 
-    public AlarmConditionSpec getSpec(AlarmRule alarmRule) {
+    @NotNull
+    public AlarmConditionSpec getSpec(@NotNull AlarmRule alarmRule) {
         AlarmConditionSpec spec = alarmRule.getCondition().getSpec();
         if (spec == null) {
             spec = new SimpleAlarmConditionSpec();
@@ -82,7 +86,7 @@ class AlarmRuleState {
         }
     }
 
-    public AlarmEvalResult eval(DataSnapshot data) {
+    public AlarmEvalResult eval(@NotNull DataSnapshot data) {
         boolean active = isActive(data, data.getTs());
         switch (spec.getType()) {
             case SIMPLE:
@@ -96,7 +100,7 @@ class AlarmRuleState {
         }
     }
 
-    private boolean isActive(DataSnapshot data, long eventTs) {
+    private boolean isActive(@NotNull DataSnapshot data, long eventTs) {
         if (eventTs == 0L) {
             eventTs = System.currentTimeMillis();
         }
@@ -115,9 +119,9 @@ class AlarmRuleState {
         }
     }
 
-    private AlarmSchedule getSchedule(DataSnapshot data, AlarmRule alarmRule) {
+    private AlarmSchedule getSchedule(@NotNull DataSnapshot data, @NotNull AlarmRule alarmRule) {
         AlarmSchedule schedule = alarmRule.getSchedule();
-        EntityKeyValue dynamicValue = getDynamicPredicateValue(data, schedule.getDynamicValue());
+        @Nullable EntityKeyValue dynamicValue = getDynamicPredicateValue(data, schedule.getDynamicValue());
 
         if (dynamicValue != null) {
             try {
@@ -129,9 +133,9 @@ class AlarmRuleState {
         return schedule;
     }
 
-    private boolean isActiveSpecific(SpecificTimeSchedule schedule, long eventTs) {
-        ZoneId zoneId = SchedulerUtils.getZoneId(schedule.getTimezone());
-        ZonedDateTime zdt = ZonedDateTime.ofInstant(Instant.ofEpochMilli(eventTs), zoneId);
+    private boolean isActiveSpecific(@NotNull SpecificTimeSchedule schedule, long eventTs) {
+        @NotNull ZoneId zoneId = SchedulerUtils.getZoneId(schedule.getTimezone());
+        @NotNull ZonedDateTime zdt = ZonedDateTime.ofInstant(Instant.ofEpochMilli(eventTs), zoneId);
         if (schedule.getDaysOfWeek().size() != 7) {
             int dayOfWeek = zdt.getDayOfWeek().getValue();
             if (!schedule.getDaysOfWeek().contains(dayOfWeek)) {
@@ -147,11 +151,11 @@ class AlarmRuleState {
         return isActive(eventTs, zoneId, zdt, schedule.getStartsOn(), endsOn);
     }
 
-    private boolean isActiveCustom(CustomTimeSchedule schedule, long eventTs) {
-        ZoneId zoneId = SchedulerUtils.getZoneId(schedule.getTimezone());
-        ZonedDateTime zdt = ZonedDateTime.ofInstant(Instant.ofEpochMilli(eventTs), zoneId);
+    private boolean isActiveCustom(@NotNull CustomTimeSchedule schedule, long eventTs) {
+        @NotNull ZoneId zoneId = SchedulerUtils.getZoneId(schedule.getTimezone());
+        @NotNull ZonedDateTime zdt = ZonedDateTime.ofInstant(Instant.ofEpochMilli(eventTs), zoneId);
         int dayOfWeek = zdt.toLocalDate().getDayOfWeek().getValue();
-        for (CustomTimeScheduleItem item : schedule.getItems()) {
+        for (@NotNull CustomTimeScheduleItem item : schedule.getItems()) {
             if (item.getDayOfWeek() == dayOfWeek) {
                 if (item.isEnabled()) {
                     long endsOn = item.getEndsOn();
@@ -168,7 +172,7 @@ class AlarmRuleState {
         return false;
     }
 
-    private boolean isActive(long eventTs, ZoneId zoneId, ZonedDateTime zdt, long startsOn, long endsOn) {
+    private boolean isActive(long eventTs, @NotNull ZoneId zoneId, @NotNull ZonedDateTime zdt, long startsOn, long endsOn) {
         long startOfDay = zdt.toLocalDate().atStartOfDay(zoneId).toInstant().toEpochMilli();
         long msFromStartOfDay = eventTs - startOfDay;
         if (startsOn <= endsOn) {
@@ -187,7 +191,8 @@ class AlarmRuleState {
         }
     }
 
-    private AlarmEvalResult evalRepeating(DataSnapshot data, boolean active) {
+    @NotNull
+    private AlarmEvalResult evalRepeating(@NotNull DataSnapshot data, boolean active) {
         if (active && eval(alarmRule.getCondition(), data)) {
             state.setEventCount(state.getEventCount() + 1);
             updateFlag = true;
@@ -198,7 +203,8 @@ class AlarmRuleState {
         }
     }
 
-    private AlarmEvalResult evalDuration(DataSnapshot data, boolean active) {
+    @NotNull
+    private AlarmEvalResult evalDuration(@NotNull DataSnapshot data, boolean active) {
         if (active && eval(alarmRule.getCondition(), data)) {
             if (state.getLastEventTs() > 0) {
                 if (data.getTs() > state.getLastEventTs()) {
@@ -218,7 +224,7 @@ class AlarmRuleState {
         }
     }
 
-    private long resolveRequiredRepeats(DataSnapshot data) {
+    private long resolveRequiredRepeats(@NotNull DataSnapshot data) {
         long repeatingTimes = 0;
         AlarmConditionSpec alarmConditionSpec = getSpec();
         AlarmConditionSpecType specType = alarmConditionSpec.getType();
@@ -230,7 +236,7 @@ class AlarmRuleState {
         return repeatingTimes;
     }
 
-    private long resolveRequiredDurationInMs(DataSnapshot data) {
+    private long resolveRequiredDurationInMs(@NotNull DataSnapshot data) {
         long durationTimeInMs = 0;
         AlarmConditionSpec alarmConditionSpec = getSpec();
         AlarmConditionSpecType specType = alarmConditionSpec.getType();
@@ -243,19 +249,20 @@ class AlarmRuleState {
         return durationTimeInMs;
     }
 
-    private Long resolveDynamicValue(DataSnapshot data, FilterPredicateValue<? extends Number> predicate) {
+    @NotNull
+    private Long resolveDynamicValue(@NotNull DataSnapshot data, @NotNull FilterPredicateValue<? extends Number> predicate) {
         DynamicValue<?> dynamicValue = predicate.getDynamicValue();
-        Long defaultValue = predicate.getDefaultValue().longValue();
+        @NotNull Long defaultValue = predicate.getDefaultValue().longValue();
         if (dynamicValue == null || dynamicValue.getSourceAttribute() == null) {
             return defaultValue;
         }
 
-        EntityKeyValue keyValue = getDynamicPredicateValue(data, dynamicValue);
+        @Nullable EntityKeyValue keyValue = getDynamicPredicateValue(data, dynamicValue);
         if (keyValue == null) {
             return defaultValue;
         }
 
-        var longValue = getLongValue(keyValue);
+        @Nullable var longValue = getLongValue(keyValue);
         if (longValue == null) {
             String sourceAttribute = dynamicValue.getSourceAttribute();
             throw new NumericParseException(String.format("Could not convert attribute '%s' with value '%s' to numeric value!", sourceAttribute, getStrValue(keyValue)));
@@ -263,7 +270,8 @@ class AlarmRuleState {
         return longValue;
     }
 
-    public AlarmEvalResult eval(long ts, DataSnapshot dataSnapshot) {
+    @NotNull
+    public AlarmEvalResult eval(long ts, @NotNull DataSnapshot dataSnapshot) {
         switch (spec.getType()) {
             case SIMPLE:
             case REPEATING:
@@ -283,10 +291,10 @@ class AlarmRuleState {
         }
     }
 
-    private boolean eval(AlarmCondition condition, DataSnapshot data) {
+    private boolean eval(@NotNull AlarmCondition condition, @NotNull DataSnapshot data) {
         boolean eval = true;
-        for (var filter : condition.getCondition()) {
-            EntityKeyValue value;
+        for (@NotNull var filter : condition.getCondition()) {
+            @Nullable EntityKeyValue value;
             if (filter.getKey().getType().equals(AlarmConditionKeyType.CONSTANT)) {
                 try {
                     value = getConstantValue(filter);
@@ -305,8 +313,9 @@ class AlarmRuleState {
         return eval;
     }
 
-    private EntityKeyValue getConstantValue(AlarmConditionFilter filter) {
-        EntityKeyValue value = new EntityKeyValue();
+    @NotNull
+    private EntityKeyValue getConstantValue(@NotNull AlarmConditionFilter filter) {
+        @NotNull EntityKeyValue value = new EntityKeyValue();
         String valueStr = filter.getValue().toString();
         switch (filter.getValueType()) {
             case STRING:
@@ -325,7 +334,7 @@ class AlarmRuleState {
         return value;
     }
 
-    private boolean eval(DataSnapshot data, EntityKeyValue value, KeyFilterPredicate predicate, AlarmConditionFilter filter) {
+    private boolean eval(@NotNull DataSnapshot data, @NotNull EntityKeyValue value, @NotNull KeyFilterPredicate predicate, @NotNull AlarmConditionFilter filter) {
         switch (predicate.getType()) {
             case STRING:
                 return evalStrPredicate(data, value, (StringFilterPredicate) predicate, filter);
@@ -340,17 +349,17 @@ class AlarmRuleState {
         }
     }
 
-    private boolean evalComplexPredicate(DataSnapshot data, EntityKeyValue ekv, ComplexFilterPredicate predicate, AlarmConditionFilter filter) {
+    private boolean evalComplexPredicate(@NotNull DataSnapshot data, @NotNull EntityKeyValue ekv, @NotNull ComplexFilterPredicate predicate, @NotNull AlarmConditionFilter filter) {
         switch (predicate.getOperation()) {
             case OR:
-                for (KeyFilterPredicate kfp : predicate.getPredicates()) {
+                for (@NotNull KeyFilterPredicate kfp : predicate.getPredicates()) {
                     if (eval(data, ekv, kfp, filter)) {
                         return true;
                     }
                 }
                 return false;
             case AND:
-                for (KeyFilterPredicate kfp : predicate.getPredicates()) {
+                for (@NotNull KeyFilterPredicate kfp : predicate.getPredicates()) {
                     if (!eval(data, ekv, kfp, filter)) {
                         return false;
                     }
@@ -361,12 +370,12 @@ class AlarmRuleState {
         }
     }
 
-    private boolean evalBoolPredicate(DataSnapshot data, EntityKeyValue ekv, BooleanFilterPredicate predicate, AlarmConditionFilter filter) {
-        Boolean val = getBoolValue(ekv);
+    private boolean evalBoolPredicate(@NotNull DataSnapshot data, @NotNull EntityKeyValue ekv, @NotNull BooleanFilterPredicate predicate, @NotNull AlarmConditionFilter filter) {
+        @Nullable Boolean val = getBoolValue(ekv);
         if (val == null) {
             return false;
         }
-        Boolean predicateValue = getPredicateValue(data, predicate.getValue(), filter, AlarmRuleState::getBoolValue);
+        @Nullable Boolean predicateValue = getPredicateValue(data, predicate.getValue(), filter, AlarmRuleState::getBoolValue);
         if (predicateValue == null) {
             return false;
         }
@@ -380,12 +389,12 @@ class AlarmRuleState {
         }
     }
 
-    private boolean evalNumPredicate(DataSnapshot data, EntityKeyValue ekv, NumericFilterPredicate predicate, AlarmConditionFilter filter) {
-        Double val = getDblValue(ekv);
+    private boolean evalNumPredicate(@NotNull DataSnapshot data, @NotNull EntityKeyValue ekv, @NotNull NumericFilterPredicate predicate, @NotNull AlarmConditionFilter filter) {
+        @Nullable Double val = getDblValue(ekv);
         if (val == null) {
             return false;
         }
-        Double predicateValue = getPredicateValue(data, predicate.getValue(), filter, AlarmRuleState::getDblValue);
+        @Nullable Double predicateValue = getPredicateValue(data, predicate.getValue(), filter, AlarmRuleState::getDblValue);
         if (predicateValue == null) {
             return false;
         }
@@ -407,12 +416,12 @@ class AlarmRuleState {
         }
     }
 
-    private boolean evalStrPredicate(DataSnapshot data, EntityKeyValue ekv, StringFilterPredicate predicate, AlarmConditionFilter filter) {
-        String val = getStrValue(ekv);
+    private boolean evalStrPredicate(@NotNull DataSnapshot data, @NotNull EntityKeyValue ekv, @NotNull StringFilterPredicate predicate, @NotNull AlarmConditionFilter filter) {
+        @Nullable String val = getStrValue(ekv);
         if (val == null) {
             return false;
         }
-        String predicateValue = getPredicateValue(data, predicate.getValue(), filter, AlarmRuleState::getStrValue);
+        @Nullable String predicateValue = getPredicateValue(data, predicate.getValue(), filter, AlarmRuleState::getStrValue);
         if (predicateValue == null) {
             return false;
         }
@@ -438,8 +447,9 @@ class AlarmRuleState {
         }
     }
 
-    private <T> T getPredicateValue(DataSnapshot data, FilterPredicateValue<T> value, AlarmConditionFilter filter, Function<EntityKeyValue, T> transformFunction) {
-        EntityKeyValue ekv = getDynamicPredicateValue(data, value.getDynamicValue());
+    @Nullable
+    private <T> T getPredicateValue(@NotNull DataSnapshot data, @NotNull FilterPredicateValue<T> value, @NotNull AlarmConditionFilter filter, @NotNull Function<EntityKeyValue, T> transformFunction) {
+        @Nullable EntityKeyValue ekv = getDynamicPredicateValue(data, value.getDynamicValue());
         if (ekv != null) {
             T result = transformFunction.apply(ekv);
             if (result != null) {
@@ -453,8 +463,9 @@ class AlarmRuleState {
         }
     }
 
-    private <T> EntityKeyValue getDynamicPredicateValue(DataSnapshot data, DynamicValue<T> value) {
-        EntityKeyValue ekv = null;
+    @Nullable
+    private <T> EntityKeyValue getDynamicPredicateValue(@NotNull DataSnapshot data, @Nullable DynamicValue<T> value) {
+        @Nullable EntityKeyValue ekv = null;
         if (value != null) {
             switch (value.getSourceType()) {
                 case CURRENT_DEVICE:
@@ -474,7 +485,8 @@ class AlarmRuleState {
         return ekv;
     }
 
-    private static String getStrValue(EntityKeyValue ekv) {
+    @Nullable
+    private static String getStrValue(@NotNull EntityKeyValue ekv) {
         switch (ekv.getDataType()) {
             case LONG:
                 return ekv.getLngValue() != null ? ekv.getLngValue().toString() : null;
@@ -491,7 +503,8 @@ class AlarmRuleState {
         }
     }
 
-    private static Double getDblValue(EntityKeyValue ekv) {
+    @Nullable
+    private static Double getDblValue(@NotNull EntityKeyValue ekv) {
         switch (ekv.getDataType()) {
             case LONG:
                 return ekv.getLngValue() != null ? ekv.getLngValue().doubleValue() : null;
@@ -516,7 +529,8 @@ class AlarmRuleState {
         }
     }
 
-    private static Boolean getBoolValue(EntityKeyValue ekv) {
+    @Nullable
+    private static Boolean getBoolValue(@NotNull EntityKeyValue ekv) {
         switch (ekv.getDataType()) {
             case LONG:
                 return ekv.getLngValue() != null ? ekv.getLngValue() > 0 : null;
@@ -541,7 +555,8 @@ class AlarmRuleState {
         }
     }
 
-    private static Long getLongValue(EntityKeyValue ekv) {
+    @Nullable
+    private static Long getLongValue(@NotNull EntityKeyValue ekv) {
         switch (ekv.getDataType()) {
             case LONG:
                 return ekv.getLngValue();

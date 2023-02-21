@@ -2,6 +2,7 @@ package org.echoiot.server.service.security.auth;
 
 import org.echoiot.server.service.security.model.SecurityUser;
 import org.echoiot.server.service.security.model.token.RawAccessJwtToken;
+import org.jetbrains.annotations.NotNull;
 
 public class RefreshAuthenticationToken extends AbstractJwtAuthenticationToken {
 
@@ -11,7 +12,7 @@ public class RefreshAuthenticationToken extends AbstractJwtAuthenticationToken {
         super(unsafeToken);
     }
 
-    public RefreshAuthenticationToken(SecurityUser securityUser) {
+    public RefreshAuthenticationToken(@NotNull SecurityUser securityUser) {
         super(securityUser);
     }
 }

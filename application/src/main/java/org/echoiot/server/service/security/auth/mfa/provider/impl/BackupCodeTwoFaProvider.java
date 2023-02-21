@@ -10,6 +10,7 @@ import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.security.auth.mfa.config.TwoFaConfigManager;
 import org.echoiot.server.service.security.auth.mfa.provider.TwoFaProvider;
 import org.echoiot.server.service.security.model.SecurityUser;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -22,17 +23,19 @@ import java.util.stream.Stream;
 @TbCoreComponent
 public class BackupCodeTwoFaProvider implements TwoFaProvider<BackupCodeTwoFaProviderConfig, BackupCodeTwoFaAccountConfig> {
 
-    @Autowired @Lazy
+    @Resource @Lazy
     private TwoFaConfigManager twoFaConfigManager;
 
+    @NotNull
     @Override
-    public BackupCodeTwoFaAccountConfig generateNewAccountConfig(User user, BackupCodeTwoFaProviderConfig providerConfig) {
-        BackupCodeTwoFaAccountConfig config = new BackupCodeTwoFaAccountConfig();
+    public BackupCodeTwoFaAccountConfig generateNewAccountConfig(User user, @NotNull BackupCodeTwoFaProviderConfig providerConfig) {
+        @NotNull BackupCodeTwoFaAccountConfig config = new BackupCodeTwoFaAccountConfig();
         config.setCodes(generateCodes(providerConfig.getCodesQuantity(), 8));
         config.setSerializeHiddenFields(true);
         return config;
     }
 
+    @NotNull
     private static Set<String> generateCodes(int count, int length) {
         return Stream.generate(() -> StringUtils.random(length, "0123456789abcdef"))
                 .distinct().limit(count)
@@ -40,7 +43,7 @@ public class BackupCodeTwoFaProvider implements TwoFaProvider<BackupCodeTwoFaPro
     }
 
     @Override
-    public boolean checkVerificationCode(SecurityUser user, String code, BackupCodeTwoFaProviderConfig providerConfig, BackupCodeTwoFaAccountConfig accountConfig) {
+    public boolean checkVerificationCode(@NotNull SecurityUser user, String code, BackupCodeTwoFaProviderConfig providerConfig, @NotNull BackupCodeTwoFaAccountConfig accountConfig) {
         if (CollectionsUtil.contains(accountConfig.getCodes(), code)) {
             accountConfig.getCodes().remove(code);
             twoFaConfigManager.saveTwoFaAccountConfig(user.getTenantId(), user.getId(), accountConfig);
@@ -50,6 +53,7 @@ public class BackupCodeTwoFaProvider implements TwoFaProvider<BackupCodeTwoFaPro
         }
     }
 
+    @NotNull
     @Override
     public TwoFaProviderType getType() {
         return TwoFaProviderType.BACKUP_CODE;

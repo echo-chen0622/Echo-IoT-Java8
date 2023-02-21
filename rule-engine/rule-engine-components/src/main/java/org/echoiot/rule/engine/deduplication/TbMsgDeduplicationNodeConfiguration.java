@@ -2,6 +2,7 @@ package org.echoiot.rule.engine.deduplication;
 
 import lombok.Data;
 import org.echoiot.rule.engine.api.NodeConfiguration;
+import org.jetbrains.annotations.NotNull;
 
 @Data
 public class TbMsgDeduplicationNodeConfiguration implements NodeConfiguration<TbMsgDeduplicationNodeConfiguration> {
@@ -17,9 +18,10 @@ public class TbMsgDeduplicationNodeConfiguration implements NodeConfiguration<Tb
     private int maxPendingMsgs;
     private int maxRetries;
 
+    @NotNull
     @Override
     public TbMsgDeduplicationNodeConfiguration defaultConfiguration() {
-        TbMsgDeduplicationNodeConfiguration configuration = new TbMsgDeduplicationNodeConfiguration();
+        @NotNull TbMsgDeduplicationNodeConfiguration configuration = new TbMsgDeduplicationNodeConfiguration();
         configuration.setInterval(60);
         configuration.setStrategy(DeduplicationStrategy.FIRST);
         configuration.setMaxPendingMsgs(100);

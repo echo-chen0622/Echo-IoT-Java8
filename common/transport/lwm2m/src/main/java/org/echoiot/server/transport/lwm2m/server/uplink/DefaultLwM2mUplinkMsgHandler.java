@@ -52,6 +52,8 @@ import org.eclipse.leshan.core.response.ReadCompositeResponse;
 import org.eclipse.leshan.core.response.ReadResponse;
 import org.eclipse.leshan.server.registration.Registration;
 import org.eclipse.leshan.server.registration.RegistrationStore;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -136,6 +138,7 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
         super.destroy();
     }
 
+    @NotNull
     @Override
     protected String getExecutorName() {
         return "LwM2M uplink";
@@ -160,7 +163,7 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
      * @param registration         - Registration LwM2M Client
      * @param previousObservations - may be null
      */
-    public void onRegistered(Registration registration, Collection<Observation> previousObservations) {
+    public void onRegistered(@NotNull Registration registration, Collection<Observation> previousObservations) {
         executor.submit(() -> {
             LwM2mClient lwM2MClient = this.clientContext.getClientByEndpoint(registration.getEndpoint());
             try {
@@ -201,7 +204,7 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
      *
      * @param registration - Registration LwM2M Client
      */
-    public void updatedReg(Registration registration) {
+    public void updatedReg(@NotNull Registration registration) {
         executor.submit(() -> {
             LwM2mClient lwM2MClient = clientContext.getClientByEndpoint(registration.getEndpoint());
             try {
@@ -226,11 +229,11 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
      * @param registration - Registration LwM2M Client
      * @param observations - !!! Warn: if have not finishing unReg, then this operation will be finished on next Client`s connect
      */
-    public void unReg(Registration registration, Collection<Observation> observations) {
+    public void unReg(@NotNull Registration registration, Collection<Observation> observations) {
         executor.submit(() -> doUnReg(registration, clientContext.getClientByEndpoint(registration.getEndpoint())));
     }
 
-    private void doUnReg(Registration registration, LwM2mClient client) {
+    private void doUnReg(@NotNull Registration registration, @NotNull LwM2mClient client) {
         try {
             logService.log(client, LOG_LWM2M_INFO + ": Client unRegistration");
             clientContext.unregister(client, registration);
@@ -251,7 +254,7 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
     }
 
     @Override
-    public void onSleepingDev(Registration registration) {
+    public void onSleepingDev(@NotNull Registration registration) {
         log.debug("[{}] [{}] Received endpoint sleeping event", registration.getId(), registration.getEndpoint());
         clientContext.asleep(clientContext.getClientByEndpoint(registration.getEndpoint()));
     }
@@ -264,21 +267,21 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
      * @param response     - observe
      */
     @Override
-    public void onUpdateValueAfterReadResponse(Registration registration, String path, ReadResponse response) {
+    public void onUpdateValueAfterReadResponse(@NotNull Registration registration, @NotNull String path, @NotNull ReadResponse response) {
         LwM2mNode content = response.getContent();
         if (content != null) {
             LwM2mClient lwM2MClient = clientContext.getClientByEndpoint(registration.getEndpoint());
-            ObjectModel objectModelVersion = lwM2MClient.getObjectModel(path, modelProvider);
+            @Nullable ObjectModel objectModelVersion = lwM2MClient.getObjectModel(path, modelProvider);
             if (objectModelVersion != null) {
                 int responseCode = response.getCode().getCode();
                 if (content instanceof LwM2mObject) {
-                    LwM2mObject lwM2mObject = (LwM2mObject) content;
+                    @NotNull LwM2mObject lwM2mObject = (LwM2mObject) content;
                     this.updateObjectResourceValue(lwM2MClient, lwM2mObject, path, responseCode);
                 } else if (content instanceof LwM2mObjectInstance) {
-                    LwM2mObjectInstance lwM2mObjectInstance = (LwM2mObjectInstance) content;
+                    @NotNull LwM2mObjectInstance lwM2mObjectInstance = (LwM2mObjectInstance) content;
                     this.updateObjectInstanceResourceValue(lwM2MClient, lwM2mObjectInstance, path, responseCode);
                 } else if (content instanceof LwM2mResource) {
-                    LwM2mResource lwM2mResource = (LwM2mResource) content;
+                    @NotNull LwM2mResource lwM2mResource = (LwM2mResource) content;
                     this.updateResourcesValue(lwM2MClient, lwM2mResource, path, Mode.UPDATE, responseCode);
                 }
             }
@@ -286,7 +289,7 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
         }
     }
 
-    public void onUpdateValueAfterReadCompositeResponse(Registration registration, ReadCompositeResponse response) {
+    public void onUpdateValueAfterReadCompositeResponse(@NotNull Registration registration, @NotNull ReadCompositeResponse response) {
         log.trace("ReadCompositeResponse: [{}]", response);
         if (response.getContent() != null) {
             LwM2mClient lwM2MClient = clientContext.getClientByEndpoint(registration.getEndpoint());
@@ -314,22 +317,22 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
      * @param sendRequest  - sendRequest
      */
     @Override
-    public void onUpdateValueWithSendRequest(Registration registration, SendRequest sendRequest) {
-        for(var entry : sendRequest.getNodes().entrySet()) {
+    public void onUpdateValueWithSendRequest(@NotNull Registration registration, @NotNull SendRequest sendRequest) {
+        for(@NotNull var entry : sendRequest.getNodes().entrySet()) {
             LwM2mPath path = entry.getKey();
             LwM2mNode node = entry.getValue();
             LwM2mClient lwM2MClient = clientContext.getClientByEndpoint(registration.getEndpoint());
-            String stringPath = convertObjectIdToVersionedId(path.toString(), registration);
-            ObjectModel objectModelVersion = lwM2MClient.getObjectModel(stringPath, modelProvider);
+            @Nullable String stringPath = convertObjectIdToVersionedId(path.toString(), registration);
+            @Nullable ObjectModel objectModelVersion = lwM2MClient.getObjectModel(stringPath, modelProvider);
             if (objectModelVersion != null) {
                 if (node instanceof LwM2mObject) {
-                    LwM2mObject lwM2mObject = (LwM2mObject) node;
+                    @NotNull LwM2mObject lwM2mObject = (LwM2mObject) node;
                     this.updateObjectResourceValue(lwM2MClient, lwM2mObject, stringPath, 0);
                 } else if (node instanceof LwM2mObjectInstance) {
-                    LwM2mObjectInstance lwM2mObjectInstance = (LwM2mObjectInstance) node;
+                    @NotNull LwM2mObjectInstance lwM2mObjectInstance = (LwM2mObjectInstance) node;
                     this.updateObjectInstanceResourceValue(lwM2MClient, lwM2mObjectInstance, stringPath, 0);
                 } else if (node instanceof LwM2mResource) {
-                    LwM2mResource lwM2mResource = (LwM2mResource) node;
+                    @NotNull LwM2mResource lwM2mResource = (LwM2mResource) node;
                     this.updateResourcesValue(lwM2MClient, lwM2mResource, stringPath, Mode.UPDATE, 0);
                 }
             }
@@ -342,11 +345,11 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
      * @param deviceProfile -
      */
     @Override
-    public void onDeviceProfileUpdate(SessionInfoProto sessionInfo, DeviceProfile deviceProfile) {
+    public void onDeviceProfileUpdate(SessionInfoProto sessionInfo, @NotNull DeviceProfile deviceProfile) {
         try {
-            List<LwM2mClient> clients = clientContext.getLwM2mClients()
-                    .stream().filter(e -> e.getProfileId() != null)
-                    .filter(e -> e.getProfileId().equals(deviceProfile.getUuidId())).collect(Collectors.toList());
+            @NotNull List<LwM2mClient> clients = clientContext.getLwM2mClients()
+                                                              .stream().filter(e -> e.getProfileId() != null)
+                                                              .filter(e -> e.getProfileId().equals(deviceProfile.getUuidId())).collect(Collectors.toList());
             clients.forEach(client -> {
                 this.securityStore.remove(client.getEndpoint(), client.getRegistration().getId());
                 client.onDeviceProfileUpdate(deviceProfile);
@@ -361,7 +364,7 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
     }
 
     @Override
-    public void onDeviceUpdate(SessionInfoProto sessionInfo, Device device, Optional<DeviceProfile> newDeviceProfileOpt) {
+    public void onDeviceUpdate(SessionInfoProto sessionInfo, @NotNull Device device, @NotNull Optional<DeviceProfile> newDeviceProfileOpt) {
         try {
             LwM2mClient client = clientContext.getClientByDeviceId(device.getUuidId());
             if (client != null) {
@@ -376,22 +379,22 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
     }
 
     @Override
-    public void onDeviceDelete(DeviceId deviceId) {
+    public void onDeviceDelete(@NotNull DeviceId deviceId) {
         clearAndUnregister(clientContext.getClientByDeviceId(deviceId.getId()));
     }
 
     @Override
-    public void onResourceUpdate(TransportProtos.ResourceUpdateMsg resourceUpdateMsgOpt) {
+    public void onResourceUpdate(@NotNull TransportProtos.ResourceUpdateMsg resourceUpdateMsgOpt) {
         String idVer = resourceUpdateMsgOpt.getResourceKey();
-        TenantId tenantId = TenantId.fromUUID(new UUID(resourceUpdateMsgOpt.getTenantIdMSB(), resourceUpdateMsgOpt.getTenantIdLSB()));
+        @NotNull TenantId tenantId = TenantId.fromUUID(new UUID(resourceUpdateMsgOpt.getTenantIdMSB(), resourceUpdateMsgOpt.getTenantIdLSB()));
         modelProvider.evict(tenantId, idVer);
         clientContext.getLwM2mClients().forEach(e -> e.updateResourceModel(idVer, modelProvider));
     }
 
     @Override
-    public void onResourceDelete(TransportProtos.ResourceDeleteMsg resourceDeleteMsgOpt) {
+    public void onResourceDelete(@NotNull TransportProtos.ResourceDeleteMsg resourceDeleteMsgOpt) {
         String pathIdVer = resourceDeleteMsgOpt.getResourceKey();
-        TenantId tenantId = TenantId.fromUUID(new UUID(resourceDeleteMsgOpt.getTenantIdMSB(), resourceDeleteMsgOpt.getTenantIdLSB()));
+        @NotNull TenantId tenantId = TenantId.fromUUID(new UUID(resourceDeleteMsgOpt.getTenantIdMSB(), resourceDeleteMsgOpt.getTenantIdLSB()));
         modelProvider.evict(tenantId, pathIdVer);
         clientContext.getLwM2mClients().forEach(e -> e.deleteResources(pathIdVer, modelProvider));
     }
@@ -403,7 +406,7 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
      * @param registration -
      */
     @Override
-    public void onAwakeDev(Registration registration) {
+    public void onAwakeDev(@NotNull Registration registration) {
         log.debug("[{}] [{}] Received endpoint awake event", registration.getId(), registration.getEndpoint());
         clientContext.awake(clientContext.getClientByEndpoint(registration.getEndpoint()));
     }
@@ -417,7 +420,7 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
      *
      * @param lwM2MClient - object with All parameters off client
      */
-    private void initClientTelemetry(LwM2mClient lwM2MClient) {
+    private void initClientTelemetry(@NotNull LwM2mClient lwM2MClient) {
         Lwm2mDeviceProfileTransportConfiguration profile = clientContext.getProfile(lwM2MClient.getProfileId());
         Set<String> supportedObjects = clientContext.getSupportedIdVerInClient(lwM2MClient);
         if (supportedObjects != null && supportedObjects.size() > 0) {
@@ -429,14 +432,14 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
         }
     }
 
-    private void sendReadRequests(LwM2mClient lwM2MClient, Lwm2mDeviceProfileTransportConfiguration profile, Set<String> supportedObjects) {
+    private void sendReadRequests(@NotNull LwM2mClient lwM2MClient, @NotNull Lwm2mDeviceProfileTransportConfiguration profile, @NotNull Set<String> supportedObjects) {
         try {
-            Set<String> targetIds = new HashSet<>(profile.getObserveAttr().getAttribute());
+            @NotNull Set<String> targetIds = new HashSet<>(profile.getObserveAttr().getAttribute());
             targetIds.addAll(profile.getObserveAttr().getTelemetry());
             targetIds = diffSets(profile.getObserveAttr().getObserve(), targetIds);
             targetIds = targetIds.stream().filter(target -> isSupportedTargetId(supportedObjects, target)).collect(Collectors.toSet());
 
-            CountDownLatch latch = new CountDownLatch(targetIds.size());
+            @NotNull CountDownLatch latch = new CountDownLatch(targetIds.size());
             targetIds.forEach(versionedId -> sendReadRequest(lwM2MClient, versionedId,
                     new TbLwM2MLatchCallback<>(latch, new TbLwM2MReadCallback(this, logService, lwM2MClient, versionedId))));
             latch.await();
@@ -448,12 +451,12 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
         }
     }
 
-    private void sendObserveRequests(LwM2mClient lwM2MClient, Lwm2mDeviceProfileTransportConfiguration profile, Set<String> supportedObjects) {
+    private void sendObserveRequests(@NotNull LwM2mClient lwM2MClient, @NotNull Lwm2mDeviceProfileTransportConfiguration profile, @NotNull Set<String> supportedObjects) {
         try {
             Set<String> targetIds = profile.getObserveAttr().getObserve();
             targetIds = targetIds.stream().filter(target -> isSupportedTargetId(supportedObjects, target)).collect(Collectors.toSet());
 
-            CountDownLatch latch = new CountDownLatch(targetIds.size());
+            @NotNull CountDownLatch latch = new CountDownLatch(targetIds.size());
             targetIds.forEach(targetId -> sendObserveRequest(lwM2MClient, targetId,
                     new TbLwM2MLatchCallback<>(latch, new TbLwM2MObserveCallback(this, logService, lwM2MClient, targetId))));
 
@@ -466,7 +469,7 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
         }
     }
 
-    private void sendWriteAttributeRequests(LwM2mClient lwM2MClient, Lwm2mDeviceProfileTransportConfiguration profile, Set<String> supportedObjects) {
+    private void sendWriteAttributeRequests(@NotNull LwM2mClient lwM2MClient, @NotNull Lwm2mDeviceProfileTransportConfiguration profile, @NotNull Set<String> supportedObjects) {
         try {
             Map<String, ObjectAttributes> attributesMap = profile.getObserveAttr().getAttributeLwm2m();
             attributesMap = attributesMap.entrySet().stream().filter(target -> isSupportedTargetId(supportedObjects, target.getKey())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
@@ -505,18 +508,18 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
         defaultLwM2MDownlinkMsgHandler.sendCancelObserveRequest(client, request, new TbLwM2MCancelObserveCallback(logService, client, versionedId));
     }
 
-    private void updateObjectResourceValue(LwM2mClient client, LwM2mObject lwM2mObject, String pathIdVer, int code) {
-        LwM2mPath pathIds = new LwM2mPath(fromVersionedIdToObjectId(pathIdVer));
+    private void updateObjectResourceValue(@NotNull LwM2mClient client, @NotNull LwM2mObject lwM2mObject, String pathIdVer, int code) {
+        @NotNull LwM2mPath pathIds = new LwM2mPath(fromVersionedIdToObjectId(pathIdVer));
         lwM2mObject.getInstances().forEach((instanceId, instance) -> {
-            String pathInstance = pathIds.toString() + "/" + instanceId;
+            @NotNull String pathInstance = pathIds + "/" + instanceId;
             this.updateObjectInstanceResourceValue(client, instance, pathInstance, code);
         });
     }
 
-    private void updateObjectInstanceResourceValue(LwM2mClient client, LwM2mObjectInstance lwM2mObjectInstance, String pathIdVer, int code) {
-        LwM2mPath pathIds = new LwM2mPath(fromVersionedIdToObjectId(pathIdVer));
+    private void updateObjectInstanceResourceValue(@NotNull LwM2mClient client, @NotNull LwM2mObjectInstance lwM2mObjectInstance, String pathIdVer, int code) {
+        @NotNull LwM2mPath pathIds = new LwM2mPath(fromVersionedIdToObjectId(pathIdVer));
         lwM2mObjectInstance.getResources().forEach((resourceId, resource) -> {
-            String pathRez = pathIds.toString() + "/" + resourceId;
+            @NotNull String pathRez = pathIds + "/" + resourceId;
             this.updateResourcesValue(client, resource, pathRez, Mode.UPDATE, code);
         });
     }
@@ -532,7 +535,7 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
      * @param path          - resource
      * @param mode          - Replace, Update
      */
-    private void updateResourcesValue(LwM2mClient lwM2MClient, LwM2mResource lwM2mResource, String path, Mode mode, int code) {
+    private void updateResourcesValue(@NotNull LwM2mClient lwM2MClient, @NotNull LwM2mResource lwM2mResource, @NotNull String path, Mode mode, int code) {
         Registration registration = lwM2MClient.getRegistration();
         if (lwM2MClient.saveResourceValue(path, lwM2mResource, modelProvider, mode)) {
             if (path.equals(convertObjectIdToVersionedId(FW_NAME_ID, registration))) {
@@ -576,7 +579,7 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
      *
      * @param registration - Registration LwM2M Client
      */
-    private void updateAttrTelemetry(Registration registration, Set<String> paths) {
+    private void updateAttrTelemetry(@NotNull Registration registration, Set<String> paths) {
         try {
             ResultsAddKeyValueProto results = this.getParametersFromProfile(registration, paths);
             SessionInfoProto sessionInfo = this.getSessionInfoOrCloseSession(registration);
@@ -593,8 +596,8 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
         }
     }
 
-    private boolean isSupportedTargetId(Set<String> supportedIds, String targetId) {
-        String[] targetIdParts = targetId.split(LWM2M_SEPARATOR_PATH);
+    private boolean isSupportedTargetId(@NotNull Set<String> supportedIds, @NotNull String targetId) {
+        @NotNull String[] targetIdParts = targetId.split(LWM2M_SEPARATOR_PATH);
         if (targetIdParts.length <= 1) {
             return false;
         }
@@ -608,14 +611,15 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
         return false;
     }
 
-    private ConcurrentHashMap<String, Object> getPathForWriteAttributes(JsonObject objectJson) {
+    @Nullable
+    private ConcurrentHashMap<String, Object> getPathForWriteAttributes(@NotNull JsonObject objectJson) {
         ConcurrentHashMap<String, Object> pathAttributes = new Gson().fromJson(objectJson.toString(),
                 new TypeToken<ConcurrentHashMap<String, Object>>() {
                 }.getType());
         return pathAttributes;
     }
 
-    private void onDeviceUpdate(LwM2mClient lwM2MClient, Device device, Optional<DeviceProfile> deviceProfileOpt) {
+    private void onDeviceUpdate(@NotNull LwM2mClient lwM2MClient, @NotNull Device device, @NotNull Optional<DeviceProfile> deviceProfileOpt) {
         var oldProfile = clientContext.getProfile(lwM2MClient.getProfileId());
         deviceProfileOpt.ifPresent(deviceProfile -> this.onDeviceProfileUpdate(Collections.singletonList(lwM2MClient), oldProfile, deviceProfile));
         lwM2MClient.onDeviceUpdate(device, deviceProfileOpt);
@@ -628,23 +632,23 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
      * @param registration - Registration LwM2M Client
      * @param path         -
      */
-    private ResultsAddKeyValueProto getParametersFromProfile(Registration registration, Set<String> path) {
+    private ResultsAddKeyValueProto getParametersFromProfile(@NotNull Registration registration, @Nullable Set<String> path) {
         if (path != null && path.size() > 0) {
-            ResultsAddKeyValueProto results = new ResultsAddKeyValueProto();
+            @NotNull ResultsAddKeyValueProto results = new ResultsAddKeyValueProto();
             var profile = clientContext.getProfile(registration);
-            List<TransportProtos.KeyValueProto> resultAttributes = new ArrayList<>();
+            @NotNull List<TransportProtos.KeyValueProto> resultAttributes = new ArrayList<>();
             profile.getObserveAttr().getAttribute().forEach(pathIdVer -> {
                 if (path.contains(pathIdVer)) {
-                    TransportProtos.KeyValueProto kvAttr = this.getKvToEchoiot(pathIdVer, registration);
+                    @Nullable TransportProtos.KeyValueProto kvAttr = this.getKvToEchoiot(pathIdVer, registration);
                     if (kvAttr != null) {
                         resultAttributes.add(kvAttr);
                     }
                 }
             });
-            List<TransportProtos.KeyValueProto> resultTelemetries = new ArrayList<>();
+            @NotNull List<TransportProtos.KeyValueProto> resultTelemetries = new ArrayList<>();
             profile.getObserveAttr().getTelemetry().forEach(pathIdVer -> {
                 if (path.contains(pathIdVer)) {
-                    TransportProtos.KeyValueProto kvAttr = this.getKvToEchoiot(pathIdVer, registration);
+                    @Nullable TransportProtos.KeyValueProto kvAttr = this.getKvToEchoiot(pathIdVer, registration);
                     if (kvAttr != null) {
                         resultTelemetries.add(kvAttr);
                     }
@@ -661,26 +665,26 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
         return null;
     }
 
-    private TransportProtos.KeyValueProto getKvToEchoiot(String pathIdVer, Registration registration) {
+    private TransportProtos.KeyValueProto getKvToEchoiot(String pathIdVer, @NotNull Registration registration) {
         LwM2mClient lwM2MClient = this.clientContext.getClientByEndpoint(registration.getEndpoint());
         Map<String, String> names = clientContext.getProfile(lwM2MClient.getProfileId()).getObserveAttr().getKeyName();
         if (names != null && names.containsKey(pathIdVer)) {
             String resourceName = names.get(pathIdVer);
             if (resourceName != null && !resourceName.isEmpty()) {
                 try {
-                    LwM2mResource resourceValue = LwM2MTransportUtil.getResourceValueFromLwM2MClient(lwM2MClient, pathIdVer);
+                    @Nullable LwM2mResource resourceValue = LwM2MTransportUtil.getResourceValueFromLwM2MClient(lwM2MClient, pathIdVer);
                     if (resourceValue != null) {
                         ResourceModel.Type currentType = resourceValue.getType();
-                        ResourceModel.Type expectedType = this.helper.getResourceModelTypeEqualsKvProtoValueType(currentType, pathIdVer);
-                        Object valueKvProto = null;
+                        ResourceModel.Type expectedType = LwM2mTransportServerHelper.getResourceModelTypeEqualsKvProtoValueType(currentType, pathIdVer);
+                        @Nullable Object valueKvProto = null;
                         if (resourceValue.isMultiInstances()) {
                             valueKvProto = new JsonObject();
-                            Object finalvalueKvProto = valueKvProto;
-                            Gson gson = new GsonBuilder().create();
-                            ResourceModel.Type finalCurrentType = currentType;
+                            @NotNull Object finalvalueKvProto = valueKvProto;
+                            @NotNull Gson gson = new GsonBuilder().create();
+                            @NotNull ResourceModel.Type finalCurrentType = currentType;
                             resourceValue.getInstances().forEach((k, v) -> {
-                                Object val = this.converter.convertValue(v.getValue(), finalCurrentType, expectedType,
-                                        new LwM2mPath(fromVersionedIdToObjectId(pathIdVer)));
+                                @Nullable Object val = this.converter.convertValue(v.getValue(), finalCurrentType, expectedType,
+                                                                                   new LwM2mPath(fromVersionedIdToObjectId(pathIdVer)));
                                 JsonElement element = gson.toJsonTree(val, val.getClass());
                                 ((JsonObject) finalvalueKvProto).add(String.valueOf(k), element);
                             });
@@ -689,7 +693,7 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
                             valueKvProto = this.converter.convertValue(resourceValue.getValue(), currentType, expectedType,
                                     new LwM2mPath(fromVersionedIdToObjectId(pathIdVer)));
                         }
-                        LwM2mOtaConvert lwM2mOtaConvert = convertOtaUpdateValueToString(pathIdVer, valueKvProto, currentType);
+                        @NotNull LwM2mOtaConvert lwM2mOtaConvert = convertOtaUpdateValueToString(pathIdVer, valueKvProto, currentType);
                         valueKvProto = lwM2mOtaConvert.getValue();
                         currentType = lwM2mOtaConvert.getCurrentType();
                         return valueKvProto != null ? this.helper.getKvAttrTelemetryToEchoiot(currentType, resourceName, valueKvProto, resourceValue.isMultiInstances()) : null;
@@ -705,7 +709,7 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
     }
 
     @Override
-    public void onWriteResponseOk(LwM2mClient client, String path, WriteRequest request, int code) {
+    public void onWriteResponseOk(@NotNull LwM2mClient client, @NotNull String path, @NotNull WriteRequest request, int code) {
         if (request.getNode() instanceof LwM2mResource) {
             this.updateResourcesValue(client, ((LwM2mResource) request.getNode()), path, request.isReplaceRequest() ? Mode.REPLACE : Mode.UPDATE, code);
         } else if (request.getNode() instanceof LwM2mObjectInstance) {
@@ -719,7 +723,7 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
     }
 
     @Override
-    public void onCreateResponseOk(LwM2mClient client, String path, CreateRequest request) {
+    public void onCreateResponseOk(LwM2mClient client, String path, @NotNull CreateRequest request) {
         if (request.getObjectInstances() != null && request.getObjectInstances().size() > 0) {
             request.getObjectInstances().forEach(instance ->
                     instance.getResources()
@@ -729,21 +733,21 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
     }
 
     @Override
-    public void onWriteCompositeResponseOk(LwM2mClient client, WriteCompositeRequest request, int code) {
+    public void onWriteCompositeResponseOk(@NotNull LwM2mClient client, @NotNull WriteCompositeRequest request, int code) {
         log.trace("ReadCompositeResponse: [{}]", request.getNodes());
         request.getNodes().forEach((k, v) -> {
             if (v instanceof LwM2mSingleResource) {
                 this.updateResourcesValue(client, (LwM2mResource) v, k.toString(), Mode.REPLACE, code);
             } else {
                 LwM2mResourceInstance resourceInstance = (LwM2mResourceInstance) v;
-                LwM2mMultipleResource multipleResource = new LwM2mMultipleResource(v.getId(), resourceInstance.getType(), resourceInstance);
+                @NotNull LwM2mMultipleResource multipleResource = new LwM2mMultipleResource(v.getId(), resourceInstance.getType(), resourceInstance);
                 this.updateResourcesValue(client, multipleResource, k.toString(), Mode.REPLACE, code);
             }
         });
     }
 
     //TODO: review and optimize the logic to minimize number of the requests to device.
-    private void onDeviceProfileUpdate(List<LwM2mClient> clients, Lwm2mDeviceProfileTransportConfiguration oldProfile, DeviceProfile deviceProfile) {
+    private void onDeviceProfileUpdate(@NotNull List<LwM2mClient> clients, @NotNull Lwm2mDeviceProfileTransportConfiguration oldProfile, @NotNull DeviceProfile deviceProfile) {
         if (clientContext.profileUpdate(deviceProfile) != null) {
             TelemetryMappingConfiguration oldTelemetryParams = oldProfile.getObserveAttr();
             Set<String> attributeSetOld = oldTelemetryParams.getAttribute();
@@ -760,11 +764,11 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
             Map<String, String> keyNameNew = newTelemetryParams.getKeyName();
             Map<String, ObjectAttributes> attributeLwm2mNew = newTelemetryParams.getAttributeLwm2m();
 
-            Set<String> observeToAdd = diffSets(observeOld, observeNew);
-            Set<String> observeToRemove = diffSets(observeNew, observeOld);
+            @NotNull Set<String> observeToAdd = diffSets(observeOld, observeNew);
+            @NotNull Set<String> observeToRemove = diffSets(observeNew, observeOld);
 
-            Set<String> newObjectsToRead = new HashSet<>();
-            Set<String> newObjectsToCancelRead = new HashSet<>();
+            @NotNull Set<String> newObjectsToRead = new HashSet<>();
+            @NotNull Set<String> newObjectsToCancelRead = new HashSet<>();
 
             if (!attributeSetOld.equals(attributeSetNew)) {
                 newObjectsToRead.addAll(diffSets(attributeSetOld, attributeSetNew));
@@ -776,26 +780,26 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
                 newObjectsToCancelRead.addAll(diffSets(telemetrySetNew, telemetrySetOld));
             }
             if (!keyNameOld.equals(keyNameNew)) {
-                ParametersAnalyzeResult keyNameChange = this.getAnalyzerKeyName(keyNameOld, keyNameNew);
+                @NotNull ParametersAnalyzeResult keyNameChange = this.getAnalyzerKeyName(keyNameOld, keyNameNew);
                 newObjectsToRead.addAll(keyNameChange.getPathPostParametersAdd());
             }
 
-            ParametersAnalyzeResult analyzerParameters = getAttributesAnalyzer(attributeLwm2mOld, attributeLwm2mNew);
+            @NotNull ParametersAnalyzeResult analyzerParameters = getAttributesAnalyzer(attributeLwm2mOld, attributeLwm2mNew);
 
             clients.forEach(client -> {
-                LwM2MModelConfig modelConfig = new LwM2MModelConfig(client.getEndpoint());
+                @NotNull LwM2MModelConfig modelConfig = new LwM2MModelConfig(client.getEndpoint());
                 modelConfig.getToRead().addAll(diffSets(observeToAdd, newObjectsToRead));
                 modelConfig.getToCancelRead().addAll(newObjectsToCancelRead);
                 modelConfig.getToCancelObserve().addAll(observeToRemove);
                 modelConfig.getToObserve().addAll(observeToAdd);
 
                 Set<String> clientObjects = clientContext.getSupportedIdVerInClient(client);
-                Set<String> pathToAdd = analyzerParameters.getPathPostParametersAdd().stream().filter(target -> clientObjects.contains("/" + target.split(LWM2M_SEPARATOR_PATH)[1]))
-                        .collect(Collectors.toUnmodifiableSet());
+                @NotNull Set<String> pathToAdd = analyzerParameters.getPathPostParametersAdd().stream().filter(target -> clientObjects.contains("/" + target.split(LWM2M_SEPARATOR_PATH)[1]))
+                                                                   .collect(Collectors.toUnmodifiableSet());
                 modelConfig.getAttributesToAdd().putAll(pathToAdd.stream().collect(Collectors.toMap(t -> t, attributeLwm2mNew::get)));
 
-                Set<String> pathToRemove = analyzerParameters.getPathPostParametersDel().stream().filter(target -> clientObjects.contains("/" + target.split(LWM2M_SEPARATOR_PATH)[1]))
-                        .collect(Collectors.toUnmodifiableSet());
+                @NotNull Set<String> pathToRemove = analyzerParameters.getPathPostParametersDel().stream().filter(target -> clientObjects.contains("/" + target.split(LWM2M_SEPARATOR_PATH)[1]))
+                                                                      .collect(Collectors.toUnmodifiableSet());
                 modelConfig.getAttributesToRemove().addAll(pathToRemove);
 
                 modelConfigService.sendUpdates(client, modelConfig);
@@ -818,27 +822,29 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
         }
     }
 
-    private ParametersAnalyzeResult getAnalyzerKeyName(Map<String, String> keyNameOld, Map<String, String> keyNameNew) {
-        ParametersAnalyzeResult analyzerParameters = new ParametersAnalyzeResult();
-        Set<String> paths = keyNameNew.entrySet()
-                .stream()
-                .filter(e -> !e.getValue().equals(keyNameOld.get(e.getKey())))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)).keySet();
+    @NotNull
+    private ParametersAnalyzeResult getAnalyzerKeyName(@NotNull Map<String, String> keyNameOld, @NotNull Map<String, String> keyNameNew) {
+        @NotNull ParametersAnalyzeResult analyzerParameters = new ParametersAnalyzeResult();
+        @NotNull Set<String> paths = keyNameNew.entrySet()
+                                               .stream()
+                                               .filter(e -> !e.getValue().equals(keyNameOld.get(e.getKey())))
+                                               .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)).keySet();
         analyzerParameters.setPathPostParametersAdd(paths);
         return analyzerParameters;
     }
 
-    private ParametersAnalyzeResult getAttributesAnalyzer(Map<String, ObjectAttributes> attributeLwm2mOld, Map<String, ObjectAttributes> attributeLwm2mNew) {
-        ParametersAnalyzeResult analyzerParameters = new ParametersAnalyzeResult();
-        Set<String> pathOld = attributeLwm2mOld.keySet();
-        Set<String> pathNew = attributeLwm2mNew.keySet();
+    @NotNull
+    private ParametersAnalyzeResult getAttributesAnalyzer(@NotNull Map<String, ObjectAttributes> attributeLwm2mOld, @NotNull Map<String, ObjectAttributes> attributeLwm2mNew) {
+        @NotNull ParametersAnalyzeResult analyzerParameters = new ParametersAnalyzeResult();
+        @NotNull Set<String> pathOld = attributeLwm2mOld.keySet();
+        @NotNull Set<String> pathNew = attributeLwm2mNew.keySet();
         analyzerParameters.setPathPostParametersAdd(pathNew
                 .stream().filter(p -> !pathOld.contains(p)).collect(Collectors.toSet()));
         analyzerParameters.setPathPostParametersDel(pathOld
                 .stream().filter(p -> !pathNew.contains(p)).collect(Collectors.toSet()));
-        Set<String> pathCommon = pathNew
+        @NotNull Set<String> pathCommon = pathNew
                 .stream().filter(pathOld::contains).collect(Collectors.toSet());
-        Set<String> pathCommonChange = pathCommon
+        @NotNull Set<String> pathCommonChange = pathCommon
                 .stream().filter(p -> !attributeLwm2mOld.get(p).equals(attributeLwm2mNew.get(p))).collect(Collectors.toSet());
         analyzerParameters.getPathPostParametersAdd().addAll(pathCommonChange);
         return analyzerParameters;
@@ -862,7 +868,7 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
      * @param lwM2MClient -
      * @return SessionInfoProto -
      */
-    private SessionInfoProto getSessionInfo(LwM2mClient lwM2MClient) {
+    private SessionInfoProto getSessionInfo(@Nullable LwM2mClient lwM2MClient) {
         if (lwM2MClient != null && lwM2MClient.getSession() != null) {
             return lwM2MClient.getSession();
         }
@@ -873,7 +879,7 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
      * @param registration - Registration LwM2M Client
      * @return - sessionInfo after access connect client
      */
-    public SessionInfoProto getSessionInfoOrCloseSession(Registration registration) {
+    public SessionInfoProto getSessionInfoOrCloseSession(@NotNull Registration registration) {
         return getSessionInfo(clientContext.getClientByEndpoint(registration.getEndpoint()));
     }
 
@@ -882,7 +888,7 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
      *
      * @param sessionInfo -
      */
-    private void reportActivityAndRegister(SessionInfoProto sessionInfo) {
+    private void reportActivityAndRegister(@Nullable SessionInfoProto sessionInfo) {
         if (sessionInfo != null && !transportService.hasSession(sessionInfo)) {
             sessionManager.register(sessionInfo);
             this.reportActivitySubscription(sessionInfo);
@@ -903,10 +909,10 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
      *
      * @param lwM2MClient - LwM2M Client
      */
-    public void initAttributes(LwM2mClient lwM2MClient, boolean logFailedUpdateOfNonChangedValue) {
+    public void initAttributes(@NotNull LwM2mClient lwM2MClient, boolean logFailedUpdateOfNonChangedValue) {
         Map<String, String> keyNamesMap = this.getNamesFromProfileForSharedAttributes(lwM2MClient);
         if (!keyNamesMap.isEmpty()) {
-            Set<String> keysToFetch = new HashSet<>(keyNamesMap.values());
+            @NotNull Set<String> keysToFetch = new HashSet<>(keyNamesMap.values());
             keysToFetch.removeAll(OtaPackageUtil.ALL_FW_ATTRIBUTE_KEYS);
             keysToFetch.removeAll(OtaPackageUtil.ALL_SW_ATTRIBUTE_KEYS);
             DonAsynchron.withCallback(attributesService.getSharedAttributes(lwM2MClient, keysToFetch),
@@ -916,7 +922,7 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
         }
     }
 
-    private Map<String, String> getNamesFromProfileForSharedAttributes(LwM2mClient lwM2MClient) {
+    private Map<String, String> getNamesFromProfileForSharedAttributes(@NotNull LwM2mClient lwM2MClient) {
         Lwm2mDeviceProfileTransportConfiguration profile = clientContext.getProfile(lwM2MClient.getProfileId());
         return profile.getObserveAttr().getKeyName();
     }
@@ -933,7 +939,7 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
                 .build(), TransportServiceCallback.EMPTY);
     }
 
-    private void clearAndUnregister(LwM2mClient client) {
+    private void clearAndUnregister(@NotNull LwM2mClient client) {
         client.lock();
         try {
             Registration registration = client.getRegistration();
@@ -945,7 +951,7 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
         }
     }
 
-    private void tryAwake(LwM2mClient lwM2MClient) {
+    private void tryAwake(@NotNull LwM2mClient lwM2MClient) {
         if (clientContext.awake(lwM2MClient)) {
             // clientContext.awake calls clientContext.update
             log.debug("[{}] Device is awake", lwM2MClient.getEndpoint());

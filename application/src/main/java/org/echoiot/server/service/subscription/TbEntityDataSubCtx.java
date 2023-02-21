@@ -20,6 +20,8 @@ import org.echoiot.server.common.data.query.EntityKeyType;
 import org.echoiot.server.common.data.query.TsValue;
 import org.echoiot.server.service.telemetry.TelemetryWebSocketService;
 import org.echoiot.server.service.telemetry.TelemetryWebSocketSessionRef;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -58,7 +60,7 @@ public class TbEntityDataSubCtx extends TbAbstractDataSubCtx<EntityDataQuery> {
     }
 
     @Override
-    protected void sendWsMsg(String sessionId, TelemetrySubscriptionUpdate subscriptionUpdate, EntityKeyType keyType, boolean resultToLatestValues) {
+    protected void sendWsMsg(String sessionId, @NotNull TelemetrySubscriptionUpdate subscriptionUpdate, EntityKeyType keyType, boolean resultToLatestValues) {
         EntityId entityId = subToEntityIdMap.get(subscriptionUpdate.getSubscriptionId());
         if (entityId != null) {
             log.trace("[{}][{}][{}][{}] Received subscription update: {}", sessionId, cmdId, subscriptionUpdate.getSubscriptionId(), keyType, subscriptionUpdate);
@@ -72,18 +74,19 @@ public class TbEntityDataSubCtx extends TbAbstractDataSubCtx<EntityDataQuery> {
         }
     }
 
+    @NotNull
     @Override
     protected Aggregation getCurrentAggregation() {
         return (this.curTsCmd == null || this.curTsCmd.getAgg() == null) ? Aggregation.NONE : this.curTsCmd.getAgg();
     }
 
-    private void sendLatestWsMsg(EntityId entityId, String sessionId, TelemetrySubscriptionUpdate subscriptionUpdate, EntityKeyType keyType) {
-        Map<String, TsValue> latestUpdate = new HashMap<>();
+    private void sendLatestWsMsg(EntityId entityId, String sessionId, @NotNull TelemetrySubscriptionUpdate subscriptionUpdate, EntityKeyType keyType) {
+        @NotNull Map<String, TsValue> latestUpdate = new HashMap<>();
         subscriptionUpdate.getData().forEach((k, v) -> {
             Object[] data = (Object[]) v.get(0);
             latestUpdate.put(k, new TsValue((Long) data[0], (String) data[1]));
         });
-        EntityData entityData = getDataForEntity(entityId);
+        @Nullable EntityData entityData = getDataForEntity(entityId);
         if (entityData != null && entityData.getLatest() != null) {
             Map<String, TsValue> latestCtxValues = entityData.getLatest().get(keyType);
             log.trace("[{}][{}][{}] Going to compare update with {}", sessionId, cmdId, subscriptionUpdate.getSubscriptionId(), latestCtxValues);
@@ -110,14 +113,14 @@ public class TbEntityDataSubCtx extends TbAbstractDataSubCtx<EntityDataQuery> {
             }
         }
         if (!latestUpdate.isEmpty()) {
-            Map<EntityKeyType, Map<String, TsValue>> latestMap = Collections.singletonMap(keyType, latestUpdate);
+            @NotNull Map<EntityKeyType, Map<String, TsValue>> latestMap = Collections.singletonMap(keyType, latestUpdate);
             entityData = new EntityData(entityId, latestMap, null);
             sendWsMsg(new EntityDataUpdate(cmdId, null, Collections.singletonList(entityData), maxEntitiesPerDataSubscription));
         }
     }
 
-    private void sendTsWsMsg(EntityId entityId, String sessionId, TelemetrySubscriptionUpdate subscriptionUpdate, EntityKeyType keyType) {
-        Map<String, List<TsValue>> tsUpdate = new HashMap<>();
+    private void sendTsWsMsg(EntityId entityId, String sessionId, @NotNull TelemetrySubscriptionUpdate subscriptionUpdate, EntityKeyType keyType) {
+        @NotNull Map<String, List<TsValue>> tsUpdate = new HashMap<>();
         subscriptionUpdate.getData().forEach((k, v) -> {
             Object[] data = (Object[]) v.get(0);
             tsUpdate.computeIfAbsent(k, key -> new ArrayList<>()).add(new TsValue((Long) data[0], (String) data[1]));
@@ -128,7 +131,7 @@ public class TbEntityDataSubCtx extends TbAbstractDataSubCtx<EntityDataQuery> {
             latestCtxValues.forEach((k, v) -> {
                 List<TsValue> updateList = tsUpdate.get(k);
                 if (updateList != null) {
-                    for (TsValue update : new ArrayList<>(updateList)) {
+                    for (@NotNull TsValue update : new ArrayList<>(updateList)) {
                         if (update.getTs() < v.getTs()) {
                             log.trace("[{}][{}][{}] Removed stale update for key: {} and ts: {}", sessionId, cmdId, subscriptionUpdate.getSubscriptionId(), k, update.getTs());
                             // Looks like this is redundant feature and our UI is ready to merge the updates.
@@ -145,18 +148,19 @@ public class TbEntityDataSubCtx extends TbAbstractDataSubCtx<EntityDataQuery> {
             });
             //Setting new values
             tsUpdate.forEach((k, v) -> {
-                Optional<TsValue> maxValue = v.stream().max(Comparator.comparingLong(TsValue::getTs));
+                @NotNull Optional<TsValue> maxValue = v.stream().max(Comparator.comparingLong(TsValue::getTs));
                 maxValue.ifPresent(max -> latestCtxValues.put(k, max));
             });
         }
         if (!tsUpdate.isEmpty()) {
-            Map<String, TsValue[]> tsMap = new HashMap<>();
+            @NotNull Map<String, TsValue[]> tsMap = new HashMap<>();
             tsUpdate.forEach((key, tsValue) -> tsMap.put(key, tsValue.toArray(new TsValue[tsValue.size()])));
-            EntityData entityData = new EntityData(entityId, null, tsMap);
+            @NotNull EntityData entityData = new EntityData(entityId, null, tsMap);
             sendWsMsg(new EntityDataUpdate(cmdId, null, Collections.singletonList(entityData), maxEntitiesPerDataSubscription));
         }
     }
 
+    @Nullable
     private EntityData getDataForEntity(EntityId entityId) {
         return data.getData().stream().filter(item -> item.getEntityId().equals(entityId)).findFirst().orElse(null);
     }
@@ -165,10 +169,10 @@ public class TbEntityDataSubCtx extends TbAbstractDataSubCtx<EntityDataQuery> {
         return latestTsEntityData.get(entityId);
     }
 
-    private void updateLatestTsData(PageData<EntityData> data) {
+    private void updateLatestTsData(@NotNull PageData<EntityData> data) {
         latestTsEntityData = new HashMap<>();
         data.getData().stream().forEach(entityData -> {
-            Map<String, TsValue> latestTsMap = new HashMap<>();
+            @NotNull Map<String, TsValue> latestTsMap = new HashMap<>();
             latestTsEntityData.put(entityData.getEntityId(), latestTsMap);
             if (entityData.getLatest() != null) {
                 Map<String, TsValue> latestTsValues = entityData.getLatest().get(EntityKeyType.TIME_SERIES);
@@ -180,11 +184,11 @@ public class TbEntityDataSubCtx extends TbAbstractDataSubCtx<EntityDataQuery> {
     }
 
     @Override
-    public synchronized void doUpdate(Map<EntityId, EntityData> newDataMap) {
+    public synchronized void doUpdate(@NotNull Map<EntityId, EntityData> newDataMap) {
         this.updateLatestTsData(this.data);
-        List<Integer> subIdsToCancel = new ArrayList<>();
-        List<TbSubscription> subsToAdd = new ArrayList<>();
-        Set<EntityId> currentSubs = new HashSet<>();
+        @NotNull List<Integer> subIdsToCancel = new ArrayList<>();
+        @NotNull List<TbSubscription> subsToAdd = new ArrayList<>();
+        @NotNull Set<EntityId> currentSubs = new HashSet<>();
         subToEntityIdMap.forEach((subId, entityId) -> {
             if (!newDataMap.containsKey(entityId)) {
                 subIdsToCancel.add(subId);
@@ -194,7 +198,7 @@ public class TbEntityDataSubCtx extends TbAbstractDataSubCtx<EntityDataQuery> {
         });
         log.trace("[{}][{}] Subscriptions that are invalid: {}", sessionRef.getSessionId(), cmdId, subIdsToCancel);
         subIdsToCancel.forEach(subToEntityIdMap::remove);
-        List<EntityData> newSubsList = newDataMap.entrySet().stream().filter(entry -> !currentSubs.contains(entry.getKey())).map(Map.Entry::getValue).collect(Collectors.toList());
+        @NotNull List<EntityData> newSubsList = newDataMap.entrySet().stream().filter(entry -> !currentSubs.contains(entry.getKey())).map(Map.Entry::getValue).collect(Collectors.toList());
         if (!newSubsList.isEmpty()) {
             // NOTE: We ignore the TS subscriptions for new entities here, because widgets will re-init it's content and will create new subscriptions.
             if (curTsCmd == null && latestValueCmd != null) {
@@ -215,7 +219,7 @@ public class TbEntityDataSubCtx extends TbAbstractDataSubCtx<EntityDataQuery> {
         sendWsMsg(new EntityDataUpdate(cmdId, data, null, maxEntitiesPerDataSubscription));
     }
 
-    public void setCurrentCmd(EntityDataCmd cmd) {
+    public void setCurrentCmd(@NotNull EntityDataCmd cmd) {
         curTsCmd = cmd.getTsCmd();
         latestValueCmd = cmd.getLatestCmd();
     }

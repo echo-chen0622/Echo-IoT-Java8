@@ -15,6 +15,7 @@ import org.echoiot.server.common.transport.session.DeviceAwareSessionContext;
 import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.gen.transport.TransportProtos.*;
 import org.echoiot.server.transport.snmp.SnmpTransportContext;
+import org.jetbrains.annotations.NotNull;
 import org.snmp4j.Target;
 import org.snmp4j.event.ResponseEvent;
 import org.snmp4j.event.ResponseListener;
@@ -36,6 +37,7 @@ public class DeviceSessionContext extends DeviceAwareSessionContext implements S
     @Getter
     @Setter
     private SnmpDeviceTransportConfiguration deviceTransportConfiguration;
+    @NotNull
     @Getter
     private final Device device;
 
@@ -48,9 +50,9 @@ public class DeviceSessionContext extends DeviceAwareSessionContext implements S
     @Getter
     private final List<ScheduledFuture<?>> queryingTasks = new LinkedList<>();
 
-    public DeviceSessionContext(Device device, DeviceProfile deviceProfile, String token,
-                                SnmpDeviceProfileTransportConfiguration profileTransportConfiguration,
-                                SnmpDeviceTransportConfiguration deviceTransportConfiguration,
+    public DeviceSessionContext(@NotNull Device device, DeviceProfile deviceProfile, String token,
+                                @NotNull SnmpDeviceProfileTransportConfiguration profileTransportConfiguration,
+                                @NotNull SnmpDeviceTransportConfiguration deviceTransportConfiguration,
                                 SnmpTransportContext snmpTransportContext) throws Exception {
         super(UUID.randomUUID());
         super.setDeviceId(device.getId());
@@ -67,7 +69,7 @@ public class DeviceSessionContext extends DeviceAwareSessionContext implements S
     }
 
     @Override
-    public void onDeviceProfileUpdate(TransportProtos.SessionInfoProto newSessionInfo, DeviceProfile deviceProfile) {
+    public void onDeviceProfileUpdate(TransportProtos.SessionInfoProto newSessionInfo, @NotNull DeviceProfile deviceProfile) {
         super.onDeviceProfileUpdate(newSessionInfo, deviceProfile);
         if (isActive) {
             snmpTransportContext.onDeviceProfileUpdated(deviceProfile, this);
@@ -80,13 +82,13 @@ public class DeviceSessionContext extends DeviceAwareSessionContext implements S
     }
 
     @Override
-    public void onResponse(ResponseEvent event) {
+    public void onResponse(@NotNull ResponseEvent event) {
         if (isActive) {
             snmpTransportContext.getSnmpTransportService().processResponseEvent(this, event);
         }
     }
 
-    public void initializeTarget(SnmpDeviceProfileTransportConfiguration profileTransportConfig, SnmpDeviceTransportConfiguration deviceTransportConfig) throws Exception {
+    public void initializeTarget(@NotNull SnmpDeviceProfileTransportConfiguration profileTransportConfig, @NotNull SnmpDeviceTransportConfiguration deviceTransportConfig) throws Exception {
         log.trace("Initializing target for SNMP session of device {}", device);
         this.target = snmpTransportContext.getSnmpAuthService().setUpSnmpTarget(profileTransportConfig, deviceTransportConfig);
         log.debug("SNMP target initialized: {}", target);
@@ -110,18 +112,18 @@ public class DeviceSessionContext extends DeviceAwareSessionContext implements S
     }
 
     @Override
-    public void onAttributeUpdate(UUID sessionId, AttributeUpdateNotificationMsg attributeUpdateNotification) {
+    public void onAttributeUpdate(UUID sessionId, @NotNull AttributeUpdateNotificationMsg attributeUpdateNotification) {
         log.trace("[{}] Received attributes update notification to device", sessionId);
         snmpTransportContext.getSnmpTransportService().onAttributeUpdate(this, attributeUpdateNotification);
     }
 
     @Override
-    public void onRemoteSessionCloseCommand(UUID sessionId, SessionCloseNotificationProto sessionCloseNotification) {
+    public void onRemoteSessionCloseCommand(UUID sessionId, @NotNull SessionCloseNotificationProto sessionCloseNotification) {
         log.trace("[{}] Received the remote command to close the session: {}", sessionId, sessionCloseNotification.getMessage());
     }
 
     @Override
-    public void onToDeviceRpcRequest(UUID sessionId, ToDeviceRpcRequestMsg toDeviceRequest) {
+    public void onToDeviceRpcRequest(UUID sessionId, @NotNull ToDeviceRpcRequestMsg toDeviceRequest) {
         log.trace("[{}] Received RPC command to device", sessionId);
         snmpTransportContext.getSnmpTransportService().onToDeviceRpcRequest(this, toDeviceRequest);
         snmpTransportContext.getTransportService().process(getSessionInfo(), toDeviceRequest, RpcStatus.DELIVERED, TransportServiceCallback.EMPTY);

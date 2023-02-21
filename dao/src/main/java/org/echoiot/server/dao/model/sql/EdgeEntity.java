@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.TypeDef;
 import org.echoiot.server.common.data.edge.Edge;
 import org.echoiot.server.dao.util.mapping.JsonStringType;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -22,7 +23,7 @@ public class EdgeEntity extends AbstractEdgeEntity<Edge> {
         super();
     }
 
-    public EdgeEntity(Edge edge) {
+    public EdgeEntity(@NotNull Edge edge) {
         super(edge);
     }
 

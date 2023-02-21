@@ -36,6 +36,7 @@ import org.echoiot.server.queue.discovery.TbServiceInfoProvider;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.partition.AbstractPartitionBasedService;
 import org.echoiot.server.service.telemetry.TelemetrySubscriptionService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -144,7 +145,7 @@ public class DefaultDeviceStateService extends AbstractPartitionBasedService<Dev
         this.dbTypeInfoComponent = dbTypeInfoComponent;
     }
 
-    @Autowired
+    @Resource
     public void setTsSubService(TelemetrySubscriptionService tsSubService) {
         this.tsSubService = tsSubService;
     }
@@ -165,23 +166,25 @@ public class DefaultDeviceStateService extends AbstractPartitionBasedService<Dev
         }
     }
 
+    @NotNull
     @Override
     protected String getServiceName() {
         return "Device State";
     }
 
+    @NotNull
     @Override
     protected String getSchedulerExecutorName() {
         return "device-state-scheduled";
     }
 
     @Override
-    public void onDeviceConnect(TenantId tenantId, DeviceId deviceId) {
+    public void onDeviceConnect(TenantId tenantId, @NotNull DeviceId deviceId) {
         if (cleanDeviceStateIfBelongsExternalPartition(tenantId, deviceId)) {
             return;
         }
         log.trace("on Device Connect [{}]", deviceId.getId());
-        DeviceStateData stateData = getOrFetchDeviceStateData(deviceId);
+        @NotNull DeviceStateData stateData = getOrFetchDeviceStateData(deviceId);
         long ts = System.currentTimeMillis();
         stateData.getState().setLastConnectTime(ts);
         save(deviceId, LAST_CONNECT_TIME, ts);
@@ -191,18 +194,18 @@ public class DefaultDeviceStateService extends AbstractPartitionBasedService<Dev
     }
 
     @Override
-    public void onDeviceActivity(TenantId tenantId, DeviceId deviceId, long lastReportedActivity) {
+    public void onDeviceActivity(TenantId tenantId, @NotNull DeviceId deviceId, long lastReportedActivity) {
         if (cleanDeviceStateIfBelongsExternalPartition(tenantId, deviceId)) {
             return;
         }
         log.trace("on Device Activity [{}], lastReportedActivity [{}]", deviceId.getId(), lastReportedActivity);
-        final DeviceStateData stateData = getOrFetchDeviceStateData(deviceId);
+        @NotNull final DeviceStateData stateData = getOrFetchDeviceStateData(deviceId);
         if (lastReportedActivity > 0 && lastReportedActivity > stateData.getState().getLastActivityTime()) {
             updateActivityState(deviceId, stateData, lastReportedActivity);
         }
     }
 
-    void updateActivityState(DeviceId deviceId, DeviceStateData stateData, long lastReportedActivity) {
+    void updateActivityState(DeviceId deviceId, @org.jetbrains.annotations.Nullable DeviceStateData stateData, long lastReportedActivity) {
         log.trace("updateActivityState - fetched state {} for device {}, lastReportedActivity {}", stateData, deviceId, lastReportedActivity);
         if (stateData != null) {
             save(deviceId, LAST_ACTIVITY_TIME, lastReportedActivity);
@@ -220,11 +223,11 @@ public class DefaultDeviceStateService extends AbstractPartitionBasedService<Dev
     }
 
     @Override
-    public void onDeviceDisconnect(TenantId tenantId, DeviceId deviceId) {
+    public void onDeviceDisconnect(TenantId tenantId, @NotNull DeviceId deviceId) {
         if (cleanDeviceStateIfBelongsExternalPartition(tenantId, deviceId)) {
             return;
         }
-        DeviceStateData stateData = getOrFetchDeviceStateData(deviceId);
+        @NotNull DeviceStateData stateData = getOrFetchDeviceStateData(deviceId);
         long ts = System.currentTimeMillis();
         stateData.getState().setLastDisconnectTime(ts);
         save(deviceId, LAST_DISCONNECT_TIME, ts);
@@ -232,7 +235,7 @@ public class DefaultDeviceStateService extends AbstractPartitionBasedService<Dev
     }
 
     @Override
-    public void onDeviceInactivityTimeoutUpdate(TenantId tenantId, DeviceId deviceId, long inactivityTimeout) {
+    public void onDeviceInactivityTimeoutUpdate(TenantId tenantId, @NotNull DeviceId deviceId, long inactivityTimeout) {
         if (cleanDeviceStateIfBelongsExternalPartition(tenantId, deviceId)) {
             return;
         }
@@ -240,16 +243,16 @@ public class DefaultDeviceStateService extends AbstractPartitionBasedService<Dev
             inactivityTimeout = defaultInactivityTimeoutInSec;
         }
         log.trace("on Device Activity Timeout Update device id {} inactivityTimeout {}", deviceId, inactivityTimeout);
-        DeviceStateData stateData = getOrFetchDeviceStateData(deviceId);
+        @NotNull DeviceStateData stateData = getOrFetchDeviceStateData(deviceId);
         stateData.getState().setInactivityTimeout(inactivityTimeout);
         checkAndUpdateState(deviceId, stateData);
     }
 
     @Override
-    public void onQueueMsg(TransportProtos.DeviceStateServiceMsgProto proto, TbCallback callback) {
+    public void onQueueMsg(@NotNull TransportProtos.DeviceStateServiceMsgProto proto, @NotNull TbCallback callback) {
         try {
-            TenantId tenantId = TenantId.fromUUID(new UUID(proto.getTenantIdMSB(), proto.getTenantIdLSB()));
-            DeviceId deviceId = new DeviceId(new UUID(proto.getDeviceIdMSB(), proto.getDeviceIdLSB()));
+            @NotNull TenantId tenantId = TenantId.fromUUID(new UUID(proto.getTenantIdMSB(), proto.getTenantIdLSB()));
+            @NotNull DeviceId deviceId = new DeviceId(new UUID(proto.getDeviceIdMSB(), proto.getDeviceIdLSB()));
             if (proto.getDeleted()) {
                 onDeviceDeleted(tenantId, deviceId);
                 callback.onSuccess();
@@ -278,8 +281,8 @@ public class DefaultDeviceStateService extends AbstractPartitionBasedService<Dev
                             }
                         }, deviceStateExecutor);
                     } else if (proto.getUpdated()) {
-                        DeviceStateData stateData = getOrFetchDeviceStateData(device.getId());
-                        TbMsgMetaData md = new TbMsgMetaData();
+                        @NotNull DeviceStateData stateData = getOrFetchDeviceStateData(device.getId());
+                        @NotNull TbMsgMetaData md = new TbMsgMetaData();
                         md.putValue("deviceName", device.getName());
                         md.putValue("deviceType", device.getType());
                         stateData.setMetaData(md);
@@ -296,13 +299,14 @@ public class DefaultDeviceStateService extends AbstractPartitionBasedService<Dev
         }
     }
 
+    @NotNull
     @Override
-    protected Map<TopicPartitionInfo, List<ListenableFuture<?>>> onAddedPartitions(Set<TopicPartitionInfo> addedPartitions) {
-        var result = new HashMap<TopicPartitionInfo, List<ListenableFuture<?>>>();
-        PageDataIterable<DeviceIdInfo> deviceIdInfos = new PageDataIterable<>(deviceService::findDeviceIdInfos, initFetchPackSize);
-        Map<TopicPartitionInfo, List<DeviceIdInfo>> tpiDeviceMap = new HashMap<>();
+    protected Map<TopicPartitionInfo, List<ListenableFuture<?>>> onAddedPartitions(@NotNull Set<TopicPartitionInfo> addedPartitions) {
+        @NotNull var result = new HashMap<TopicPartitionInfo, List<ListenableFuture<?>>>();
+        @NotNull PageDataIterable<DeviceIdInfo> deviceIdInfos = new PageDataIterable<>(deviceService::findDeviceIdInfos, initFetchPackSize);
+        @NotNull Map<TopicPartitionInfo, List<DeviceIdInfo>> tpiDeviceMap = new HashMap<>();
 
-        for (DeviceIdInfo idInfo : deviceIdInfos) {
+        for (@NotNull DeviceIdInfo idInfo : deviceIdInfos) {
             TopicPartitionInfo tpi;
             try {
                 tpi = partitionService.resolve(ServiceType.TB_CORE, idInfo.getTenantId(), idInfo.getDeviceId());
@@ -316,13 +320,13 @@ public class DefaultDeviceStateService extends AbstractPartitionBasedService<Dev
             }
         }
 
-        for (var entry : tpiDeviceMap.entrySet()) {
-            AtomicInteger counter = new AtomicInteger(0);
+        for (@NotNull var entry : tpiDeviceMap.entrySet()) {
+            @NotNull AtomicInteger counter = new AtomicInteger(0);
             // hard-coded limit of 1000 is due to the Entity Data Query limitations and should not be changed.
-            for (List<DeviceIdInfo> partition : Lists.partition(entry.getValue(), 1000)) {
+            for (@NotNull List<DeviceIdInfo> partition : Lists.partition(entry.getValue(), 1000)) {
                 log.info("[{}] Submit task for device states: {}", entry.getKey(), partition.size());
-                DevicePackFutureHolder devicePackFutureHolder = new DevicePackFutureHolder();
-                var devicePackFuture = deviceStateExecutor.submit(() -> {
+                @NotNull DevicePackFutureHolder devicePackFutureHolder = new DevicePackFutureHolder();
+                @NotNull var devicePackFuture = deviceStateExecutor.submit(() -> {
                     try {
                         List<DeviceStateData> states;
                         if (persistToTelemetry && !dbTypeInfoComponent.isLatestTsDaoStoredToSql()) {
@@ -331,7 +335,7 @@ public class DefaultDeviceStateService extends AbstractPartitionBasedService<Dev
                             states = fetchDeviceStateDataUsingEntityDataQuery(partition);
                         }
                         if (devicePackFutureHolder.future == null || !devicePackFutureHolder.future.isCancelled()) {
-                            for (var state : states) {
+                            for (@NotNull var state : states) {
                                 if (!addDeviceUsingState(entry.getKey(), state)) {
                                     return;
                                 }
@@ -366,7 +370,7 @@ public class DefaultDeviceStateService extends AbstractPartitionBasedService<Dev
         }
     }
 
-    private boolean addDeviceUsingState(TopicPartitionInfo tpi, DeviceStateData state) {
+    private boolean addDeviceUsingState(@NotNull TopicPartitionInfo tpi, @NotNull DeviceStateData state) {
         Set<DeviceId> deviceIds = partitionedEntities.get(tpi);
         if (deviceIds != null) {
             deviceIds.add(state.getDeviceId());
@@ -383,7 +387,7 @@ public class DefaultDeviceStateService extends AbstractPartitionBasedService<Dev
             final long ts = System.currentTimeMillis();
             partitionedEntities.forEach((tpi, deviceIds) -> {
                 log.debug("Calculating state updates. tpi {} for {} devices", tpi.getFullTopicName(), deviceIds.size());
-                for (DeviceId deviceId : deviceIds) {
+                for (@NotNull DeviceId deviceId : deviceIds) {
                     try {
                         updateInactivityStateIfExpired(ts, deviceId);
                     } catch (Exception e) {
@@ -396,12 +400,12 @@ public class DefaultDeviceStateService extends AbstractPartitionBasedService<Dev
         }
     }
 
-    void updateInactivityStateIfExpired(long ts, DeviceId deviceId) {
-        DeviceStateData stateData = getOrFetchDeviceStateData(deviceId);
+    void updateInactivityStateIfExpired(long ts, @NotNull DeviceId deviceId) {
+        @NotNull DeviceStateData stateData = getOrFetchDeviceStateData(deviceId);
         updateInactivityStateIfExpired(ts, deviceId, stateData);
     }
 
-    void updateInactivityStateIfExpired(long ts, DeviceId deviceId, DeviceStateData stateData) {
+    void updateInactivityStateIfExpired(long ts, DeviceId deviceId, @org.jetbrains.annotations.Nullable DeviceStateData stateData) {
         log.trace("Processing state {} for device {}", stateData, deviceId);
         if (stateData != null) {
             DeviceState state = stateData.getState();
@@ -424,12 +428,12 @@ public class DefaultDeviceStateService extends AbstractPartitionBasedService<Dev
         }
     }
 
-    boolean isActive(long ts, DeviceState state) {
+    boolean isActive(long ts, @NotNull DeviceState state) {
         return ts < state.getLastActivityTime() + state.getInactivityTimeout();
     }
 
     @Nonnull
-    DeviceStateData getOrFetchDeviceStateData(DeviceId deviceId) {
+    DeviceStateData getOrFetchDeviceStateData(@NotNull DeviceId deviceId) {
         DeviceStateData deviceStateData = deviceStates.get(deviceId);
         if (deviceStateData != null) {
             return deviceStateData;
@@ -437,7 +441,7 @@ public class DefaultDeviceStateService extends AbstractPartitionBasedService<Dev
         return fetchDeviceStateDataUsingEntityDataQuery(deviceId);
     }
 
-    DeviceStateData fetchDeviceStateDataUsingEntityDataQuery(final DeviceId deviceId) {
+    DeviceStateData fetchDeviceStateDataUsingEntityDataQuery(@NotNull final DeviceId deviceId) {
         final Device device = deviceService.findDeviceById(TenantId.SYS_TENANT_ID, deviceId);
         if (device == null) {
             log.warn("[{}] Failed to fetch device by Id!", deviceId);
@@ -483,7 +487,8 @@ public class DefaultDeviceStateService extends AbstractPartitionBasedService<Dev
     }
 
 
-    private ListenableFuture<DeviceStateData> fetchDeviceState(Device device) {
+    @NotNull
+    private ListenableFuture<DeviceStateData> fetchDeviceState(@NotNull Device device) {
         ListenableFuture<DeviceStateData> future;
         if (persistToTelemetry) {
             ListenableFuture<List<TsKvEntry>> tsData = tsService.findLatest(TenantId.SYS_TENANT_ID, device.getId(), PERSISTENT_ATTRIBUTES);
@@ -495,7 +500,8 @@ public class DefaultDeviceStateService extends AbstractPartitionBasedService<Dev
         return transformInactivityTimeout(future);
     }
 
-    private ListenableFuture<DeviceStateData> transformInactivityTimeout(ListenableFuture<DeviceStateData> future) {
+    @NotNull
+    private ListenableFuture<DeviceStateData> transformInactivityTimeout(@NotNull ListenableFuture<DeviceStateData> future) {
         return Futures.transformAsync(future, deviceStateData -> {
             if (!persistToTelemetry || deviceStateData.getState().getInactivityTimeout() != defaultInactivityTimeoutMs) {
                 return future; //fail fast
@@ -512,7 +518,8 @@ public class DefaultDeviceStateService extends AbstractPartitionBasedService<Dev
         }, deviceStateExecutor);
     }
 
-    private <T extends KvEntry> Function<List<T>, DeviceStateData> extractDeviceStateData(Device device) {
+    @NotNull
+    private <T extends KvEntry> Function<List<T>, DeviceStateData> extractDeviceStateData(@NotNull Device device) {
         return new Function<>() {
             @Nonnull
             @Override
@@ -531,7 +538,7 @@ public class DefaultDeviceStateService extends AbstractPartitionBasedService<Dev
                             .lastInactivityAlarmTime(inactivityAlarmTime)
                             .inactivityTimeout(inactivityTimeout)
                             .build();
-                    TbMsgMetaData md = new TbMsgMetaData();
+                    @NotNull TbMsgMetaData md = new TbMsgMetaData();
                     md.putValue("deviceName", device.getName());
                     md.putValue("deviceType", device.getType());
                     DeviceStateData deviceStateData = DeviceStateData.builder()
@@ -551,10 +558,11 @@ public class DefaultDeviceStateService extends AbstractPartitionBasedService<Dev
         };
     }
 
-    private List<DeviceStateData> fetchDeviceStateDataUsingSeparateRequests(List<DeviceIdInfo> deviceIds) {
+    @NotNull
+    private List<DeviceStateData> fetchDeviceStateDataUsingSeparateRequests(@NotNull List<DeviceIdInfo> deviceIds) {
         List<Device> devices = deviceService.findDevicesByIds(deviceIds.stream().map(DeviceIdInfo::getDeviceId).collect(Collectors.toList()));
-        List<ListenableFuture<DeviceStateData>> deviceStateFutures = new ArrayList<>();
-        for (Device device : devices) {
+        @NotNull List<ListenableFuture<DeviceStateData>> deviceStateFutures = new ArrayList<>();
+        for (@NotNull Device device : devices) {
             deviceStateFutures.add(fetchDeviceState(device));
         }
         try {
@@ -574,24 +582,25 @@ public class DefaultDeviceStateService extends AbstractPartitionBasedService<Dev
         }
     }
 
-    private List<DeviceStateData> fetchDeviceStateDataUsingEntityDataQuery(List<DeviceIdInfo> deviceIds) {
-        EntityListFilter ef = new EntityListFilter();
+    @NotNull
+    private List<DeviceStateData> fetchDeviceStateDataUsingEntityDataQuery(@NotNull List<DeviceIdInfo> deviceIds) {
+        @NotNull EntityListFilter ef = new EntityListFilter();
         ef.setEntityType(EntityType.DEVICE);
         ef.setEntityList(deviceIds.stream().map(DeviceIdInfo::getDeviceId).map(DeviceId::getId).map(UUID::toString).collect(Collectors.toList()));
 
-        EntityDataQuery query = new EntityDataQuery(ef,
-                                                    new EntityDataPageLink(deviceIds.size(), 0, null, null),
-                                                    PERSISTENT_ENTITY_FIELDS,
-                                                    persistToTelemetry ? PERSISTENT_TELEMETRY_KEYS : PERSISTENT_ATTRIBUTE_KEYS, Collections.emptyList());
+        @NotNull EntityDataQuery query = new EntityDataQuery(ef,
+                                                             new EntityDataPageLink(deviceIds.size(), 0, null, null),
+                                                             PERSISTENT_ENTITY_FIELDS,
+                                                             persistToTelemetry ? PERSISTENT_TELEMETRY_KEYS : PERSISTENT_ATTRIBUTE_KEYS, Collections.emptyList());
         PageData<EntityData> queryResult = entityQueryRepository.findEntityDataByQueryInternal(query);
 
-        Map<EntityId, DeviceIdInfo> deviceIdInfos = deviceIds.stream().collect(Collectors.toMap(DeviceIdInfo::getDeviceId, java.util.function.Function.identity()));
+        @NotNull Map<EntityId, DeviceIdInfo> deviceIdInfos = deviceIds.stream().collect(Collectors.toMap(DeviceIdInfo::getDeviceId, java.util.function.Function.identity()));
 
         return queryResult.getData().stream().map(ed -> toDeviceStateData(ed, deviceIdInfos.get(ed.getEntityId()))).collect(Collectors.toList());
 
     }
 
-    DeviceStateData toDeviceStateData(EntityData ed, DeviceIdInfo deviceIdInfo) {
+    DeviceStateData toDeviceStateData(EntityData ed, @NotNull DeviceIdInfo deviceIdInfo) {
         long lastActivityTime = getEntryValue(ed, getKeyType(), LAST_ACTIVITY_TIME, 0L);
         long inactivityAlarmTime = getEntryValue(ed, getKeyType(), INACTIVITY_ALARM_TIME, 0L);
         long inactivityTimeout = getEntryValue(ed, getKeyType(), INACTIVITY_TIMEOUT, defaultInactivityTimeoutMs);
@@ -610,7 +619,7 @@ public class DefaultDeviceStateService extends AbstractPartitionBasedService<Dev
                 .lastInactivityAlarmTime(inactivityAlarmTime)
                 .inactivityTimeout(inactivityTimeout)
                 .build();
-        TbMsgMetaData md = new TbMsgMetaData();
+        @NotNull TbMsgMetaData md = new TbMsgMetaData();
         md.putValue("deviceName", getEntryValue(ed, EntityKeyType.ENTITY_FIELD, "name", ""));
         md.putValue("deviceType", getEntryValue(ed, EntityKeyType.ENTITY_FIELD, "type", ""));
         return DeviceStateData.builder()
@@ -622,6 +631,7 @@ public class DefaultDeviceStateService extends AbstractPartitionBasedService<Dev
                 .state(deviceState).build();
     }
 
+    @NotNull
     private EntityKeyType getKeyType() {
         return persistToTelemetry ? EntityKeyType.TIME_SERIES : EntityKeyType.SERVER_ATTRIBUTE;
     }
@@ -638,7 +648,7 @@ public class DefaultDeviceStateService extends AbstractPartitionBasedService<Dev
         return getEntryValue(ed, keyType, keyName, Boolean::parseBoolean, defaultValue);
     }
 
-    private <T> T getEntryValue(EntityData ed, EntityKeyType entityKeyType, String attributeName, Function<String, T> converter, T defaultValue) {
+    private <T> T getEntryValue(@org.jetbrains.annotations.Nullable EntityData ed, EntityKeyType entityKeyType, String attributeName, @NotNull Function<String, T> converter, T defaultValue) {
         if (ed != null && ed.getLatest() != null) {
             var map = ed.getLatest().get(entityKeyType);
             if (map != null) {
@@ -656,9 +666,9 @@ public class DefaultDeviceStateService extends AbstractPartitionBasedService<Dev
     }
 
 
-    private long getEntryValue(List<? extends KvEntry> kvEntries, String attributeName, long defaultValue) {
+    private long getEntryValue(@org.jetbrains.annotations.Nullable List<? extends KvEntry> kvEntries, String attributeName, long defaultValue) {
         if (kvEntries != null) {
-            for (KvEntry entry : kvEntries) {
+            for (@org.jetbrains.annotations.Nullable KvEntry entry : kvEntries) {
                 if (entry != null && !StringUtils.isEmpty(entry.getKey()) && entry.getKey().equals(attributeName)) {
                     return entry.getLongValue().orElse(defaultValue);
                 }
@@ -667,9 +677,9 @@ public class DefaultDeviceStateService extends AbstractPartitionBasedService<Dev
         return defaultValue;
     }
 
-    private boolean getEntryValue(List<? extends KvEntry> kvEntries, String attributeName, boolean defaultValue) {
+    private boolean getEntryValue(@org.jetbrains.annotations.Nullable List<? extends KvEntry> kvEntries, String attributeName, boolean defaultValue) {
         if (kvEntries != null) {
-            for (KvEntry entry : kvEntries) {
+            for (@org.jetbrains.annotations.Nullable KvEntry entry : kvEntries) {
                 if (entry != null && !StringUtils.isEmpty(entry.getKey()) && entry.getKey().equals(attributeName)) {
                     return entry.getBooleanValue().orElse(defaultValue);
                 }
@@ -678,22 +688,22 @@ public class DefaultDeviceStateService extends AbstractPartitionBasedService<Dev
         return defaultValue;
     }
 
-    private void pushRuleEngineMessage(DeviceStateData stateData, String msgType) {
+    private void pushRuleEngineMessage(@NotNull DeviceStateData stateData, @NotNull String msgType) {
         DeviceState state = stateData.getState();
         try {
-            String data;
+            @org.jetbrains.annotations.Nullable String data;
             if (msgType.equals(DataConstants.CONNECT_EVENT)) {
-                ObjectNode stateNode = JacksonUtil.convertValue(state, ObjectNode.class);
+                @org.jetbrains.annotations.Nullable ObjectNode stateNode = JacksonUtil.convertValue(state, ObjectNode.class);
                 stateNode.remove(ACTIVITY_STATE);
                 data = JacksonUtil.toString(stateNode);
             } else {
                 data = JacksonUtil.toString(state);
             }
-            TbMsgMetaData md = stateData.getMetaData().copy();
+            @NotNull TbMsgMetaData md = stateData.getMetaData().copy();
             if (!persistToTelemetry) {
                 md.putValue(DataConstants.SCOPE, DataConstants.SERVER_SCOPE);
             }
-            TbMsg tbMsg = TbMsg.newMsg(msgType, stateData.getDeviceId(), stateData.getCustomerId(), md, TbMsgDataType.JSON, data);
+            @NotNull TbMsg tbMsg = TbMsg.newMsg(msgType, stateData.getDeviceId(), stateData.getCustomerId(), md, TbMsgDataType.JSON, data);
             clusterService.pushMsgToRuleEngine(stateData.getTenantId(), stateData.getDeviceId(), tbMsg, null);
         } catch (Exception e) {
             log.warn("[{}] Failed to push inactivity alarm: {}", stateData.getDeviceId(), state, e);

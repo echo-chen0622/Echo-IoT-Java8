@@ -40,6 +40,8 @@ import org.echoiot.server.common.msg.queue.PartitionChangeMsg;
 import org.echoiot.server.common.msg.queue.QueueToRuleEngineMsg;
 import org.echoiot.server.common.msg.queue.RuleEngineException;
 import org.echoiot.server.common.msg.queue.ServiceType;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -66,7 +68,7 @@ public class TenantActor extends RuleChainManagerActor {
                 cantFindTenant = true;
                 log.info("[{}] Started tenant actor for missing tenant.", tenantId);
             } else {
-                TenantProfile tenantProfile = systemContext.getTenantProfileCache().get(tenant.getTenantProfileId());
+                @Nullable TenantProfile tenantProfile = systemContext.getTenantProfileCache().get(tenant.getTenantProfileId());
 
                 isCore = systemContext.getServiceInfoProvider().isService(ServiceType.TB_CORE);
                 isRuleEngine = systemContext.getServiceInfoProvider().isService(ServiceType.TB_RULE_ENGINE);
@@ -95,21 +97,21 @@ public class TenantActor extends RuleChainManagerActor {
     }
 
     @Override
-    protected boolean doProcess(TbActorMsg msg) {
+    protected boolean doProcess(@NotNull TbActorMsg msg) {
         if (cantFindTenant) {
             log.info("[{}] Processing missing Tenant msg: {}", tenantId, msg);
             if (msg.getMsgType().equals(MsgType.QUEUE_TO_RULE_ENGINE_MSG)) {
-                QueueToRuleEngineMsg queueMsg = (QueueToRuleEngineMsg) msg;
+                @NotNull QueueToRuleEngineMsg queueMsg = (QueueToRuleEngineMsg) msg;
                 queueMsg.getMsg().getCallback().onSuccess();
             } else if (msg.getMsgType().equals(MsgType.TRANSPORT_TO_DEVICE_ACTOR_MSG)) {
-                TransportToDeviceActorMsgWrapper transportMsg = (TransportToDeviceActorMsgWrapper) msg;
+                @NotNull TransportToDeviceActorMsgWrapper transportMsg = (TransportToDeviceActorMsgWrapper) msg;
                 transportMsg.getCallback().onSuccess();
             }
             return true;
         }
         switch (msg.getMsgType()) {
             case PARTITION_CHANGE_MSG:
-                PartitionChangeMsg partitionChangeMsg = (PartitionChangeMsg) msg;
+                @NotNull PartitionChangeMsg partitionChangeMsg = (PartitionChangeMsg) msg;
                 ServiceType serviceType = partitionChangeMsg.getServiceType();
                 if (ServiceType.TB_RULE_ENGINE.equals(serviceType)) {
                     //To Rule Chain Actors
@@ -117,7 +119,7 @@ public class TenantActor extends RuleChainManagerActor {
                 } else if (ServiceType.TB_CORE.equals(serviceType)) {
                     List<TbActorId> deviceActorIds = ctx.filterChildren(new TbEntityTypeActorIdPredicate(EntityType.DEVICE) {
                         @Override
-                        protected boolean testEntityId(EntityId entityId) {
+                        protected boolean testEntityId(@NotNull EntityId entityId) {
                             return super.testEntityId(entityId) && !isMyPartition(entityId);
                         }
                     });
@@ -166,7 +168,7 @@ public class TenantActor extends RuleChainManagerActor {
         return systemContext.resolve(ServiceType.TB_CORE, tenantId, entityId).isMyPartition();
     }
 
-    private void onQueueToRuleEngineMsg(QueueToRuleEngineMsg msg) {
+    private void onQueueToRuleEngineMsg(@NotNull QueueToRuleEngineMsg msg) {
         if (!isRuleEngine) {
             log.warn("RECEIVED INVALID MESSAGE: {}", msg);
             return;
@@ -195,13 +197,13 @@ public class TenantActor extends RuleChainManagerActor {
         }
     }
 
-    private void onRuleChainMsg(RuleChainAwareMsg msg) {
+    private void onRuleChainMsg(@NotNull RuleChainAwareMsg msg) {
         if (getApiUsageState().isReExecEnabled()) {
             getOrCreateActor(msg.getRuleChainId()).tell(msg);
         }
     }
 
-    private void onToDeviceActorMsg(DeviceAwareMsg msg, boolean priority) {
+    private void onToDeviceActorMsg(@NotNull DeviceAwareMsg msg, boolean priority) {
         if (!isCore) {
             log.warn("RECEIVED INVALID MESSAGE: {}", msg);
         }
@@ -213,9 +215,9 @@ public class TenantActor extends RuleChainManagerActor {
         }
     }
 
-    private void onComponentLifecycleMsg(ComponentLifecycleMsg msg) {
+    private void onComponentLifecycleMsg(@NotNull ComponentLifecycleMsg msg) {
         if (msg.getEntityId().getEntityType().equals(EntityType.API_USAGE_STATE)) {
-            ApiUsageState old = getApiUsageState();
+            @NotNull ApiUsageState old = getApiUsageState();
             apiUsageState = new ApiUsageState(systemContext.getApiUsageStateService().getApiUsageState(tenantId));
             if (old.isReExecEnabled() && !apiUsageState.isReExecEnabled()) {
                 log.info("[{}] Received API state update. Going to DISABLE Rule Engine execution.", tenantId);
@@ -225,7 +227,7 @@ public class TenantActor extends RuleChainManagerActor {
                 initRuleChains();
             }
         } else if (msg.getEntityId().getEntityType() == EntityType.EDGE) {
-            EdgeId edgeId = new EdgeId(msg.getEntityId().getId());
+            @NotNull EdgeId edgeId = new EdgeId(msg.getEntityId().getId());
             EdgeRpcService edgeRpcService = systemContext.getEdgeRpcService();
             if (msg.getEvent() == ComponentLifecycleEvent.DELETED) {
                 edgeRpcService.deleteEdge(tenantId, edgeId);
@@ -260,6 +262,7 @@ public class TenantActor extends RuleChainManagerActor {
         systemContext.getEdgeRpcService().onToEdgeSessionMsg(tenantId, msg);
     }
 
+    @NotNull
     private ApiUsageState getApiUsageState() {
         if (apiUsageState == null) {
             apiUsageState = new ApiUsageState(systemContext.getApiUsageStateService().getApiUsageState(tenantId));
@@ -276,11 +279,13 @@ public class TenantActor extends RuleChainManagerActor {
             this.tenantId = tenantId;
         }
 
+        @NotNull
         @Override
         public TbActorId createActorId() {
             return new TbEntityActorId(tenantId);
         }
 
+        @NotNull
         @Override
         public TbActor createActor() {
             return new TenantActor(context, tenantId);

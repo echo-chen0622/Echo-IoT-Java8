@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.ProtocolHandler;
 import org.apache.coyote.http11.Http11NioProtocol;
 import org.echoiot.server.common.transport.TransportContext;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.web.embedded.tomcat.TomcatConnectorCustomizer;
@@ -27,6 +28,7 @@ public class HttpTransportContext extends TransportContext {
     @Value("${transport.http.max_request_timeout}")
     private long maxRequestTimeout;
 
+    @NotNull
     @Bean
     public TomcatConnectorCustomizer tomcatAsyncTimeoutConnectorCustomizer() {
         return connector -> {

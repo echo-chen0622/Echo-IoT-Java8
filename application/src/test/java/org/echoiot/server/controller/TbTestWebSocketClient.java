@@ -21,6 +21,8 @@ import org.echoiot.server.service.telemetry.cmd.v2.EntityDataUpdate;
 import org.echoiot.server.service.telemetry.cmd.v2.EntityHistoryCmd;
 import org.echoiot.server.service.telemetry.cmd.v2.LatestValueCmd;
 import org.echoiot.server.service.telemetry.cmd.v2.TimeSeriesCmd;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.net.URI;
 import java.nio.channels.NotYetConnectedException;
@@ -32,11 +34,12 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class TbTestWebSocketClient extends WebSocketClient {
 
+    @Nullable
     private volatile String lastMsg;
     private volatile CountDownLatch reply;
     private volatile CountDownLatch update;
 
-    public TbTestWebSocketClient(URI serverUri) {
+    public TbTestWebSocketClient(@NotNull URI serverUri) {
         super(serverUri);
     }
 
@@ -83,13 +86,13 @@ public class TbTestWebSocketClient extends WebSocketClient {
     }
 
     public void send(EntityDataCmd cmd) throws NotYetConnectedException {
-        TelemetryPluginCmdsWrapper wrapper = new TelemetryPluginCmdsWrapper();
+        @NotNull TelemetryPluginCmdsWrapper wrapper = new TelemetryPluginCmdsWrapper();
         wrapper.setEntityDataCmds(Collections.singletonList(cmd));
         this.send(JacksonUtil.toString(wrapper));
     }
 
     public void send(EntityCountCmd cmd) throws NotYetConnectedException {
-        TelemetryPluginCmdsWrapper wrapper = new TelemetryPluginCmdsWrapper();
+        @NotNull TelemetryPluginCmdsWrapper wrapper = new TelemetryPluginCmdsWrapper();
         wrapper.setEntityCountCmds(Collections.singletonList(cmd));
         this.send(JacksonUtil.toString(wrapper));
     }
@@ -116,17 +119,19 @@ public class TbTestWebSocketClient extends WebSocketClient {
         return lastMsg;
     }
 
+    @Nullable
     public EntityDataUpdate parseDataReply(String msg) {
         return JacksonUtil.fromString(msg, EntityDataUpdate.class);
     }
 
+    @Nullable
     public EntityCountUpdate parseCountReply(String msg) {
         return JacksonUtil.fromString(msg, EntityCountUpdate.class);
     }
 
     public EntityDataUpdate subscribeLatestUpdate(List<EntityKey> keys, EntityFilter entityFilter) {
-        EntityDataQuery edq = new EntityDataQuery(entityFilter, new EntityDataPageLink(1, 0, null, null),
-                Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
+        @NotNull EntityDataQuery edq = new EntityDataQuery(entityFilter, new EntityDataPageLink(1, 0, null, null),
+                                                           Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
         return subscribeLatestUpdate(keys, edq);
     }
 
@@ -135,9 +140,9 @@ public class TbTestWebSocketClient extends WebSocketClient {
     }
 
     public EntityDataUpdate subscribeLatestUpdate(List<EntityKey> keys, EntityDataQuery edq) {
-        LatestValueCmd latestCmd = new LatestValueCmd();
+        @NotNull LatestValueCmd latestCmd = new LatestValueCmd();
         latestCmd.setKeys(keys);
-        EntityDataCmd cmd = new EntityDataCmd(1, edq, null, latestCmd, null);
+        @NotNull EntityDataCmd cmd = new EntityDataCmd(1, edq, null, latestCmd, null);
         send(cmd);
         return parseDataReply(waitForReply());
     }
@@ -147,33 +152,34 @@ public class TbTestWebSocketClient extends WebSocketClient {
     }
 
     public EntityDataUpdate subscribeTsUpdate(List<String> keys, long startTs, long timeWindow, EntityFilter entityFilter) {
-        EntityDataQuery edq = new EntityDataQuery(entityFilter, new EntityDataPageLink(1, 0, null, null),
-                Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
+        @NotNull EntityDataQuery edq = new EntityDataQuery(entityFilter, new EntityDataPageLink(1, 0, null, null),
+                                                           Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
         return subscribeTsUpdate(keys, startTs, timeWindow, edq);
     }
 
     public EntityDataUpdate subscribeTsUpdate(List<String> keys, long startTs, long timeWindow, EntityDataQuery edq) {
-        TimeSeriesCmd tsCmd = new TimeSeriesCmd();
+        @NotNull TimeSeriesCmd tsCmd = new TimeSeriesCmd();
         tsCmd.setKeys(keys);
         tsCmd.setAgg(Aggregation.NONE);
         tsCmd.setLimit(1000);
         tsCmd.setStartTs(startTs - timeWindow);
         tsCmd.setTimeWindow(timeWindow);
 
-        EntityDataCmd cmd = new EntityDataCmd(1, edq, null, null, tsCmd);
+        @NotNull EntityDataCmd cmd = new EntityDataCmd(1, edq, null, null, tsCmd);
 
         send(cmd);
         return parseDataReply(waitForReply());
     }
 
-    public JsonNode subscribeForAttributes(EntityId entityId, String scope, List<String> keys) {
-        AttributesSubscriptionCmd cmd = new AttributesSubscriptionCmd();
+    @Nullable
+    public JsonNode subscribeForAttributes(@NotNull EntityId entityId, String scope, @NotNull List<String> keys) {
+        @NotNull AttributesSubscriptionCmd cmd = new AttributesSubscriptionCmd();
         cmd.setCmdId(1);
         cmd.setEntityType(entityId.getEntityType().toString());
         cmd.setEntityId(entityId.getId().toString());
         cmd.setScope(scope);
         cmd.setKeys(String.join(",", keys));
-        TelemetryPluginCmdsWrapper cmdsWrapper = new TelemetryPluginCmdsWrapper();
+        @NotNull TelemetryPluginCmdsWrapper cmdsWrapper = new TelemetryPluginCmdsWrapper();
         cmdsWrapper.setAttrSubCmds(List.of(cmd));
         JsonNode msg = JacksonUtil.valueToTree(cmdsWrapper);
         ((ObjectNode) msg.get("attrSubCmds").get(0)).remove("type");
@@ -186,21 +192,21 @@ public class TbTestWebSocketClient extends WebSocketClient {
     }
 
     public EntityDataUpdate sendHistoryCmd(List<String> keys, long startTs, long timeWindow, EntityFilter entityFilter) {
-        EntityDataQuery edq = new EntityDataQuery(entityFilter,
-                new EntityDataPageLink(1, 0, null, null),
-                Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
+        @NotNull EntityDataQuery edq = new EntityDataQuery(entityFilter,
+                                                           new EntityDataPageLink(1, 0, null, null),
+                                                           Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
         return sendHistoryCmd(keys, startTs, timeWindow, edq);
     }
 
     public EntityDataUpdate sendHistoryCmd(List<String> keys, long startTs, long timeWindow, EntityDataQuery edq) {
-        EntityHistoryCmd historyCmd = new EntityHistoryCmd();
+        @NotNull EntityHistoryCmd historyCmd = new EntityHistoryCmd();
         historyCmd.setKeys(keys);
         historyCmd.setAgg(Aggregation.NONE);
         historyCmd.setLimit(1000);
         historyCmd.setStartTs(startTs - timeWindow);
         historyCmd.setEndTs(startTs);
 
-        EntityDataCmd cmd = new EntityDataCmd(1, edq, historyCmd, null, null);
+        @NotNull EntityDataCmd cmd = new EntityDataCmd(1, edq, historyCmd, null, null);
 
         send(cmd);
         return parseDataReply(this.waitForReply());
@@ -208,7 +214,7 @@ public class TbTestWebSocketClient extends WebSocketClient {
 
     public EntityDataUpdate sendEntityDataQuery(EntityDataQuery edq) {
         log.warn("sendEntityDataQuery {}", edq);
-        EntityDataCmd cmd = new EntityDataCmd(1, edq, null, null, null);
+        @NotNull EntityDataCmd cmd = new EntityDataCmd(1, edq, null, null, null);
         send(cmd);
         String msg = this.waitForReply();
         return parseDataReply(msg);
@@ -216,8 +222,8 @@ public class TbTestWebSocketClient extends WebSocketClient {
 
     public EntityDataUpdate sendEntityDataQuery(EntityFilter entityFilter) {
         log.warn("sendEntityDataQuery {}", entityFilter);
-        EntityDataQuery edq = new EntityDataQuery(entityFilter, new EntityDataPageLink(1, 0, null, null),
-                Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
+        @NotNull EntityDataQuery edq = new EntityDataQuery(entityFilter, new EntityDataPageLink(1, 0, null, null),
+                                                           Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
         return sendEntityDataQuery(edq);
     }
 

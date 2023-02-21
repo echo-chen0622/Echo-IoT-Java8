@@ -4,6 +4,7 @@ import lombok.Data;
 import org.echoiot.rule.engine.api.NodeConfiguration;
 import org.echoiot.rule.engine.credentials.AnonymousCredentials;
 import org.echoiot.rule.engine.credentials.ClientCredentials;
+import org.jetbrains.annotations.NotNull;
 
 @Data
 public class TbMqttNodeConfiguration implements NodeConfiguration<TbMqttNodeConfiguration> {
@@ -20,9 +21,10 @@ public class TbMqttNodeConfiguration implements NodeConfiguration<TbMqttNodeConf
     private boolean ssl;
     private ClientCredentials credentials;
 
+    @NotNull
     @Override
     public TbMqttNodeConfiguration defaultConfiguration() {
-        TbMqttNodeConfiguration configuration = new TbMqttNodeConfiguration();
+        @NotNull TbMqttNodeConfiguration configuration = new TbMqttNodeConfiguration();
         configuration.setTopicPattern("my-topic");
         configuration.setPort(1883);
         configuration.setConnectTimeoutSec(10);

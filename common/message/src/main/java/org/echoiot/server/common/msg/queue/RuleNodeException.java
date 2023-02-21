@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.id.RuleChainId;
 import org.echoiot.server.common.data.id.RuleNodeId;
 import org.echoiot.server.common.data.rule.RuleNode;
+import org.jetbrains.annotations.Nullable;
 
 @Slf4j
 public class RuleNodeException extends RuleEngineException {
@@ -23,7 +24,7 @@ public class RuleNodeException extends RuleEngineException {
     private final RuleNodeId ruleNodeId;
 
 
-    public RuleNodeException(String message, String ruleChainName, RuleNode ruleNode) {
+    public RuleNodeException(String message, String ruleChainName, @Nullable RuleNode ruleNode) {
         super(message);
         this.ruleChainName = ruleChainName;
         if (ruleNode != null) {

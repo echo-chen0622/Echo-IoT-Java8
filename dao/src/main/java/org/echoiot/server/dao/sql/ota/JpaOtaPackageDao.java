@@ -2,6 +2,7 @@ package org.echoiot.server.dao.sql.ota;
 
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.dao.model.sql.OtaPackageEntity;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
@@ -19,9 +20,10 @@ import java.util.UUID;
 @SqlDao
 public class JpaOtaPackageDao extends JpaAbstractSearchTextDao<OtaPackageEntity, OtaPackage> implements OtaPackageDao {
 
-    @Autowired
+    @Resource
     private OtaPackageRepository otaPackageRepository;
 
+    @NotNull
     @Override
     protected Class<OtaPackageEntity> getEntityClass() {
         return OtaPackageEntity.class;
@@ -33,10 +35,11 @@ public class JpaOtaPackageDao extends JpaAbstractSearchTextDao<OtaPackageEntity,
     }
 
     @Override
-    public Long sumDataSizeByTenantId(TenantId tenantId) {
+    public Long sumDataSizeByTenantId(@NotNull TenantId tenantId) {
         return otaPackageRepository.sumDataSizeByTenantId(tenantId.getId());
     }
 
+    @NotNull
     @Override
     public EntityType getEntityType() {
         return EntityType.OTA_PACKAGE;

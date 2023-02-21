@@ -22,6 +22,8 @@ import org.echoiot.server.queue.TbQueueMsg;
 import org.echoiot.server.queue.TbQueueProducer;
 import org.echoiot.server.queue.common.DefaultTbQueueMsg;
 import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.UUID;
@@ -35,9 +37,9 @@ public class TbAwsSqsProducerTemplate<T extends TbQueueMsg> implements TbQueuePr
     private final Gson gson = new Gson();
     private final Map<String, String> queueUrlMap = new ConcurrentHashMap<>();
     private final TbQueueAdmin admin;
-    private ListeningExecutorService producerExecutor;
+    private final ListeningExecutorService producerExecutor;
 
-    public TbAwsSqsProducerTemplate(TbQueueAdmin admin, TbAwsSqsSettings sqsSettings, String defaultTopic) {
+    public TbAwsSqsProducerTemplate(TbQueueAdmin admin, @NotNull TbAwsSqsSettings sqsSettings, String defaultTopic) {
         this.admin = admin;
         this.defaultTopic = defaultTopic;
 
@@ -45,7 +47,7 @@ public class TbAwsSqsProducerTemplate<T extends TbQueueMsg> implements TbQueuePr
         if (sqsSettings.getUseDefaultCredentialProviderChain()) {
             credentialsProvider = new DefaultAWSCredentialsProviderChain();
         } else {
-            AWSCredentials awsCredentials = new BasicAWSCredentials(sqsSettings.getAccessKeyId(), sqsSettings.getSecretAccessKey());
+            @NotNull AWSCredentials awsCredentials = new BasicAWSCredentials(sqsSettings.getAccessKeyId(), sqsSettings.getSecretAccessKey());
             credentialsProvider = new AWSStaticCredentialsProvider(awsCredentials);
         }
 
@@ -67,8 +69,8 @@ public class TbAwsSqsProducerTemplate<T extends TbQueueMsg> implements TbQueuePr
     }
 
     @Override
-    public void send(TopicPartitionInfo tpi, T msg, TbQueueCallback callback) {
-        SendMessageRequest sendMsgRequest = new SendMessageRequest();
+    public void send(@NotNull TopicPartitionInfo tpi, @NotNull T msg, @Nullable TbQueueCallback callback) {
+        @NotNull SendMessageRequest sendMsgRequest = new SendMessageRequest();
         sendMsgRequest.withQueueUrl(getQueueUrl(tpi.getFullTopicName()));
         sendMsgRequest.withMessageBody(gson.toJson(new DefaultTbQueueMsg(msg)));
 
@@ -76,11 +78,11 @@ public class TbAwsSqsProducerTemplate<T extends TbQueueMsg> implements TbQueuePr
         sendMsgRequest.withMessageGroupId(sqsMsgId);
         sendMsgRequest.withMessageDeduplicationId(sqsMsgId);
 
-        ListenableFuture<SendMessageResult> future = producerExecutor.submit(() -> sqsClient.sendMessage(sendMsgRequest));
+        @NotNull ListenableFuture<SendMessageResult> future = producerExecutor.submit(() -> sqsClient.sendMessage(sendMsgRequest));
 
         Futures.addCallback(future, new FutureCallback<SendMessageResult>() {
             @Override
-            public void onSuccess(SendMessageResult result) {
+            public void onSuccess(@NotNull SendMessageResult result) {
                 if (callback != null) {
                     callback.onSuccess(new AwsSqsTbQueueMsgMetadata(result.getSdkHttpMetadata()));
                 }
@@ -105,7 +107,7 @@ public class TbAwsSqsProducerTemplate<T extends TbQueueMsg> implements TbQueuePr
         }
     }
 
-    private String getQueueUrl(String topic) {
+    private String getQueueUrl(@NotNull String topic) {
         return queueUrlMap.computeIfAbsent(topic, k -> {
             admin.createTopicIfNotExists(topic);
             return sqsClient.getQueueUrl(topic.replaceAll("\\.", "_") + ".fifo").getQueueUrl();

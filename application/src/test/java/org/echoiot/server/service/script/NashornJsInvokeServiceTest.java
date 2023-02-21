@@ -2,6 +2,7 @@ package org.echoiot.server.service.script;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.echoiot.server.controller.AbstractControllerTest;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 })
 class NashornJsInvokeServiceTest extends AbstractControllerTest {
 
-    @Autowired
+    @Resource
     private NashornJsInvokeService invokeService;
 
     @Value("${js.local.max_errors}")
@@ -60,7 +61,7 @@ class NashornJsInvokeServiceTest extends AbstractControllerTest {
 
     @Test
     void givenTooBigScriptForEval_thenReturnError() {
-        String hugeScript = "var a = 'qwertyqwertywertyqwabababer'; return {a: a};";
+        @NotNull String hugeScript = "var a = 'qwertyqwertywertyqwabababer'; return {a: a};";
 
         assertThatThrownBy(() -> {
             evalScript(hugeScript);
@@ -69,8 +70,8 @@ class NashornJsInvokeServiceTest extends AbstractControllerTest {
 
     @Test
     void givenTooBigScriptInputArgs_thenReturnErrorAndReportScriptExecutionError() throws Exception {
-        String script = "return { msg: msg };";
-        String hugeMsg = "{\"input\":\"123456781234349\"}";
+        @NotNull String script = "return { msg: msg };";
+        @NotNull String hugeMsg = "{\"input\":\"123456781234349\"}";
         UUID scriptId = evalScript(script);
 
         for (int i = 0; i < maxJsErrors; i++) {
@@ -83,7 +84,7 @@ class NashornJsInvokeServiceTest extends AbstractControllerTest {
 
     @Test
     void whenScriptInvocationResultIsTooBig_thenReturnErrorAndReportScriptExecutionError() throws Exception {
-        String script = "var s = new Array(50).join('a'); return { s: s};";
+        @NotNull String script = "var s = new Array(50).join('a'); return { s: s};";
         UUID scriptId = evalScript(script);
 
         for (int i = 0; i < maxJsErrors; i++) {
@@ -100,7 +101,7 @@ class NashornJsInvokeServiceTest extends AbstractControllerTest {
         }).hasMessageContaining("invocation is blocked due to maximum error");
     }
 
-    private UUID evalScript(String script) throws ExecutionException, InterruptedException {
+    private UUID evalScript(@NotNull String script) throws ExecutionException, InterruptedException {
         return invokeService.eval(TenantId.SYS_TENANT_ID, ScriptType.RULE_NODE_SCRIPT, script).get();
     }
 

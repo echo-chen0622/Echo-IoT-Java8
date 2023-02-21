@@ -13,6 +13,7 @@ import org.echoiot.server.common.data.id.UserId;
 import org.echoiot.server.common.data.security.Authority;
 import org.echoiot.server.common.data.validation.Length;
 import org.echoiot.server.common.data.validation.NoXss;
+import org.jetbrains.annotations.NotNull;
 
 @ApiModel
 @EqualsAndHashCode(callSuper = true)
@@ -39,7 +40,7 @@ public class User extends SearchTextBasedWithAdditionalInfo<UserId> implements H
         super(id);
     }
 
-    public User(User user) {
+    public User(@NotNull User user) {
         super(user);
         this.tenantId = user.getTenantId();
         this.customerId = user.getCustomerId();
@@ -137,29 +138,29 @@ public class User extends SearchTextBasedWithAdditionalInfo<UserId> implements H
         return getEmail();
     }
 
+    @NotNull
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("User [tenantId=");
-        builder.append(tenantId);
-        builder.append(", customerId=");
-        builder.append(customerId);
-        builder.append(", email=");
-        builder.append(email);
-        builder.append(", authority=");
-        builder.append(authority);
-        builder.append(", firstName=");
-        builder.append(firstName);
-        builder.append(", lastName=");
-        builder.append(lastName);
-        builder.append(", additionalInfo=");
-        builder.append(getAdditionalInfo());
-        builder.append(", createdTime=");
-        builder.append(createdTime);
-        builder.append(", id=");
-        builder.append(id);
-        builder.append("]");
-        return builder.toString();
+        String builder = "User [tenantId=" +
+                         tenantId +
+                         ", customerId=" +
+                         customerId +
+                         ", email=" +
+                         email +
+                         ", authority=" +
+                         authority +
+                         ", firstName=" +
+                         firstName +
+                         ", lastName=" +
+                         lastName +
+                         ", additionalInfo=" +
+                         getAdditionalInfo() +
+                         ", createdTime=" +
+                         createdTime +
+                         ", id=" +
+                         id +
+                         "]";
+        return builder;
     }
 
     @JsonIgnore

@@ -1,6 +1,7 @@
 package org.echoiot.server.dao.sql.edge;
 
 import org.echoiot.server.dao.model.sql.EdgeEventEntity;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -24,13 +25,13 @@ public class EdgeEventInsertRepository {
                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) " +
                     "ON CONFLICT DO NOTHING;";
 
-    @Autowired
+    @Resource
     protected JdbcTemplate jdbcTemplate;
 
-    @Autowired
+    @Resource
     private TransactionTemplate transactionTemplate;
 
-    protected void save(List<EdgeEventEntity> entities) {
+    protected void save(@NotNull List<EdgeEventEntity> entities) {
         transactionTemplate.execute(new TransactionCallbackWithoutResult() {
             @Override
             protected void doInTransactionWithoutResult(TransactionStatus status) {

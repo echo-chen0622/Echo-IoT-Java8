@@ -9,6 +9,7 @@ import org.echoiot.rule.engine.api.sms.exception.SmsException;
 import org.echoiot.rule.engine.api.sms.exception.SmsParseException;
 import org.echoiot.rule.engine.api.sms.exception.SmsSendException;
 import org.echoiot.server.service.sms.AbstractSmsSender;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.regex.Pattern;
 
@@ -16,9 +17,10 @@ public class TwilioSmsSender extends AbstractSmsSender {
 
     private static final Pattern PHONE_NUMBERS_SID_MESSAGE_SERVICE_SID = Pattern.compile("^(PN|MG).*$");
 
-    private TwilioRestClient twilioRestClient;
-    private String numberFrom;
+    private final TwilioRestClient twilioRestClient;
+    private final String numberFrom;
 
+    @NotNull
     private String validatePhoneTwilioNumber(String phoneNumber) throws SmsParseException {
         phoneNumber = phoneNumber.trim();
         if (!E_164_PHONE_NUMBER_PATTERN.matcher(phoneNumber).matches() && !PHONE_NUMBERS_SID_MESSAGE_SERVICE_SID.matcher(phoneNumber).matches()) {
@@ -27,7 +29,7 @@ public class TwilioSmsSender extends AbstractSmsSender {
         return phoneNumber;
     }
 
-    public TwilioSmsSender(TwilioSmsProviderConfiguration config) {
+    public TwilioSmsSender(@NotNull TwilioSmsProviderConfiguration config) {
         if (StringUtils.isEmpty(config.getAccountSid()) || StringUtils.isEmpty(config.getAccountToken()) || StringUtils.isEmpty(config.getNumberFrom())) {
             throw new IllegalArgumentException("Invalid twilio sms provider configuration: accountSid, accountToken and numberFrom should be specified!");
         }

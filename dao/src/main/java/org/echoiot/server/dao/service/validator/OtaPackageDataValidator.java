@@ -9,6 +9,7 @@ import org.echoiot.server.dao.exception.DataValidationException;
 import org.echoiot.server.dao.ota.OtaPackageDao;
 import org.echoiot.server.dao.ota.OtaPackageService;
 import org.echoiot.server.dao.tenant.TbTenantProfileCache;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -16,19 +17,19 @@ import org.springframework.stereotype.Component;
 @Component
 public class OtaPackageDataValidator extends BaseOtaPackageDataValidator<OtaPackage> {
 
-    @Autowired
+    @Resource
     private OtaPackageDao otaPackageDao;
 
-    @Autowired
+    @Resource
     @Lazy
     private OtaPackageService otaPackageService;
 
-    @Autowired
+    @Resource
     @Lazy
     private TbTenantProfileCache tenantProfileCache;
 
     @Override
-    protected void validateCreate(TenantId tenantId, OtaPackage otaPackage) {
+    protected void validateCreate(TenantId tenantId, @NotNull OtaPackage otaPackage) {
         DefaultTenantProfileConfiguration profileConfiguration =
                 (DefaultTenantProfileConfiguration) tenantProfileCache.get(tenantId).getProfileData().getConfiguration();
         long maxOtaPackagesInBytes = profileConfiguration.getMaxOtaPackagesInBytes();
@@ -36,7 +37,7 @@ public class OtaPackageDataValidator extends BaseOtaPackageDataValidator<OtaPack
     }
 
     @Override
-    protected void validateDataImpl(TenantId tenantId, OtaPackage otaPackage) {
+    protected void validateDataImpl(TenantId tenantId, @NotNull OtaPackage otaPackage) {
         validateImpl(otaPackage);
 
         if (!otaPackage.hasUrl()) {
@@ -69,8 +70,9 @@ public class OtaPackageDataValidator extends BaseOtaPackageDataValidator<OtaPack
         }
     }
 
+    @NotNull
     @Override
-    protected OtaPackage validateUpdate(TenantId tenantId, OtaPackage otaPackage) {
+    protected OtaPackage validateUpdate(TenantId tenantId, @NotNull OtaPackage otaPackage) {
         OtaPackage otaPackageOld = otaPackageDao.findById(tenantId, otaPackage.getUuidId());
 
         validateUpdate(otaPackage, otaPackageOld);

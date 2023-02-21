@@ -1,6 +1,7 @@
 package org.echoiot.server.service.install.cql;
 
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -20,16 +21,16 @@ public class CQLStatementsParser {
 
     }
 
-    private String text;
+    private final String text;
     private State state;
     private int pos;
     private List<String> statements;
 
-    public CQLStatementsParser(Path cql) throws IOException {
+    public CQLStatementsParser(@NotNull Path cql) throws IOException {
         try {
-            List<String> lines = Files.readAllLines(cql);
-            StringBuilder t = new StringBuilder();
-            for (String l : lines) {
+            @NotNull List<String> lines = Files.readAllLines(cql);
+            @NotNull StringBuilder t = new StringBuilder();
+            for (@NotNull String l : lines) {
                 t.append(l.trim());
                 t.append('\n');
             }
@@ -52,7 +53,7 @@ public class CQLStatementsParser {
 
     private void parseStatements() {
         this.statements = new ArrayList<>();
-        StringBuilder statementUnderConstruction = new StringBuilder();
+        @NotNull StringBuilder statementUnderConstruction = new StringBuilder();
 
         char c;
         while ((c = getChar()) != 0) {
@@ -82,13 +83,13 @@ public class CQLStatementsParser {
             }
 
         }
-        String tmp = statementUnderConstruction.toString().trim();
+        @NotNull String tmp = statementUnderConstruction.toString().trim();
         if (tmp.length() > 0) {
             this.statements.add(tmp);
         }
     }
 
-    private void processDefaultState(char c, StringBuilder statementUnderConstruction) {
+    private void processDefaultState(char c, @NotNull StringBuilder statementUnderConstruction) {
         if ((c == '/' && peekAhead() == '/') || (c == '-' && peekAhead() == '-')) {
             state = State.INSINGLELINECOMMENT;
             advance();
@@ -110,7 +111,7 @@ public class CQLStatementsParser {
         }
     }
 
-    private void processInQuoteStringState(char c, StringBuilder statementUnderConstruction) {
+    private void processInQuoteStringState(char c, @NotNull StringBuilder statementUnderConstruction) {
         statementUnderConstruction.append(c);
         if (c == '"') {
             if (peekAhead() == '"') {
@@ -121,7 +122,7 @@ public class CQLStatementsParser {
         }
     }
 
-    private void processInSQuoteStringState(char c, StringBuilder statementUnderConstruction) {
+    private void processInSQuoteStringState(char c, @NotNull StringBuilder statementUnderConstruction) {
         statementUnderConstruction.append(c);
         if (c == '\'') {
             if (peekAhead() == '\'') {

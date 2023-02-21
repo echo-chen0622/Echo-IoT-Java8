@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import org.echoiot.server.common.data.id.IdBased;
 import org.echoiot.server.common.data.id.UUIDBased;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class BaseData<I extends UUIDBased> extends IdBased<I> implements Serializable {
 
@@ -19,7 +20,7 @@ public abstract class BaseData<I extends UUIDBased> extends IdBased<I> implement
         super(id);
     }
 
-    public BaseData(BaseData<I> data) {
+    public BaseData(@NotNull BaseData<I> data) {
         super(data.getId());
         this.createdTime = data.getCreatedTime();
     }
@@ -42,26 +43,21 @@ public abstract class BaseData<I extends UUIDBased> extends IdBased<I> implement
 
     @SuppressWarnings("rawtypes")
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(@NotNull Object obj) {
         if (this == obj)
             return true;
         if (!super.equals(obj))
             return false;
         if (getClass() != obj.getClass())
             return false;
-        BaseData other = (BaseData) obj;
+        @NotNull BaseData other = (BaseData) obj;
         return createdTime == other.createdTime;
     }
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("BaseData [createdTime=");
-        builder.append(createdTime);
-        builder.append(", id=");
-        builder.append(id);
-        builder.append("]");
-        return builder.toString();
+        String builder = "BaseData [createdTime=" + createdTime + ", id=" + id + "]";
+        return builder;
     }
 
 }

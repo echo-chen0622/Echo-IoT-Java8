@@ -2,6 +2,7 @@ package org.echoiot.server.service.telemetry;
 
 import lombok.Getter;
 import lombok.ToString;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
@@ -10,10 +11,11 @@ public class SessionEvent {
 
     public enum SessionEventType {
         ESTABLISHED, CLOSED, ERROR
-    };
+    }
 
     @Getter
     private final SessionEventType eventType;
+    @NotNull
     @Getter
     private final Optional<Throwable> error;
 
@@ -23,14 +25,17 @@ public class SessionEvent {
         this.error = Optional.ofNullable(error);
     }
 
+    @NotNull
     public static SessionEvent onEstablished() {
         return new SessionEvent(SessionEventType.ESTABLISHED, null);
     }
 
+    @NotNull
     public static SessionEvent onClosed() {
         return new SessionEvent(SessionEventType.CLOSED, null);
     }
 
+    @NotNull
     public static SessionEvent onError(Throwable t) {
         return new SessionEvent(SessionEventType.ERROR, t);
     }

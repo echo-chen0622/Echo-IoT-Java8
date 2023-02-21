@@ -1,6 +1,7 @@
 package org.echoiot.server.transport.mqtt.attributes.request;
 
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import org.echoiot.server.common.data.TransportPayloadType;
 import org.echoiot.server.common.data.device.profile.MqttTopics;
@@ -92,8 +93,9 @@ public class MqttAttributesRequestBackwardCompatibilityIntegrationTest extends A
     }
 
 
-    protected List<TransportProtos.KeyValueProto> getKvProtos(List<String> expectedKeys) {
-        List<TransportProtos.KeyValueProto> keyValueProtos = new ArrayList<>();
+    @NotNull
+    protected List<TransportProtos.KeyValueProto> getKvProtos(@NotNull List<String> expectedKeys) {
+        @NotNull List<TransportProtos.KeyValueProto> keyValueProtos = new ArrayList<>();
         TransportProtos.KeyValueProto strKeyValueProto = getKeyValueProto(expectedKeys.get(0), "value1", TransportProtos.KeyValueType.STRING_V);
         TransportProtos.KeyValueProto boolKeyValueProto = getKeyValueProto(expectedKeys.get(1), "true", TransportProtos.KeyValueType.BOOLEAN_V);
         TransportProtos.KeyValueProto dblKeyValueProto = getKeyValueProto(expectedKeys.get(2), "42.0", TransportProtos.KeyValueType.DOUBLE_V);

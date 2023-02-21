@@ -9,6 +9,7 @@ import org.echoiot.rule.engine.api.TbNodeException;
 import org.echoiot.rule.engine.api.util.TbNodeUtils;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.plugin.ComponentType;
+import org.jetbrains.annotations.NotNull;
 
 @RuleNode(
         type = ComponentType.ENRICHMENT,
@@ -29,13 +30,13 @@ public class TbGetRelatedAttributeNode extends TbEntityGetAttrNode<EntityId> {
     private TbGetRelatedAttrNodeConfiguration config;
 
     @Override
-    public void init(TbContext context, TbNodeConfiguration configuration) throws TbNodeException {
+    public void init(TbContext context, @NotNull TbNodeConfiguration configuration) throws TbNodeException {
         this.config = TbNodeUtils.convert(configuration, TbGetRelatedAttrNodeConfiguration.class);
         setConfig(config);
     }
 
     @Override
-    protected ListenableFuture<EntityId> findEntityAsync(TbContext ctx, EntityId originator) {
+    protected ListenableFuture<EntityId> findEntityAsync(@NotNull TbContext ctx, @NotNull EntityId originator) {
         return EntitiesRelatedEntityIdAsyncLoader.findEntityAsync(ctx, originator, config.getRelationsQuery());
     }
 }

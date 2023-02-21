@@ -17,6 +17,7 @@ import org.echoiot.server.common.data.tenant.profile.DefaultTenantProfileConfigu
 import org.echoiot.server.common.data.tenant.profile.TenantProfileData;
 import org.echoiot.server.common.data.tenant.profile.TenantProfileQueueConfiguration;
 import org.echoiot.server.dao.exception.DataValidationException;
+import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
@@ -28,8 +29,8 @@ import java.util.stream.Collectors;
 
 public abstract class BaseTenantProfileServiceTest extends AbstractServiceTest {
 
-    private IdComparator<TenantProfile> idComparator = new IdComparator<>();
-    private IdComparator<EntityInfo> tenantProfileInfoIdComparator = new IdComparator<>();
+    private final IdComparator<TenantProfile> idComparator = new IdComparator<>();
+    private final IdComparator<EntityInfo> tenantProfileInfoIdComparator = new IdComparator<>();
 
     @After
     public void after() {
@@ -38,22 +39,22 @@ public abstract class BaseTenantProfileServiceTest extends AbstractServiceTest {
 
     @Test
     public void testSaveTenantProfile() {
-        TenantProfile tenantProfile = this.createTenantProfile("Tenant Profile");
+        @NotNull TenantProfile tenantProfile = createTenantProfile("Tenant Profile");
 
         tenantProfile.setIsolatedTbRuleEngine(true);
 
-        TenantProfileQueueConfiguration mainQueueConfiguration = new TenantProfileQueueConfiguration();
+        @NotNull TenantProfileQueueConfiguration mainQueueConfiguration = new TenantProfileQueueConfiguration();
         mainQueueConfiguration.setName(DataConstants.MAIN_QUEUE_NAME);
         mainQueueConfiguration.setTopic(DataConstants.MAIN_QUEUE_TOPIC);
         mainQueueConfiguration.setPollInterval(25);
         mainQueueConfiguration.setPartitions(10);
         mainQueueConfiguration.setConsumerPerPartition(true);
         mainQueueConfiguration.setPackProcessingTimeout(2000);
-        SubmitStrategy mainQueueSubmitStrategy = new SubmitStrategy();
+        @NotNull SubmitStrategy mainQueueSubmitStrategy = new SubmitStrategy();
         mainQueueSubmitStrategy.setType(SubmitStrategyType.BURST);
         mainQueueSubmitStrategy.setBatchSize(1000);
         mainQueueConfiguration.setSubmitStrategy(mainQueueSubmitStrategy);
-        ProcessingStrategy mainQueueProcessingStrategy = new ProcessingStrategy();
+        @NotNull ProcessingStrategy mainQueueProcessingStrategy = new ProcessingStrategy();
         mainQueueProcessingStrategy.setType(ProcessingStrategyType.SKIP_ALL_FAILURES);
         mainQueueProcessingStrategy.setRetries(3);
         mainQueueProcessingStrategy.setFailurePercentage(0);
@@ -81,7 +82,7 @@ public abstract class BaseTenantProfileServiceTest extends AbstractServiceTest {
 
     @Test
     public void testFindTenantProfileById() {
-        TenantProfile tenantProfile = this.createTenantProfile("Tenant Profile");
+        @NotNull TenantProfile tenantProfile = createTenantProfile("Tenant Profile");
         TenantProfile savedTenantProfile = tenantProfileService.saveTenantProfile(TenantId.SYS_TENANT_ID, tenantProfile);
         TenantProfile foundTenantProfile = tenantProfileService.findTenantProfileById(TenantId.SYS_TENANT_ID, savedTenantProfile.getId());
         Assert.assertNotNull(foundTenantProfile);
@@ -90,7 +91,7 @@ public abstract class BaseTenantProfileServiceTest extends AbstractServiceTest {
 
     @Test
     public void testFindTenantProfileInfoById() {
-        TenantProfile tenantProfile = this.createTenantProfile("Tenant Profile");
+        @NotNull TenantProfile tenantProfile = createTenantProfile("Tenant Profile");
         TenantProfile savedTenantProfile = tenantProfileService.saveTenantProfile(TenantId.SYS_TENANT_ID, tenantProfile);
         EntityInfo foundTenantProfileInfo = tenantProfileService.findTenantProfileInfoById(TenantId.SYS_TENANT_ID, savedTenantProfile.getId());
         Assert.assertNotNull(foundTenantProfileInfo);
@@ -100,7 +101,7 @@ public abstract class BaseTenantProfileServiceTest extends AbstractServiceTest {
 
     @Test
     public void testFindDefaultTenantProfile() {
-        TenantProfile tenantProfile = this.createTenantProfile("Default Tenant Profile");
+        @NotNull TenantProfile tenantProfile = createTenantProfile("Default Tenant Profile");
         tenantProfile.setDefault(true);
         TenantProfile savedTenantProfile = tenantProfileService.saveTenantProfile(TenantId.SYS_TENANT_ID, tenantProfile);
         TenantProfile foundDefaultTenantProfile = tenantProfileService.findDefaultTenantProfile(TenantId.SYS_TENANT_ID);
@@ -110,7 +111,7 @@ public abstract class BaseTenantProfileServiceTest extends AbstractServiceTest {
 
     @Test
     public void testFindDefaultTenantProfileInfo() {
-        TenantProfile tenantProfile = this.createTenantProfile("Default Tenant Profile");
+        @NotNull TenantProfile tenantProfile = createTenantProfile("Default Tenant Profile");
         tenantProfile.setDefault(true);
         TenantProfile savedTenantProfile = tenantProfileService.saveTenantProfile(TenantId.SYS_TENANT_ID, tenantProfile);
         EntityInfo foundDefaultTenantProfileInfo = tenantProfileService.findDefaultTenantProfileInfo(TenantId.SYS_TENANT_ID);
@@ -121,8 +122,8 @@ public abstract class BaseTenantProfileServiceTest extends AbstractServiceTest {
 
     @Test
     public void testSetDefaultTenantProfile() {
-        TenantProfile tenantProfile1 = this.createTenantProfile("Tenant Profile 1");
-        TenantProfile tenantProfile2 = this.createTenantProfile("Tenant Profile 2");
+        @NotNull TenantProfile tenantProfile1 = createTenantProfile("Tenant Profile 1");
+        @NotNull TenantProfile tenantProfile2 = createTenantProfile("Tenant Profile 2");
 
         TenantProfile savedTenantProfile1 = tenantProfileService.saveTenantProfile(TenantId.SYS_TENANT_ID, tenantProfile1);
         TenantProfile savedTenantProfile2 = tenantProfileService.saveTenantProfile(TenantId.SYS_TENANT_ID, tenantProfile2);
@@ -141,21 +142,21 @@ public abstract class BaseTenantProfileServiceTest extends AbstractServiceTest {
 
     @Test(expected = DataValidationException.class)
     public void testSaveTenantProfileWithEmptyName() {
-        TenantProfile tenantProfile = new TenantProfile();
+        @NotNull TenantProfile tenantProfile = new TenantProfile();
         tenantProfileService.saveTenantProfile(TenantId.SYS_TENANT_ID, tenantProfile);
     }
 
     @Test(expected = DataValidationException.class)
     public void testSaveTenantProfileWithSameName() {
-        TenantProfile tenantProfile = this.createTenantProfile("Tenant Profile");
+        @NotNull TenantProfile tenantProfile = createTenantProfile("Tenant Profile");
         tenantProfileService.saveTenantProfile(TenantId.SYS_TENANT_ID, tenantProfile);
-        TenantProfile tenantProfile2 = this.createTenantProfile("Tenant Profile");
+        @NotNull TenantProfile tenantProfile2 = createTenantProfile("Tenant Profile");
         tenantProfileService.saveTenantProfile(TenantId.SYS_TENANT_ID, tenantProfile2);
     }
 
     @Test(expected = DataValidationException.class)
     public void testSaveSameTenantProfileWithDifferentIsolatedTbRuleEngine() {
-        TenantProfile tenantProfile = this.createTenantProfile("Tenant Profile");
+        @NotNull TenantProfile tenantProfile = createTenantProfile("Tenant Profile");
         TenantProfile savedTenantProfile = tenantProfileService.saveTenantProfile(TenantId.SYS_TENANT_ID, tenantProfile);
         savedTenantProfile.setIsolatedTbRuleEngine(true);
         addMainQueueConfig(savedTenantProfile);
@@ -164,7 +165,7 @@ public abstract class BaseTenantProfileServiceTest extends AbstractServiceTest {
 
     @Test(expected = DataValidationException.class)
     public void testDeleteTenantProfileWithExistingTenant() {
-        TenantProfile tenantProfile = this.createTenantProfile("Tenant Profile");
+        @NotNull TenantProfile tenantProfile = createTenantProfile("Tenant Profile");
         TenantProfile savedTenantProfile = tenantProfileService.saveTenantProfile(TenantId.SYS_TENANT_ID, tenantProfile);
         Tenant tenant = new Tenant();
         tenant.setTitle("Test tenant");
@@ -179,7 +180,7 @@ public abstract class BaseTenantProfileServiceTest extends AbstractServiceTest {
 
     @Test
     public void testDeleteTenantProfile() {
-        TenantProfile tenantProfile = this.createTenantProfile("Tenant Profile");
+        @NotNull TenantProfile tenantProfile = createTenantProfile("Tenant Profile");
         TenantProfile savedTenantProfile = tenantProfileService.saveTenantProfile(TenantId.SYS_TENANT_ID, tenantProfile);
         tenantProfileService.deleteTenantProfile(TenantId.SYS_TENANT_ID, savedTenantProfile.getId());
         TenantProfile foundTenantProfile = tenantProfileService.findTenantProfileById(TenantId.SYS_TENANT_ID, savedTenantProfile.getId());
@@ -189,7 +190,7 @@ public abstract class BaseTenantProfileServiceTest extends AbstractServiceTest {
     @Test
     public void testFindTenantProfiles() {
 
-        List<TenantProfile> tenantProfiles = new ArrayList<>();
+        @NotNull List<TenantProfile> tenantProfiles = new ArrayList<>();
         PageLink pageLink = new PageLink(17);
         PageData<TenantProfile> pageData = tenantProfileService.findTenantProfiles(TenantId.SYS_TENANT_ID, pageLink);
         Assert.assertFalse(pageData.hasNext());
@@ -197,11 +198,11 @@ public abstract class BaseTenantProfileServiceTest extends AbstractServiceTest {
         tenantProfiles.addAll(pageData.getData());
 
         for (int i = 0; i < 28; i++) {
-            TenantProfile tenantProfile = this.createTenantProfile("Tenant Profile" + i);
+            @NotNull TenantProfile tenantProfile = createTenantProfile("Tenant Profile" + i);
             tenantProfiles.add(tenantProfileService.saveTenantProfile(TenantId.SYS_TENANT_ID, tenantProfile));
         }
 
-        List<TenantProfile> loadedTenantProfiles = new ArrayList<>();
+        @NotNull List<TenantProfile> loadedTenantProfiles = new ArrayList<>();
         pageLink = new PageLink(17);
         do {
             pageData = tenantProfileService.findTenantProfiles(TenantId.SYS_TENANT_ID, pageLink);
@@ -216,7 +217,7 @@ public abstract class BaseTenantProfileServiceTest extends AbstractServiceTest {
 
         Assert.assertEquals(tenantProfiles, loadedTenantProfiles);
 
-        for (TenantProfile tenantProfile : loadedTenantProfiles) {
+        for (@NotNull TenantProfile tenantProfile : loadedTenantProfiles) {
             tenantProfileService.deleteTenantProfile(TenantId.SYS_TENANT_ID, tenantProfile.getId());
         }
 
@@ -230,14 +231,14 @@ public abstract class BaseTenantProfileServiceTest extends AbstractServiceTest {
     @Test
     public void testFindTenantProfileInfos() {
 
-        List<TenantProfile> tenantProfiles = new ArrayList<>();
+        @NotNull List<TenantProfile> tenantProfiles = new ArrayList<>();
 
         for (int i = 0; i < 28; i++) {
-            TenantProfile tenantProfile = this.createTenantProfile("Tenant Profile" + i);
+            @NotNull TenantProfile tenantProfile = createTenantProfile("Tenant Profile" + i);
             tenantProfiles.add(tenantProfileService.saveTenantProfile(TenantId.SYS_TENANT_ID, tenantProfile));
         }
 
-        List<EntityInfo> loadedTenantProfileInfos = new ArrayList<>();
+        @NotNull List<EntityInfo> loadedTenantProfileInfos = new ArrayList<>();
         PageLink pageLink = new PageLink(17);
         PageData<EntityInfo> pageData;
         do {
@@ -251,12 +252,12 @@ public abstract class BaseTenantProfileServiceTest extends AbstractServiceTest {
         Collections.sort(tenantProfiles, idComparator);
         Collections.sort(loadedTenantProfileInfos, tenantProfileInfoIdComparator);
 
-        List<EntityInfo> tenantProfileInfos = tenantProfiles.stream().map(tenantProfile -> new EntityInfo(tenantProfile.getId(),
-                tenantProfile.getName())).collect(Collectors.toList());
+        @NotNull List<EntityInfo> tenantProfileInfos = tenantProfiles.stream().map(tenantProfile -> new EntityInfo(tenantProfile.getId(),
+                                                                                                                   tenantProfile.getName())).collect(Collectors.toList());
 
         Assert.assertEquals(tenantProfileInfos, loadedTenantProfileInfos);
 
-        for (EntityInfo tenantProfile : loadedTenantProfileInfos) {
+        for (@NotNull EntityInfo tenantProfile : loadedTenantProfileInfos) {
             tenantProfileService.deleteTenantProfile(TenantId.SYS_TENANT_ID, new TenantProfileId(tenantProfile.getId().getId()));
         }
 
@@ -267,11 +268,12 @@ public abstract class BaseTenantProfileServiceTest extends AbstractServiceTest {
 
     }
 
+    @NotNull
     public static TenantProfile createTenantProfile(String name) {
-        TenantProfile tenantProfile = new TenantProfile();
+        @NotNull TenantProfile tenantProfile = new TenantProfile();
         tenantProfile.setName(name);
         tenantProfile.setDescription(name + " Test");
-        TenantProfileData profileData = new TenantProfileData();
+        @NotNull TenantProfileData profileData = new TenantProfileData();
         profileData.setConfiguration(new DefaultTenantProfileConfiguration());
         tenantProfile.setProfileData(profileData);
         tenantProfile.setDefault(false);
@@ -279,19 +281,19 @@ public abstract class BaseTenantProfileServiceTest extends AbstractServiceTest {
         return tenantProfile;
     }
 
-    private void addMainQueueConfig(TenantProfile tenantProfile) {
-        TenantProfileQueueConfiguration mainQueueConfiguration = new TenantProfileQueueConfiguration();
+    private void addMainQueueConfig(@NotNull TenantProfile tenantProfile) {
+        @NotNull TenantProfileQueueConfiguration mainQueueConfiguration = new TenantProfileQueueConfiguration();
         mainQueueConfiguration.setName(DataConstants.MAIN_QUEUE_NAME);
         mainQueueConfiguration.setTopic(DataConstants.MAIN_QUEUE_TOPIC);
         mainQueueConfiguration.setPollInterval(25);
         mainQueueConfiguration.setPartitions(10);
         mainQueueConfiguration.setConsumerPerPartition(true);
         mainQueueConfiguration.setPackProcessingTimeout(2000);
-        SubmitStrategy mainQueueSubmitStrategy = new SubmitStrategy();
+        @NotNull SubmitStrategy mainQueueSubmitStrategy = new SubmitStrategy();
         mainQueueSubmitStrategy.setType(SubmitStrategyType.BURST);
         mainQueueSubmitStrategy.setBatchSize(1000);
         mainQueueConfiguration.setSubmitStrategy(mainQueueSubmitStrategy);
-        ProcessingStrategy mainQueueProcessingStrategy = new ProcessingStrategy();
+        @NotNull ProcessingStrategy mainQueueProcessingStrategy = new ProcessingStrategy();
         mainQueueProcessingStrategy.setType(ProcessingStrategyType.SKIP_ALL_FAILURES);
         mainQueueProcessingStrategy.setRetries(3);
         mainQueueProcessingStrategy.setFailurePercentage(0);

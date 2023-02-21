@@ -3,6 +3,7 @@ package org.echoiot.server.common.data.query;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.ToString;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -24,6 +25,7 @@ public class AlarmDataQuery extends AbstractDataQuery<AlarmDataPageLink> {
         this.alarmFields = alarmFields;
     }
 
+    @NotNull
     @JsonIgnore
     public AlarmDataQuery next() {
         return new AlarmDataQuery(getEntityFilter(), getPageLink().nextPageLink(), entityFields, latestValues, keyFilters, alarmFields);

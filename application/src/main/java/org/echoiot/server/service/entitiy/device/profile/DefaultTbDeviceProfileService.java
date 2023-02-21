@@ -14,6 +14,8 @@ import org.echoiot.server.dao.device.DeviceProfileService;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.entitiy.AbstractTbEntityService;
 import org.echoiot.server.service.ota.OtaPackageStateService;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -24,12 +26,15 @@ import java.util.Objects;
 @Slf4j
 public class DefaultTbDeviceProfileService extends AbstractTbEntityService implements TbDeviceProfileService {
 
+    @NotNull
     private final DeviceProfileService deviceProfileService;
+    @NotNull
     private final OtaPackageStateService otaPackageStateService;
 
+    @NotNull
     @Override
-    public DeviceProfile save(DeviceProfile deviceProfile, User user) throws Exception {
-        ActionType actionType = deviceProfile.getId() == null ? ActionType.ADDED : ActionType.UPDATED;
+    public DeviceProfile save(@NotNull DeviceProfile deviceProfile, User user) throws Exception {
+        @NotNull ActionType actionType = deviceProfile.getId() == null ? ActionType.ADDED : ActionType.UPDATED;
         TenantId tenantId = deviceProfile.getTenantId();
         try {
             boolean isFirmwareChanged = false;
@@ -62,7 +67,7 @@ public class DefaultTbDeviceProfileService extends AbstractTbEntityService imple
     }
 
     @Override
-    public void delete(DeviceProfile deviceProfile, User user) {
+    public void delete(@NotNull DeviceProfile deviceProfile, User user) {
         DeviceProfileId deviceProfileId = deviceProfile.getId();
         TenantId tenantId = deviceProfile.getTenantId();
         try {
@@ -80,7 +85,7 @@ public class DefaultTbDeviceProfileService extends AbstractTbEntityService imple
     }
 
     @Override
-    public DeviceProfile setDefaultDeviceProfile(DeviceProfile deviceProfile, DeviceProfile previousDefaultDeviceProfile, User user) throws EchoiotException {
+    public DeviceProfile setDefaultDeviceProfile(@NotNull DeviceProfile deviceProfile, @Nullable DeviceProfile previousDefaultDeviceProfile, User user) throws EchoiotException {
         TenantId tenantId = deviceProfile.getTenantId();
         DeviceProfileId deviceProfileId = deviceProfile.getId();
         try {

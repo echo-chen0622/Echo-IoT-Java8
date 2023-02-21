@@ -5,6 +5,8 @@ import org.eclipse.leshan.client.resource.BaseInstanceEnabler;
 import org.eclipse.leshan.client.servers.ServerIdentity;
 import org.eclipse.leshan.core.model.ObjectModel;
 import org.eclipse.leshan.core.response.ReadResponse;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.security.auth.Destroyable;
 import java.util.Arrays;
@@ -28,7 +30,7 @@ public class LwM2mLocation extends BaseInstanceEnabler implements Destroyable {
         this(null, null, 1.0f);
     }
 
-    public LwM2mLocation(Float latitude, Float longitude, float scaleFactor) {
+    public LwM2mLocation(@Nullable Float latitude, @Nullable Float longitude, float scaleFactor) {
 
         if (latitude != null) {
             this.latitude = latitude + 90f;
@@ -44,7 +46,7 @@ public class LwM2mLocation extends BaseInstanceEnabler implements Destroyable {
         timestamp = new Date();
     }
 
-    public LwM2mLocation(Float latitude, Float longitude, float scaleFactor, ScheduledExecutorService executorService, Integer id) {
+    public LwM2mLocation(@Nullable Float latitude, @Nullable Float longitude, float scaleFactor, @NotNull ScheduledExecutorService executorService, @Nullable Integer id) {
         try {
             if (id != null) this.setId(id);
             if (latitude != null) {
@@ -84,7 +86,7 @@ public class LwM2mLocation extends BaseInstanceEnabler implements Destroyable {
         }
     }
 
-    public void moveLocation(String nextMove) {
+    public void moveLocation(@NotNull String nextMove) {
         switch (nextMove.charAt(0)) {
             case 'w':
                 moveLatitude(1.0f);

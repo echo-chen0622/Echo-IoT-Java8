@@ -2,6 +2,8 @@ package org.echoiot.server.transport.lwm2m.rpc.sql;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.eclipse.leshan.core.ResponseCode;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.junit.Test;
 import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.transport.lwm2m.rpc.AbstractRpcLwM2MIntegrationTest;
@@ -23,9 +25,9 @@ public class RpcLwm2mIntegrationDeleteTest extends AbstractRpcLwM2MIntegrationTe
      */
     @Test
     public void testDeleteObjectInstanceIsSuchByIdKey_Result_DELETED() throws Exception {
-        String expectedPath = objectIdVer_3303 + "/" + OBJECT_INSTANCE_ID_12;
+        @NotNull String expectedPath = objectIdVer_3303 + "/" + OBJECT_INSTANCE_ID_12;
         String actualResult = sendRPCDeleteById(expectedPath);
-        ObjectNode rpcActualResult = JacksonUtil.fromString(actualResult, ObjectNode.class);
+        @Nullable ObjectNode rpcActualResult = JacksonUtil.fromString(actualResult, ObjectNode.class);
         assertEquals(ResponseCode.DELETED.getName(), rpcActualResult.get("result").asText());
     }
 
@@ -36,9 +38,9 @@ public class RpcLwm2mIntegrationDeleteTest extends AbstractRpcLwM2MIntegrationTe
      */
     @Test
     public void testDeleteObjectInstanceIsNotSuchByIdKey_Result_NOT_FOUND() throws Exception {
-        String expectedPath = objectIdVer_19 + "/" + OBJECT_INSTANCE_ID_12;
+        @NotNull String expectedPath = objectIdVer_19 + "/" + OBJECT_INSTANCE_ID_12;
         String actualResult = sendRPCDeleteById(expectedPath);
-        ObjectNode rpcActualResult = JacksonUtil.fromString(actualResult, ObjectNode.class);
+        @Nullable ObjectNode rpcActualResult = JacksonUtil.fromString(actualResult, ObjectNode.class);
         assertEquals(ResponseCode.NOT_FOUND.getName(), rpcActualResult.get("result").asText());
     }
 
@@ -51,11 +53,11 @@ public class RpcLwm2mIntegrationDeleteTest extends AbstractRpcLwM2MIntegrationTe
     public void testDeleteObjectByIdKey_Result_BAD_REQUEST() throws Exception {
         String expectedPath = objectIdVer_19;
         String actualResult = sendRPCDeleteById(expectedPath);
-        ObjectNode rpcActualResult = JacksonUtil.fromString(actualResult, ObjectNode.class);
+        @Nullable ObjectNode rpcActualResult = JacksonUtil.fromString(actualResult, ObjectNode.class);
         assertEquals(ResponseCode.BAD_REQUEST.getName(), rpcActualResult.get("result").asText());
-        String expected = "Invalid path " + pathIdVerToObjectId((String) expectedPath) + " : Only object instances can be delete";
+        @NotNull String expected = "Invalid path " + pathIdVerToObjectId(expectedPath) + " : Only object instances can be delete";
         String actual = rpcActualResult.get("error").asText();
-        assertTrue(actual.equals(expected));
+        assertEquals(actual, expected);
     }
 
 
@@ -66,15 +68,15 @@ public class RpcLwm2mIntegrationDeleteTest extends AbstractRpcLwM2MIntegrationTe
      */
     @Test
     public void testDeleteResourceByIdKey_Result_METHOD_NOT_ALLOWED() throws Exception {
-        String expectedPath = objectIdVer_3 + "/" + OBJECT_INSTANCE_ID_0 + RESOURCE_ID_7;
+        @NotNull String expectedPath = objectIdVer_3 + "/" + OBJECT_INSTANCE_ID_0 + RESOURCE_ID_7;
         String actualResult = sendRPCDeleteById(expectedPath);
-        ObjectNode rpcActualResult = JacksonUtil.fromString(actualResult, ObjectNode.class);
+        @Nullable ObjectNode rpcActualResult = JacksonUtil.fromString(actualResult, ObjectNode.class);
         assertEquals(ResponseCode.METHOD_NOT_ALLOWED.getName(), rpcActualResult.get("result").asText());
     }
 
 
     private String sendRPCDeleteById(String path) throws Exception {
-        String setRpcRequest = "{\"method\": \"Delete\", \"params\": {\"id\": \"" + path  + "\"}}";
+        @NotNull String setRpcRequest = "{\"method\": \"Delete\", \"params\": {\"id\": \"" + path + "\"}}";
         return doPostAsync("/api/plugins/rpc/twoway/" + deviceId, setRpcRequest, String.class, status().isOk());
     }
 

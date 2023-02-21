@@ -5,6 +5,7 @@ import org.echoiot.server.queue.TbQueueAdmin;
 import org.echoiot.server.queue.TbQueueConsumer;
 import org.echoiot.server.queue.TbQueueMsg;
 import org.echoiot.server.queue.TbQueueProducer;
+import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -55,6 +56,7 @@ public class DefaultTbQueueRequestTemplateTest {
     ExecutorService executorMock;
 
     ExecutorService executor;
+    @NotNull
     String topic = "js-responses-tb-node-0";
     long maxRequestTimeout = 10;
     long maxPendingRequests = 32;
@@ -107,7 +109,7 @@ public class DefaultTbQueueRequestTemplateTest {
     @Test
     public void givenMainLoop_whenLoopFewTimes_thenVerifyInvocationCount() throws InterruptedException {
         executor = inst.createExecutor();
-        CountDownLatch latch = new CountDownLatch(5);
+        @NotNull CountDownLatch latch = new CountDownLatch(5);
         willDoNothing().given(inst).sleep(anyLong());
         willAnswer(invocation -> {
             if (latch.getCount() == 1) {
@@ -159,7 +161,7 @@ public class DefaultTbQueueRequestTemplateTest {
     @Test
     public void givenNothing_whenSendAndFetchAndProcessResponsesWithTimeout_thenFail() {
         //given
-        AtomicLong currentTime = new AtomicLong();
+        @NotNull AtomicLong currentTime = new AtomicLong();
         willAnswer(x -> {
             log.info("currentTime={}", currentTime.get());
             return currentTime.get();
@@ -179,9 +181,9 @@ public class DefaultTbQueueRequestTemplateTest {
         }
 
         //then
-        ArgumentCaptor<DefaultTbQueueRequestTemplate.ResponseMetaData> argumentCaptorResp = ArgumentCaptor.forClass(DefaultTbQueueRequestTemplate.ResponseMetaData.class);
-        ArgumentCaptor<UUID> argumentCaptorUUID = ArgumentCaptor.forClass(UUID.class);
-        ArgumentCaptor<Long> argumentCaptorLong = ArgumentCaptor.forClass(Long.class);
+        @NotNull ArgumentCaptor<DefaultTbQueueRequestTemplate.ResponseMetaData> argumentCaptorResp = ArgumentCaptor.forClass(DefaultTbQueueRequestTemplate.ResponseMetaData.class);
+        @NotNull ArgumentCaptor<UUID> argumentCaptorUUID = ArgumentCaptor.forClass(UUID.class);
+        @NotNull ArgumentCaptor<Long> argumentCaptorLong = ArgumentCaptor.forClass(Long.class);
         verify(inst, atLeastOnce()).setTimeoutException(argumentCaptorUUID.capture(), argumentCaptorResp.capture(), argumentCaptorLong.capture());
 
         List<DefaultTbQueueRequestTemplate.ResponseMetaData> responseMetaDataList = argumentCaptorResp.getAllValues();

@@ -15,6 +15,8 @@ import org.echoiot.server.common.data.script.ScriptLanguage;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.TbMsgMetaData;
 import org.echoiot.common.util.JacksonUtil;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import static org.echoiot.common.util.DonAsynchron.withCallback;
 
@@ -30,7 +32,7 @@ public abstract class TbAbstractAlarmNode<C extends TbAbstractAlarmNodeConfigura
     private ScriptEngine scriptEngine;
 
     @Override
-    public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
+    public void init(@NotNull TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
         this.config = loadAlarmNodeConfig(configuration);
         scriptEngine = ctx.createScriptEngine(config.getScriptLang(),
                 ScriptLanguage.TBEL.equals(config.getScriptLang()) ? config.getAlarmDetailsBuildTbel() : config.getAlarmDetailsBuildJs());
@@ -39,7 +41,7 @@ public abstract class TbAbstractAlarmNode<C extends TbAbstractAlarmNodeConfigura
     protected abstract C loadAlarmNodeConfig(TbNodeConfiguration configuration) throws TbNodeException;
 
     @Override
-    public void onMsg(TbContext ctx, TbMsg msg) {
+    public void onMsg(@NotNull TbContext ctx, @NotNull TbMsg msg) {
         withCallback(processAlarm(ctx, msg),
                 alarmResult -> {
                     if (alarmResult.alarm == null) {
@@ -57,13 +59,14 @@ public abstract class TbAbstractAlarmNode<C extends TbAbstractAlarmNodeConfigura
                 t -> ctx.tellFailure(msg, t), ctx.getDbCallbackExecutor());
     }
 
+    @Nullable
     protected abstract ListenableFuture<TbAlarmResult> processAlarm(TbContext ctx, TbMsg msg);
 
-    protected ListenableFuture<JsonNode> buildAlarmDetails(TbContext ctx, TbMsg msg, JsonNode previousDetails) {
+    protected ListenableFuture<JsonNode> buildAlarmDetails(@NotNull TbContext ctx, @NotNull TbMsg msg, @Nullable JsonNode previousDetails) {
         try {
             TbMsg dummyMsg = msg;
             if (previousDetails != null) {
-                TbMsgMetaData metaData = msg.getMetaData().copy();
+                @NotNull TbMsgMetaData metaData = msg.getMetaData().copy();
                 metaData.putValue(PREV_ALARM_DETAILS, mapper.writeValueAsString(previousDetails));
                 dummyMsg = ctx.transformMsg(msg, msg.getType(), msg.getOriginator(), metaData, msg.getData());
             }
@@ -73,10 +76,10 @@ public abstract class TbAbstractAlarmNode<C extends TbAbstractAlarmNodeConfigura
         }
     }
 
-    public static TbMsg toAlarmMsg(TbContext ctx, TbAlarmResult alarmResult, TbMsg originalMsg) {
+    public static TbMsg toAlarmMsg(@NotNull TbContext ctx, @NotNull TbAlarmResult alarmResult, @NotNull TbMsg originalMsg) {
         JsonNode jsonNodes = JacksonUtil.valueToTree(alarmResult.alarm);
         String data = jsonNodes.toString();
-        TbMsgMetaData metaData = originalMsg.getMetaData().copy();
+        @NotNull TbMsgMetaData metaData = originalMsg.getMetaData().copy();
         if (alarmResult.isCreated) {
             metaData.putValue(DataConstants.IS_NEW_ALARM, Boolean.TRUE.toString());
         } else if (alarmResult.isUpdated) {
@@ -94,7 +97,7 @@ public abstract class TbAbstractAlarmNode<C extends TbAbstractAlarmNodeConfigura
         }
     }
 
-    private void tellNext(TbContext ctx, TbMsg msg, TbAlarmResult alarmResult, String entityAction, String alarmAction) {
+    private void tellNext(@NotNull TbContext ctx, @NotNull TbMsg msg, @NotNull TbAlarmResult alarmResult, String entityAction, String alarmAction) {
         ctx.enqueue(ctx.alarmActionMsg(alarmResult.alarm, ctx.getSelfId(), entityAction),
                 () -> ctx.tellNext(toAlarmMsg(ctx, alarmResult, msg), alarmAction),
                 throwable -> ctx.tellFailure(toAlarmMsg(ctx, alarmResult, msg), throwable));

@@ -2,6 +2,8 @@ package org.echoiot.server.queue.rabbitmq;
 
 import lombok.Getter;
 import org.echoiot.server.common.data.StringUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Component;
@@ -50,20 +52,22 @@ public class TbRabbitMqQueueArguments {
         vcArgs = getArgs(vcProperties);
     }
 
-    private Map<String, Object> getArgs(String properties) {
-        Map<String, Object> configs = new HashMap<>();
+    @NotNull
+    private Map<String, Object> getArgs(@NotNull String properties) {
+        @NotNull Map<String, Object> configs = new HashMap<>();
         if (StringUtils.isNotEmpty(properties)) {
-            for (String property : properties.split(";")) {
+            for (@NotNull String property : properties.split(";")) {
                 int delimiterPosition = property.indexOf(":");
-                String key = property.substring(0, delimiterPosition);
-                String strValue = property.substring(delimiterPosition + 1);
+                @NotNull String key = property.substring(0, delimiterPosition);
+                @NotNull String strValue = property.substring(delimiterPosition + 1);
                 configs.put(key, getObjectValue(strValue));
             }
         }
         return configs;
     }
 
-    private Object getObjectValue(String str) {
+    @NotNull
+    private Object getObjectValue(@NotNull String str) {
         if (str.equalsIgnoreCase("true") || str.equalsIgnoreCase("false")) {
             return Boolean.valueOf(str);
         } else if (isNumeric(str)) {
@@ -72,7 +76,8 @@ public class TbRabbitMqQueueArguments {
         return str;
     }
 
-    private Object getNumericValue(String str) {
+    @NotNull
+    private Object getNumericValue(@NotNull String str) {
         if (str.contains(".")) {
             return Double.valueOf(str);
         } else {
@@ -82,7 +87,7 @@ public class TbRabbitMqQueueArguments {
 
     private static final Pattern PATTERN = Pattern.compile("-?\\d+(\\.\\d+)?");
 
-    public boolean isNumeric(String strNum) {
+    public boolean isNumeric(@Nullable String strNum) {
         if (strNum == null) {
             return false;
         }

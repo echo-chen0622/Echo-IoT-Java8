@@ -1,5 +1,6 @@
 package org.echoiot.server.cache;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -42,8 +43,9 @@ public class TBRedisStandaloneConfiguration extends TBRedisCacheConfiguration {
     @Value("${redis.password:}")
     private String password;
 
+    @NotNull
     public JedisConnectionFactory loadFactory() {
-        RedisStandaloneConfiguration standaloneConfiguration = new RedisStandaloneConfiguration();
+        @NotNull RedisStandaloneConfiguration standaloneConfiguration = new RedisStandaloneConfiguration();
         standaloneConfiguration.setHostName(host);
         standaloneConfiguration.setPort(port);
         standaloneConfiguration.setDatabase(db);
@@ -55,6 +57,7 @@ public class TBRedisStandaloneConfiguration extends TBRedisCacheConfiguration {
         }
     }
 
+    @NotNull
     private JedisClientConfiguration buildClientConfig() {
         if (usePoolConfig) {
             return JedisClientConfiguration.builder()

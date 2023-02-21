@@ -3,6 +3,8 @@ package org.echoiot.rule.engine.transform;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -76,7 +78,7 @@ public class TbMsgDeduplicationNodeTest {
         ctx = mock(TbContext.class);
 
         tenantId = TenantId.fromUUID(UUID.randomUUID());
-        RuleNodeId ruleNodeId = new RuleNodeId(UUID.randomUUID());
+        @NotNull RuleNodeId ruleNodeId = new RuleNodeId(UUID.randomUUID());
 
         when(ctx.getSelfId()).thenReturn(ruleNodeId);
         when(ctx.getTenantId()).thenReturn(tenantId);
@@ -97,8 +99,8 @@ public class TbMsgDeduplicationNodeTest {
     }
 
     private void invokeTellSelf(int maxNumberOfInvocation, boolean delayScheduleTimeout, int delayMultiplier) {
-        AtomicLong scheduleTimeout = new AtomicLong(deduplicationInterval);
-        AtomicInteger scheduleCount = new AtomicInteger(0);
+        @NotNull AtomicLong scheduleTimeout = new AtomicLong(deduplicationInterval);
+        @NotNull AtomicInteger scheduleCount = new AtomicInteger(0);
         doAnswer((Answer<Void>) invocationOnMock -> {
             scheduleCount.getAndIncrement();
             if (scheduleCount.get() <= maxNumberOfInvocation) {
@@ -138,22 +140,22 @@ public class TbMsgDeduplicationNodeTest {
         nodeConfiguration = new TbNodeConfiguration(JacksonUtil.valueToTree(config));
         node.init(ctx, nodeConfiguration);
 
-        DeviceId deviceId = new DeviceId(UUID.randomUUID());
+        @NotNull DeviceId deviceId = new DeviceId(UUID.randomUUID());
         long currentTimeMillis = System.currentTimeMillis();
 
-        List<TbMsg> inputMsgs = getTbMsgs(deviceId, msgCount, currentTimeMillis, 500);
-        for (TbMsg msg : inputMsgs) {
+        @NotNull List<TbMsg> inputMsgs = getTbMsgs(deviceId, msgCount, currentTimeMillis, 500);
+        for (@NotNull TbMsg msg : inputMsgs) {
             node.onMsg(ctx, msg);
         }
 
-        TbMsg msgToReject = createMsg(deviceId, inputMsgs.get(inputMsgs.size() - 1).getMetaDataTs() + 2);
+        @NotNull TbMsg msgToReject = createMsg(deviceId, inputMsgs.get(inputMsgs.size() - 1).getMetaDataTs() + 2);
         node.onMsg(ctx, msgToReject);
 
         awaitTellSelfLatch.await();
 
-        ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
-        ArgumentCaptor<Runnable> successCaptor = ArgumentCaptor.forClass(Runnable.class);
-        ArgumentCaptor<Consumer<Throwable>> failureCaptor = ArgumentCaptor.forClass(Consumer.class);
+        @NotNull ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        @NotNull ArgumentCaptor<Runnable> successCaptor = ArgumentCaptor.forClass(Runnable.class);
+        @NotNull ArgumentCaptor<Consumer<Throwable>> failureCaptor = ArgumentCaptor.forClass(Consumer.class);
 
         verify(ctx, times(msgCount)).ack(any());
         verify(ctx, times(1)).tellFailure(eq(msgToReject), any());
@@ -175,24 +177,24 @@ public class TbMsgDeduplicationNodeTest {
         nodeConfiguration = new TbNodeConfiguration(JacksonUtil.valueToTree(config));
         node.init(ctx, nodeConfiguration);
 
-        DeviceId deviceId = new DeviceId(UUID.randomUUID());
+        @NotNull DeviceId deviceId = new DeviceId(UUID.randomUUID());
         long currentTimeMillis = System.currentTimeMillis();
 
-        List<TbMsg> inputMsgs = getTbMsgs(deviceId, msgCount, currentTimeMillis, 500);
+        @NotNull List<TbMsg> inputMsgs = getTbMsgs(deviceId, msgCount, currentTimeMillis, 500);
         TbMsg msgWithLatestTs = getMsgWithLatestTs(inputMsgs);
 
-        for (TbMsg msg : inputMsgs) {
+        for (@NotNull TbMsg msg : inputMsgs) {
             node.onMsg(ctx, msg);
         }
 
-        TbMsg msgToReject = createMsg(deviceId, inputMsgs.get(inputMsgs.size() - 1).getMetaDataTs() + 2);
+        @NotNull TbMsg msgToReject = createMsg(deviceId, inputMsgs.get(inputMsgs.size() - 1).getMetaDataTs() + 2);
         node.onMsg(ctx, msgToReject);
 
         awaitTellSelfLatch.await();
 
-        ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
-        ArgumentCaptor<Runnable> successCaptor = ArgumentCaptor.forClass(Runnable.class);
-        ArgumentCaptor<Consumer<Throwable>> failureCaptor = ArgumentCaptor.forClass(Consumer.class);
+        @NotNull ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        @NotNull ArgumentCaptor<Runnable> successCaptor = ArgumentCaptor.forClass(Runnable.class);
+        @NotNull ArgumentCaptor<Consumer<Throwable>> failureCaptor = ArgumentCaptor.forClass(Consumer.class);
 
         verify(ctx, times(msgCount)).ack(any());
         verify(ctx, times(1)).tellFailure(eq(msgToReject), any());
@@ -215,19 +217,19 @@ public class TbMsgDeduplicationNodeTest {
         nodeConfiguration = new TbNodeConfiguration(JacksonUtil.valueToTree(config));
         node.init(ctx, nodeConfiguration);
 
-        DeviceId deviceId = new DeviceId(UUID.randomUUID());
+        @NotNull DeviceId deviceId = new DeviceId(UUID.randomUUID());
         long currentTimeMillis = System.currentTimeMillis();
 
-        List<TbMsg> inputMsgs = getTbMsgs(deviceId, msgCount, currentTimeMillis, 500);
-        for (TbMsg msg : inputMsgs) {
+        @NotNull List<TbMsg> inputMsgs = getTbMsgs(deviceId, msgCount, currentTimeMillis, 500);
+        for (@NotNull TbMsg msg : inputMsgs) {
             node.onMsg(ctx, msg);
         }
 
         awaitTellSelfLatch.await();
 
-        ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
-        ArgumentCaptor<Runnable> successCaptor = ArgumentCaptor.forClass(Runnable.class);
-        ArgumentCaptor<Consumer<Throwable>> failureCaptor = ArgumentCaptor.forClass(Consumer.class);
+        @NotNull ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        @NotNull ArgumentCaptor<Runnable> successCaptor = ArgumentCaptor.forClass(Runnable.class);
+        @NotNull ArgumentCaptor<Consumer<Throwable>> failureCaptor = ArgumentCaptor.forClass(Consumer.class);
 
         verify(ctx, times(msgCount)).ack(any());
         verify(node, times(msgCount + wantedNumberOfTellSelfInvocation)).onMsg(eq(ctx), any());
@@ -255,25 +257,25 @@ public class TbMsgDeduplicationNodeTest {
         nodeConfiguration = new TbNodeConfiguration(JacksonUtil.valueToTree(config));
         node.init(ctx, nodeConfiguration);
 
-        DeviceId deviceId = new DeviceId(UUID.randomUUID());
+        @NotNull DeviceId deviceId = new DeviceId(UUID.randomUUID());
         long currentTimeMillis = System.currentTimeMillis();
 
-        List<TbMsg> firstMsgPack = getTbMsgs(deviceId, msgCount / 2, currentTimeMillis, 500);
-        for (TbMsg msg : firstMsgPack) {
+        @NotNull List<TbMsg> firstMsgPack = getTbMsgs(deviceId, msgCount / 2, currentTimeMillis, 500);
+        for (@NotNull TbMsg msg : firstMsgPack) {
             node.onMsg(ctx, msg);
         }
         long firstPackDeduplicationPackEndTs =  firstMsgPack.get(0).getMetaDataTs() + TimeUnit.SECONDS.toMillis(deduplicationInterval);
 
-        List<TbMsg> secondMsgPack = getTbMsgs(deviceId, msgCount / 2, firstPackDeduplicationPackEndTs, 500);
-        for (TbMsg msg : secondMsgPack) {
+        @NotNull List<TbMsg> secondMsgPack = getTbMsgs(deviceId, msgCount / 2, firstPackDeduplicationPackEndTs, 500);
+        for (@NotNull TbMsg msg : secondMsgPack) {
             node.onMsg(ctx, msg);
         }
 
         awaitTellSelfLatch.await();
 
-        ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
-        ArgumentCaptor<Runnable> successCaptor = ArgumentCaptor.forClass(Runnable.class);
-        ArgumentCaptor<Consumer<Throwable>> failureCaptor = ArgumentCaptor.forClass(Consumer.class);
+        @NotNull ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        @NotNull ArgumentCaptor<Runnable> successCaptor = ArgumentCaptor.forClass(Runnable.class);
+        @NotNull ArgumentCaptor<Consumer<Throwable>> failureCaptor = ArgumentCaptor.forClass(Consumer.class);
 
         verify(ctx, times(msgCount)).ack(any());
         verify(node, times(msgCount + wantedNumberOfTellSelfInvocation)).onMsg(eq(ctx), any());
@@ -307,27 +309,27 @@ public class TbMsgDeduplicationNodeTest {
         nodeConfiguration = new TbNodeConfiguration(JacksonUtil.valueToTree(config));
         node.init(ctx, nodeConfiguration);
 
-        DeviceId deviceId = new DeviceId(UUID.randomUUID());
+        @NotNull DeviceId deviceId = new DeviceId(UUID.randomUUID());
         long currentTimeMillis = System.currentTimeMillis();
 
-        List<TbMsg> firstMsgPack = getTbMsgs(deviceId, msgCount / 2, currentTimeMillis, 500);
-        for (TbMsg msg : firstMsgPack) {
+        @NotNull List<TbMsg> firstMsgPack = getTbMsgs(deviceId, msgCount / 2, currentTimeMillis, 500);
+        for (@NotNull TbMsg msg : firstMsgPack) {
             node.onMsg(ctx, msg);
         }
         long firstPackDeduplicationPackEndTs = firstMsgPack.get(0).getMetaDataTs() + TimeUnit.SECONDS.toMillis(deduplicationInterval);
         TbMsg msgWithLatestTsInFirstPack = getMsgWithLatestTs(firstMsgPack);
 
-        List<TbMsg> secondMsgPack = getTbMsgs(deviceId, msgCount / 2, firstPackDeduplicationPackEndTs, 500);
-        for (TbMsg msg : secondMsgPack) {
+        @NotNull List<TbMsg> secondMsgPack = getTbMsgs(deviceId, msgCount / 2, firstPackDeduplicationPackEndTs, 500);
+        for (@NotNull TbMsg msg : secondMsgPack) {
             node.onMsg(ctx, msg);
         }
         TbMsg msgWithLatestTsInSecondPack = getMsgWithLatestTs(secondMsgPack);
 
         awaitTellSelfLatch.await();
 
-        ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
-        ArgumentCaptor<Runnable> successCaptor = ArgumentCaptor.forClass(Runnable.class);
-        ArgumentCaptor<Consumer<Throwable>> failureCaptor = ArgumentCaptor.forClass(Consumer.class);
+        @NotNull ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        @NotNull ArgumentCaptor<Runnable> successCaptor = ArgumentCaptor.forClass(Runnable.class);
+        @NotNull ArgumentCaptor<Consumer<Throwable>> failureCaptor = ArgumentCaptor.forClass(Consumer.class);
 
         verify(ctx, times(msgCount)).ack(any());
         verify(node, times(msgCount + wantedNumberOfTellSelfInvocation)).onMsg(eq(ctx), any());
@@ -339,7 +341,7 @@ public class TbMsgDeduplicationNodeTest {
         Assertions.assertTrue(resultMsgs.contains(msgWithLatestTsInSecondPack));
     }
 
-    private TbMsg getMsgWithLatestTs(List<TbMsg> firstMsgPack) {
+    private TbMsg getMsgWithLatestTs(@NotNull List<TbMsg> firstMsgPack) {
         int indexOfLastMsgInArray = firstMsgPack.size() - 1;
         int indexToSetMaxTs = new Random().nextInt(indexOfLastMsgInArray) + 1;
         TbMsg currentMaxTsMsg = firstMsgPack.get(indexOfLastMsgInArray);
@@ -349,8 +351,9 @@ public class TbMsgDeduplicationNodeTest {
         return currentMaxTsMsg;
     }
 
-    private List<TbMsg> getTbMsgs(DeviceId deviceId, int msgCount, long currentTimeMillis, int initTsStep) {
-        List<TbMsg> inputMsgs = new ArrayList<>();
+    @NotNull
+    private List<TbMsg> getTbMsgs(@NotNull DeviceId deviceId, int msgCount, long currentTimeMillis, int initTsStep) {
+        @NotNull List<TbMsg> inputMsgs = new ArrayList<>();
         var ts = currentTimeMillis + initTsStep;
         for (int i = 0; i < msgCount; i++) {
             inputMsgs.add(createMsg(deviceId, ts));
@@ -359,10 +362,11 @@ public class TbMsgDeduplicationNodeTest {
         return inputMsgs;
     }
 
-    private TbMsg createMsg(DeviceId deviceId, long ts) {
+    @NotNull
+    private TbMsg createMsg(@NotNull DeviceId deviceId, long ts) {
         ObjectNode dataNode = JacksonUtil.newObjectNode();
         dataNode.put("deviceId", deviceId.getId().toString());
-        TbMsgMetaData metaData = new TbMsgMetaData();
+        @NotNull TbMsgMetaData metaData = new TbMsgMetaData();
         metaData.putValue("ts", String.valueOf(ts));
         return TbMsg.newMsg(
                 DataConstants.MAIN_QUEUE_NAME,
@@ -372,7 +376,8 @@ public class TbMsgDeduplicationNodeTest {
                 JacksonUtil.toString(dataNode));
     }
 
-    private String getMergedData(List<TbMsg> msgs) {
+    @Nullable
+    private String getMergedData(@NotNull List<TbMsg> msgs) {
         ArrayNode mergedData = JacksonUtil.OBJECT_MAPPER.createArrayNode();
         msgs.forEach(msg -> {
             ObjectNode msgNode = JacksonUtil.newObjectNode();

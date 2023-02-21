@@ -45,6 +45,8 @@ import org.echoiot.server.service.security.model.SecurityUser;
 import org.echoiot.server.service.security.model.UserPrincipal;
 import org.echoiot.server.service.sync.vc.data.EntitiesImportCtx;
 import org.echoiot.server.service.sync.vc.data.SimpleEntitiesExportCtx;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.junit.After;
 import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,29 +60,29 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public abstract class BaseExportImportServiceTest extends AbstractControllerTest {
 
-    @Autowired
+    @Resource
     protected EntitiesExportImportService exportImportService;
-    @Autowired
+    @Resource
     protected DeviceService deviceService;
-    @Autowired
+    @Resource
     protected OtaPackageService otaPackageService;
-    @Autowired
+    @Resource
     protected DeviceProfileService deviceProfileService;
-    @Autowired
+    @Resource
     protected AssetProfileService assetProfileService;
-    @Autowired
+    @Resource
     protected AssetService assetService;
-    @Autowired
+    @Resource
     protected CustomerService customerService;
-    @Autowired
+    @Resource
     protected RuleChainService ruleChainService;
-    @Autowired
+    @Resource
     protected DashboardService dashboardService;
-    @Autowired
+    @Resource
     protected RelationService relationService;
-    @Autowired
+    @Resource
     protected TenantService tenantService;
-    @Autowired
+    @Resource
     protected EntityViewService entityViewService;
 
     protected TenantId tenantId1;
@@ -92,20 +94,20 @@ public abstract class BaseExportImportServiceTest extends AbstractControllerTest
     @Before
     public void beforeEach() throws Exception {
         loginSysAdmin();
-        Tenant tenant1 = new Tenant();
+        @NotNull Tenant tenant1 = new Tenant();
         tenant1.setTitle("Tenant 1");
         tenant1.setEmail("tenant1@echoiot.org");
         this.tenantId1 = tenantService.saveTenant(tenant1).getId();
-        User tenantAdmin1 = new User();
+        @NotNull User tenantAdmin1 = new User();
         tenantAdmin1.setTenantId(tenantId1);
         tenantAdmin1.setAuthority(Authority.TENANT_ADMIN);
         tenantAdmin1.setEmail("tenant1-admin@echoiot.org");
         this.tenantAdmin1 = createUser(tenantAdmin1, "12345678");
-        Tenant tenant2 = new Tenant();
+        @NotNull Tenant tenant2 = new Tenant();
         tenant2.setTitle("Tenant 2");
         tenant2.setEmail("tenant2@echoiot.org");
         this.tenantId2 = tenantService.saveTenant(tenant2).getId();
-        User tenantAdmin2 = new User();
+        @NotNull User tenantAdmin2 = new User();
         tenantAdmin2.setTenantId(tenantId2);
         tenantAdmin2.setAuthority(Authority.TENANT_ADMIN);
         tenantAdmin2.setEmail("tenant2-admin@echoiot.org");
@@ -119,20 +121,20 @@ public abstract class BaseExportImportServiceTest extends AbstractControllerTest
     }
 
     protected Device createDevice(TenantId tenantId, CustomerId customerId, DeviceProfileId deviceProfileId, String name) {
-        Device device = new Device();
+        @NotNull Device device = new Device();
         device.setTenantId(tenantId);
         device.setCustomerId(customerId);
         device.setName(name);
         device.setLabel("lbl");
         device.setDeviceProfileId(deviceProfileId);
-        DeviceData deviceData = new DeviceData();
+        @NotNull DeviceData deviceData = new DeviceData();
         deviceData.setTransportConfiguration(new DefaultDeviceTransportConfiguration());
         device.setDeviceData(deviceData);
         return deviceService.saveDevice(device);
     }
 
     protected OtaPackage createOtaPackage(TenantId tenantId, DeviceProfileId deviceProfileId, OtaPackageType type) {
-        OtaPackage otaPackage = new OtaPackage();
+        @NotNull OtaPackage otaPackage = new OtaPackage();
         otaPackage.setTenantId(tenantId);
         otaPackage.setDeviceProfileId(deviceProfileId);
         otaPackage.setType(type);
@@ -147,7 +149,7 @@ public abstract class BaseExportImportServiceTest extends AbstractControllerTest
         return otaPackageService.saveOtaPackage(otaPackage);
     }
 
-    protected void checkImportedDeviceData(Device initialDevice, Device importedDevice) {
+    protected void checkImportedDeviceData(@NotNull Device initialDevice, @NotNull Device importedDevice) {
         assertThat(importedDevice.getName()).isEqualTo(initialDevice.getName());
         assertThat(importedDevice.getType()).isEqualTo(initialDevice.getType());
         assertThat(importedDevice.getDeviceData()).isEqualTo(initialDevice.getDeviceData());
@@ -155,7 +157,7 @@ public abstract class BaseExportImportServiceTest extends AbstractControllerTest
     }
 
     protected DeviceProfile createDeviceProfile(TenantId tenantId, RuleChainId defaultRuleChainId, DashboardId defaultDashboardId, String name) {
-        DeviceProfile deviceProfile = new DeviceProfile();
+        @NotNull DeviceProfile deviceProfile = new DeviceProfile();
         deviceProfile.setTenantId(tenantId);
         deviceProfile.setName(name);
         deviceProfile.setDescription("dscrptn");
@@ -163,14 +165,14 @@ public abstract class BaseExportImportServiceTest extends AbstractControllerTest
         deviceProfile.setTransportType(DeviceTransportType.DEFAULT);
         deviceProfile.setDefaultRuleChainId(defaultRuleChainId);
         deviceProfile.setDefaultDashboardId(defaultDashboardId);
-        DeviceProfileData profileData = new DeviceProfileData();
+        @NotNull DeviceProfileData profileData = new DeviceProfileData();
         profileData.setConfiguration(new DefaultDeviceProfileConfiguration());
         profileData.setTransportConfiguration(new DefaultDeviceProfileTransportConfiguration());
         deviceProfile.setProfileData(profileData);
         return deviceProfileService.saveDeviceProfile(deviceProfile);
     }
 
-    protected void checkImportedDeviceProfileData(DeviceProfile initialProfile, DeviceProfile importedProfile) {
+    protected void checkImportedDeviceProfileData(@NotNull DeviceProfile initialProfile, @NotNull DeviceProfile importedProfile) {
         assertThat(initialProfile.getName()).isEqualTo(importedProfile.getName());
         assertThat(initialProfile.getType()).isEqualTo(importedProfile.getType());
         assertThat(initialProfile.getTransportType()).isEqualTo(importedProfile.getTransportType());
@@ -179,7 +181,7 @@ public abstract class BaseExportImportServiceTest extends AbstractControllerTest
     }
 
     protected AssetProfile createAssetProfile(TenantId tenantId, RuleChainId defaultRuleChainId, DashboardId defaultDashboardId, String name) {
-        AssetProfile assetProfile = new AssetProfile();
+        @NotNull AssetProfile assetProfile = new AssetProfile();
         assetProfile.setTenantId(tenantId);
         assetProfile.setName(name);
         assetProfile.setDescription("dscrptn");
@@ -188,13 +190,13 @@ public abstract class BaseExportImportServiceTest extends AbstractControllerTest
         return assetProfileService.saveAssetProfile(assetProfile);
     }
 
-    protected void checkImportedAssetProfileData(AssetProfile initialProfile, AssetProfile importedProfile) {
+    protected void checkImportedAssetProfileData(@NotNull AssetProfile initialProfile, @NotNull AssetProfile importedProfile) {
         assertThat(initialProfile.getName()).isEqualTo(importedProfile.getName());
         assertThat(initialProfile.getDescription()).isEqualTo(importedProfile.getDescription());
     }
 
     protected Asset createAsset(TenantId tenantId, CustomerId customerId, AssetProfileId assetProfileId, String name) {
-        Asset asset = new Asset();
+        @NotNull Asset asset = new Asset();
         asset.setTenantId(tenantId);
         asset.setCustomerId(customerId);
         asset.setAssetProfileId(assetProfileId);
@@ -204,7 +206,7 @@ public abstract class BaseExportImportServiceTest extends AbstractControllerTest
         return assetService.saveAsset(asset);
     }
 
-    protected void checkImportedAssetData(Asset initialAsset, Asset importedAsset) {
+    protected void checkImportedAssetData(@NotNull Asset initialAsset, @NotNull Asset importedAsset) {
         assertThat(importedAsset.getName()).isEqualTo(initialAsset.getName());
         assertThat(importedAsset.getType()).isEqualTo(initialAsset.getType());
         assertThat(importedAsset.getLabel()).isEqualTo(initialAsset.getLabel());
@@ -212,7 +214,7 @@ public abstract class BaseExportImportServiceTest extends AbstractControllerTest
     }
 
     protected Customer createCustomer(TenantId tenantId, String name) {
-        Customer customer = new Customer();
+        @NotNull Customer customer = new Customer();
         customer.setTenantId(tenantId);
         customer.setTitle(name);
         customer.setCountry("ua");
@@ -222,14 +224,14 @@ public abstract class BaseExportImportServiceTest extends AbstractControllerTest
         return customerService.saveCustomer(customer);
     }
 
-    protected void checkImportedCustomerData(Customer initialCustomer, Customer importedCustomer) {
+    protected void checkImportedCustomerData(@NotNull Customer initialCustomer, @NotNull Customer importedCustomer) {
         assertThat(importedCustomer.getTitle()).isEqualTo(initialCustomer.getTitle());
         assertThat(importedCustomer.getCountry()).isEqualTo(initialCustomer.getCountry());
         assertThat(importedCustomer.getAddress()).isEqualTo(initialCustomer.getAddress());
         assertThat(importedCustomer.getEmail()).isEqualTo(initialCustomer.getEmail());
     }
 
-    protected Dashboard createDashboard(TenantId tenantId, CustomerId customerId, String name) {
+    protected Dashboard createDashboard(TenantId tenantId, @Nullable CustomerId customerId, String name) {
         Dashboard dashboard = new Dashboard();
         dashboard.setTenantId(tenantId);
         dashboard.setTitle(name);
@@ -244,22 +246,22 @@ public abstract class BaseExportImportServiceTest extends AbstractControllerTest
         return dashboard;
     }
 
-    protected Dashboard createDashboard(TenantId tenantId, CustomerId customerId, String name, AssetId assetForEntityAlias) {
+    protected Dashboard createDashboard(TenantId tenantId, CustomerId customerId, String name, @NotNull AssetId assetForEntityAlias) {
         Dashboard dashboard = createDashboard(tenantId, customerId, name);
-        String entityAliases = "{\n" +
-                "\t\"23c4185d-1497-9457-30b2-6d91e69a5b2c\": {\n" +
-                "\t\t\"alias\": \"assets\",\n" +
-                "\t\t\"filter\": {\n" +
-                "\t\t\t\"entityList\": [\n" +
-                "\t\t\t\t\"" + assetForEntityAlias.getId().toString() + "\"\n" +
-                "\t\t\t],\n" +
-                "\t\t\t\"entityType\": \"ASSET\",\n" +
-                "\t\t\t\"resolveMultiple\": true,\n" +
-                "\t\t\t\"type\": \"entityList\"\n" +
-                "\t\t},\n" +
-                "\t\t\"id\": \"23c4185d-1497-9457-30b2-6d91e69a5b2c\"\n" +
-                "\t}\n" +
-                "}";
+        @NotNull String entityAliases = "{\n" +
+                                        "\t\"23c4185d-1497-9457-30b2-6d91e69a5b2c\": {\n" +
+                                        "\t\t\"alias\": \"assets\",\n" +
+                                        "\t\t\"filter\": {\n" +
+                                        "\t\t\t\"entityList\": [\n" +
+                                        "\t\t\t\t\"" + assetForEntityAlias.getId().toString() + "\"\n" +
+                                        "\t\t\t],\n" +
+                                        "\t\t\t\"entityType\": \"ASSET\",\n" +
+                                        "\t\t\t\"resolveMultiple\": true,\n" +
+                                        "\t\t\t\"type\": \"entityList\"\n" +
+                                        "\t\t},\n" +
+                                        "\t\t\"id\": \"23c4185d-1497-9457-30b2-6d91e69a5b2c\"\n" +
+                                        "\t}\n" +
+                                        "}";
         ObjectNode dashboardConfiguration = JacksonUtil.newObjectNode();
         dashboardConfiguration.set("entityAliases", JacksonUtil.toJsonNode(entityAliases));
         dashboardConfiguration.set("description", new TextNode("hallo"));
@@ -267,7 +269,7 @@ public abstract class BaseExportImportServiceTest extends AbstractControllerTest
         return dashboardService.saveDashboard(dashboard);
     }
 
-    protected void checkImportedDashboardData(Dashboard initialDashboard, Dashboard importedDashboard) {
+    protected void checkImportedDashboardData(@NotNull Dashboard initialDashboard, @NotNull Dashboard importedDashboard) {
         assertThat(importedDashboard.getTitle()).isEqualTo(initialDashboard.getTitle());
         assertThat(importedDashboard.getConfiguration()).isEqualTo(initialDashboard.getConfiguration());
         assertThat(importedDashboard.getImage()).isEqualTo(initialDashboard.getImage());
@@ -276,7 +278,7 @@ public abstract class BaseExportImportServiceTest extends AbstractControllerTest
             assertThat(importedDashboard.getAssignedCustomers()).containsAll(initialDashboard.getAssignedCustomers());
         }
     }
-    protected RuleChain createRuleChain(TenantId tenantId, String name, EntityId originatorId) {
+    protected RuleChain createRuleChain(TenantId tenantId, String name, @NotNull EntityId originatorId) {
         RuleChain ruleChain = new RuleChain();
         ruleChain.setTenantId(tenantId);
         ruleChain.setName(name);
@@ -285,23 +287,23 @@ public abstract class BaseExportImportServiceTest extends AbstractControllerTest
         ruleChain.setConfiguration(JacksonUtil.newObjectNode().set("a", new TextNode("b")));
         ruleChain = ruleChainService.saveRuleChain(ruleChain);
 
-        RuleChainMetaData metaData = new RuleChainMetaData();
+        @NotNull RuleChainMetaData metaData = new RuleChainMetaData();
         metaData.setRuleChainId(ruleChain.getId());
 
-        RuleNode ruleNode1 = new RuleNode();
+        @NotNull RuleNode ruleNode1 = new RuleNode();
         ruleNode1.setName("Generator 1");
         ruleNode1.setType(TbMsgGeneratorNode.class.getName());
         ruleNode1.setDebugMode(true);
-        TbMsgGeneratorNodeConfiguration configuration1 = new TbMsgGeneratorNodeConfiguration();
+        @NotNull TbMsgGeneratorNodeConfiguration configuration1 = new TbMsgGeneratorNodeConfiguration();
         configuration1.setOriginatorType(originatorId.getEntityType());
         configuration1.setOriginatorId(originatorId.getId().toString());
         ruleNode1.setConfiguration(mapper.valueToTree(configuration1));
 
-        RuleNode ruleNode2 = new RuleNode();
+        @NotNull RuleNode ruleNode2 = new RuleNode();
         ruleNode2.setName("Simple Rule Node 2");
         ruleNode2.setType(org.echoiot.rule.engine.metadata.TbGetAttributesNode.class.getName());
         ruleNode2.setDebugMode(true);
-        TbGetAttributesNodeConfiguration configuration2 = new TbGetAttributesNodeConfiguration();
+        @NotNull TbGetAttributesNodeConfiguration configuration2 = new TbGetAttributesNodeConfiguration();
         configuration2.setServerAttributeNames(Collections.singletonList("serverAttributeKey2"));
         ruleNode2.setConfiguration(mapper.valueToTree(configuration2));
 
@@ -322,22 +324,22 @@ public abstract class BaseExportImportServiceTest extends AbstractControllerTest
         ruleChain.setConfiguration(JacksonUtil.newObjectNode().set("a", new TextNode("b")));
         ruleChain = ruleChainService.saveRuleChain(ruleChain);
 
-        RuleChainMetaData metaData = new RuleChainMetaData();
+        @NotNull RuleChainMetaData metaData = new RuleChainMetaData();
         metaData.setRuleChainId(ruleChain.getId());
 
-        RuleNode ruleNode1 = new RuleNode();
+        @NotNull RuleNode ruleNode1 = new RuleNode();
         ruleNode1.setName("Simple Rule Node 1");
         ruleNode1.setType(org.echoiot.rule.engine.metadata.TbGetAttributesNode.class.getName());
         ruleNode1.setDebugMode(true);
-        TbGetAttributesNodeConfiguration configuration1 = new TbGetAttributesNodeConfiguration();
+        @NotNull TbGetAttributesNodeConfiguration configuration1 = new TbGetAttributesNodeConfiguration();
         configuration1.setServerAttributeNames(Collections.singletonList("serverAttributeKey1"));
         ruleNode1.setConfiguration(mapper.valueToTree(configuration1));
 
-        RuleNode ruleNode2 = new RuleNode();
+        @NotNull RuleNode ruleNode2 = new RuleNode();
         ruleNode2.setName("Simple Rule Node 2");
         ruleNode2.setType(org.echoiot.rule.engine.metadata.TbGetAttributesNode.class.getName());
         ruleNode2.setDebugMode(true);
-        TbGetAttributesNodeConfiguration configuration2 = new TbGetAttributesNodeConfiguration();
+        @NotNull TbGetAttributesNodeConfiguration configuration2 = new TbGetAttributesNodeConfiguration();
         configuration2.setServerAttributeNames(Collections.singletonList("serverAttributeKey2"));
         ruleNode2.setConfiguration(mapper.valueToTree(configuration2));
 
@@ -349,7 +351,7 @@ public abstract class BaseExportImportServiceTest extends AbstractControllerTest
         return ruleChainService.findRuleChainById(tenantId, ruleChain.getId());
     }
 
-    protected void checkImportedRuleChainData(RuleChain initialRuleChain, RuleChainMetaData initialMetaData, RuleChain importedRuleChain, RuleChainMetaData importedMetaData) {
+    protected void checkImportedRuleChainData(@NotNull RuleChain initialRuleChain, @NotNull RuleChainMetaData initialMetaData, @NotNull RuleChain importedRuleChain, @NotNull RuleChainMetaData importedMetaData) {
         assertThat(importedRuleChain.getType()).isEqualTo(initialRuleChain.getType());
         assertThat(importedRuleChain.getName()).isEqualTo(initialRuleChain.getName());
         assertThat(importedRuleChain.isDebugMode()).isEqualTo(initialRuleChain.isDebugMode());
@@ -369,7 +371,7 @@ public abstract class BaseExportImportServiceTest extends AbstractControllerTest
     }
 
     protected EntityView createEntityView(TenantId tenantId, CustomerId customerId, EntityId entityId, String name) {
-        EntityView entityView = new EntityView();
+        @NotNull EntityView entityView = new EntityView();
         entityView.setTenantId(tenantId);
         entityView.setEntityId(entityId);
         entityView.setCustomerId(customerId);
@@ -378,8 +380,9 @@ public abstract class BaseExportImportServiceTest extends AbstractControllerTest
         return entityViewService.saveEntityView(entityView);
     }
 
+    @NotNull
     protected EntityRelation createRelation(EntityId from, EntityId to) {
-        EntityRelation relation = new EntityRelation();
+        @NotNull EntityRelation relation = new EntityRelation();
         relation.setFrom(from);
         relation.setTo(to);
         relation.setType(EntityRelation.MANAGES_TYPE);
@@ -389,7 +392,7 @@ public abstract class BaseExportImportServiceTest extends AbstractControllerTest
         return relation;
     }
 
-    protected <E extends ExportableEntity<?> & HasTenantId> void checkImportedEntity(TenantId tenantId1, E initialEntity, TenantId tenantId2, E importedEntity) {
+    protected <E extends ExportableEntity<?> & HasTenantId> void checkImportedEntity(@NotNull TenantId tenantId1, @NotNull E initialEntity, TenantId tenantId2, @NotNull E importedEntity) {
         assertThat(initialEntity.getTenantId()).isEqualTo(tenantId1);
         assertThat(importedEntity.getTenantId()).isEqualTo(tenantId2);
 
@@ -404,35 +407,36 @@ public abstract class BaseExportImportServiceTest extends AbstractControllerTest
     }
 
 
-    protected <E extends ExportableEntity<I>, I extends EntityId> EntityExportData<E> exportEntity(User user, I entityId) throws Exception {
+    protected <E extends ExportableEntity<I>, I extends EntityId> EntityExportData<E> exportEntity(@NotNull User user, I entityId) throws Exception {
         return exportEntity(user, entityId, EntityExportSettings.builder()
                 .exportCredentials(true)
                 .build());
     }
 
-    protected <E extends ExportableEntity<I>, I extends EntityId> EntityExportData<E> exportEntity(User user, I entityId, EntityExportSettings exportSettings) throws Exception {
+    protected <E extends ExportableEntity<I>, I extends EntityId> EntityExportData<E> exportEntity(@NotNull User user, I entityId, EntityExportSettings exportSettings) throws Exception {
         return exportImportService.exportEntity(new SimpleEntitiesExportCtx(getSecurityUser(user), null, null, exportSettings), entityId);
     }
 
-    protected <E extends ExportableEntity<I>, I extends EntityId> EntityImportResult<E> importEntity(User user, EntityExportData<E> exportData) throws Exception {
+    protected <E extends ExportableEntity<I>, I extends EntityId> EntityImportResult<E> importEntity(@NotNull User user, EntityExportData<E> exportData) throws Exception {
         return importEntity(user, exportData, EntityImportSettings.builder()
                 .saveCredentials(true)
                 .build());
     }
 
-    protected <E extends ExportableEntity<I>, I extends EntityId> EntityImportResult<E> importEntity(User user, EntityExportData<E> exportData, EntityImportSettings importSettings) throws Exception {
-        EntitiesImportCtx ctx = new EntitiesImportCtx(UUID.randomUUID(), getSecurityUser(user), null, importSettings);
+    protected <E extends ExportableEntity<I>, I extends EntityId> EntityImportResult<E> importEntity(@NotNull User user, EntityExportData<E> exportData, EntityImportSettings importSettings) throws Exception {
+        @NotNull EntitiesImportCtx ctx = new EntitiesImportCtx(UUID.randomUUID(), getSecurityUser(user), null, importSettings);
         ctx.setFinalImportAttempt(true);
         exportData = JacksonUtil.treeToValue(JacksonUtil.valueToTree(exportData), EntityExportData.class);
         EntityImportResult<E> importResult = exportImportService.importEntity(ctx, exportData);
         exportImportService.saveReferencesAndRelations(ctx);
-        for (ThrowingRunnable throwingRunnable : ctx.getEventCallbacks()) {
+        for (@NotNull ThrowingRunnable throwingRunnable : ctx.getEventCallbacks()) {
             throwingRunnable.run();
         }
         return importResult;
     }
 
-    protected SecurityUser getSecurityUser(User user) {
+    @NotNull
+    protected SecurityUser getSecurityUser(@NotNull User user) {
         return new SecurityUser(user, true, new UserPrincipal(UserPrincipal.Type.USER_NAME, user.getEmail()));
     }
 

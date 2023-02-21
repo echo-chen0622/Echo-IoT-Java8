@@ -1,5 +1,7 @@
 package org.echoiot.script.api.tbel;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mvel2.ExecutionContext;
 import org.mvel2.ParserConfiguration;
 import org.mvel2.execution.ExecutionArrayList;
@@ -19,7 +21,7 @@ public class TbUtils {
 
     private static final byte[] HEX_ARRAY = "0123456789ABCDEF".getBytes(StandardCharsets.US_ASCII);
 
-    public static void register(ParserConfiguration parserConfig) throws Exception {
+    public static void register(@NotNull ParserConfiguration parserConfig) throws Exception {
         parserConfig.addImport("btoa", new MethodStub(TbUtils.class.getMethod("btoa",
                 String.class)));
         parserConfig.addImport("atob", new MethodStub(TbUtils.class.getMethod("atob",
@@ -76,55 +78,62 @@ public class TbUtils {
                 ExecutionArrayList.class)));
     }
 
-    public static String btoa(String input) {
+    @NotNull
+    public static String btoa(@NotNull String input) {
         return new String(Base64.getEncoder().encode(input.getBytes()));
     }
 
+    @NotNull
     public static String atob(String encoded) {
         return new String(Base64.getDecoder().decode(encoded));
     }
 
-    public static Object decodeToJson(ExecutionContext ctx, List<Byte> bytesList) throws IOException {
+    public static Object decodeToJson(ExecutionContext ctx, @NotNull List<Byte> bytesList) throws IOException {
         return TbJson.parse(ctx, bytesToString(bytesList));
     }
 
-    public static String bytesToString(List<Byte> bytesList) {
-        byte[] bytes = bytesFromList(bytesList);
+    @NotNull
+    public static String bytesToString(@NotNull List<Byte> bytesList) {
+        @NotNull byte[] bytes = bytesFromList(bytesList);
         return new String(bytes);
     }
 
-    public static String bytesToString(List<Byte> bytesList, String charsetName) throws UnsupportedEncodingException {
-        byte[] bytes = bytesFromList(bytesList);
+    @NotNull
+    public static String bytesToString(@NotNull List<Byte> bytesList, @NotNull String charsetName) throws UnsupportedEncodingException {
+        @NotNull byte[] bytes = bytesFromList(bytesList);
         return new String(bytes, charsetName);
     }
 
-    public static List<Byte> stringToBytes(ExecutionContext ctx, String str) {
-        byte[] bytes = str.getBytes();
+    @NotNull
+    public static List<Byte> stringToBytes(@NotNull ExecutionContext ctx, @NotNull String str) {
+        @NotNull byte[] bytes = str.getBytes();
         return bytesToList(ctx, bytes);
     }
 
-    public static List<Byte> stringToBytes(ExecutionContext ctx, String str, String charsetName) throws UnsupportedEncodingException {
-        byte[] bytes = str.getBytes(charsetName);
+    @NotNull
+    public static List<Byte> stringToBytes(@NotNull ExecutionContext ctx, @NotNull String str, @NotNull String charsetName) throws UnsupportedEncodingException {
+        @NotNull byte[] bytes = str.getBytes(charsetName);
         return bytesToList(ctx, bytes);
     }
 
-    private static byte[] bytesFromList(List<Byte> bytesList) {
-        byte[] bytes = new byte[bytesList.size()];
+    private static byte[] bytesFromList(@NotNull List<Byte> bytesList) {
+        @NotNull byte[] bytes = new byte[bytesList.size()];
         for (int i = 0; i < bytesList.size(); i++) {
             bytes[i] = bytesList.get(i);
         }
         return bytes;
     }
 
-    private static List<Byte> bytesToList(ExecutionContext ctx, byte[] bytes) {
-        List<Byte> list = new ExecutionArrayList<>(ctx);
+    @NotNull
+    private static List<Byte> bytesToList(@NotNull ExecutionContext ctx, @NotNull byte[] bytes) {
+        @NotNull List<Byte> list = new ExecutionArrayList<>(ctx);
         for (byte aByte : bytes) {
             list.add(aByte);
         }
         return list;
     }
 
-    public static Integer parseInt(String value) {
+    public static Integer parseInt(@Nullable String value) {
         if (value != null) {
             try {
                 int radix = 10;
@@ -142,7 +151,7 @@ public class TbUtils {
         return null;
     }
 
-    public static Integer parseInt(String value, int radix) {
+    public static Integer parseInt(@Nullable String value, int radix) {
         if (value != null) {
             try {
                 return Integer.parseInt(prepareNumberString(value), radix);
@@ -156,7 +165,7 @@ public class TbUtils {
         return null;
     }
 
-    public static Float parseFloat(String value) {
+    public static Float parseFloat(@Nullable String value) {
         if (value != null) {
             try {
                 return Float.parseFloat(prepareNumberString(value));
@@ -166,7 +175,7 @@ public class TbUtils {
         return null;
     }
 
-    public static Double parseDouble(String value) {
+    public static Double parseDouble(@Nullable String value) {
         if (value != null) {
             try {
                 return Double.parseDouble(prepareNumberString(value));
@@ -176,19 +185,19 @@ public class TbUtils {
         return null;
     }
 
-    public static int parseLittleEndianHexToInt(String hex) {
+    public static int parseLittleEndianHexToInt(@NotNull String hex) {
         return parseHexToInt(hex, false);
     }
 
-    public static int parseBigEndianHexToInt(String hex) {
+    public static int parseBigEndianHexToInt(@NotNull String hex) {
         return parseHexToInt(hex, true);
     }
 
-    public static int parseHexToInt(String hex) {
+    public static int parseHexToInt(@NotNull String hex) {
         return parseHexToInt(hex, true);
     }
 
-    public static int parseHexToInt(String hex, boolean bigEndian) {
+    public static int parseHexToInt(@NotNull String hex, boolean bigEndian) {
         int length = hex.length();
         if (length > 8) {
             throw new IllegalArgumentException("Hex string is too large. Maximum 8 symbols allowed.");
@@ -196,19 +205,20 @@ public class TbUtils {
         if (length % 2 > 0) {
             throw new IllegalArgumentException("Hex string must be even-length.");
         }
-        byte[] data = new byte[length / 2];
+        @NotNull byte[] data = new byte[length / 2];
         for (int i = 0; i < length; i += 2) {
             data[i / 2] = (byte) ((Character.digit(hex.charAt(i), 16) << 4) + Character.digit(hex.charAt(i + 1), 16));
         }
         return parseBytesToInt(data, 0, data.length, bigEndian);
     }
 
-    public static ExecutionArrayList<Byte> hexToBytes(ExecutionContext ctx, String hex) {
+    @NotNull
+    public static ExecutionArrayList<Byte> hexToBytes(@NotNull ExecutionContext ctx, @NotNull String hex) {
         int len = hex.length();
         if (len % 2 > 0) {
             throw new IllegalArgumentException("Hex string must be even-length.");
         }
-        ExecutionArrayList<Byte> data = new ExecutionArrayList<>(ctx);
+        @NotNull ExecutionArrayList<Byte> data = new ExecutionArrayList<>(ctx);
         for (int i = 0; i < len; i += 2) {
             data.add((byte)((Character.digit(hex.charAt(i), 16) << 4)
                     + Character.digit(hex.charAt(i + 1), 16)));
@@ -216,6 +226,7 @@ public class TbUtils {
         return data;
     }
 
+    @NotNull
     public static String base64ToHex(String base64) {
         return bytesToHex(Base64.getDecoder().decode(base64));
     }
@@ -228,23 +239,23 @@ public class TbUtils {
         return Base64.getDecoder().decode(input);
     }
 
-    public static int parseBytesToInt(List<Byte> data, int offset, int length) {
+    public static int parseBytesToInt(@NotNull List<Byte> data, int offset, int length) {
         return parseBytesToInt(data, offset, length, true);
     }
 
-    public static int parseBytesToInt(List<Byte> data, int offset, int length, boolean bigEndian) {
-        final byte[] bytes = new byte[data.size()];
+    public static int parseBytesToInt(@NotNull List<Byte> data, int offset, int length, boolean bigEndian) {
+        @NotNull final byte[] bytes = new byte[data.size()];
         for (int i = 0; i < bytes.length; i++) {
             bytes[i] = data.get(i);
         }
         return parseBytesToInt(bytes, offset, length, bigEndian);
     }
 
-    public static int parseBytesToInt(byte[] data, int offset, int length) {
+    public static int parseBytesToInt(@NotNull byte[] data, int offset, int length) {
         return parseBytesToInt(data, offset, length, true);
     }
 
-    public static int parseBytesToInt(byte[] data, int offset, int length, boolean bigEndian) {
+    public static int parseBytesToInt(@NotNull byte[] data, int offset, int length, boolean bigEndian) {
         if (offset > data.length) {
             throw new IllegalArgumentException("Offset: " + offset + " is out of bounds for array with length: " + data.length + "!");
         }
@@ -254,7 +265,7 @@ public class TbUtils {
         if (offset + length > data.length) {
             throw new IllegalArgumentException("Offset: " + offset + " and Length: " + length + " is out of bounds for array with length: " + data.length + "!");
         }
-        var bb = ByteBuffer.allocate(4);
+        @NotNull var bb = ByteBuffer.allocate(4);
         if (!bigEndian) {
             bb.order(ByteOrder.LITTLE_ENDIAN);
         }
@@ -264,16 +275,18 @@ public class TbUtils {
         return bb.getInt();
     }
 
-    public static String bytesToHex(ExecutionArrayList<?> bytesList) {
-        byte[] bytes = new byte[bytesList.size()];
+    @NotNull
+    public static String bytesToHex(@NotNull ExecutionArrayList<?> bytesList) {
+        @NotNull byte[] bytes = new byte[bytesList.size()];
         for (int i = 0; i < bytesList.size(); i++) {
             bytes[i] = Byte.parseByte(bytesList.get(i).toString());
         }
         return bytesToHex(bytes);
     }
 
-    public static String bytesToHex(byte[] bytes) {
-        byte[] hexChars = new byte[bytes.length * 2];
+    @NotNull
+    public static String bytesToHex(@NotNull byte[] bytes) {
+        @NotNull byte[] hexChars = new byte[bytes.length * 2];
         for (int j = 0; j < bytes.length; j++) {
             int v = bytes[j] & 0xFF;
             hexChars[j * 2] = HEX_ARRAY[v >>> 4];
@@ -286,11 +299,11 @@ public class TbUtils {
         return BigDecimal.valueOf(value).setScale(precision, RoundingMode.HALF_UP).doubleValue();
     }
 
-    private static boolean isHexadecimal(String value) {
+    private static boolean isHexadecimal(@Nullable String value) {
         return value != null && (value.contains("0x") || value.contains("0X"));
     }
 
-    private static String prepareNumberString(String value) {
+    private static String prepareNumberString(@Nullable String value) {
         if (value != null) {
             value = value.trim();
             if (isHexadecimal(value)) {

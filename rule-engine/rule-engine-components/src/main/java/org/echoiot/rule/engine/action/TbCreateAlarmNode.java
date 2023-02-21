@@ -19,6 +19,8 @@ import org.echoiot.server.common.data.alarm.AlarmStatus;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.msg.TbMsg;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.List;
@@ -41,12 +43,12 @@ import java.util.List;
 )
 public class TbCreateAlarmNode extends TbAbstractAlarmNode<TbCreateAlarmNodeConfiguration> {
 
-    private static ObjectMapper mapper = new ObjectMapper();
+    private static final ObjectMapper mapper = new ObjectMapper();
     private List<String> relationTypes;
     private AlarmSeverity notDynamicAlarmSeverity;
 
     @Override
-    public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
+    public void init(@NotNull TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
         super.init(ctx, configuration);
         if(!this.config.isDynamicSeverity()) {
             this.notDynamicAlarmSeverity = EnumUtils.getEnum(AlarmSeverity.class, this.config.getSeverity());
@@ -57,17 +59,19 @@ public class TbCreateAlarmNode extends TbAbstractAlarmNode<TbCreateAlarmNodeConf
     }
 
 
+    @NotNull
     @Override
-    protected TbCreateAlarmNodeConfiguration loadAlarmNodeConfig(TbNodeConfiguration configuration) throws TbNodeException {
+    protected TbCreateAlarmNodeConfiguration loadAlarmNodeConfig(@NotNull TbNodeConfiguration configuration) throws TbNodeException {
         TbCreateAlarmNodeConfiguration nodeConfiguration = TbNodeUtils.convert(configuration, TbCreateAlarmNodeConfiguration.class);
         relationTypes = nodeConfiguration.getRelationTypes();
         return nodeConfiguration;
     }
 
+    @Nullable
     @Override
-    protected ListenableFuture<TbAlarmResult> processAlarm(TbContext ctx, TbMsg msg) {
+    protected ListenableFuture<TbAlarmResult> processAlarm(@NotNull TbContext ctx, @NotNull TbMsg msg) {
         String alarmType;
-        final Alarm msgAlarm;
+        @Nullable final Alarm msgAlarm;
 
         if (!config.isUseMessageAlarmData()) {
             alarmType = TbNodeUtils.processPattern(this.config.getAlarmType(), msg);
@@ -93,7 +97,8 @@ public class TbCreateAlarmNode extends TbAbstractAlarmNode<TbCreateAlarmNodeConf
 
     }
 
-    private Alarm getAlarmFromMessage(TbContext ctx, TbMsg msg) throws IOException {
+    @NotNull
+    private Alarm getAlarmFromMessage(@NotNull TbContext ctx, @NotNull TbMsg msg) throws IOException {
         Alarm msgAlarm;
         msgAlarm = mapper.readValue(msg.getData(), Alarm.class);
         msgAlarm.setTenantId(ctx.getTenantId());
@@ -106,7 +111,8 @@ public class TbCreateAlarmNode extends TbAbstractAlarmNode<TbCreateAlarmNodeConf
         return msgAlarm;
     }
 
-    private ListenableFuture<TbAlarmResult> createNewAlarm(TbContext ctx, TbMsg msg, Alarm msgAlarm) {
+    @NotNull
+    private ListenableFuture<TbAlarmResult> createNewAlarm(@NotNull TbContext ctx, @NotNull TbMsg msg, @Nullable Alarm msgAlarm) {
         ListenableFuture<JsonNode> asyncDetails;
         boolean buildDetails = !config.isUseMessageAlarmData() || config.isOverwriteAlarmDetails();
         if (buildDetails) {
@@ -115,7 +121,7 @@ public class TbCreateAlarmNode extends TbAbstractAlarmNode<TbCreateAlarmNodeConf
         } else {
             asyncDetails = Futures.immediateFuture(null);
         }
-        ListenableFuture<Alarm> asyncAlarm =  Futures.transform(asyncDetails, details -> {
+        @NotNull ListenableFuture<Alarm> asyncAlarm =  Futures.transform(asyncDetails, details -> {
             if (buildDetails) {
                 ctx.logJsEvalResponse();
             }
@@ -130,12 +136,13 @@ public class TbCreateAlarmNode extends TbAbstractAlarmNode<TbCreateAlarmNodeConf
             }
             return newAlarm;
         }, MoreExecutors.directExecutor());
-        ListenableFuture<Alarm> asyncCreated = Futures.transform(asyncAlarm,
+        @NotNull ListenableFuture<Alarm> asyncCreated = Futures.transform(asyncAlarm,
                 alarm -> ctx.getAlarmService().createOrUpdateAlarm(alarm), ctx.getDbCallbackExecutor());
         return Futures.transform(asyncCreated, alarm -> new TbAlarmResult(true, false, false, alarm), MoreExecutors.directExecutor());
     }
 
-    private ListenableFuture<TbAlarmResult> updateAlarm(TbContext ctx, TbMsg msg, Alarm existingAlarm, Alarm msgAlarm) {
+    @NotNull
+    private ListenableFuture<TbAlarmResult> updateAlarm(@NotNull TbContext ctx, @NotNull TbMsg msg, @NotNull Alarm existingAlarm, @Nullable Alarm msgAlarm) {
         ListenableFuture<JsonNode> asyncDetails;
         boolean buildDetails = !config.isUseMessageAlarmData() || config.isOverwriteAlarmDetails();
         if (buildDetails) {
@@ -144,7 +151,7 @@ public class TbCreateAlarmNode extends TbAbstractAlarmNode<TbCreateAlarmNodeConf
         } else {
             asyncDetails = Futures.immediateFuture(null);
         }
-        ListenableFuture<Alarm> asyncUpdated = Futures.transform(asyncDetails, (Function<JsonNode, Alarm>) details -> {
+        @NotNull ListenableFuture<Alarm> asyncUpdated = Futures.transform(asyncDetails, details -> {
             if (buildDetails) {
                 ctx.logJsEvalResponse();
             }
@@ -174,7 +181,7 @@ public class TbCreateAlarmNode extends TbAbstractAlarmNode<TbCreateAlarmNodeConf
         return Futures.transform(asyncUpdated, a -> new TbAlarmResult(false, true, false, a), MoreExecutors.directExecutor());
     }
 
-    private Alarm buildAlarm(TbMsg msg, JsonNode details, TenantId tenantId) {
+    private Alarm buildAlarm(@NotNull TbMsg msg, JsonNode details, TenantId tenantId) {
         long ts = msg.getMetaDataTs();
         return Alarm.builder()
                 .tenantId(tenantId)
@@ -192,7 +199,8 @@ public class TbCreateAlarmNode extends TbAbstractAlarmNode<TbCreateAlarmNodeConf
                 .build();
     }
 
-    private AlarmSeverity processAlarmSeverity(TbMsg msg) {
+    @NotNull
+    private AlarmSeverity processAlarmSeverity(@NotNull TbMsg msg) {
         AlarmSeverity severity = EnumUtils.getEnum(AlarmSeverity.class, TbNodeUtils.processPattern(this.config.getSeverity(), msg));
         if(severity == null) {
             throw new RuntimeException("Used incorrect pattern or Alarm Severity not included in message");

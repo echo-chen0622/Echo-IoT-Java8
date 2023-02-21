@@ -5,6 +5,7 @@ import com.google.protobuf.ByteString;
 import org.echoiot.server.common.data.asset.AssetProfile;
 import org.echoiot.server.gen.edge.v1.AssetProfileUpdateMsg;
 import org.echoiot.server.gen.edge.v1.UpdateMsgType;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -23,7 +24,7 @@ abstract public class BaseAssetProfileEdgeTest extends AbstractEdgeTest {
         Assert.assertTrue(edgeImitator.waitForMessages());
         AbstractMessage latestMessage = edgeImitator.getLatestMessage();
         Assert.assertTrue(latestMessage instanceof AssetProfileUpdateMsg);
-        AssetProfileUpdateMsg assetProfileUpdateMsg = (AssetProfileUpdateMsg) latestMessage;
+        @NotNull AssetProfileUpdateMsg assetProfileUpdateMsg = (AssetProfileUpdateMsg) latestMessage;
         Assert.assertEquals(UpdateMsgType.ENTITY_CREATED_RPC_MESSAGE, assetProfileUpdateMsg.getMsgType());
         Assert.assertEquals(assetProfile.getUuidId().getMostSignificantBits(), assetProfileUpdateMsg.getIdMSB());
         Assert.assertEquals(assetProfile.getUuidId().getLeastSignificantBits(), assetProfileUpdateMsg.getIdLSB());

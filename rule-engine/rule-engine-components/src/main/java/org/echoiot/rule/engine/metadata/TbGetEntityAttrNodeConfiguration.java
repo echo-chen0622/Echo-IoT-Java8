@@ -2,6 +2,7 @@ package org.echoiot.rule.engine.metadata;
 
 import lombok.Data;
 import org.echoiot.rule.engine.api.NodeConfiguration;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,8 +15,8 @@ public class TbGetEntityAttrNodeConfiguration implements NodeConfiguration<TbGet
 
     @Override
     public TbGetEntityAttrNodeConfiguration defaultConfiguration() {
-        TbGetEntityAttrNodeConfiguration configuration = new TbGetEntityAttrNodeConfiguration();
-        Map<String, String> attrMapping = new HashMap<>();
+        @NotNull TbGetEntityAttrNodeConfiguration configuration = new TbGetEntityAttrNodeConfiguration();
+        @NotNull Map<String, String> attrMapping = new HashMap<>();
         attrMapping.putIfAbsent("temperature", "tempo");
         configuration.setAttrMapping(attrMapping);
         configuration.setTelemetry(false);

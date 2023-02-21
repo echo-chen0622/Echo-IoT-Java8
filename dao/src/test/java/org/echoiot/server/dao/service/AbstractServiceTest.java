@@ -48,6 +48,8 @@ import org.echoiot.server.dao.usagerecord.ApiUsageStateService;
 import org.echoiot.server.dao.user.UserService;
 import org.echoiot.server.dao.widget.WidgetTypeService;
 import org.echoiot.server.dao.widget.WidgetsBundleService;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -74,103 +76,104 @@ import static org.junit.Assert.assertNotNull;
 @ComponentScan("org.echoiot.server")
 public abstract class AbstractServiceTest {
 
+    @NotNull
     protected ObjectMapper mapper = new ObjectMapper();
 
     public static final TenantId SYSTEM_TENANT_ID = TenantId.SYS_TENANT_ID;
 
-    @Autowired
+    @Resource
     protected UserService userService;
 
-    @Autowired
+    @Resource
     protected ApiUsageStateService apiUsageStateService;
 
-    @Autowired
+    @Resource
     protected AdminSettingsService adminSettingsService;
 
-    @Autowired
+    @Resource
     protected TenantService tenantService;
 
-    @Autowired
+    @Resource
     protected CustomerService customerService;
 
-    @Autowired
+    @Resource
     protected DeviceService deviceService;
 
-    @Autowired
+    @Resource
     protected AssetService assetService;
 
-    @Autowired
+    @Resource
     protected EntityViewService entityViewService;
 
-    @Autowired
+    @Resource
     protected EntityService entityService;
 
-    @Autowired
+    @Resource
     protected DeviceCredentialsService deviceCredentialsService;
 
-    @Autowired
+    @Resource
     protected WidgetsBundleService widgetsBundleService;
 
-    @Autowired
+    @Resource
     protected WidgetTypeService widgetTypeService;
 
-    @Autowired
+    @Resource
     protected DashboardService dashboardService;
 
-    @Autowired
+    @Resource
     protected TimeseriesService tsService;
 
-    @Autowired
+    @Resource
     protected EventService eventService;
 
-    @Autowired
+    @Resource
     protected RelationService relationService;
 
-    @Autowired
+    @Resource
     protected AlarmService alarmService;
 
-    @Autowired
+    @Resource
     protected RuleChainService ruleChainService;
 
-    @Autowired
+    @Resource
     protected EdgeService edgeService;
 
-    @Autowired
+    @Resource
     protected EdgeEventService edgeEventService;
 
-    @Autowired
+    @Resource
     private ComponentDescriptorService componentDescriptorService;
 
-    @Autowired
+    @Resource
     protected TenantProfileService tenantProfileService;
 
-    @Autowired
+    @Resource
     protected DeviceProfileService deviceProfileService;
 
-    @Autowired
+    @Resource
     protected AssetProfileService assetProfileService;
 
-    @Autowired
+    @Resource
     protected ResourceService resourceService;
 
-    @Autowired
+    @Resource
     protected OtaPackageService otaPackageService;
 
-    @Autowired
+    @Resource
     protected RpcService rpcService;
 
-    @Autowired
+    @Resource
     protected QueueService queueService;
 
     public class IdComparator<D extends HasId> implements Comparator<D> {
         @Override
-        public int compare(D o1, D o2) {
+        public int compare(@NotNull D o1, @NotNull D o2) {
             return o1.getId().getId().compareTo(o2.getId().getId());
         }
     }
 
 
-    protected RuleNodeDebugEvent generateEvent(TenantId tenantId, EntityId entityId) throws IOException {
+    protected RuleNodeDebugEvent generateEvent(@Nullable TenantId tenantId, @NotNull EntityId entityId) throws IOException {
         if (tenantId == null) {
             tenantId = TenantId.fromUUID(Uuids.timeBased());
         }
@@ -205,27 +208,29 @@ public abstract class AbstractServiceTest {
         return mapper.readTree(this.getClass().getClassLoader().getResourceAsStream(resourceName));
     }
 
+    @NotNull
     @Bean
     public AuditLogLevelFilter auditLogLevelFilter() {
-        Map<String, String> mask = new HashMap<>();
-        for (EntityType entityType : EntityType.values()) {
+        @NotNull Map<String, String> mask = new HashMap<>();
+        for (@NotNull EntityType entityType : EntityType.values()) {
             mask.put(entityType.name().toLowerCase(), AuditLogLevelMask.RW.name());
         }
-        var props = new AuditLogLevelProperties();
+        @NotNull var props = new AuditLogLevelProperties();
         props.setMask(mask);
         return new AuditLogLevelFilter(props);
     }
 
+    @NotNull
     protected DeviceProfile createDeviceProfile(TenantId tenantId, String name) {
-        DeviceProfile deviceProfile = new DeviceProfile();
+        @NotNull DeviceProfile deviceProfile = new DeviceProfile();
         deviceProfile.setTenantId(tenantId);
         deviceProfile.setName(name);
         deviceProfile.setType(DeviceProfileType.DEFAULT);
         deviceProfile.setTransportType(DeviceTransportType.DEFAULT);
         deviceProfile.setDescription(name + " Test");
-        DeviceProfileData deviceProfileData = new DeviceProfileData();
-        DefaultDeviceProfileConfiguration configuration = new DefaultDeviceProfileConfiguration();
-        DefaultDeviceProfileTransportConfiguration transportConfiguration = new DefaultDeviceProfileTransportConfiguration();
+        @NotNull DeviceProfileData deviceProfileData = new DeviceProfileData();
+        @NotNull DefaultDeviceProfileConfiguration configuration = new DefaultDeviceProfileConfiguration();
+        @NotNull DefaultDeviceProfileTransportConfiguration transportConfiguration = new DefaultDeviceProfileTransportConfiguration();
         deviceProfileData.setConfiguration(configuration);
         deviceProfileData.setTransportConfiguration(transportConfiguration);
         deviceProfile.setProfileData(deviceProfileData);
@@ -234,8 +239,9 @@ public abstract class AbstractServiceTest {
         return deviceProfile;
     }
 
+    @NotNull
     protected AssetProfile createAssetProfile(TenantId tenantId, String name) {
-        AssetProfile assetProfile = new AssetProfile();
+        @NotNull AssetProfile assetProfile = new AssetProfile();
         assetProfile.setTenantId(tenantId);
         assetProfile.setName(name);
         assetProfile.setDescription(name + " Test");
@@ -245,15 +251,16 @@ public abstract class AbstractServiceTest {
     }
 
     public TenantId createTenant() {
-        Tenant tenant = new Tenant();
+        @NotNull Tenant tenant = new Tenant();
         tenant.setTitle("My tenant " + Uuids.timeBased());
         Tenant savedTenant = tenantService.saveTenant(tenant);
         assertNotNull(savedTenant);
         return savedTenant.getId();
     }
 
+    @NotNull
     protected Edge constructEdge(TenantId tenantId, String name, String type) {
-        Edge edge = new Edge();
+        @NotNull Edge edge = new Edge();
         edge.setTenantId(tenantId);
         edge.setName(name);
         edge.setType(type);
@@ -262,8 +269,9 @@ public abstract class AbstractServiceTest {
         return edge;
     }
 
+    @NotNull
     protected OtaPackage constructDefaultOtaPackage(TenantId tenantId, DeviceProfileId deviceProfileId) {
-        OtaPackage firmware = new OtaPackage();
+        @NotNull OtaPackage firmware = new OtaPackage();
         firmware.setTenantId(tenantId);
         firmware.setDeviceProfileId(deviceProfileId);
         firmware.setType(OtaPackageType.FIRMWARE);

@@ -5,6 +5,8 @@ import org.echoiot.server.common.data.sync.vc.RepositoryAuthMethod;
 import org.echoiot.server.common.data.sync.vc.RepositorySettings;
 import org.echoiot.server.dao.settings.AdminSettingsService;
 import org.echoiot.server.queue.util.TbCoreComponent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.echoiot.server.cache.TbTransactionalCache;
 import org.echoiot.server.service.sync.vc.TbAbstractVersionControlSettingsService;
@@ -20,8 +22,8 @@ public class DefaultTbRepositorySettingsService extends TbAbstractVersionControl
     }
 
     @Override
-    public RepositorySettings restore(TenantId tenantId, RepositorySettings settings) {
-        RepositorySettings storedSettings = get(tenantId);
+    public RepositorySettings restore(TenantId tenantId, @NotNull RepositorySettings settings) {
+        @Nullable RepositorySettings storedSettings = get(tenantId);
         if (storedSettings != null) {
             RepositoryAuthMethod authMethod = settings.getAuthMethod();
             if (RepositoryAuthMethod.USERNAME_PASSWORD.equals(authMethod) && settings.getPassword() == null) {
@@ -36,6 +38,7 @@ public class DefaultTbRepositorySettingsService extends TbAbstractVersionControl
         return settings;
     }
 
+    @Nullable
     @Override
     public RepositorySettings get(TenantId tenantId) {
         RepositorySettings settings = super.get(tenantId);

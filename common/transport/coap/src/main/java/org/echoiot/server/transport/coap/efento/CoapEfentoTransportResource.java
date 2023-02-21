@@ -25,6 +25,7 @@ import org.eclipse.californium.core.coap.Response;
 import org.eclipse.californium.core.network.Exchange;
 import org.eclipse.californium.core.server.resources.CoapExchange;
 import org.eclipse.californium.core.server.resources.Resource;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.util.CollectionUtils;
 
 import java.nio.ByteBuffer;
@@ -38,7 +39,7 @@ public class CoapEfentoTransportResource extends AbstractCoapTransportResource {
 
     private static final int CHILD_RESOURCE_POSITION = 2;
 
-    public CoapEfentoTransportResource(CoapTransportContext context, String name) {
+    public CoapEfentoTransportResource(@NotNull CoapTransportContext context, String name) {
         super(context, name);
         this.setObservable(true); // enable observing
         this.setObserveType(CoAP.Type.CON); // configure the notification type to CONs
@@ -46,7 +47,7 @@ public class CoapEfentoTransportResource extends AbstractCoapTransportResource {
     }
 
     @Override
-    protected void processHandleGet(CoapExchange exchange) {
+    protected void processHandleGet(@NotNull CoapExchange exchange) {
         Exchange advanced = exchange.advanced();
         Request request = advanced.getRequest();
         List<String> uriPath = request.getOptions().getUriPath();
@@ -55,13 +56,13 @@ public class CoapEfentoTransportResource extends AbstractCoapTransportResource {
             exchange.respond(CoAP.ResponseCode.BAD_REQUEST);
         } else {
             int dateInSec = (int) (System.currentTimeMillis() / 1000);
-            byte[] bytes = ByteBuffer.allocate(4).putInt(dateInSec).array();
+            @NotNull byte[] bytes = ByteBuffer.allocate(4).putInt(dateInSec).array();
             exchange.respond(CoAP.ResponseCode.CONTENT, bytes);
         }
     }
 
     @Override
-    protected void processHandlePost(CoapExchange exchange) {
+    protected void processHandlePost(@NotNull CoapExchange exchange) {
         Exchange advanced = exchange.advanced();
         Request request = advanced.getRequest();
         List<String> uriPath = request.getOptions().getUriPath();
@@ -87,19 +88,19 @@ public class CoapEfentoTransportResource extends AbstractCoapTransportResource {
         }
     }
 
-    private void processMeasurementsRequest(CoapExchange exchange, Request request) {
+    private void processMeasurementsRequest(@NotNull CoapExchange exchange, @NotNull Request request) {
         byte[] bytes = request.getPayload();
         try {
             MeasurementsProtos.ProtoMeasurements protoMeasurements = MeasurementsProtos.ProtoMeasurements.parseFrom(bytes);
             log.trace("Successfully parsed Efento ProtoMeasurements: [{}]", protoMeasurements.getCloudToken());
-            String token = protoMeasurements.getCloudToken();
+            @NotNull String token = protoMeasurements.getCloudToken();
             transportService.process(DeviceTransportType.COAP, TransportProtos.ValidateDeviceTokenRequestMsg.newBuilder().setToken(token).build(),
                                      new CoapDeviceAuthCallback(exchange, (msg, deviceProfile) -> {
                         TransportProtos.SessionInfoProto sessionInfo = SessionInfoCreator.create(msg, transportContext, UUID.randomUUID());
-                        UUID sessionId = new UUID(sessionInfo.getSessionIdMSB(), sessionInfo.getSessionIdLSB());
+                        @NotNull UUID sessionId = new UUID(sessionInfo.getSessionIdMSB(), sessionInfo.getSessionIdLSB());
                         try {
                             validateEfentoTransportConfiguration(deviceProfile);
-                            List<EfentoMeasurements> efentoMeasurements = getEfentoMeasurements(protoMeasurements, sessionId);
+                            @NotNull List<EfentoMeasurements> efentoMeasurements = getEfentoMeasurements(protoMeasurements, sessionId);
                             transportService.process(sessionInfo,
                                     transportContext.getEfentoCoapAdaptor().convertToPostTelemetry(sessionId, efentoMeasurements),
                                     new CoapEfentoCallback(exchange, CoAP.ResponseCode.CREATED, CoAP.ResponseCode.INTERNAL_SERVER_ERROR));
@@ -115,15 +116,16 @@ public class CoapEfentoTransportResource extends AbstractCoapTransportResource {
         }
     }
 
+    @NotNull
     @Override
     public Resource getChild(String name) {
         return this;
     }
 
-    private void validateEfentoTransportConfiguration(DeviceProfile deviceProfile) throws AdaptorException {
+    private void validateEfentoTransportConfiguration(@NotNull DeviceProfile deviceProfile) throws AdaptorException {
         DeviceProfileTransportConfiguration transportConfiguration = deviceProfile.getProfileData().getTransportConfiguration();
         if (transportConfiguration instanceof CoapDeviceProfileTransportConfiguration) {
-            CoapDeviceProfileTransportConfiguration coapDeviceProfileTransportConfiguration =
+            @NotNull CoapDeviceProfileTransportConfiguration coapDeviceProfileTransportConfiguration =
                     (CoapDeviceProfileTransportConfiguration) transportConfiguration;
             if (!(coapDeviceProfileTransportConfiguration.getCoapDeviceTypeConfiguration() instanceof EfentoCoapDeviceTypeConfiguration)) {
                 throw new AdaptorException("Invalid CoapDeviceTypeConfiguration type: " + coapDeviceProfileTransportConfiguration.getCoapDeviceTypeConfiguration().getClass().getSimpleName() + "!");
@@ -133,22 +135,23 @@ public class CoapEfentoTransportResource extends AbstractCoapTransportResource {
         }
     }
 
-    private List<EfentoMeasurements> getEfentoMeasurements(MeasurementsProtos.ProtoMeasurements protoMeasurements, UUID sessionId) {
-        String serialNumber = CoapEfentoUtils.convertByteArrayToString(protoMeasurements.getSerialNum().toByteArray());
+    @NotNull
+    private List<EfentoMeasurements> getEfentoMeasurements(@NotNull MeasurementsProtos.ProtoMeasurements protoMeasurements, UUID sessionId) {
+        @NotNull String serialNumber = CoapEfentoUtils.convertByteArrayToString(protoMeasurements.getSerialNum().toByteArray());
         boolean batteryStatus = protoMeasurements.getBatteryStatus();
         int measurementPeriodBase = protoMeasurements.getMeasurementPeriodBase();
         int measurementPeriodFactor = protoMeasurements.getMeasurementPeriodFactor();
         int signal = protoMeasurements.getSignal();
-        List<MeasurementsProtos.ProtoChannel> channelsList = protoMeasurements.getChannelsList();
-        Map<Long, JsonObject> valuesMap = new TreeMap<>();
+        @NotNull List<MeasurementsProtos.ProtoChannel> channelsList = protoMeasurements.getChannelsList();
+        @NotNull Map<Long, JsonObject> valuesMap = new TreeMap<>();
         if (!CollectionUtils.isEmpty(channelsList)) {
             int channel = 0;
             JsonObject values;
-            for (MeasurementsProtos.ProtoChannel protoChannel : channelsList) {
+            for (@NotNull MeasurementsProtos.ProtoChannel protoChannel : channelsList) {
                 channel++;
                 boolean isBinarySensor = false;
-                MeasurementTypeProtos.MeasurementType measurementType = protoChannel.getType();
-                String measurementTypeName = measurementType.name();
+                @NotNull MeasurementTypeProtos.MeasurementType measurementType = protoChannel.getType();
+                @NotNull String measurementTypeName = measurementType.name();
                 if (measurementType.equals(MeasurementTypeProtos.MeasurementType.OK_ALARM)
                         || measurementType.equals(MeasurementTypeProtos.MeasurementType.FLOODING)) {
                     isBinarySensor = true;
@@ -164,7 +167,7 @@ public class CoapEfentoTransportResource extends AbstractCoapTransportResource {
                 int startPoint = protoChannel.getStartPoint();
                 int startTimestamp = protoChannel.getTimestamp();
                 long startTimestampMillis = TimeUnit.SECONDS.toMillis(startTimestamp);
-                List<Integer> sampleOffsetsList = protoChannel.getSampleOffsetsList();
+                @NotNull List<Integer> sampleOffsetsList = protoChannel.getSampleOffsetsList();
                 if (!CollectionUtils.isEmpty(sampleOffsetsList)) {
                     int sampleOfssetsListSize = sampleOffsetsList.size();
                     for (int i = 0; i < sampleOfssetsListSize; i++) {
@@ -214,7 +217,7 @@ public class CoapEfentoTransportResource extends AbstractCoapTransportResource {
                                             break;
                                         }
                                     }
-                                    String data = currentIsOk ? "OK" : "ALARM";
+                                    @NotNull String data = currentIsOk ? "OK" : "ALARM";
                                     long sampleOffsetMillis = TimeUnit.SECONDS.toMillis(sampleOffset);
                                     long measurementTimestamp = startTimestampMillis + Math.abs(sampleOffsetMillis);
                                     values = valuesMap.computeIfAbsent(measurementTimestamp - 1000, k ->
@@ -239,9 +242,9 @@ public class CoapEfentoTransportResource extends AbstractCoapTransportResource {
             throw new IllegalStateException("[" + sessionId + "]: Failed to get Efento measurements, reason: channels list is empty!");
         }
         if (!CollectionUtils.isEmpty(valuesMap)) {
-            List<EfentoMeasurements> efentoMeasurements = new ArrayList<>();
+            @NotNull List<EfentoMeasurements> efentoMeasurements = new ArrayList<>();
             for (Long ts : valuesMap.keySet()) {
-                EfentoMeasurements measurement = new EfentoMeasurements(ts, valuesMap.get(ts));
+                @NotNull EfentoMeasurements measurement = new EfentoMeasurements(ts, valuesMap.get(ts));
                 efentoMeasurements.add(measurement);
             }
             return efentoMeasurements;

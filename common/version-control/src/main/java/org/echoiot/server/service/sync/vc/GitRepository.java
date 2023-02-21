@@ -30,6 +30,8 @@ import org.eclipse.jgit.transport.sshd.SshdSessionFactoryBuilder;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.treewalk.filter.PathFilter;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -63,25 +65,27 @@ public class GitRepository {
         this.directory = directory;
     }
 
-    public static GitRepository clone(RepositorySettings settings, File directory) throws GitAPIException {
+    @NotNull
+    public static GitRepository clone(@NotNull RepositorySettings settings, @NotNull File directory) throws GitAPIException {
         CloneCommand cloneCommand = Git.cloneRepository()
                 .setURI(settings.getRepositoryUri())
                 .setDirectory(directory)
                 .setNoCheckout(true);
-        AuthHandler authHandler = AuthHandler.createFor(settings, directory);
+        @NotNull AuthHandler authHandler = AuthHandler.createFor(settings, directory);
         authHandler.configureCommand(cloneCommand);
         Git git = cloneCommand.call();
         return new GitRepository(git, settings, authHandler, directory.getAbsolutePath());
     }
 
-    public static GitRepository open(File directory, RepositorySettings settings) throws IOException {
-        Git git = Git.open(directory);
-        AuthHandler authHandler = AuthHandler.createFor(settings, directory);
+    @NotNull
+    public static GitRepository open(@NotNull File directory, @NotNull RepositorySettings settings) throws IOException {
+        @NotNull Git git = Git.open(directory);
+        @NotNull AuthHandler authHandler = AuthHandler.createFor(settings, directory);
         return new GitRepository(git, settings, authHandler, directory.getAbsolutePath());
     }
 
-    public static void test(RepositorySettings settings, File directory) throws Exception {
-        AuthHandler authHandler = AuthHandler.createFor(settings, directory);
+    public static void test(@NotNull RepositorySettings settings, @NotNull File directory) throws Exception {
+        @NotNull AuthHandler authHandler = AuthHandler.createFor(settings, directory);
         if (settings.isReadOnly()) {
             LsRemoteCommand lsRemoteCommand = Git.lsRemoteRepository().setRemote(settings.getRepositoryUri());
             authHandler.configureCommand(lsRemoteCommand);
@@ -90,7 +94,7 @@ public class GitRepository {
             Files.createDirectories(directory.toPath());
             try {
                 Git git = Git.init().setDirectory(directory).call();
-                GitRepository repository = new GitRepository(git, settings, authHandler, directory.getAbsolutePath());
+                @NotNull GitRepository repository = new GitRepository(git, settings, authHandler, directory.getAbsolutePath());
                 repository.execute(repository.git.remoteAdd()
                         .setName("origin")
                         .setUri(new URIish(settings.getRepositoryUri())));
@@ -127,7 +131,7 @@ public class GitRepository {
     }
 
     public void merge(String branch) throws IOException, GitAPIException {
-        ObjectId branchId = resolve("origin/" + branch);
+        @NotNull ObjectId branchId = resolve("origin/" + branch);
         if (branchId == null) {
             throw new IllegalArgumentException("Branch not found");
         }
@@ -135,6 +139,7 @@ public class GitRepository {
                 .include(branchId));
     }
 
+    @NotNull
     public List<BranchInfo> listRemoteBranches() throws GitAPIException {
         return execute(git.branchList()
                 .setListMode(ListBranchCommand.ListMode.REMOTE)).stream()
@@ -143,12 +148,13 @@ public class GitRepository {
                 .distinct().collect(Collectors.toList());
     }
 
-    public PageData<Commit> listCommits(String branch, PageLink pageLink) throws IOException, GitAPIException {
+    public PageData<Commit> listCommits(String branch, @NotNull PageLink pageLink) throws IOException, GitAPIException {
         return listCommits(branch, null, pageLink);
     }
 
-    public PageData<Commit> listCommits(String branch, String path, PageLink pageLink) throws IOException, GitAPIException {
-        ObjectId branchId = resolve("origin/" + branch);
+    @NotNull
+    public PageData<Commit> listCommits(String branch, String path, @NotNull PageLink pageLink) throws IOException, GitAPIException {
+        @NotNull ObjectId branchId = resolve("origin/" + branch);
         if (branchId == null) {
             return new PageData<>();
         }
@@ -168,10 +174,11 @@ public class GitRepository {
         return listFilesAtCommit(commitId, null);
     }
 
-    public List<String> listFilesAtCommit(String commitId, String path) throws IOException {
-        List<String> files = new ArrayList<>();
+    @NotNull
+    public List<String> listFilesAtCommit(String commitId, @NotNull String path) throws IOException {
+        @NotNull List<String> files = new ArrayList<>();
         RevCommit revCommit = resolveCommit(commitId);
-        try (TreeWalk treeWalk = new TreeWalk(git.getRepository())) {
+        try (@NotNull TreeWalk treeWalk = new TreeWalk(git.getRepository())) {
             treeWalk.reset(revCommit.getTree().getId());
             if (StringUtils.isNotEmpty(path)) {
                 treeWalk.setFilter(PathFilter.create(path));
@@ -185,7 +192,8 @@ public class GitRepository {
     }
 
 
-    public String getFileContentAtCommit(String file, String commitId) throws IOException {
+    @NotNull
+    public String getFileContentAtCommit(@NotNull String file, String commitId) throws IOException {
         RevCommit revCommit = resolveCommit(commitId);
         try (TreeWalk treeWalk = TreeWalk.forPath(git.getRepository(), file, revCommit.getTree())) {
             if (treeWalk == null) {
@@ -194,7 +202,7 @@ public class GitRepository {
             ObjectId blobId = treeWalk.getObjectId(0);
             try (ObjectReader objectReader = git.getRepository().newObjectReader()) {
                 ObjectLoader objectLoader = objectReader.open(blobId);
-                byte[] bytes = objectLoader.getBytes();
+                @NotNull byte[] bytes = objectLoader.getBytes();
                 return new String(bytes, StandardCharsets.UTF_8);
             }
         }
@@ -213,14 +221,16 @@ public class GitRepository {
         execute(git.add().addFilepattern(filesPattern));
     }
 
+    @NotNull
     public Status status() throws GitAPIException {
         org.eclipse.jgit.api.Status status = execute(git.status());
-        Set<String> modified = new HashSet<>();
+        @NotNull Set<String> modified = new HashSet<>();
         modified.addAll(status.getModified());
         modified.addAll(status.getChanged());
         return new Status(status.getAdded(), modified, status.getRemoved());
     }
 
+    @NotNull
     public Commit commit(String message, String authorName, String authorEmail) throws GitAPIException {
         RevCommit revCommit = execute(git.commit()
                 .setAuthor(authorName, authorEmail)
@@ -234,33 +244,34 @@ public class GitRepository {
                 .setRefSpecs(new RefSpec(localBranch + ":" + remoteBranch)));
     }
 
-    public String getContentsDiff(String content1, String content2) throws IOException {
-        RawText rawContent1 = new RawText(content1.getBytes());
-        RawText rawContent2 = new RawText(content2.getBytes());
+    public String getContentsDiff(@NotNull String content1, @NotNull String content2) throws IOException {
+        @NotNull RawText rawContent1 = new RawText(content1.getBytes());
+        @NotNull RawText rawContent2 = new RawText(content2.getBytes());
 
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        DiffFormatter diffFormatter = new DiffFormatter(out);
+        @NotNull ByteArrayOutputStream out = new ByteArrayOutputStream();
+        @NotNull DiffFormatter diffFormatter = new DiffFormatter(out);
         diffFormatter.setRepository(git.getRepository());
 
-        EditList edits = new EditList();
+        @NotNull EditList edits = new EditList();
         edits.addAll(new HistogramDiff().diff(RawTextComparator.DEFAULT, rawContent1, rawContent2));
         diffFormatter.format(edits, rawContent1, rawContent2);
         return out.toString();
     }
 
-    public List<Diff> getDiffList(String commit1, String commit2, String path) throws IOException {
+    @NotNull
+    public List<Diff> getDiffList(String commit1, String commit2, @NotNull String path) throws IOException {
         ObjectReader reader = git.getRepository().newObjectReader();
 
-        CanonicalTreeParser tree1Iter = new CanonicalTreeParser();
+        @NotNull CanonicalTreeParser tree1Iter = new CanonicalTreeParser();
         ObjectId tree1 = resolveCommit(commit1).getTree();
         tree1Iter.reset(reader, tree1);
 
-        CanonicalTreeParser tree2Iter = new CanonicalTreeParser();
+        @NotNull CanonicalTreeParser tree2Iter = new CanonicalTreeParser();
         ObjectId tree2 = resolveCommit(commit2).getTree();
         tree2Iter.reset(reader, tree2);
 
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        DiffFormatter diffFormatter = new DiffFormatter(out);
+        @NotNull ByteArrayOutputStream out = new ByteArrayOutputStream();
+        @NotNull DiffFormatter diffFormatter = new DiffFormatter(out);
         diffFormatter.setRepository(git.getRepository());
         if (StringUtils.isNotEmpty(path)) {
             diffFormatter.setPathFilter(PathFilter.create(path));
@@ -268,7 +279,7 @@ public class GitRepository {
 
         return diffFormatter.scan(tree1, tree2).stream()
                 .map(diffEntry -> {
-                    Diff diff = new Diff();
+                    @NotNull Diff diff = new Diff();
                     try {
                         out.reset();
                         diffFormatter.format(diffEntry);
@@ -291,22 +302,25 @@ public class GitRepository {
                 .collect(Collectors.toList());
     }
 
-    private BranchInfo toBranchInfo(Ref ref) {
+    @NotNull
+    private BranchInfo toBranchInfo(@NotNull Ref ref) {
         String name = org.eclipse.jgit.lib.Repository.shortenRefName(ref.getName());
-        String branchName = StringUtils.removeStart(name, "origin/");
+        @Nullable String branchName = StringUtils.removeStart(name, "origin/");
         boolean isDefault = this.headId != null && this.headId.equals(ref.getObjectId());
         return new BranchInfo(branchName, isDefault);
     }
 
-    private Commit toCommit(RevCommit revCommit) {
-        return new Commit(revCommit.getCommitTime() * 1000l, revCommit.getName(),
-                revCommit.getFullMessage(), revCommit.getAuthorIdent().getName(), revCommit.getAuthorIdent().getEmailAddress());
+    @NotNull
+    private Commit toCommit(@NotNull RevCommit revCommit) {
+        return new Commit(revCommit.getCommitTime() * 1000L, revCommit.getName(),
+                          revCommit.getFullMessage(), revCommit.getAuthorIdent().getName(), revCommit.getAuthorIdent().getEmailAddress());
     }
 
     private RevCommit resolveCommit(String id) throws IOException {
         return git.getRepository().parseCommit(resolve(id));
     }
 
+    @NotNull
     private ObjectId resolve(String rev) throws IOException {
         ObjectId result = git.getRepository().resolve(rev);
         if (result == null) {
@@ -332,10 +346,11 @@ public class GitRepository {
         return null;
     };
 
+    @NotNull
     private static <T, R> PageData<R> iterableToPageData(Iterable<T> iterable,
                                                          Function<? super T, ? extends R> mapper,
-                                                         PageLink pageLink,
-                                                         Function<PageLink, Comparator<T>> comparatorFunction) {
+                                                         @NotNull PageLink pageLink,
+                                                         @Nullable Function<PageLink, Comparator<T>> comparatorFunction) {
         iterable = Streams.stream(iterable).collect(Collectors.toList());
         int totalElements = Iterables.size(iterable);
         int totalPages = pageLink.getPageSize() > 0 ? (int) Math.ceil((float) totalElements / pageLink.getPageSize()) : 1;
@@ -353,20 +368,23 @@ public class GitRepository {
         } else {
             iterable = Collections.emptyList();
         }
-        List<R> data = Streams.stream(iterable).map(mapper)
-                .collect(Collectors.toList());
+        @NotNull List<R> data = Streams.stream(iterable).map(mapper)
+                                       .collect(Collectors.toList());
         boolean hasNext = pageLink.getPageSize() > 0 && totalElements > startIndex + data.size();
         return new PageData<>(data, totalPages, totalElements, hasNext);
     }
 
     @RequiredArgsConstructor
     private static class AuthHandler {
+        @NotNull
         private final CredentialsProvider credentialsProvider;
+        @NotNull
         private final SshdSessionFactory sshSessionFactory;
 
-        protected static AuthHandler createFor(RepositorySettings settings, File directory) {
-            CredentialsProvider credentialsProvider = null;
-            SshdSessionFactory sshSessionFactory = null;
+        @NotNull
+        protected static AuthHandler createFor(@NotNull RepositorySettings settings, File directory) {
+            @Nullable CredentialsProvider credentialsProvider = null;
+            @Nullable SshdSessionFactory sshSessionFactory = null;
             if (RepositoryAuthMethod.USERNAME_PASSWORD.equals(settings.getAuthMethod())) {
                 credentialsProvider = newCredentialsProvider(settings.getUsername(), settings.getPassword());
             } else if (RepositoryAuthMethod.PRIVATE_KEY.equals(settings.getAuthMethod())) {
@@ -375,34 +393,37 @@ public class GitRepository {
             return new AuthHandler(credentialsProvider, sshSessionFactory);
         }
 
-        protected void configureCommand(TransportCommand command) {
+        protected void configureCommand(@NotNull TransportCommand command) {
             if (credentialsProvider != null) {
                 command.setCredentialsProvider(credentialsProvider);
             }
             if (sshSessionFactory != null) {
                 command.setTransportConfigCallback(transport -> {
                     if (transport instanceof SshTransport) {
-                        SshTransport sshTransport = (SshTransport) transport;
+                        @NotNull SshTransport sshTransport = (SshTransport) transport;
                         sshTransport.setSshSessionFactory(sshSessionFactory);
                     }
                 });
             }
         }
 
-        private static CredentialsProvider newCredentialsProvider(String username, String password) {
+        @NotNull
+        private static CredentialsProvider newCredentialsProvider(String username, @Nullable String password) {
             return new UsernamePasswordCredentialsProvider(username, password == null ? "" : password);
         }
 
-        private static SshdSessionFactory newSshdSessionFactory(String privateKey, String password, File directory) {
-            SshdSessionFactory sshSessionFactory = null;
+        @Nullable
+        private static SshdSessionFactory newSshdSessionFactory(@NotNull String privateKey, String password, File directory) {
+            @Nullable SshdSessionFactory sshSessionFactory = null;
             if (StringUtils.isNotBlank(privateKey)) {
-                Iterable<KeyPair> keyPairs = loadKeyPairs(privateKey, password);
+                @NotNull Iterable<KeyPair> keyPairs = loadKeyPairs(privateKey, password);
                 sshSessionFactory = new SshdSessionFactoryBuilder()
                         .setPreferredAuthentications("publickey")
                         .setDefaultKeysProvider(file -> keyPairs)
                         .setHomeDirectory(directory)
                         .setSshDirectory(directory)
                         .setServerKeyDatabase((file, file2) -> new ServerKeyDatabase() {
+                            @NotNull
                             @Override
                             public List<PublicKey> lookup(String connectAddress, InetSocketAddress remoteAddress, Configuration config) {
                                 return Collections.emptyList();
@@ -418,8 +439,9 @@ public class GitRepository {
             return sshSessionFactory;
         }
 
-        private static Iterable<KeyPair> loadKeyPairs(String privateKeyContent, String password) {
-            Iterable<KeyPair> keyPairs = null;
+        @NotNull
+        private static Iterable<KeyPair> loadKeyPairs(@NotNull String privateKeyContent, String password) {
+            @Nullable Iterable<KeyPair> keyPairs = null;
             try {
                 keyPairs = SecurityUtils.loadKeyPairIdentities(null,
                         null, new ByteArrayInputStream(privateKeyContent.getBytes()), (session, resourceKey, retryIndex) -> password);
@@ -433,20 +455,22 @@ public class GitRepository {
 
     private static class CommitFilter extends RevFilter {
 
+        @NotNull
         private final String textSearch;
         private final boolean showMergeCommits;
 
-        CommitFilter(String textSearch, boolean showMergeCommits) {
+        CommitFilter(@NotNull String textSearch, boolean showMergeCommits) {
             this.textSearch = textSearch.toLowerCase();
             this.showMergeCommits = showMergeCommits;
         }
 
         @Override
-        public boolean include(RevWalk walker, RevCommit c) {
+        public boolean include(RevWalk walker, @NotNull RevCommit c) {
             return (showMergeCommits || c.getParentCount() < 2) && (StringUtils.isEmpty(textSearch)
                     || c.getFullMessage().toLowerCase().contains(textSearch));
         }
 
+        @NotNull
         @Override
         public RevFilter clone() {
             return this;
@@ -462,16 +486,23 @@ public class GitRepository {
     @Data
     public static class Commit {
         private final long timestamp;
+        @NotNull
         private final String id;
+        @NotNull
         private final String message;
+        @NotNull
         private final String authorName;
+        @NotNull
         private final String authorEmail;
     }
 
     @Data
     public static class Status {
+        @NotNull
         private final Set<String> added;
+        @NotNull
         private final Set<String> modified;
+        @NotNull
         private final Set<String> removed;
     }
 

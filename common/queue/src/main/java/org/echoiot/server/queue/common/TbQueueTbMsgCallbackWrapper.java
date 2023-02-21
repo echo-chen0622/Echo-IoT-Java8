@@ -4,6 +4,7 @@ import org.echoiot.server.queue.TbQueueCallback;
 import org.echoiot.server.queue.TbQueueMsgMetadata;
 import org.echoiot.server.common.msg.queue.RuleEngineException;
 import org.echoiot.server.common.msg.queue.TbMsgCallback;
+import org.jetbrains.annotations.NotNull;
 
 public class TbQueueTbMsgCallbackWrapper implements TbQueueCallback {
 
@@ -19,7 +20,7 @@ public class TbQueueTbMsgCallbackWrapper implements TbQueueCallback {
     }
 
     @Override
-    public void onFailure(Throwable t) {
+    public void onFailure(@NotNull Throwable t) {
         tbMsgCallback.onFailure(new RuleEngineException(t.getMessage()));
     }
 }

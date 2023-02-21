@@ -1,6 +1,7 @@
 package org.echoiot.server.transport.mqtt.claim;
 
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.echoiot.server.common.data.TransportPayloadType;
@@ -45,7 +46,7 @@ public class MqttClaimProtoDeviceTest extends MqttClaimDeviceTest {
     }
 
     protected void processTestClaimingDevice(boolean emptyPayload) throws Exception {
-        MqttTestClient client = new MqttTestClient();
+        @NotNull MqttTestClient client = new MqttTestClient();
         client.connectAndWait(accessToken);
         byte[] payloadBytes;
         if (emptyPayload) {
@@ -61,6 +62,7 @@ public class MqttClaimProtoDeviceTest extends MqttClaimDeviceTest {
         processProtoTestGatewayClaimDevice(deviceName, emptyPayload);
     }
 
+    @NotNull
     private TransportApiProtos.ClaimDevice getClaimDevice(long duration, boolean emptyPayload) {
         TransportApiProtos.ClaimDevice.Builder claimDeviceBuilder = TransportApiProtos.ClaimDevice.newBuilder();
         if (!emptyPayload) {

@@ -1,6 +1,7 @@
 package org.echoiot.server.transport.lwm2m.server.ota.software;
 
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * SW Update Result
@@ -42,11 +43,11 @@ public enum SoftwareUpdateResult {
     UN_INSTALL_FAILURE(59, "Uninstallation Failure during forUpdate(arg=0)", true);
 
     @Getter
-    private int code;
+    private final int code;
     @Getter
-    private String type;
+    private final String type;
     @Getter
-    private boolean isAgain;
+    private final boolean isAgain;
 
     SoftwareUpdateResult(int code, String type, boolean isAgain) {
         this.code = code;
@@ -54,8 +55,9 @@ public enum SoftwareUpdateResult {
         this.isAgain = isAgain;
     }
 
+    @NotNull
     public static SoftwareUpdateResult fromUpdateResultSwByType(String type) {
-        for (SoftwareUpdateResult to : SoftwareUpdateResult.values()) {
+        for (@NotNull SoftwareUpdateResult to : SoftwareUpdateResult.values()) {
             if (to.type.equals(type)) {
                 return to;
             }
@@ -63,8 +65,9 @@ public enum SoftwareUpdateResult {
         throw new IllegalArgumentException(String.format("Unsupported SW Update Result type  : %s", type));
     }
 
+    @NotNull
     public static SoftwareUpdateResult fromUpdateResultSwByCode(int code) {
-        for (SoftwareUpdateResult to : SoftwareUpdateResult.values()) {
+        for (@NotNull SoftwareUpdateResult to : SoftwareUpdateResult.values()) {
             if (to.code == code) {
                 return to;
             }

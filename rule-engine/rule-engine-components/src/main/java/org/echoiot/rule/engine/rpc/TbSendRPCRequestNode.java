@@ -20,6 +20,8 @@ import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.msg.TbMsg;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
 import java.util.UUID;
@@ -39,18 +41,18 @@ import java.util.concurrent.TimeUnit;
 )
 public class TbSendRPCRequestNode implements TbNode {
 
-    private Random random = new Random();
-    private Gson gson = new Gson();
-    private JsonParser jsonParser = new JsonParser();
+    private final Random random = new Random();
+    private final Gson gson = new Gson();
+    private final JsonParser jsonParser = new JsonParser();
     private TbSendRpcRequestNodeConfiguration config;
 
     @Override
-    public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
+    public void init(TbContext ctx, @NotNull TbNodeConfiguration configuration) throws TbNodeException {
         this.config = TbNodeUtils.convert(configuration, TbSendRpcRequestNodeConfiguration.class);
     }
 
     @Override
-    public void onMsg(TbContext ctx, TbMsg msg) {
+    public void onMsg(@NotNull TbContext ctx, @NotNull TbMsg msg) {
         JsonObject json = jsonParser.parse(msg.getData()).getAsJsonObject();
         String tmp;
         if (msg.getOriginator().getEntityType() != EntityType.DEVICE) {
@@ -70,9 +72,9 @@ public class TbSendRPCRequestNode implements TbNode {
             boolean persisted = !StringUtils.isEmpty(tmp) && Boolean.parseBoolean(tmp);
 
             tmp = msg.getMetaData().getValue("requestUUID");
-            UUID requestUUID = !StringUtils.isEmpty(tmp) ? UUID.fromString(tmp) : Uuids.timeBased();
+            @NotNull UUID requestUUID = !StringUtils.isEmpty(tmp) ? UUID.fromString(tmp) : Uuids.timeBased();
             tmp = msg.getMetaData().getValue("originServiceId");
-            String originServiceId = !StringUtils.isEmpty(tmp) ? tmp : null;
+            @Nullable String originServiceId = !StringUtils.isEmpty(tmp) ? tmp : null;
 
             tmp = msg.getMetaData().getValue(DataConstants.EXPIRATION_TIME);
             long expirationTime = !StringUtils.isEmpty(tmp) ? Long.parseLong(tmp) : (System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(config.getTimeoutInSeconds()));
@@ -112,13 +114,13 @@ public class TbSendRPCRequestNode implements TbNode {
         }
     }
 
-    private String wrap(String name, String body) {
-        JsonObject json = new JsonObject();
+    private String wrap(@NotNull String name, String body) {
+        @NotNull JsonObject json = new JsonObject();
         json.addProperty(name, body);
         return gson.toJson(json);
     }
 
-    private String parseJsonData(JsonElement paramsEl) {
+    private String parseJsonData(@Nullable JsonElement paramsEl) {
         if (paramsEl != null) {
             return paramsEl.isJsonPrimitive() ? paramsEl.getAsString() : gson.toJson(paramsEl);
         } else {

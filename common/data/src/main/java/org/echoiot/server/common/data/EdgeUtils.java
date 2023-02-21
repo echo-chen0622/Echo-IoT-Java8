@@ -9,6 +9,8 @@ import org.echoiot.server.common.data.edge.EdgeEventType;
 import org.echoiot.server.common.data.id.EdgeId;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.TenantId;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -20,7 +22,8 @@ public final class EdgeUtils {
     private EdgeUtils() {
     }
 
-    public static EdgeEventType getEdgeEventTypeByEntityType(EntityType entityType) {
+    @Nullable
+    public static EdgeEventType getEdgeEventTypeByEntityType(@NotNull EntityType entityType) {
         switch (entityType) {
             case EDGE:
                 return EdgeEventType.EDGE;
@@ -64,13 +67,14 @@ public final class EdgeUtils {
         return ThreadLocalRandom.current().nextInt(0, Integer.MAX_VALUE);
     }
 
+    @NotNull
     public static EdgeEvent constructEdgeEvent(TenantId tenantId,
                                                EdgeId edgeId,
                                                EdgeEventType type,
                                                EdgeEventActionType action,
-                                               EntityId entityId,
+                                               @Nullable EntityId entityId,
                                                JsonNode body) {
-        EdgeEvent edgeEvent = new EdgeEvent();
+        @NotNull EdgeEvent edgeEvent = new EdgeEvent();
         edgeEvent.setTenantId(tenantId);
         edgeEvent.setEdgeId(edgeId);
         edgeEvent.setType(type);
@@ -82,13 +86,14 @@ public final class EdgeUtils {
         return edgeEvent;
     }
 
-    public static String createErrorMsgFromRootCauseAndStackTrace(Throwable t) {
-        Throwable rootCause = Throwables.getRootCause(t);
-        StringBuilder errorMsg = new StringBuilder(rootCause.getMessage() != null ? rootCause.getMessage() : "");
+    @NotNull
+    public static String createErrorMsgFromRootCauseAndStackTrace(@NotNull Throwable t) {
+        @NotNull Throwable rootCause = Throwables.getRootCause(t);
+        @NotNull StringBuilder errorMsg = new StringBuilder(rootCause.getMessage() != null ? rootCause.getMessage() : "");
         if (rootCause.getStackTrace().length > 0) {
             int idx = 0;
-            for (StackTraceElement stackTraceElement : rootCause.getStackTrace()) {
-                errorMsg.append("\n").append(stackTraceElement.toString());
+            for (@NotNull StackTraceElement stackTraceElement : rootCause.getStackTrace()) {
+                errorMsg.append("\n").append(stackTraceElement);
                 idx++;
                 if (idx > STACK_TRACE_LIMIT) {
                     break;

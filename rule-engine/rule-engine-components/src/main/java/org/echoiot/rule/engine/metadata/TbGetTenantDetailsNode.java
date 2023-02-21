@@ -12,6 +12,7 @@ import org.echoiot.rule.engine.api.util.TbNodeUtils;
 import org.echoiot.server.common.data.ContactBased;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.msg.TbMsg;
+import org.jetbrains.annotations.NotNull;
 
 @Slf4j
 @RuleNode(type = ComponentType.ENRICHMENT,
@@ -28,7 +29,7 @@ public class TbGetTenantDetailsNode extends TbAbstractGetEntityDetailsNode<TbGet
     private static final String TENANT_PREFIX = "tenant_";
 
     @Override
-    protected TbGetTenantDetailsNodeConfiguration loadGetEntityDetailsNodeConfiguration(TbNodeConfiguration configuration) throws TbNodeException {
+    protected TbGetTenantDetailsNodeConfiguration loadGetEntityDetailsNodeConfiguration(@NotNull TbNodeConfiguration configuration) throws TbNodeException {
         return TbNodeUtils.convert(configuration, TbGetTenantDetailsNodeConfiguration.class);
     }
 
@@ -37,8 +38,9 @@ public class TbGetTenantDetailsNode extends TbAbstractGetEntityDetailsNode<TbGet
         return getTbMsgListenableFuture(ctx, msg, getDataAsJson(msg), TENANT_PREFIX);
     }
 
+    @NotNull
     @Override
-    protected ListenableFuture<ContactBased> getContactBasedListenableFuture(TbContext ctx, TbMsg msg) {
+    protected ListenableFuture<ContactBased> getContactBasedListenableFuture(@NotNull TbContext ctx, TbMsg msg) {
         return Futures.transformAsync(ctx.getTenantService().findTenantByIdAsync(ctx.getTenantId(), ctx.getTenantId()), tenant -> {
             if (tenant != null) {
                 return Futures.immediateFuture(tenant);

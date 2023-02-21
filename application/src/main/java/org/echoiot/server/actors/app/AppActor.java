@@ -29,6 +29,8 @@ import org.echoiot.server.common.msg.plugin.ComponentLifecycleMsg;
 import org.echoiot.server.common.msg.queue.QueueToRuleEngineMsg;
 import org.echoiot.server.common.msg.queue.RuleEngineException;
 import org.echoiot.server.common.msg.queue.ServiceType;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -37,10 +39,11 @@ import java.util.Set;
 public class AppActor extends ContextAwareActor {
 
     private final TenantService tenantService;
+    @NotNull
     private final Set<TenantId> deletedTenants;
     private volatile boolean ruleChainsInitialized;
 
-    private AppActor(ActorSystemContext systemContext) {
+    private AppActor(@NotNull ActorSystemContext systemContext) {
         super(systemContext);
         this.tenantService = systemContext.getTenantService();
         this.deletedTenants = new HashSet<>();
@@ -56,7 +59,7 @@ public class AppActor extends ContextAwareActor {
     }
 
     @Override
-    protected boolean doProcess(TbActorMsg msg) {
+    protected boolean doProcess(@NotNull TbActorMsg msg) {
         if (!ruleChainsInitialized) {
             initTenantActors();
             ruleChainsInitialized = true;
@@ -107,8 +110,8 @@ public class AppActor extends ContextAwareActor {
         log.info("Starting main system actor.");
         try {
             if (systemContext.isTenantComponentsInitEnabled()) {
-                PageDataIterable<Tenant> tenantIterator = new PageDataIterable<>(tenantService::findTenants, ENTITY_PACK_LIMIT);
-                for (Tenant tenant : tenantIterator) {
+                @NotNull PageDataIterable<Tenant> tenantIterator = new PageDataIterable<>(tenantService::findTenants, ENTITY_PACK_LIMIT);
+                for (@NotNull Tenant tenant : tenantIterator) {
                     log.debug("[{}] Creating tenant actor", tenant.getId());
                     getOrCreateTenantActor(tenant.getId());
                     log.debug("[{}] Tenant actor created.", tenant.getId());
@@ -120,7 +123,7 @@ public class AppActor extends ContextAwareActor {
         }
     }
 
-    private void onQueueToRuleEngineMsg(QueueToRuleEngineMsg msg) {
+    private void onQueueToRuleEngineMsg(@NotNull QueueToRuleEngineMsg msg) {
         if (TenantId.SYS_TENANT_ID.equals(msg.getTenantId())) {
             msg.getMsg().getCallback().onFailure(new RuleEngineException("Message has system tenant id!"));
         } else {
@@ -132,15 +135,15 @@ public class AppActor extends ContextAwareActor {
         }
     }
 
-    private void onComponentLifecycleMsg(ComponentLifecycleMsg msg) {
-        TbActorRef target = null;
+    private void onComponentLifecycleMsg(@NotNull ComponentLifecycleMsg msg) {
+        @Nullable TbActorRef target = null;
         if (TenantId.SYS_TENANT_ID.equals(msg.getTenantId())) {
             if (!EntityType.TENANT_PROFILE.equals(msg.getEntityId().getEntityType())) {
                 log.warn("Message has system tenant id: {}", msg);
             }
         } else {
             if (EntityType.TENANT.equals(msg.getEntityId().getEntityType())) {
-                TenantId tenantId = TenantId.fromUUID(msg.getEntityId().getId());
+                @NotNull TenantId tenantId = TenantId.fromUUID(msg.getEntityId().getId());
                 if (msg.getEvent() == ComponentLifecycleEvent.DELETED) {
                     log.info("[{}] Handling tenant deleted notification: {}", msg.getTenantId(), msg);
                     deletedTenants.add(tenantId);
@@ -159,7 +162,7 @@ public class AppActor extends ContextAwareActor {
         }
     }
 
-    private void onToDeviceActorMsg(TenantAwareMsg msg, boolean priority) {
+    private void onToDeviceActorMsg(@NotNull TenantAwareMsg msg, boolean priority) {
         if (!deletedTenants.contains(msg.getTenantId())) {
             TbActorRef tenantActor = getOrCreateTenantActor(msg.getTenantId());
             if (priority) {
@@ -180,8 +183,8 @@ public class AppActor extends ContextAwareActor {
                 () -> new TenantActor.ActorCreator(systemContext, tenantId));
     }
 
-    private void onToEdgeSessionMsg(EdgeSessionMsg msg) {
-        TbActorRef target = null;
+    private void onToEdgeSessionMsg(@NotNull EdgeSessionMsg msg) {
+        @Nullable TbActorRef target = null;
         if (ModelConstants.SYSTEM_TENANT.equals(msg.getTenantId())) {
             log.warn("Message has system tenant id: {}", msg);
         } else {
@@ -200,11 +203,13 @@ public class AppActor extends ContextAwareActor {
             super(context);
         }
 
+        @NotNull
         @Override
         public TbActorId createActorId() {
             return new TbEntityActorId(TenantId.SYS_TENANT_ID);
         }
 
+        @NotNull
         @Override
         public TbActor createActor() {
             return new AppActor(context);

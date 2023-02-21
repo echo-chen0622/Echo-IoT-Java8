@@ -17,8 +17,11 @@ import org.echoiot.rule.engine.api.util.TbNodeUtils;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.TbMsgMetaData;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import static org.echoiot.common.util.DonAsynchron.withCallback;
 
@@ -35,7 +38,7 @@ import static org.echoiot.common.util.DonAsynchron.withCallback;
 )
 public class TbRabbitMqNode implements TbNode {
 
-    private static final Charset UTF8 = Charset.forName("UTF-8");
+    private static final Charset UTF8 = StandardCharsets.UTF_8;
 
     private static final String ERROR = "error";
 
@@ -45,9 +48,9 @@ public class TbRabbitMqNode implements TbNode {
     private Channel channel;
 
     @Override
-    public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
+    public void init(TbContext ctx, @NotNull TbNodeConfiguration configuration) throws TbNodeException {
         this.config = TbNodeUtils.convert(configuration, TbRabbitMqNodeConfiguration.class);
-        ConnectionFactory factory = new ConnectionFactory();
+        @NotNull ConnectionFactory factory = new ConnectionFactory();
         factory.setHost(this.config.getHost());
         factory.setPort(this.config.getPort());
         factory.setVirtualHost(this.config.getVirtualHost());
@@ -66,7 +69,7 @@ public class TbRabbitMqNode implements TbNode {
     }
 
     @Override
-    public void onMsg(TbContext ctx, TbMsg msg) {
+    public void onMsg(@NotNull TbContext ctx, @NotNull TbMsg msg) {
         withCallback(publishMessageAsync(ctx, msg),
                 ctx::tellSuccess,
                 t -> {
@@ -75,11 +78,12 @@ public class TbRabbitMqNode implements TbNode {
                 });
     }
 
-    private ListenableFuture<TbMsg> publishMessageAsync(TbContext ctx, TbMsg msg) {
+    private ListenableFuture<TbMsg> publishMessageAsync(@NotNull TbContext ctx, @NotNull TbMsg msg) {
         return ctx.getExternalCallExecutor().executeAsync(() -> publishMessage(ctx, msg));
     }
 
-    private TbMsg publishMessage(TbContext ctx, TbMsg msg) throws Exception {
+    @NotNull
+    private TbMsg publishMessage(TbContext ctx, @NotNull TbMsg msg) throws Exception {
         String exchangeName = "";
         if (!StringUtils.isEmpty(this.config.getExchangeNamePattern())) {
             exchangeName = TbNodeUtils.processPattern(this.config.getExchangeNamePattern(), msg);
@@ -88,7 +92,7 @@ public class TbRabbitMqNode implements TbNode {
         if (!StringUtils.isEmpty(this.config.getRoutingKeyPattern())) {
             routingKey = TbNodeUtils.processPattern(this.config.getRoutingKeyPattern(), msg);
         }
-        AMQP.BasicProperties properties = null;
+        @Nullable AMQP.BasicProperties properties = null;
         if (!StringUtils.isEmpty(this.config.getMessageProperties())) {
             properties = convert(this.config.getMessageProperties());
         }
@@ -100,8 +104,8 @@ public class TbRabbitMqNode implements TbNode {
         return msg;
     }
 
-    private TbMsg processException(TbContext ctx, TbMsg origMsg, Throwable t) {
-        TbMsgMetaData metaData = origMsg.getMetaData().copy();
+    private TbMsg processException(@NotNull TbContext ctx, @NotNull TbMsg origMsg, @NotNull Throwable t) {
+        @NotNull TbMsgMetaData metaData = origMsg.getMetaData().copy();
         metaData.putValue(ERROR, t.getClass() + ": " + t.getMessage());
         return ctx.transformMsg(origMsg, origMsg.getType(), origMsg.getOriginator(), metaData, origMsg.getData());
     }
@@ -117,7 +121,8 @@ public class TbRabbitMqNode implements TbNode {
         }
     }
 
-    private static AMQP.BasicProperties convert(String name) throws TbNodeException {
+    @NotNull
+    private static AMQP.BasicProperties convert(@NotNull String name) throws TbNodeException {
         switch (name) {
             case "BASIC":
                 return MessageProperties.BASIC;

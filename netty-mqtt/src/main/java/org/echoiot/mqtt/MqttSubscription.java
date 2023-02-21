@@ -1,18 +1,24 @@
 package org.echoiot.mqtt;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.regex.Pattern;
 
 final class MqttSubscription {
 
+    @NotNull
     private final String topic;
+    @NotNull
     private final Pattern topicRegex;
+    @NotNull
     private final MqttHandler handler;
 
     private final boolean once;
 
     private boolean called;
 
-    MqttSubscription(String topic, MqttHandler handler, boolean once) {
+    MqttSubscription(@NotNull String topic, @NotNull MqttHandler handler, boolean once) {
         if (topic == null) {
             throw new NullPointerException("topic");
         }
@@ -41,16 +47,16 @@ final class MqttSubscription {
         return called;
     }
 
-    boolean matches(String topic) {
+    boolean matches(@NotNull String topic) {
         return this.topicRegex.matcher(topic).matches();
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        MqttSubscription that = (MqttSubscription) o;
+        @NotNull MqttSubscription that = (MqttSubscription) o;
 
         return once == that.once && topic.equals(that.topic) && handler.equals(that.handler);
     }

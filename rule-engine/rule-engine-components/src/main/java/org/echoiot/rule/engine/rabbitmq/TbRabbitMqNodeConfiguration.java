@@ -3,6 +3,7 @@ package org.echoiot.rule.engine.rabbitmq;
 import com.rabbitmq.client.ConnectionFactory;
 import lombok.Data;
 import org.echoiot.rule.engine.api.NodeConfiguration;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.Map;
@@ -23,9 +24,10 @@ public class TbRabbitMqNodeConfiguration implements NodeConfiguration<TbRabbitMq
     private int handshakeTimeout;
     private Map<String, String> clientProperties;
 
+    @NotNull
     @Override
     public TbRabbitMqNodeConfiguration defaultConfiguration() {
-        TbRabbitMqNodeConfiguration configuration = new TbRabbitMqNodeConfiguration();
+        @NotNull TbRabbitMqNodeConfiguration configuration = new TbRabbitMqNodeConfiguration();
         configuration.setExchangeNamePattern("");
         configuration.setRoutingKeyPattern("");
         configuration.setMessageProperties(null);

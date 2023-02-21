@@ -8,6 +8,6 @@ package org.echoiot.server.common.data.rule;
  */
 public enum Scope {
 
-    SYSTEM, TENANT, CUSTOMER, DEVICE, RULE;
+    SYSTEM, TENANT, CUSTOMER, DEVICE, RULE
 
 }

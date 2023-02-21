@@ -7,6 +7,8 @@ import com.google.common.util.concurrent.MoreExecutors;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.dao.exception.IncorrectParameterException;
 import org.echoiot.server.dao.service.Validator;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -56,44 +58,44 @@ public class BaseEntityService extends AbstractEntityService implements EntitySe
     public static final String INCORRECT_TENANT_ID = "Incorrect tenantId ";
     public static final String INCORRECT_CUSTOMER_ID = "Incorrect customerId ";
 
-    @Autowired
+    @Resource
     private AssetService assetService;
 
-    @Autowired
+    @Resource
     private DeviceService deviceService;
 
-    @Autowired
+    @Resource
     private EntityViewService entityViewService;
 
-    @Autowired
+    @Resource
     private TenantService tenantService;
 
-    @Autowired
+    @Resource
     private CustomerService customerService;
 
-    @Autowired
+    @Resource
     private UserService userService;
 
-    @Autowired
+    @Resource
     private DashboardService dashboardService;
 
-    @Autowired
+    @Resource
     private AlarmService alarmService;
 
-    @Autowired
+    @Resource
     private RuleChainService ruleChainService;
 
-    @Autowired
+    @Resource
     private EntityQueryDao entityQueryDao;
 
-    @Autowired
+    @Resource
     private ResourceService resourceService;
 
-    @Autowired
+    @Resource
     private OtaPackageService otaPackageService;
 
     @Override
-    public long countEntitiesByQuery(TenantId tenantId, CustomerId customerId, EntityCountQuery query) {
+    public long countEntitiesByQuery(TenantId tenantId, CustomerId customerId, @NotNull EntityCountQuery query) {
         log.trace("Executing countEntitiesByQuery, tenantId [{}], customerId [{}], query [{}]", tenantId, customerId, query);
         validateId(tenantId, INCORRECT_TENANT_ID + tenantId);
         validateId(customerId, INCORRECT_CUSTOMER_ID + customerId);
@@ -102,7 +104,7 @@ public class BaseEntityService extends AbstractEntityService implements EntitySe
     }
 
     @Override
-    public PageData<EntityData> findEntityDataByQuery(TenantId tenantId, CustomerId customerId, EntityDataQuery query) {
+    public PageData<EntityData> findEntityDataByQuery(TenantId tenantId, CustomerId customerId, @NotNull EntityDataQuery query) {
         log.trace("Executing findEntityDataByQuery, tenantId [{}], customerId [{}], query [{}]", tenantId, customerId, query);
         validateId(tenantId, INCORRECT_TENANT_ID + tenantId);
         validateId(customerId, INCORRECT_CUSTOMER_ID + customerId);
@@ -111,8 +113,9 @@ public class BaseEntityService extends AbstractEntityService implements EntitySe
     }
 
     //TODO: 3.1 Remove this from project.
+    @NotNull
     @Override
-    public ListenableFuture<String> fetchEntityNameAsync(TenantId tenantId, EntityId entityId) {
+    public ListenableFuture<String> fetchEntityNameAsync(TenantId tenantId, @NotNull EntityId entityId) {
         log.trace("Executing fetchEntityNameAsync [{}]", entityId);
         ListenableFuture<String> entityName;
         ListenableFuture<? extends HasName> hasName;
@@ -161,9 +164,9 @@ public class BaseEntityService extends AbstractEntityService implements EntitySe
     }
 
     @Override
-    public CustomerId fetchEntityCustomerId(TenantId tenantId, EntityId entityId) {
+    public CustomerId fetchEntityCustomerId(TenantId tenantId, @NotNull EntityId entityId) {
         log.trace("Executing fetchEntityCustomerId [{}]", entityId);
-        HasCustomerId hasCustomerId = null;
+        @Nullable HasCustomerId hasCustomerId = null;
         switch (entityId.getEntityType()) {
             case TENANT:
             case RULE_CHAIN:
@@ -206,7 +209,7 @@ public class BaseEntityService extends AbstractEntityService implements EntitySe
         return hasCustomerId != null ? hasCustomerId.getCustomerId() : new CustomerId(NULL_UUID);
     }
 
-    private static void validateEntityCountQuery(EntityCountQuery query) {
+    private static void validateEntityCountQuery(@NotNull EntityCountQuery query) {
         if (query == null) {
             throw new IncorrectParameterException("Query must be specified.");
         } else if (query.getEntityFilter() == null) {
@@ -218,12 +221,12 @@ public class BaseEntityService extends AbstractEntityService implements EntitySe
         }
     }
 
-    private static void validateEntityDataQuery(EntityDataQuery query) {
+    private static void validateEntityDataQuery(@NotNull EntityDataQuery query) {
         validateEntityCountQuery(query);
         Validator.validateEntityDataPageLink(query.getPageLink());
     }
 
-    private static void validateRelationQuery(RelationsQueryFilter queryFilter) {
+    private static void validateRelationQuery(@NotNull RelationsQueryFilter queryFilter) {
         if (queryFilter.isMultiRoot() && queryFilter.getMultiRootEntitiesType() ==null){
             throw new IncorrectParameterException("Multi-root relation query filter should contain 'multiRootEntitiesType'");
         }

@@ -7,6 +7,7 @@ import lombok.ToString;
 import org.echoiot.server.common.data.id.ApiUsageStateId;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.TenantId;
+import org.jetbrains.annotations.NotNull;
 
 @ToString
 @EqualsAndHashCode(callSuper = true)
@@ -34,7 +35,7 @@ public class ApiUsageState extends BaseData<ApiUsageStateId> implements HasTenan
         super(id);
     }
 
-    public ApiUsageState(ApiUsageState ur) {
+    public ApiUsageState(@NotNull ApiUsageState ur) {
         super(ur);
         this.tenantId = ur.getTenantId();
         this.entityId = ur.getEntityId();

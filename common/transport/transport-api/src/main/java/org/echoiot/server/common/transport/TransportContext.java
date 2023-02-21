@@ -24,26 +24,26 @@ public abstract class TransportContext {
 
     protected final ObjectMapper mapper = new ObjectMapper();
 
-    @Autowired
+    @Resource
     protected TransportService transportService;
 
-    @Autowired
+    @Resource
     private TbServiceInfoProvider serviceInfoProvider;
 
-    @Autowired
+    @Resource
     private SchedulerComponent scheduler;
 
     @Getter
     private ExecutorService executor;
 
     @Getter
-    @Autowired
+    @Resource
     private OtaPackageDataCache otaPackageDataCache;
 
-    @Autowired
+    @Resource
     private TransportResourceCache transportResourceCache;
 
-    @Autowired
+    @Resource
     protected TransportRateLimitService rateLimitService;
 
     @PostConstruct

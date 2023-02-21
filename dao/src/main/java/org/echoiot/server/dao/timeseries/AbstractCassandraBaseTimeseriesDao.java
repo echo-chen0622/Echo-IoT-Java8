@@ -13,6 +13,8 @@ import org.echoiot.server.common.data.kv.StringDataEntry;
 import org.echoiot.server.common.data.kv.TsKvEntry;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.nosql.CassandraAbstractAsyncDao;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,25 +28,26 @@ public abstract class AbstractCassandraBaseTimeseriesDao extends CassandraAbstra
     public static final String SELECT_PREFIX = "SELECT ";
     public static final String EQUALS_PARAM = " = ? ";
 
-    public static KvEntry toKvEntry(Row row, String key) {
-        KvEntry kvEntry = null;
-        String strV = row.get(ModelConstants.STRING_VALUE_COLUMN, String.class);
+    @Nullable
+    public static KvEntry toKvEntry(@NotNull Row row, String key) {
+        @Nullable KvEntry kvEntry = null;
+        @Nullable String strV = row.get(ModelConstants.STRING_VALUE_COLUMN, String.class);
         if (strV != null) {
             kvEntry = new StringDataEntry(key, strV);
         } else {
-            Long longV = row.get(ModelConstants.LONG_VALUE_COLUMN, Long.class);
+            @Nullable Long longV = row.get(ModelConstants.LONG_VALUE_COLUMN, Long.class);
             if (longV != null) {
                 kvEntry = new LongDataEntry(key, longV);
             } else {
-                Double doubleV = row.get(ModelConstants.DOUBLE_VALUE_COLUMN, Double.class);
+                @Nullable Double doubleV = row.get(ModelConstants.DOUBLE_VALUE_COLUMN, Double.class);
                 if (doubleV != null) {
                     kvEntry = new DoubleDataEntry(key, doubleV);
                 } else {
-                    Boolean boolV = row.get(ModelConstants.BOOLEAN_VALUE_COLUMN, Boolean.class);
+                    @Nullable Boolean boolV = row.get(ModelConstants.BOOLEAN_VALUE_COLUMN, Boolean.class);
                     if (boolV != null) {
                         kvEntry = new BooleanDataEntry(key, boolV);
                     } else {
-                        String jsonV = row.get(ModelConstants.JSON_VALUE_COLUMN, String.class);
+                        @Nullable String jsonV = row.get(ModelConstants.JSON_VALUE_COLUMN, String.class);
                         if (StringUtils.isNoneEmpty(jsonV)) {
                             kvEntry = new JsonDataEntry(key, jsonV);
                         } else {
@@ -57,21 +60,24 @@ public abstract class AbstractCassandraBaseTimeseriesDao extends CassandraAbstra
         return kvEntry;
     }
 
-    protected List<TsKvEntry> convertResultToTsKvEntryList(List<Row> rows) {
-        List<TsKvEntry> entries = new ArrayList<>(rows.size());
+    @NotNull
+    protected List<TsKvEntry> convertResultToTsKvEntryList(@NotNull List<Row> rows) {
+        @NotNull List<TsKvEntry> entries = new ArrayList<>(rows.size());
         if (!rows.isEmpty()) {
             rows.forEach(row -> entries.add(convertResultToTsKvEntry(row)));
         }
         return entries;
     }
 
-    private TsKvEntry convertResultToTsKvEntry(Row row) {
-        String key = row.getString(ModelConstants.KEY_COLUMN);
+    @NotNull
+    private TsKvEntry convertResultToTsKvEntry(@NotNull Row row) {
+        @Nullable String key = row.getString(ModelConstants.KEY_COLUMN);
         long ts = row.getLong(ModelConstants.TS_COLUMN);
         return new BasicTsKvEntry(ts, toKvEntry(row, key));
     }
 
-    protected TsKvEntry convertResultToTsKvEntry(String key, Row row) {
+    @NotNull
+    protected TsKvEntry convertResultToTsKvEntry(String key, @Nullable Row row) {
         if (row != null) {
             return getBasicTsKvEntry(key, row);
         } else {
@@ -79,7 +85,8 @@ public abstract class AbstractCassandraBaseTimeseriesDao extends CassandraAbstra
         }
     }
 
-    protected Optional<TsKvEntry> convertResultToTsKvEntryOpt(String key, Row row) {
+    @NotNull
+    protected Optional<TsKvEntry> convertResultToTsKvEntryOpt(String key, @Nullable Row row) {
         if (row != null) {
             return Optional.of(getBasicTsKvEntry(key, row));
         } else {
@@ -87,13 +94,15 @@ public abstract class AbstractCassandraBaseTimeseriesDao extends CassandraAbstra
         }
     }
 
-    private BasicTsKvEntry getBasicTsKvEntry(String key, Row row) {
-        Optional<String> foundKeyOpt = getKey(row);
+    @NotNull
+    private BasicTsKvEntry getBasicTsKvEntry(String key, @NotNull Row row) {
+        @NotNull Optional<String> foundKeyOpt = getKey(row);
         long ts = row.getLong(ModelConstants.TS_COLUMN);
         return new BasicTsKvEntry(ts, toKvEntry(row, foundKeyOpt.orElse(key)));
     }
 
-    private Optional<String> getKey(Row row){
+    @NotNull
+    private Optional<String> getKey(@NotNull Row row){
        try{
            return Optional.ofNullable(row.getString(ModelConstants.KEY_COLUMN));
        } catch (IllegalArgumentException e){

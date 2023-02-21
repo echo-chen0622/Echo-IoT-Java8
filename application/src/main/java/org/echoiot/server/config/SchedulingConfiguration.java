@@ -1,5 +1,6 @@
 package org.echoiot.server.config;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.TaskScheduler;
@@ -13,13 +14,14 @@ import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 public class SchedulingConfiguration implements SchedulingConfigurer {
 
     @Override
-    public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
+    public void configureTasks(@NotNull ScheduledTaskRegistrar taskRegistrar) {
         taskRegistrar.setScheduler(taskScheduler());
     }
 
+    @NotNull
     @Bean(destroyMethod="shutdown")
     public TaskScheduler taskScheduler() {
-        ThreadPoolTaskScheduler threadPoolScheduler = new ThreadPoolTaskScheduler();
+        @NotNull ThreadPoolTaskScheduler threadPoolScheduler = new ThreadPoolTaskScheduler();
         threadPoolScheduler.setThreadNamePrefix("TB-Scheduling-");
         threadPoolScheduler.setPoolSize(Runtime.getRuntime().availableProcessors());
         threadPoolScheduler.setRemoveOnCancelPolicy(true);

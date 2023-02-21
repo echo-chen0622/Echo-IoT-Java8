@@ -9,6 +9,7 @@ import org.echoiot.rule.engine.api.TbNodeConfiguration;
 import org.echoiot.rule.engine.api.TbNodeException;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.msg.TbMsg;
+import org.jetbrains.annotations.NotNull;
 
 @Slf4j
 @RuleNode(
@@ -30,7 +31,7 @@ public class TbRuleChainOutputNode implements TbNode {
     }
 
     @Override
-    public void onMsg(TbContext ctx, TbMsg msg) {
+    public void onMsg(@NotNull TbContext ctx, TbMsg msg) {
         ctx.output(msg, ctx.getSelf().getName());
     }
 

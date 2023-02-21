@@ -3,6 +3,7 @@ package org.echoiot.server.service.sync.vc.autocommit;
 import org.echoiot.server.common.data.CacheConstants;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.sync.vc.AutoCommitSettings;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,7 @@ import org.echoiot.server.cache.TbFSTRedisSerializer;
 @Service("AutoCommitSettingsCache")
 public class AutoCommitSettingsRedisCache extends RedisTbTransactionalCache<TenantId, AutoCommitSettings> {
 
-    public AutoCommitSettingsRedisCache(TBRedisCacheConfiguration configuration, CacheSpecsMap cacheSpecsMap, RedisConnectionFactory connectionFactory) {
+    public AutoCommitSettingsRedisCache(@NotNull TBRedisCacheConfiguration configuration, CacheSpecsMap cacheSpecsMap, RedisConnectionFactory connectionFactory) {
         super(CacheConstants.AUTO_COMMIT_SETTINGS_CACHE, cacheSpecsMap, connectionFactory, configuration, new TbFSTRedisSerializer<>());
     }
 }

@@ -12,6 +12,8 @@ import org.eclipse.leshan.core.model.ObjectModel;
 import org.eclipse.leshan.core.model.ResourceModel;
 import org.eclipse.leshan.server.model.LwM2mModelProvider;
 import org.eclipse.leshan.server.registration.Registration;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.echoiot.server.queue.util.TbLwM2mTransportComponent;
@@ -34,6 +36,7 @@ public class LwM2mVersionedModelProvider implements LwM2mModelProvider {
     private final LwM2mClientContext lwM2mClientContext;
     private final LwM2mTransportServerHelper helper;
     private final LwM2mTransportContext context;
+    @NotNull
     private final ConcurrentMap<TenantId, ConcurrentMap<String, ObjectModel>> models;
 
     public LwM2mVersionedModelProvider(@Lazy LwM2mClientContext lwM2mClientContext, LwM2mTransportServerHelper helper, LwM2mTransportContext context) {
@@ -43,16 +46,17 @@ public class LwM2mVersionedModelProvider implements LwM2mModelProvider {
         this.models = new ConcurrentHashMap<>();
     }
 
-    private String getKeyIdVer(Integer objectId, String version) {
+    private String getKeyIdVer(@Nullable Integer objectId, @Nullable String version) {
         return objectId != null ? objectId + LwM2mConstants.LWM2M_SEPARATOR_KEY + ((version == null || version.isEmpty()) ? ObjectModel.DEFAULT_VERSION : version) : null;
     }
 
+    @NotNull
     @Override
-    public LwM2mModel getObjectModel(Registration registration) {
+    public LwM2mModel getObjectModel(@NotNull Registration registration) {
         return new DynamicModel(registration);
     }
 
-    public void evict(TenantId tenantId, String key) {
+    public void evict(@NotNull TenantId tenantId, String key) {
         if (tenantId.isNullUid()) {
             models.values().forEach(m -> m.remove(key));
         } else {
@@ -63,9 +67,10 @@ public class LwM2mVersionedModelProvider implements LwM2mModelProvider {
     private class DynamicModel implements LwM2mModel {
         private final Registration registration;
         private final TenantId tenantId;
+        @NotNull
         private final Lock modelsLock;
 
-        public DynamicModel(Registration registration) {
+        public DynamicModel(@NotNull Registration registration) {
             this.registration = registration;
             this.tenantId = lwM2mClientContext.getClientByEndpoint(registration.getEndpoint()).getTenantId();
             this.modelsLock = new ReentrantLock();
@@ -74,10 +79,11 @@ public class LwM2mVersionedModelProvider implements LwM2mModelProvider {
             }
         }
 
+        @Nullable
         @Override
         public ResourceModel getResourceModel(int objectId, int resourceId) {
             try {
-                ObjectModel objectModel = getObjectModel(objectId);
+                @Nullable ObjectModel objectModel = getObjectModel(objectId);
                 if (objectModel != null)
                     return objectModel.resources.get(resourceId);
                 else
@@ -89,6 +95,7 @@ public class LwM2mVersionedModelProvider implements LwM2mModelProvider {
             }
         }
 
+        @Nullable
         @Override
         public ObjectModel getObjectModel(int objectId) {
             String version = registration.getSupportedVersion(objectId);
@@ -98,12 +105,13 @@ public class LwM2mVersionedModelProvider implements LwM2mModelProvider {
             return null;
         }
 
+        @NotNull
         @Override
         public Collection<ObjectModel> getObjectModels() {
             Map<Integer, String> supportedObjects = this.registration.getSupportedObject();
-            Collection<ObjectModel> result = new ArrayList<>(supportedObjects.size());
-            for (Map.Entry<Integer, String> supportedObject : supportedObjects.entrySet()) {
-                ObjectModel objectModel = this.getObjectModelDynamic(supportedObject.getKey(), supportedObject.getValue());
+            @NotNull Collection<ObjectModel> result = new ArrayList<>(supportedObjects.size());
+            for (@NotNull Map.Entry<Integer, String> supportedObject : supportedObjects.entrySet()) {
+                @Nullable ObjectModel objectModel = this.getObjectModelDynamic(supportedObject.getKey(), supportedObject.getValue());
                 if (objectModel != null) {
                     result.add(objectModel);
                 }
@@ -111,9 +119,10 @@ public class LwM2mVersionedModelProvider implements LwM2mModelProvider {
             return result;
         }
 
+        @Nullable
         private ObjectModel getObjectModelDynamic(Integer objectId, String version) {
-            String key = getKeyIdVer(objectId, version);
-            ObjectModel objectModel = tenantId != null ? models.get(tenantId).get(key) : null;
+            @Nullable String key = getKeyIdVer(objectId, version);
+            @Nullable ObjectModel objectModel = tenantId != null ? models.get(tenantId).get(key) : null;
             if (tenantId != null && objectModel == null) {
                 modelsLock.lock();
                 try {
@@ -134,6 +143,7 @@ public class LwM2mVersionedModelProvider implements LwM2mModelProvider {
             return objectModel;
         }
 
+        @Nullable
         private ObjectModel getObjectModel(String key) {
             Optional<TbResource> tbResource = context.getTransportResourceCache().get(this.tenantId, ResourceType.LWM2M_MODEL, key);
             return tbResource.map(resource -> helper.parseFromXmlToObjectModel(

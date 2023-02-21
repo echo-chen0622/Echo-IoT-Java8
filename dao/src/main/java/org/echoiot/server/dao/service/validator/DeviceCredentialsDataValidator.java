@@ -8,20 +8,22 @@ import org.echoiot.server.dao.device.DeviceCredentialsDao;
 import org.echoiot.server.dao.device.DeviceService;
 import org.echoiot.server.dao.exception.DeviceCredentialsValidationException;
 import org.echoiot.server.dao.service.DataValidator;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DeviceCredentialsDataValidator extends DataValidator<DeviceCredentials> {
 
-    @Autowired
+    @Resource
     private DeviceCredentialsDao deviceCredentialsDao;
 
-    @Autowired
+    @Resource
     private DeviceService deviceService;
 
     @Override
-    protected void validateCreate(TenantId tenantId, DeviceCredentials deviceCredentials) {
+    protected void validateCreate(TenantId tenantId, @NotNull DeviceCredentials deviceCredentials) {
         if (deviceCredentialsDao.findByDeviceId(tenantId, deviceCredentials.getDeviceId().getId()) != null) {
             throw new DeviceCredentialsValidationException("Credentials for this device are already specified!");
         }
@@ -30,8 +32,9 @@ public class DeviceCredentialsDataValidator extends DataValidator<DeviceCredenti
         }
     }
 
+    @Nullable
     @Override
-    protected DeviceCredentials validateUpdate(TenantId tenantId, DeviceCredentials deviceCredentials) {
+    protected DeviceCredentials validateUpdate(TenantId tenantId, @NotNull DeviceCredentials deviceCredentials) {
         if (deviceCredentialsDao.findById(tenantId, deviceCredentials.getUuidId()) == null) {
             throw new DeviceCredentialsValidationException("Unable to update non-existent device credentials!");
         }
@@ -43,7 +46,7 @@ public class DeviceCredentialsDataValidator extends DataValidator<DeviceCredenti
     }
 
     @Override
-    protected void validateDataImpl(TenantId tenantId, DeviceCredentials deviceCredentials) {
+    protected void validateDataImpl(TenantId tenantId, @NotNull DeviceCredentials deviceCredentials) {
         if (deviceCredentials.getDeviceId() == null) {
             throw new DeviceCredentialsValidationException("Device credentials should be assigned to device!");
         }

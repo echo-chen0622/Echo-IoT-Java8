@@ -1,5 +1,6 @@
 package org.echoiot.server.dao.ota;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ import org.echoiot.server.cache.RedisTbTransactionalCache;
 @Service("OtaPackageCache")
 public class OtaPackageRedisCache extends RedisTbTransactionalCache<OtaPackageCacheKey, OtaPackageInfo> {
 
-    public OtaPackageRedisCache(TBRedisCacheConfiguration configuration, CacheSpecsMap cacheSpecsMap, RedisConnectionFactory connectionFactory) {
+    public OtaPackageRedisCache(@NotNull TBRedisCacheConfiguration configuration, CacheSpecsMap cacheSpecsMap, RedisConnectionFactory connectionFactory) {
         super(CacheConstants.OTA_PACKAGE_CACHE, cacheSpecsMap, connectionFactory, configuration, new TbFSTRedisSerializer<>());
     }
 }

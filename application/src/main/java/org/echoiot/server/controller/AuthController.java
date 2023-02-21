@@ -22,6 +22,7 @@ import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.security.auth.rest.RestAuthenticationDetails;
 import org.echoiot.server.service.security.model.token.JwtTokenFactory;
 import org.echoiot.server.service.security.system.SystemSecurityService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -54,11 +55,17 @@ import java.net.URISyntaxException;
 @Slf4j
 @RequiredArgsConstructor
 public class AuthController extends BaseController {
+    @NotNull
     private final BCryptPasswordEncoder passwordEncoder;
+    @NotNull
     private final JwtTokenFactory tokenFactory;
+    @NotNull
     private final MailService mailService;
+    @NotNull
     private final SystemSecurityService systemSecurityService;
+    @NotNull
     private final AuditLogService auditLogService;
+    @NotNull
     private final ApplicationEventPublisher eventPublisher;
 
 
@@ -80,17 +87,18 @@ public class AuthController extends BaseController {
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/auth/logout", method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.OK)
-    public void logout(HttpServletRequest request) throws EchoiotException {
+    public void logout(@NotNull HttpServletRequest request) throws EchoiotException {
         logLogoutAction(request);
     }
 
+    @NotNull
     @ApiOperation(value = "Change password for current User (changePassword)",
             notes = "Change the password for the User which credentials are used to perform this REST API call. Be aware that previously generated [JWT](https://jwt.io/) tokens will be still valid until they expire.")
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/auth/changePassword", method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.OK)
     public ObjectNode changePassword(
-            @ApiParam(value = "Change Password Request")
+            @NotNull @ApiParam(value = "Change Password Request")
             @RequestBody ChangePasswordRequest changePasswordRequest) throws EchoiotException {
         try {
             String currentPassword = changePasswordRequest.getCurrentPassword();
@@ -133,6 +141,7 @@ public class AuthController extends BaseController {
         }
     }
 
+    @NotNull
     @ApiOperation(value = "Check Activate User Token (checkActivateToken)",
             notes = "Checks the activation token and forwards user to 'Create Password' page. " +
                     "If token is valid, returns '303 See Other' (redirect) response code with the correct address of 'Create Password' page and same 'activateToken' specified in the URL parameters. " +
@@ -141,13 +150,13 @@ public class AuthController extends BaseController {
     public ResponseEntity<String> checkActivateToken(
             @ApiParam(value = "The activate token string.")
             @RequestParam(value = "activateToken") String activateToken) {
-        HttpHeaders headers = new HttpHeaders();
+        @NotNull HttpHeaders headers = new HttpHeaders();
         HttpStatus responseStatus;
         UserCredentials userCredentials = userService.findUserCredentialsByActivateToken(TenantId.SYS_TENANT_ID, activateToken);
         if (userCredentials != null) {
-            String createURI = "/login/createPassword";
+            @NotNull String createURI = "/login/createPassword";
             try {
-                URI location = new URI(createURI + "?activateToken=" + activateToken);
+                @NotNull URI location = new URI(createURI + "?activateToken=" + activateToken);
                 headers.setLocation(location);
                 responseStatus = HttpStatus.SEE_OTHER;
             } catch (URISyntaxException e) {
@@ -166,7 +175,7 @@ public class AuthController extends BaseController {
     @RequestMapping(value = "/noauth/resetPasswordByEmail", method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.OK)
     public void requestResetPasswordByEmail(
-            @ApiParam(value = "The JSON object representing the reset password email request.")
+            @NotNull @ApiParam(value = "The JSON object representing the reset password email request.")
             @RequestBody ResetPasswordEmailRequest resetPasswordByEmailRequest,
             HttpServletRequest request) throws EchoiotException {
         try {
@@ -183,6 +192,7 @@ public class AuthController extends BaseController {
         }
     }
 
+    @NotNull
     @ApiOperation(value = "Check password reset token (checkResetToken)",
             notes = "Checks the password reset token and forwards user to 'Reset Password' page. " +
                     "If token is valid, returns '303 See Other' (redirect) response code with the correct address of 'Reset Password' page and same 'resetToken' specified in the URL parameters. " +
@@ -191,13 +201,13 @@ public class AuthController extends BaseController {
     public ResponseEntity<String> checkResetToken(
             @ApiParam(value = "The reset token string.")
             @RequestParam(value = "resetToken") String resetToken) {
-        HttpHeaders headers = new HttpHeaders();
+        @NotNull HttpHeaders headers = new HttpHeaders();
         HttpStatus responseStatus;
-        String resetURI = "/login/resetPassword";
+        @NotNull String resetURI = "/login/resetPassword";
         UserCredentials userCredentials = userService.findUserCredentialsByResetToken(TenantId.SYS_TENANT_ID, resetToken);
         if (userCredentials != null) {
             try {
-                URI location = new URI(resetURI + "?resetToken=" + resetToken);
+                @NotNull URI location = new URI(resetURI + "?resetToken=" + resetToken);
                 headers.setLocation(location);
                 responseStatus = HttpStatus.SEE_OTHER;
             } catch (URISyntaxException e) {
@@ -221,7 +231,7 @@ public class AuthController extends BaseController {
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public JwtPair activateUser(
-            @ApiParam(value = "Activate user request.")
+            @NotNull @ApiParam(value = "Activate user request.")
             @RequestBody ActivateUserRequest activateRequest,
             @RequestParam(required = false, defaultValue = "true") boolean sendActivationMail,
             HttpServletRequest request) throws EchoiotException {
@@ -232,8 +242,8 @@ public class AuthController extends BaseController {
             String encodedPassword = passwordEncoder.encode(password);
             UserCredentials credentials = userService.activateUserCredentials(TenantId.SYS_TENANT_ID, activateToken, encodedPassword);
             User user = userService.findUserById(TenantId.SYS_TENANT_ID, credentials.getUserId());
-            UserPrincipal principal = new UserPrincipal(UserPrincipal.Type.USER_NAME, user.getEmail());
-            SecurityUser securityUser = new SecurityUser(user, credentials.isEnabled(), principal);
+            @NotNull UserPrincipal principal = new UserPrincipal(UserPrincipal.Type.USER_NAME, user.getEmail());
+            @NotNull SecurityUser securityUser = new SecurityUser(user, credentials.isEnabled(), principal);
             userService.setUserCredentialsEnabled(user.getTenantId(), user.getId(), true);
             String baseUrl = systemSecurityService.getBaseUrl(user.getTenantId(), user.getCustomerId(), request);
             String loginUrl = String.format("%s/login", baseUrl);
@@ -263,7 +273,7 @@ public class AuthController extends BaseController {
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public JwtPair resetPassword(
-            @ApiParam(value = "Reset password request.")
+            @NotNull @ApiParam(value = "Reset password request.")
             @RequestBody ResetPasswordRequest resetPasswordRequest,
             HttpServletRequest request) throws EchoiotException {
         try {
@@ -280,8 +290,8 @@ public class AuthController extends BaseController {
                 userCredentials.setResetToken(null);
                 userCredentials = userService.replaceUserCredentials(TenantId.SYS_TENANT_ID, userCredentials);
                 User user = userService.findUserById(TenantId.SYS_TENANT_ID, userCredentials.getUserId());
-                UserPrincipal principal = new UserPrincipal(UserPrincipal.Type.USER_NAME, user.getEmail());
-                SecurityUser securityUser = new SecurityUser(user, userCredentials.isEnabled(), principal);
+                @NotNull UserPrincipal principal = new UserPrincipal(UserPrincipal.Type.USER_NAME, user.getEmail());
+                @NotNull SecurityUser securityUser = new SecurityUser(user, userCredentials.isEnabled(), principal);
                 String baseUrl = systemSecurityService.getBaseUrl(user.getTenantId(), user.getCustomerId(), request);
                 String loginUrl = String.format("%s/login", baseUrl);
                 String email = user.getEmail();
@@ -298,7 +308,7 @@ public class AuthController extends BaseController {
         }
     }
 
-    private void logLogoutAction(HttpServletRequest request) throws EchoiotException {
+    private void logLogoutAction(@NotNull HttpServletRequest request) throws EchoiotException {
         try {
             var user = getCurrentUser();
             systemSecurityService.logLoginAction(user, new RestAuthenticationDetails(request), ActionType.LOGOUT, null);

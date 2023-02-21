@@ -8,6 +8,7 @@ import org.echoiot.server.queue.common.TbProtoQueueMsg;
 import org.echoiot.server.queue.settings.TbQueueCoreSettings;
 import org.echoiot.server.queue.settings.TbQueueVersionControlSettings;
 import org.echoiot.server.queue.sqs.*;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Component;
 
@@ -22,14 +23,17 @@ public class AwsSqsTbVersionControlQueueFactory implements TbVersionControlQueue
     private final TbQueueVersionControlSettings vcSettings;
 
 
+    @NotNull
     private final TbQueueAdmin coreAdmin;
+    @NotNull
     private final TbQueueAdmin notificationAdmin;
+    @NotNull
     private final TbQueueAdmin vcAdmin;
 
-    public AwsSqsTbVersionControlQueueFactory(TbAwsSqsSettings sqsSettings,
+    public AwsSqsTbVersionControlQueueFactory(@NotNull TbAwsSqsSettings sqsSettings,
                                               TbQueueCoreSettings coreSettings,
                                               TbQueueVersionControlSettings vcSettings,
-                                              TbAwsSqsQueueAttributes sqsQueueAttributes
+                                              @NotNull TbAwsSqsQueueAttributes sqsQueueAttributes
     ) {
         this.sqsSettings = sqsSettings;
         this.coreSettings = coreSettings;
@@ -40,16 +44,19 @@ public class AwsSqsTbVersionControlQueueFactory implements TbVersionControlQueue
         this.vcAdmin = new TbAwsSqsAdmin(sqsSettings, sqsQueueAttributes.getVcAttributes());
     }
 
+    @NotNull
     @Override
     public TbQueueProducer<TbProtoQueueMsg<TransportProtos.ToUsageStatsServiceMsg>> createToUsageStatsServiceMsgProducer() {
         return new TbAwsSqsProducerTemplate<>(coreAdmin, sqsSettings, coreSettings.getUsageStatsTopic());
     }
 
+    @NotNull
     @Override
     public TbQueueProducer<TbProtoQueueMsg<TransportProtos.ToCoreNotificationMsg>> createTbCoreNotificationsMsgProducer() {
         return new TbAwsSqsProducerTemplate<>(notificationAdmin, sqsSettings, coreSettings.getTopic());
     }
 
+    @NotNull
     @Override
     public TbQueueConsumer<TbProtoQueueMsg<TransportProtos.ToVersionControlServiceMsg>> createToVersionControlMsgConsumer() {
         return new TbAwsSqsConsumerTemplate<>(vcAdmin, sqsSettings, vcSettings.getTopic(),

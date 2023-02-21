@@ -5,6 +5,7 @@ import org.echoiot.server.common.data.User;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.UserId;
 import org.echoiot.server.common.data.security.Authority;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import org.echoiot.server.service.security.model.SecurityUser;
 
@@ -30,23 +31,17 @@ public class SysAdminPermissions extends AbstractPermissions {
     private static final PermissionChecker systemEntityPermissionChecker = new PermissionChecker() {
 
         @Override
-        public boolean hasPermission(SecurityUser user, Operation operation, EntityId entityId, HasTenantId entity) {
+        public boolean hasPermission(SecurityUser user, Operation operation, EntityId entityId, @NotNull HasTenantId entity) {
 
-            if (entity.getTenantId() != null && !entity.getTenantId().isNullUid()) {
-                return false;
-            }
-            return true;
+            return entity.getTenantId() == null || entity.getTenantId().isNullUid();
         }
     };
 
     private static final PermissionChecker userPermissionChecker = new PermissionChecker<UserId, User>() {
 
         @Override
-        public boolean hasPermission(SecurityUser user, Operation operation, UserId userId, User userEntity) {
-            if (Authority.CUSTOMER_USER.equals(userEntity.getAuthority())) {
-                return false;
-            }
-            return true;
+        public boolean hasPermission(SecurityUser user, Operation operation, UserId userId, @NotNull User userEntity) {
+            return !Authority.CUSTOMER_USER.equals(userEntity.getAuthority());
         }
 
     };

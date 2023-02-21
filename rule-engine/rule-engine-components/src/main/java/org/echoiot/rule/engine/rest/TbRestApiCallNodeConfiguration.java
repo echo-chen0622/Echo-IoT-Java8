@@ -2,6 +2,7 @@ package org.echoiot.rule.engine.rest;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.echoiot.rule.engine.api.NodeConfiguration;
@@ -34,9 +35,10 @@ public class TbRestApiCallNodeConfiguration implements NodeConfiguration<TbRestA
     private ClientCredentials credentials;
     private boolean ignoreRequestBody;
 
+    @NotNull
     @Override
     public TbRestApiCallNodeConfiguration defaultConfiguration() {
-        TbRestApiCallNodeConfiguration configuration = new TbRestApiCallNodeConfiguration();
+        @NotNull TbRestApiCallNodeConfiguration configuration = new TbRestApiCallNodeConfiguration();
         configuration.setRestEndpointUrlPattern("http://localhost/api");
         configuration.setRequestMethod("POST");
         configuration.setHeaders(Collections.singletonMap(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE));
@@ -51,6 +53,7 @@ public class TbRestApiCallNodeConfiguration implements NodeConfiguration<TbRestA
         return configuration;
     }
 
+    @NotNull
     public ClientCredentials getCredentials() {
         if (this.credentials == null) {
             return new AnonymousCredentials();

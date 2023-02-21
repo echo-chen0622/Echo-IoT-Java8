@@ -1,6 +1,7 @@
 package org.echoiot.server.common.data.security.model.mfa.provider;
 
 import lombok.Data;
+import org.jetbrains.annotations.NotNull;
 
 import javax.validation.constraints.Min;
 
@@ -10,6 +11,7 @@ public class BackupCodeTwoFaProviderConfig implements TwoFaProviderConfig {
     @Min(value = 1, message = "backup codes quantity must be greater than 0")
     private int codesQuantity;
 
+    @NotNull
     @Override
     public TwoFaProviderType getProviderType() {
         return TwoFaProviderType.BACKUP_CODE;

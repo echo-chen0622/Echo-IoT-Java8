@@ -2,6 +2,7 @@ package org.echoiot.server.common.data.id;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
@@ -12,7 +13,8 @@ public class OAuth2MobileId extends UUIDBased {
         super(id);
     }
 
-    public static OAuth2MobileId fromString(String oauth2MobileId) {
+    @NotNull
+    public static OAuth2MobileId fromString(@NotNull String oauth2MobileId) {
         return new OAuth2MobileId(UUID.fromString(oauth2MobileId));
     }
 }

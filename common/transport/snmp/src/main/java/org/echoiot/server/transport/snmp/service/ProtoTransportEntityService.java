@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.echoiot.server.common.data.device.data.DeviceData;
 import org.echoiot.server.common.data.device.data.DeviceTransportConfiguration;
 import org.echoiot.server.common.transport.TransportService;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.echoiot.server.common.data.Device;
 import org.echoiot.server.common.data.id.DeviceId;
@@ -19,10 +21,13 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class ProtoTransportEntityService {
+    @NotNull
     private final TransportService transportService;
+    @NotNull
     private final DataDecodingEncodingService dataDecodingEncodingService;
 
-    public Device getDeviceById(DeviceId id) {
+    @Nullable
+    public Device getDeviceById(@NotNull DeviceId id) {
         TransportProtos.GetDeviceResponseMsg deviceProto = transportService.getDevice(TransportProtos.GetDeviceRequestMsg.newBuilder()
                 .setDeviceIdMSB(id.getId().getMostSignificantBits())
                 .setDeviceIdLSB(id.getId().getLeastSignificantBits())
@@ -32,11 +37,11 @@ public class ProtoTransportEntityService {
             return null;
         }
 
-        DeviceProfileId deviceProfileId = new DeviceProfileId(new UUID(
+        @NotNull DeviceProfileId deviceProfileId = new DeviceProfileId(new UUID(
                 deviceProto.getDeviceProfileIdMSB(), deviceProto.getDeviceProfileIdLSB())
         );
 
-        Device device = new Device();
+        @NotNull Device device = new Device();
         device.setId(id);
         device.setDeviceProfileId(deviceProfileId);
 
@@ -44,14 +49,14 @@ public class ProtoTransportEntityService {
                 deviceProto.getDeviceTransportConfiguration().toByteArray()
                                                                                                                                      ).orElseThrow(() -> new IllegalStateException("Can't find device transport configuration"));
 
-        DeviceData deviceData = new DeviceData();
+        @NotNull DeviceData deviceData = new DeviceData();
         deviceData.setTransportConfiguration(deviceTransportConfiguration);
         device.setDeviceData(deviceData);
 
         return device;
     }
 
-    public DeviceCredentials getDeviceCredentialsByDeviceId(DeviceId deviceId) {
+    public DeviceCredentials getDeviceCredentialsByDeviceId(@NotNull DeviceId deviceId) {
         TransportProtos.GetDeviceCredentialsResponseMsg deviceCredentialsResponse = transportService.getDeviceCredentials(
                 TransportProtos.GetDeviceCredentialsRequestMsg.newBuilder()
                         .setDeviceIdMSB(deviceId.getId().getMostSignificantBits())

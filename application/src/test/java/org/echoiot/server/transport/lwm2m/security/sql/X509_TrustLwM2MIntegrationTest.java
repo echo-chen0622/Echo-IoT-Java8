@@ -1,6 +1,7 @@
 package org.echoiot.server.transport.lwm2m.security.sql;
 
 import org.eclipse.leshan.client.object.Security;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import org.echoiot.server.common.data.device.credentials.lwm2m.LwM2MDeviceCredentials;
 import org.echoiot.server.common.data.device.credentials.lwm2m.X509ClientCredential;
@@ -22,17 +23,17 @@ public class X509_TrustLwM2MIntegrationTest extends AbstractSecurityLwM2MIntegra
     //Lwm2m only
     @Test
     public void testWithX509TrustConnectLwm2mSuccess() throws Exception {
-        String clientEndpoint = CLIENT_ENDPOINT_X509_TRUST;
+        @NotNull String clientEndpoint = CLIENT_ENDPOINT_X509_TRUST;
         X509Certificate certificate = clientX509CertTrust;
         PrivateKey privateKey = clientPrivateKeyFromCertTrust;
-        X509ClientCredential clientCredentials = new X509ClientCredential();
+        @NotNull X509ClientCredential clientCredentials = new X509ClientCredential();
         clientCredentials.setEndpoint(clientEndpoint);
         clientCredentials.setCert("");
-        Security security = x509(SECURE_URI,
-                shortServerId,
-                certificate.getEncoded(),
-                privateKey.getEncoded(),
-                serverX509Cert.getEncoded());
+        @NotNull Security security = x509(SECURE_URI,
+                                          shortServerId,
+                                          certificate.getEncoded(),
+                                          privateKey.getEncoded(),
+                                          serverX509Cert.getEncoded());
         Lwm2mDeviceProfileTransportConfiguration transportConfiguration = getTransportConfiguration(OBSERVE_ATTRIBUTES_WITHOUT_PARAMS, getBootstrapServerCredentialsSecure(X509, NONE));
         LwM2MDeviceCredentials deviceCredentials = getDeviceCredentialsSecure(clientCredentials, privateKey, certificate, X509, false);
         this.basicTestConnection(security,
@@ -50,16 +51,16 @@ public class X509_TrustLwM2MIntegrationTest extends AbstractSecurityLwM2MIntegra
     // Bootstrap + Lwm2m
     @Test
     public void testWithX509TrustConnectBsSuccess_UpdateTwoSectionsBootstrapAndLm2m_ConnectLwm2mSuccess() throws Exception {
-        String clientEndpoint = CLIENT_ENDPOINT_X509_TRUST;
+        @NotNull String clientEndpoint = CLIENT_ENDPOINT_X509_TRUST;
         X509Certificate certificate = clientX509CertTrust;
         PrivateKey privateKey = clientPrivateKeyFromCertTrust;
-        X509ClientCredential clientCredentials = new X509ClientCredential();
+        @NotNull X509ClientCredential clientCredentials = new X509ClientCredential();
         clientCredentials.setEndpoint(clientEndpoint);
         clientCredentials.setCert("");
-        Security security = x509Bootstrap(SECURE_URI_BS,
-                certificate.getEncoded(),
-                privateKey.getEncoded(),
-                serverX509CertBs.getEncoded());
+        @NotNull Security security = x509Bootstrap(SECURE_URI_BS,
+                                                   certificate.getEncoded(),
+                                                   privateKey.getEncoded(),
+                                                   serverX509CertBs.getEncoded());
         Lwm2mDeviceProfileTransportConfiguration transportConfiguration = getTransportConfiguration(OBSERVE_ATTRIBUTES_WITHOUT_PARAMS, getBootstrapServerCredentialsSecure(X509, BOTH));
         LwM2MDeviceCredentials deviceCredentials = getDeviceCredentialsSecure(clientCredentials, privateKey, certificate, X509, false);
         this.basicTestConnection(security,

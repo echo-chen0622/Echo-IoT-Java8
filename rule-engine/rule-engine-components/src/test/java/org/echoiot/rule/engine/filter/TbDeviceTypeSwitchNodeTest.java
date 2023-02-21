@@ -1,5 +1,6 @@
 package org.echoiot.rule.engine.filter;
 
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -78,7 +79,7 @@ class TbDeviceTypeSwitchNodeTest {
 
     @Test
     void givenMsg_whenOnMsg_then_Fail() {
-        CustomerId customerId = new CustomerId(UUID.randomUUID());
+        @NotNull CustomerId customerId = new CustomerId(UUID.randomUUID());
         assertThatThrownBy(() -> {
             node.onMsg(ctx, getTbMsg(customerId));
         }).isInstanceOf(TbNodeException.class).hasMessageContaining("Unsupported originator type");
@@ -93,10 +94,10 @@ class TbDeviceTypeSwitchNodeTest {
 
     @Test
     void givenMsg_whenOnMsg_then_Success() throws TbNodeException {
-        TbMsg msg = getTbMsg(deviceId);
+        @NotNull TbMsg msg = getTbMsg(deviceId);
         node.onMsg(ctx, msg);
 
-        ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        @NotNull ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
         verify(ctx, times(1)).tellNext(newMsgCaptor.capture(), eq("TestDeviceProfile"));
         verify(ctx, never()).tellFailure(any(), any());
 
@@ -105,6 +106,7 @@ class TbDeviceTypeSwitchNodeTest {
         assertThat(newMsg).isSameAs(msg);
     }
 
+    @NotNull
     private TbMsg getTbMsg(EntityId entityId) {
         return TbMsg.newMsg("POST_ATTRIBUTES_REQUEST", entityId, new TbMsgMetaData(), "{}", callback);
     }

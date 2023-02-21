@@ -14,6 +14,7 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.dao.model.BaseSqlEntity;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.model.SearchTextEntity;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -58,7 +59,7 @@ public class DashboardInfoEntity extends BaseSqlEntity<DashboardInfo> implements
         super();
     }
 
-    public DashboardInfoEntity(DashboardInfo dashboardInfo) {
+    public DashboardInfoEntity(@NotNull DashboardInfo dashboardInfo) {
         if (dashboardInfo.getId() != null) {
             this.setUuid(dashboardInfo.getId().getId());
         }
@@ -93,9 +94,10 @@ public class DashboardInfoEntity extends BaseSqlEntity<DashboardInfo> implements
         return searchText;
     }
 
+    @NotNull
     @Override
     public DashboardInfo toData() {
-        DashboardInfo dashboardInfo = new DashboardInfo(new DashboardId(this.getUuid()));
+        @NotNull DashboardInfo dashboardInfo = new DashboardInfo(new DashboardId(this.getUuid()));
         dashboardInfo.setCreatedTime(createdTime);
         if (tenantId != null) {
             dashboardInfo.setTenantId(TenantId.fromUUID(tenantId));

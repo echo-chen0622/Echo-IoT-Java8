@@ -13,6 +13,8 @@ import org.echoiot.server.common.msg.TbMsgMetaData;
 import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.script.api.RuleNodeScriptFactory;
 import org.echoiot.script.api.tbel.TbelInvokeService;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.script.ScriptException;
 import java.util.ArrayList;
@@ -33,6 +35,7 @@ public class RuleNodeTbelScriptEngine extends RuleNodeScriptEngine<TbelInvokeSer
         super(tenantId, scriptInvokeService, script, argNames);
     }
 
+    @NotNull
     @Override
     protected ListenableFuture<Boolean> executeFilterTransform(Object result) {
         if (result instanceof Boolean) {
@@ -41,12 +44,13 @@ public class RuleNodeTbelScriptEngine extends RuleNodeScriptEngine<TbelInvokeSer
         return wrongResultType(result);
     }
 
+    @NotNull
     @Override
-    protected ListenableFuture<List<TbMsg>> executeUpdateTransform(TbMsg msg, Object result) {
+    protected ListenableFuture<List<TbMsg>> executeUpdateTransform(@NotNull TbMsg msg, Object result) {
         if (result instanceof Map) {
             return Futures.immediateFuture(Collections.singletonList(unbindMsg((Map) result, msg)));
         } else if (result instanceof Collection) {
-            List<TbMsg> res = new ArrayList<>();
+            @NotNull List<TbMsg> res = new ArrayList<>();
             for (Object resObject : (Collection) result) {
                 if (resObject instanceof Map) {
                     res.add(unbindMsg((Map) resObject, msg));
@@ -59,14 +63,16 @@ public class RuleNodeTbelScriptEngine extends RuleNodeScriptEngine<TbelInvokeSer
         return wrongResultType(result);
     }
 
+    @NotNull
     @Override
-    protected ListenableFuture<TbMsg> executeGenerateTransform(TbMsg prevMsg, Object result) {
+    protected ListenableFuture<TbMsg> executeGenerateTransform(@NotNull TbMsg prevMsg, Object result) {
         if (result instanceof Map) {
             return Futures.immediateFuture(unbindMsg((Map) result, prevMsg));
         }
         return wrongResultType(result);
     }
 
+    @NotNull
     @Override
     protected ListenableFuture<String> executeToStringTransform(Object result) {
         if (result instanceof String) {
@@ -76,12 +82,13 @@ public class RuleNodeTbelScriptEngine extends RuleNodeScriptEngine<TbelInvokeSer
         }
     }
 
+    @NotNull
     @Override
     protected ListenableFuture<Set<String>> executeSwitchTransform(Object result) {
         if (result instanceof String) {
             return Futures.immediateFuture(Collections.singleton((String) result));
         } else if (result instanceof Collection) {
-            Set<String> res = new HashSet<>();
+            @NotNull Set<String> res = new HashSet<>();
             for (Object resObject : (Collection) result) {
                 if (resObject instanceof String) {
                     res.add((String) resObject);
@@ -94,8 +101,9 @@ public class RuleNodeTbelScriptEngine extends RuleNodeScriptEngine<TbelInvokeSer
         return wrongResultType(result);
     }
 
+    @NotNull
     @Override
-    public ListenableFuture<JsonNode> executeJsonAsync(TbMsg msg) {
+    public ListenableFuture<JsonNode> executeJsonAsync(@NotNull TbMsg msg) {
         return Futures.transform(executeScriptAsync(msg), JacksonUtil::valueToTree, MoreExecutors.directExecutor());
 
     }
@@ -105,9 +113,10 @@ public class RuleNodeTbelScriptEngine extends RuleNodeScriptEngine<TbelInvokeSer
         return result;
     }
 
+    @NotNull
     @Override
-    protected Object[] prepareArgs(TbMsg msg) {
-        Object[] args = new Object[3];
+    protected Object[] prepareArgs(@NotNull TbMsg msg) {
+        @NotNull Object[] args = new Object[3];
         if (msg.getData() != null) {
             args[0] = JacksonUtil.fromString(msg.getData(), Object.class);
         } else {
@@ -118,10 +127,11 @@ public class RuleNodeTbelScriptEngine extends RuleNodeScriptEngine<TbelInvokeSer
         return args;
     }
 
-    private static TbMsg unbindMsg(Map msgData, TbMsg msg) {
-        String data = null;
-        Map<String, String> metadata = null;
-        String messageType = null;
+    @NotNull
+    private static TbMsg unbindMsg(@NotNull Map msgData, @NotNull TbMsg msg) {
+        @Nullable String data = null;
+        @Nullable Map<String, String> metadata = null;
+        @Nullable String messageType = null;
         if (msgData.containsKey(RuleNodeScriptFactory.MSG)) {
             data = JacksonUtil.toString(msgData.get(RuleNodeScriptFactory.MSG));
         }
@@ -139,18 +149,20 @@ public class RuleNodeTbelScriptEngine extends RuleNodeScriptEngine<TbelInvokeSer
             messageType = msgData.get(RuleNodeScriptFactory.MSG_TYPE).toString();
         }
         String newData = data != null ? data : msg.getData();
-        TbMsgMetaData newMetadata = metadata != null ? new TbMsgMetaData(metadata) : msg.getMetaData().copy();
+        @NotNull TbMsgMetaData newMetadata = metadata != null ? new TbMsgMetaData(metadata) : msg.getMetaData().copy();
         String newMessageType = !StringUtils.isEmpty(messageType) ? messageType : msg.getType();
         return TbMsg.transformMsg(msg, newMessageType, msg.getOriginator(), newMetadata, newData);
     }
 
+    @NotNull
     private static <T> ListenableFuture<T> wrongResultType(Object result) {
-        String className = toClassName(result);
+        @NotNull String className = toClassName(result);
         log.warn("Wrong result type: {}", className);
         return Futures.immediateFailedFuture(new ScriptException("Wrong result type: " + className));
     }
 
-    private static String toClassName(Object result) {
+    @NotNull
+    private static String toClassName(@Nullable Object result) {
         return result != null ? result.getClass().getSimpleName() : "null";
     }
 }

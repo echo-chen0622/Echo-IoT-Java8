@@ -13,6 +13,8 @@ import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.dao.asset.AssetDao;
 import org.echoiot.server.dao.asset.AssetProfileDao;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -44,14 +46,15 @@ public class JpaAssetDaoTest extends AbstractJpaDaoTest {
     UUID tenantId2;
     UUID customerId1;
     UUID customerId2;
+    @NotNull
     List<Asset> assets = new ArrayList<>();
-    @Autowired
+    @Resource
     private AssetDao assetDao;
 
-    @Autowired
+    @Resource
     private AssetProfileDao assetProfileDao;
 
-    private Map<String, AssetProfileId> savedAssetProfiles = new HashMap<>();
+    private final Map<String, AssetProfileId> savedAssetProfiles = new HashMap<>();
 
     @Before
     public void setUp() {
@@ -60,7 +63,7 @@ public class JpaAssetDaoTest extends AbstractJpaDaoTest {
         customerId1 = Uuids.timeBased();
         customerId2 = Uuids.timeBased();
         for (int i = 0; i < 60; i++) {
-            UUID assetId = Uuids.timeBased();
+            @NotNull UUID assetId = Uuids.timeBased();
             UUID tenantId = i % 2 == 0 ? tenantId1 : tenantId2;
             UUID customerId = i % 2 == 0 ? customerId1 : customerId2;
             assets.add(saveAsset(assetId, tenantId, customerId, "ASSET_" + i));
@@ -70,11 +73,11 @@ public class JpaAssetDaoTest extends AbstractJpaDaoTest {
 
     @After
     public void tearDown() {
-        for (Asset asset : assets) {
+        for (@NotNull Asset asset : assets) {
             assetDao.removeById(asset.getTenantId(), asset.getUuidId());
         }
         assets.clear();
-        for (AssetProfileId assetProfileId : savedAssetProfiles.values()) {
+        for (@NotNull AssetProfileId assetProfileId : savedAssetProfiles.values()) {
             assetProfileDao.removeById(TenantId.SYS_TENANT_ID, assetProfileId.getId());
         }
         savedAssetProfiles.clear();
@@ -112,7 +115,7 @@ public class JpaAssetDaoTest extends AbstractJpaDaoTest {
 
     @Test
     public void testFindAssetsByTenantIdAndIdsAsync() throws ExecutionException, InterruptedException, TimeoutException {
-        List<UUID> searchIds = getAssetsUuids(tenantId1);
+        @NotNull List<UUID> searchIds = getAssetsUuids(tenantId1);
 
         ListenableFuture<List<Asset>> assetsFuture = assetDao
                 .findAssetsByTenantIdAndIdsAsync(tenantId1, searchIds);
@@ -123,7 +126,7 @@ public class JpaAssetDaoTest extends AbstractJpaDaoTest {
 
     @Test
     public void testFindAssetsByTenantIdCustomerIdAndIdsAsync() throws ExecutionException, InterruptedException, TimeoutException {
-        List<UUID> searchIds = getAssetsUuids(tenantId1);
+        @NotNull List<UUID> searchIds = getAssetsUuids(tenantId1);
 
         ListenableFuture<List<Asset>> assetsFuture = assetDao
                 .findAssetsByTenantIdAndCustomerIdAndIdsAsync(tenantId1, customerId1, searchIds);
@@ -132,9 +135,10 @@ public class JpaAssetDaoTest extends AbstractJpaDaoTest {
         assertEquals(searchIds.size(), assets.size());
     }
 
+    @NotNull
     private List<UUID> getAssetsUuids(UUID tenantId) {
-        List<UUID> result = new ArrayList<>();
-        for (Asset asset : assets) {
+        @NotNull List<UUID> result = new ArrayList<>();
+        for (@NotNull Asset asset : assets) {
             if (asset.getTenantId().getId().equals(tenantId)) {
                 result.add(asset.getUuidId());
             }
@@ -144,8 +148,8 @@ public class JpaAssetDaoTest extends AbstractJpaDaoTest {
 
     @Test
     public void testFindAssetsByTenantIdAndName() {
-        UUID assetId = Uuids.timeBased();
-        String name = "TEST_ASSET";
+        @NotNull UUID assetId = Uuids.timeBased();
+        @NotNull String name = "TEST_ASSET";
         assets.add(saveAsset(assetId, tenantId2, customerId2, name));
 
         Optional<Asset> assetOpt1 = assetDao.findAssetsByTenantIdAndName(tenantId2, name);
@@ -158,7 +162,7 @@ public class JpaAssetDaoTest extends AbstractJpaDaoTest {
 
     @Test
     public void testFindAssetsByTenantIdAndType() {
-        String type = "TYPE_2";
+        @NotNull String type = "TYPE_2";
         assets.add(saveAsset(Uuids.timeBased(), tenantId2, customerId2, "TEST_ASSET", type));
 
         List<Asset> foundedAssetsByType = assetDao
@@ -168,7 +172,7 @@ public class JpaAssetDaoTest extends AbstractJpaDaoTest {
 
     @Test
     public void testFindAssetsByTenantIdAndCustomerIdAndType() {
-        String type = "TYPE_2";
+        @NotNull String type = "TYPE_2";
         assets.add(saveAsset(Uuids.timeBased(), tenantId2, customerId2, "TEST_ASSET", type));
 
         List<Asset> foundedAssetsByType = assetDao
@@ -176,7 +180,7 @@ public class JpaAssetDaoTest extends AbstractJpaDaoTest {
         compareFoundedAssetByType(foundedAssetsByType, type);
     }
 
-    private void compareFoundedAssetByType(List<Asset> foundedAssetsByType, String type) {
+    private void compareFoundedAssetByType(@NotNull List<Asset> foundedAssetsByType, String type) {
         assertNotNull(foundedAssetsByType);
         assertEquals(1, foundedAssetsByType.size());
         assertEquals(type, foundedAssetsByType.get(0).getType());
@@ -197,12 +201,12 @@ public class JpaAssetDaoTest extends AbstractJpaDaoTest {
         List<EntitySubtype> tenant2Types = assetDao.findTenantAssetTypesAsync(tenantId2).get(30, TimeUnit.SECONDS);
         assertNotNull(tenant2Types);
 
-        List<String> types = List.of("default", "TYPE_1", "TYPE_2", "TYPE_3", "TYPE_4");
+        @NotNull List<String> types = List.of("default", "TYPE_1", "TYPE_2", "TYPE_3", "TYPE_4");
         assertEquals(getDifferentTypesCount(types, tenant1Types), tenant1Types.size());
         assertEquals(getDifferentTypesCount(types, tenant2Types), tenant2Types.size());
     }
 
-    private long getDifferentTypesCount(List<String> types, List<EntitySubtype> foundedAssetsTypes) {
+    private long getDifferentTypesCount(@NotNull List<String> types, @NotNull List<EntitySubtype> foundedAssetsTypes) {
         return foundedAssetsTypes.stream().filter(type -> types.contains(type.getType())).count();
     }
 
@@ -210,11 +214,11 @@ public class JpaAssetDaoTest extends AbstractJpaDaoTest {
         return saveAsset(id, tenantId, customerId, name, null);
     }
 
-    private Asset saveAsset(UUID id, UUID tenantId, UUID customerId, String name, String type) {
+    private Asset saveAsset(UUID id, UUID tenantId, UUID customerId, String name, @Nullable String type) {
         if (type == null) {
             type = "default";
         }
-        Asset asset = new Asset();
+        @NotNull Asset asset = new Asset();
         asset.setId(new AssetId(id));
         asset.setTenantId(TenantId.fromUUID(tenantId));
         asset.setCustomerId(new CustomerId(customerId));
@@ -227,7 +231,7 @@ public class JpaAssetDaoTest extends AbstractJpaDaoTest {
     private AssetProfileId assetProfileId(String type) {
         AssetProfileId assetProfileId = savedAssetProfiles.get(type);
         if (assetProfileId == null) {
-            AssetProfile assetProfile = new AssetProfile();
+            @NotNull AssetProfile assetProfile = new AssetProfile();
             assetProfile.setName(type);
             assetProfile.setTenantId(TenantId.SYS_TENANT_ID);
             assetProfile.setDescription("Test");

@@ -15,6 +15,8 @@ import org.eclipse.leshan.server.registration.Registration;
 import org.eclipse.leshan.server.registration.RegistrationListener;
 import org.eclipse.leshan.server.registration.RegistrationUpdate;
 import org.eclipse.leshan.server.send.SendListener;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Map;
@@ -35,7 +37,7 @@ public class LwM2mServerListener {
          * Register – query represented as POST /rd?…
          */
         @Override
-        public void registered(Registration registration, Registration previousReg,
+        public void registered(@NotNull Registration registration, Registration previousReg,
                                Collection<Observation> previousObservations) {
             log.debug("Client: registered: [{}]", registration.getEndpoint());
             service.onRegistered(registration, previousObservations);
@@ -63,13 +65,13 @@ public class LwM2mServerListener {
 
     public final PresenceListener presenceListener = new PresenceListener() {
         @Override
-        public void onSleeping(Registration registration) {
+        public void onSleeping(@NotNull Registration registration) {
             log.info("[{}] onSleeping", registration.getEndpoint());
             service.onSleepingDev(registration);
         }
 
         @Override
-        public void onAwake(Registration registration) {
+        public void onAwake(@NotNull Registration registration) {
             log.info("[{}] onAwake", registration.getEndpoint());
             service.onAwakeDev(registration);
         }
@@ -78,13 +80,13 @@ public class LwM2mServerListener {
     public final ObservationListener observationListener = new ObservationListener() {
 
         @Override
-        public void cancelled(Observation observation) {
+        public void cancelled(@NotNull Observation observation) {
             //TODO: should be able to use CompositeObservation
             log.trace("Canceled Observation {}.", ((SingleObservation)observation).getPath());
         }
 
         @Override
-        public void onResponse(SingleObservation observation, Registration registration, ObserveResponse response) {
+        public void onResponse(@NotNull SingleObservation observation, @Nullable Registration registration, ObserveResponse response) {
             if (registration != null) {
                 service.onUpdateValueAfterReadResponse(registration, convertObjectIdToVersionedId(observation.getPath().toString(), registration), response);
             }
@@ -96,7 +98,7 @@ public class LwM2mServerListener {
         }
 
         @Override
-        public void onError(Observation observation, Registration registration, Exception error) {
+        public void onError(@NotNull Observation observation, Registration registration, @Nullable Exception error) {
             if (error != null) {
                 //TODO: should be able to use CompositeObservation
                 log.debug("Unable to handle notification of [{}:{}] [{}]", observation.getRegistrationId(), ((SingleObservation)observation).getPath(), error.getMessage());
@@ -104,7 +106,7 @@ public class LwM2mServerListener {
         }
 
         @Override
-        public void newObservation(Observation observation, Registration registration) {
+        public void newObservation(@NotNull Observation observation, Registration registration) {
             //TODO: should be able to use CompositeObservation
             log.trace("Successful start newObservation {}.", ((SingleObservation)observation).getPath());
         }
@@ -113,7 +115,7 @@ public class LwM2mServerListener {
     public final SendListener sendListener = new SendListener() {
 
         @Override
-        public void dataReceived(Registration registration, Map<String, LwM2mNode> map, SendRequest sendRequest) {
+        public void dataReceived(@Nullable Registration registration, Map<String, LwM2mNode> map, SendRequest sendRequest) {
             if (registration != null) {
                 service.onUpdateValueWithSendRequest(registration, sendRequest);
             }

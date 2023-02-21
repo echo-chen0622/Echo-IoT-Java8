@@ -8,6 +8,8 @@ import com.datastax.oss.driver.internal.core.session.RequestProcessor;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.SettableFuture;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.concurrent.CompletionStage;
 
 /**
@@ -36,14 +38,15 @@ public class GuavaRequestAsyncProcessor<T extends Request, U>
     }
 
     @Override
-    public boolean canProcess(Request request, GenericType resultType) {
+    public boolean canProcess(Request request, @NotNull GenericType resultType) {
         return requestClass.isInstance(request) && resultType.equals(this.resultType);
     }
 
+    @NotNull
     @Override
     public ListenableFuture<U> process(
             T request, DefaultSession session, InternalDriverContext context, String sessionLogPrefix) {
-        SettableFuture<U> future = SettableFuture.create();
+        @NotNull SettableFuture<U> future = SettableFuture.create();
         subProcessor
                 .process(request, session, context, sessionLogPrefix)
                 .whenComplete(
@@ -57,8 +60,9 @@ public class GuavaRequestAsyncProcessor<T extends Request, U>
         return future;
     }
 
+    @NotNull
     @Override
-    public ListenableFuture<U> newFailure(RuntimeException error) {
+    public ListenableFuture<U> newFailure(@NotNull RuntimeException error) {
         return Futures.immediateFailedFuture(error);
     }
 }

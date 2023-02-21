@@ -1,6 +1,7 @@
 package org.echoiot.server.cache.usersUpdateTime;
 
 import org.echoiot.server.common.data.CacheConstants;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -14,8 +15,8 @@ import org.echoiot.server.cache.TbFSTRedisSerializer;
 @Service("UsersSessionInvalidation")
 public class UsersSessionInvalidationRedisCache extends RedisTbTransactionalCache<String, Long> {
 
-    @Autowired
-    public UsersSessionInvalidationRedisCache(TBRedisCacheConfiguration configuration, CacheSpecsMap cacheSpecsMap, RedisConnectionFactory connectionFactory) {
+    @Resource
+    public UsersSessionInvalidationRedisCache(@NotNull TBRedisCacheConfiguration configuration, CacheSpecsMap cacheSpecsMap, RedisConnectionFactory connectionFactory) {
         super(CacheConstants.USERS_SESSION_INVALIDATION_CACHE, cacheSpecsMap, connectionFactory, configuration, new TbFSTRedisSerializer<>());
     }
 }

@@ -5,6 +5,7 @@ import org.echoiot.server.common.data.relation.EntitySearchDirection;
 import org.echoiot.server.common.data.relation.RelationEntityTypeFilter;
 import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.id.EntityId;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Set;
@@ -12,6 +13,7 @@ import java.util.Set;
 @Data
 public class RelationsQueryFilter implements EntityFilter {
 
+    @NotNull
     @Override
     public EntityFilterType getType() {
         return EntityFilterType.RELATIONS_QUERY;

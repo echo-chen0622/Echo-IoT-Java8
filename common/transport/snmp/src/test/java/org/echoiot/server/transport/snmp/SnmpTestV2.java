@@ -1,12 +1,14 @@
 package org.echoiot.server.transport.snmp;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.util.Map;
 import java.util.Scanner;
 
 public class SnmpTestV2 {
     public static void main(String[] args) throws IOException {
-        SnmpDeviceSimulatorV2 device = new SnmpDeviceSimulatorV2(1610, "public");
+        @NotNull SnmpDeviceSimulatorV2 device = new SnmpDeviceSimulatorV2(1610, "public");
 
         device.start();
         device.setUpMappings(Map.of(

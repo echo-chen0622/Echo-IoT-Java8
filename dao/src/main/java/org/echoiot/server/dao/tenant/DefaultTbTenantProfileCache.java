@@ -1,6 +1,8 @@
 package org.echoiot.server.dao.tenant;
 
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.echoiot.server.common.data.Tenant;
 import org.echoiot.server.common.data.TenantProfile;
@@ -31,6 +33,7 @@ public class DefaultTbTenantProfileCache implements TbTenantProfileCache {
         this.tenantService = tenantService;
     }
 
+    @Nullable
     @Override
     public TenantProfile get(TenantProfileId tenantProfileId) {
         TenantProfile profile = tenantProfilesMap.get(tenantProfileId);
@@ -51,6 +54,7 @@ public class DefaultTbTenantProfileCache implements TbTenantProfileCache {
         return profile;
     }
 
+    @Nullable
     @Override
     public TenantProfile get(TenantId tenantId) {
         TenantProfileId profileId = tenantsMap.get(tenantId);
@@ -67,7 +71,7 @@ public class DefaultTbTenantProfileCache implements TbTenantProfileCache {
     }
 
     @Override
-    public void put(TenantProfile profile) {
+    public void put(@NotNull TenantProfile profile) {
         if (profile.getId() != null) {
             tenantProfilesMap.put(profile.getId(), profile);
             notifyTenantListeners(profile);
@@ -80,7 +84,7 @@ public class DefaultTbTenantProfileCache implements TbTenantProfileCache {
         notifyTenantListeners(get(profileId));
     }
 
-    public void notifyTenantListeners(TenantProfile tenantProfile) {
+    public void notifyTenantListeners(@Nullable TenantProfile tenantProfile) {
         if (tenantProfile != null) {
             tenantsMap.forEach(((tenantId, tenantProfileId) -> {
                 if (tenantProfileId.equals(tenantProfile.getId())) {
@@ -96,7 +100,7 @@ public class DefaultTbTenantProfileCache implements TbTenantProfileCache {
     @Override
     public void evict(TenantId tenantId) {
         tenantsMap.remove(tenantId);
-        TenantProfile tenantProfile = get(tenantId);
+        @Nullable TenantProfile tenantProfile = get(tenantId);
         if (tenantProfile != null) {
             ConcurrentMap<EntityId, Consumer<TenantProfile>> tenantListeners = profileListeners.get(tenantId);
             if (tenantListeners != null) {
@@ -106,7 +110,7 @@ public class DefaultTbTenantProfileCache implements TbTenantProfileCache {
     }
 
     @Override
-    public void addListener(TenantId tenantId, EntityId listenerId, Consumer<TenantProfile> profileListener) {
+    public void addListener(TenantId tenantId, EntityId listenerId, @Nullable Consumer<TenantProfile> profileListener) {
         //Force cache of the tenant id.
         get(tenantId);
         if (profileListener != null) {

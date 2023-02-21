@@ -14,6 +14,7 @@ import org.echoiot.server.common.data.audit.ActionType;
 import org.echoiot.server.common.data.id.AlarmId;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.dao.alarm.AlarmDao;
+import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -39,7 +40,7 @@ public abstract class BaseAlarmControllerTest extends AbstractControllerTest {
 
     protected Device customerDevice;
 
-    @Autowired
+    @Resource
     private AlarmDao alarmDao;
 
     static class Config {
@@ -54,7 +55,7 @@ public abstract class BaseAlarmControllerTest extends AbstractControllerTest {
     public void setup() throws Exception {
         loginTenantAdmin();
 
-        Device device = new Device();
+        @NotNull Device device = new Device();
         device.setTenantId(tenantId);
         device.setName("Test device");
         device.setLabel("Label");
@@ -78,7 +79,7 @@ public abstract class BaseAlarmControllerTest extends AbstractControllerTest {
 
         Mockito.reset(tbClusterService, auditLogService);
 
-        Alarm alarm = createAlarm(TEST_ALARM_TYPE);
+        @NotNull Alarm alarm = createAlarm(TEST_ALARM_TYPE);
 
         testNotifyEntityAllOneTime(alarm, alarm.getId(), alarm.getOriginator(),
                 tenantId, customerId, customerUserId, CUSTOMER_USER_EMAIL, ActionType.ADDED);
@@ -90,7 +91,7 @@ public abstract class BaseAlarmControllerTest extends AbstractControllerTest {
 
         Mockito.reset(tbClusterService, auditLogService);
 
-        Alarm alarm = createAlarm(TEST_ALARM_TYPE);
+        @NotNull Alarm alarm = createAlarm(TEST_ALARM_TYPE);
 
         testNotifyEntityAllOneTime(alarm, alarm.getId(), alarm.getOriginator(),
                 tenantId, customerId, tenantAdminUserId, TENANT_ADMIN_EMAIL, ActionType.ADDED);
@@ -99,7 +100,7 @@ public abstract class BaseAlarmControllerTest extends AbstractControllerTest {
     @Test
     public void testUpdateAlarmViaCustomer() throws Exception {
         loginCustomerUser();
-        Alarm alarm = createAlarm(TEST_ALARM_TYPE);
+        @NotNull Alarm alarm = createAlarm(TEST_ALARM_TYPE);
 
         Mockito.reset(tbClusterService, auditLogService);
 
@@ -115,7 +116,7 @@ public abstract class BaseAlarmControllerTest extends AbstractControllerTest {
     @Test
     public void testUpdateAlarmViaTenant() throws Exception {
         loginTenantAdmin();
-        Alarm alarm = createAlarm(TEST_ALARM_TYPE);
+        @NotNull Alarm alarm = createAlarm(TEST_ALARM_TYPE);
 
         Mockito.reset(tbClusterService, auditLogService);
 
@@ -131,7 +132,7 @@ public abstract class BaseAlarmControllerTest extends AbstractControllerTest {
     @Test
     public void testUpdateAlarmViaDifferentTenant() throws Exception {
         loginTenantAdmin();
-        Alarm alarm = createAlarm(TEST_ALARM_TYPE);
+        @NotNull Alarm alarm = createAlarm(TEST_ALARM_TYPE);
 
         alarm.setSeverity(AlarmSeverity.MAJOR);
         loginDifferentTenant();
@@ -148,7 +149,7 @@ public abstract class BaseAlarmControllerTest extends AbstractControllerTest {
     @Test
     public void testUpdateAlarmViaDifferentCustomer() throws Exception {
         loginCustomerUser();
-        Alarm alarm = createAlarm(TEST_ALARM_TYPE);
+        @NotNull Alarm alarm = createAlarm(TEST_ALARM_TYPE);
 
         loginDifferentCustomer();
         alarm.setSeverity(AlarmSeverity.MAJOR);
@@ -165,7 +166,7 @@ public abstract class BaseAlarmControllerTest extends AbstractControllerTest {
     @Test
     public void testDeleteAlarmViaCustomer() throws Exception {
         loginCustomerUser();
-        Alarm alarm = createAlarm(TEST_ALARM_TYPE);
+        @NotNull Alarm alarm = createAlarm(TEST_ALARM_TYPE);
 
         Mockito.reset(tbClusterService, auditLogService);
 
@@ -178,7 +179,7 @@ public abstract class BaseAlarmControllerTest extends AbstractControllerTest {
     @Test
     public void testDeleteAlarmViaTenant() throws Exception {
         loginTenantAdmin();
-        Alarm alarm = createAlarm(TEST_ALARM_TYPE);
+        @NotNull Alarm alarm = createAlarm(TEST_ALARM_TYPE);
 
         Mockito.reset(tbClusterService, auditLogService);
 
@@ -191,7 +192,7 @@ public abstract class BaseAlarmControllerTest extends AbstractControllerTest {
     @Test
     public void testDeleteAlarmViaDifferentTenant() throws Exception {
         loginTenantAdmin();
-        Alarm alarm = createAlarm(TEST_ALARM_TYPE);
+        @NotNull Alarm alarm = createAlarm(TEST_ALARM_TYPE);
 
         loginDifferentTenant();
 
@@ -207,7 +208,7 @@ public abstract class BaseAlarmControllerTest extends AbstractControllerTest {
     @Test
     public void testDeleteAlarmViaDifferentCustomer() throws Exception {
         loginCustomerUser();
-        Alarm alarm = createAlarm(TEST_ALARM_TYPE);
+        @NotNull Alarm alarm = createAlarm(TEST_ALARM_TYPE);
 
         loginDifferentCustomer();
 
@@ -223,7 +224,7 @@ public abstract class BaseAlarmControllerTest extends AbstractControllerTest {
     @Test
     public void testClearAlarmViaCustomer() throws Exception {
         loginCustomerUser();
-        Alarm alarm = createAlarm(TEST_ALARM_TYPE);
+        @NotNull Alarm alarm = createAlarm(TEST_ALARM_TYPE);
 
         Mockito.reset(tbClusterService, auditLogService);
 
@@ -240,7 +241,7 @@ public abstract class BaseAlarmControllerTest extends AbstractControllerTest {
     @Test
     public void testClearAlarmViaTenant() throws Exception {
         loginTenantAdmin();
-        Alarm alarm = createAlarm(TEST_ALARM_TYPE);
+        @NotNull Alarm alarm = createAlarm(TEST_ALARM_TYPE);
 
         Mockito.reset(tbClusterService, auditLogService);
 
@@ -256,7 +257,7 @@ public abstract class BaseAlarmControllerTest extends AbstractControllerTest {
     @Test
     public void testAcknowledgeAlarmViaCustomer() throws Exception {
         loginCustomerUser();
-        Alarm alarm = createAlarm(TEST_ALARM_TYPE);
+        @NotNull Alarm alarm = createAlarm(TEST_ALARM_TYPE);
 
         Mockito.reset(tbClusterService, auditLogService);
 
@@ -273,7 +274,7 @@ public abstract class BaseAlarmControllerTest extends AbstractControllerTest {
     @Test
     public void testClearAlarmViaDifferentCustomer() throws Exception {
         loginCustomerUser();
-        Alarm alarm = createAlarm(TEST_ALARM_TYPE);
+        @NotNull Alarm alarm = createAlarm(TEST_ALARM_TYPE);
 
         loginDifferentCustomer();
 
@@ -289,7 +290,7 @@ public abstract class BaseAlarmControllerTest extends AbstractControllerTest {
     @Test
     public void testClearAlarmViaDifferentTenant() throws Exception {
         loginTenantAdmin();
-        Alarm alarm = createAlarm(TEST_ALARM_TYPE);
+        @NotNull Alarm alarm = createAlarm(TEST_ALARM_TYPE);
 
         loginDifferentTenant();
 
@@ -305,7 +306,7 @@ public abstract class BaseAlarmControllerTest extends AbstractControllerTest {
     @Test
     public void testAcknowledgeAlarmViaDifferentCustomer() throws Exception {
         loginCustomerUser();
-        Alarm alarm = createAlarm(TEST_ALARM_TYPE);
+        @NotNull Alarm alarm = createAlarm(TEST_ALARM_TYPE);
 
         loginDifferentCustomer();
 
@@ -321,7 +322,7 @@ public abstract class BaseAlarmControllerTest extends AbstractControllerTest {
     @Test
     public void testAcknowledgeAlarmViaDifferentTenant() throws Exception {
         loginTenantAdmin();
-        Alarm alarm = createAlarm(TEST_ALARM_TYPE);
+        @NotNull Alarm alarm = createAlarm(TEST_ALARM_TYPE);
 
         loginDifferentTenant();
 
@@ -336,7 +337,7 @@ public abstract class BaseAlarmControllerTest extends AbstractControllerTest {
     public void testFindAlarmsViaCustomerUser() throws Exception {
         loginCustomerUser();
 
-        List<Alarm> createdAlarms = new LinkedList<>();
+        @NotNull List<Alarm> createdAlarms = new LinkedList<>();
 
         final int size = 10;
         for (int i = 0; i < size; i++) {
@@ -441,6 +442,7 @@ public abstract class BaseAlarmControllerTest extends AbstractControllerTest {
         testEntityDaoWithRelationsTransactionalException(alarmDao, customerDevice.getId(), alarmId, "/api/alarm/" + alarmId);
     }
 
+    @NotNull
     private Alarm createAlarm(String type) throws Exception {
         Alarm alarm = Alarm.builder()
                 .tenantId(tenantId)

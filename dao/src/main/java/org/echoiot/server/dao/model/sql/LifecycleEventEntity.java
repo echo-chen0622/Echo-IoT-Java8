@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.echoiot.server.common.data.event.LifecycleEvent;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.dao.model.BaseEntity;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -30,7 +31,7 @@ public class LifecycleEventEntity extends EventEntity<LifecycleEvent> implements
     @Column(name = EVENT_ERROR_COLUMN_NAME)
     private String error;
 
-    public LifecycleEventEntity(LifecycleEvent event) {
+    public LifecycleEventEntity(@NotNull LifecycleEvent event) {
         super(event);
         this.eventType = event.getLcEventType();
         this.success = event.isSuccess();

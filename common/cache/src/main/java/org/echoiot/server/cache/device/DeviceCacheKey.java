@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.data.id.TenantId;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 
@@ -15,8 +16,11 @@ import java.io.Serializable;
 @Builder
 public class DeviceCacheKey implements Serializable {
 
+    @NotNull
     private final TenantId tenantId;
+    @NotNull
     private final DeviceId deviceId;
+    @NotNull
     private final String deviceName;
 
     public DeviceCacheKey(TenantId tenantId, DeviceId deviceId) {
@@ -27,6 +31,7 @@ public class DeviceCacheKey implements Serializable {
         this(tenantId, null, deviceName);
     }
 
+    @NotNull
     @Override
     public String toString() {
         if (deviceId != null) {

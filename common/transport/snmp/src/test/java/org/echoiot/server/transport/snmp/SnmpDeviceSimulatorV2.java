@@ -1,5 +1,6 @@
 package org.echoiot.server.transport.snmp;
 
+import org.jetbrains.annotations.NotNull;
 import org.snmp4j.CommandResponderEvent;
 import org.snmp4j.CommunityTarget;
 import org.snmp4j.PDU;
@@ -60,18 +61,20 @@ public class SnmpDeviceSimulatorV2 extends BaseAgent {
     }
 
 
+    @NotNull
     private final Target target;
     private final Address address;
     private Snmp snmp;
 
+    @NotNull
     private final String password;
 
-    public SnmpDeviceSimulatorV2(int port, String password) throws IOException {
+    public SnmpDeviceSimulatorV2(int port, @NotNull String password) throws IOException {
         super(new File("conf.agent"), new File("bootCounter.agent"), new RequestProcessor(event -> {
             System.out.println("aboba");
             ((Snmp) event.getSource()).cancel(event.getPDU(), event1 -> System.out.println("canceled"));
         }));
-        CommunityTarget target = new CommunityTarget();
+        @NotNull CommunityTarget target = new CommunityTarget();
         target.setCommunity(new OctetString(password));
         this.address = GenericAddress.parse("udp:0.0.0.0/" + port);
         target.setAddress(address);
@@ -92,15 +95,15 @@ public class SnmpDeviceSimulatorV2 extends BaseAgent {
         snmp = new Snmp(transportMappings[0]);
     }
 
-    public void setUpMappings(Map<String, String> oidToResponseMappings) {
+    public void setUpMappings(@NotNull Map<String, String> oidToResponseMappings) {
         unregisterManagedObject(getSnmpv2MIB());
         oidToResponseMappings.forEach((oid, response) -> {
             registerManagedObject(new MOScalar<>(new OID(oid), MOAccessImpl.ACCESS_READ_WRITE, new OctetString(response)));
         });
     }
 
-    public void sendTrap(String host, int port, Map<String, String> values) throws IOException {
-        PDU pdu = new PDU();
+    public void sendTrap(String host, int port, @NotNull Map<String, String> values) throws IOException {
+        @NotNull PDU pdu = new PDU();
         pdu.addAll(values.entrySet().stream()
                 .map(entry -> new VariableBinding(new OID(entry.getKey()), new OctetString(entry.getValue())))
                 .collect(Collectors.toList()));
@@ -124,7 +127,7 @@ public class SnmpDeviceSimulatorV2 extends BaseAgent {
         }
     }
 
-    protected void unregisterManagedObject(MOGroup moGroup) {
+    protected void unregisterManagedObject(@NotNull MOGroup moGroup) {
         moGroup.unregisterMOs(server, getContext(moGroup));
     }
 
@@ -134,7 +137,7 @@ public class SnmpDeviceSimulatorV2 extends BaseAgent {
     }
 
     @Override
-    protected void addViews(VacmMIB vacm) {
+    protected void addViews(@NotNull VacmMIB vacm) {
         vacm.addGroup(SecurityModel.SECURITY_MODEL_SNMPv2c, new OctetString(
                         "cpublic"), new OctetString("v1v2group"),
                 StorageType.nonVolatile);
@@ -161,8 +164,8 @@ public class SnmpDeviceSimulatorV2 extends BaseAgent {
     protected void unregisterManagedObjects() {
     }
 
-    protected void addCommunities(SnmpCommunityMIB communityMIB) {
-        Variable[] com2sec = new Variable[]{
+    protected void addCommunities(@NotNull SnmpCommunityMIB communityMIB) {
+        @NotNull Variable[] com2sec = new Variable[]{
                 new OctetString("public"),
                 new OctetString("cpublic"),
                 getAgent().getContextEngineID(),

@@ -15,6 +15,7 @@ import org.echoiot.server.queue.TbQueueProducer;
 import org.echoiot.server.queue.azure.servicebus.TbServiceBusSettings;
 import org.echoiot.server.queue.common.DefaultTbQueueMsg;
 import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -29,6 +30,7 @@ public class TbServiceBusProducerTemplate<T extends TbQueueMsg> implements TbQue
     private final TbQueueAdmin admin;
     private final TbServiceBusSettings serviceBusSettings;
     private final Map<String, QueueClient> clients = new ConcurrentHashMap<>();
+    @NotNull
     private final ExecutorService executorService;
 
     public TbServiceBusProducerTemplate(TbQueueAdmin admin, TbServiceBusSettings serviceBusSettings, String defaultTopic) {
@@ -49,8 +51,8 @@ public class TbServiceBusProducerTemplate<T extends TbQueueMsg> implements TbQue
     }
 
     @Override
-    public void send(TopicPartitionInfo tpi, T msg, TbQueueCallback callback) {
-        IMessage message = new Message(gson.toJson(new DefaultTbQueueMsg(msg)));
+    public void send(@NotNull TopicPartitionInfo tpi, @NotNull T msg, @NotNull TbQueueCallback callback) {
+        @NotNull IMessage message = new Message(gson.toJson(new DefaultTbQueueMsg(msg)));
         CompletableFuture<Void> future = getClient(tpi.getFullTopicName()).sendAsync(message);
         future.whenCompleteAsync((success, err) -> {
             if (err != null) {
@@ -76,10 +78,11 @@ public class TbServiceBusProducerTemplate<T extends TbQueueMsg> implements TbQue
         }
     }
 
+    @NotNull
     private QueueClient getClient(String topic) {
         return clients.computeIfAbsent(topic, k -> {
             admin.createTopicIfNotExists(topic);
-            ConnectionStringBuilder builder =
+            @NotNull ConnectionStringBuilder builder =
                     new ConnectionStringBuilder(
                             serviceBusSettings.getNamespaceName(),
                             topic,

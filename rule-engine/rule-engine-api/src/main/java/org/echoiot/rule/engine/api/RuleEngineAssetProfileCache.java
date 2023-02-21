@@ -5,6 +5,7 @@ import org.echoiot.server.common.data.id.AssetId;
 import org.echoiot.server.common.data.id.AssetProfileId;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.TenantId;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -14,8 +15,10 @@ import java.util.function.Consumer;
  */
 public interface RuleEngineAssetProfileCache {
 
+    @Nullable
     AssetProfile get(TenantId tenantId, AssetProfileId assetProfileId);
 
+    @Nullable
     AssetProfile get(TenantId tenantId, AssetId assetId);
 
     void addListener(TenantId tenantId, EntityId listenerId, Consumer<AssetProfile> profileListener, BiConsumer<AssetId, AssetProfile> assetlistener);

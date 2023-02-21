@@ -11,6 +11,7 @@ import com.amazonaws.services.sqs.model.CreateQueueRequest;
 import com.amazonaws.services.sqs.model.GetQueueUrlResult;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.queue.TbQueueAdmin;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 import java.util.function.Function;
@@ -21,16 +22,17 @@ public class TbAwsSqsAdmin implements TbQueueAdmin {
 
     private final Map<String, String> attributes;
     private final AmazonSQS sqsClient;
+    @NotNull
     private final Map<String, String> queues;
 
-    public TbAwsSqsAdmin(TbAwsSqsSettings sqsSettings, Map<String, String> attributes) {
+    public TbAwsSqsAdmin(@NotNull TbAwsSqsSettings sqsSettings, Map<String, String> attributes) {
         this.attributes = attributes;
 
         AWSCredentialsProvider credentialsProvider;
         if (sqsSettings.getUseDefaultCredentialProviderChain()) {
             credentialsProvider = new DefaultAWSCredentialsProviderChain();
         } else {
-            AWSCredentials awsCredentials = new BasicAWSCredentials(sqsSettings.getAccessKeyId(), sqsSettings.getSecretAccessKey());
+            @NotNull AWSCredentials awsCredentials = new BasicAWSCredentials(sqsSettings.getAccessKeyId(), sqsSettings.getSecretAccessKey());
             credentialsProvider = new AWSStaticCredentialsProvider(awsCredentials);
         }
 
@@ -48,8 +50,8 @@ public class TbAwsSqsAdmin implements TbQueueAdmin {
     }
 
     @Override
-    public void createTopicIfNotExists(String topic) {
-        String queueName = convertTopicToQueueName(topic);
+    public void createTopicIfNotExists(@NotNull String topic) {
+        @NotNull String queueName = convertTopicToQueueName(topic);
         if (queues.containsKey(queueName)) {
             return;
         }
@@ -58,13 +60,14 @@ public class TbAwsSqsAdmin implements TbQueueAdmin {
         queues.put(getQueueNameFromUrl(queueUrl), queueUrl);
     }
 
-    private String convertTopicToQueueName(String topic) {
+    @NotNull
+    private String convertTopicToQueueName(@NotNull String topic) {
         return topic.replaceAll("\\.", "_") + ".fifo";
     }
 
     @Override
-    public void deleteTopic(String topic) {
-        String queueName = convertTopicToQueueName(topic);
+    public void deleteTopic(@NotNull String topic) {
+        @NotNull String queueName = convertTopicToQueueName(topic);
         if (queues.containsKey(queueName)) {
             sqsClient.deleteQueue(queues.get(queueName));
         } else {
@@ -77,7 +80,8 @@ public class TbAwsSqsAdmin implements TbQueueAdmin {
         }
     }
 
-    private String getQueueNameFromUrl(String queueUrl) {
+    @NotNull
+    private String getQueueNameFromUrl(@NotNull String queueUrl) {
         int delimiterIndex = queueUrl.lastIndexOf("/");
         return queueUrl.substring(delimiterIndex + 1);
     }

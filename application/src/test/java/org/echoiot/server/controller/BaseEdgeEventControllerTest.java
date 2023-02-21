@@ -19,6 +19,7 @@ import org.echoiot.server.common.data.security.Authority;
 import org.echoiot.server.dao.edge.EdgeEventDao;
 import org.echoiot.server.dao.sqlts.insert.sql.SqlPartitioningRepository;
 import org.echoiot.server.service.ttl.EdgeEventsCleanUpService;
+import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -49,11 +50,11 @@ public abstract class BaseEdgeEventControllerTest extends AbstractControllerTest
     private Tenant savedTenant;
     private User tenantAdmin;
 
-    @Autowired
+    @Resource
     private EdgeEventDao edgeEventDao;
     @SpyBean
     private SqlPartitioningRepository partitioningRepository;
-    @Autowired
+    @Resource
     private EdgeEventsCleanUpService edgeEventsCleanUpService;
 
     @Value("#{${sql.edge_events.partition_size} * 60 * 60 * 1000}")
@@ -65,7 +66,7 @@ public abstract class BaseEdgeEventControllerTest extends AbstractControllerTest
     public void beforeTest() throws Exception {
         loginSysAdmin();
 
-        Tenant tenant = new Tenant();
+        @NotNull Tenant tenant = new Tenant();
         tenant.setTitle("My tenant");
         savedTenant = doPost("/api/tenant", tenant, Tenant.class);
         Assert.assertNotNull(savedTenant);
@@ -97,18 +98,18 @@ public abstract class BaseEdgeEventControllerTest extends AbstractControllerTest
         Edge edge = constructEdge("TestEdge", "default");
         edge = doPost("/api/edge", edge, Edge.class);
 
-        Device device = constructDevice("TestDevice", "default");
+        @NotNull Device device = constructDevice("TestDevice", "default");
         Device savedDevice = doPost("/api/device", device, Device.class);
 
         final EdgeId edgeId = edge.getId();
         doPost("/api/edge/" + edgeId.toString() + "/device/" + savedDevice.getId().toString(), Device.class);
 
-        Asset asset = constructAsset("TestAsset", "default");
+        @NotNull Asset asset = constructAsset("TestAsset", "default");
         Asset savedAsset = doPost("/api/asset", asset, Asset.class);
 
-        doPost("/api/edge/" + edgeId.toString() + "/asset/" + savedAsset.getId().toString(), Asset.class);
+        doPost("/api/edge/" + edgeId + "/asset/" + savedAsset.getId().toString(), Asset.class);
 
-        EntityRelation relation = new EntityRelation(savedAsset.getId(), savedDevice.getId(), EntityRelation.CONTAINS_TYPE);
+        @NotNull EntityRelation relation = new EntityRelation(savedAsset.getId(), savedDevice.getId(), EntityRelation.CONTAINS_TYPE);
 
         doPost("/api/relation", relation);
 
@@ -128,9 +129,9 @@ public abstract class BaseEdgeEventControllerTest extends AbstractControllerTest
     @Test
     public void saveEdgeEvent_thenCreatePartitionIfNotExist() {
         reset(partitioningRepository);
-        EdgeEvent edgeEvent = createEdgeEvent();
+        @NotNull EdgeEvent edgeEvent = createEdgeEvent();
         verify(partitioningRepository).createPartitionIfNotExists(eq("edge_event"), eq(edgeEvent.getCreatedTime()), eq(partitionDurationInMs));
-        List<Long> partitions = partitioningRepository.fetchPartitions("edge_event");
+        @NotNull List<Long> partitions = partitioningRepository.fetchPartitions("edge_event");
         assertThat(partitions).singleElement().satisfies(partitionStartTs -> {
             assertThat(partitionStartTs).isEqualTo(partitioningRepository.calculatePartitionStartTime(edgeEvent.getCreatedTime(), partitionDurationInMs));
         });
@@ -141,7 +142,7 @@ public abstract class BaseEdgeEventControllerTest extends AbstractControllerTest
         long oldEdgeEventTs = LocalDate.of(2020, 10, 1).atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli();
         long partitionStartTs = partitioningRepository.calculatePartitionStartTime(oldEdgeEventTs, partitionDurationInMs);
         partitioningRepository.createPartitionIfNotExists("edge_event", oldEdgeEventTs, partitionDurationInMs);
-        List<Long> partitions = partitioningRepository.fetchPartitions("edge_event");
+        @NotNull List<Long> partitions = partitioningRepository.fetchPartitions("edge_event");
         assertThat(partitions).contains(partitionStartTs);
 
         edgeEventsCleanUpService.cleanUp();
@@ -153,28 +154,31 @@ public abstract class BaseEdgeEventControllerTest extends AbstractControllerTest
         });
     }
 
-    private List<EdgeEvent> findEdgeEvents(EdgeId edgeId) throws Exception {
-        return doGetTypedWithTimePageLink("/api/edge/" + edgeId.toString() + "/events?",
+    private List<EdgeEvent> findEdgeEvents(@NotNull EdgeId edgeId) throws Exception {
+        return doGetTypedWithTimePageLink("/api/edge/" + edgeId + "/events?",
                 new TypeReference<PageData<EdgeEvent>>() {
                 }, new TimePageLink(10)).getData();
     }
 
+    @NotNull
     private Device constructDevice(String name, String type) {
-        Device device = new Device();
+        @NotNull Device device = new Device();
         device.setName(name);
         device.setType(type);
         return device;
     }
 
+    @NotNull
     private Asset constructAsset(String name, String type) {
-        Asset asset = new Asset();
+        @NotNull Asset asset = new Asset();
         asset.setName(name);
         asset.setType(type);
         return asset;
     }
 
+    @NotNull
     private EdgeEvent createEdgeEvent() {
-        EdgeEvent edgeEvent = new EdgeEvent();
+        @NotNull EdgeEvent edgeEvent = new EdgeEvent();
         edgeEvent.setCreatedTime(System.currentTimeMillis());
         edgeEvent.setTenantId(tenantId);
         edgeEvent.setAction(EdgeEventActionType.ADDED);

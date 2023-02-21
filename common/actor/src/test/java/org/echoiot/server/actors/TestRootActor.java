@@ -3,6 +3,7 @@ package org.echoiot.server.actors;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.msg.TbActorMsg;
+import org.jetbrains.annotations.NotNull;
 
 @Slf4j
 public class TestRootActor extends AbstractTbActor {
@@ -28,7 +29,7 @@ public class TestRootActor extends AbstractTbActor {
     }
 
     @Override
-    public boolean process(TbActorMsg msg) {
+    public boolean process(@NotNull TbActorMsg msg) {
         if (initialized) {
             int value = ((IntTbActorMsg) msg).getValue();
             sum += value;
@@ -64,6 +65,7 @@ public class TestRootActor extends AbstractTbActor {
             return actorId;
         }
 
+        @NotNull
         @Override
         public TbActor createActor() {
             return new TestRootActor(actorId, testCtx);

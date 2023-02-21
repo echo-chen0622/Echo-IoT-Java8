@@ -18,6 +18,7 @@ import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.session.SessionMsgType;
 import org.echoiot.server.common.transport.adaptor.JsonConverter;
 import org.echoiot.server.common.data.tenant.profile.DefaultTenantProfileConfiguration;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,33 +53,33 @@ public class TbMsgTimeseriesNode implements TbNode {
     private long tenantProfileDefaultStorageTtl;
 
     @Override
-    public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
+    public void init(@NotNull TbContext ctx, @NotNull TbNodeConfiguration configuration) throws TbNodeException {
         this.config = TbNodeUtils.convert(configuration, TbMsgTimeseriesNodeConfiguration.class);
         this.ctx = ctx;
         ctx.addTenantProfileListener(this::onTenantProfileUpdate);
         onTenantProfileUpdate(ctx.getTenantProfile());
     }
 
-    void onTenantProfileUpdate(TenantProfile tenantProfile) {
+    void onTenantProfileUpdate(@NotNull TenantProfile tenantProfile) {
         DefaultTenantProfileConfiguration configuration = (DefaultTenantProfileConfiguration) tenantProfile.getProfileData().getConfiguration();
         tenantProfileDefaultStorageTtl = TimeUnit.DAYS.toSeconds(configuration.getDefaultStorageTtlDays());
     }
 
     @Override
-    public void onMsg(TbContext ctx, TbMsg msg) {
+    public void onMsg(@NotNull TbContext ctx, @NotNull TbMsg msg) {
         if (!msg.getType().equals(SessionMsgType.POST_TELEMETRY_REQUEST.name())) {
             ctx.tellFailure(msg, new IllegalArgumentException("Unsupported msg type: " + msg.getType()));
             return;
         }
         long ts = computeTs(msg, config.isUseServerTs());
         String src = msg.getData();
-        Map<Long, List<KvEntry>> tsKvMap = JsonConverter.convertToTelemetry(new JsonParser().parse(src), ts);
+        @NotNull Map<Long, List<KvEntry>> tsKvMap = JsonConverter.convertToTelemetry(new JsonParser().parse(src), ts);
         if (tsKvMap.isEmpty()) {
             ctx.tellFailure(msg, new IllegalArgumentException("Msg body is empty: " + src));
             return;
         }
-        List<TsKvEntry> tsKvEntryList = new ArrayList<>();
-        for (Map.Entry<Long, List<KvEntry>> tsKvEntry : tsKvMap.entrySet()) {
+        @NotNull List<TsKvEntry> tsKvEntryList = new ArrayList<>();
+        for (@NotNull Map.Entry<Long, List<KvEntry>> tsKvEntry : tsKvMap.entrySet()) {
             for (KvEntry kvEntry : tsKvEntry.getValue()) {
                 tsKvEntryList.add(new BasicTsKvEntry(tsKvEntry.getKey(), kvEntry));
             }
@@ -95,7 +96,7 @@ public class TbMsgTimeseriesNode implements TbNode {
         }
     }
 
-    public static long computeTs(TbMsg msg, boolean ignoreMetadataTs) {
+    public static long computeTs(@NotNull TbMsg msg, boolean ignoreMetadataTs) {
         return ignoreMetadataTs ? System.currentTimeMillis() : msg.getMetaDataTs();
     }
 

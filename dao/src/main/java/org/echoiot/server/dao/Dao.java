@@ -3,6 +3,7 @@ package org.echoiot.server.dao;
 import com.google.common.util.concurrent.ListenableFuture;
 import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.id.TenantId;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -28,6 +29,7 @@ public interface Dao<T> {
 
     void removeAllByIds(Collection<UUID> ids);
 
+    @Nullable
     default EntityType getEntityType() { return null; }
 
 }

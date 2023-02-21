@@ -1,5 +1,6 @@
 package org.echoiot.common.util;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.util.StopWatch;
 
 /**
@@ -13,19 +14,21 @@ import org.springframework.util.StopWatch;
  * */
 public class TbStopWatch extends StopWatch {
 
+    @NotNull
     public static TbStopWatch create(){
-        TbStopWatch stopWatch = new TbStopWatch();
+        @NotNull TbStopWatch stopWatch = new TbStopWatch();
         stopWatch.start();
         return stopWatch;
     }
 
-    public static TbStopWatch create(String taskName){
-        TbStopWatch stopWatch = new TbStopWatch();
+    @NotNull
+    public static TbStopWatch create(@NotNull String taskName){
+        @NotNull TbStopWatch stopWatch = new TbStopWatch();
         stopWatch.start(taskName);
         return stopWatch;
     }
 
-    public void startNew(String taskName){
+    public void startNew(@NotNull String taskName){
         stop();
         start(taskName);
     }

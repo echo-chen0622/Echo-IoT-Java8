@@ -34,6 +34,8 @@ import org.apache.cassandra.io.sstable.metadata.IMetadataSerializer;
 import org.apache.cassandra.io.sstable.metadata.LegacyMetadataSerializer;
 import org.apache.cassandra.io.sstable.metadata.MetadataSerializer;
 import org.apache.cassandra.utils.Pair;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import static org.apache.cassandra.io.sstable.Component.separator;
 
@@ -46,15 +48,21 @@ import static org.apache.cassandra.io.sstable.Component.separator;
  */
 public class Descriptor
 {
+    @NotNull
     public static String TMP_EXT = ".tmp";
 
     /** canonicalized path to the directory where SSTable resides */
+    @NotNull
     public final File directory;
     /** version has the following format: <code>[a-z]+</code> */
+    @NotNull
     public final Version version;
+    @NotNull
     public final String ksname;
+    @NotNull
     public final String cfname;
     public final int generation;
+    @NotNull
     public final SSTableFormat.Type formatType;
     /** digest component - might be {@code null} for old, legacy sstables */
     public final Component digestComponent;
@@ -64,7 +72,7 @@ public class Descriptor
      * A descriptor that assumes CURRENT_VERSION.
      */
     @VisibleForTesting
-    public Descriptor(File directory, String ksname, String cfname, int generation)
+    public Descriptor(@NotNull File directory, @NotNull String ksname, @NotNull String cfname, int generation)
     {
         this(SSTableFormat.Type.current().info.getLatestVersion(), directory, ksname, cfname, generation, SSTableFormat.Type.current(), null);
     }
@@ -72,18 +80,18 @@ public class Descriptor
     /**
      * Constructor for sstable writers only.
      */
-    public Descriptor(File directory, String ksname, String cfname, int generation, SSTableFormat.Type formatType)
+    public Descriptor(@NotNull File directory, @NotNull String ksname, @NotNull String cfname, int generation, @NotNull SSTableFormat.Type formatType)
     {
         this(formatType.info.getLatestVersion(), directory, ksname, cfname, generation, formatType, Component.digestFor(formatType.info.getLatestVersion().uncompressedChecksumType()));
     }
 
     @VisibleForTesting
-    public Descriptor(String version, File directory, String ksname, String cfname, int generation, SSTableFormat.Type formatType)
+    public Descriptor(String version, @NotNull File directory, @NotNull String ksname, @NotNull String cfname, int generation, @NotNull SSTableFormat.Type formatType)
     {
         this(formatType.info.getVersion(version), directory, ksname, cfname, generation, formatType, Component.digestFor(formatType.info.getLatestVersion().uncompressedChecksumType()));
     }
 
-    public Descriptor(Version version, File directory, String ksname, String cfname, int generation, SSTableFormat.Type formatType, Component digestComponent)
+    public Descriptor(@NotNull Version version, @NotNull File directory, @NotNull String ksname, @NotNull String cfname, int generation, @NotNull SSTableFormat.Type formatType, Component digestComponent)
     {
         assert version != null && directory != null && ksname != null && cfname != null && formatType.info.getLatestVersion().getClass().equals(version.getClass());
         this.version = version;
@@ -104,40 +112,46 @@ public class Descriptor
         hashCode = Objects.hashCode(version, this.directory, generation, ksname, cfname, formatType);
     }
 
+    @NotNull
     public Descriptor withGeneration(int newGeneration)
     {
         return new Descriptor(version, directory, ksname, cfname, newGeneration, formatType, digestComponent);
     }
 
-    public Descriptor withFormatType(SSTableFormat.Type newType)
+    @NotNull
+    public Descriptor withFormatType(@NotNull SSTableFormat.Type newType)
     {
         return new Descriptor(newType.info.getLatestVersion(), directory, ksname, cfname, generation, newType, digestComponent);
     }
 
+    @NotNull
     public Descriptor withDigestComponent(Component newDigestComponent)
     {
         return new Descriptor(version, directory, ksname, cfname, generation, formatType, newDigestComponent);
     }
 
-    public String tmpFilenameFor(Component component)
+    @NotNull
+    public String tmpFilenameFor(@NotNull Component component)
     {
         return filenameFor(component) + TMP_EXT;
     }
 
-    public String filenameFor(Component component)
+    @NotNull
+    public String filenameFor(@NotNull Component component)
     {
         return baseFilename() + separator + component.name();
     }
 
+    @NotNull
     public String baseFilename()
     {
-        StringBuilder buff = new StringBuilder();
+        @NotNull StringBuilder buff = new StringBuilder();
         buff.append(directory).append(File.separatorChar);
         appendFileName(buff);
         return buff.toString();
     }
 
-    private void appendFileName(StringBuilder buff)
+    private void appendFileName(@NotNull StringBuilder buff)
     {
         if (!version.hasNewFileName())
         {
@@ -150,9 +164,10 @@ public class Descriptor
             buff.append(separator).append(formatType.name);
     }
 
-    public String relativeFilenameFor(Component component)
+    @NotNull
+    public String relativeFilenameFor(@NotNull Component component)
     {
-        final StringBuilder buff = new StringBuilder();
+        @NotNull final StringBuilder buff = new StringBuilder();
         appendFileName(buff);
         buff.append(separator).append(component.name());
         return buff.toString();
@@ -164,14 +179,14 @@ public class Descriptor
     }
 
     /** Return any temporary files found in the directory */
+    @NotNull
     public List<File> getTemporaryFiles()
     {
-        List<File> ret = new ArrayList<>();
-        File[] tmpFiles = directory.listFiles((dir, name) ->
+        @NotNull List<File> ret = new ArrayList<>();
+        @Nullable File[] tmpFiles = directory.listFiles((dir, name) ->
                 name.endsWith(Descriptor.TMP_EXT));
 
-        for (File tmpFile : tmpFiles)
-            ret.add(tmpFile);
+        Collections.addAll(ret, tmpFiles);
 
         return ret;
     }
@@ -187,7 +202,7 @@ public class Descriptor
     private final static String LEGACY_TMP_REGEX_STR = "^((.*)\\-(.*)\\-)?tmp(link)?\\-((?:l|k).)\\-(\\d)*\\-(.*)$";
     private final static Pattern LEGACY_TMP_REGEX = Pattern.compile(LEGACY_TMP_REGEX_STR);
 
-    public static boolean isLegacyFile(File file)
+    public static boolean isLegacyFile(@NotNull File file)
     {
         if (file.isDirectory())
             return file.getParentFile() != null &&
@@ -197,7 +212,7 @@ public class Descriptor
             return LEGACY_TMP_REGEX.matcher(file.getName()).matches();
     }
 
-    public static boolean isValidFile(String fileName)
+    public static boolean isValidFile(@NotNull String fileName)
     {
         return fileName.endsWith(".db") && !LEGACY_TMP_REGEX.matcher(fileName).matches();
     }
@@ -207,23 +222,24 @@ public class Descriptor
      * @param filename The SSTable filename
      * @return Descriptor of the SSTable initialized from filename
      */
-    public static Descriptor fromFilename(String filename)
+    public static Descriptor fromFilename(@NotNull String filename)
     {
         return fromFilename(filename, false);
     }
 
-    public static Descriptor fromFilename(String filename, SSTableFormat.Type formatType)
+    public static Descriptor fromFilename(@NotNull String filename, @NotNull SSTableFormat.Type formatType)
     {
         return fromFilename(filename).withFormatType(formatType);
     }
 
-    public static Descriptor fromFilename(String filename, boolean skipComponent)
+    public static Descriptor fromFilename(@NotNull String filename, boolean skipComponent)
     {
-        File file = new File(filename).getAbsoluteFile();
+        @NotNull File file = new File(filename).getAbsoluteFile();
         return fromFilename(file.getParentFile(), file.getName(), skipComponent).left;
     }
 
-    public static Pair<Descriptor, String> fromFilename(File directory, String name)
+    @NotNull
+    public static Pair<Descriptor, String> fromFilename(File directory, @NotNull String name)
     {
         return fromFilename(directory, name, false);
     }
@@ -244,28 +260,29 @@ public class Descriptor
      *
      * @return A Descriptor for the SSTable, and the Component remainder.
      */
+    @NotNull
     @SuppressWarnings("deprecation")
-    public static Pair<Descriptor, String> fromFilename(File directory, String name, boolean skipComponent)
+    public static Pair<Descriptor, String> fromFilename(@Nullable File directory, @NotNull String name, boolean skipComponent)
     {
-        File parentDirectory = directory != null ? directory : new File(".");
+        @NotNull File parentDirectory = directory != null ? directory : new File(".");
 
         // tokenize the filename
-        StringTokenizer st = new StringTokenizer(name, String.valueOf(separator));
+        @NotNull StringTokenizer st = new StringTokenizer(name, String.valueOf(separator));
         String nexttok;
 
         // read tokens backwards to determine version
-        Deque<String> tokenStack = new ArrayDeque<>();
+        @NotNull Deque<String> tokenStack = new ArrayDeque<>();
         while (st.hasMoreTokens())
         {
             tokenStack.push(st.nextToken());
         }
 
         // component suffix
-        String component = skipComponent ? null : tokenStack.pop();
+        @Nullable String component = skipComponent ? null : tokenStack.pop();
 
         nexttok = tokenStack.pop();
         // generation OR format type
-        SSTableFormat.Type fmt = SSTableFormat.Type.LEGACY;
+        @NotNull SSTableFormat.Type fmt = SSTableFormat.Type.LEGACY;
         if (!CharMatcher.digit().matchesAllOf(nexttok))
         {
             fmt = SSTableFormat.Type.validate(nexttok);
@@ -290,7 +307,7 @@ public class Descriptor
             // for 2.1+ read ks and cf names from directory
             File cfDirectory = parentDirectory;
             // check if this is secondary index
-            String indexName = "";
+            @NotNull String indexName = "";
             if (cfDirectory.getName().startsWith(Directories.SECONDARY_INDEX_NAME_SEPARATOR))
             {
                 indexName = cfDirectory.getName();
@@ -320,6 +337,7 @@ public class Descriptor
                 component);
     }
 
+    @NotNull
     @SuppressWarnings("deprecation")
     public IMetadataSerializer getMetadataSerializer()
     {
@@ -350,7 +368,7 @@ public class Descriptor
             return true;
         if (!(o instanceof Descriptor))
             return false;
-        Descriptor that = (Descriptor)o;
+        @NotNull Descriptor that = (Descriptor)o;
         return that.directory.equals(this.directory)
                 && that.generation == this.generation
                 && that.ksname.equals(this.ksname)

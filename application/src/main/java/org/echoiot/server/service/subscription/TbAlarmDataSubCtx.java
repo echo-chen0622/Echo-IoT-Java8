@@ -29,6 +29,7 @@ import org.echoiot.server.common.data.query.EntityKeyType;
 import org.echoiot.server.common.data.query.TsValue;
 import org.echoiot.server.service.telemetry.TelemetryWebSocketService;
 import org.echoiot.server.service.telemetry.TelemetryWebSocketSessionRef;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -47,9 +48,11 @@ import java.util.stream.Collectors;
 public class TbAlarmDataSubCtx extends TbAbstractDataSubCtx<AlarmDataQuery> {
 
     private final AlarmService alarmService;
+    @NotNull
     @Getter
     @Setter
     private final LinkedHashMap<EntityId, EntityData> entitiesMap;
+    @NotNull
     @Getter
     @Setter
     private final HashMap<AlarmId, AlarmData> alarmsMap;
@@ -112,18 +115,19 @@ public class TbAlarmDataSubCtx extends TbAbstractDataSubCtx<AlarmDataQuery> {
         super.fetchData();
         entitiesMap.clear();
         tooManyEntities = data.hasNext();
-        for (EntityData entityData : data.getData()) {
+        for (@NotNull EntityData entityData : data.getData()) {
             entitiesMap.put(entityData.getEntityId(), entityData);
         }
     }
 
+    @NotNull
     public Collection<EntityId> getOrderedEntityIds() {
         return entitiesMap.keySet();
     }
 
-    public PageData<AlarmData> setAndMergeAlarmsData(PageData<AlarmData> alarms) {
+    public PageData<AlarmData> setAndMergeAlarmsData(@NotNull PageData<AlarmData> alarms) {
         this.alarms = alarms;
-        for (AlarmData alarmData : alarms.getData()) {
+        for (@NotNull AlarmData alarmData : alarms.getData()) {
             EntityId entityId = alarmData.getEntityId();
             if (entityId != null) {
                 EntityData entityData = entitiesMap.get(entityId);
@@ -146,12 +150,12 @@ public class TbAlarmDataSubCtx extends TbAbstractDataSubCtx<AlarmDataQuery> {
     public void createAlarmSubscriptions() {
         AlarmDataPageLink pageLink = query.getPageLink();
         long startTs = System.currentTimeMillis() - pageLink.getTimeWindow();
-        for (EntityData entityData : entitiesMap.values()) {
+        for (@NotNull EntityData entityData : entitiesMap.values()) {
             createAlarmSubscriptionForEntity(pageLink, startTs, entityData);
         }
     }
 
-    private void createAlarmSubscriptionForEntity(AlarmDataPageLink pageLink, long startTs, EntityData entityData) {
+    private void createAlarmSubscriptionForEntity(AlarmDataPageLink pageLink, long startTs, @NotNull EntityData entityData) {
         int subIdx = sessionRef.getSessionSubIdSeq().incrementAndGet();
         subToEntityIdMap.put(subIdx, entityData.getEntityId());
         log.trace("[{}][{}][{}] Creating alarms subscription for [{}] with query: {}", serviceId, cmdId, subIdx, entityData.getEntityId(), pageLink);
@@ -168,10 +172,10 @@ public class TbAlarmDataSubCtx extends TbAbstractDataSubCtx<AlarmDataQuery> {
     }
 
     @Override
-    void sendWsMsg(String sessionId, TelemetrySubscriptionUpdate subscriptionUpdate, EntityKeyType keyType, boolean resultToLatestValues) {
+    void sendWsMsg(String sessionId, @NotNull TelemetrySubscriptionUpdate subscriptionUpdate, EntityKeyType keyType, boolean resultToLatestValues) {
         EntityId entityId = subToEntityIdMap.get(subscriptionUpdate.getSubscriptionId());
         if (entityId != null) {
-            Map<String, TsValue> latestUpdate = new HashMap<>();
+            @NotNull Map<String, TsValue> latestUpdate = new HashMap<>();
             subscriptionUpdate.getData().forEach((k, v) -> {
                 Object[] data = (Object[]) v.get(0);
                 latestUpdate.put(k, new TsValue((Long) data[0], (String) data[1]));
@@ -179,7 +183,7 @@ public class TbAlarmDataSubCtx extends TbAbstractDataSubCtx<AlarmDataQuery> {
             EntityData entityData = entitiesMap.get(entityId);
             entityData.getLatest().computeIfAbsent(keyType, tmp -> new HashMap<>()).putAll(latestUpdate);
             log.trace("[{}][{}][{}][{}] Received subscription update: {}", sessionId, cmdId, subscriptionUpdate.getSubscriptionId(), keyType, subscriptionUpdate);
-            List<AlarmData> update = alarmsMap.values().stream().filter(alarm -> entityId.equals(alarm.getEntityId())).map(alarm -> {
+            @NotNull List<AlarmData> update = alarmsMap.values().stream().filter(alarm -> entityId.equals(alarm.getEntityId())).map(alarm -> {
                 alarm.getLatest().computeIfAbsent(keyType, tmp -> new HashMap<>()).putAll(latestUpdate);
                 return alarm;
             }).collect(Collectors.toList());
@@ -191,12 +195,13 @@ public class TbAlarmDataSubCtx extends TbAbstractDataSubCtx<AlarmDataQuery> {
         }
     }
 
+    @NotNull
     @Override
     protected Aggregation getCurrentAggregation() {
         return Aggregation.NONE;
     }
 
-    private void sendWsMsg(String sessionId, AlarmSubscriptionUpdate subscriptionUpdate) {
+    private void sendWsMsg(String sessionId, @NotNull AlarmSubscriptionUpdate subscriptionUpdate) {
         Alarm alarm = subscriptionUpdate.getAlarm();
         AlarmId alarmId = alarm.getId();
         if (subscriptionUpdate.isAlarmDeleted()) {
@@ -210,7 +215,7 @@ public class TbAlarmDataSubCtx extends TbAbstractDataSubCtx<AlarmDataQuery> {
             boolean matchesFilter = filter(alarm);
             if (onCurrentPage) {
                 if (matchesFilter) {
-                    AlarmData updated = new AlarmData(alarm, current.getOriginatorName(), current.getEntityId());
+                    @NotNull AlarmData updated = new AlarmData(alarm, current.getOriginatorName(), current.getEntityId());
                     updated.getLatest().putAll(current.getLatest());
                     alarmsMap.put(alarmId, updated);
                     sendWsMsg(new AlarmDataUpdate(cmdId, null, Collections.singletonList(updated), maxEntitiesPerAlarmSubscription, data.getTotalElements()));
@@ -226,7 +231,7 @@ public class TbAlarmDataSubCtx extends TbAbstractDataSubCtx<AlarmDataQuery> {
     public void cleanupOldAlarms() {
         long expTime = System.currentTimeMillis() - query.getPageLink().getTimeWindow();
         boolean shouldRefresh = false;
-        for (AlarmData alarmData : alarms.getData()) {
+        for (@NotNull AlarmData alarmData : alarms.getData()) {
             if (alarmData.getCreatedTime() < expTime) {
                 shouldRefresh = true;
                 break;
@@ -237,7 +242,7 @@ public class TbAlarmDataSubCtx extends TbAbstractDataSubCtx<AlarmDataQuery> {
         }
     }
 
-    private boolean filter(Alarm alarm) {
+    private boolean filter(@NotNull Alarm alarm) {
         AlarmDataPageLink filter = query.getPageLink();
         long startTs = System.currentTimeMillis() - filter.getTimeWindow();
         if (alarm.getCreatedTime() < startTs) {
@@ -254,15 +259,13 @@ public class TbAlarmDataSubCtx extends TbAbstractDataSubCtx<AlarmDataQuery> {
         }
         if (filter.getStatusList() != null && !filter.getStatusList().isEmpty()) {
             boolean matches = false;
-            for (AlarmSearchStatus status : filter.getStatusList()) {
+            for (@NotNull AlarmSearchStatus status : filter.getStatusList()) {
                 if (status.getStatuses().contains(alarm.getStatus())) {
                     matches = true;
                     break;
                 }
             }
-            if (!matches) {
-                return false;
-            }
+            return matches;
         }
         return true;
     }
@@ -278,17 +281,17 @@ public class TbAlarmDataSubCtx extends TbAbstractDataSubCtx<AlarmDataQuery> {
     }
 
     @Override
-    protected synchronized void doUpdate(Map<EntityId, EntityData> newDataMap) {
+    protected synchronized void doUpdate(@NotNull Map<EntityId, EntityData> newDataMap) {
         resetInvocationCounter();
         entitiesMap.clear();
         tooManyEntities = data.hasNext();
-        for (EntityData entityData : data.getData()) {
+        for (@NotNull EntityData entityData : data.getData()) {
             entitiesMap.put(entityData.getEntityId(), entityData);
         }
         fetchAlarms();
-        List<Integer> subIdsToCancel = new ArrayList<>();
-        List<TbSubscription> subsToAdd = new ArrayList<>();
-        Set<EntityId> currentSubs = new HashSet<>();
+        @NotNull List<Integer> subIdsToCancel = new ArrayList<>();
+        @NotNull List<TbSubscription> subsToAdd = new ArrayList<>();
+        @NotNull Set<EntityId> currentSubs = new HashSet<>();
         subToEntityIdMap.forEach((subId, entityId) -> {
             if (!newDataMap.containsKey(entityId)) {
                 subIdsToCancel.add(subId);
@@ -298,7 +301,7 @@ public class TbAlarmDataSubCtx extends TbAbstractDataSubCtx<AlarmDataQuery> {
         });
         log.trace("[{}][{}] Subscriptions that are invalid: {}", sessionRef.getSessionId(), cmdId, subIdsToCancel);
         subIdsToCancel.forEach(subToEntityIdMap::remove);
-        List<EntityData> newSubsList = newDataMap.entrySet().stream().filter(entry -> !currentSubs.contains(entry.getKey())).map(Map.Entry::getValue).collect(Collectors.toList());
+        @NotNull List<EntityData> newSubsList = newDataMap.entrySet().stream().filter(entry -> !currentSubs.contains(entry.getKey())).map(Map.Entry::getValue).collect(Collectors.toList());
         if (!newSubsList.isEmpty()) {
             List<EntityKey> keys = query.getLatestValues();
             if (keys != null && !keys.isEmpty()) {
@@ -321,6 +324,7 @@ public class TbAlarmDataSubCtx extends TbAbstractDataSubCtx<AlarmDataQuery> {
         alarmInvocationAttempts = 0;
     }
 
+    @NotNull
     @Override
     protected EntityDataQuery buildEntityDataQuery() {
         EntityDataSortOrder sortOrder = query.getPageLink().getSortOrder();
@@ -330,7 +334,7 @@ public class TbAlarmDataSubCtx extends TbAbstractDataSubCtx<AlarmDataQuery> {
         } else {
             entitiesSortOrder = sortOrder;
         }
-        EntityDataPageLink edpl = new EntityDataPageLink(maxEntitiesPerAlarmSubscription, 0, null, entitiesSortOrder);
+        @NotNull EntityDataPageLink edpl = new EntityDataPageLink(maxEntitiesPerAlarmSubscription, 0, null, entitiesSortOrder);
         return new EntityDataQuery(query.getEntityFilter(), edpl, query.getEntityFields(), query.getLatestValues(), query.getKeyFilters());
     }
 }

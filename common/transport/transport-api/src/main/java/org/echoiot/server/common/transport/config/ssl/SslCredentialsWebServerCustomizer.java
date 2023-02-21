@@ -1,5 +1,7 @@
 package org.echoiot.server.common.transport.config.ssl;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
@@ -18,14 +20,14 @@ import java.security.KeyStore;
 @ConditionalOnExpression("'${spring.main.web-environment:true}'=='true' && '${server.ssl.enabled:false}'=='true'")
 public class SslCredentialsWebServerCustomizer implements WebServerFactoryCustomizer<ConfigurableServletWebServerFactory> {
 
+    @NotNull
     @Bean
     @ConfigurationProperties(prefix = "server.ssl.credentials")
     public SslCredentialsConfig httpServerSslCredentials() {
         return new SslCredentialsConfig("HTTP Server SSL Credentials", false);
     }
 
-    @Autowired
-    @Qualifier("httpServerSslCredentials")
+    @Resource(name = "httpServerSslCredentials")
     private SslCredentialsConfig httpServerSslCredentialsConfig;
 
     private final ServerProperties serverProperties;
@@ -35,7 +37,7 @@ public class SslCredentialsWebServerCustomizer implements WebServerFactoryCustom
     }
 
     @Override
-    public void customize(ConfigurableServletWebServerFactory factory) {
+    public void customize(@NotNull ConfigurableServletWebServerFactory factory) {
         SslCredentials sslCredentials = this.httpServerSslCredentialsConfig.getCredentials();
         Ssl ssl = serverProperties.getSsl();
         ssl.setKeyAlias(sslCredentials.getKeyAlias());
@@ -47,6 +49,7 @@ public class SslCredentialsWebServerCustomizer implements WebServerFactoryCustom
                 return sslCredentials.getKeyStore();
             }
 
+            @Nullable
             @Override
             public KeyStore getTrustStore() {
                 return null;

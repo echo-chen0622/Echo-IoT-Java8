@@ -11,7 +11,7 @@ import java.util.UUID;
 
 public class AutoCommitController extends BaseController {
 
-    @Autowired
+    @Resource
     private EntitiesVersionControlService vcService;
 
     protected ListenableFuture<UUID> autoCommit(User user, EntityId entityId) throws Exception {

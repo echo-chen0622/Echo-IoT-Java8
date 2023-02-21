@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -22,13 +23,13 @@ public class TelemetryEntityView implements Serializable {
     @ApiModelProperty(position = 2, required = true, value = "JSON object with attributes to expose")
     private AttributesEntityView attributes;
 
-    public TelemetryEntityView(List<String> timeseries, AttributesEntityView attributes) {
+    public TelemetryEntityView(@NotNull List<String> timeseries, AttributesEntityView attributes) {
 
         this.timeseries = new ArrayList<>(timeseries);
         this.attributes = attributes;
     }
 
-    public TelemetryEntityView(TelemetryEntityView obj) {
+    public TelemetryEntityView(@NotNull TelemetryEntityView obj) {
         this(obj.getTimeseries(), obj.getAttributes());
     }
 }

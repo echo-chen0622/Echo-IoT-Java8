@@ -8,6 +8,7 @@ import org.echoiot.server.common.data.DeviceProfile;
 import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.transport.auth.TransportDeviceInfo;
 import org.echoiot.server.gen.transport.TransportProtos;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -18,6 +19,7 @@ import java.util.UUID;
 @Data
 public abstract class DeviceAwareSessionContext implements SessionContext {
 
+    @NotNull
     @Getter
     protected final UUID sessionId;
     @Getter
@@ -38,13 +40,13 @@ public abstract class DeviceAwareSessionContext implements SessionContext {
         return deviceId;
     }
 
-    public void setDeviceInfo(TransportDeviceInfo deviceInfo) {
+    public void setDeviceInfo(@NotNull TransportDeviceInfo deviceInfo) {
         this.deviceInfo = deviceInfo;
         this.deviceId = deviceInfo.getDeviceId();
     }
 
     @Override
-    public void onDeviceProfileUpdate(TransportProtos.SessionInfoProto sessionInfo, DeviceProfile deviceProfile) {
+    public void onDeviceProfileUpdate(TransportProtos.SessionInfoProto sessionInfo, @NotNull DeviceProfile deviceProfile) {
         this.sessionInfo = sessionInfo;
         this.deviceProfile = deviceProfile;
         this.deviceInfo.setDeviceType(deviceProfile.getName());
@@ -52,7 +54,7 @@ public abstract class DeviceAwareSessionContext implements SessionContext {
     }
 
     @Override
-    public void onDeviceUpdate(TransportProtos.SessionInfoProto sessionInfo, Device device, Optional<DeviceProfile> deviceProfileOpt) {
+    public void onDeviceUpdate(TransportProtos.SessionInfoProto sessionInfo, @NotNull Device device, @NotNull Optional<DeviceProfile> deviceProfileOpt) {
         this.sessionInfo = sessionInfo;
         this.deviceInfo.setDeviceProfileId(device.getDeviceProfileId());
         this.deviceInfo.setDeviceType(device.getType());

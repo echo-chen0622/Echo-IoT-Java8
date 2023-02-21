@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.echoiot.server.common.data.validation.NoXss;
 import org.echoiot.server.common.data.id.WidgetTypeId;
+import org.jetbrains.annotations.NotNull;
 
 @Data
 public class WidgetTypeInfo extends BaseWidgetType {
@@ -25,11 +26,11 @@ public class WidgetTypeInfo extends BaseWidgetType {
         super(id);
     }
 
-    public WidgetTypeInfo(BaseWidgetType baseWidgetType) {
+    public WidgetTypeInfo(@NotNull BaseWidgetType baseWidgetType) {
         super(baseWidgetType);
     }
 
-    public WidgetTypeInfo(WidgetTypeInfo widgetTypeInfo) {
+    public WidgetTypeInfo(@NotNull WidgetTypeInfo widgetTypeInfo) {
         super(widgetTypeInfo);
         this.image = widgetTypeInfo.getImage();
         this.description = widgetTypeInfo.getDescription();

@@ -4,6 +4,7 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.id.WidgetTypeId;
 import org.echoiot.server.common.data.widget.WidgetTypeDetails;
 import org.echoiot.server.queue.util.TbCoreComponent;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.gen.edge.v1.UpdateMsgType;
@@ -13,11 +14,12 @@ import org.echoiot.server.gen.edge.v1.WidgetTypeUpdateMsg;
 @TbCoreComponent
 public class WidgetTypeMsgConstructor {
 
-    public WidgetTypeUpdateMsg constructWidgetTypeUpdateMsg(UpdateMsgType msgType, WidgetTypeDetails widgetTypeDetails) {
-        WidgetTypeUpdateMsg.Builder builder = WidgetTypeUpdateMsg.newBuilder()
-                .setMsgType(msgType)
-                .setIdMSB(widgetTypeDetails.getId().getId().getMostSignificantBits())
-                .setIdLSB(widgetTypeDetails.getId().getId().getLeastSignificantBits());
+    @NotNull
+    public WidgetTypeUpdateMsg constructWidgetTypeUpdateMsg(UpdateMsgType msgType, @NotNull WidgetTypeDetails widgetTypeDetails) {
+        @NotNull WidgetTypeUpdateMsg.Builder builder = WidgetTypeUpdateMsg.newBuilder()
+                                                                          .setMsgType(msgType)
+                                                                          .setIdMSB(widgetTypeDetails.getId().getId().getMostSignificantBits())
+                                                                          .setIdLSB(widgetTypeDetails.getId().getId().getLeastSignificantBits());
         if (widgetTypeDetails.getBundleAlias() != null) {
             builder.setBundleAlias(widgetTypeDetails.getBundleAlias());
         }
@@ -42,7 +44,8 @@ public class WidgetTypeMsgConstructor {
         return builder.build();
     }
 
-    public WidgetTypeUpdateMsg constructWidgetTypeDeleteMsg(WidgetTypeId widgetTypeId) {
+    @NotNull
+    public WidgetTypeUpdateMsg constructWidgetTypeDeleteMsg(@NotNull WidgetTypeId widgetTypeId) {
         return WidgetTypeUpdateMsg.newBuilder()
                 .setMsgType(UpdateMsgType.ENTITY_DELETED_RPC_MESSAGE)
                 .setIdMSB(widgetTypeId.getId().getMostSignificantBits())

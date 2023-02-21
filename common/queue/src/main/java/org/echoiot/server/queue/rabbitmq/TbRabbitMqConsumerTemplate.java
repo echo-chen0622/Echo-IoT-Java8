@@ -12,6 +12,7 @@ import org.echoiot.server.queue.TbQueueMsgDecoder;
 import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
 import org.echoiot.server.queue.common.AbstractTbQueueConsumerTemplate;
 import org.echoiot.server.queue.common.DefaultTbQueueMsg;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -32,7 +33,7 @@ public class TbRabbitMqConsumerTemplate<T extends TbQueueMsg> extends AbstractTb
 
     private volatile Set<String> queues;
 
-    public TbRabbitMqConsumerTemplate(TbQueueAdmin admin, TbRabbitMqSettings rabbitMqSettings, String topic, TbQueueMsgDecoder<T> decoder) {
+    public TbRabbitMqConsumerTemplate(TbQueueAdmin admin, @NotNull TbRabbitMqSettings rabbitMqSettings, String topic, TbQueueMsgDecoder<T> decoder) {
         super(topic);
         this.admin = admin;
         this.decoder = decoder;
@@ -51,10 +52,11 @@ public class TbRabbitMqConsumerTemplate<T extends TbQueueMsg> extends AbstractTb
         stopped = false;
     }
 
+    @NotNull
     @Override
     protected List<GetResponse> doPoll(long durationInMillis) {
-        List<GetResponse> result = queues.stream()
-                .map(queue -> {
+        @NotNull List<GetResponse> result = queues.stream()
+                                                  .map(queue -> {
                     try {
                         return channel.basicGet(queue, false);
                     } catch (IOException e) {
@@ -104,7 +106,7 @@ public class TbRabbitMqConsumerTemplate<T extends TbQueueMsg> extends AbstractTb
         }
     }
 
-    public T decode(GetResponse message) throws InvalidProtocolBufferException {
+    public T decode(@NotNull GetResponse message) throws InvalidProtocolBufferException {
         DefaultTbQueueMsg msg = gson.fromJson(new String(message.getBody()), DefaultTbQueueMsg.class);
         return decoder.decode(msg);
     }

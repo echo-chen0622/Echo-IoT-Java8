@@ -13,6 +13,7 @@ import org.eclipse.californium.scandium.config.DtlsConnectorConfig;
 import org.eclipse.leshan.server.bootstrap.BootstrapSessionManager;
 import org.eclipse.leshan.server.californium.bootstrap.LeshanBootstrapServer;
 import org.eclipse.leshan.server.californium.bootstrap.LeshanBootstrapServerBuilder;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import org.echoiot.server.queue.util.TbLwM2mBootstrapTransportComponent;
 import org.echoiot.server.transport.lwm2m.config.LwM2MTransportBootstrapConfig;
@@ -38,11 +39,17 @@ import static org.echoiot.server.transport.lwm2m.server.LwM2MNetworkConfig.getCo
 @RequiredArgsConstructor
 public class LwM2MTransportBootstrapService {
 
+    @NotNull
     private final LwM2MTransportServerConfig serverConfig;
+    @NotNull
     private final LwM2MTransportBootstrapConfig bootstrapConfig;
+    @NotNull
     private final LwM2MBootstrapSecurityStore lwM2MBootstrapSecurityStore;
+    @NotNull
     private final LwM2MInMemoryBootstrapConfigStore lwM2MInMemoryBootstrapConfigStore;
+    @NotNull
     private final TransportService transportService;
+    @NotNull
     private final TbLwM2MDtlsBootstrapCertificateVerifier certificateVerifier;
     private LeshanBootstrapServer server;
 
@@ -66,7 +73,7 @@ public class LwM2MTransportBootstrapService {
     }
 
     public LeshanBootstrapServer getLhBootstrapServer() {
-        LeshanBootstrapServerBuilder builder = new LeshanBootstrapServerBuilder();
+        @NotNull LeshanBootstrapServerBuilder builder = new LeshanBootstrapServerBuilder();
         builder.setLocalAddress(bootstrapConfig.getHost(), bootstrapConfig.getPort());
         builder.setLocalSecureAddress(bootstrapConfig.getSecureHost(), bootstrapConfig.getSecurePort());
 
@@ -75,7 +82,7 @@ public class LwM2MTransportBootstrapService {
 
 
         /* Create and Set DTLS Config */
-        DtlsConnectorConfig.Builder dtlsConfig = new DtlsConnectorConfig.Builder(getCoapConfig(bootstrapConfig.getPort(), bootstrapConfig.getSecurePort(), serverConfig));
+        @NotNull DtlsConnectorConfig.Builder dtlsConfig = new DtlsConnectorConfig.Builder(getCoapConfig(bootstrapConfig.getPort(), bootstrapConfig.getSecurePort(), serverConfig));
 
         dtlsConfig.set(DTLS_RECOMMENDED_CURVES_ONLY, serverConfig.isRecommendedSupportedGroups());
         dtlsConfig.set(DTLS_RECOMMENDED_CIPHER_SUITES_ONLY, serverConfig.isRecommendedCiphers());
@@ -93,14 +100,14 @@ public class LwM2MTransportBootstrapService {
         builder.setSecurityStore(lwM2MBootstrapSecurityStore);
 
 
-        BootstrapSessionManager sessionManager = new LwM2mDefaultBootstrapSessionManager(lwM2MBootstrapSecurityStore, lwM2MInMemoryBootstrapConfigStore, transportService);
+        @NotNull BootstrapSessionManager sessionManager = new LwM2mDefaultBootstrapSessionManager(lwM2MBootstrapSecurityStore, lwM2MInMemoryBootstrapConfigStore, transportService);
         builder.setSessionManager(sessionManager);
 
         /* Create BootstrapServer */
         return builder.build();
     }
 
-    private void setServerWithCredentials(LeshanBootstrapServerBuilder builder, DtlsConnectorConfig.Builder dtlsConfig) {
+    private void setServerWithCredentials(@NotNull LeshanBootstrapServerBuilder builder, @NotNull DtlsConnectorConfig.Builder dtlsConfig) {
         if (this.bootstrapConfig.getSslCredentials() != null) {
             SslCredentials sslCredentials = this.bootstrapConfig.getSslCredentials();
             builder.setPublicKey(sslCredentials.getPublicKey());

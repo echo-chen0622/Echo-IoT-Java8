@@ -36,6 +36,8 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.StreamSupport;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,12 +67,12 @@ public final class FileUtils
     public static final boolean isCleanerAvailable = false;
     private static final AtomicReference<Optional<FSErrorHandler>> fsErrorHandler = new AtomicReference<>(Optional.empty());
 
-    public static void createHardLink(String from, String to)
+    public static void createHardLink(@NotNull String from, @NotNull String to)
     {
         createHardLink(new File(from), new File(to));
     }
 
-    public static void createHardLink(File from, File to)
+    public static void createHardLink(@NotNull File from, @NotNull File to)
     {
         if (to.exists())
             throw new RuntimeException("Tried to create duplicate hard link to " + to);
@@ -87,7 +89,8 @@ public final class FileUtils
         }
     }
 
-    public static File createTempFile(String prefix, String suffix, File directory)
+    @NotNull
+    public static File createTempFile(@NotNull String prefix, String suffix, File directory)
     {
         try
         {
@@ -99,17 +102,18 @@ public final class FileUtils
         }
     }
 
-    public static File createTempFile(String prefix, String suffix)
+    @NotNull
+    public static File createTempFile(@NotNull String prefix, String suffix)
     {
         return createTempFile(prefix, suffix, new File(System.getProperty("java.io.tmpdir")));
     }
 
-    public static Throwable deleteWithConfirm(String filePath, boolean expect, Throwable accumulate)
+    public static Throwable deleteWithConfirm(@NotNull String filePath, boolean expect, Throwable accumulate)
     {
         return deleteWithConfirm(new File(filePath), expect, accumulate);
     }
 
-    public static Throwable deleteWithConfirm(File file, boolean expect, Throwable accumulate)
+    public static Throwable deleteWithConfirm(@NotNull File file, boolean expect, Throwable accumulate)
     {
         boolean exists = file.exists();
         assert exists || !expect : "attempted to delete non-existing file " + file.getName();
@@ -132,17 +136,17 @@ public final class FileUtils
         return accumulate;
     }
 
-    public static void deleteWithConfirm(String file)
+    public static void deleteWithConfirm(@NotNull String file)
     {
         deleteWithConfirm(new File(file));
     }
 
-    public static void deleteWithConfirm(File file)
+    public static void deleteWithConfirm(@NotNull File file)
     {
         maybeFail(deleteWithConfirm(file, true, null));
     }
 
-    public static void renameWithOutConfirm(String from, String to)
+    public static void renameWithOutConfirm(@NotNull String from, @NotNull String to)
     {
         try
         {
@@ -155,12 +159,12 @@ public final class FileUtils
         }
     }
 
-    public static void renameWithConfirm(String from, String to)
+    public static void renameWithConfirm(@NotNull String from, @NotNull String to)
     {
         renameWithConfirm(new File(from), new File(to));
     }
 
-    public static void renameWithConfirm(File from, File to)
+    public static void renameWithConfirm(@NotNull File from, @NotNull File to)
     {
         assert from.exists();
         if (logger.isTraceEnabled())
@@ -183,7 +187,7 @@ public final class FileUtils
      * @param to
      * @throws IOException
      */
-    private static void atomicMoveWithFallback(Path from, Path to) throws IOException
+    private static void atomicMoveWithFallback(@NotNull Path from, @NotNull Path to) throws IOException
     {
         try
         {
@@ -196,7 +200,7 @@ public final class FileUtils
         }
 
     }
-    public static void truncate(String path, long size)
+    public static void truncate(@NotNull String path, long size)
     {
         try(FileChannel channel = FileChannel.open(Paths.get(path), StandardOpenOption.READ, StandardOpenOption.WRITE))
         {
@@ -208,7 +212,7 @@ public final class FileUtils
         }
     }
 
-    public static void closeQuietly(Closeable c)
+    public static void closeQuietly(@Nullable Closeable c)
     {
         try
         {
@@ -221,7 +225,7 @@ public final class FileUtils
         }
     }
 
-    public static void closeQuietly(AutoCloseable c)
+    public static void closeQuietly(@Nullable AutoCloseable c)
     {
         try
         {
@@ -239,10 +243,10 @@ public final class FileUtils
         close(Arrays.asList(cs));
     }
 
-    public static void close(Iterable<? extends Closeable> cs) throws IOException
+    public static void close(@NotNull Iterable<? extends Closeable> cs) throws IOException
     {
-        Throwable e = null;
-        for (Closeable c : cs)
+        @Nullable Throwable e = null;
+        for (@Nullable Closeable c : cs)
         {
             try
             {
@@ -259,9 +263,9 @@ public final class FileUtils
         maybeFail(e, IOException.class);
     }
 
-    public static void closeQuietly(Iterable<? extends AutoCloseable> cs)
+    public static void closeQuietly(@NotNull Iterable<? extends AutoCloseable> cs)
     {
-        for (AutoCloseable c : cs)
+        for (@Nullable AutoCloseable c : cs)
         {
             try
             {
@@ -275,7 +279,8 @@ public final class FileUtils
         }
     }
 
-    public static String getCanonicalPath(String filename)
+    @NotNull
+    public static String getCanonicalPath(@NotNull String filename)
     {
         try
         {
@@ -287,7 +292,8 @@ public final class FileUtils
         }
     }
 
-    public static String getCanonicalPath(File file)
+    @NotNull
+    public static String getCanonicalPath(@NotNull File file)
     {
         try
         {
@@ -300,16 +306,17 @@ public final class FileUtils
     }
 
     /** Return true if file is contained in folder */
-    public static boolean isContained(File folder, File file)
+    public static boolean isContained(@NotNull File folder, @NotNull File file)
     {
-        Path folderPath = Paths.get(getCanonicalPath(folder));
-        Path filePath = Paths.get(getCanonicalPath(file));
+        @NotNull Path folderPath = Paths.get(getCanonicalPath(folder));
+        @NotNull Path filePath = Paths.get(getCanonicalPath(file));
 
         return filePath.startsWith(folderPath);
     }
 
     /** Convert absolute path into a path relative to the base path */
-    public static String getRelativePath(String basePath, String path)
+    @NotNull
+    public static String getRelativePath(@NotNull String basePath, @NotNull String path)
     {
         try
         {
@@ -317,23 +324,22 @@ public final class FileUtils
         }
         catch(Exception ex)
         {
-            String absDataPath = FileUtils.getCanonicalPath(basePath);
+            @NotNull String absDataPath = FileUtils.getCanonicalPath(basePath);
             return Paths.get(absDataPath).relativize(Paths.get(path)).toString();
         }
     }
 
-    public static void clean(ByteBuffer buffer)
+    public static void clean(@Nullable ByteBuffer buffer)
     {
-        if (buffer == null)
-            return;
+        if (buffer == null) {}
     }
 
-    public static void createDirectory(String directory)
+    public static void createDirectory(@NotNull String directory)
     {
         createDirectory(new File(directory));
     }
 
-    public static void createDirectory(File directory)
+    public static void createDirectory(@NotNull File directory)
     {
         if (!directory.exists())
         {
@@ -342,13 +348,13 @@ public final class FileUtils
         }
     }
 
-    public static boolean delete(String file)
+    public static boolean delete(@NotNull String file)
     {
-        File f = new File(file);
+        @NotNull File f = new File(file);
         return f.delete();
     }
 
-    public static void delete(File... files)
+    public static void delete(@Nullable File... files)
     {
         if (files == null)
         {
@@ -357,15 +363,15 @@ public final class FileUtils
             return;
         }
 
-        for ( File file : files )
+        for ( @NotNull File file : files )
         {
             file.delete();
         }
     }
 
-    public static void deleteAsync(final String file)
+    public static void deleteAsync(@NotNull final String file)
     {
-        Runnable runnable = new Runnable()
+        @NotNull Runnable runnable = new Runnable()
         {
             public void run()
             {
@@ -375,7 +381,7 @@ public final class FileUtils
         ScheduledExecutors.nonPeriodicTasks.execute(runnable);
     }
 
-    public static void visitDirectory(Path dir, Predicate<? super File> filter, Consumer<? super File> consumer)
+    public static void visitDirectory(@NotNull Path dir, @Nullable Predicate<? super File> filter, Consumer<? super File> consumer)
     {
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir))
         {
@@ -391,6 +397,7 @@ public final class FileUtils
         }
     }
 
+    @NotNull
     public static String stringifyFileSize(double value)
     {
         double d;
@@ -430,12 +437,12 @@ public final class FileUtils
      * @param dir Directory to be deleted
      * @throws FSWriteError if any part of the tree cannot be deleted
      */
-    public static void deleteRecursive(File dir)
+    public static void deleteRecursive(@NotNull File dir)
     {
         if (dir.isDirectory())
         {
-            String[] children = dir.list();
-            for (String child : children)
+            @Nullable String[] children = dir.list();
+            for (@NotNull String child : children)
                 deleteRecursive(new File(dir, child));
         }
 
@@ -447,12 +454,12 @@ public final class FileUtils
      * Schedules deletion of all file and subdirectories under "dir" on JVM shutdown.
      * @param dir Directory to be deleted
      */
-    public static void deleteRecursiveOnExit(File dir)
+    public static void deleteRecursiveOnExit(@NotNull File dir)
     {
         if (dir.isDirectory())
         {
-            String[] children = dir.list();
-            for (String child : children)
+            @Nullable String[] children = dir.list();
+            for (@NotNull String child : children)
                 deleteRecursiveOnExit(new File(dir, child));
         }
 
@@ -478,7 +485,7 @@ public final class FileUtils
      *
      * @param e A filesystem error
      */
-    public static void handleFSErrorAndPropagate(FSError e)
+    public static void handleFSErrorAndPropagate(@NotNull FSError e)
     {
         JVMStabilityInspector.inspectThrowable(e);
         throwIfUnchecked(e);
@@ -490,15 +497,16 @@ public final class FileUtils
      * @param folder The directory for which we need size.
      * @return The size of the directory
      */
-    public static long folderSize(File folder)
+    public static long folderSize(@NotNull File folder)
     {
-        final long [] sizeArr = {0L};
+        @NotNull final long [] sizeArr = {0L};
         try
         {
             Files.walkFileTree(folder.toPath(), new SimpleFileVisitor<Path>()
             {
+                @NotNull
                 @Override
-                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
+                public FileVisitResult visitFile(Path file, @NotNull BasicFileAttributes attrs)
                 {
                     sizeArr[0] += attrs.size();
                     return FileVisitResult.CONTINUE;
@@ -512,9 +520,9 @@ public final class FileUtils
         return sizeArr[0];
     }
 
-    public static void copyTo(DataInput in, OutputStream out, int length) throws IOException
+    public static void copyTo(@NotNull DataInput in, @NotNull OutputStream out, int length) throws IOException
     {
-        byte[] buffer = new byte[64 * 1024];
+        @NotNull byte[] buffer = new byte[64 * 1024];
         int copiedBytes = 0;
 
         while (copiedBytes + buffer.length < length)
@@ -547,7 +555,7 @@ public final class FileUtils
         return false;
     }
 
-    public static void append(File file, String ... lines)
+    public static void append(@NotNull File file, String ... lines)
     {
         if (file.exists())
             write(file, Arrays.asList(lines), StandardOpenOption.APPEND);
@@ -555,7 +563,7 @@ public final class FileUtils
             write(file, Arrays.asList(lines), StandardOpenOption.CREATE);
     }
 
-    public static void appendAndSync(File file, String ... lines)
+    public static void appendAndSync(@NotNull File file, String ... lines)
     {
         if (file.exists())
             write(file, Arrays.asList(lines), StandardOpenOption.APPEND, StandardOpenOption.SYNC);
@@ -563,12 +571,12 @@ public final class FileUtils
             write(file, Arrays.asList(lines), StandardOpenOption.CREATE, StandardOpenOption.SYNC);
     }
 
-    public static void replace(File file, String ... lines)
+    public static void replace(@NotNull File file, String ... lines)
     {
         write(file, Arrays.asList(lines), StandardOpenOption.TRUNCATE_EXISTING);
     }
 
-    public static void write(File file, List<String> lines, StandardOpenOption ... options)
+    public static void write(@NotNull File file, @NotNull List<String> lines, StandardOpenOption ... options)
     {
         try
         {
@@ -583,7 +591,8 @@ public final class FileUtils
         }
     }
 
-    public static List<String> readLines(File file)
+    @NotNull
+    public static List<String> readLines(@NotNull File file)
     {
         try
         {
@@ -611,7 +620,7 @@ public final class FileUtils
      * @param file the partition
      * @return the size, in bytes, of the partition or {@code 0L} if the abstract pathname does not name a partition
      */
-    public static long getTotalSpace(File file)
+    public static long getTotalSpace(@NotNull File file)
     {
         return handleLargeFileSystem(file.getTotalSpace());
     }
@@ -625,7 +634,7 @@ public final class FileUtils
      * @return the number of unallocated bytes on the partition or {@code 0L}
      * if the abstract pathname does not name a partition.
      */
-    public static long getFreeSpace(File file)
+    public static long getFreeSpace(@NotNull File file)
     {
         return handleLargeFileSystem(file.getFreeSpace());
     }
@@ -639,7 +648,7 @@ public final class FileUtils
      * @return the number of available bytes on the partition or {@code 0L}
      * if the abstract pathname does not name a partition.
      */
-    public static long getUsableSpace(File file)
+    public static long getUsableSpace(@NotNull File file)
     {
         return handleLargeFileSystem(file.getUsableSpace());
     }
@@ -654,7 +663,8 @@ public final class FileUtils
      * @param path the path to the file
      * @return the file store where the file is stored
      */
-    public static FileStore getFileStore(Path path) throws IOException
+    @NotNull
+    public static FileStore getFileStore(@NotNull Path path) throws IOException
     {
         return new SafeFileStore(Files.getFileStore(path));
     }

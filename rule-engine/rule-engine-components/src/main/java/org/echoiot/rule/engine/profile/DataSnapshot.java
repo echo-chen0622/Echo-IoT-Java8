@@ -6,6 +6,8 @@ import org.echoiot.server.common.data.device.profile.AlarmConditionFilterKey;
 import org.echoiot.server.common.data.device.profile.AlarmConditionKeyType;
 import org.echoiot.server.common.data.query.EntityKey;
 import org.echoiot.server.common.data.query.EntityKeyType;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.Set;
@@ -24,11 +26,13 @@ class DataSnapshot {
         this.keys = entityKeysToFetch;
     }
 
-    static AlarmConditionFilterKey toConditionKey(EntityKey key) {
+    @NotNull
+    static AlarmConditionFilterKey toConditionKey(@NotNull EntityKey key) {
         return new AlarmConditionFilterKey(toConditionKeyType(key.getType()), key.getKey());
     }
 
-    static AlarmConditionKeyType toConditionKeyType(EntityKeyType keyType) {
+    @NotNull
+    static AlarmConditionKeyType toConditionKeyType(@NotNull EntityKeyType keyType) {
         switch (keyType) {
             case ATTRIBUTE:
             case SERVER_ATTRIBUTE:
@@ -44,7 +48,7 @@ class DataSnapshot {
         }
     }
 
-    void removeValue(EntityKey key) {
+    void removeValue(@NotNull EntityKey key) {
         values.remove(toConditionKey(key));
     }
 
@@ -54,7 +58,7 @@ class DataSnapshot {
 
     private boolean putIfKeyExists(AlarmConditionFilterKey key, EntityKeyValue value, boolean updateOfTs) {
         if (keys.contains(key)) {
-            EntityKeyValue oldValue = values.put(key, value);
+            @Nullable EntityKeyValue oldValue = values.put(key, value);
             if (updateOfTs) {
                 return true;
             } else {

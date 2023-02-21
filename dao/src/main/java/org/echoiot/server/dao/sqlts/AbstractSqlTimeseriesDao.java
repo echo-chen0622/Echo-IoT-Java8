@@ -4,6 +4,7 @@ import com.google.common.base.Function;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.echoiot.server.common.data.id.EntityId;
@@ -30,7 +31,7 @@ public abstract class AbstractSqlTimeseriesDao extends BaseAbstractSqlTimeseries
 
     protected static final long SECONDS_IN_DAY = TimeUnit.DAYS.toSeconds(1);
 
-    @Autowired
+    @Resource
     protected ScheduledLogExecutorComponent logExecutor;
 
     @Value("${sql.ts.batch_size:1000}")
@@ -73,8 +74,9 @@ public abstract class AbstractSqlTimeseriesDao extends BaseAbstractSqlTimeseries
         }
     }
 
-    protected ListenableFuture<List<ReadTsKvQueryResult>> processFindAllAsync(TenantId tenantId, EntityId entityId, List<ReadTsKvQuery> queries) {
-        List<ListenableFuture<ReadTsKvQueryResult>> futures = queries
+    @NotNull
+    protected ListenableFuture<List<ReadTsKvQueryResult>> processFindAllAsync(TenantId tenantId, EntityId entityId, @NotNull List<ReadTsKvQuery> queries) {
+        @NotNull List<ListenableFuture<ReadTsKvQueryResult>> futures = queries
                 .stream()
                 .map(query -> findAllAsync(tenantId, entityId, query))
                 .collect(Collectors.toList());
@@ -101,7 +103,7 @@ public abstract class AbstractSqlTimeseriesDao extends BaseAbstractSqlTimeseries
         return ttl;
     }
 
-    protected int getDataPointDays(TsKvEntry tsKvEntry, long ttl) {
+    protected int getDataPointDays(@NotNull TsKvEntry tsKvEntry, long ttl) {
         return tsKvEntry.getDataPoints() * Math.max(1, (int) (ttl / SECONDS_IN_DAY));
     }
 }

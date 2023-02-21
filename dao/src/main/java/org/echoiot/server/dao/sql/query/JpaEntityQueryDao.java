@@ -13,7 +13,7 @@ import org.echoiot.server.dao.entity.EntityQueryDao;
 @Component
 public class JpaEntityQueryDao implements EntityQueryDao {
 
-    @Autowired
+    @Resource
     private EntityQueryRepository entityQueryRepository;
 
     @Override

@@ -1,6 +1,7 @@
 package org.echoiot.server.system;
 
 import org.echoiot.server.controller.AbstractControllerTest;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.test.context.TestPropertySource;
@@ -48,24 +49,26 @@ public abstract class BaseHttpDeviceApiTest extends AbstractControllerTest {
         doGetAsync("/api/v1/" + "WRONG_TOKEN" + "/attributes?clientKeys=keyA,keyB,keyC").andExpect(status().isUnauthorized());
         doGetAsync("/api/v1/" + deviceCredentials.getCredentialsId() + "/attributes?clientKeys=keyA,keyB,keyC").andExpect(status().isOk());
 
-        Map<String, String> attrMap = new HashMap<>();
+        @NotNull Map<String, String> attrMap = new HashMap<>();
         attrMap.put("keyA", "valueA");
         mockMvc.perform(
-                asyncDispatch(doPost("/api/v1/" + deviceCredentials.getCredentialsId() + "/attributes", attrMap, new String[]{}).andReturn()))
+                asyncDispatch(doPost("/api/v1/" + deviceCredentials.getCredentialsId() + "/attributes", attrMap).andReturn()))
                 .andExpect(status().isOk());
         Thread.sleep(2000);
         doGetAsync("/api/v1/" + deviceCredentials.getCredentialsId() + "/attributes?clientKeys=keyA,keyB,keyC").andExpect(status().isOk());
     }
 
-    protected ResultActions doGetAsync(String urlTemplate, Object... urlVariables) throws Exception {
+    @NotNull
+    protected ResultActions doGetAsync(@NotNull String urlTemplate, Object... urlVariables) throws Exception {
         MockHttpServletRequestBuilder getRequest;
         getRequest = get(urlTemplate, urlVariables);
         setJwtToken(getRequest);
         return mockMvc.perform(asyncDispatch(mockMvc.perform(getRequest).andExpect(request().asyncStarted()).andReturn()));
     }
 
-    protected ResultActions doPostAsync(String urlTemplate, Object... urlVariables) throws Exception {
-        MockHttpServletRequestBuilder getRequest = post(urlTemplate, urlVariables);
+    @NotNull
+    protected ResultActions doPostAsync(@NotNull String urlTemplate, Object... urlVariables) throws Exception {
+        @NotNull MockHttpServletRequestBuilder getRequest = post(urlTemplate, urlVariables);
         setJwtToken(getRequest);
         return mockMvc.perform(asyncDispatch(mockMvc.perform(getRequest).andExpect(request().asyncStarted()).andReturn()));
     }

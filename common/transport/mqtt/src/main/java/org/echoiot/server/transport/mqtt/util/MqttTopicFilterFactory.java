@@ -2,6 +2,7 @@ package org.echoiot.server.transport.mqtt.util;
 
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.device.profile.MqttTopics;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -13,7 +14,8 @@ public class MqttTopicFilterFactory {
     private static final MqttTopicFilter DEFAULT_TELEMETRY_TOPIC_FILTER = toFilter(MqttTopics.DEVICE_TELEMETRY_TOPIC);
     private static final MqttTopicFilter DEFAULT_ATTRIBUTES_TOPIC_FILTER = toFilter(MqttTopics.DEVICE_ATTRIBUTES_TOPIC);
 
-    public static MqttTopicFilter toFilter(String topicFilter) {
+    @NotNull
+    public static MqttTopicFilter toFilter(@NotNull String topicFilter) {
         if (topicFilter == null || topicFilter.isEmpty()) {
             throw new IllegalArgumentException("Topic filter can't be empty!");
         }
@@ -21,7 +23,7 @@ public class MqttTopicFilterFactory {
             if (filter.equals("#")) {
                 return new AlwaysTrueTopicFilter();
             } else if (filter.contains("+") || filter.contains("#")) {
-                String regex = filter
+                @NotNull String regex = filter
                         .replace("\\", "\\\\")
                         .replace("+", "[^/]+")
                         .replace("/#", "($|/.*)");

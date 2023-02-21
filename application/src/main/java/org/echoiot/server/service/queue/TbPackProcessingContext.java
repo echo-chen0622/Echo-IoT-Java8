@@ -1,6 +1,7 @@
 package org.echoiot.server.service.queue;
 
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 import java.util.concurrent.ConcurrentMap;
@@ -11,13 +12,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Slf4j
 public class TbPackProcessingContext<T> {
 
+    @NotNull
     private final AtomicInteger pendingCount;
     private final CountDownLatch processingTimeoutLatch;
+    @NotNull
     private final ConcurrentMap<UUID, T> ackMap;
     private final ConcurrentMap<UUID, T> failedMap;
 
     public TbPackProcessingContext(CountDownLatch processingTimeoutLatch,
-                                   ConcurrentMap<UUID, T> ackMap,
+                                   @NotNull ConcurrentMap<UUID, T> ackMap,
                                    ConcurrentMap<UUID, T> failedMap) {
         this.processingTimeoutLatch = processingTimeoutLatch;
         this.pendingCount = new AtomicInteger(ackMap.size());
@@ -25,7 +28,7 @@ public class TbPackProcessingContext<T> {
         this.failedMap = failedMap;
     }
 
-    public boolean await(long packProcessingTimeout, TimeUnit milliseconds) throws InterruptedException {
+    public boolean await(long packProcessingTimeout, @NotNull TimeUnit milliseconds) throws InterruptedException {
         return processingTimeoutLatch.await(packProcessingTimeout, milliseconds);
     }
 

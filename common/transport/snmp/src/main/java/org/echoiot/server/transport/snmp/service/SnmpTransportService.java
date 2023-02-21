@@ -15,6 +15,7 @@ import org.echoiot.server.common.transport.TransportService;
 import org.echoiot.server.common.transport.TransportServiceCallback;
 import org.echoiot.server.common.transport.adaptor.JsonConverter;
 import org.echoiot.server.transport.snmp.session.DeviceSessionContext;
+import org.jetbrains.annotations.NotNull;
 import org.snmp4j.PDU;
 import org.snmp4j.Snmp;
 import org.snmp4j.TransportMapping;
@@ -57,7 +58,9 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 public class SnmpTransportService implements TbTransportService {
+    @NotNull
     private final TransportService transportService;
+    @NotNull
     private final PduService pduService;
 
     @Getter
@@ -110,15 +113,15 @@ public class SnmpTransportService implements TbTransportService {
         snmp = new Snmp(transportMapping);
         snmp.listen();
 
-        USM usm = new USM(SecurityProtocols.getInstance(), new OctetString(MPv3.createLocalEngineID()), 0);
+        @NotNull USM usm = new USM(SecurityProtocols.getInstance(), new OctetString(MPv3.createLocalEngineID()), 0);
         SecurityModels.getInstance().addSecurityModel(usm);
     }
 
-    public void createQueryingTasks(DeviceSessionContext sessionContext) {
-        List<ScheduledFuture<?>> queryingTasks = sessionContext.getProfileTransportConfiguration().getCommunicationConfigs().stream()
-                .filter(communicationConfig -> communicationConfig instanceof RepeatingQueryingSnmpCommunicationConfig)
-                .map(config -> {
-                    RepeatingQueryingSnmpCommunicationConfig repeatingCommunicationConfig = (RepeatingQueryingSnmpCommunicationConfig) config;
+    public void createQueryingTasks(@NotNull DeviceSessionContext sessionContext) {
+        @NotNull List<ScheduledFuture<?>> queryingTasks = sessionContext.getProfileTransportConfiguration().getCommunicationConfigs().stream()
+                                                                        .filter(communicationConfig -> communicationConfig instanceof RepeatingQueryingSnmpCommunicationConfig)
+                                                                        .map(config -> {
+                    @NotNull RepeatingQueryingSnmpCommunicationConfig repeatingCommunicationConfig = (RepeatingQueryingSnmpCommunicationConfig) config;
                     Long queryingFrequency = repeatingCommunicationConfig.getQueryingFrequencyMs();
 
                     return queryingExecutor.scheduleWithFixedDelay(() -> {
@@ -131,27 +134,27 @@ public class SnmpTransportService implements TbTransportService {
                         }
                     }, queryingFrequency, queryingFrequency, TimeUnit.MILLISECONDS);
                 })
-                .collect(Collectors.toList());
+                                                                        .collect(Collectors.toList());
         sessionContext.getQueryingTasks().addAll(queryingTasks);
     }
 
-    public void cancelQueryingTasks(DeviceSessionContext sessionContext) {
+    public void cancelQueryingTasks(@NotNull DeviceSessionContext sessionContext) {
         sessionContext.getQueryingTasks().forEach(task -> task.cancel(true));
         sessionContext.getQueryingTasks().clear();
     }
 
 
-    private void sendRequest(DeviceSessionContext sessionContext, SnmpCommunicationConfig communicationConfig) {
+    private void sendRequest(@NotNull DeviceSessionContext sessionContext, @NotNull SnmpCommunicationConfig communicationConfig) {
         sendRequest(sessionContext, communicationConfig, Collections.emptyMap());
     }
 
-    private void sendRequest(DeviceSessionContext sessionContext, SnmpCommunicationConfig communicationConfig, Map<String, String> values) {
-        PDU request = pduService.createPdu(sessionContext, communicationConfig, values);
-        RequestInfo requestInfo = new RequestInfo(communicationConfig.getSpec(), communicationConfig.getAllMappings());
+    private void sendRequest(@NotNull DeviceSessionContext sessionContext, @NotNull SnmpCommunicationConfig communicationConfig, @NotNull Map<String, String> values) {
+        @NotNull PDU request = pduService.createPdu(sessionContext, communicationConfig, values);
+        @NotNull RequestInfo requestInfo = new RequestInfo(communicationConfig.getSpec(), communicationConfig.getAllMappings());
         sendRequest(sessionContext, request, requestInfo);
     }
 
-    private void sendRequest(DeviceSessionContext sessionContext, PDU request, RequestInfo requestInfo) {
+    private void sendRequest(@NotNull DeviceSessionContext sessionContext, @NotNull PDU request, RequestInfo requestInfo) {
         if (request.size() > 0) {
             log.trace("Executing SNMP request for device {}. Variables bindings: {}", sessionContext.getDeviceId(), request.getVariableBindings());
             try {
@@ -162,13 +165,13 @@ public class SnmpTransportService implements TbTransportService {
         }
     }
 
-    public void onAttributeUpdate(DeviceSessionContext sessionContext, TransportProtos.AttributeUpdateNotificationMsg attributeUpdateNotification) {
+    public void onAttributeUpdate(@NotNull DeviceSessionContext sessionContext, @NotNull TransportProtos.AttributeUpdateNotificationMsg attributeUpdateNotification) {
         sessionContext.getProfileTransportConfiguration().getCommunicationConfigs().stream()
                 .filter(config -> config.getSpec() == SnmpCommunicationSpec.SHARED_ATTRIBUTES_SETTING)
                 .findFirst()
                 .ifPresent(communicationConfig -> {
-                    Map<String, String> sharedAttributes = JsonConverter.toJson(attributeUpdateNotification).entrySet().stream()
-                                                                        .collect(Collectors.toMap(
+                    @NotNull Map<String, String> sharedAttributes = JsonConverter.toJson(attributeUpdateNotification).entrySet().stream()
+                                                                                 .collect(Collectors.toMap(
                                     Map.Entry::getKey,
                                     entry -> entry.getValue().isJsonPrimitive() ? entry.getValue().getAsString() : entry.getValue().toString()
                             ));
@@ -176,8 +179,8 @@ public class SnmpTransportService implements TbTransportService {
                 });
     }
 
-    public void onToDeviceRpcRequest(DeviceSessionContext sessionContext, TransportProtos.ToDeviceRpcRequestMsg toDeviceRpcRequestMsg) {
-        SnmpMethod snmpMethod = SnmpMethod.valueOf(toDeviceRpcRequestMsg.getMethodName());
+    public void onToDeviceRpcRequest(@NotNull DeviceSessionContext sessionContext, @NotNull TransportProtos.ToDeviceRpcRequestMsg toDeviceRpcRequestMsg) {
+        @NotNull SnmpMethod snmpMethod = SnmpMethod.valueOf(toDeviceRpcRequestMsg.getMethodName());
         JsonObject params = JsonConverter.parse(toDeviceRpcRequestMsg.getParams()).getAsJsonObject();
 
         String key = Optional.ofNullable(params.get("key")).map(JsonElement::getAsString).orElse(null);
@@ -199,13 +202,13 @@ public class SnmpTransportService implements TbTransportService {
         String oid = snmpMapping.getOid();
         DataType dataType = snmpMapping.getDataType();
 
-        PDU request = pduService.createSingleVariablePdu(sessionContext, snmpMethod, oid, value, dataType);
-        RequestInfo requestInfo = new RequestInfo(toDeviceRpcRequestMsg.getRequestId(), communicationConfig.getSpec(), communicationConfig.getAllMappings());
+        @NotNull PDU request = pduService.createSingleVariablePdu(sessionContext, snmpMethod, oid, value, dataType);
+        @NotNull RequestInfo requestInfo = new RequestInfo(toDeviceRpcRequestMsg.getRequestId(), communicationConfig.getSpec(), communicationConfig.getAllMappings());
         sendRequest(sessionContext, request, requestInfo);
     }
 
 
-    public void processResponseEvent(DeviceSessionContext sessionContext, ResponseEvent event) {
+    public void processResponseEvent(@NotNull DeviceSessionContext sessionContext, @NotNull ResponseEvent event) {
         ((Snmp) event.getSource()).cancel(event.getRequest(), sessionContext);
 
         if (event.getError() != null) {
@@ -225,7 +228,7 @@ public class SnmpTransportService implements TbTransportService {
         });
     }
 
-    private void processResponse(DeviceSessionContext sessionContext, PDU response, RequestInfo requestInfo) {
+    private void processResponse(@NotNull DeviceSessionContext sessionContext, @NotNull PDU response, @NotNull RequestInfo requestInfo) {
         ResponseProcessor responseProcessor = responseProcessors.get(requestInfo.getCommunicationSpec());
         if (responseProcessor == null) return;
 
@@ -242,7 +245,7 @@ public class SnmpTransportService implements TbTransportService {
 
     private void configureResponseDataMappers() {
         responseDataMappers.put(SnmpCommunicationSpec.TO_DEVICE_RPC_REQUEST, (pdu, requestInfo) -> {
-            JsonObject responseData = new JsonObject();
+            @NotNull JsonObject responseData = new JsonObject();
             pduService.processPdu(pdu).forEach((oid, value) -> {
                 requestInfo.getResponseMappings().stream()
                         .filter(snmpMapping -> snmpMapping.getOid().equals(oid.toDottedString()))
@@ -254,7 +257,7 @@ public class SnmpTransportService implements TbTransportService {
             return responseData;
         });
 
-        ResponseDataMapper defaultResponseDataMapper = (pdu, requestInfo) -> {
+        @NotNull ResponseDataMapper defaultResponseDataMapper = (pdu, requestInfo) -> {
             return pduService.processPdu(pdu, requestInfo.getResponseMappings());
         };
         Arrays.stream(SnmpCommunicationSpec.values())
@@ -295,6 +298,7 @@ public class SnmpTransportService implements TbTransportService {
     }
 
 
+    @NotNull
     @Override
     public String getName() {
         return DataConstants.SNMP_TRANSPORT_NAME;

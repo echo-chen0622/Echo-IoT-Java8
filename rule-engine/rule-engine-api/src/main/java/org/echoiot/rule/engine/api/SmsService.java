@@ -9,7 +9,7 @@ public interface SmsService {
 
     void updateSmsConfiguration();
 
-    void sendSms(TenantId tenantId, CustomerId customerId, String[] numbersTo, String message) throws EchoiotException;;
+    void sendSms(TenantId tenantId, CustomerId customerId, String[] numbersTo, String message) throws EchoiotException;
 
     void sendTestSms(TestSmsRequest testSmsRequest) throws EchoiotException;
 

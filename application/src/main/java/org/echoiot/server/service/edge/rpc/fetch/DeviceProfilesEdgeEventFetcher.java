@@ -12,11 +12,13 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.dao.device.DeviceProfileService;
+import org.jetbrains.annotations.NotNull;
 
 @AllArgsConstructor
 @Slf4j
 public class DeviceProfilesEdgeEventFetcher extends BasePageableEdgeEventFetcher<DeviceProfile> {
 
+    @NotNull
     private final DeviceProfileService deviceProfileService;
 
     @Override
@@ -24,8 +26,9 @@ public class DeviceProfilesEdgeEventFetcher extends BasePageableEdgeEventFetcher
         return deviceProfileService.findDeviceProfiles(tenantId, pageLink);
     }
 
+    @NotNull
     @Override
-    EdgeEvent constructEdgeEvent(TenantId tenantId, Edge edge, DeviceProfile deviceProfile) {
+    EdgeEvent constructEdgeEvent(TenantId tenantId, @NotNull Edge edge, @NotNull DeviceProfile deviceProfile) {
         return EdgeUtils.constructEdgeEvent(tenantId, edge.getId(), EdgeEventType.DEVICE_PROFILE,
                                             EdgeEventActionType.ADDED, deviceProfile.getId(), null);
     }

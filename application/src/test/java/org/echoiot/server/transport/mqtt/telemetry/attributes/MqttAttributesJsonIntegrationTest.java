@@ -1,6 +1,7 @@
 package org.echoiot.server.transport.mqtt.telemetry.attributes;
 
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.echoiot.server.common.data.TransportPayloadType;
@@ -29,7 +30,7 @@ public class MqttAttributesJsonIntegrationTest extends MqttAttributesIntegration
 
     @Test
     public void testPushAttributes() throws Exception {
-        List<String> expectedKeys = Arrays.asList("key1", "key2", "key3", "key4", "key5");
+        @NotNull List<String> expectedKeys = Arrays.asList("key1", "key2", "key3", "key4", "key5");
         processJsonPayloadAttributesTest(POST_DATA_ATTRIBUTES_TOPIC, expectedKeys, PAYLOAD_VALUES_STR.getBytes());
     }
 

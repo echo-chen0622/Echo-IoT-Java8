@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import org.echoiot.server.common.data.EntityType;
+import org.jetbrains.annotations.NotNull;
 
 public final class WidgetsBundleId extends UUIDBased implements EntityId {
 
@@ -16,6 +17,7 @@ public final class WidgetsBundleId extends UUIDBased implements EntityId {
         super(id);
     }
 
+    @NotNull
     @ApiModelProperty(position = 2, required = true, value = "string", example = "WIDGETS_BUNDLE", allowableValues = "WIDGETS_BUNDLE")
     @Override
     public EntityType getEntityType() {

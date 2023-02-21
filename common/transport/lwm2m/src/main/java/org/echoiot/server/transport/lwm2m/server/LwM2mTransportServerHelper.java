@@ -11,6 +11,7 @@ import org.eclipse.leshan.core.model.InvalidDDFFileException;
 import org.eclipse.leshan.core.model.ObjectModel;
 import org.eclipse.leshan.core.model.ResourceModel;
 import org.eclipse.leshan.core.node.codec.CodecException;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.gen.transport.TransportProtos.PostAttributeMsg;
@@ -35,6 +36,7 @@ import static org.echoiot.server.gen.transport.TransportProtos.KeyValueType.BOOL
 @RequiredArgsConstructor
 public class LwM2mTransportServerHelper {
 
+    @NotNull
     private final LwM2mTransportContext context;
     private final static JsonParser JSON_PARSER = new JsonParser();
 
@@ -66,7 +68,7 @@ public class LwM2mTransportServerHelper {
                 .build();
     }
 
-    long getTs(List<TransportProtos.KeyValueProto> kvList, Map<String, AtomicLong> keyTsLatestMap) {
+    long getTs(@org.jetbrains.annotations.Nullable List<TransportProtos.KeyValueProto> kvList, @org.jetbrains.annotations.Nullable Map<String, AtomicLong> keyTsLatestMap) {
         if (keyTsLatestMap == null || kvList == null || kvList.isEmpty()) {
             return getCurrentTimeMillis();
         }
@@ -75,7 +77,7 @@ public class LwM2mTransportServerHelper {
     }
 
     long getTsByKey(@Nonnull String key, @Nonnull Map<String, AtomicLong> keyTsLatestMap, final long tsNow) {
-        AtomicLong tsLatestAtomic = keyTsLatestMap.putIfAbsent(key, new AtomicLong(tsNow));
+        @org.jetbrains.annotations.Nullable AtomicLong tsLatestAtomic = keyTsLatestMap.putIfAbsent(key, new AtomicLong(tsNow));
         if (tsLatestAtomic == null) {
             return tsNow; // it is a first known timestamp for this key. return as the latest
         }
@@ -89,7 +91,7 @@ public class LwM2mTransportServerHelper {
      * Ts latest will be incremented until current time overtake the latest ts.
      * In normal environment without race conditions method will return current ts (wall-clock)
      * */
-    long compareAndSwapOrIncrementTsAtomically(AtomicLong tsLatestAtomic, final long tsNow) {
+    long compareAndSwapOrIncrementTsAtomically(@NotNull AtomicLong tsLatestAtomic, final long tsNow) {
         long tsLatest;
         while ((tsLatest = tsLatestAtomic.get()) < tsNow) {
             if (tsLatestAtomic.compareAndSet(tsLatest, tsNow)) {
@@ -109,7 +111,7 @@ public class LwM2mTransportServerHelper {
     /**
      * @return - sessionInfo after access connect client
      */
-    public SessionInfoProto getValidateSessionInfo(ValidateDeviceCredentialsResponse msg, long mostSignificantBits, long leastSignificantBits) {
+    public SessionInfoProto getValidateSessionInfo(@NotNull ValidateDeviceCredentialsResponse msg, long mostSignificantBits, long leastSignificantBits) {
         return SessionInfoProto.newBuilder()
                 .setNodeId(context.getNodeId())
                 .setSessionIdMSB(mostSignificantBits)
@@ -127,9 +129,10 @@ public class LwM2mTransportServerHelper {
                 .build();
     }
 
-    public ObjectModel parseFromXmlToObjectModel(byte[] xmlByte, String streamName, DefaultDDFFileValidator ddfValidator) {
+    @org.jetbrains.annotations.Nullable
+    public ObjectModel parseFromXmlToObjectModel(@NotNull byte[] xmlByte, String streamName, DefaultDDFFileValidator ddfValidator) {
         try {
-            DDFFileParser ddfFileParser = new DDFFileParser(ddfValidator);
+            @NotNull DDFFileParser ddfFileParser = new DDFFileParser(ddfValidator);
             return ddfFileParser.parse(new ByteArrayInputStream(xmlByte), streamName).get(0);
         } catch (IOException | InvalidDDFFileException e) {
             log.error("Could not parse the XML file [{}]", streamName, e);
@@ -141,8 +144,9 @@ public class LwM2mTransportServerHelper {
      * @param value - info about Logs
      * @return- KeyValueProto for telemetry (Logs)
      */
+    @NotNull
     public List<TransportProtos.KeyValueProto> getKvStringtoEchoiot(String key, String value) {
-        List<TransportProtos.KeyValueProto> result = new ArrayList<>();
+        @NotNull List<TransportProtos.KeyValueProto> result = new ArrayList<>();
         value = value.replaceAll("<", "").replaceAll(">", "");
         result.add(TransportProtos.KeyValueProto.newBuilder()
                 .setKey(key)
@@ -156,7 +160,7 @@ public class LwM2mTransportServerHelper {
      * @throws CodecException -
      */
 
-    public TransportProtos.KeyValueProto getKvAttrTelemetryToEchoiot(ResourceModel.Type resourceType, String resourceName, Object value, boolean isMultiInstances) {
+    public TransportProtos.KeyValueProto getKvAttrTelemetryToEchoiot(@NotNull ResourceModel.Type resourceType, String resourceName, Object value, boolean isMultiInstances) {
         TransportProtos.KeyValueProto.Builder kvProto = TransportProtos.KeyValueProto.newBuilder().setKey(resourceName);
         if (isMultiInstances) {
             kvProto.setType(TransportProtos.KeyValueType.JSON_V)
@@ -187,7 +191,8 @@ public class LwM2mTransportServerHelper {
      * @param resourcePath -
      * @return
      */
-    public static ResourceModel.Type getResourceModelTypeEqualsKvProtoValueType(ResourceModel.Type currentType, String resourcePath) {
+    @NotNull
+    public static ResourceModel.Type getResourceModelTypeEqualsKvProtoValueType(@NotNull ResourceModel.Type currentType, String resourcePath) {
         switch (currentType) {
             case BOOLEAN:
                 return ResourceModel.Type.BOOLEAN;
@@ -205,7 +210,8 @@ public class LwM2mTransportServerHelper {
         throw new CodecException("Invalid ResourceModel_Type for resource %s, got %s", resourcePath, currentType);
     }
 
-    public static Object getValueFromKvProto(TransportProtos.KeyValueProto kv) {
+    @org.jetbrains.annotations.Nullable
+    public static Object getValueFromKvProto(@NotNull TransportProtos.KeyValueProto kv) {
         switch (kv.getType()) {
             case BOOLEAN_V:
                 return kv.getBoolV();

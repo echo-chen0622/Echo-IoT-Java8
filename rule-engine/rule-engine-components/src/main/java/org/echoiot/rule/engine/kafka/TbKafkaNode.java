@@ -10,6 +10,8 @@ import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.header.Headers;
 import org.apache.kafka.common.header.internals.RecordHeader;
 import org.apache.kafka.common.header.internals.RecordHeaders;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.util.ReflectionUtils;
 import org.echoiot.rule.engine.api.RuleNode;
 import org.echoiot.rule.engine.api.TbContext;
@@ -48,6 +50,7 @@ public class TbKafkaNode implements TbNode {
     private static final String TOPIC = "topic";
     private static final String ERROR = "error";
     public static final String TB_MSG_MD_PREFIX = "tb_msg_md_";
+    @Nullable
     private static final Field IO_THREAD_FIELD = ReflectionUtils.findField(KafkaProducer.class, "ioThread");
 
     static {
@@ -59,13 +62,14 @@ public class TbKafkaNode implements TbNode {
     private Charset toBytesCharset;
 
     private Producer<String, String> producer;
+    @Nullable
     private Throwable initError;
 
     @Override
-    public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
+    public void init(@NotNull TbContext ctx, @NotNull TbNodeConfiguration configuration) throws TbNodeException {
         this.config = TbNodeUtils.convert(configuration, TbKafkaNodeConfiguration.class);
         this.initError = null;
-        Properties properties = new Properties();
+        @NotNull Properties properties = new Properties();
         properties.put(ProducerConfig.CLIENT_ID_CONFIG, "producer-tb-kafka-node-" + ctx.getSelfId().getId().toString() + "-" + ctx.getServiceId());
         properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, config.getBootstrapServers());
         properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, config.getValueSerializer());
@@ -82,7 +86,7 @@ public class TbKafkaNode implements TbNode {
         toBytesCharset = config.getKafkaHeadersCharset() != null ? Charset.forName(config.getKafkaHeadersCharset()) : StandardCharsets.UTF_8;
         try {
             this.producer = new KafkaProducer<>(properties);
-            Thread ioThread = (Thread) ReflectionUtils.getField(IO_THREAD_FIELD, producer);
+            @Nullable Thread ioThread = (Thread) ReflectionUtils.getField(IO_THREAD_FIELD, producer);
             ioThread.setUncaughtExceptionHandler((thread, throwable) -> {
                 if (throwable instanceof EchoiotKafkaClientError) {
                     initError = throwable;
@@ -95,7 +99,7 @@ public class TbKafkaNode implements TbNode {
     }
 
     @Override
-    public void onMsg(TbContext ctx, TbMsg msg) {
+    public void onMsg(@NotNull TbContext ctx, @NotNull TbMsg msg) {
         String topic = TbNodeUtils.processPattern(config.getTopicPattern(), msg);
         String keyPattern = config.getKeyPattern();
         try {
@@ -119,14 +123,14 @@ public class TbKafkaNode implements TbNode {
         }
     }
 
-    protected void publish(TbContext ctx, TbMsg msg, String topic, String key) {
+    protected void publish(@NotNull TbContext ctx, @NotNull TbMsg msg, @NotNull String topic, String key) {
         try {
             if (!addMetadataKeyValuesAsKafkaHeaders) {
                 //TODO: external system executor
                 producer.send(new ProducerRecord<>(topic, key, msg.getData()),
                         (metadata, e) -> processRecord(ctx, msg, metadata, e));
             } else {
-                Headers headers = new RecordHeaders();
+                @NotNull Headers headers = new RecordHeaders();
                 msg.getMetaData().values().forEach((k, v) -> headers.add(new RecordHeader(TB_MSG_MD_PREFIX + k, v.getBytes(toBytesCharset))));
                 producer.send(new ProducerRecord<>(topic, null, null, key, msg.getData(), headers),
                         (metadata, e) -> processRecord(ctx, msg, metadata, e));
@@ -147,7 +151,7 @@ public class TbKafkaNode implements TbNode {
         }
     }
 
-    private void processRecord(TbContext ctx, TbMsg msg, RecordMetadata metadata, Exception e) {
+    private void processRecord(@NotNull TbContext ctx, @NotNull TbMsg msg, @NotNull RecordMetadata metadata, @Nullable Exception e) {
         if (e == null) {
             TbMsg next = processResponse(ctx, msg, metadata);
             ctx.tellNext(next, TbRelationTypes.SUCCESS);
@@ -157,16 +161,16 @@ public class TbKafkaNode implements TbNode {
         }
     }
 
-    private TbMsg processResponse(TbContext ctx, TbMsg origMsg, RecordMetadata recordMetadata) {
-        TbMsgMetaData metaData = origMsg.getMetaData().copy();
+    private TbMsg processResponse(@NotNull TbContext ctx, @NotNull TbMsg origMsg, @NotNull RecordMetadata recordMetadata) {
+        @NotNull TbMsgMetaData metaData = origMsg.getMetaData().copy();
         metaData.putValue(OFFSET, String.valueOf(recordMetadata.offset()));
         metaData.putValue(PARTITION, String.valueOf(recordMetadata.partition()));
         metaData.putValue(TOPIC, recordMetadata.topic());
         return ctx.transformMsg(origMsg, origMsg.getType(), origMsg.getOriginator(), metaData, origMsg.getData());
     }
 
-    private TbMsg processException(TbContext ctx, TbMsg origMsg, Exception e) {
-        TbMsgMetaData metaData = origMsg.getMetaData().copy();
+    private TbMsg processException(@NotNull TbContext ctx, @NotNull TbMsg origMsg, @NotNull Exception e) {
+        @NotNull TbMsgMetaData metaData = origMsg.getMetaData().copy();
         metaData.putValue(ERROR, e.getClass() + ": " + e.getMessage());
         return ctx.transformMsg(origMsg, origMsg.getType(), origMsg.getOriginator(), metaData, origMsg.getData());
     }

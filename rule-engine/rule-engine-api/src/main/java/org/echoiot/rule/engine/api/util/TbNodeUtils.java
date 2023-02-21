@@ -3,6 +3,8 @@ package org.echoiot.rule.engine.api.util;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.util.CollectionUtils;
 import org.echoiot.rule.engine.api.TbNodeConfiguration;
 import org.echoiot.rule.engine.api.TbNodeException;
@@ -26,7 +28,7 @@ public class TbNodeUtils {
 
     private static final Pattern DATA_PATTERN = Pattern.compile("(\\$\\[)(.*?)(])");
 
-    public static <T> T convert(TbNodeConfiguration configuration, Class<T> clazz) throws TbNodeException {
+    public static <T> T convert(@NotNull TbNodeConfiguration configuration, Class<T> clazz) throws TbNodeException {
         try {
             return mapper.treeToValue(configuration.getData(), clazz);
         } catch (JsonProcessingException e) {
@@ -34,23 +36,24 @@ public class TbNodeUtils {
         }
     }
 
-    public static List<String> processPatterns(List<String> patterns, TbMsg tbMsg) {
+    @NotNull
+    public static List<String> processPatterns(@NotNull List<String> patterns, @NotNull TbMsg tbMsg) {
         if (!CollectionUtils.isEmpty(patterns)) {
             return patterns.stream().map(p -> processPattern(p, tbMsg)).collect(Collectors.toList());
         }
         return Collections.emptyList();
     }
 
-    public static String processPattern(String pattern, TbMsg tbMsg) {
+    public static String processPattern(String pattern, @NotNull TbMsg tbMsg) {
         try {
             String result = processPattern(pattern, tbMsg.getMetaData());
             JsonNode json = mapper.readTree(tbMsg.getData());
             if (json.isObject()) {
-                Matcher matcher = DATA_PATTERN.matcher(result);
+                @NotNull Matcher matcher = DATA_PATTERN.matcher(result);
                 while (matcher.find()) {
                     String group = matcher.group(2);
-                    String[] keys = group.split("\\.");
-                    JsonNode jsonNode = json;
+                    @NotNull String[] keys = group.split("\\.");
+                    @Nullable JsonNode jsonNode = json;
                     for (String key : keys) {
                         if (!StringUtils.isEmpty(key) && jsonNode != null) {
                             jsonNode = jsonNode.get(key);
@@ -71,33 +74,37 @@ public class TbNodeUtils {
         }
     }
 
-    public static List<String> processPatterns(List<String> patterns, TbMsgMetaData metaData) {
+    @NotNull
+    public static List<String> processPatterns(@NotNull List<String> patterns, @NotNull TbMsgMetaData metaData) {
         if (!CollectionUtils.isEmpty(patterns)) {
             return patterns.stream().map(p -> processPattern(p, metaData)).collect(Collectors.toList());
         }
         return Collections.emptyList();
     }
 
-    public static String processPattern(String pattern, TbMsgMetaData metaData) {
+    public static String processPattern(String pattern, @NotNull TbMsgMetaData metaData) {
         return processTemplate(pattern, metaData.values());
     }
 
-    public static String processTemplate(String template, Map<String, String> data) {
+    public static String processTemplate(String template, @NotNull Map<String, String> data) {
         String result = template;
-        for (Map.Entry<String, String> kv : data.entrySet()) {
+        for (@NotNull Map.Entry<String, String> kv : data.entrySet()) {
             result = processVar(result, kv.getKey(), kv.getValue());
         }
         return result;
     }
 
-    private static String processVar(String pattern, String key, String val) {
+    @NotNull
+    private static String processVar(@NotNull String pattern, String key, @NotNull String val) {
         return pattern.replace(formatMetadataVarTemplate(key), val);
     }
 
+    @NotNull
     static String formatDataVarTemplate(String key) {
         return "$[" + key + ']';
     }
 
+    @NotNull
     static String formatMetadataVarTemplate(String key) {
         return "${" + key + '}';
     }

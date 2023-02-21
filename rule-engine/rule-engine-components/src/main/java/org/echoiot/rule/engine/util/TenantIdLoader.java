@@ -25,17 +25,20 @@ import org.echoiot.server.common.data.id.UserId;
 import org.echoiot.server.common.data.id.WidgetTypeId;
 import org.echoiot.server.common.data.id.WidgetsBundleId;
 import org.echoiot.server.common.data.rule.RuleNode;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
 public class TenantIdLoader {
 
-    public static TenantId findTenantId(TbContext ctx, EntityId entityId) {
+    @Nullable
+    public static TenantId findTenantId(@NotNull TbContext ctx, @NotNull EntityId entityId) {
         UUID id = entityId.getId();
         EntityType entityType = entityId.getEntityType();
         TenantId ctxTenantId = ctx.getTenantId();
 
-        HasTenantId tenantEntity;
+        @Nullable HasTenantId tenantEntity;
         switch (entityType) {
             case TENANT:
                 return new TenantId(id);

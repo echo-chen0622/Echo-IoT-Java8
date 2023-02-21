@@ -12,6 +12,7 @@ import org.echoiot.server.dao.exception.DataValidationException;
 import org.echoiot.server.dao.service.DataValidator;
 import org.echoiot.server.dao.tenant.TenantProfileDao;
 import org.echoiot.server.dao.tenant.TenantProfileService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -24,15 +25,15 @@ import java.util.Set;
 @Component
 public class TenantProfileDataValidator extends DataValidator<TenantProfile> {
 
-    @Autowired
+    @Resource
     private TenantProfileDao tenantProfileDao;
 
-    @Autowired
+    @Resource
     @Lazy
     private TenantProfileService tenantProfileService;
 
     @Override
-    protected void validateDataImpl(TenantId tenantId, TenantProfile tenantProfile) {
+    protected void validateDataImpl(TenantId tenantId, @NotNull TenantProfile tenantProfile) {
         if (StringUtils.isEmpty(tenantProfile.getName())) {
             throw new DataValidationException("Tenant profile name should be specified!");
         }
@@ -55,7 +56,7 @@ public class TenantProfileDataValidator extends DataValidator<TenantProfile> {
                 throw new DataValidationException("Tenant profile data queue configuration should be specified!");
             }
 
-            Optional<TenantProfileQueueConfiguration> mainQueueConfig =
+            @NotNull Optional<TenantProfileQueueConfiguration> mainQueueConfig =
                     queueConfiguration
                             .stream()
                             .filter(q -> q.getName().equals(DataConstants.MAIN_QUEUE_NAME))
@@ -66,7 +67,7 @@ public class TenantProfileDataValidator extends DataValidator<TenantProfile> {
 
             queueConfiguration.forEach(this::validateQueueConfiguration);
 
-            Set<String> queueNames = new HashSet<>(queueConfiguration.size());
+            @NotNull Set<String> queueNames = new HashSet<>(queueConfiguration.size());
 
             queueConfiguration.forEach(q -> {
                 String name = q.getName();
@@ -79,8 +80,9 @@ public class TenantProfileDataValidator extends DataValidator<TenantProfile> {
         }
     }
 
+    @NotNull
     @Override
-    protected TenantProfile validateUpdate(TenantId tenantId, TenantProfile tenantProfile) {
+    protected TenantProfile validateUpdate(TenantId tenantId, @NotNull TenantProfile tenantProfile) {
         TenantProfile old = tenantProfileDao.findById(TenantId.SYS_TENANT_ID, tenantProfile.getId().getId());
         if (old == null) {
             throw new DataValidationException("Can't update non existing tenant profile!");
@@ -90,7 +92,7 @@ public class TenantProfileDataValidator extends DataValidator<TenantProfile> {
         return old;
     }
 
-    private void validateQueueConfiguration(TenantProfileQueueConfiguration queue) {
+    private void validateQueueConfiguration(@NotNull TenantProfileQueueConfiguration queue) {
         validateQueueName(queue.getName());
         validateQueueTopic(queue.getTopic());
 

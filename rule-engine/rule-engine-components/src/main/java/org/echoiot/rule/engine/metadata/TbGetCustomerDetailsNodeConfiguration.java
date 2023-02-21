@@ -2,6 +2,7 @@ package org.echoiot.rule.engine.metadata;
 
 import lombok.Data;
 import org.echoiot.rule.engine.api.NodeConfiguration;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 
@@ -9,9 +10,10 @@ import java.util.Collections;
 public class TbGetCustomerDetailsNodeConfiguration extends TbAbstractGetEntityDetailsNodeConfiguration implements NodeConfiguration<TbGetCustomerDetailsNodeConfiguration> {
 
 
+    @NotNull
     @Override
     public TbGetCustomerDetailsNodeConfiguration defaultConfiguration() {
-        TbGetCustomerDetailsNodeConfiguration configuration = new TbGetCustomerDetailsNodeConfiguration();
+        @NotNull TbGetCustomerDetailsNodeConfiguration configuration = new TbGetCustomerDetailsNodeConfiguration();
         configuration.setDetailsList(Collections.emptyList());
         return configuration;
     }

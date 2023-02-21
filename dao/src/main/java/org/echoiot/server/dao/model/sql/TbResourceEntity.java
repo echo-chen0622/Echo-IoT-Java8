@@ -8,6 +8,7 @@ import org.echoiot.server.common.data.id.TbResourceId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.dao.model.BaseSqlEntity;
 import org.echoiot.server.dao.model.SearchTextEntity;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -53,7 +54,7 @@ public class TbResourceEntity extends BaseSqlEntity<TbResource> implements Searc
     public TbResourceEntity() {
     }
 
-    public TbResourceEntity(TbResource resource) {
+    public TbResourceEntity(@NotNull TbResource resource) {
         if (resource.getId() != null) {
             this.id = resource.getId().getId();
         }
@@ -69,9 +70,10 @@ public class TbResourceEntity extends BaseSqlEntity<TbResource> implements Searc
         this.data = resource.getData();
     }
 
+    @NotNull
     @Override
     public TbResource toData() {
-        TbResource resource = new TbResource(new TbResourceId(id));
+        @NotNull TbResource resource = new TbResource(new TbResourceId(id));
         resource.setCreatedTime(createdTime);
         resource.setTenantId(TenantId.fromUUID(tenantId));
         resource.setTitle(title);

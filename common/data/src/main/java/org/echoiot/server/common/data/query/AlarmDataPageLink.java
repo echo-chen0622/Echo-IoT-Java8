@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.echoiot.server.common.data.alarm.AlarmSearchStatus;
 import org.echoiot.server.common.data.alarm.AlarmSeverity;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -43,6 +44,7 @@ public class AlarmDataPageLink extends EntityDataPageLink {
         this.severityList = severityList;
     }
 
+    @NotNull
     @JsonIgnore
     public AlarmDataPageLink nextPageLink() {
         return new AlarmDataPageLink(this.getPageSize(), this.getPage() + 1, this.getTextSearch(), this.getSortOrder(), this.isDynamic(),

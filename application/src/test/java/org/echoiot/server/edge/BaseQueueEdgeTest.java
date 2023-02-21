@@ -5,6 +5,7 @@ import org.echoiot.server.common.data.queue.*;
 import org.echoiot.server.common.msg.queue.ServiceType;
 import org.echoiot.server.gen.edge.v1.QueueUpdateMsg;
 import org.echoiot.server.gen.edge.v1.UpdateMsgType;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -17,17 +18,17 @@ abstract public class BaseQueueEdgeTest extends AbstractEdgeTest {
         loginSysAdmin();
 
         // create queue
-        Queue queue = new Queue();
+        @NotNull Queue queue = new Queue();
         queue.setName("EdgeMain");
         queue.setTopic("tb_rule_engine.EdgeMain");
         queue.setPollInterval(25);
         queue.setPartitions(10);
         queue.setConsumerPerPartition(false);
         queue.setPackProcessingTimeout(2000);
-        SubmitStrategy submitStrategy = new SubmitStrategy();
+        @NotNull SubmitStrategy submitStrategy = new SubmitStrategy();
         submitStrategy.setType(SubmitStrategyType.SEQUENTIAL_BY_ORIGINATOR);
         queue.setSubmitStrategy(submitStrategy);
-        ProcessingStrategy processingStrategy = new ProcessingStrategy();
+        @NotNull ProcessingStrategy processingStrategy = new ProcessingStrategy();
         processingStrategy.setType(ProcessingStrategyType.RETRY_ALL);
         processingStrategy.setRetries(3);
         processingStrategy.setFailurePercentage(0.7);
@@ -41,7 +42,7 @@ abstract public class BaseQueueEdgeTest extends AbstractEdgeTest {
 
         AbstractMessage latestMessage = edgeImitator.getLatestMessage();
         Assert.assertTrue(latestMessage instanceof QueueUpdateMsg);
-        QueueUpdateMsg queueUpdateMsg = (QueueUpdateMsg) latestMessage;
+        @NotNull QueueUpdateMsg queueUpdateMsg = (QueueUpdateMsg) latestMessage;
         Assert.assertEquals(UpdateMsgType.ENTITY_CREATED_RPC_MESSAGE, queueUpdateMsg.getMsgType());
         Assert.assertEquals(savedQueue.getUuidId().getMostSignificantBits(), queueUpdateMsg.getIdMSB());
         Assert.assertEquals(savedQueue.getUuidId().getLeastSignificantBits(), queueUpdateMsg.getIdLSB());

@@ -1,6 +1,8 @@
 package org.echoiot.server.transport.lwm2m.server;
 
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Define the behavior of a write request.
@@ -68,8 +70,9 @@ public enum LwM2MOperationType {
         }
     }
 
+    @Nullable
     public static LwM2MOperationType fromType(String type) {
-        for (LwM2MOperationType to : LwM2MOperationType.values()) {
+        for (@NotNull LwM2MOperationType to : LwM2MOperationType.values()) {
             if (to.type.equals(type)) {
                 return to;
             }

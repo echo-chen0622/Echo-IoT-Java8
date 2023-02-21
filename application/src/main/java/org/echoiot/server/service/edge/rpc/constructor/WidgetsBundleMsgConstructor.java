@@ -5,6 +5,7 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.id.WidgetsBundleId;
 import org.echoiot.server.common.data.widget.WidgetsBundle;
 import org.echoiot.server.queue.util.TbCoreComponent;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import org.echoiot.server.gen.edge.v1.UpdateMsgType;
 import org.echoiot.server.gen.edge.v1.WidgetsBundleUpdateMsg;
@@ -15,7 +16,8 @@ import java.nio.charset.StandardCharsets;
 @TbCoreComponent
 public class WidgetsBundleMsgConstructor {
 
-    public WidgetsBundleUpdateMsg constructWidgetsBundleUpdateMsg(UpdateMsgType msgType, WidgetsBundle widgetsBundle) {
+    @NotNull
+    public WidgetsBundleUpdateMsg constructWidgetsBundleUpdateMsg(UpdateMsgType msgType, @NotNull WidgetsBundle widgetsBundle) {
         WidgetsBundleUpdateMsg.Builder builder = WidgetsBundleUpdateMsg.newBuilder()
                 .setMsgType(msgType)
                 .setIdMSB(widgetsBundle.getId().getId().getMostSignificantBits())
@@ -34,7 +36,8 @@ public class WidgetsBundleMsgConstructor {
         return builder.build();
     }
 
-    public WidgetsBundleUpdateMsg constructWidgetsBundleDeleteMsg(WidgetsBundleId widgetsBundleId) {
+    @NotNull
+    public WidgetsBundleUpdateMsg constructWidgetsBundleDeleteMsg(@NotNull WidgetsBundleId widgetsBundleId) {
         return WidgetsBundleUpdateMsg.newBuilder()
                 .setMsgType(UpdateMsgType.ENTITY_DELETED_RPC_MESSAGE)
                 .setIdMSB(widgetsBundleId.getId().getMostSignificantBits())

@@ -1,5 +1,7 @@
 package org.echoiot.common.util;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ForkJoinPool;
 
@@ -23,13 +25,15 @@ public class EchoiotExecutors {
      * @throws IllegalArgumentException if {@code parallelism <= 0}
      * @since 1.8
      */
-    public static ExecutorService newWorkStealingPool(int parallelism, String namePrefix) {
+    @NotNull
+    public static ExecutorService newWorkStealingPool(int parallelism, @NotNull String namePrefix) {
         return new ForkJoinPool(parallelism,
                 new EchoiotForkJoinWorkerThreadFactory(namePrefix),
                 null, true);
     }
 
-    public static ExecutorService newWorkStealingPool(int parallelism, Class clazz) {
+    @NotNull
+    public static ExecutorService newWorkStealingPool(int parallelism, @NotNull Class clazz) {
         return newWorkStealingPool(parallelism, clazz.getSimpleName());
     }
 

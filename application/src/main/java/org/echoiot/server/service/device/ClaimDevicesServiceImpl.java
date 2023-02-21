@@ -24,6 +24,7 @@ import org.echoiot.server.dao.device.claim.ClaimResult;
 import org.echoiot.server.dao.device.claim.ReclaimResult;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.queue.util.TbCoreComponent;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.Cache;
@@ -45,17 +46,17 @@ public class ClaimDevicesServiceImpl implements ClaimDevicesService {
     private static final String CLAIM_DATA_ATTRIBUTE_NAME = "claimingData";
     private static final ObjectMapper mapper = new ObjectMapper();
 
-    @Autowired
+    @Resource
     private TbClusterService clusterService;
-    @Autowired
+    @Resource
     private DeviceService deviceService;
-    @Autowired
+    @Resource
     private AttributesService attributesService;
-    @Autowired
+    @Resource
     private RuleEngineTelemetryService telemetryService;
-    @Autowired
+    @Resource
     private CustomerService customerService;
-    @Autowired
+    @Resource
     private CacheManager cacheManager;
 
     @Value("${security.claim.allowClaimingByDefault}")
@@ -64,12 +65,13 @@ public class ClaimDevicesServiceImpl implements ClaimDevicesService {
     @Value("${security.claim.duration}")
     private long systemDurationMs;
 
+    @NotNull
     @Override
     public ListenableFuture<Void> registerClaimingInfo(TenantId tenantId, DeviceId deviceId, String secretKey, long durationMs) {
         ListenableFuture<Device> deviceFuture = deviceService.findDeviceByIdAsync(tenantId, deviceId);
         return Futures.transformAsync(deviceFuture, device -> {
-            Cache cache = cacheManager.getCache(CacheConstants.CLAIM_DEVICES_CACHE);
-            List<Object> key = constructCacheKey(device.getId());
+            @org.jetbrains.annotations.Nullable Cache cache = cacheManager.getCache(CacheConstants.CLAIM_DEVICES_CACHE);
+            @NotNull List<Object> key = constructCacheKey(device.getId());
 
             if (isAllowedClaimingByDefault) {
                 if (device.getCustomerId().getId().equals(ModelConstants.NULL_UUID)) {
@@ -97,9 +99,10 @@ public class ClaimDevicesServiceImpl implements ClaimDevicesService {
         }, MoreExecutors.directExecutor());
     }
 
-    private ListenableFuture<ClaimDataInfo> getClaimData(Cache cache, Device device) {
-        List<Object> key = constructCacheKey(device.getId());
-        ClaimData claimDataFromCache = cache.get(key, ClaimData.class);
+    @NotNull
+    private ListenableFuture<ClaimDataInfo> getClaimData(@NotNull Cache cache, @NotNull Device device) {
+        @NotNull List<Object> key = constructCacheKey(device.getId());
+        @org.jetbrains.annotations.Nullable ClaimData claimDataFromCache = cache.get(key, ClaimData.class);
         if (claimDataFromCache != null) {
             return Futures.immediateFuture(new ClaimDataInfo(true, key, claimDataFromCache));
         } else {
@@ -108,7 +111,7 @@ public class ClaimDevicesServiceImpl implements ClaimDevicesService {
 
             return Futures.transform(claimDataAttrFuture, claimDataAttr -> {
                 if (claimDataAttr.isPresent()) {
-                    ClaimData claimDataFromAttribute = JacksonUtil.fromString(claimDataAttr.get().getValueAsString(), ClaimData.class);
+                    @org.jetbrains.annotations.Nullable ClaimData claimDataFromAttribute = JacksonUtil.fromString(claimDataAttr.get().getValueAsString(), ClaimData.class);
                     return new ClaimDataInfo(false, key, claimDataFromAttribute);
                 }
                 return null;
@@ -116,10 +119,11 @@ public class ClaimDevicesServiceImpl implements ClaimDevicesService {
         }
     }
 
+    @NotNull
     @Override
-    public ListenableFuture<ClaimResult> claimDevice(Device device, CustomerId customerId, String secretKey) {
-        Cache cache = cacheManager.getCache(CacheConstants.CLAIM_DEVICES_CACHE);
-        ListenableFuture<ClaimDataInfo> claimDataFuture = getClaimData(cache, device);
+    public ListenableFuture<ClaimResult> claimDevice(@NotNull Device device, CustomerId customerId, @NotNull String secretKey) {
+        @org.jetbrains.annotations.Nullable Cache cache = cacheManager.getCache(CacheConstants.CLAIM_DEVICES_CACHE);
+        @NotNull ListenableFuture<ClaimDataInfo> claimDataFuture = getClaimData(cache, device);
 
         return Futures.transformAsync(claimDataFuture, claimData -> {
             if (claimData != null) {
@@ -150,12 +154,13 @@ public class ClaimDevicesServiceImpl implements ClaimDevicesService {
         }, MoreExecutors.directExecutor());
     }
 
-    private boolean secretKeyIsEmptyOrEqual(String secretKeyA, String secretKeyB) {
+    private boolean secretKeyIsEmptyOrEqual(@NotNull String secretKeyA, String secretKeyB) {
         return (StringUtils.isEmpty(secretKeyA) && StringUtils.isEmpty(secretKeyB)) || secretKeyA.equals(secretKeyB);
     }
 
+    @NotNull
     @Override
-    public ListenableFuture<ReclaimResult> reClaimDevice(TenantId tenantId, Device device) {
+    public ListenableFuture<ReclaimResult> reClaimDevice(TenantId tenantId, @NotNull Device device) {
         if (!device.getCustomerId().getId().equals(ModelConstants.NULL_UUID)) {
             cacheEviction(device.getId());
             Customer unassignedCustomer = customerService.findCustomerById(tenantId, device.getCustomerId());
@@ -165,7 +170,7 @@ public class ClaimDevicesServiceImpl implements ClaimDevicesService {
             if (isAllowedClaimingByDefault) {
                 return Futures.immediateFuture(new ReclaimResult(unassignedCustomer));
             }
-            SettableFuture<ReclaimResult> result = SettableFuture.create();
+            @NotNull SettableFuture<ReclaimResult> result = SettableFuture.create();
             telemetryService.saveAndNotify(
                     tenantId, savedDevice.getId(), DataConstants.SERVER_SCOPE, Collections.singletonList(
                             new BaseAttributeKvEntry(new BooleanDataEntry(CLAIM_ATTRIBUTE_NAME, true), System.currentTimeMillis())
@@ -187,12 +192,13 @@ public class ClaimDevicesServiceImpl implements ClaimDevicesService {
         return Futures.immediateFuture(new ReclaimResult(null));
     }
 
+    @NotNull
     private List<Object> constructCacheKey(DeviceId deviceId) {
         return Collections.singletonList(deviceId);
     }
 
-    private void persistInCache(String secretKey, long durationMs, Cache cache, List<Object> key) {
-        ClaimData claimData = new ClaimData(secretKey,
+    private void persistInCache(String secretKey, long durationMs, @NotNull Cache cache, @NotNull List<Object> key) {
+        @NotNull ClaimData claimData = new ClaimData(secretKey,
                 System.currentTimeMillis() + validateDurationMs(durationMs));
         cache.putIfAbsent(key, claimData);
     }
@@ -204,11 +210,12 @@ public class ClaimDevicesServiceImpl implements ClaimDevicesService {
         return systemDurationMs;
     }
 
-    private ListenableFuture<Void> removeClaimingSavedData(Cache cache, ClaimDataInfo data, Device device) {
+    @NotNull
+    private ListenableFuture<Void> removeClaimingSavedData(@NotNull Cache cache, @NotNull ClaimDataInfo data, @NotNull Device device) {
         if (data.isFromCache()) {
             cache.evict(data.getKey());
         }
-        SettableFuture<Void> result = SettableFuture.create();
+        @NotNull SettableFuture<Void> result = SettableFuture.create();
         telemetryService.deleteAndNotify(device.getTenantId(),
                 device.getId(), DataConstants.SERVER_SCOPE, Arrays.asList(CLAIM_ATTRIBUTE_NAME, CLAIM_DATA_ATTRIBUTE_NAME), new FutureCallback<>() {
                     @Override
@@ -225,7 +232,7 @@ public class ClaimDevicesServiceImpl implements ClaimDevicesService {
     }
 
     private void cacheEviction(DeviceId deviceId) {
-        Cache cache = cacheManager.getCache(CacheConstants.CLAIM_DEVICES_CACHE);
+        @org.jetbrains.annotations.Nullable Cache cache = cacheManager.getCache(CacheConstants.CLAIM_DEVICES_CACHE);
         cache.evict(constructCacheKey(deviceId));
     }
 

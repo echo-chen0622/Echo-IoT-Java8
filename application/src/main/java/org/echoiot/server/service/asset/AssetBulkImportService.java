@@ -16,6 +16,7 @@ import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.entitiy.asset.TbAssetService;
 import org.echoiot.server.service.security.model.SecurityUser;
 import org.echoiot.server.service.sync.ie.importing.csv.AbstractBulkImportService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -25,12 +26,15 @@ import java.util.Optional;
 @TbCoreComponent
 @RequiredArgsConstructor
 public class AssetBulkImportService extends AbstractBulkImportService<Asset> {
+    @NotNull
     private final AssetService assetService;
+    @NotNull
     private final TbAssetService tbAssetService;
+    @NotNull
     private final AssetProfileService assetProfileService;
 
     @Override
-    protected void setEntityFields(Asset entity, Map<BulkImportColumnType, String> fields) {
+    protected void setEntityFields(@NotNull Asset entity, @NotNull Map<BulkImportColumnType, String> fields) {
         ObjectNode additionalInfo = getOrCreateAdditionalInfoObj(entity);
         fields.forEach((columnType, value) -> {
             switch (columnType) {
@@ -53,7 +57,7 @@ public class AssetBulkImportService extends AbstractBulkImportService<Asset> {
 
     @Override
     @SneakyThrows
-    protected Asset saveEntity(SecurityUser user, Asset entity, Map<BulkImportColumnType, String> fields) {
+    protected Asset saveEntity(SecurityUser user, @NotNull Asset entity, Map<BulkImportColumnType, String> fields) {
         AssetProfile assetProfile;
         if (StringUtils.isNotEmpty(entity.getType())) {
             assetProfile = assetProfileService.findOrCreateAssetProfile(entity.getTenantId(), entity.getType());
@@ -64,6 +68,7 @@ public class AssetBulkImportService extends AbstractBulkImportService<Asset> {
         return tbAssetService.save(entity, user);
     }
 
+    @NotNull
     @Override
     protected Asset findOrCreateEntity(TenantId tenantId, String name) {
         return Optional.ofNullable(assetService.findAssetByTenantIdAndName(tenantId, name))
@@ -71,11 +76,12 @@ public class AssetBulkImportService extends AbstractBulkImportService<Asset> {
     }
 
     @Override
-    protected void setOwners(Asset entity, SecurityUser user) {
+    protected void setOwners(@NotNull Asset entity, @NotNull SecurityUser user) {
         entity.setTenantId(user.getTenantId());
         entity.setCustomerId(user.getCustomerId());
     }
 
+    @NotNull
     @Override
     protected EntityType getEntityType() {
         return EntityType.ASSET;

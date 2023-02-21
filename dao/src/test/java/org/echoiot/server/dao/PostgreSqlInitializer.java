@@ -3,6 +3,7 @@ package org.echoiot.server.dao;
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.net.URL;
@@ -22,13 +23,13 @@ public class PostgreSqlInitializer {
             "sql/system-test-psql.sql");
     private static final String dropAllTablesSqlFile = "sql/psql/drop-all-tables.sql";
 
-    public static void initDb(Connection conn) {
+    public static void initDb(@NotNull Connection conn) {
         cleanUpDb(conn);
         log.info("initialize Postgres DB...");
         try {
-            for (String sqlFile : sqlFiles) {
-                URL sqlFileUrl = Resources.getResource(sqlFile);
-                String sql = Resources.toString(sqlFileUrl, Charsets.UTF_8);
+            for (@NotNull String sqlFile : sqlFiles) {
+                @NotNull URL sqlFileUrl = Resources.getResource(sqlFile);
+                @NotNull String sql = Resources.toString(sqlFileUrl, Charsets.UTF_8);
                 conn.createStatement().execute(sql);
             }
         } catch (IOException | SQLException e) {
@@ -37,11 +38,11 @@ public class PostgreSqlInitializer {
         log.info("Postgres DB is initialized!");
     }
 
-    private static void cleanUpDb(Connection conn) {
+    private static void cleanUpDb(@NotNull Connection conn) {
         log.info("clean up Postgres DB...");
         try {
-            URL dropAllTableSqlFileUrl = Resources.getResource(dropAllTablesSqlFile);
-            String dropAllTablesSql = Resources.toString(dropAllTableSqlFileUrl, Charsets.UTF_8);
+            @NotNull URL dropAllTableSqlFileUrl = Resources.getResource(dropAllTablesSqlFile);
+            @NotNull String dropAllTablesSql = Resources.toString(dropAllTableSqlFileUrl, Charsets.UTF_8);
             conn.createStatement().execute(dropAllTablesSql);
         } catch (IOException | SQLException e) {
             throw new RuntimeException("Unable to clean up the Postgres database. Reason: " + e.getMessage(), e);

@@ -6,6 +6,7 @@ import org.hibernate.annotations.TypeDef;
 import org.echoiot.server.common.data.Tenant;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.util.mapping.JsonStringType;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -21,7 +22,7 @@ public final class TenantEntity extends AbstractTenantEntity<Tenant> {
         super();
     }
 
-    public TenantEntity(Tenant tenant) {
+    public TenantEntity(@NotNull Tenant tenant) {
         super(tenant);
     }
 

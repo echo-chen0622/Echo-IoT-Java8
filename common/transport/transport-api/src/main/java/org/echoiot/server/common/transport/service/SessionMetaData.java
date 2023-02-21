@@ -3,6 +3,7 @@ package org.echoiot.server.common.transport.service;
 import lombok.Data;
 import org.echoiot.server.common.transport.SessionMsgListener;
 import org.echoiot.server.gen.transport.TransportProtos;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.ScheduledFuture;
 
@@ -16,6 +17,7 @@ public class SessionMetaData {
     private final TransportProtos.SessionType sessionType;
     private final SessionMsgListener listener;
 
+    @Nullable
     private volatile ScheduledFuture scheduledFuture;
     private volatile boolean subscribedToAttributes;
     private volatile boolean subscribedToRPC;

@@ -1,6 +1,7 @@
 package org.echoiot.server.service.install;
 
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -26,7 +27,7 @@ public abstract class SqlAbstractDatabaseSchemaService implements DatabaseSchema
     @Value("${spring.datasource.password}")
     protected String dbPassword;
 
-    @Autowired
+    @Resource
     protected InstallScripts installScripts;
 
     private final String schemaSql;
@@ -61,7 +62,7 @@ public abstract class SqlAbstractDatabaseSchemaService implements DatabaseSchema
     }
 
     void executeQueryFromFile(String schemaIdxSql) throws SQLException, IOException {
-        Path schemaIdxFile = Paths.get(installScripts.getDataDir(), SQL_DIR, schemaIdxSql);
+        @NotNull Path schemaIdxFile = Paths.get(installScripts.getDataDir(), SQL_DIR, schemaIdxSql);
         String sql = Files.readString(schemaIdxFile);
         try (Connection conn = DriverManager.getConnection(dbUrl, dbUserName, dbPassword)) {
             conn.createStatement().execute(sql); //NOSONAR, ignoring because method used to load initial echoiot database schema

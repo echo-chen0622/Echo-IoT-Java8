@@ -11,6 +11,8 @@ import org.echoiot.server.transport.coap.client.TbCoapObservationState;
 import org.eclipse.californium.core.coap.Request;
 import org.eclipse.californium.core.coap.Response;
 import org.eclipse.californium.core.server.resources.CoapExchange;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -18,8 +20,11 @@ import java.util.UUID;
 @Slf4j
 public abstract class AbstractSyncSessionCallback implements SessionMsgListener {
 
+    @NotNull
     protected final TbCoapClientState state;
+    @NotNull
     protected final CoapExchange exchange;
+    @NotNull
     protected final Request request;
 
     @Override
@@ -56,7 +61,7 @@ public abstract class AbstractSyncSessionCallback implements SessionMsgListener 
         log.trace("[{}] Ignore unsupported update: {}", state.getDeviceId(), update);
     }
 
-    public static boolean isConRequest(TbCoapObservationState state) {
+    public static boolean isConRequest(@Nullable TbCoapObservationState state) {
         if (state != null) {
             return state.getExchange().advanced().getRequest().isConfirmable();
         } else {
@@ -64,7 +69,7 @@ public abstract class AbstractSyncSessionCallback implements SessionMsgListener 
         }
     }
 
-    protected void respond(Response response) {
+    protected void respond(@NotNull Response response) {
         response.getOptions().setContentFormat(TbCoapContentFormatUtil.getContentFormat(exchange.getRequestOptions().getContentFormat(), state.getContentFormat()));
         exchange.respond(response);
     }

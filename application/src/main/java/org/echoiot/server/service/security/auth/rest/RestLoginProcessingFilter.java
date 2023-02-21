@@ -3,6 +3,7 @@ package org.echoiot.server.service.security.auth.rest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationDetailsSource;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -41,7 +42,7 @@ public class RestLoginProcessingFilter extends AbstractAuthenticationProcessingF
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
+    public Authentication attemptAuthentication(@NotNull HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException, IOException, ServletException {
         if (!HttpMethod.POST.name().equals(request.getMethod())) {
             if(log.isDebugEnabled()) {
@@ -61,9 +62,9 @@ public class RestLoginProcessingFilter extends AbstractAuthenticationProcessingF
             throw new AuthenticationServiceException("Username or Password not provided");
         }
 
-        UserPrincipal principal = new UserPrincipal(UserPrincipal.Type.USER_NAME, loginRequest.getUsername());
+        @NotNull UserPrincipal principal = new UserPrincipal(UserPrincipal.Type.USER_NAME, loginRequest.getUsername());
 
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(principal, loginRequest.getPassword());
+        @NotNull UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(principal, loginRequest.getPassword());
         token.setDetails(authenticationDetailsSource.buildDetails(request));
         return this.getAuthenticationManager().authenticate(token);
     }

@@ -15,6 +15,8 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
 import org.echoiot.server.dao.cassandra.guava.GuavaSession;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -30,25 +32,27 @@ import static org.echoiot.server.service.install.DatabaseHelper.CSV_DUMP_FORMAT;
 
 public class CassandraDbHelper {
 
-    public static Path dumpCfIfExists(KeyspaceMetadata ks, GuavaSession session, String cfName,
-                                      String[] columns, String[] defaultValues, String dumpPrefix) throws Exception {
+    @Nullable
+    public static Path dumpCfIfExists(@NotNull KeyspaceMetadata ks, @NotNull GuavaSession session, @NotNull String cfName,
+                                      @NotNull String[] columns, String[] defaultValues, String dumpPrefix) throws Exception {
         return dumpCfIfExists(ks, session, cfName, columns, defaultValues, dumpPrefix, false);
     }
 
-    public static Path dumpCfIfExists(KeyspaceMetadata ks, GuavaSession session, String cfName,
-                                      String[] columns, String[] defaultValues, String dumpPrefix, boolean printHeader) throws Exception {
+    @NotNull
+    public static Path dumpCfIfExists(@NotNull KeyspaceMetadata ks, @NotNull GuavaSession session, @NotNull String cfName,
+                                      @NotNull String[] columns, String[] defaultValues, String dumpPrefix, boolean printHeader) throws Exception {
         if (ks.getTable(cfName) != null) {
             Path dumpFile = Files.createTempFile(dumpPrefix, null);
             Files.deleteIfExists(dumpFile);
-            CSVFormat csvFormat = CSV_DUMP_FORMAT;
+            @NotNull CSVFormat csvFormat = CSV_DUMP_FORMAT;
             if (printHeader) {
                 csvFormat = csvFormat.withHeader(columns);
             }
-            try (CSVPrinter csvPrinter = new CSVPrinter(Files.newBufferedWriter(dumpFile), csvFormat)) {
-                Statement stmt = SimpleStatement.newInstance("SELECT * FROM " + cfName);
+            try (@NotNull CSVPrinter csvPrinter = new CSVPrinter(Files.newBufferedWriter(dumpFile), csvFormat)) {
+                @NotNull Statement stmt = SimpleStatement.newInstance("SELECT * FROM " + cfName);
                 stmt.setPageSize(1000);
-                ResultSet rs = session.execute(stmt);
-                Iterator<Row> iter = rs.iterator();
+                @NotNull ResultSet rs = session.execute(stmt);
+                @NotNull Iterator<Row> iter = rs.iterator();
                 while (iter.hasNext()) {
                     Row row = iter.next();
                     if (row != null) {
@@ -62,12 +66,12 @@ public class CassandraDbHelper {
         }
     }
 
-    public static void appendToEndOfLine(Path targetDumpFile, String toAppend) throws Exception {
+    public static void appendToEndOfLine(@NotNull Path targetDumpFile, String toAppend) throws Exception {
         Path tmp = Files.createTempFile(null, null);
-        try (CSVParser csvParser = new CSVParser(Files.newBufferedReader(targetDumpFile), CSV_DUMP_FORMAT)) {
-            try (CSVPrinter csvPrinter = new CSVPrinter(Files.newBufferedWriter(tmp), CSV_DUMP_FORMAT)) {
+        try (@NotNull CSVParser csvParser = new CSVParser(Files.newBufferedReader(targetDumpFile), CSV_DUMP_FORMAT)) {
+            try (@NotNull CSVPrinter csvPrinter = new CSVPrinter(Files.newBufferedWriter(tmp), CSV_DUMP_FORMAT)) {
                 csvParser.forEach(record -> {
-                    List<String> newRecord = new ArrayList<>();
+                    @NotNull List<String> newRecord = new ArrayList<>();
                     record.forEach(val -> newRecord.add(val));
                     newRecord.add(toAppend);
                     try {
@@ -81,23 +85,23 @@ public class CassandraDbHelper {
         Files.move(tmp, targetDumpFile, StandardCopyOption.REPLACE_EXISTING);
     }
 
-    public static void loadCf(KeyspaceMetadata ks, GuavaSession session, String cfName, String[] columns, Path sourceFile) throws Exception {
+    public static void loadCf(@NotNull KeyspaceMetadata ks, @NotNull GuavaSession session, @NotNull String cfName, @NotNull String[] columns, @NotNull Path sourceFile) throws Exception {
         loadCf(ks, session, cfName, columns, sourceFile, false);
     }
 
-    public static void loadCf(KeyspaceMetadata ks, GuavaSession session, String cfName, String[] columns, Path sourceFile, boolean parseHeader) throws Exception {
-        TableMetadata tableMetadata = ks.getTable(cfName).get();
-        PreparedStatement prepared = session.prepare(createInsertStatement(cfName, columns));
-        CSVFormat csvFormat = CSV_DUMP_FORMAT;
+    public static void loadCf(@NotNull KeyspaceMetadata ks, @NotNull GuavaSession session, @NotNull String cfName, @NotNull String[] columns, @NotNull Path sourceFile, boolean parseHeader) throws Exception {
+        @NotNull TableMetadata tableMetadata = ks.getTable(cfName).get();
+        @NotNull PreparedStatement prepared = session.prepare(createInsertStatement(cfName, columns));
+        @NotNull CSVFormat csvFormat = CSV_DUMP_FORMAT;
         if (parseHeader) {
             csvFormat = csvFormat.withFirstRecordAsHeader();
         } else {
             csvFormat = CSV_DUMP_FORMAT.withHeader(columns);
         }
-        try (CSVParser csvParser = new CSVParser(Files.newBufferedReader(sourceFile), csvFormat)) {
+        try (@NotNull CSVParser csvParser = new CSVParser(Files.newBufferedReader(sourceFile), csvFormat)) {
             csvParser.forEach(record -> {
-                BoundStatementBuilder boundStatementBuilder = new BoundStatementBuilder(prepared.bind());
-                for (String column : columns) {
+                @NotNull BoundStatementBuilder boundStatementBuilder = new BoundStatementBuilder(prepared.bind());
+                for (@NotNull String column : columns) {
                     setColumnValue(tableMetadata, column, record, boundStatementBuilder);
                 }
                 session.execute(boundStatementBuilder.build());
@@ -106,8 +110,8 @@ public class CassandraDbHelper {
     }
 
 
-    private static void dumpRow(Row row, String[] columns, String[] defaultValues, CSVPrinter csvPrinter) throws Exception {
-        List<String> record = new ArrayList<>();
+    private static void dumpRow(@NotNull Row row, @NotNull String[] columns, @Nullable String[] defaultValues, @NotNull CSVPrinter csvPrinter) throws Exception {
+        @NotNull List<String> record = new ArrayList<>();
         for (int i=0;i<columns.length;i++) {
             String column = columns[i];
             String defaultValue;
@@ -121,11 +125,12 @@ public class CassandraDbHelper {
         csvPrinter.printRecord(record);
     }
 
-    private static String getColumnValue(String column, String defaultValue, Row row) {
+    @Nullable
+    private static String getColumnValue(@NotNull String column, String defaultValue, @NotNull Row row) {
         int index = row.getColumnDefinitions().firstIndexOf(column);
         if (index > -1) {
-            String str;
-            DataType type = row.getColumnDefinitions().get(index).getType();
+            @Nullable String str;
+            @NotNull DataType type = row.getColumnDefinitions().get(index).getType();
             try {
                 if (row.isNull(index)) {
                     return null;
@@ -157,8 +162,9 @@ public class CassandraDbHelper {
         }
     }
 
-    private static String createInsertStatement(String cfName, String[] columns) {
-        StringBuilder insertStatementBuilder = new StringBuilder();
+    @NotNull
+    private static String createInsertStatement(String cfName, @NotNull String[] columns) {
+        @NotNull StringBuilder insertStatementBuilder = new StringBuilder();
         insertStatementBuilder.append("INSERT INTO ").append(cfName).append(" (");
         for (String column : columns) {
             insertStatementBuilder.append(column).append(",");
@@ -173,10 +179,10 @@ public class CassandraDbHelper {
         return insertStatementBuilder.toString();
     }
 
-    private static void setColumnValue(TableMetadata tableMetadata, String column,
-                                       CSVRecord record, BoundStatementBuilder boundStatementBuilder) {
+    private static void setColumnValue(@NotNull TableMetadata tableMetadata, @NotNull String column,
+                                       @NotNull CSVRecord record, @NotNull BoundStatementBuilder boundStatementBuilder) {
         String value = record.get(column);
-        DataType type = tableMetadata.getColumn(column).get().getType();
+        @NotNull DataType type = tableMetadata.getColumn(column).get().getType();
         if (value == null) {
             boundStatementBuilder.setToNull(column);
         } else if (type.getProtocolCode() == ProtocolConstants.DataType.DOUBLE) {

@@ -6,6 +6,7 @@ import org.echoiot.server.common.data.security.DeviceCredentials;
 import org.echoiot.server.common.data.security.DeviceCredentialsType;
 import org.echoiot.server.dao.device.DeviceCredentialsDao;
 import org.echoiot.server.dao.service.AbstractServiceTest;
+import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -24,7 +25,7 @@ import static org.junit.Assert.assertNotNull;
  */
 public class JpaDeviceCredentialsDaoTest extends AbstractJpaDaoTest {
 
-    @Autowired
+    @Resource
     DeviceCredentialsDao deviceCredentialsDao;
 
     List<DeviceCredentials> deviceCredentialsList;
@@ -38,7 +39,7 @@ public class JpaDeviceCredentialsDaoTest extends AbstractJpaDaoTest {
     }
 
     DeviceCredentials createAndSaveDeviceCredentials() {
-        DeviceCredentials deviceCredentials = new DeviceCredentials();
+        @NotNull DeviceCredentials deviceCredentials = new DeviceCredentials();
         deviceCredentials.setCredentialsType(DeviceCredentialsType.ACCESS_TOKEN);
         deviceCredentials.setCredentialsId(UUID.randomUUID().toString());
         deviceCredentials.setCredentialsValue("CHECK123");
@@ -48,7 +49,7 @@ public class JpaDeviceCredentialsDaoTest extends AbstractJpaDaoTest {
 
     @After
     public void deleteDeviceCredentials() {
-        for (DeviceCredentials credentials : deviceCredentialsList) {
+        for (@NotNull DeviceCredentials credentials : deviceCredentialsList) {
             deviceCredentialsDao.removeById(TenantId.SYS_TENANT_ID, credentials.getUuidId());
         }
     }

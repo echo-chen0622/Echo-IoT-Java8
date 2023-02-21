@@ -6,6 +6,8 @@ import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.msg.MsgType;
 import org.echoiot.server.common.msg.TbActorMsg;
 import org.echoiot.server.common.msg.TbActorStopReason;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -26,17 +28,24 @@ public final class TbActorMailbox implements TbActorCtx {
     private static final boolean NOT_READY = false;
     private static final boolean READY = true;
 
+    @NotNull
     private final TbActorSystem system;
+    @NotNull
     private final TbActorSystemSettings settings;
+    @NotNull
     private final TbActorId selfId;
+    @NotNull
     private final TbActorRef parentRef;
+    @NotNull
     private final TbActor actor;
+    @NotNull
     private final Dispatcher dispatcher;
     private final ConcurrentLinkedQueue<TbActorMsg> highPriorityMsgs = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<TbActorMsg> normalPriorityMsgs = new ConcurrentLinkedQueue<>();
     private final AtomicBoolean busy = new AtomicBoolean(FREE);
     private final AtomicBoolean ready = new AtomicBoolean(NOT_READY);
     private final AtomicBoolean destroyInProgress = new AtomicBoolean();
+    @Nullable
     private volatile TbActorStopReason stopReason;
 
     public void initActor() {
@@ -73,7 +82,7 @@ public final class TbActorMailbox implements TbActorCtx {
         }
     }
 
-    private void enqueue(TbActorMsg msg, boolean highPriority) {
+    private void enqueue(@NotNull TbActorMsg msg, boolean highPriority) {
         if (!destroyInProgress.get()) {
             if (highPriority) {
                 highPriorityMsgs.add(msg);
@@ -164,7 +173,7 @@ public final class TbActorMailbox implements TbActorCtx {
     }
 
     @Override
-    public void broadcastToChildrenByType(TbActorMsg msg, EntityType entityType) {
+    public void broadcastToChildrenByType(TbActorMsg msg, @NotNull EntityType entityType) {
         broadcastToChildren(msg, actorId -> entityType.equals(actorId.getEntityType()));
     }
 
@@ -184,7 +193,7 @@ public final class TbActorMailbox implements TbActorCtx {
     }
 
     @Override
-    public TbActorRef getOrCreateChildActor(TbActorId actorId, Supplier<String> dispatcher, Supplier<TbActorCreator> creator) {
+    public TbActorRef getOrCreateChildActor(TbActorId actorId, @NotNull Supplier<String> dispatcher, @NotNull Supplier<TbActorCreator> creator) {
         TbActorRef actorRef = system.getActor(actorId);
         if (actorRef == null) {
             return system.createChildActor(dispatcher.get(), creator.get(), selfId);
@@ -216,12 +225,12 @@ public final class TbActorMailbox implements TbActorCtx {
     }
 
     @Override
-    public void tell(TbActorMsg actorMsg) {
+    public void tell(@NotNull TbActorMsg actorMsg) {
         enqueue(actorMsg, NORMAL_PRIORITY);
     }
 
     @Override
-    public void tellWithHighPriority(TbActorMsg actorMsg) {
+    public void tellWithHighPriority(@NotNull TbActorMsg actorMsg) {
         enqueue(actorMsg, HIGH_PRIORITY);
     }
 

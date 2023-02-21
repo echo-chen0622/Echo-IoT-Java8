@@ -6,6 +6,7 @@ import org.echoiot.common.util.EchoiotThreadFactory;
 import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
 import org.echoiot.server.common.stats.MessagesStats;
 import org.echoiot.server.queue.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.UUID;
@@ -18,8 +19,11 @@ public class DefaultTbQueueResponseTemplate<Request extends TbQueueMsg, Response
 
     private final TbQueueConsumer<Request> requestTemplate;
     private final TbQueueProducer<Response> responseTemplate;
+    @NotNull
     private final ConcurrentMap<UUID, String> pendingRequests;
+    @NotNull
     private final ExecutorService loopExecutor;
+    @NotNull
     private final ScheduledExecutorService timeoutExecutor;
     private final ExecutorService callbackExecutor;
     private final MessagesStats stats;
@@ -31,7 +35,7 @@ public class DefaultTbQueueResponseTemplate<Request extends TbQueueMsg, Response
     private final AtomicInteger pendingRequestCount = new AtomicInteger();
 
     @Builder
-    public DefaultTbQueueResponseTemplate(TbQueueConsumer<Request> requestTemplate,
+    public DefaultTbQueueResponseTemplate(@NotNull TbQueueConsumer<Request> requestTemplate,
                                           TbQueueProducer<Response> responseTemplate,
                                           TbQueueHandler<Request, Response> handler,
                                           long pollInterval,
@@ -52,7 +56,7 @@ public class DefaultTbQueueResponseTemplate<Request extends TbQueueMsg, Response
     }
 
     @Override
-    public void init(TbQueueHandler<Request, Response> handler) {
+    public void init(@NotNull TbQueueHandler<Request, Response> handler) {
         this.responseTemplate.init();
         requestTemplate.subscribe();
         loopExecutor.submit(() -> {
@@ -85,8 +89,8 @@ public class DefaultTbQueueResponseTemplate<Request extends TbQueueMsg, Response
                                 log.error("[{}] Missing response topic in header", request);
                                 return;
                             }
-                            UUID requestId = bytesToUuid(requestIdHeader);
-                            String responseTopic = bytesToString(responseTopicHeader);
+                            @NotNull UUID requestId = bytesToUuid(requestIdHeader);
+                            @NotNull String responseTopic = bytesToString(responseTopicHeader);
                             try {
                                 pendingRequestCount.getAndIncrement();
                                 stats.incrementTotal();

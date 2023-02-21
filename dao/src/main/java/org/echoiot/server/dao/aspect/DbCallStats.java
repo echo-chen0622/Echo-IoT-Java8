@@ -2,6 +2,7 @@ package org.echoiot.server.dao.aspect;
 
 import lombok.Data;
 import org.echoiot.server.common.data.id.TenantId;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -13,13 +14,14 @@ import java.util.stream.Collectors;
 @Data
 public class DbCallStats {
 
+    @NotNull
     private final TenantId tenantId;
     private final ConcurrentMap<String, MethodCallStats> methodStats = new ConcurrentHashMap<>();
     private final AtomicInteger successCalls = new AtomicInteger();
     private final AtomicInteger failureCalls = new AtomicInteger();
 
     public void onMethodCall(String methodName, boolean success, long executionTime) {
-        var methodCallStats = methodStats.computeIfAbsent(methodName, m -> new MethodCallStats());
+        @NotNull var methodCallStats = methodStats.computeIfAbsent(methodName, m -> new MethodCallStats());
         methodCallStats.getExecutions().incrementAndGet();
         methodCallStats.getTiming().addAndGet(executionTime);
         if (success) {

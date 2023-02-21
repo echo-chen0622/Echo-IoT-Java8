@@ -12,6 +12,7 @@ import org.echoiot.server.common.data.transport.snmp.config.impl.ToDeviceRpcRequ
 import org.echoiot.server.common.data.transport.snmp.SnmpCommunicationSpec;
 import org.echoiot.server.common.data.transport.snmp.SnmpMapping;
 import org.echoiot.server.common.data.transport.snmp.SnmpMethod;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 import java.util.List;
@@ -28,6 +29,7 @@ public interface SnmpCommunicationConfig extends Serializable {
 
     SnmpCommunicationSpec getSpec();
 
+    @Nullable
     @JsonIgnore
     default SnmpMethod getMethod() {
         return null;

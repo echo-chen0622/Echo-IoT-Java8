@@ -17,7 +17,7 @@ public enum AlarmSearchStatus {
 
     @JsonIgnore
     @Getter
-    private Set<AlarmStatus> statuses;
+    private final Set<AlarmStatus> statuses;
 
     AlarmSearchStatus(AlarmStatus... statuses) {
         this.statuses = new LinkedHashSet<>(Arrays.asList(statuses));

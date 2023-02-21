@@ -13,6 +13,7 @@ import org.echoiot.server.dao.model.BaseSqlEntity;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.model.SearchTextEntity;
 import org.echoiot.server.dao.util.mapping.JsonStringType;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -54,7 +55,7 @@ public class ComponentDescriptorEntity extends BaseSqlEntity<ComponentDescriptor
     public ComponentDescriptorEntity() {
     }
 
-    public ComponentDescriptorEntity(ComponentDescriptor component) {
+    public ComponentDescriptorEntity(@NotNull ComponentDescriptor component) {
         if (component.getId() != null) {
             this.setUuid(component.getId().getId());
         }
@@ -68,9 +69,10 @@ public class ComponentDescriptorEntity extends BaseSqlEntity<ComponentDescriptor
         this.searchText = component.getName();
     }
 
+    @NotNull
     @Override
     public ComponentDescriptor toData() {
-        ComponentDescriptor data = new ComponentDescriptor(new ComponentDescriptorId(this.getUuid()));
+        @NotNull ComponentDescriptor data = new ComponentDescriptor(new ComponentDescriptorId(this.getUuid()));
         data.setCreatedTime(createdTime);
         data.setType(type);
         data.setScope(scope);

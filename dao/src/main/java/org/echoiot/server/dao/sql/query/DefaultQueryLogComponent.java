@@ -1,6 +1,8 @@
 package org.echoiot.server.dao.sql.query;
 
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.SqlParameterValue;
@@ -22,31 +24,32 @@ public class DefaultQueryLogComponent implements QueryLogComponent {
     private long logQueriesThreshold;
 
     @Override
-    public void logQuery(QueryContext ctx, String query, long duration) {
+    public void logQuery(@NotNull QueryContext ctx, @NotNull String query, long duration) {
         if (logSqlQueries && duration > logQueriesThreshold) {
 
-            String sqlToUse = substituteParametersInSqlString(query, ctx);
+            @NotNull String sqlToUse = substituteParametersInSqlString(query, ctx);
             log.warn("SLOW QUERY took {} ms: {}", duration, sqlToUse);
 
         }
     }
 
-    String substituteParametersInSqlString(String sql, SqlParameterSource paramSource) {
+    @NotNull
+    String substituteParametersInSqlString(@NotNull String sql, @NotNull SqlParameterSource paramSource) {
 
-        ParsedSql parsedSql = NamedParameterUtils.parseSqlStatement(sql);
-        List<SqlParameter> declaredParams = NamedParameterUtils.buildSqlParameterList(parsedSql, paramSource);
+        @NotNull ParsedSql parsedSql = NamedParameterUtils.parseSqlStatement(sql);
+        @NotNull List<SqlParameter> declaredParams = NamedParameterUtils.buildSqlParameterList(parsedSql, paramSource);
 
         if (declaredParams.isEmpty()) {
             return sql;
         }
 
-        for (SqlParameter parSQL: declaredParams) {
-            String paramName = parSQL.getName();
+        for (@NotNull SqlParameter parSQL: declaredParams) {
+            @Nullable String paramName = parSQL.getName();
             if (!paramSource.hasValue(paramName)) {
                 continue;
             }
 
-            Object value = paramSource.getValue(paramName);
+            @Nullable Object value = paramSource.getValue(paramName);
             if (value instanceof SqlParameterValue) {
                 value = ((SqlParameterValue)value).getValue();
             }

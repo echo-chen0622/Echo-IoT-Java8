@@ -5,6 +5,7 @@ import org.echoiot.server.queue.TbQueueConsumer;
 import org.echoiot.server.queue.TbQueueProducer;
 import org.echoiot.server.queue.settings.TbQueueCoreSettings;
 import org.echoiot.server.queue.settings.TbQueueVersionControlSettings;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Component;
 import org.echoiot.server.gen.transport.TransportProtos;
@@ -25,14 +26,17 @@ public class RabbitMqTbVersionControlQueueFactory implements TbVersionControlQue
     private final TbQueueCoreSettings coreSettings;
     private final TbQueueVersionControlSettings vcSettings;
 
+    @NotNull
     private final TbQueueAdmin coreAdmin;
+    @NotNull
     private final TbQueueAdmin notificationAdmin;
+    @NotNull
     private final TbQueueAdmin vcAdmin;
 
     public RabbitMqTbVersionControlQueueFactory(TbRabbitMqSettings rabbitMqSettings,
                                                 TbQueueCoreSettings coreSettings,
                                                 TbQueueVersionControlSettings vcSettings,
-                                                TbRabbitMqQueueArguments queueArguments
+                                                @NotNull TbRabbitMqQueueArguments queueArguments
     ) {
         this.rabbitMqSettings = rabbitMqSettings;
         this.coreSettings = coreSettings;
@@ -43,16 +47,19 @@ public class RabbitMqTbVersionControlQueueFactory implements TbVersionControlQue
         this.vcAdmin = new TbRabbitMqAdmin(this.rabbitMqSettings, queueArguments.getVcArgs());
     }
 
+    @NotNull
     @Override
     public TbQueueProducer<TbProtoQueueMsg<TransportProtos.ToUsageStatsServiceMsg>> createToUsageStatsServiceMsgProducer() {
         return new TbRabbitMqProducerTemplate<>(coreAdmin, rabbitMqSettings, coreSettings.getUsageStatsTopic());
     }
 
+    @NotNull
     @Override
     public TbQueueProducer<TbProtoQueueMsg<TransportProtos.ToCoreNotificationMsg>> createTbCoreNotificationsMsgProducer() {
         return new TbRabbitMqProducerTemplate<>(notificationAdmin, rabbitMqSettings, coreSettings.getTopic());
     }
 
+    @NotNull
     @Override
     public TbQueueConsumer<TbProtoQueueMsg<TransportProtos.ToVersionControlServiceMsg>> createToVersionControlMsgConsumer() {
         return new TbRabbitMqConsumerTemplate<>(vcAdmin, rabbitMqSettings, vcSettings.getTopic(),

@@ -2,6 +2,8 @@ package org.echoiot.server.service.queue;
 
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.id.RuleNodeId;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.AbstractMap;
 import java.util.Map;
@@ -13,8 +15,9 @@ import java.util.concurrent.locks.ReentrantLock;
 @Slf4j
 public class TbMsgProfilerInfo {
     private final UUID msgId;
-    private AtomicLong totalProcessingTime = new AtomicLong();
-    private Lock stateLock = new ReentrantLock();
+    private final AtomicLong totalProcessingTime = new AtomicLong();
+    private final Lock stateLock = new ReentrantLock();
+    @Nullable
     private RuleNodeId currentRuleNodeId;
     private long stateChangeTime;
 
@@ -33,7 +36,7 @@ public class TbMsgProfilerInfo {
         }
     }
 
-    public long onEnd(RuleNodeId ruleNodeId) {
+    public long onEnd(@NotNull RuleNodeId ruleNodeId) {
         long currentTime = System.currentTimeMillis();
         stateLock.lock();
         try {
@@ -52,6 +55,7 @@ public class TbMsgProfilerInfo {
         }
     }
 
+    @Nullable
     public Map.Entry<UUID, Long> onTimeout() {
         long currentTime = System.currentTimeMillis();
         stateLock.lock();

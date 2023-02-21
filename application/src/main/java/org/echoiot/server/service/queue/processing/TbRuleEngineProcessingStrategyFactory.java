@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.queue.ProcessingStrategy;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.queue.common.TbProtoQueueMsg;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.echoiot.server.common.msg.queue.TbMsgCallback;
@@ -18,7 +19,8 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class TbRuleEngineProcessingStrategyFactory {
 
-    public TbRuleEngineProcessingStrategy newInstance(String name, ProcessingStrategy processingStrategy) {
+    @NotNull
+    public TbRuleEngineProcessingStrategy newInstance(String name, @NotNull ProcessingStrategy processingStrategy) {
         switch (processingStrategy.getType()) {
             case SKIP_ALL_FAILURES:
                 return new SkipStrategy(name, false);
@@ -51,7 +53,7 @@ public class TbRuleEngineProcessingStrategyFactory {
         private int initialTotalCount;
         private int retryCount;
 
-        public RetryStrategy(String queueName, boolean retrySuccessful, boolean retryFailed, boolean retryTimeout, ProcessingStrategy processingStrategy) {
+        public RetryStrategy(String queueName, boolean retrySuccessful, boolean retryFailed, boolean retryTimeout, @NotNull ProcessingStrategy processingStrategy) {
             this.queueName = queueName;
             this.retrySuccessful = retrySuccessful;
             this.retryFailed = retryFailed;
@@ -67,8 +69,9 @@ public class TbRuleEngineProcessingStrategyFactory {
             return true;
         }
 
+        @NotNull
         @Override
-        public TbRuleEngineProcessingDecision analyze(TbRuleEngineProcessingResult result) {
+        public TbRuleEngineProcessingDecision analyze(@NotNull TbRuleEngineProcessingResult result) {
             if (result.isSuccess()) {
                 log.trace("[{}] The result of the msg pack processing is successful, going to proceed with processing of the following msgs", queueName);
                 return new TbRuleEngineProcessingDecision(true, null);
@@ -86,7 +89,7 @@ public class TbRuleEngineProcessingStrategyFactory {
                     return new TbRuleEngineProcessingDecision(true, null);
                 } else {
                     log.debug("[{}] The result of msg pack processing is unsuccessful, checking unprocessed msgs and going to reprocess them", queueName);
-                    ConcurrentMap<UUID, TbProtoQueueMsg<TransportProtos.ToRuleEngineMsg>> toReprocess = new ConcurrentHashMap<>(initialTotalCount);
+                    @NotNull ConcurrentMap<UUID, TbProtoQueueMsg<TransportProtos.ToRuleEngineMsg>> toReprocess = new ConcurrentHashMap<>(initialTotalCount);
                     if (retryFailed) {
                         result.getFailedMap().forEach(toReprocess::put);
                     } else if (log.isDebugEnabled() && !result.getFailedMap().isEmpty()) {
@@ -143,8 +146,9 @@ public class TbRuleEngineProcessingStrategyFactory {
             return skipTimeoutMsgs;
         }
 
+        @NotNull
         @Override
-        public TbRuleEngineProcessingDecision analyze(TbRuleEngineProcessingResult result) {
+        public TbRuleEngineProcessingDecision analyze(@NotNull TbRuleEngineProcessingResult result) {
             if (!result.isSuccess()) {
                 log.debug("[{}] Reprocessing skipped for {} failed and {} timeout messages", queueName, result.getFailedMap().size(), result.getPendingMap().size());
             }

@@ -9,6 +9,7 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.echoiot.server.common.data.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.TimeUnit;
 
@@ -18,6 +19,7 @@ public class MqttTestClient {
     private static final int TIMEOUT = 30; // seconds
     private static final long TIMEOUT_MS = TimeUnit.SECONDS.toMillis(TIMEOUT);
 
+    @NotNull
     private final MqttAsyncClient client;
 
     public void setCallback(MqttTestCallback callback) {
@@ -32,7 +34,7 @@ public class MqttTestClient {
         this.client = createClient(clientId);
     }
 
-    public void connectAndWait(String userName, String password) throws MqttException {
+    public void connectAndWait(String userName, @NotNull String password) throws MqttException {
         IMqttToken connect = connect(userName, password);
         connect.waitForCompletion(TIMEOUT_MS);
     }
@@ -45,11 +47,11 @@ public class MqttTestClient {
         connectAndWait(null, null);
     }
 
-    private IMqttToken connect(String userName, String password) throws MqttException {
+    private IMqttToken connect(String userName, @NotNull String password) throws MqttException {
         if (client == null) {
             throw new RuntimeException("Failed to connect! MqttAsyncClient is not initialized!");
         }
-        MqttConnectOptions options = new MqttConnectOptions();
+        @NotNull MqttConnectOptions options = new MqttConnectOptions();
         if (StringUtils.isNotEmpty(userName)) {
             options.setUserName(userName);
         }
@@ -76,16 +78,16 @@ public class MqttTestClient {
     }
 
     public IMqttDeliveryToken publish(String topic, byte[] payload) throws MqttException {
-        MqttMessage message = new MqttMessage();
+        @NotNull MqttMessage message = new MqttMessage();
         message.setPayload(payload);
         return client.publish(topic, message);
     }
 
-    public void subscribeAndWait(String topic, MqttQoS qoS) throws MqttException {
+    public void subscribeAndWait(String topic, @NotNull MqttQoS qoS) throws MqttException {
         subscribe(topic, qoS).waitForCompletion(TIMEOUT_MS);
     }
 
-    public IMqttToken subscribe(String topic, MqttQoS qoS) throws MqttException {
+    public IMqttToken subscribe(String topic, @NotNull MqttQoS qoS) throws MqttException {
         return client.subscribe(topic, qoS.value());
     }
 
@@ -93,10 +95,11 @@ public class MqttTestClient {
         client.setManualAcks(true);
     }
 
-    public void messageArrivedComplete(MqttMessage mqttMessage) throws MqttException {
+    public void messageArrivedComplete(@NotNull MqttMessage mqttMessage) throws MqttException {
         client.messageArrivedComplete(mqttMessage.getId(), mqttMessage.getQos());
     }
 
+    @NotNull
     private MqttAsyncClient createClient(String clientId) throws MqttException {
         if (StringUtils.isEmpty(clientId)) {
             clientId = MqttAsyncClient.generateClientId();
@@ -104,6 +107,7 @@ public class MqttTestClient {
         return new MqttAsyncClient(MQTT_URL, clientId, new MemoryPersistence());
     }
 
+    @NotNull
     private MqttAsyncClient createClient() throws MqttException {
         return createClient(null);
     }

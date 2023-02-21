@@ -1,5 +1,6 @@
 package org.echoiot.server.service.security.auth.rest;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -16,13 +17,13 @@ public class RestAwareAuthenticationFailureHandler implements AuthenticationFail
 
     private final EchoiotErrorResponseHandler errorResponseHandler;
 
-    @Autowired
+    @Resource
     public RestAwareAuthenticationFailureHandler(EchoiotErrorResponseHandler errorResponseHandler) {
         this.errorResponseHandler = errorResponseHandler;
     }
 
     @Override
-    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
+    public void onAuthenticationFailure(HttpServletRequest request, @NotNull HttpServletResponse response,
                                         AuthenticationException e) throws IOException, ServletException {
         errorResponseHandler.handle(e, response);
     }

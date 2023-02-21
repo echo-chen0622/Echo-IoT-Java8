@@ -3,6 +3,8 @@ package org.echoiot.server.transport.lwm2m.server.store;
 import org.eclipse.leshan.core.SecurityMode;
 import org.eclipse.leshan.server.security.NonUniqueSecurityInfoException;
 import org.eclipse.leshan.server.security.SecurityInfo;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.nustaq.serialization.FSTConfiguration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.integration.redis.util.RedisLockRegistry;
@@ -17,21 +19,23 @@ public class TbLwM2mRedisSecurityStore implements TbEditableSecurityStore {
 
     private final RedisConnectionFactory connectionFactory;
     private final FSTConfiguration serializer;
+    @NotNull
     private final RedisLockRegistry redisLock;
 
-    public TbLwM2mRedisSecurityStore(RedisConnectionFactory connectionFactory) {
+    public TbLwM2mRedisSecurityStore(@NotNull RedisConnectionFactory connectionFactory) {
         this.connectionFactory = connectionFactory;
         redisLock = new RedisLockRegistry(connectionFactory, "Security");
         serializer = FSTConfiguration.createDefaultConfiguration();
     }
 
+    @Nullable
     @Override
     public SecurityInfo getByEndpoint(String endpoint) {
-        Lock lock = null;
-        try (var connection = connectionFactory.getConnection()) {
+        @Nullable Lock lock = null;
+        try (@NotNull var connection = connectionFactory.getConnection()) {
             lock = redisLock.obtain(toLockKey(endpoint));
             lock.lock();
-            byte[] data = connection.get((SEC_EP + endpoint).getBytes());
+            @Nullable byte[] data = connection.get((SEC_EP + endpoint).getBytes());
             if (data == null || data.length == 0) {
                 return null;
             } else {
@@ -50,17 +54,18 @@ public class TbLwM2mRedisSecurityStore implements TbEditableSecurityStore {
         }
     }
 
+    @Nullable
     @Override
-    public SecurityInfo getByIdentity(String identity) {
-        Lock lock = null;
-        try (var connection = connectionFactory.getConnection()) {
+    public SecurityInfo getByIdentity(@NotNull String identity) {
+        @Nullable Lock lock = null;
+        try (@NotNull var connection = connectionFactory.getConnection()) {
             lock = redisLock.obtain(toLockKey(identity));
             lock.lock();
-            byte[] ep = connection.hGet(PSKID_SEC.getBytes(), identity.getBytes());
+            @Nullable byte[] ep = connection.hGet(PSKID_SEC.getBytes(), identity.getBytes());
             if (ep == null) {
                 return null;
             } else {
-                byte[] data = connection.get((SEC_EP + new String(ep)).getBytes());
+                @Nullable byte[] data = connection.get((SEC_EP + new String(ep)).getBytes());
                 if (data == null || data.length == 0) {
                     return null;
                 } else {
@@ -75,17 +80,17 @@ public class TbLwM2mRedisSecurityStore implements TbEditableSecurityStore {
     }
 
     @Override
-    public void put(TbLwM2MSecurityInfo tbSecurityInfo) throws NonUniqueSecurityInfoException {
+    public void put(@NotNull TbLwM2MSecurityInfo tbSecurityInfo) throws NonUniqueSecurityInfoException {
         SecurityInfo info = tbSecurityInfo.getSecurityInfo();
         byte[] tbSecurityInfoSerialized = serializer.asByteArray(tbSecurityInfo);
-        Lock lock = null;
-        try (var connection = connectionFactory.getConnection()) {
+        @Nullable Lock lock = null;
+        try (@NotNull var connection = connectionFactory.getConnection()) {
             lock = redisLock.obtain(tbSecurityInfo.getEndpoint());
             lock.lock();
             if (info != null && info.getIdentity() != null) {
-                byte[] oldEndpointBytes = connection.hGet(PSKID_SEC.getBytes(), info.getIdentity().getBytes());
+                @Nullable byte[] oldEndpointBytes = connection.hGet(PSKID_SEC.getBytes(), info.getIdentity().getBytes());
                 if (oldEndpointBytes != null) {
-                    String oldEndpoint = new String(oldEndpointBytes);
+                    @NotNull String oldEndpoint = new String(oldEndpointBytes);
                     if (!oldEndpoint.equals(info.getEndpoint())) {
                         throw new NonUniqueSecurityInfoException("PSK Identity " + info.getIdentity() + " is already used");
                     }
@@ -93,7 +98,7 @@ public class TbLwM2mRedisSecurityStore implements TbEditableSecurityStore {
                 }
             }
 
-            byte[] previousData = connection.getSet((SEC_EP + tbSecurityInfo.getEndpoint()).getBytes(), tbSecurityInfoSerialized);
+            @Nullable byte[] previousData = connection.getSet((SEC_EP + tbSecurityInfo.getEndpoint()).getBytes(), tbSecurityInfoSerialized);
             if (previousData != null && info != null) {
                 String previousIdentity = ((TbLwM2MSecurityInfo) serializer.asObject(previousData)).getSecurityInfo().getIdentity();
                 if (previousIdentity != null && !previousIdentity.equals(info.getIdentity())) {
@@ -107,13 +112,14 @@ public class TbLwM2mRedisSecurityStore implements TbEditableSecurityStore {
         }
     }
 
+    @Nullable
     @Override
     public TbLwM2MSecurityInfo getTbLwM2MSecurityInfoByEndpoint(String endpoint) {
-        Lock lock = null;
-        try (var connection = connectionFactory.getConnection()) {
+        @Nullable Lock lock = null;
+        try (@NotNull var connection = connectionFactory.getConnection()) {
             lock = redisLock.obtain(endpoint);
             lock.lock();
-            byte[] data = connection.get((SEC_EP + endpoint).getBytes());
+            @Nullable byte[] data = connection.get((SEC_EP + endpoint).getBytes());
             if (data != null && data.length > 0) {
                 return (TbLwM2MSecurityInfo) serializer.asObject(data);
             } else {
@@ -128,11 +134,11 @@ public class TbLwM2mRedisSecurityStore implements TbEditableSecurityStore {
 
     @Override
     public void remove(String endpoint) {
-        Lock lock = null;
-        try (var connection = connectionFactory.getConnection()) {
+        @Nullable Lock lock = null;
+        try (@NotNull var connection = connectionFactory.getConnection()) {
             lock = redisLock.obtain(endpoint);
             lock.lock();
-            byte[] data = connection.get((SEC_EP + endpoint).getBytes());
+            @Nullable byte[] data = connection.get((SEC_EP + endpoint).getBytes());
             if (data != null && data.length > 0) {
                 SecurityInfo info = ((TbLwM2MSecurityInfo) serializer.asObject(data)).getSecurityInfo();
                 if (info != null && info.getIdentity() != null) {
@@ -147,6 +153,7 @@ public class TbLwM2mRedisSecurityStore implements TbEditableSecurityStore {
         }
     }
 
+    @NotNull
     private String toLockKey(String endpoint) {
         return LOCK_EP + endpoint;
     }

@@ -15,6 +15,8 @@ import org.apache.curator.retry.RetryForever;
 import org.apache.curator.utils.CloseableUtils;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -83,6 +85,7 @@ public class ZkDiscoveryService implements DiscoveryService, PathChildrenCacheLi
         initZkClient();
     }
 
+    @NotNull
     private List<TransportProtos.ServiceInfo> getOtherServers() {
         return cache.getCurrentData().stream()
                 .filter(cd -> !cd.getPath().equals(nodePath))
@@ -140,7 +143,7 @@ public class ZkDiscoveryService implements DiscoveryService, PathChildrenCacheLi
         }
         try {
             TransportProtos.ServiceInfo self = serviceInfoProvider.getServiceInfo();
-            TransportProtos.ServiceInfo registeredServerInfo = null;
+            @Nullable TransportProtos.ServiceInfo registeredServerInfo = null;
             registeredServerInfo = TransportProtos.ServiceInfo.parseFrom(client.getData().forPath(nodePath));
             if (self.equals(registeredServerInfo)) {
                 return true;
@@ -153,7 +156,8 @@ public class ZkDiscoveryService implements DiscoveryService, PathChildrenCacheLi
         return false;
     }
 
-    private ConnectionStateListener checkReconnect(TransportProtos.ServiceInfo self) {
+    @NotNull
+    private ConnectionStateListener checkReconnect(@NotNull TransportProtos.ServiceInfo self) {
         return (client, newState) -> {
             log.info("[{}] ZK state changed: {}", self.getServiceId(), newState);
             if (newState == ConnectionState.LOST) {
@@ -226,12 +230,13 @@ public class ZkDiscoveryService implements DiscoveryService, PathChildrenCacheLi
         log.info("Stopped discovery service");
     }
 
+    @NotNull
     public static String missingProperty(String propertyName) {
         return "The " + propertyName + " property need to be set!";
     }
 
     @Override
-    public void childEvent(CuratorFramework curatorFramework, PathChildrenCacheEvent pathChildrenCacheEvent) throws Exception {
+    public void childEvent(CuratorFramework curatorFramework, @NotNull PathChildrenCacheEvent pathChildrenCacheEvent) throws Exception {
         if (stopped) {
             log.debug("Ignoring {}. Service is stopped.", pathChildrenCacheEvent);
             return;

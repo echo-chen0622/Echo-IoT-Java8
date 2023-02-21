@@ -3,21 +3,22 @@ package org.echoiot.server.common.transport.auth;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.transport.TransportContext;
 import org.echoiot.server.gen.transport.TransportProtos;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
 @Slf4j
 public class SessionInfoCreator {
 
-    public static TransportProtos.SessionInfoProto create(ValidateDeviceCredentialsResponse msg, TransportContext context, UUID sessionId) {
+    public static TransportProtos.SessionInfoProto create(@NotNull ValidateDeviceCredentialsResponse msg, @NotNull TransportContext context, @NotNull UUID sessionId) {
         return getSessionInfoProto(msg, context.getNodeId(), sessionId);
     }
 
-    public static TransportProtos.SessionInfoProto create(ValidateDeviceCredentialsResponse msg, String nodeId, UUID sessionId) {
+    public static TransportProtos.SessionInfoProto create(@NotNull ValidateDeviceCredentialsResponse msg, String nodeId, @NotNull UUID sessionId) {
         return getSessionInfoProto(msg, nodeId, sessionId);
     }
 
-    private static TransportProtos.SessionInfoProto getSessionInfoProto(ValidateDeviceCredentialsResponse msg, String nodeId, UUID sessionId) {
+    private static TransportProtos.SessionInfoProto getSessionInfoProto(@NotNull ValidateDeviceCredentialsResponse msg, String nodeId, @NotNull UUID sessionId) {
         return TransportProtos.SessionInfoProto.newBuilder().setNodeId(nodeId)
                 .setSessionIdMSB(sessionId.getMostSignificantBits())
                 .setSessionIdLSB(sessionId.getLeastSignificantBits())

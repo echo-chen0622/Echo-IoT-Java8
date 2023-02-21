@@ -29,16 +29,16 @@ public class CoapTransportContext extends TransportContext {
     @Value("${transport.sessions.report_timeout}")
     private long sessionReportTimeout;
 
-    @Autowired
+    @Resource
     private JsonCoapAdaptor jsonCoapAdaptor;
 
-    @Autowired
+    @Resource
     private ProtoCoapAdaptor protoCoapAdaptor;
 
-    @Autowired
+    @Resource
     private EfentoCoapAdaptor efentoCoapAdaptor;
 
-    @Autowired
+    @Resource
     private CoapClientContext clientContext;
 
     private final ConcurrentMap<Integer, TransportProtos.ToDeviceRpcRequestMsg> rpcAwaitingAck = new ConcurrentHashMap<>();

@@ -20,6 +20,7 @@ import org.echoiot.server.dao.device.DeviceService;
 import org.echoiot.server.queue.discovery.TbServiceInfoProvider;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.security.model.SecurityUser;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -79,7 +80,7 @@ public class DefaultTbCoreDeviceRpcService implements TbCoreDeviceRpcService {
     }
 
     @Override
-    public void processRestApiRpcRequest(ToDeviceRpcRequest request, Consumer<FromDeviceRpcResponse> responseConsumer, SecurityUser currentUser) {
+    public void processRestApiRpcRequest(@NotNull ToDeviceRpcRequest request, Consumer<FromDeviceRpcResponse> responseConsumer, SecurityUser currentUser) {
         log.trace("[{}][{}] Processing REST API call to rule engine [{}]", request.getTenantId(), request.getId(), request.getDeviceId());
         UUID requestId = request.getId();
         localToRuleEngineRpcRequests.put(requestId, responseConsumer);
@@ -88,7 +89,7 @@ public class DefaultTbCoreDeviceRpcService implements TbCoreDeviceRpcService {
     }
 
     @Override
-    public void processRpcResponseFromRuleEngine(FromDeviceRpcResponse response) {
+    public void processRpcResponseFromRuleEngine(@NotNull FromDeviceRpcResponse response) {
         log.trace("[{}] Received response to server-side RPC request from rule engine: [{}]", response.getId(), response);
         UUID requestId = response.getId();
         Consumer<FromDeviceRpcResponse> consumer = localToRuleEngineRpcRequests.remove(requestId);
@@ -100,7 +101,7 @@ public class DefaultTbCoreDeviceRpcService implements TbCoreDeviceRpcService {
     }
 
     @Override
-    public void forwardRpcRequestToDeviceActor(ToDeviceRpcRequestActorMsg rpcMsg) {
+    public void forwardRpcRequestToDeviceActor(@NotNull ToDeviceRpcRequestActorMsg rpcMsg) {
         ToDeviceRpcRequest request = rpcMsg.getMsg();
         log.trace("[{}][{}] Processing local rpc call to device actor [{}]", request.getTenantId(), request.getId(), request.getDeviceId());
         UUID requestId = request.getId();
@@ -110,7 +111,7 @@ public class DefaultTbCoreDeviceRpcService implements TbCoreDeviceRpcService {
     }
 
     @Override
-    public void processRpcResponseFromDeviceActor(FromDeviceRpcResponse response) {
+    public void processRpcResponseFromDeviceActor(@NotNull FromDeviceRpcResponse response) {
         log.trace("[{}] Received response to server-side RPC request from device actor.", response.getId());
         UUID requestId = response.getId();
         ToDeviceRpcRequestActorMsg request = localToDeviceRpcRequests.remove(requestId);
@@ -122,7 +123,7 @@ public class DefaultTbCoreDeviceRpcService implements TbCoreDeviceRpcService {
     }
 
     @Override
-    public void processRemoveRpc(RemoveRpcActorMsg removeRpcMsg) {
+    public void processRemoveRpc(@NotNull RemoveRpcActorMsg removeRpcMsg) {
         log.trace("[{}][{}] Processing remove RPC [{}]", removeRpcMsg.getTenantId(), removeRpcMsg.getRequestId(), removeRpcMsg.getDeviceId());
         actorContext.tellWithHighPriority(removeRpcMsg);
     }
@@ -139,9 +140,9 @@ public class DefaultTbCoreDeviceRpcService implements TbCoreDeviceRpcService {
         }
     }
 
-    private void sendRpcRequestToRuleEngine(ToDeviceRpcRequest msg, SecurityUser currentUser) {
+    private void sendRpcRequestToRuleEngine(@NotNull ToDeviceRpcRequest msg, SecurityUser currentUser) {
         ObjectNode entityNode = json.createObjectNode();
-        TbMsgMetaData metaData = new TbMsgMetaData();
+        @NotNull TbMsgMetaData metaData = new TbMsgMetaData();
         metaData.putValue("requestUUID", msg.getId().toString());
         metaData.putValue("originServiceId", serviceId);
         metaData.putValue("expirationTime", Long.toString(msg.getExpirationTime()));
@@ -165,14 +166,14 @@ public class DefaultTbCoreDeviceRpcService implements TbCoreDeviceRpcService {
         entityNode.put(DataConstants.ADDITIONAL_INFO, msg.getAdditionalInfo());
 
         try {
-            TbMsg tbMsg = TbMsg.newMsg(DataConstants.RPC_CALL_FROM_SERVER_TO_DEVICE, msg.getDeviceId(), Optional.ofNullable(currentUser).map(User::getCustomerId).orElse(null), metaData, TbMsgDataType.JSON, json.writeValueAsString(entityNode));
+            @NotNull TbMsg tbMsg = TbMsg.newMsg(DataConstants.RPC_CALL_FROM_SERVER_TO_DEVICE, msg.getDeviceId(), Optional.ofNullable(currentUser).map(User::getCustomerId).orElse(null), metaData, TbMsgDataType.JSON, json.writeValueAsString(entityNode));
             clusterService.pushMsgToRuleEngine(msg.getTenantId(), msg.getDeviceId(), tbMsg, null);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void scheduleToRuleEngineTimeout(ToDeviceRpcRequest request, UUID requestId) {
+    private void scheduleToRuleEngineTimeout(@NotNull ToDeviceRpcRequest request, UUID requestId) {
         long timeout = Math.max(0, request.getExpirationTime() - System.currentTimeMillis()) + TimeUnit.SECONDS.toMillis(1);
         log.trace("[{}] processing to rule engine request.", requestId);
         scheduler.schedule(() -> {
@@ -184,7 +185,7 @@ public class DefaultTbCoreDeviceRpcService implements TbCoreDeviceRpcService {
         }, timeout, TimeUnit.MILLISECONDS);
     }
 
-    private void scheduleToDeviceTimeout(ToDeviceRpcRequest request, UUID requestId) {
+    private void scheduleToDeviceTimeout(@NotNull ToDeviceRpcRequest request, UUID requestId) {
         long timeout = Math.max(0, request.getExpirationTime() - System.currentTimeMillis()) + TimeUnit.SECONDS.toMillis(1);
         log.trace("[{}] processing to device request.", requestId);
         scheduler.schedule(() -> {

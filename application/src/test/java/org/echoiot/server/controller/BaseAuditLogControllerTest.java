@@ -14,6 +14,7 @@ import org.echoiot.server.dao.audit.AuditLogDao;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.sqlts.insert.sql.SqlPartitioningRepository;
 import org.echoiot.server.service.ttl.AuditLogsCleanUpService;
+import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -40,11 +41,11 @@ public abstract class BaseAuditLogControllerTest extends AbstractControllerTest 
     private Tenant savedTenant;
     private User tenantAdmin;
 
-    @Autowired
+    @Resource
     private AuditLogDao auditLogDao;
     @SpyBean
     private SqlPartitioningRepository partitioningRepository;
-    @Autowired
+    @Resource
     private AuditLogsCleanUpService auditLogsCleanUpService;
 
     @Value("#{${sql.audit_logs.partition_size} * 60 * 60 * 1000}")
@@ -56,7 +57,7 @@ public abstract class BaseAuditLogControllerTest extends AbstractControllerTest 
     public void beforeTest() throws Exception {
         loginSysAdmin();
 
-        Tenant tenant = new Tenant();
+        @NotNull Tenant tenant = new Tenant();
         tenant.setTitle("My tenant");
         savedTenant = doPost("/api/tenant", tenant, Tenant.class);
         Assert.assertNotNull(savedTenant);
@@ -82,14 +83,14 @@ public abstract class BaseAuditLogControllerTest extends AbstractControllerTest 
     @Test
     public void testAuditLogs() throws Exception {
         for (int i = 0; i < 178; i++) {
-            Device device = new Device();
+            @NotNull Device device = new Device();
             device.setName("Device" + i);
             device.setType("default");
             doPost("/api/device", device, Device.class);
         }
 
-        List<AuditLog> loadedAuditLogs = new ArrayList<>();
-        TimePageLink pageLink = new TimePageLink(23);
+        @NotNull List<AuditLog> loadedAuditLogs = new ArrayList<>();
+        @NotNull TimePageLink pageLink = new TimePageLink(23);
         PageData<AuditLog> pageData;
         do {
             pageData = doGetTypedWithTimePageLink("/api/audit/logs?",
@@ -134,7 +135,7 @@ public abstract class BaseAuditLogControllerTest extends AbstractControllerTest 
 
     @Test
     public void testAuditLogs_byTenantIdAndEntityId() throws Exception {
-        Device device = new Device();
+        @NotNull Device device = new Device();
         device.setName("Device name");
         device.setType("default");
         Device savedDevice = doPost("/api/device", device, Device.class);
@@ -143,8 +144,8 @@ public abstract class BaseAuditLogControllerTest extends AbstractControllerTest 
             doPost("/api/device", savedDevice, Device.class);
         }
 
-        List<AuditLog> loadedAuditLogs = new ArrayList<>();
-        TimePageLink pageLink = new TimePageLink(23);
+        @NotNull List<AuditLog> loadedAuditLogs = new ArrayList<>();
+        @NotNull TimePageLink pageLink = new TimePageLink(23);
         PageData<AuditLog> pageData;
         do {
             pageData = doGetTypedWithTimePageLink("/api/audit/logs/entity/DEVICE/" + savedDevice.getId().getId() + "?",
@@ -165,7 +166,7 @@ public abstract class BaseAuditLogControllerTest extends AbstractControllerTest 
         AuditLog auditLog = createAuditLog(ActionType.LOGIN, tenantAdminUserId);
         verify(partitioningRepository).createPartitionIfNotExists(eq("audit_log"), eq(auditLog.getCreatedTime()), eq(partitionDurationInMs));
 
-        List<Long> partitions = partitioningRepository.fetchPartitions("audit_log");
+        @NotNull List<Long> partitions = partitioningRepository.fetchPartitions("audit_log");
         assertThat(partitions).singleElement().satisfies(partitionStartTs -> {
             assertThat(partitionStartTs).isEqualTo(partitioningRepository.calculatePartitionStartTime(auditLog.getCreatedTime(), partitionDurationInMs));
         });
@@ -176,7 +177,7 @@ public abstract class BaseAuditLogControllerTest extends AbstractControllerTest 
         long oldAuditLogTs = LocalDate.of(2020, 10, 1).atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli();
         long partitionStartTs = partitioningRepository.calculatePartitionStartTime(oldAuditLogTs, partitionDurationInMs);
         partitioningRepository.createPartitionIfNotExists("audit_log", oldAuditLogTs, partitionDurationInMs);
-        List<Long> partitions = partitioningRepository.fetchPartitions("audit_log");
+        @NotNull List<Long> partitions = partitioningRepository.fetchPartitions("audit_log");
         assertThat(partitions).contains(partitionStartTs);
 
         auditLogsCleanUpService.cleanUp();
@@ -192,7 +193,7 @@ public abstract class BaseAuditLogControllerTest extends AbstractControllerTest 
     public void whenSavingAuditLogAndPartitionSaveErrorOccurred_thenSaveAuditLogAnyway() throws Exception {
         // creating partition bigger than sql.audit_logs.partition_size
         partitioningRepository.createPartitionIfNotExists("audit_log", System.currentTimeMillis(), TimeUnit.DAYS.toMillis(7));
-        List<Long> partitions = partitioningRepository.fetchPartitions("audit_log");
+        @NotNull List<Long> partitions = partitioningRepository.fetchPartitions("audit_log");
         assertThat(partitions).size().isOne();
         partitioningRepository.cleanupPartitionsCache("audit_log", System.currentTimeMillis(), 0);
 
@@ -204,7 +205,7 @@ public abstract class BaseAuditLogControllerTest extends AbstractControllerTest 
     }
 
     private AuditLog createAuditLog(ActionType actionType, EntityId entityId) {
-        AuditLog auditLog = new AuditLog();
+        @NotNull AuditLog auditLog = new AuditLog();
         auditLog.setTenantId(tenantId);
         auditLog.setCustomerId(null);
         auditLog.setUserId(tenantAdminUserId);

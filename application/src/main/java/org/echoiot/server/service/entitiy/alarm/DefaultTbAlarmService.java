@@ -14,6 +14,8 @@ import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.EdgeId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.service.entitiy.AbstractTbEntityService;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,8 +25,8 @@ import java.util.List;
 public class DefaultTbAlarmService extends AbstractTbEntityService implements TbAlarmService {
 
     @Override
-    public Alarm save(Alarm alarm, User user) throws EchoiotException {
-        ActionType actionType = alarm.getId() == null ? ActionType.ADDED : ActionType.UPDATED;
+    public Alarm save(@NotNull Alarm alarm, User user) throws EchoiotException {
+        @NotNull ActionType actionType = alarm.getId() == null ? ActionType.ADDED : ActionType.UPDATED;
         TenantId tenantId = alarm.getTenantId();
         try {
             Alarm savedAlarm = checkNotNull(alarmSubscriptionService.createOrUpdateAlarm(alarm));
@@ -36,8 +38,9 @@ public class DefaultTbAlarmService extends AbstractTbEntityService implements Tb
         }
     }
 
+    @NotNull
     @Override
-    public ListenableFuture<Void> ack(Alarm alarm, User user) {
+    public ListenableFuture<Void> ack(@NotNull Alarm alarm, User user) {
         long ackTs = System.currentTimeMillis();
         ListenableFuture<Boolean> future = alarmSubscriptionService.ackAlarm(alarm.getTenantId(), alarm.getId(), ackTs);
         return Futures.transform(future, result -> {
@@ -48,8 +51,9 @@ public class DefaultTbAlarmService extends AbstractTbEntityService implements Tb
         }, MoreExecutors.directExecutor());
     }
 
+    @NotNull
     @Override
-    public ListenableFuture<Void> clear(Alarm alarm, User user) {
+    public ListenableFuture<Void> clear(@NotNull Alarm alarm, User user) {
         long clearTs = System.currentTimeMillis();
         ListenableFuture<Boolean> future = alarmSubscriptionService.clearAlarm(alarm.getTenantId(), alarm.getId(), null, clearTs);
         return Futures.transform(future, result -> {
@@ -61,9 +65,9 @@ public class DefaultTbAlarmService extends AbstractTbEntityService implements Tb
     }
 
     @Override
-    public Boolean delete(Alarm alarm, User user) {
+    public Boolean delete(@NotNull Alarm alarm, User user) {
         TenantId tenantId = alarm.getTenantId();
-        List<EdgeId> relatedEdgeIds = edgeService.findAllRelatedEdgeIds(tenantId, alarm.getOriginator());
+        @Nullable List<EdgeId> relatedEdgeIds = edgeService.findAllRelatedEdgeIds(tenantId, alarm.getOriginator());
         notificationEntityService.notifyDeleteAlarm(tenantId, alarm, alarm.getOriginator(), alarm.getCustomerId(),
                 relatedEdgeIds, user, JacksonUtil.toString(alarm));
         return alarmSubscriptionService.deleteAlarm(tenantId, alarm.getId());

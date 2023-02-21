@@ -9,13 +9,15 @@ import org.echoiot.server.common.data.sms.config.TwilioSmsProviderConfiguration;
 import org.echoiot.server.service.sms.aws.AwsSmsSender;
 import org.echoiot.server.service.sms.smpp.SmppSmsSender;
 import org.echoiot.server.service.sms.twilio.TwilioSmsSender;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DefaultSmsSenderFactory implements SmsSenderFactory {
 
+    @NotNull
     @Override
-    public SmsSender createSmsSender(SmsProviderConfiguration config) {
+    public SmsSender createSmsSender(@NotNull SmsProviderConfiguration config) {
         switch (config.getType()) {
             case AWS_SNS:
                 return new AwsSmsSender((AwsSnsSmsProviderConfiguration)config);

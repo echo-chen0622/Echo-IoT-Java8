@@ -8,6 +8,7 @@ import org.echoiot.server.common.msg.tools.TbRateLimitsException;
 import org.echoiot.server.service.security.exception.AuthMethodNotSupportedException;
 import org.echoiot.server.service.security.exception.JwtExpiredTokenException;
 import org.echoiot.server.service.security.exception.UserPasswordExpiredException;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -75,12 +76,12 @@ public class EchoiotErrorResponseHandler extends ResponseEntityExceptionHandler 
         return errorCodeToStatusMap.getOrDefault(errorCode, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @Autowired
+    @Resource
     private ObjectMapper mapper;
 
     @Override
     @ExceptionHandler(AccessDeniedException.class)
-    public void handle(HttpServletRequest request, HttpServletResponse response,
+    public void handle(HttpServletRequest request, @NotNull HttpServletResponse response,
                        AccessDeniedException accessDeniedException) throws IOException,
             ServletException {
         if (!response.isCommitted()) {
@@ -93,14 +94,14 @@ public class EchoiotErrorResponseHandler extends ResponseEntityExceptionHandler 
     }
 
     @ExceptionHandler(Exception.class)
-    public void handle(Exception exception, HttpServletResponse response) {
+    public void handle(@NotNull Exception exception, @NotNull HttpServletResponse response) {
         log.debug("Processing exception {}", exception.getMessage(), exception);
         if (!response.isCommitted()) {
             try {
                 response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
                 if (exception instanceof EchoiotException) {
-                    EchoiotException echoiotException = (EchoiotException) exception;
+                    @NotNull EchoiotException echoiotException = (EchoiotException) exception;
                     if (echoiotException.getErrorCode() == EchoiotErrorCode.SUBSCRIPTION_VIOLATION) {
                         handleSubscriptionException((EchoiotException) exception, response);
                     } else {
@@ -123,6 +124,7 @@ public class EchoiotErrorResponseHandler extends ResponseEntityExceptionHandler 
         }
     }
 
+    @NotNull
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(
             Exception ex, @Nullable Object body,
@@ -135,28 +137,28 @@ public class EchoiotErrorResponseHandler extends ResponseEntityExceptionHandler 
         return new ResponseEntity<>(EchoiotErrorResponse.of(ex.getMessage(), errorCode, status), headers, status);
     }
 
-    private void handleEchoiotException(EchoiotException echoiotException, HttpServletResponse response) throws IOException {
+    private void handleEchoiotException(@NotNull EchoiotException echoiotException, @NotNull HttpServletResponse response) throws IOException {
         EchoiotErrorCode errorCode = echoiotException.getErrorCode();
         HttpStatus status = errorCodeToStatus(errorCode);
         response.setStatus(status.value());
         mapper.writeValue(response.getWriter(), EchoiotErrorResponse.of(echoiotException.getMessage(), errorCode, status));
     }
 
-    private void handleRateLimitException(HttpServletResponse response, TbRateLimitsException exception) throws IOException {
+    private void handleRateLimitException(@NotNull HttpServletResponse response, @NotNull TbRateLimitsException exception) throws IOException {
         response.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
-        String message = "Too many requests for current " + exception.getEntityType().name().toLowerCase() + "!";
+        @NotNull String message = "Too many requests for current " + exception.getEntityType().name().toLowerCase() + "!";
         mapper.writeValue(response.getWriter(),
                 EchoiotErrorResponse.of(message,
                         EchoiotErrorCode.TOO_MANY_REQUESTS, HttpStatus.TOO_MANY_REQUESTS));
     }
 
-    private void handleSubscriptionException(EchoiotException subscriptionException, HttpServletResponse response) throws IOException {
+    private void handleSubscriptionException(@NotNull EchoiotException subscriptionException, @NotNull HttpServletResponse response) throws IOException {
         response.setStatus(HttpStatus.FORBIDDEN.value());
         mapper.writeValue(response.getWriter(),
                 (new ObjectMapper()).readValue(((HttpClientErrorException) subscriptionException.getCause()).getResponseBodyAsByteArray(), Object.class));
     }
 
-    private void handleAccessDeniedException(HttpServletResponse response) throws IOException {
+    private void handleAccessDeniedException(@NotNull HttpServletResponse response) throws IOException {
         response.setStatus(HttpStatus.FORBIDDEN.value());
         mapper.writeValue(response.getWriter(),
                 EchoiotErrorResponse.of("You don't have permission to perform this operation!",
@@ -164,7 +166,7 @@ public class EchoiotErrorResponseHandler extends ResponseEntityExceptionHandler 
 
     }
 
-    private void handleAuthenticationException(AuthenticationException authenticationException, HttpServletResponse response) throws IOException {
+    private void handleAuthenticationException(AuthenticationException authenticationException, @NotNull HttpServletResponse response) throws IOException {
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         if (authenticationException instanceof BadCredentialsException || authenticationException instanceof UsernameNotFoundException) {
             mapper.writeValue(response.getWriter(), EchoiotErrorResponse.of("Invalid username or password", EchoiotErrorCode.AUTHENTICATION, HttpStatus.UNAUTHORIZED));
@@ -177,7 +179,7 @@ public class EchoiotErrorResponseHandler extends ResponseEntityExceptionHandler 
         } else if (authenticationException instanceof AuthMethodNotSupportedException) {
             mapper.writeValue(response.getWriter(), EchoiotErrorResponse.of(authenticationException.getMessage(), EchoiotErrorCode.AUTHENTICATION, HttpStatus.UNAUTHORIZED));
         } else if (authenticationException instanceof UserPasswordExpiredException) {
-            UserPasswordExpiredException expiredException = (UserPasswordExpiredException) authenticationException;
+            @NotNull UserPasswordExpiredException expiredException = (UserPasswordExpiredException) authenticationException;
             String resetToken = expiredException.getResetToken();
             mapper.writeValue(response.getWriter(), EchoiotCredentialsExpiredResponse.of(expiredException.getMessage(), resetToken));
         } else {

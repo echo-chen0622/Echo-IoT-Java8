@@ -6,13 +6,15 @@ import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.gen.edge.v1.CustomerUpdateMsg;
 import org.echoiot.server.gen.edge.v1.UpdateMsgType;
 import org.echoiot.server.queue.util.TbCoreComponent;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 @Component
 @TbCoreComponent
 public class CustomerMsgConstructor {
 
-    public CustomerUpdateMsg constructCustomerUpdatedMsg(UpdateMsgType msgType, Customer customer) {
+    @NotNull
+    public CustomerUpdateMsg constructCustomerUpdatedMsg(UpdateMsgType msgType, @NotNull Customer customer) {
         CustomerUpdateMsg.Builder builder = CustomerUpdateMsg.newBuilder()
                 .setMsgType(msgType)
                 .setIdMSB(customer.getId().getId().getMostSignificantBits())
@@ -48,7 +50,8 @@ public class CustomerMsgConstructor {
         return builder.build();
     }
 
-    public CustomerUpdateMsg constructCustomerDeleteMsg(CustomerId customerId) {
+    @NotNull
+    public CustomerUpdateMsg constructCustomerDeleteMsg(@NotNull CustomerId customerId) {
         return CustomerUpdateMsg.newBuilder()
                 .setMsgType(UpdateMsgType.ENTITY_DELETED_RPC_MESSAGE)
                 .setIdMSB(customerId.getId().getMostSignificantBits())

@@ -27,6 +27,7 @@ import org.echoiot.server.queue.discovery.PartitionService;
 import org.echoiot.server.service.apiusage.TbApiUsageStateService;
 import org.echoiot.server.service.subscription.SubscriptionManagerService;
 import org.echoiot.server.service.subscription.TbSubscriptionUtils;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -60,13 +61,14 @@ public class DefaultAlarmSubscriptionService extends AbstractSubscriptionService
         this.subscriptionManagerService = subscriptionManagerService;
     }
 
+    @NotNull
     @Override
     String getExecutorPrefix() {
         return "alarm";
     }
 
     @Override
-    public Alarm createOrUpdateAlarm(Alarm alarm) {
+    public Alarm createOrUpdateAlarm(@NotNull Alarm alarm) {
         AlarmOperationResult result = alarmService.createOrUpdateAlarm(alarm, apiUsageStateService.getApiUsageState(alarm.getTenantId()).isAlarmCreationEnabled());
         if (result.isSuccessful()) {
             onAlarmUpdated(result);
@@ -77,6 +79,7 @@ public class DefaultAlarmSubscriptionService extends AbstractSubscriptionService
         return result.getAlarm();
     }
 
+    @NotNull
     @Override
     public Boolean deleteAlarm(TenantId tenantId, AlarmId alarmId) {
         AlarmOperationResult result = alarmService.deleteAlarm(tenantId, alarmId);
@@ -84,6 +87,7 @@ public class DefaultAlarmSubscriptionService extends AbstractSubscriptionService
         return result.isSuccessful();
     }
 
+    @NotNull
     @Override
     public ListenableFuture<Boolean> ackAlarm(TenantId tenantId, AlarmId alarmId, long ackTs) {
         ListenableFuture<AlarmOperationResult> result = alarmService.ackAlarm(tenantId, alarmId, ackTs);
@@ -91,12 +95,14 @@ public class DefaultAlarmSubscriptionService extends AbstractSubscriptionService
         return Futures.transform(result, AlarmOperationResult::isSuccessful, wsCallBackExecutor);
     }
 
+    @NotNull
     @Override
     public ListenableFuture<Boolean> clearAlarm(TenantId tenantId, AlarmId alarmId, JsonNode details, long clearTs) {
-        ListenableFuture<AlarmOperationResult> result = clearAlarmForResult(tenantId, alarmId, details, clearTs);
+        @NotNull ListenableFuture<AlarmOperationResult> result = clearAlarmForResult(tenantId, alarmId, details, clearTs);
         return Futures.transform(result, AlarmOperationResult::isSuccessful, wsCallBackExecutor);
     }
 
+    @NotNull
     @Override
     public ListenableFuture<AlarmOperationResult> clearAlarmForResult(TenantId tenantId, AlarmId alarmId, JsonNode details, long clearTs) {
         ListenableFuture<AlarmOperationResult> result = alarmService.clearAlarm(tenantId, alarmId, details, clearTs);
@@ -144,11 +150,11 @@ public class DefaultAlarmSubscriptionService extends AbstractSubscriptionService
         return alarmService.findLatestByOriginatorAndType(tenantId, originator, type);
     }
 
-    private void onAlarmUpdated(AlarmOperationResult result) {
+    private void onAlarmUpdated(@NotNull AlarmOperationResult result) {
         wsCallBackExecutor.submit(() -> {
             Alarm alarm = result.getAlarm();
             TenantId tenantId = result.getAlarm().getTenantId();
-            for (EntityId entityId : result.getPropagatedEntitiesList()) {
+            for (@NotNull EntityId entityId : result.getPropagatedEntitiesList()) {
                 TopicPartitionInfo tpi = partitionService.resolve(ServiceType.TB_CORE, tenantId, entityId);
                 if (currentPartitions.contains(tpi)) {
                     if (subscriptionManagerService.isPresent()) {
@@ -164,11 +170,11 @@ public class DefaultAlarmSubscriptionService extends AbstractSubscriptionService
         });
     }
 
-    private void onAlarmDeleted(AlarmOperationResult result) {
+    private void onAlarmDeleted(@NotNull AlarmOperationResult result) {
         wsCallBackExecutor.submit(() -> {
             Alarm alarm = result.getAlarm();
             TenantId tenantId = result.getAlarm().getTenantId();
-            for (EntityId entityId : result.getPropagatedEntitiesList()) {
+            for (@NotNull EntityId entityId : result.getPropagatedEntitiesList()) {
                 TopicPartitionInfo tpi = partitionService.resolve(ServiceType.TB_CORE, tenantId, entityId);
                 if (currentPartitions.contains(tpi)) {
                     if (subscriptionManagerService.isPresent()) {

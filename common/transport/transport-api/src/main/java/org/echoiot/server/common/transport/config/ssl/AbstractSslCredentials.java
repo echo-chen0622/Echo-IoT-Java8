@@ -1,6 +1,8 @@
 package org.echoiot.server.common.transport.config.ssl;
 
 import org.echoiot.server.common.data.StringUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.TrustManagerFactory;
@@ -46,10 +48,10 @@ public abstract class AbstractSslCredentials implements SslCredentials {
             this.keyPasswordArray = keyPassword.toCharArray();
         }
         this.keyStore = this.loadKeyStore(trustsOnly, this.keyPasswordArray);
-        Set<X509Certificate> trustedCerts = getTrustedCerts(this.keyStore, trustsOnly);
+        @NotNull Set<X509Certificate> trustedCerts = getTrustedCerts(this.keyStore, trustsOnly);
         this.trusts = trustedCerts.toArray(new X509Certificate[0]);
         if (!trustsOnly) {
-            PrivateKeyEntry privateKeyEntry = null;
+            @Nullable PrivateKeyEntry privateKeyEntry = null;
             String keyAlias = this.getKeyAlias();
             if (!StringUtils.isEmpty(keyAlias)) {
                 privateKeyEntry = tryGetPrivateKeyEntry(this.keyStore, keyAlias, this.keyPasswordArray);
@@ -100,25 +102,28 @@ public abstract class AbstractSslCredentials implements SslCredentials {
         return this.trusts;
     }
 
+    @NotNull
     @Override
     public TrustManagerFactory createTrustManagerFactory() throws NoSuchAlgorithmException, KeyStoreException {
-        TrustManagerFactory tmFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+        @NotNull TrustManagerFactory tmFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
         tmFactory.init(this.keyStore);
         return tmFactory;
     }
 
+    @NotNull
     @Override
     public KeyManagerFactory createKeyManagerFactory() throws NoSuchAlgorithmException, UnrecoverableKeyException, KeyStoreException {
-        KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+        @NotNull KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
         kmf.init(this.keyStore, this.keyPasswordArray);
         return kmf;
     }
 
+    @Nullable
     @Override
-    public String getValueFromSubjectNameByKey(String subjectName, String key) {
-        String[] dns = subjectName.split(",");
-        Optional<String> cn = (Arrays.stream(dns).filter(dn -> dn.contains(key + "="))).findFirst();
-        String value = cn.isPresent() ? cn.get().replace(key + "=", "") : null;
+    public String getValueFromSubjectNameByKey(@NotNull String subjectName, String key) {
+        @NotNull String[] dns = subjectName.split(",");
+        @NotNull Optional<String> cn = (Arrays.stream(dns).filter(dn -> dn.contains(key + "="))).findFirst();
+        @Nullable String value = cn.isPresent() ? cn.get().replace(key + "=", "") : null;
         return StringUtils.isNotEmpty(value) ? value : null;
     }
 
@@ -128,11 +133,12 @@ public abstract class AbstractSslCredentials implements SslCredentials {
 
     protected abstract void updateKeyAlias(String keyAlias);
 
-    private static X509Certificate[] asX509Certificates(Certificate[] certificates) {
+    @NotNull
+    private static X509Certificate[] asX509Certificates(@NotNull Certificate[] certificates) {
         if (null == certificates || 0 == certificates.length) {
             throw new IllegalArgumentException("certificates missing!");
         }
-        X509Certificate[] x509Certificates = new X509Certificate[certificates.length];
+        @NotNull X509Certificate[] x509Certificates = new X509Certificate[certificates.length];
         for (int index = 0; certificates.length > index; ++index) {
             if (null == certificates[index]) {
                 throw new IllegalArgumentException("[" + index + "] is null!");
@@ -147,8 +153,9 @@ public abstract class AbstractSslCredentials implements SslCredentials {
         return x509Certificates;
     }
 
-    private static PrivateKeyEntry tryGetPrivateKeyEntry(KeyStore keyStore, String alias, char[] pwd) {
-        PrivateKeyEntry entry = null;
+    @Nullable
+    private static PrivateKeyEntry tryGetPrivateKeyEntry(@NotNull KeyStore keyStore, @NotNull String alias, char[] pwd) {
+        @Nullable PrivateKeyEntry entry = null;
         try {
             if (keyStore.entryInstanceOf(alias, KeyStore.PrivateKeyEntry.class)) {
                 try {
@@ -164,8 +171,9 @@ public abstract class AbstractSslCredentials implements SslCredentials {
         return entry;
     }
 
-    private static Set<X509Certificate> getTrustedCerts(KeyStore ks, boolean trustsOnly) {
-        Set<X509Certificate> set = new HashSet<>();
+    @NotNull
+    private static Set<X509Certificate> getTrustedCerts(@NotNull KeyStore ks, boolean trustsOnly) {
+        @NotNull Set<X509Certificate> set = new HashSet<>();
         try {
             for (Enumeration<String> e = ks.aliases(); e.hasMoreElements(); ) {
                 String alias = e.nextElement();
@@ -186,7 +194,7 @@ public abstract class AbstractSslCredentials implements SslCredentials {
                     if ((certs != null) && (certs.length > 0) &&
                             (certs[0] instanceof X509Certificate)) {
                         if (trustsOnly) {
-                            for (Certificate cert : certs) {
+                            for (@NotNull Certificate cert : certs) {
                                 // is CA certificate
                                 if (((X509Certificate) cert).getBasicConstraints()>=0) {
                                     set.add((X509Certificate) cert);

@@ -1,6 +1,8 @@
 package org.echoiot.server.service.telemetry;
 
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Created by Echo on 27.03.18.
  */
@@ -30,6 +32,7 @@ public class WsSessionMetaData {
         this.lastActivityTime = lastActivityTime;
     }
 
+    @NotNull
     @Override
     public String toString() {
         return "WsSessionMetaData [sessionRef=" + sessionRef + ", lastActivityTime=" + lastActivityTime + "]";

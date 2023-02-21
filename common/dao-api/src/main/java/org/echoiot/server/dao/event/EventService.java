@@ -9,6 +9,7 @@ import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.TimePageLink;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ public interface EventService {
 
     PageData<EventInfo> findEvents(TenantId tenantId, EntityId entityId, EventType eventType, TimePageLink pageLink);
 
+    @Nullable
     List<EventInfo> findLatestEvents(TenantId tenantId, EntityId entityId, EventType eventType, int limit);
 
     PageData<EventInfo> findEventsByFilter(TenantId tenantId, EntityId entityId, EventFilter eventFilter, TimePageLink pageLink);

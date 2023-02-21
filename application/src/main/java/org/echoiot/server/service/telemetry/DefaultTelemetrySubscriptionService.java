@@ -22,6 +22,7 @@ import org.echoiot.server.queue.discovery.PartitionService;
 import org.echoiot.server.service.apiusage.TbApiUsageStateService;
 import org.echoiot.server.service.entitiy.entityview.TbEntityViewService;
 import org.echoiot.server.service.subscription.TbSubscriptionUtils;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -68,6 +69,7 @@ public class DefaultTelemetrySubscriptionService extends AbstractSubscriptionSer
         tsCallBackExecutor = Executors.newSingleThreadExecutor(EchoiotThreadFactory.forName("ts-service-ts-callback"));
     }
 
+    @NotNull
     @Override
     protected String getExecutorPrefix() {
         return "ts";
@@ -81,29 +83,30 @@ public class DefaultTelemetrySubscriptionService extends AbstractSubscriptionSer
         super.shutdownExecutor();
     }
 
+    @NotNull
     @Override
-    public ListenableFuture<Void> saveAndNotify(TenantId tenantId, EntityId entityId, TsKvEntry ts) {
-        SettableFuture<Void> future = SettableFuture.create();
+    public ListenableFuture<Void> saveAndNotify(TenantId tenantId, @NotNull EntityId entityId, TsKvEntry ts) {
+        @NotNull SettableFuture<Void> future = SettableFuture.create();
         saveAndNotify(tenantId, entityId, Collections.singletonList(ts), new VoidFutureCallback(future));
         return future;
     }
 
     @Override
-    public void saveAndNotify(TenantId tenantId, EntityId entityId, List<TsKvEntry> ts, FutureCallback<Void> callback) {
+    public void saveAndNotify(TenantId tenantId, @NotNull EntityId entityId, @NotNull List<TsKvEntry> ts, @NotNull FutureCallback<Void> callback) {
         saveAndNotify(tenantId, null, entityId, ts, 0L, callback);
     }
 
     @Override
-    public void saveAndNotify(TenantId tenantId, CustomerId customerId, EntityId entityId, List<TsKvEntry> ts, long ttl, FutureCallback<Void> callback) {
+    public void saveAndNotify(TenantId tenantId, CustomerId customerId, @NotNull EntityId entityId, @NotNull List<TsKvEntry> ts, long ttl, @NotNull FutureCallback<Void> callback) {
         doSaveAndNotify(tenantId, customerId, entityId, ts, ttl, callback, true);
     }
 
     @Override
-    public void saveWithoutLatestAndNotify(TenantId tenantId, CustomerId customerId, EntityId entityId, List<TsKvEntry> ts, long ttl, FutureCallback<Void> callback) {
+    public void saveWithoutLatestAndNotify(TenantId tenantId, CustomerId customerId, @NotNull EntityId entityId, @NotNull List<TsKvEntry> ts, long ttl, @NotNull FutureCallback<Void> callback) {
         doSaveAndNotify(tenantId, customerId, entityId, ts, ttl, callback, false);
     }
 
-    private void doSaveAndNotify(TenantId tenantId, CustomerId customerId, EntityId entityId, List<TsKvEntry> ts, long ttl, FutureCallback<Void> callback, boolean saveLatest) {
+    private void doSaveAndNotify(@org.jetbrains.annotations.Nullable TenantId tenantId, CustomerId customerId, @NotNull EntityId entityId, @NotNull List<TsKvEntry> ts, long ttl, @NotNull FutureCallback<Void> callback, boolean saveLatest) {
         checkInternalEntity(entityId);
         boolean sysTenant = TenantId.SYS_TENANT_ID.equals(tenantId) || tenantId == null;
         if (sysTenant || apiUsageStateService.getApiUsageState(tenantId).isDbStorageEnabled()) {
@@ -117,10 +120,11 @@ public class DefaultTelemetrySubscriptionService extends AbstractSubscriptionSer
         }
     }
 
-    private FutureCallback<Integer> getCallback(TenantId tenantId, CustomerId customerId, boolean sysTenant, FutureCallback<Void> callback) {
+    @NotNull
+    private FutureCallback<Integer> getCallback(TenantId tenantId, CustomerId customerId, boolean sysTenant, @NotNull FutureCallback<Void> callback) {
         return new FutureCallback<>() {
             @Override
-            public void onSuccess(Integer result) {
+            public void onSuccess(@org.jetbrains.annotations.Nullable Integer result) {
                 if (!sysTenant && result != null && result > 0) {
                     apiUsageClient.report(tenantId, customerId, ApiUsageRecordKey.STORAGE_DP_COUNT, result);
                 }
@@ -135,22 +139,22 @@ public class DefaultTelemetrySubscriptionService extends AbstractSubscriptionSer
     }
 
     @Override
-    public void saveAndNotifyInternal(TenantId tenantId, EntityId entityId, List<TsKvEntry> ts, FutureCallback<Integer> callback) {
+    public void saveAndNotifyInternal(@NotNull TenantId tenantId, @NotNull EntityId entityId, @NotNull List<TsKvEntry> ts, @NotNull FutureCallback<Integer> callback) {
         saveAndNotifyInternal(tenantId, entityId, ts, 0L, callback);
     }
 
     @Override
-    public void saveAndNotifyInternal(TenantId tenantId, EntityId entityId, List<TsKvEntry> ts, long ttl, FutureCallback<Integer> callback) {
+    public void saveAndNotifyInternal(@NotNull TenantId tenantId, @NotNull EntityId entityId, @NotNull List<TsKvEntry> ts, long ttl, @NotNull FutureCallback<Integer> callback) {
         ListenableFuture<Integer> saveFuture = tsService.save(tenantId, entityId, ts, ttl);
         addCallbacks(tenantId, entityId, ts, callback, saveFuture);
     }
 
-    private void saveWithoutLatestAndNotifyInternal(TenantId tenantId, EntityId entityId, List<TsKvEntry> ts, long ttl, FutureCallback<Integer> callback) {
+    private void saveWithoutLatestAndNotifyInternal(@NotNull TenantId tenantId, @NotNull EntityId entityId, @NotNull List<TsKvEntry> ts, long ttl, @NotNull FutureCallback<Integer> callback) {
         ListenableFuture<Integer> saveFuture = tsService.saveWithoutLatest(tenantId, entityId, ts, ttl);
         addCallbacks(tenantId, entityId, ts, callback, saveFuture);
     }
 
-    private void addCallbacks(TenantId tenantId, EntityId entityId, List<TsKvEntry> ts, FutureCallback<Integer> callback, ListenableFuture<Integer> saveFuture) {
+    private void addCallbacks(@NotNull TenantId tenantId, @NotNull EntityId entityId, @NotNull List<TsKvEntry> ts, @NotNull FutureCallback<Integer> callback, @NotNull ListenableFuture<Integer> saveFuture) {
         addMainCallback(saveFuture, callback);
         addWsCallback(saveFuture, success -> onTimeSeriesUpdate(tenantId, entityId, ts));
         if (EntityType.DEVICE.equals(entityId.getEntityType()) || EntityType.ASSET.equals(entityId.getEntityType())) {
@@ -159,22 +163,22 @@ public class DefaultTelemetrySubscriptionService extends AbstractSubscriptionSer
                         @Override
                         public void onSuccess(@Nullable List<EntityView> result) {
                             if (result != null && !result.isEmpty()) {
-                                Map<String, List<TsKvEntry>> tsMap = new HashMap<>();
-                                for (TsKvEntry entry : ts) {
+                                @NotNull Map<String, List<TsKvEntry>> tsMap = new HashMap<>();
+                                for (@NotNull TsKvEntry entry : ts) {
                                     tsMap.computeIfAbsent(entry.getKey(), s -> new ArrayList<>()).add(entry);
                                 }
-                                for (EntityView entityView : result) {
-                                    List<String> keys = entityView.getKeys() != null && entityView.getKeys().getTimeseries() != null ?
+                                for (@NotNull EntityView entityView : result) {
+                                    @NotNull List<String> keys = entityView.getKeys() != null && entityView.getKeys().getTimeseries() != null ?
                                             entityView.getKeys().getTimeseries() : new ArrayList<>(tsMap.keySet());
-                                    List<TsKvEntry> entityViewLatest = new ArrayList<>();
+                                    @NotNull List<TsKvEntry> entityViewLatest = new ArrayList<>();
                                     long startTs = entityView.getStartTimeMs();
                                     long endTs = entityView.getEndTimeMs() == 0 ? Long.MAX_VALUE : entityView.getEndTimeMs();
                                     for (String key : keys) {
                                         List<TsKvEntry> entries = tsMap.get(key);
                                         if (entries != null) {
-                                            Optional<TsKvEntry> tsKvEntry = entries.stream()
-                                                    .filter(entry -> entry.getTs() > startTs && entry.getTs() <= endTs)
-                                                    .max(Comparator.comparingLong(TsKvEntry::getTs));
+                                            @NotNull Optional<TsKvEntry> tsKvEntry = entries.stream()
+                                                                                            .filter(entry -> entry.getTs() > startTs && entry.getTs() <= endTs)
+                                                                                            .max(Comparator.comparingLong(TsKvEntry::getTs));
                                             tsKvEntry.ifPresent(entityViewLatest::add);
                                         }
                                     }
@@ -203,69 +207,69 @@ public class DefaultTelemetrySubscriptionService extends AbstractSubscriptionSer
 
     @Override
 
-    public void saveAndNotify(TenantId tenantId, EntityId entityId, String scope, List<AttributeKvEntry> attributes, FutureCallback<Void> callback) {
+    public void saveAndNotify(@NotNull TenantId tenantId, @NotNull EntityId entityId, String scope, @NotNull List<AttributeKvEntry> attributes, @NotNull FutureCallback<Void> callback) {
         saveAndNotify(tenantId, entityId, scope, attributes, true, callback);
     }
 
     @Override
-    public void saveAndNotify(TenantId tenantId, EntityId entityId, String scope, List<AttributeKvEntry> attributes, boolean notifyDevice, FutureCallback<Void> callback) {
+    public void saveAndNotify(@NotNull TenantId tenantId, @NotNull EntityId entityId, String scope, @NotNull List<AttributeKvEntry> attributes, boolean notifyDevice, @NotNull FutureCallback<Void> callback) {
         checkInternalEntity(entityId);
         saveAndNotifyInternal(tenantId, entityId, scope, attributes, notifyDevice, callback);
     }
 
     @Override
-    public void saveAndNotifyInternal(TenantId tenantId, EntityId entityId, String scope, List<AttributeKvEntry> attributes, boolean notifyDevice, FutureCallback<Void> callback) {
+    public void saveAndNotifyInternal(@NotNull TenantId tenantId, @NotNull EntityId entityId, String scope, @NotNull List<AttributeKvEntry> attributes, boolean notifyDevice, @NotNull FutureCallback<Void> callback) {
         ListenableFuture<List<String>> saveFuture = attrService.save(tenantId, entityId, scope, attributes);
         addVoidCallback(saveFuture, callback);
         addWsCallback(saveFuture, success -> onAttributesUpdate(tenantId, entityId, scope, attributes, notifyDevice));
     }
 
     @Override
-    public void saveLatestAndNotify(TenantId tenantId, EntityId entityId, List<TsKvEntry> ts, FutureCallback<Void> callback) {
+    public void saveLatestAndNotify(@NotNull TenantId tenantId, @NotNull EntityId entityId, @NotNull List<TsKvEntry> ts, @NotNull FutureCallback<Void> callback) {
         checkInternalEntity(entityId);
         saveLatestAndNotifyInternal(tenantId, entityId, ts, callback);
     }
 
     @Override
-    public void saveLatestAndNotifyInternal(TenantId tenantId, EntityId entityId, List<TsKvEntry> ts, FutureCallback<Void> callback) {
+    public void saveLatestAndNotifyInternal(@NotNull TenantId tenantId, @NotNull EntityId entityId, @NotNull List<TsKvEntry> ts, @NotNull FutureCallback<Void> callback) {
         ListenableFuture<List<Void>> saveFuture = tsService.saveLatest(tenantId, entityId, ts);
         addVoidCallback(saveFuture, callback);
         addWsCallback(saveFuture, success -> onTimeSeriesUpdate(tenantId, entityId, ts));
     }
 
     @Override
-    public void deleteAndNotify(TenantId tenantId, EntityId entityId, String scope, List<String> keys, FutureCallback<Void> callback) {
+    public void deleteAndNotify(@NotNull TenantId tenantId, @NotNull EntityId entityId, String scope, List<String> keys, @NotNull FutureCallback<Void> callback) {
         checkInternalEntity(entityId);
         deleteAndNotifyInternal(tenantId, entityId, scope, keys, false, callback);
     }
 
     @Override
-    public void deleteAndNotify(TenantId tenantId, EntityId entityId, String scope, List<String> keys, boolean notifyDevice, FutureCallback<Void> callback) {
+    public void deleteAndNotify(@NotNull TenantId tenantId, @NotNull EntityId entityId, String scope, List<String> keys, boolean notifyDevice, @NotNull FutureCallback<Void> callback) {
         checkInternalEntity(entityId);
         deleteAndNotifyInternal(tenantId, entityId, scope, keys, notifyDevice, callback);
     }
 
     @Override
-    public void deleteAndNotifyInternal(TenantId tenantId, EntityId entityId, String scope, List<String> keys, boolean notifyDevice, FutureCallback<Void> callback) {
+    public void deleteAndNotifyInternal(@NotNull TenantId tenantId, @NotNull EntityId entityId, String scope, List<String> keys, boolean notifyDevice, @NotNull FutureCallback<Void> callback) {
         ListenableFuture<List<String>> deleteFuture = attrService.removeAll(tenantId, entityId, scope, keys);
         addVoidCallback(deleteFuture, callback);
         addWsCallback(deleteFuture, success -> onAttributesDelete(tenantId, entityId, scope, keys, notifyDevice));
     }
 
     @Override
-    public void deleteLatest(TenantId tenantId, EntityId entityId, List<String> keys, FutureCallback<Void> callback) {
+    public void deleteLatest(TenantId tenantId, @NotNull EntityId entityId, List<String> keys, @NotNull FutureCallback<Void> callback) {
         checkInternalEntity(entityId);
         deleteLatestInternal(tenantId, entityId, keys, callback);
     }
 
     @Override
-    public void deleteLatestInternal(TenantId tenantId, EntityId entityId, List<String> keys, FutureCallback<Void> callback) {
+    public void deleteLatestInternal(TenantId tenantId, EntityId entityId, List<String> keys, @NotNull FutureCallback<Void> callback) {
         ListenableFuture<List<TsKvLatestRemovingResult>> deleteFuture = tsService.removeLatest(tenantId, entityId, keys);
         addVoidCallback(deleteFuture, callback);
     }
 
     @Override
-    public void deleteAllLatest(TenantId tenantId, EntityId entityId, FutureCallback<Collection<String>> callback) {
+    public void deleteAllLatest(TenantId tenantId, EntityId entityId, @NotNull FutureCallback<Collection<String>> callback) {
         ListenableFuture<Collection<String>> deleteFuture = tsService.removeAllLatest(tenantId, entityId);
         Futures.addCallback(deleteFuture, new FutureCallback<Collection<String>>() {
             @Override
@@ -281,65 +285,69 @@ public class DefaultTelemetrySubscriptionService extends AbstractSubscriptionSer
     }
 
     @Override
-    public void deleteTimeseriesAndNotify(TenantId tenantId, EntityId entityId, List<String> keys, List<DeleteTsKvQuery> deleteTsKvQueries, FutureCallback<Void> callback) {
+    public void deleteTimeseriesAndNotify(@NotNull TenantId tenantId, @NotNull EntityId entityId, List<String> keys, List<DeleteTsKvQuery> deleteTsKvQueries, @NotNull FutureCallback<Void> callback) {
         ListenableFuture<List<TsKvLatestRemovingResult>> deleteFuture = tsService.remove(tenantId, entityId, deleteTsKvQueries);
         addVoidCallback(deleteFuture, callback);
         addWsCallback(deleteFuture, list -> onTimeSeriesDelete(tenantId, entityId, keys, list));
     }
 
     @Override
-    public void saveAttrAndNotify(TenantId tenantId, EntityId entityId, String scope, String key, long value, FutureCallback<Void> callback) {
+    public void saveAttrAndNotify(@NotNull TenantId tenantId, @NotNull EntityId entityId, String scope, String key, long value, @NotNull FutureCallback<Void> callback) {
         saveAndNotify(tenantId, entityId, scope, Collections.singletonList(new BaseAttributeKvEntry(new LongDataEntry(key, value)
                 , System.currentTimeMillis())), callback);
     }
 
     @Override
-    public void saveAttrAndNotify(TenantId tenantId, EntityId entityId, String scope, String key, String value, FutureCallback<Void> callback) {
+    public void saveAttrAndNotify(@NotNull TenantId tenantId, @NotNull EntityId entityId, String scope, String key, String value, @NotNull FutureCallback<Void> callback) {
         saveAndNotify(tenantId, entityId, scope, Collections.singletonList(new BaseAttributeKvEntry(new StringDataEntry(key, value)
                 , System.currentTimeMillis())), callback);
     }
 
     @Override
-    public void saveAttrAndNotify(TenantId tenantId, EntityId entityId, String scope, String key, double value, FutureCallback<Void> callback) {
+    public void saveAttrAndNotify(@NotNull TenantId tenantId, @NotNull EntityId entityId, String scope, String key, double value, @NotNull FutureCallback<Void> callback) {
         saveAndNotify(tenantId, entityId, scope, Collections.singletonList(new BaseAttributeKvEntry(new DoubleDataEntry(key, value)
                 , System.currentTimeMillis())), callback);
     }
 
     @Override
-    public void saveAttrAndNotify(TenantId tenantId, EntityId entityId, String scope, String key, boolean value, FutureCallback<Void> callback) {
+    public void saveAttrAndNotify(@NotNull TenantId tenantId, @NotNull EntityId entityId, String scope, String key, boolean value, @NotNull FutureCallback<Void> callback) {
         saveAndNotify(tenantId, entityId, scope, Collections.singletonList(new BaseAttributeKvEntry(new BooleanDataEntry(key, value)
                 , System.currentTimeMillis())), callback);
     }
 
+    @NotNull
     @Override
-    public ListenableFuture<Void> saveAttrAndNotify(TenantId tenantId, EntityId entityId, String scope, String key, long value) {
-        SettableFuture<Void> future = SettableFuture.create();
+    public ListenableFuture<Void> saveAttrAndNotify(@NotNull TenantId tenantId, @NotNull EntityId entityId, String scope, String key, long value) {
+        @NotNull SettableFuture<Void> future = SettableFuture.create();
         saveAttrAndNotify(tenantId, entityId, scope, key, value, new VoidFutureCallback(future));
         return future;
     }
 
+    @NotNull
     @Override
-    public ListenableFuture<Void> saveAttrAndNotify(TenantId tenantId, EntityId entityId, String scope, String key, String value) {
-        SettableFuture<Void> future = SettableFuture.create();
+    public ListenableFuture<Void> saveAttrAndNotify(@NotNull TenantId tenantId, @NotNull EntityId entityId, String scope, String key, String value) {
+        @NotNull SettableFuture<Void> future = SettableFuture.create();
         saveAttrAndNotify(tenantId, entityId, scope, key, value, new VoidFutureCallback(future));
         return future;
     }
 
+    @NotNull
     @Override
-    public ListenableFuture<Void> saveAttrAndNotify(TenantId tenantId, EntityId entityId, String scope, String key, double value) {
-        SettableFuture<Void> future = SettableFuture.create();
+    public ListenableFuture<Void> saveAttrAndNotify(@NotNull TenantId tenantId, @NotNull EntityId entityId, String scope, String key, double value) {
+        @NotNull SettableFuture<Void> future = SettableFuture.create();
         saveAttrAndNotify(tenantId, entityId, scope, key, value, new VoidFutureCallback(future));
         return future;
     }
 
+    @NotNull
     @Override
-    public ListenableFuture<Void> saveAttrAndNotify(TenantId tenantId, EntityId entityId, String scope, String key, boolean value) {
-        SettableFuture<Void> future = SettableFuture.create();
+    public ListenableFuture<Void> saveAttrAndNotify(@NotNull TenantId tenantId, @NotNull EntityId entityId, String scope, String key, boolean value) {
+        @NotNull SettableFuture<Void> future = SettableFuture.create();
         saveAttrAndNotify(tenantId, entityId, scope, key, value, new VoidFutureCallback(future));
         return future;
     }
 
-    private void onAttributesUpdate(TenantId tenantId, EntityId entityId, String scope, List<AttributeKvEntry> attributes, boolean notifyDevice) {
+    private void onAttributesUpdate(@NotNull TenantId tenantId, @NotNull EntityId entityId, String scope, @NotNull List<AttributeKvEntry> attributes, boolean notifyDevice) {
         TopicPartitionInfo tpi = partitionService.resolve(ServiceType.TB_CORE, tenantId, entityId);
         if (currentPartitions.contains(tpi)) {
             if (subscriptionManagerService.isPresent()) {
@@ -353,7 +361,7 @@ public class DefaultTelemetrySubscriptionService extends AbstractSubscriptionSer
         }
     }
 
-    private void onAttributesDelete(TenantId tenantId, EntityId entityId, String scope, List<String> keys, boolean notifyDevice) {
+    private void onAttributesDelete(@NotNull TenantId tenantId, @NotNull EntityId entityId, String scope, List<String> keys, boolean notifyDevice) {
         TopicPartitionInfo tpi = partitionService.resolve(ServiceType.TB_CORE, tenantId, entityId);
         if (currentPartitions.contains(tpi)) {
             if (subscriptionManagerService.isPresent()) {
@@ -367,7 +375,7 @@ public class DefaultTelemetrySubscriptionService extends AbstractSubscriptionSer
         }
     }
 
-    private void onTimeSeriesUpdate(TenantId tenantId, EntityId entityId, List<TsKvEntry> ts) {
+    private void onTimeSeriesUpdate(@NotNull TenantId tenantId, @NotNull EntityId entityId, @NotNull List<TsKvEntry> ts) {
         TopicPartitionInfo tpi = partitionService.resolve(ServiceType.TB_CORE, tenantId, entityId);
         if (currentPartitions.contains(tpi)) {
             if (subscriptionManagerService.isPresent()) {
@@ -381,12 +389,12 @@ public class DefaultTelemetrySubscriptionService extends AbstractSubscriptionSer
         }
     }
 
-    private void onTimeSeriesDelete(TenantId tenantId, EntityId entityId, List<String> keys, List<TsKvLatestRemovingResult> ts) {
+    private void onTimeSeriesDelete(@NotNull TenantId tenantId, @NotNull EntityId entityId, List<String> keys, @NotNull List<TsKvLatestRemovingResult> ts) {
         TopicPartitionInfo tpi = partitionService.resolve(ServiceType.TB_CORE, tenantId, entityId);
         if (currentPartitions.contains(tpi)) {
             if (subscriptionManagerService.isPresent()) {
-                List<TsKvEntry> updated = new ArrayList<>();
-                List<String> deleted = new ArrayList<>();
+                @NotNull List<TsKvEntry> updated = new ArrayList<>();
+                @NotNull List<String> deleted = new ArrayList<>();
 
                 ts.stream().filter(Objects::nonNull).forEach(res -> {
                     if (res.isRemoved()) {
@@ -409,7 +417,7 @@ public class DefaultTelemetrySubscriptionService extends AbstractSubscriptionSer
         }
     }
 
-    private <S> void addVoidCallback(ListenableFuture<S> saveFuture, final FutureCallback<Void> callback) {
+    private <S> void addVoidCallback(@NotNull ListenableFuture<S> saveFuture, @NotNull final FutureCallback<Void> callback) {
         Futures.addCallback(saveFuture, new FutureCallback<S>() {
             @Override
             public void onSuccess(@Nullable S result) {
@@ -423,7 +431,7 @@ public class DefaultTelemetrySubscriptionService extends AbstractSubscriptionSer
         }, tsCallBackExecutor);
     }
 
-    private <S> void addMainCallback(ListenableFuture<S> saveFuture, final FutureCallback<S> callback) {
+    private <S> void addMainCallback(@NotNull ListenableFuture<S> saveFuture, @NotNull final FutureCallback<S> callback) {
         Futures.addCallback(saveFuture, new FutureCallback<S>() {
             @Override
             public void onSuccess(@Nullable S result) {
@@ -437,7 +445,7 @@ public class DefaultTelemetrySubscriptionService extends AbstractSubscriptionSer
         }, tsCallBackExecutor);
     }
 
-    private void checkInternalEntity(EntityId entityId) {
+    private void checkInternalEntity(@NotNull EntityId entityId) {
         if (EntityType.API_USAGE_STATE.equals(entityId.getEntityType())) {
             throw new RuntimeException("Can't update API Usage State!");
         }

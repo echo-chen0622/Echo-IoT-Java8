@@ -3,283 +3,157 @@ package org.echoiot.server.install;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.service.component.ComponentDiscoveryService;
 import org.echoiot.server.service.install.*;
-import org.echoiot.server.service.install.migrate.EntitiesMigrateService;
-import org.echoiot.server.service.install.migrate.TsLatestMigrateService;
 import org.echoiot.server.service.install.update.CacheCleanupService;
 import org.echoiot.server.service.install.update.DataUpdateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+
+/**
+ * 初始化类，用来进行初始化操作，主要是创建数据库，以及初始化数据 demo。
+ *
+ * @author Echo
+ */
 @Service
 @Profile("install")
 @Slf4j
 public class EchoiotInstallService {
 
+    /**
+     * 是否是升级
+     */
     @Value("${install.upgrade:false}")
     private Boolean isUpgrade;
 
-    @Value("${install.upgrade.from_version:1.2.3}")
+    /**
+     * 从哪个版本开始的升级 --- 默认 1.0.0 版本
+     */
+    @Value("${install.upgrade.from_version:1.0.0}")
     private String upgradeFromVersion;
 
+    /**
+     * 是否加载 demo 数据
+     */
     @Value("${install.load_demo:false}")
     private Boolean loadDemo;
 
-    @Autowired
+    @Resource
     private EntityDatabaseSchemaService entityDatabaseSchemaService;
 
     @Autowired(required = false)
     private NoSqlKeyspaceService noSqlKeyspaceService;
 
-    @Autowired
+    @Resource
     private TsDatabaseSchemaService tsDatabaseSchemaService;
 
     @Autowired(required = false)
     private TsLatestDatabaseSchemaService tsLatestDatabaseSchemaService;
 
-    @Autowired
+    @Resource
     private DatabaseEntitiesUpgradeService databaseEntitiesUpgradeService;
 
+    /**
+     * 数据升级服务。数据库支持不同类型的服务，所以，这里spring boot自动装配找不到应该用哪个服务。不是问题
+     */
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired(required = false)
     private DatabaseTsUpgradeService databaseTsUpgradeService;
 
-    @Autowired
+    @Resource
     private ComponentDiscoveryService componentDiscoveryService;
 
-    @Autowired
+    @Resource
     private ApplicationContext context;
 
-    @Autowired
+    @Resource
     private SystemDataLoaderService systemDataLoaderService;
 
-    @Autowired
+    @Resource
     private DataUpdateService dataUpdateService;
 
-    @Autowired
+    @Resource
     private CacheCleanupService cacheCleanupService;
 
-    @Autowired(required = false)
-    private EntitiesMigrateService entitiesMigrateService;
+    /**
+     * 执行安装或者升级程序
+     */
+    @SuppressWarnings({"AlibabaSwitchStatement", "java:S128","java:S1192"})
+    public void performInstall() throws Exception {
+        if (Boolean.TRUE.equals(isUpgrade)) {
+            log.info("开始 Echoiot 升级 , 现版本: {} ...", upgradeFromVersion);
 
-    @Autowired(required = false)
-    private TsLatestMigrateService latestMigrateService;
+            // 清空历史缓存
+            cacheCleanupService.clearCache(upgradeFromVersion);
 
-    public void performInstall() {
-        try {
-            if (Boolean.TRUE.equals(isUpgrade)) {
-                log.info("Starting Echoiot Upgrade from version {} ...", upgradeFromVersion);
-
-                cacheCleanupService.clearCache(upgradeFromVersion);
-
-                if ("2.5.0-cassandra".equals(upgradeFromVersion)) {
-                    log.info("Migrating Echoiot entities data from cassandra to SQL database ...");
-                    entitiesMigrateService.migrate();
-                    log.info("Updating system data...");
-                    systemDataLoaderService.updateSystemWidgets();
-                } else if ("3.0.1-cassandra".equals(upgradeFromVersion)) {
-                    log.info("Migrating Echoiot latest timeseries data from cassandra to SQL database ...");
-                    latestMigrateService.migrate();
-                } else {
-                    switch (upgradeFromVersion) {
-                        case "1.2.3":
-                            //NOSONAR, Need to execute gradual upgrade starting from upgradeFromVersion
-                            log.info("Upgrading Echoiot from version 1.2.3 to 1.3.0 ...");
-
-                            databaseEntitiesUpgradeService.upgradeDatabase("1.2.3");
-
-                        case "1.3.0":
-                            //NOSONAR, Need to execute gradual upgrade starting from upgradeFromVersion
-                            log.info("Upgrading Echoiot from version 1.3.0 to 1.3.1 ...");
-
-                            databaseEntitiesUpgradeService.upgradeDatabase("1.3.0");
-
-                        case "1.3.1":
-                            //NOSONAR, Need to execute gradual upgrade starting from upgradeFromVersion
-                            log.info("Upgrading Echoiot from version 1.3.1 to 1.4.0 ...");
-
-                            databaseEntitiesUpgradeService.upgradeDatabase("1.3.1");
-
-                        case "1.4.0":
-                            log.info("Upgrading Echoiot from version 1.4.0 to 2.0.0 ...");
-
-                            databaseEntitiesUpgradeService.upgradeDatabase("1.4.0");
-
-                            dataUpdateService.updateData("1.4.0");
-
-                        case "2.0.0":
-                            log.info("Upgrading Echoiot from version 2.0.0 to 2.1.1 ...");
-
-                            databaseEntitiesUpgradeService.upgradeDatabase("2.0.0");
-
-                        case "2.1.1":
-                            log.info("Upgrading Echoiot from version 2.1.1 to 2.1.2 ...");
-
-                            databaseEntitiesUpgradeService.upgradeDatabase("2.1.1");
-                        case "2.1.3":
-                            log.info("Upgrading Echoiot from version 2.1.3 to 2.2.0 ...");
-
-                            databaseEntitiesUpgradeService.upgradeDatabase("2.1.3");
-
-                        case "2.3.0":
-                            log.info("Upgrading Echoiot from version 2.3.0 to 2.3.1 ...");
-
-                            databaseEntitiesUpgradeService.upgradeDatabase("2.3.0");
-
-                        case "2.3.1":
-                            log.info("Upgrading Echoiot from version 2.3.1 to 2.4.0 ...");
-
-                            databaseEntitiesUpgradeService.upgradeDatabase("2.3.1");
-
-                        case "2.4.0":
-                            log.info("Upgrading Echoiot from version 2.4.0 to 2.4.1 ...");
-
-                        case "2.4.1":
-                            log.info("Upgrading Echoiot from version 2.4.1 to 2.4.2 ...");
-
-                            databaseEntitiesUpgradeService.upgradeDatabase("2.4.1");
-                        case "2.4.2":
-                            log.info("Upgrading Echoiot from version 2.4.2 to 2.4.3 ...");
-
-                            databaseEntitiesUpgradeService.upgradeDatabase("2.4.2");
-
-                        case "2.4.3":
-                            log.info("Upgrading Echoiot from version 2.4.3 to 2.5 ...");
-
-                            if (databaseTsUpgradeService != null) {
-                                databaseTsUpgradeService.upgradeDatabase("2.4.3");
-                            }
-                            databaseEntitiesUpgradeService.upgradeDatabase("2.4.3");
-                        case "2.5.0":
-                            log.info("Upgrading Echoiot from version 2.5.0 to 2.5.1 ...");
-                            if (databaseTsUpgradeService != null) {
-                                databaseTsUpgradeService.upgradeDatabase("2.5.0");
-                            }
-                        case "2.5.1":
-                            log.info("Upgrading Echoiot from version 2.5.1 to 3.0.0 ...");
-                        case "3.0.1":
-                            log.info("Upgrading Echoiot from version 3.0.1 to 3.1.0 ...");
-                            databaseEntitiesUpgradeService.upgradeDatabase("3.0.1");
-                            dataUpdateService.updateData("3.0.1");
-                        case "3.1.0":
-                            log.info("Upgrading Echoiot from version 3.1.0 to 3.1.1 ...");
-                            databaseEntitiesUpgradeService.upgradeDatabase("3.1.0");
-                        case "3.1.1":
-                            log.info("Upgrading Echoiot from version 3.1.1 to 3.2.0 ...");
-                            if (databaseTsUpgradeService != null) {
-                                databaseTsUpgradeService.upgradeDatabase("3.1.1");
-                            }
-                            databaseEntitiesUpgradeService.upgradeDatabase("3.1.1");
-                            dataUpdateService.updateData("3.1.1");
-                            systemDataLoaderService.createOAuth2Templates();
-                        case "3.2.0":
-                            log.info("Upgrading Echoiot from version 3.2.0 to 3.2.1 ...");
-                            databaseEntitiesUpgradeService.upgradeDatabase("3.2.0");
-                        case "3.2.1":
-                            log.info("Upgrading Echoiot from version 3.2.1 to 3.2.2 ...");
-                            if (databaseTsUpgradeService != null) {
-                                databaseTsUpgradeService.upgradeDatabase("3.2.1");
-                            }
-                            databaseEntitiesUpgradeService.upgradeDatabase("3.2.1");
-                        case "3.2.2":
-                            log.info("Upgrading Echoiot from version 3.2.2 to 3.3.0 ...");
-                            if (databaseTsUpgradeService != null) {
-                                databaseTsUpgradeService.upgradeDatabase("3.2.2");
-                            }
-                            databaseEntitiesUpgradeService.upgradeDatabase("3.2.2");
-
-                            dataUpdateService.updateData("3.2.2");
-                            systemDataLoaderService.createOAuth2Templates();
-                        case "3.3.0":
-                            log.info("Upgrading Echoiot from version 3.3.0 to 3.3.1 ...");
-                        case "3.3.1":
-                            log.info("Upgrading Echoiot from version 3.3.1 to 3.3.2 ...");
-                        case "3.3.2":
-                            log.info("Upgrading Echoiot from version 3.3.2 to 3.3.3 ...");
-                            databaseEntitiesUpgradeService.upgradeDatabase("3.3.2");
-                            dataUpdateService.updateData("3.3.2");
-                        case "3.3.3":
-                            log.info("Upgrading Echoiot from version 3.3.3 to 3.3.4 ...");
-                            databaseEntitiesUpgradeService.upgradeDatabase("3.3.3");
-                        case "3.3.4":
-                            log.info("Upgrading Echoiot from version 3.3.4 to 3.4.0 ...");
-                            databaseEntitiesUpgradeService.upgradeDatabase("3.3.4");
-                            dataUpdateService.updateData("3.3.4");
-                        case "3.4.0":
-                            log.info("Upgrading Echoiot from version 3.4.0 to 3.4.1 ...");
-                            databaseEntitiesUpgradeService.upgradeDatabase("3.4.0");
-                            dataUpdateService.updateData("3.4.0");
-                        case "3.4.1":
-                            log.info("Upgrading Echoiot from version 3.4.1 to 3.4.2 ...");
-                            databaseEntitiesUpgradeService.upgradeDatabase("3.4.1");
-                            dataUpdateService.updateData("3.4.1");
-                            log.info("Updating system data...");
-                            systemDataLoaderService.updateSystemWidgets();
-                        case "3.4.2":
-                            log.info("Upgrading Echoiot from version 3.4.2 to 3.4.3 ...");
-                        case "3.4.3":
-                            log.info("Upgrading Echoiot from version 3.4.3 to 3.4.4 ...");
-                            break;
-
-                        //TODO update CacheCleanupService on the next version upgrade
-
-                        default:
-                            throw new RuntimeException("Unable to upgrade Echoiot, unsupported fromVersion: " + upgradeFromVersion);
-
+            switch (upgradeFromVersion) {
+                case "1.0.0":
+                    log.info("Upgrading Echoiot from version 1.0.0 to 1.0.1 ...");
+                    // 升级数据库
+                    if (databaseTsUpgradeService != null) {
+                        databaseTsUpgradeService.upgradeDatabase("1.0.0");
                     }
-                }
-                log.info("Upgrade finished successfully!");
+                    // 升级实体数据库
+                    databaseEntitiesUpgradeService.upgradeDatabase("1.0.0");
+                    // 升级数据
+                    dataUpdateService.updateData("1.0.0");
+                    // 升级系统数据
+                    systemDataLoaderService.updateSystemWidgets();
+                case "1.0.1":
+                    log.info("Upgrading Echoiot from version 1.0.1 to 1.0.2 ...");
+                    break;
 
-            } else {
+                //dupdate CacheCleanupService on the next version upgrade
 
-                log.info("Starting Echoiot Installation...");
+                default:
+                    throw new RuntimeException("Unable to upgrade Echoiot, unsupported fromVersion: " + upgradeFromVersion);
 
-                log.info("Installing DataBase schema for entities...");
+            }
+            log.info("Upgrade finished successfully!");
 
-                entityDatabaseSchemaService.createDatabaseSchema();
+        } else {
 
-                log.info("Installing DataBase schema for timeseries...");
+            log.info("Starting Echoiot Installation...");
 
-                if (noSqlKeyspaceService != null) {
-                    noSqlKeyspaceService.createDatabaseSchema();
-                }
+            log.info("Installing DataBase schema for entities...");
 
-                tsDatabaseSchemaService.createDatabaseSchema();
+            entityDatabaseSchemaService.createDatabaseSchema();
 
-                if (tsLatestDatabaseSchemaService != null) {
-                    tsLatestDatabaseSchemaService.createDatabaseSchema();
-                }
+            log.info("Installing DataBase schema for timeseries...");
 
-                log.info("Loading system data...");
-
-                componentDiscoveryService.discoverComponents();
-
-                systemDataLoaderService.createSysAdmin();
-                systemDataLoaderService.createDefaultTenantProfiles();
-                systemDataLoaderService.createAdminSettings();
-                systemDataLoaderService.createRandomJwtSettings();
-                systemDataLoaderService.loadSystemWidgets();
-                systemDataLoaderService.createOAuth2Templates();
-                systemDataLoaderService.createQueues();
-//                systemDataLoaderService.loadSystemPlugins();
-//                systemDataLoaderService.loadSystemRules();
-
-                if (loadDemo) {
-                    log.info("Loading demo data...");
-                    systemDataLoaderService.loadDemoData();
-                }
-                log.info("Installation finished successfully!");
+            if (noSqlKeyspaceService != null) {
+                noSqlKeyspaceService.createDatabaseSchema();
             }
 
+            tsDatabaseSchemaService.createDatabaseSchema();
 
-        } catch (Exception e) {
-            log.error("Unexpected error during Echoiot installation!", e);
-            throw new EchoiotInstallException("Unexpected error during Echoiot installation!", e);
-        } finally {
-            SpringApplication.exit(context);
+            if (tsLatestDatabaseSchemaService != null) {
+                tsLatestDatabaseSchemaService.createDatabaseSchema();
+            }
+
+            log.info("Loading system data...");
+
+            componentDiscoveryService.discoverComponents();
+
+            systemDataLoaderService.createSysAdmin();
+            systemDataLoaderService.createDefaultTenantProfiles();
+            systemDataLoaderService.createAdminSettings();
+            systemDataLoaderService.createRandomJwtSettings();
+            systemDataLoaderService.loadSystemWidgets();
+            systemDataLoaderService.createOAuth2Templates();
+            systemDataLoaderService.createQueues();
+
+            if (Boolean.TRUE.equals(loadDemo)) {
+                log.info("Loading demo data...");
+                systemDataLoaderService.loadDemoData();
+            }
+            log.info("Installation finished successfully!");
         }
+
+
     }
 
 }

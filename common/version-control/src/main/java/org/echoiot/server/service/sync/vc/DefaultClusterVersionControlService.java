@@ -31,6 +31,7 @@ import org.echoiot.server.queue.provider.TbQueueProducerProvider;
 import org.echoiot.server.queue.provider.TbVersionControlQueueFactory;
 import org.echoiot.server.queue.util.DataDecodingEncodingService;
 import org.echoiot.server.queue.util.TbVersionControlComponent;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -56,11 +57,17 @@ import static org.echoiot.server.service.sync.vc.DefaultGitRepositoryService.fro
 @RequiredArgsConstructor
 public class DefaultClusterVersionControlService extends TbApplicationEventListener<PartitionChangeEvent> implements ClusterVersionControlService {
 
+    @NotNull
     private final PartitionService partitionService;
+    @NotNull
     private final TbQueueProducerProvider producerProvider;
+    @NotNull
     private final TbVersionControlQueueFactory queueFactory;
+    @NotNull
     private final DataDecodingEncodingService encodingService;
+    @NotNull
     private final GitRepositoryService vcService;
+    @NotNull
     private final NotificationsTopicService notificationsTopicService;
 
     private final ConcurrentMap<TenantId, Lock> tenantRepoLocks = new ConcurrentHashMap<>();
@@ -87,7 +94,7 @@ public class DefaultClusterVersionControlService extends TbApplicationEventListe
     @PostConstruct
     public void init() {
         consumerExecutor = Executors.newSingleThreadExecutor(EchoiotThreadFactory.forName("vc-consumer"));
-        var threadFactory = EchoiotThreadFactory.forName("vc-io-thread");
+        @NotNull var threadFactory = EchoiotThreadFactory.forName("vc-io-thread");
         for (int i = 0; i < ioPoolSize; i++) {
             ioThreads.add(MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor(threadFactory)));
         }
@@ -108,10 +115,10 @@ public class DefaultClusterVersionControlService extends TbApplicationEventListe
     }
 
     @Override
-    protected void onTbApplicationEvent(PartitionChangeEvent event) {
+    protected void onTbApplicationEvent(@NotNull PartitionChangeEvent event) {
         for (TenantId tenantId : vcService.getActiveRepositoryTenants()) {
             if (!partitionService.resolve(ServiceType.TB_VC_EXECUTOR, tenantId, tenantId).isMyPartition()) {
-                var lock = getRepoLock(tenantId);
+                @NotNull var lock = getRepoLock(tenantId);
                 lock.lock();
                 try {
                     pendingCommitMap.remove(tenantId);
@@ -127,7 +134,7 @@ public class DefaultClusterVersionControlService extends TbApplicationEventListe
     }
 
     @Override
-    protected boolean filterTbApplicationEvent(PartitionChangeEvent event) {
+    protected boolean filterTbApplicationEvent(@NotNull PartitionChangeEvent event) {
         return ServiceType.TB_VC_EXECUTOR.equals(event.getServiceType());
     }
 
@@ -137,21 +144,21 @@ public class DefaultClusterVersionControlService extends TbApplicationEventListe
         consumerExecutor.execute(() -> consumerLoop(consumer));
     }
 
-    void consumerLoop(TbQueueConsumer<TbProtoQueueMsg<ToVersionControlServiceMsg>> consumer) {
+    void consumerLoop(@NotNull TbQueueConsumer<TbProtoQueueMsg<ToVersionControlServiceMsg>> consumer) {
         while (!stopped && !consumer.isStopped()) {
-            List<ListenableFuture<?>> futures = new ArrayList<>();
+            @NotNull List<ListenableFuture<?>> futures = new ArrayList<>();
             try {
                 List<TbProtoQueueMsg<ToVersionControlServiceMsg>> msgs = consumer.poll(pollDuration);
                 if (msgs.isEmpty()) {
                     continue;
                 }
-                for (TbProtoQueueMsg<ToVersionControlServiceMsg> msgWrapper : msgs) {
+                for (@NotNull TbProtoQueueMsg<ToVersionControlServiceMsg> msgWrapper : msgs) {
                     ToVersionControlServiceMsg msg = msgWrapper.getValue();
-                    var ctx = new VersionControlRequestCtx(msg, msg.hasClearRepositoryRequest() ? null : getEntitiesVersionControlSettings(msg));
+                    @NotNull var ctx = new VersionControlRequestCtx(msg, msg.hasClearRepositoryRequest() ? null : getEntitiesVersionControlSettings(msg));
                     long startTs = System.currentTimeMillis();
                     log.trace("[{}][{}] RECEIVED task: {}", ctx.getTenantId(), ctx.getRequestId(), msg);
                     int threadIdx = Math.abs(ctx.getTenantId().hashCode() % ioPoolSize);
-                    ListenableFuture<Void> future = ioThreads.get(threadIdx).submit(() -> processMessage(ctx, msg));
+                    @NotNull ListenableFuture<Void> future = ioThreads.get(threadIdx).submit(() -> processMessage(ctx, msg));
                     logTaskExecution(ctx, future, startTs);
                     futures.add(future);
                 }
@@ -175,8 +182,9 @@ public class DefaultClusterVersionControlService extends TbApplicationEventListe
         log.info("TB Version Control request consumer stopped.");
     }
 
-    private Void processMessage(VersionControlRequestCtx ctx, ToVersionControlServiceMsg msg) {
-        var lock = getRepoLock(ctx.getTenantId());
+    @org.jetbrains.annotations.Nullable
+    private Void processMessage(@NotNull VersionControlRequestCtx ctx, @NotNull ToVersionControlServiceMsg msg) {
+        @NotNull var lock = getRepoLock(ctx.getTenantId());
         lock.lock();
         try {
             if (msg.hasClearRepositoryRequest()) {
@@ -219,19 +227,19 @@ public class DefaultClusterVersionControlService extends TbApplicationEventListe
         return null;
     }
 
-    private void handleEntitiesContentRequest(VersionControlRequestCtx ctx, EntitiesContentRequestMsg request) throws Exception {
-        var entityType = EntityType.valueOf(request.getEntityType());
-        String path = getRelativePath(entityType, null);
-        var ids = vcService.listEntitiesAtVersion(ctx.getTenantId(), request.getVersionId(), path)
-                .stream().skip(request.getOffset()).limit(request.getLimit()).collect(Collectors.toList());
+    private void handleEntitiesContentRequest(@NotNull VersionControlRequestCtx ctx, @NotNull EntitiesContentRequestMsg request) throws Exception {
+        @NotNull var entityType = EntityType.valueOf(request.getEntityType());
+        @NotNull String path = getRelativePath(entityType, null);
+        @NotNull var ids = vcService.listEntitiesAtVersion(ctx.getTenantId(), request.getVersionId(), path)
+                                    .stream().skip(request.getOffset()).limit(request.getLimit()).collect(Collectors.toList());
         if (!ids.isEmpty()) {
             for (int i = 0; i < ids.size(); i++){
                 VersionedEntityInfo info = ids.get(i);
                 var data = vcService.getFileContentAtCommit(ctx.getTenantId(),
                         getRelativePath(info.getExternalId().getEntityType(), info.getExternalId().getId().toString()), request.getVersionId());
-                Iterable<String> dataChunks = StringUtils.split(data, msgChunkSize);
+                @NotNull Iterable<String> dataChunks = StringUtils.split(data, msgChunkSize);
                 int chunksCount = Iterables.size(dataChunks);
-                AtomicInteger chunkIndex = new AtomicInteger();
+                @NotNull AtomicInteger chunkIndex = new AtomicInteger();
                 int itemIdx = i;
                 dataChunks.forEach(chunk -> {
                     EntitiesContentResponseMsg.Builder response = EntitiesContentResponseMsg.newBuilder()
@@ -252,15 +260,15 @@ public class DefaultClusterVersionControlService extends TbApplicationEventListe
         }
     }
 
-    private void handleEntityContentRequest(VersionControlRequestCtx ctx, EntityContentRequestMsg request) throws IOException {
-        String path = getRelativePath(EntityType.valueOf(request.getEntityType()), new UUID(request.getEntityIdMSB(), request.getEntityIdLSB()).toString());
+    private void handleEntityContentRequest(@NotNull VersionControlRequestCtx ctx, @NotNull EntityContentRequestMsg request) throws IOException {
+        @NotNull String path = getRelativePath(EntityType.valueOf(request.getEntityType()), new UUID(request.getEntityIdMSB(), request.getEntityIdLSB()).toString());
         String data = vcService.getFileContentAtCommit(ctx.getTenantId(), path, request.getVersionId());
 
-        Iterable<String> dataChunks = StringUtils.split(data, msgChunkSize);
+        @NotNull Iterable<String> dataChunks = StringUtils.split(data, msgChunkSize);
         String chunkedMsgId = UUID.randomUUID().toString();
         int chunksCount = Iterables.size(dataChunks);
 
-        AtomicInteger chunkIndex = new AtomicInteger();
+        @NotNull AtomicInteger chunkIndex = new AtomicInteger();
         dataChunks.forEach(chunk -> {
             log.trace("[{}] sending chunk {} for 'getEntity'", chunkedMsgId, chunkIndex.get());
             reply(ctx, Optional.empty(), builder -> builder.setEntityContentResponse(EntityContentResponseMsg.newBuilder()
@@ -269,10 +277,10 @@ public class DefaultClusterVersionControlService extends TbApplicationEventListe
         });
     }
 
-    private void handleListVersions(VersionControlRequestCtx ctx, ListVersionsRequestMsg request) throws Exception {
-        String path;
+    private void handleListVersions(@NotNull VersionControlRequestCtx ctx, @NotNull ListVersionsRequestMsg request) throws Exception {
+        @org.jetbrains.annotations.Nullable String path;
         if (StringUtils.isNotEmpty(request.getEntityType())) {
-            var entityType = EntityType.valueOf(request.getEntityType());
+            @NotNull var entityType = EntityType.valueOf(request.getEntityType());
             if (request.getEntityIdLSB() != 0 || request.getEntityIdMSB() != 0) {
                 path = getRelativePath(entityType, new UUID(request.getEntityIdMSB(), request.getEntityIdLSB()).toString());
             } else {
@@ -281,9 +289,9 @@ public class DefaultClusterVersionControlService extends TbApplicationEventListe
         } else {
             path = null;
         }
-        SortOrder sortOrder = null;
+        @org.jetbrains.annotations.Nullable SortOrder sortOrder = null;
         if (StringUtils.isNotEmpty(request.getSortProperty())) {
-            var direction = SortOrder.Direction.DESC;
+            @NotNull var direction = SortOrder.Direction.DESC;
             if (StringUtils.isNotEmpty(request.getSortDirection())) {
                 direction = SortOrder.Direction.valueOf(request.getSortDirection());
             }
@@ -302,8 +310,8 @@ public class DefaultClusterVersionControlService extends TbApplicationEventListe
         );
     }
 
-    private void handleListEntities(VersionControlRequestCtx ctx, ListEntitiesRequestMsg request) throws Exception {
-        EntityType entityType = StringUtils.isNotEmpty(request.getEntityType()) ? EntityType.valueOf(request.getEntityType()) : null;
+    private void handleListEntities(@NotNull VersionControlRequestCtx ctx, @NotNull ListEntitiesRequestMsg request) throws Exception {
+        @org.jetbrains.annotations.Nullable EntityType entityType = StringUtils.isNotEmpty(request.getEntityType()) ? EntityType.valueOf(request.getEntityType()) : null;
         var path = entityType != null ? getRelativePath(entityType, null) : null;
         var data = vcService.listEntitiesAtVersion(ctx.getTenantId(), request.getVersionId(), path);
         reply(ctx, Optional.empty(), builder ->
@@ -316,17 +324,17 @@ public class DefaultClusterVersionControlService extends TbApplicationEventListe
                         ).collect(Collectors.toList()))));
     }
 
-    private void handleListBranches(VersionControlRequestCtx ctx, ListBranchesRequestMsg request) {
-        var branches = vcService.listBranches(ctx.getTenantId()).stream()
-                .map(branchInfo -> BranchInfoProto.newBuilder()
+    private void handleListBranches(@NotNull VersionControlRequestCtx ctx, ListBranchesRequestMsg request) {
+        @NotNull var branches = vcService.listBranches(ctx.getTenantId()).stream()
+                                         .map(branchInfo -> BranchInfoProto.newBuilder()
                         .setName(branchInfo.getName())
                         .setIsDefault(branchInfo.isDefault()).build()).collect(Collectors.toList());
         reply(ctx, Optional.empty(), builder -> builder.setListBranchesResponse(ListBranchesResponseMsg.newBuilder().addAllBranches(branches)));
     }
 
-    private void handleVersionsDiffRequest(VersionControlRequestCtx ctx, TransportProtos.VersionsDiffRequestMsg request) throws IOException {
-        List<TransportProtos.EntityVersionsDiff> diffList = vcService.getVersionsDiffList(ctx.getTenantId(), request.getPath(), request.getVersionId1(), request.getVersionId2()).stream()
-                .map(diff -> {
+    private void handleVersionsDiffRequest(@NotNull VersionControlRequestCtx ctx, @NotNull TransportProtos.VersionsDiffRequestMsg request) throws IOException {
+        @NotNull List<TransportProtos.EntityVersionsDiff> diffList = vcService.getVersionsDiffList(ctx.getTenantId(), request.getPath(), request.getVersionId1(), request.getVersionId2()).stream()
+                                                                              .map(diff -> {
                     EntityId entityId = fromRelativePath(diff.getFilePath());
                     return TransportProtos.EntityVersionsDiff.newBuilder()
                             .setEntityType(entityId.getEntityType().name())
@@ -337,15 +345,15 @@ public class DefaultClusterVersionControlService extends TbApplicationEventListe
                             .setRawDiff(diff.getDiffStringValue())
                             .build();
                 })
-                .collect(Collectors.toList());
+                                                                              .collect(Collectors.toList());
 
         reply(ctx, builder -> builder.setVersionsDiffResponse(TransportProtos.VersionsDiffResponseMsg.newBuilder()
                 .addAllDiff(diffList)));
     }
 
-    private void handleCommitRequest(VersionControlRequestCtx ctx, CommitRequestMsg request) throws Exception {
+    private void handleCommitRequest(@NotNull VersionControlRequestCtx ctx, @NotNull CommitRequestMsg request) throws Exception {
         var tenantId = ctx.getTenantId();
-        UUID txId = UUID.fromString(request.getTxId());
+        @NotNull UUID txId = UUID.fromString(request.getTxId());
         if (request.hasPrepareMsg()) {
             vcService.fetch(ctx.getTenantId());
             prepareCommit(ctx, txId, request.getPrepareMsg());
@@ -377,10 +385,10 @@ public class DefaultClusterVersionControlService extends TbApplicationEventListe
         }
     }
 
-    private void prepareCommit(VersionControlRequestCtx ctx, UUID txId, PrepareMsg prepareMsg) {
+    private void prepareCommit(@NotNull VersionControlRequestCtx ctx, @NotNull UUID txId, @NotNull PrepareMsg prepareMsg) {
         var tenantId = ctx.getTenantId();
-        var pendingCommit = new PendingCommit(tenantId, ctx.getNodeId(), txId, prepareMsg.getBranchName(),
-                prepareMsg.getCommitMsg(), prepareMsg.getAuthorName(), prepareMsg.getAuthorEmail());
+        @NotNull var pendingCommit = new PendingCommit(tenantId, ctx.getNodeId(), txId, prepareMsg.getBranchName(),
+                                                       prepareMsg.getCommitMsg(), prepareMsg.getAuthorName(), prepareMsg.getAuthorEmail());
         PendingCommit old = pendingCommitMap.get(tenantId);
         if (old != null) {
             doAbortCurrentCommit(tenantId, old);
@@ -389,18 +397,18 @@ public class DefaultClusterVersionControlService extends TbApplicationEventListe
         vcService.prepareCommit(pendingCommit);
     }
 
-    private void deleteFromCommit(VersionControlRequestCtx ctx, PendingCommit commit, DeleteMsg deleteMsg) throws IOException {
+    private void deleteFromCommit(VersionControlRequestCtx ctx, PendingCommit commit, @NotNull DeleteMsg deleteMsg) throws IOException {
         vcService.deleteFolderContent(commit, deleteMsg.getRelativePath());
     }
 
-    private void addToCommit(VersionControlRequestCtx ctx, PendingCommit commit, AddMsg addMsg) throws IOException {
+    private void addToCommit(VersionControlRequestCtx ctx, @NotNull PendingCommit commit, @NotNull AddMsg addMsg) throws IOException {
         log.trace("[{}] received chunk {} for 'addToCommit'", addMsg.getChunkedMsgId(), addMsg.getChunkIndex());
-        Map<String, String[]> chunkedMsgs = commit.getChunkedMsgs();
-        String[] msgChunks = chunkedMsgs.computeIfAbsent(addMsg.getChunkedMsgId(), id -> new String[addMsg.getChunksCount()]);
+        @NotNull Map<String, String[]> chunkedMsgs = commit.getChunkedMsgs();
+        @NotNull String[] msgChunks = chunkedMsgs.computeIfAbsent(addMsg.getChunkedMsgId(), id -> new String[addMsg.getChunksCount()]);
         msgChunks[addMsg.getChunkIndex()] = addMsg.getEntityDataJsonChunk();
         if (CollectionsUtil.countNonNull(msgChunks) == msgChunks.length) {
             log.trace("[{}] collected all chunks for 'addToCommit'", addMsg.getChunkedMsgId());
-            String entityDataJson = String.join("", msgChunks);
+            @NotNull String entityDataJson = String.join("", msgChunks);
             chunkedMsgs.remove(addMsg.getChunkedMsgId());
             vcService.add(commit, addMsg.getRelativePath(), entityDataJson);
         }
@@ -416,7 +424,7 @@ public class DefaultClusterVersionControlService extends TbApplicationEventListe
         //TODO: push notification to core using old.getNodeId() to cancel old commit processing on the caller side.
     }
 
-    private void handleClearRepositoryCommand(VersionControlRequestCtx ctx) {
+    private void handleClearRepositoryCommand(@NotNull VersionControlRequestCtx ctx) {
         try {
             vcService.clearRepository(ctx.getTenantId());
             reply(ctx, Optional.empty());
@@ -426,7 +434,7 @@ public class DefaultClusterVersionControlService extends TbApplicationEventListe
         }
     }
 
-    private void handleInitRepositoryCommand(VersionControlRequestCtx ctx) {
+    private void handleInitRepositoryCommand(@NotNull VersionControlRequestCtx ctx) {
         try {
             vcService.initRepository(ctx.getTenantId(), ctx.getSettings());
             reply(ctx, Optional.empty());
@@ -437,7 +445,7 @@ public class DefaultClusterVersionControlService extends TbApplicationEventListe
     }
 
 
-    private void handleTestRepositoryCommand(VersionControlRequestCtx ctx) {
+    private void handleTestRepositoryCommand(@NotNull VersionControlRequestCtx ctx) {
         try {
             vcService.testRepository(ctx.getTenantId(), ctx.getSettings());
             reply(ctx, Optional.empty());
@@ -447,7 +455,7 @@ public class DefaultClusterVersionControlService extends TbApplicationEventListe
         }
     }
 
-    private void reply(VersionControlRequestCtx ctx, VersionCreationResult result) {
+    private void reply(@NotNull VersionControlRequestCtx ctx, @NotNull VersionCreationResult result) {
         var responseBuilder = CommitResponseMsg.newBuilder().setAdded(result.getAdded())
                 .setModified(result.getModified())
                 .setRemoved(result.getRemoved());
@@ -462,16 +470,16 @@ public class DefaultClusterVersionControlService extends TbApplicationEventListe
         reply(ctx, Optional.empty(), builder -> builder.setCommitResponse(responseBuilder));
     }
 
-    private void reply(VersionControlRequestCtx ctx, Optional<Exception> e) {
+    private void reply(@NotNull VersionControlRequestCtx ctx, @NotNull Optional<Exception> e) {
         reply(ctx, e, null);
     }
 
-    private void reply(VersionControlRequestCtx ctx, Function<VersionControlResponseMsg.Builder, VersionControlResponseMsg.Builder> enrichFunction) {
+    private void reply(@NotNull VersionControlRequestCtx ctx, Function<VersionControlResponseMsg.Builder, VersionControlResponseMsg.Builder> enrichFunction) {
         reply(ctx, Optional.empty(), enrichFunction);
     }
 
-    private void reply(VersionControlRequestCtx ctx, Optional<Exception> e, Function<VersionControlResponseMsg.Builder, VersionControlResponseMsg.Builder> enrichFunction) {
-        TopicPartitionInfo tpi = notificationsTopicService.getNotificationsTopic(ServiceType.TB_CORE, ctx.getNodeId());
+    private void reply(@NotNull VersionControlRequestCtx ctx, @NotNull Optional<Exception> e, @org.jetbrains.annotations.Nullable Function<VersionControlResponseMsg.Builder, VersionControlResponseMsg.Builder> enrichFunction) {
+        @NotNull TopicPartitionInfo tpi = notificationsTopicService.getNotificationsTopic(ServiceType.TB_CORE, ctx.getNodeId());
         VersionControlResponseMsg.Builder builder = VersionControlResponseMsg.newBuilder()
                 .setRequestIdMSB(ctx.getRequestId().getMostSignificantBits())
                 .setRequestIdLSB(ctx.getRequestId().getLeastSignificantBits());
@@ -493,7 +501,8 @@ public class DefaultClusterVersionControlService extends TbApplicationEventListe
         producer.send(tpi, new TbProtoQueueMsg<>(UUID.randomUUID(), msg), null);
     }
 
-    private RepositorySettings getEntitiesVersionControlSettings(ToVersionControlServiceMsg msg) {
+    @NotNull
+    private RepositorySettings getEntitiesVersionControlSettings(@NotNull ToVersionControlServiceMsg msg) {
         Optional<RepositorySettings> settingsOpt = encodingService.decode(msg.getVcSettings().toByteArray());
         if (settingsOpt.isPresent()) {
             return settingsOpt.get();
@@ -503,19 +512,21 @@ public class DefaultClusterVersionControlService extends TbApplicationEventListe
         }
     }
 
-    private String getRelativePath(EntityType entityType, String entityId) {
-        String path = entityType.name().toLowerCase();
+    @NotNull
+    private String getRelativePath(@NotNull EntityType entityType, @org.jetbrains.annotations.Nullable String entityId) {
+        @NotNull String path = entityType.name().toLowerCase();
         if (entityId != null) {
             path += "/" + entityId + ".json";
         }
         return path;
     }
 
+    @NotNull
     private Lock getRepoLock(TenantId tenantId) {
         return tenantRepoLocks.computeIfAbsent(tenantId, t -> new ReentrantLock(true));
     }
 
-    private void logTaskExecution(VersionControlRequestCtx ctx, ListenableFuture<Void> future, long startTs) {
+    private void logTaskExecution(@NotNull VersionControlRequestCtx ctx, @NotNull ListenableFuture<Void> future, long startTs) {
         if (log.isTraceEnabled()) {
             Futures.addCallback(future, new FutureCallback<Object>() {
 

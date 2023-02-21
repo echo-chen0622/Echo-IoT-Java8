@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.dao.service.PaginatedRemover;
 import org.echoiot.server.dao.service.Validator;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.data.id.RpcId;
@@ -23,16 +24,17 @@ public class BaseRpcService implements RpcService {
     public static final String INCORRECT_TENANT_ID = "Incorrect tenantId ";
     public static final String INCORRECT_RPC_ID = "Incorrect rpcId ";
 
+    @NotNull
     private final RpcDao rpcDao;
 
     @Override
-    public Rpc save(Rpc rpc) {
+    public Rpc save(@NotNull Rpc rpc) {
         log.trace("Executing save, [{}]", rpc);
         return rpcDao.save(rpc.getTenantId(), rpc);
     }
 
     @Override
-    public void deleteRpc(TenantId tenantId, RpcId rpcId) {
+    public void deleteRpc(TenantId tenantId, @NotNull RpcId rpcId) {
         log.trace("Executing deleteRpc, tenantId [{}], rpcId [{}]", tenantId, rpcId);
         validateId(tenantId, INCORRECT_TENANT_ID + tenantId);
         validateId(rpcId, INCORRECT_RPC_ID + rpcId);
@@ -47,7 +49,7 @@ public class BaseRpcService implements RpcService {
     }
 
     @Override
-    public Rpc findById(TenantId tenantId, RpcId rpcId) {
+    public Rpc findById(TenantId tenantId, @NotNull RpcId rpcId) {
         log.trace("Executing findById, tenantId [{}], rpcId [{}]", tenantId, rpcId);
         validateId(tenantId, INCORRECT_TENANT_ID + tenantId);
         validateId(rpcId, INCORRECT_RPC_ID + rpcId);
@@ -55,7 +57,7 @@ public class BaseRpcService implements RpcService {
     }
 
     @Override
-    public ListenableFuture<Rpc> findRpcByIdAsync(TenantId tenantId, RpcId rpcId) {
+    public ListenableFuture<Rpc> findRpcByIdAsync(TenantId tenantId, @NotNull RpcId rpcId) {
         log.trace("Executing findRpcByIdAsync, tenantId [{}], rpcId: [{}]", tenantId, rpcId);
         validateId(tenantId, INCORRECT_TENANT_ID + tenantId);
         validateId(rpcId, INCORRECT_RPC_ID + rpcId);
@@ -78,7 +80,7 @@ public class BaseRpcService implements RpcService {
         return rpcDao.findAllByDeviceId(tenantId, deviceId, pageLink);
     }
 
-    private PaginatedRemover<TenantId, Rpc> tenantRpcRemover =
+    private final PaginatedRemover<TenantId, Rpc> tenantRpcRemover =
             new PaginatedRemover<>() {
                 @Override
                 protected PageData<Rpc> findEntities(TenantId tenantId, TenantId id, PageLink pageLink) {
@@ -86,7 +88,7 @@ public class BaseRpcService implements RpcService {
                 }
 
                 @Override
-                protected void removeEntity(TenantId tenantId, Rpc entity) {
+                protected void removeEntity(TenantId tenantId, @NotNull Rpc entity) {
                     deleteRpc(tenantId, entity.getId());
                 }
             };

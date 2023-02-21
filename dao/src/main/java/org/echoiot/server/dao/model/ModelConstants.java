@@ -4,6 +4,7 @@ import com.datastax.oss.driver.api.core.uuid.Uuids;
 import org.apache.commons.lang3.ArrayUtils;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.kv.Aggregation;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
@@ -634,30 +635,34 @@ public class ModelConstants {
     protected static final String[] COUNT_AGGREGATION_COLUMNS = new String[]{count(LONG_VALUE_COLUMN), count(DOUBLE_VALUE_COLUMN), count(BOOLEAN_VALUE_COLUMN), count(STRING_VALUE_COLUMN), count(JSON_VALUE_COLUMN), max(TS_COLUMN)};
 
     protected static final String[] MIN_AGGREGATION_COLUMNS =
-            ArrayUtils.addAll(COUNT_AGGREGATION_COLUMNS, new String[]{min(LONG_VALUE_COLUMN), min(DOUBLE_VALUE_COLUMN), min(BOOLEAN_VALUE_COLUMN), min(STRING_VALUE_COLUMN), min(JSON_VALUE_COLUMN)});
+            ArrayUtils.addAll(COUNT_AGGREGATION_COLUMNS, min(LONG_VALUE_COLUMN), min(DOUBLE_VALUE_COLUMN), min(BOOLEAN_VALUE_COLUMN), min(STRING_VALUE_COLUMN), min(JSON_VALUE_COLUMN));
     protected static final String[] MAX_AGGREGATION_COLUMNS =
-            ArrayUtils.addAll(COUNT_AGGREGATION_COLUMNS, new String[]{max(LONG_VALUE_COLUMN), max(DOUBLE_VALUE_COLUMN), max(BOOLEAN_VALUE_COLUMN), max(STRING_VALUE_COLUMN), max(JSON_VALUE_COLUMN)});
+            ArrayUtils.addAll(COUNT_AGGREGATION_COLUMNS, max(LONG_VALUE_COLUMN), max(DOUBLE_VALUE_COLUMN), max(BOOLEAN_VALUE_COLUMN), max(STRING_VALUE_COLUMN), max(JSON_VALUE_COLUMN));
     protected static final String[] SUM_AGGREGATION_COLUMNS =
-            ArrayUtils.addAll(COUNT_AGGREGATION_COLUMNS, new String[]{sum(LONG_VALUE_COLUMN), sum(DOUBLE_VALUE_COLUMN)});
+            ArrayUtils.addAll(COUNT_AGGREGATION_COLUMNS, sum(LONG_VALUE_COLUMN), sum(DOUBLE_VALUE_COLUMN));
     protected static final String[] AVG_AGGREGATION_COLUMNS = SUM_AGGREGATION_COLUMNS;
 
+    @NotNull
     public static String min(String s) {
         return "min(" + s + ")";
     }
 
+    @NotNull
     public static String max(String s) {
         return "max(" + s + ")";
     }
 
+    @NotNull
     public static String sum(String s) {
         return "sum(" + s + ")";
     }
 
+    @NotNull
     public static String count(String s) {
         return "count(" + s + ")";
     }
 
-    public static String[] getFetchColumnNames(Aggregation aggregation) {
+    public static String[] getFetchColumnNames(@NotNull Aggregation aggregation) {
         switch (aggregation) {
             case NONE:
                 return NONE_AGGREGATION_COLUMNS;

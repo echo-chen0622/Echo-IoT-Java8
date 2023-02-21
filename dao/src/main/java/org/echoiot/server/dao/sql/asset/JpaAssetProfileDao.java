@@ -1,6 +1,8 @@
 package org.echoiot.server.dao.sql.asset;
 
 import org.echoiot.server.dao.model.sql.AssetProfileEntity;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
@@ -23,9 +25,10 @@ import java.util.UUID;
 @Component
 public class JpaAssetProfileDao extends JpaAbstractSearchTextDao<AssetProfileEntity, AssetProfile> implements AssetProfileDao {
 
-    @Autowired
+    @Resource
     private AssetProfileRepository assetProfileRepository;
 
+    @NotNull
     @Override
     protected Class<AssetProfileEntity> getEntityClass() {
         return AssetProfileEntity.class;
@@ -49,8 +52,9 @@ public class JpaAssetProfileDao extends JpaAbstractSearchTextDao<AssetProfileEnt
         return result;
     }
 
+    @NotNull
     @Override
-    public PageData<AssetProfile> findAssetProfiles(TenantId tenantId, PageLink pageLink) {
+    public PageData<AssetProfile> findAssetProfiles(@NotNull TenantId tenantId, @NotNull PageLink pageLink) {
         return DaoUtil.toPageData(
                 assetProfileRepository.findAssetProfiles(
                         tenantId.getId(),
@@ -58,8 +62,9 @@ public class JpaAssetProfileDao extends JpaAbstractSearchTextDao<AssetProfileEnt
                         DaoUtil.toPageable(pageLink)));
     }
 
+    @NotNull
     @Override
-    public PageData<AssetProfileInfo> findAssetProfileInfos(TenantId tenantId, PageLink pageLink) {
+    public PageData<AssetProfileInfo> findAssetProfileInfos(@NotNull TenantId tenantId, @NotNull PageLink pageLink) {
         return DaoUtil.pageToPageData(
                 assetProfileRepository.findAssetProfileInfos(
                         tenantId.getId(),
@@ -68,17 +73,17 @@ public class JpaAssetProfileDao extends JpaAbstractSearchTextDao<AssetProfileEnt
     }
 
     @Override
-    public AssetProfile findDefaultAssetProfile(TenantId tenantId) {
+    public AssetProfile findDefaultAssetProfile(@NotNull TenantId tenantId) {
         return DaoUtil.getData(assetProfileRepository.findByDefaultTrueAndTenantId(tenantId.getId()));
     }
 
     @Override
-    public AssetProfileInfo findDefaultAssetProfileInfo(TenantId tenantId) {
+    public AssetProfileInfo findDefaultAssetProfileInfo(@NotNull TenantId tenantId) {
         return assetProfileRepository.findDefaultAssetProfileInfo(tenantId.getId());
     }
 
     @Override
-    public AssetProfile findByName(TenantId tenantId, String profileName) {
+    public AssetProfile findByName(@NotNull TenantId tenantId, String profileName) {
         return DaoUtil.getData(assetProfileRepository.findByTenantIdAndName(tenantId.getId(), profileName));
     }
 
@@ -93,16 +98,18 @@ public class JpaAssetProfileDao extends JpaAbstractSearchTextDao<AssetProfileEnt
     }
 
     @Override
-    public PageData<AssetProfile> findByTenantId(UUID tenantId, PageLink pageLink) {
+    public PageData<AssetProfile> findByTenantId(UUID tenantId, @NotNull PageLink pageLink) {
         return findAssetProfiles(TenantId.fromUUID(tenantId), pageLink);
     }
 
+    @Nullable
     @Override
-    public AssetProfileId getExternalIdByInternal(AssetProfileId internalId) {
+    public AssetProfileId getExternalIdByInternal(@NotNull AssetProfileId internalId) {
         return Optional.ofNullable(assetProfileRepository.getExternalIdById(internalId.getId()))
                 .map(AssetProfileId::new).orElse(null);
     }
 
+    @NotNull
     @Override
     public EntityType getEntityType() {
         return EntityType.ASSET_PROFILE;

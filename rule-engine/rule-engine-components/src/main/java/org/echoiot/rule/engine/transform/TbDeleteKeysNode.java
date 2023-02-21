@@ -13,6 +13,8 @@ import org.echoiot.rule.engine.api.util.TbNodeUtils;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.TbMsgMetaData;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +41,7 @@ public class TbDeleteKeysNode implements TbNode {
     private boolean fromMetadata;
 
     @Override
-    public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
+    public void init(TbContext ctx, @NotNull TbNodeConfiguration configuration) throws TbNodeException {
         this.config = TbNodeUtils.convert(configuration, TbDeleteKeysNodeConfiguration.class);
         this.fromMetadata = config.isFromMetadata();
         this.patternKeys = new ArrayList<>();
@@ -49,10 +51,10 @@ public class TbDeleteKeysNode implements TbNode {
     }
 
     @Override
-    public void onMsg(TbContext ctx, TbMsg msg) throws ExecutionException, InterruptedException, TbNodeException {
+    public void onMsg(@NotNull TbContext ctx, @NotNull TbMsg msg) throws ExecutionException, InterruptedException, TbNodeException {
         TbMsgMetaData metaData = msg.getMetaData();
-        String msgData = msg.getData();
-        List<String> keysToDelete = new ArrayList<>();
+        @Nullable String msgData = msg.getData();
+        @NotNull List<String> keysToDelete = new ArrayList<>();
         if (fromMetadata) {
             Map<String, String> metaDataMap = metaData.getData();
             metaDataMap.forEach((keyMetaData, valueMetaData) -> {
@@ -65,7 +67,7 @@ public class TbDeleteKeysNode implements TbNode {
         } else {
             JsonNode dataNode = JacksonUtil.toJsonNode(msgData);
             if (dataNode.isObject()) {
-                ObjectNode msgDataObject = (ObjectNode) dataNode;
+                @NotNull ObjectNode msgDataObject = (ObjectNode) dataNode;
                 dataNode.fields().forEachRemaining(entry -> {
                     String keyData = entry.getKey();
                     if (checkKey(keyData)) {
@@ -83,7 +85,7 @@ public class TbDeleteKeysNode implements TbNode {
         }
     }
 
-    boolean checkKey(String key) {
+    boolean checkKey(@NotNull String key) {
         return patternKeys.stream().anyMatch(pattern -> pattern.matcher(key).matches());
     }
 }

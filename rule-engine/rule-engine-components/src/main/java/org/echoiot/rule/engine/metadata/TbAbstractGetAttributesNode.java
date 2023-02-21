@@ -22,6 +22,8 @@ import org.echoiot.server.common.data.kv.KvEntry;
 import org.echoiot.server.common.data.kv.TsKvEntry;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.TbMsgMetaData;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,7 +61,7 @@ public abstract class TbAbstractGetAttributesNode<C extends TbGetAttributesNodeC
     protected abstract C loadGetAttributesNodeConfig(TbNodeConfiguration configuration) throws TbNodeException;
 
     @Override
-    public void onMsg(TbContext ctx, TbMsg msg) throws TbNodeException {
+    public void onMsg(@NotNull TbContext ctx, @NotNull TbMsg msg) throws TbNodeException {
         try {
             withCallback(
                     findEntityIdAsync(ctx, msg),
@@ -72,12 +74,12 @@ public abstract class TbAbstractGetAttributesNode<C extends TbGetAttributesNodeC
 
     protected abstract ListenableFuture<T> findEntityIdAsync(TbContext ctx, TbMsg msg);
 
-    private void safePutAttributes(TbContext ctx, TbMsg msg, T entityId) {
+    private void safePutAttributes(@NotNull TbContext ctx, @NotNull TbMsg msg, @Nullable T entityId) {
         if (entityId == null || entityId.isNullUid()) {
             ctx.tellNext(msg, FAILURE);
             return;
         }
-        JsonNode msgDataNode;
+        @Nullable JsonNode msgDataNode;
         if (fetchToData) {
             msgDataNode = JacksonUtil.toJsonNode(msg.getData());
             if (!msgDataNode.isObject()) {
@@ -87,20 +89,20 @@ public abstract class TbAbstractGetAttributesNode<C extends TbGetAttributesNodeC
         } else {
             msgDataNode = null;
         }
-        ConcurrentHashMap<String, List<String>> failuresMap = new ConcurrentHashMap<>();
-        ListenableFuture<List<Map<String, ? extends List<? extends KvEntry>>>> allFutures = Futures.allAsList(
+        @NotNull ConcurrentHashMap<String, List<String>> failuresMap = new ConcurrentHashMap<>();
+        @NotNull ListenableFuture<List<Map<String, ? extends List<? extends KvEntry>>>> allFutures = Futures.allAsList(
                 getLatestTelemetry(ctx, entityId, TbNodeUtils.processPatterns(config.getLatestTsKeyNames(), msg), failuresMap),
                 getAttrAsync(ctx, entityId, CLIENT_SCOPE, TbNodeUtils.processPatterns(config.getClientAttributeNames(), msg), failuresMap),
                 getAttrAsync(ctx, entityId, SHARED_SCOPE, TbNodeUtils.processPatterns(config.getSharedAttributeNames(), msg), failuresMap),
                 getAttrAsync(ctx, entityId, SERVER_SCOPE, TbNodeUtils.processPatterns(config.getServerAttributeNames(), msg), failuresMap)
-        );
+                                                                                                                      );
         withCallback(allFutures, futuresList -> {
-            TbMsgMetaData msgMetaData = msg.getMetaData().copy();
+            @NotNull TbMsgMetaData msgMetaData = msg.getMetaData().copy();
             futuresList.stream().filter(Objects::nonNull).forEach(kvEntriesMap -> {
                 kvEntriesMap.forEach((keyScope, kvEntryList) -> {
-                    String prefix = getPrefix(keyScope);
+                    @NotNull String prefix = getPrefix(keyScope);
                     kvEntryList.forEach(kvEntry -> {
-                        String key = prefix + kvEntry.getKey();
+                        @NotNull String key = prefix + kvEntry.getKey();
                         if (fetchToData) {
                             JacksonUtil.addKvEntry((ObjectNode) msgDataNode, kvEntry, key);
                         } else {
@@ -109,7 +111,7 @@ public abstract class TbAbstractGetAttributesNode<C extends TbGetAttributesNodeC
                     });
                 });
             });
-            TbMsg outMsg = fetchToData ?
+            @NotNull TbMsg outMsg = fetchToData ?
                     TbMsg.transformMsgData(msg, JacksonUtil.toString(msgDataNode)) :
                     TbMsg.transformMsg(msg, msgMetaData);
             if (failuresMap.isEmpty()) {
@@ -120,7 +122,8 @@ public abstract class TbAbstractGetAttributesNode<C extends TbGetAttributesNodeC
         }, t -> ctx.tellFailure(msg, t), ctx.getDbCallbackExecutor());
     }
 
-    private ListenableFuture<Map<String, List<AttributeKvEntry>>> getAttrAsync(TbContext ctx, EntityId entityId, String scope, List<String> keys, ConcurrentHashMap<String, List<String>> failuresMap) {
+    @NotNull
+    private ListenableFuture<Map<String, List<AttributeKvEntry>>> getAttrAsync(@NotNull TbContext ctx, EntityId entityId, String scope, @NotNull List<String> keys, @NotNull ConcurrentHashMap<String, List<String>> failuresMap) {
         if (CollectionUtils.isEmpty(keys)) {
             return Futures.immediateFuture(null);
         }
@@ -129,19 +132,20 @@ public abstract class TbAbstractGetAttributesNode<C extends TbGetAttributesNodeC
             if (isTellFailureIfAbsent && attributeKvEntryList.size() != keys.size()) {
                 getNotExistingKeys(attributeKvEntryList, keys).forEach(key -> computeFailuresMap(scope, failuresMap, key));
             }
-            Map<String, List<AttributeKvEntry>> mapAttributeKvEntry = new HashMap<>();
+            @NotNull Map<String, List<AttributeKvEntry>> mapAttributeKvEntry = new HashMap<>();
             mapAttributeKvEntry.put(scope, attributeKvEntryList);
             return mapAttributeKvEntry;
         }, MoreExecutors.directExecutor());
     }
 
-    private ListenableFuture<Map<String, List<TsKvEntry>>> getLatestTelemetry(TbContext ctx, EntityId entityId, List<String> keys, ConcurrentHashMap<String, List<String>> failuresMap) {
+    @NotNull
+    private ListenableFuture<Map<String, List<TsKvEntry>>> getLatestTelemetry(@NotNull TbContext ctx, EntityId entityId, List<String> keys, @NotNull ConcurrentHashMap<String, List<String>> failuresMap) {
         if (CollectionUtils.isEmpty(keys)) {
             return Futures.immediateFuture(null);
         }
         ListenableFuture<List<TsKvEntry>> latestTelemetryFutures = ctx.getTimeseriesService().findLatest(ctx.getTenantId(), entityId, keys);
         return Futures.transform(latestTelemetryFutures, tsKvEntries -> {
-            List<TsKvEntry> listTsKvEntry = new ArrayList<>();
+            @NotNull List<TsKvEntry> listTsKvEntry = new ArrayList<>();
             tsKvEntries.forEach(tsKvEntry -> {
                 if (tsKvEntry.getValue() == null) {
                     if (isTellFailureIfAbsent) {
@@ -153,13 +157,14 @@ public abstract class TbAbstractGetAttributesNode<C extends TbGetAttributesNodeC
                     listTsKvEntry.add(new BasicTsKvEntry(tsKvEntry.getTs(), tsKvEntry));
                 }
             });
-            Map<String, List<TsKvEntry>> mapTsKvEntry = new HashMap<>();
+            @NotNull Map<String, List<TsKvEntry>> mapTsKvEntry = new HashMap<>();
             mapTsKvEntry.put(LATEST_TS, listTsKvEntry);
             return mapTsKvEntry;
         }, MoreExecutors.directExecutor());
     }
 
-    private TsKvEntry getValueWithTs(TsKvEntry tsKvEntry) {
+    @NotNull
+    private TsKvEntry getValueWithTs(@NotNull TsKvEntry tsKvEntry) {
         ObjectMapper mapper = fetchToData ? JacksonUtil.OBJECT_MAPPER : JacksonUtil.ALLOW_UNQUOTED_FIELD_NAMES_MAPPER;
         ObjectNode value = JacksonUtil.newObjectNode(mapper);
         value.put(TS, tsKvEntry.getTs());
@@ -167,8 +172,9 @@ public abstract class TbAbstractGetAttributesNode<C extends TbGetAttributesNodeC
         return new BasicTsKvEntry(tsKvEntry.getTs(), new JsonDataEntry(tsKvEntry.getKey(), value.toString()));
     }
 
-    private String getPrefix(String scope) {
-        String prefix = "";
+    @NotNull
+    private String getPrefix(@NotNull String scope) {
+        @NotNull String prefix = "";
         switch (scope) {
             case CLIENT_SCOPE:
                 prefix = "cs_";
@@ -183,18 +189,20 @@ public abstract class TbAbstractGetAttributesNode<C extends TbGetAttributesNodeC
         return prefix;
     }
 
-    private List<String> getNotExistingKeys(List<AttributeKvEntry> existingAttributesKvEntry, List<String> allKeys) {
-        List<String> existingKeys = existingAttributesKvEntry.stream().map(KvEntry::getKey).collect(Collectors.toList());
+    @NotNull
+    private List<String> getNotExistingKeys(@NotNull List<AttributeKvEntry> existingAttributesKvEntry, @NotNull List<String> allKeys) {
+        @NotNull List<String> existingKeys = existingAttributesKvEntry.stream().map(KvEntry::getKey).collect(Collectors.toList());
         return allKeys.stream().filter(key -> !existingKeys.contains(key)).collect(Collectors.toList());
     }
 
-    private void computeFailuresMap(String scope, ConcurrentHashMap<String, List<String>> failuresMap, String key) {
-        List<String> failures = failuresMap.computeIfAbsent(scope, k -> new ArrayList<>());
+    private void computeFailuresMap(String scope, @NotNull ConcurrentHashMap<String, List<String>> failuresMap, String key) {
+        @NotNull List<String> failures = failuresMap.computeIfAbsent(scope, k -> new ArrayList<>());
         failures.add(key);
     }
 
-    private RuntimeException reportFailures(ConcurrentHashMap<String, List<String>> failuresMap) {
-        StringBuilder errorMessage = new StringBuilder("The following attribute/telemetry keys is not present in the DB: ").append("\n");
+    @NotNull
+    private RuntimeException reportFailures(@NotNull ConcurrentHashMap<String, List<String>> failuresMap) {
+        @NotNull StringBuilder errorMessage = new StringBuilder("The following attribute/telemetry keys is not present in the DB: ").append("\n");
         if (failuresMap.containsKey(CLIENT_SCOPE)) {
             errorMessage.append("\t").append("[" + CLIENT_SCOPE + "]:").append(failuresMap.get(CLIENT_SCOPE).toString()).append("\n");
         }

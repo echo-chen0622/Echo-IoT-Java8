@@ -16,6 +16,8 @@ import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.entitiy.device.profile.TbDeviceProfileService;
 import org.echoiot.server.service.security.permission.Operation;
 import org.echoiot.server.service.security.permission.Resource;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -38,9 +40,10 @@ import java.util.UUID;
 @Slf4j
 public class DeviceProfileController extends BaseController {
 
+    @NotNull
     private final TbDeviceProfileService tbDeviceProfileService;
 
-    @Autowired
+    @Resource
     private TimeseriesService timeseriesService;
 
     @ApiOperation(value = "Get Device Profile (getDeviceProfileById)",
@@ -51,17 +54,18 @@ public class DeviceProfileController extends BaseController {
     @RequestMapping(value = "/deviceProfile/{deviceProfileId}", method = RequestMethod.GET)
     @ResponseBody
     public DeviceProfile getDeviceProfileById(
-            @ApiParam(value = ControllerConstants.DEVICE_PROFILE_ID_PARAM_DESCRIPTION)
+            @NotNull @ApiParam(value = ControllerConstants.DEVICE_PROFILE_ID_PARAM_DESCRIPTION)
             @PathVariable(ControllerConstants.DEVICE_PROFILE_ID) String strDeviceProfileId) throws EchoiotException {
         checkParameter(ControllerConstants.DEVICE_PROFILE_ID, strDeviceProfileId);
         try {
-            DeviceProfileId deviceProfileId = new DeviceProfileId(toUUID(strDeviceProfileId));
+            @NotNull DeviceProfileId deviceProfileId = new DeviceProfileId(toUUID(strDeviceProfileId));
             return checkDeviceProfileId(deviceProfileId, Operation.READ);
         } catch (Exception e) {
             throw handleException(e);
         }
     }
 
+    @NotNull
     @ApiOperation(value = "Get Device Profile Info (getDeviceProfileInfoById)",
             notes = "Fetch the Device Profile Info object based on the provided Device Profile Id. "
                     + ControllerConstants.DEVICE_PROFILE_INFO_DESCRIPTION + ControllerConstants.TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH,
@@ -70,11 +74,11 @@ public class DeviceProfileController extends BaseController {
     @RequestMapping(value = "/deviceProfileInfo/{deviceProfileId}", method = RequestMethod.GET)
     @ResponseBody
     public DeviceProfileInfo getDeviceProfileInfoById(
-            @ApiParam(value = ControllerConstants.DEVICE_PROFILE_ID_PARAM_DESCRIPTION)
+            @NotNull @ApiParam(value = ControllerConstants.DEVICE_PROFILE_ID_PARAM_DESCRIPTION)
             @PathVariable(ControllerConstants.DEVICE_PROFILE_ID) String strDeviceProfileId) throws EchoiotException {
         checkParameter(ControllerConstants.DEVICE_PROFILE_ID, strDeviceProfileId);
         try {
-            DeviceProfileId deviceProfileId = new DeviceProfileId(toUUID(strDeviceProfileId));
+            @NotNull DeviceProfileId deviceProfileId = new DeviceProfileId(toUUID(strDeviceProfileId));
             return new DeviceProfileInfo(checkDeviceProfileId(deviceProfileId, Operation.READ));
         } catch (Exception e) {
             throw handleException(e);
@@ -107,9 +111,9 @@ public class DeviceProfileController extends BaseController {
     @RequestMapping(value = "/deviceProfile/devices/keys/timeseries", method = RequestMethod.GET)
     @ResponseBody
     public List<String> getTimeseriesKeys(
-            @ApiParam(value = ControllerConstants.DEVICE_PROFILE_ID_PARAM_DESCRIPTION)
+            @NotNull @ApiParam(value = ControllerConstants.DEVICE_PROFILE_ID_PARAM_DESCRIPTION)
             @RequestParam(name = ControllerConstants.DEVICE_PROFILE_ID, required = false) String deviceProfileIdStr) throws EchoiotException {
-        DeviceProfileId deviceProfileId;
+        @Nullable DeviceProfileId deviceProfileId;
         if (StringUtils.isNotEmpty(deviceProfileIdStr)) {
             deviceProfileId = new DeviceProfileId(UUID.fromString(deviceProfileIdStr));
             checkDeviceProfileId(deviceProfileId, Operation.READ);
@@ -135,9 +139,9 @@ public class DeviceProfileController extends BaseController {
     @RequestMapping(value = "/deviceProfile/devices/keys/attributes", method = RequestMethod.GET)
     @ResponseBody
     public List<String> getAttributesKeys(
-            @ApiParam(value = ControllerConstants.DEVICE_PROFILE_ID_PARAM_DESCRIPTION)
+            @NotNull @ApiParam(value = ControllerConstants.DEVICE_PROFILE_ID_PARAM_DESCRIPTION)
             @RequestParam(name = ControllerConstants.DEVICE_PROFILE_ID, required = false) String deviceProfileIdStr) throws EchoiotException {
-        DeviceProfileId deviceProfileId;
+        @Nullable DeviceProfileId deviceProfileId;
         if (StringUtils.isNotEmpty(deviceProfileIdStr)) {
             deviceProfileId = new DeviceProfileId(UUID.fromString(deviceProfileIdStr));
             checkDeviceProfileId(deviceProfileId, Operation.READ);
@@ -166,7 +170,7 @@ public class DeviceProfileController extends BaseController {
     @RequestMapping(value = "/deviceProfile", method = RequestMethod.POST)
     @ResponseBody
     public DeviceProfile saveDeviceProfile(
-            @ApiParam(value = "A JSON value representing the device profile.")
+            @NotNull @ApiParam(value = "A JSON value representing the device profile.")
             @RequestBody DeviceProfile deviceProfile) throws Exception {
         deviceProfile.setTenantId(getTenantId());
         checkEntity(deviceProfile.getId(), deviceProfile, Resource.DEVICE_PROFILE);
@@ -181,10 +185,10 @@ public class DeviceProfileController extends BaseController {
     @RequestMapping(value = "/deviceProfile/{deviceProfileId}", method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.OK)
     public void deleteDeviceProfile(
-            @ApiParam(value = ControllerConstants.DEVICE_PROFILE_ID_PARAM_DESCRIPTION)
+            @NotNull @ApiParam(value = ControllerConstants.DEVICE_PROFILE_ID_PARAM_DESCRIPTION)
             @PathVariable(ControllerConstants.DEVICE_PROFILE_ID) String strDeviceProfileId) throws EchoiotException {
         checkParameter(ControllerConstants.DEVICE_PROFILE_ID, strDeviceProfileId);
-        DeviceProfileId deviceProfileId = new DeviceProfileId(toUUID(strDeviceProfileId));
+        @NotNull DeviceProfileId deviceProfileId = new DeviceProfileId(toUUID(strDeviceProfileId));
         DeviceProfile deviceProfile = checkDeviceProfileId(deviceProfileId, Operation.DELETE);
         tbDeviceProfileService.delete(deviceProfile, getCurrentUser());
     }
@@ -196,10 +200,10 @@ public class DeviceProfileController extends BaseController {
     @RequestMapping(value = "/deviceProfile/{deviceProfileId}/default", method = RequestMethod.POST)
     @ResponseBody
     public DeviceProfile setDefaultDeviceProfile(
-            @ApiParam(value = ControllerConstants.DEVICE_PROFILE_ID_PARAM_DESCRIPTION)
+            @NotNull @ApiParam(value = ControllerConstants.DEVICE_PROFILE_ID_PARAM_DESCRIPTION)
             @PathVariable(ControllerConstants.DEVICE_PROFILE_ID) String strDeviceProfileId) throws EchoiotException {
         checkParameter(ControllerConstants.DEVICE_PROFILE_ID, strDeviceProfileId);
-        DeviceProfileId deviceProfileId = new DeviceProfileId(toUUID(strDeviceProfileId));
+        @NotNull DeviceProfileId deviceProfileId = new DeviceProfileId(toUUID(strDeviceProfileId));
         DeviceProfile deviceProfile = checkDeviceProfileId(deviceProfileId, Operation.WRITE);
         DeviceProfile previousDefaultDeviceProfile = deviceProfileService.findDefaultDeviceProfile(getTenantId());
         return tbDeviceProfileService.setDefaultDeviceProfile(deviceProfile, previousDefaultDeviceProfile, getCurrentUser());
@@ -221,10 +225,10 @@ public class DeviceProfileController extends BaseController {
             @RequestParam(required = false) String textSearch,
             @ApiParam(value = ControllerConstants.SORT_PROPERTY_DESCRIPTION, allowableValues = ControllerConstants.DEVICE_PROFILE_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
-            @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
+            @NotNull @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortOrder) throws EchoiotException {
         try {
-            PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
+            @NotNull PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
             return checkNotNull(deviceProfileService.findDeviceProfiles(getTenantId(), pageLink));
         } catch (Exception e) {
             throw handleException(e);
@@ -247,12 +251,12 @@ public class DeviceProfileController extends BaseController {
             @RequestParam(required = false) String textSearch,
             @ApiParam(value = ControllerConstants.SORT_PROPERTY_DESCRIPTION, allowableValues = ControllerConstants.DEVICE_PROFILE_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
-            @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
+            @NotNull @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortOrder,
             @ApiParam(value = "Type of the transport", allowableValues = ControllerConstants.TRANSPORT_TYPE_ALLOWABLE_VALUES)
             @RequestParam(required = false) String transportType) throws EchoiotException {
         try {
-            PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
+            @NotNull PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
             return checkNotNull(deviceProfileService.findDeviceProfileInfos(getTenantId(), pageLink, transportType));
         } catch (Exception e) {
             throw handleException(e);

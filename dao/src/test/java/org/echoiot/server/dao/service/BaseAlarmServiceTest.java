@@ -16,6 +16,7 @@ import org.echoiot.server.common.data.query.*;
 import org.echoiot.server.common.data.relation.EntityRelation;
 import org.echoiot.server.common.data.relation.RelationTypeGroup;
 import org.echoiot.server.dao.alarm.AlarmOperationResult;
+import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -33,7 +34,7 @@ public abstract class BaseAlarmServiceTest extends AbstractServiceTest {
 
     @Before
     public void before() {
-        Tenant tenant = new Tenant();
+        @NotNull Tenant tenant = new Tenant();
         tenant.setTitle("My tenant");
         Tenant savedTenant = tenantService.saveTenant(tenant);
         Assert.assertNotNull(savedTenant);
@@ -48,10 +49,10 @@ public abstract class BaseAlarmServiceTest extends AbstractServiceTest {
 
     @Test
     public void testSaveAndFetchAlarm() throws ExecutionException, InterruptedException {
-        AssetId parentId = new AssetId(Uuids.timeBased());
-        AssetId childId = new AssetId(Uuids.timeBased());
+        @NotNull AssetId parentId = new AssetId(Uuids.timeBased());
+        @NotNull AssetId childId = new AssetId(Uuids.timeBased());
 
-        EntityRelation relation = new EntityRelation(parentId, childId, EntityRelation.CONTAINS_TYPE);
+        @NotNull EntityRelation relation = new EntityRelation(parentId, childId, EntityRelation.CONTAINS_TYPE);
 
         Assert.assertTrue(relationService.saveRelationAsync(tenantId, relation).get());
 
@@ -86,10 +87,10 @@ public abstract class BaseAlarmServiceTest extends AbstractServiceTest {
 
     @Test
     public void testFindAlarm() throws ExecutionException, InterruptedException {
-        AssetId parentId = new AssetId(Uuids.timeBased());
-        AssetId childId = new AssetId(Uuids.timeBased());
+        @NotNull AssetId parentId = new AssetId(Uuids.timeBased());
+        @NotNull AssetId childId = new AssetId(Uuids.timeBased());
 
-        EntityRelation relation = new EntityRelation(parentId, childId, EntityRelation.CONTAINS_TYPE);
+        @NotNull EntityRelation relation = new EntityRelation(parentId, childId, EntityRelation.CONTAINS_TYPE);
 
         Assert.assertTrue(relationService.saveRelationAsync(tenantId, relation).get());
 
@@ -226,7 +227,7 @@ public abstract class BaseAlarmServiceTest extends AbstractServiceTest {
         result = alarmService.createOrUpdateAlarm(deviceAlarm);
         deviceAlarm = result.getAlarm();
 
-        AlarmDataPageLink pageLink = new AlarmDataPageLink();
+        @NotNull AlarmDataPageLink pageLink = new AlarmDataPageLink();
         pageLink.setPage(0);
         pageLink.setPageSize(10);
         pageLink.setSortOrder(new EntityDataSortOrder(new EntityKey(EntityKeyType.ALARM_FIELD, "createdTime")));
@@ -235,7 +236,7 @@ public abstract class BaseAlarmServiceTest extends AbstractServiceTest {
         pageLink.setEndTs(System.currentTimeMillis());
         pageLink.setSearchPropagatedAlarms(true);
         pageLink.setSeverityList(Arrays.asList(AlarmSeverity.CRITICAL, AlarmSeverity.WARNING));
-        pageLink.setStatusList(Arrays.asList(AlarmSearchStatus.ACTIVE));
+        pageLink.setStatusList(List.of(AlarmSearchStatus.ACTIVE));
 
         PageData<AlarmData> tenantAlarms = alarmService.findAlarmDataByQueryForEntities(tenantId, toQuery(pageLink), Arrays.asList(tenantDevice.getId(), customerDevice.getId()));
         Assert.assertEquals(2, tenantAlarms.getData().size());
@@ -275,7 +276,7 @@ public abstract class BaseAlarmServiceTest extends AbstractServiceTest {
         customerAsset.setCustomerId(customer.getId());
         customerAsset = assetService.saveAsset(customerAsset);
 
-        EntityRelation relation = new EntityRelation();
+        @NotNull EntityRelation relation = new EntityRelation();
         relation.setFrom(customerAsset.getId());
         relation.setTo(tenantDevice.getId());
         relation.setAdditionalInfo(JacksonUtil.newObjectNode());
@@ -302,7 +303,7 @@ public abstract class BaseAlarmServiceTest extends AbstractServiceTest {
         result = alarmService.createOrUpdateAlarm(customerAlarm);
         customerAlarm = result.getAlarm();
 
-        AlarmDataPageLink pageLink = new AlarmDataPageLink();
+        @NotNull AlarmDataPageLink pageLink = new AlarmDataPageLink();
         pageLink.setPage(0);
         pageLink.setPageSize(10);
         pageLink.setSortOrder(new EntityDataSortOrder(new EntityKey(EntityKeyType.ALARM_FIELD, "createdTime")));
@@ -311,7 +312,7 @@ public abstract class BaseAlarmServiceTest extends AbstractServiceTest {
         pageLink.setEndTs(System.currentTimeMillis());
         pageLink.setSearchPropagatedAlarms(true);
         pageLink.setSeverityList(Arrays.asList(AlarmSeverity.CRITICAL, AlarmSeverity.WARNING));
-        pageLink.setStatusList(Arrays.asList(AlarmSearchStatus.ACTIVE));
+        pageLink.setStatusList(List.of(AlarmSearchStatus.ACTIVE));
 
         //TEST that propagated alarms are visible on the asset level.
         PageData<AlarmData> customerAlarms = alarmService.findAlarmDataByQueryForEntities(tenantId, toQuery(pageLink), Collections.singletonList(customerAsset.getId()));
@@ -353,7 +354,7 @@ public abstract class BaseAlarmServiceTest extends AbstractServiceTest {
         result = alarmService.createOrUpdateAlarm(customerAlarm);
         customerAlarm = result.getAlarm();
 
-        AlarmDataPageLink pageLink = new AlarmDataPageLink();
+        @NotNull AlarmDataPageLink pageLink = new AlarmDataPageLink();
         pageLink.setPage(0);
         pageLink.setPageSize(10);
         pageLink.setSortOrder(new EntityDataSortOrder(new EntityKey(EntityKeyType.ALARM_FIELD, "createdTime")));
@@ -362,7 +363,7 @@ public abstract class BaseAlarmServiceTest extends AbstractServiceTest {
         pageLink.setEndTs(System.currentTimeMillis());
         pageLink.setSearchPropagatedAlarms(true);
         pageLink.setSeverityList(Arrays.asList(AlarmSeverity.CRITICAL, AlarmSeverity.WARNING));
-        pageLink.setStatusList(Arrays.asList(AlarmSearchStatus.ACTIVE));
+        pageLink.setStatusList(List.of(AlarmSearchStatus.ACTIVE));
 
         //TEST that propagated alarms are visible on the asset level.
         PageData<AlarmData> tenantAlarms = alarmService.findAlarmDataByQueryForEntities(tenantId, toQuery(pageLink), Collections.singletonList(tenantId));
@@ -375,10 +376,12 @@ public abstract class BaseAlarmServiceTest extends AbstractServiceTest {
         Assert.assertEquals(customerAlarm, customerAlarms.getData().get(0));
     }
 
+    @NotNull
     private AlarmDataQuery toQuery(AlarmDataPageLink pageLink){
         return toQuery(pageLink, Collections.emptyList());
     }
 
+    @NotNull
     private AlarmDataQuery toQuery(AlarmDataPageLink pageLink, List<EntityKey> alarmFields){
         return new AlarmDataQuery(new DeviceTypeFilter(), pageLink, null, null, null, alarmFields);
     }
@@ -441,12 +444,12 @@ public abstract class BaseAlarmServiceTest extends AbstractServiceTest {
 
     @Test
     public void testFindAlarmUsingAlarmDataQuery() throws ExecutionException, InterruptedException {
-        AssetId parentId = new AssetId(Uuids.timeBased());
-        AssetId parentId2 = new AssetId(Uuids.timeBased());
-        AssetId childId = new AssetId(Uuids.timeBased());
+        @NotNull AssetId parentId = new AssetId(Uuids.timeBased());
+        @NotNull AssetId parentId2 = new AssetId(Uuids.timeBased());
+        @NotNull AssetId childId = new AssetId(Uuids.timeBased());
 
-        EntityRelation relation = new EntityRelation(parentId, childId, EntityRelation.CONTAINS_TYPE);
-        EntityRelation relation2 = new EntityRelation(parentId2, childId, EntityRelation.CONTAINS_TYPE);
+        @NotNull EntityRelation relation = new EntityRelation(parentId, childId, EntityRelation.CONTAINS_TYPE);
+        @NotNull EntityRelation relation2 = new EntityRelation(parentId2, childId, EntityRelation.CONTAINS_TYPE);
 
         Assert.assertTrue(relationService.saveRelationAsync(tenantId, relation).get());
         Assert.assertTrue(relationService.saveRelationAsync(tenantId, relation2).get());
@@ -462,7 +465,7 @@ public abstract class BaseAlarmServiceTest extends AbstractServiceTest {
         AlarmOperationResult result = alarmService.createOrUpdateAlarm(alarm);
         Alarm created = result.getAlarm();
 
-        AlarmDataPageLink pageLink = new AlarmDataPageLink();
+        @NotNull AlarmDataPageLink pageLink = new AlarmDataPageLink();
         pageLink.setPage(0);
         pageLink.setPageSize(10);
         pageLink.setSortOrder(new EntityDataSortOrder(new EntityKey(EntityKeyType.ALARM_FIELD, "createdTime")));
@@ -471,7 +474,7 @@ public abstract class BaseAlarmServiceTest extends AbstractServiceTest {
         pageLink.setEndTs(System.currentTimeMillis());
         pageLink.setSearchPropagatedAlarms(false);
         pageLink.setSeverityList(Arrays.asList(AlarmSeverity.CRITICAL, AlarmSeverity.WARNING));
-        pageLink.setStatusList(Arrays.asList(AlarmSearchStatus.ACTIVE));
+        pageLink.setStatusList(List.of(AlarmSearchStatus.ACTIVE));
 
         PageData<AlarmData> alarms = alarmService.findAlarmDataByQueryForEntities(tenantId, toQuery(pageLink), Collections.singletonList(childId));
 
@@ -487,7 +490,7 @@ public abstract class BaseAlarmServiceTest extends AbstractServiceTest {
         pageLink.setEndTs(System.currentTimeMillis());
         pageLink.setSearchPropagatedAlarms(false);
         pageLink.setSeverityList(Arrays.asList(AlarmSeverity.CRITICAL, AlarmSeverity.WARNING));
-        pageLink.setStatusList(Arrays.asList(AlarmSearchStatus.ACTIVE));
+        pageLink.setStatusList(List.of(AlarmSearchStatus.ACTIVE));
 
         alarms = alarmService.findAlarmDataByQueryForEntities(tenantId, toQuery(pageLink), Collections.singletonList(childId));
         Assert.assertNotNull(alarms.getData());
@@ -514,7 +517,7 @@ public abstract class BaseAlarmServiceTest extends AbstractServiceTest {
         pageLink.setEndTs(System.currentTimeMillis());
         pageLink.setSearchPropagatedAlarms(true);
         pageLink.setSeverityList(Arrays.asList(AlarmSeverity.CRITICAL, AlarmSeverity.WARNING));
-        pageLink.setStatusList(Arrays.asList(AlarmSearchStatus.ACTIVE));
+        pageLink.setStatusList(List.of(AlarmSearchStatus.ACTIVE));
 
         alarms = alarmService.findAlarmDataByQueryForEntities(tenantId, toQuery(pageLink), Collections.singletonList(childId));
         Assert.assertNotNull(alarms.getData());
@@ -530,7 +533,7 @@ public abstract class BaseAlarmServiceTest extends AbstractServiceTest {
         pageLink.setEndTs(System.currentTimeMillis());
         pageLink.setSearchPropagatedAlarms(true);
         pageLink.setSeverityList(Arrays.asList(AlarmSeverity.CRITICAL, AlarmSeverity.WARNING));
-        pageLink.setStatusList(Arrays.asList(AlarmSearchStatus.ACTIVE));
+        pageLink.setStatusList(List.of(AlarmSearchStatus.ACTIVE));
 
         alarms = alarmService.findAlarmDataByQueryForEntities(tenantId, toQuery(pageLink), Collections.singletonList(parentId));
         Assert.assertNotNull(alarms.getData());
@@ -575,7 +578,7 @@ public abstract class BaseAlarmServiceTest extends AbstractServiceTest {
         pageLink.setEndTs(System.currentTimeMillis());
         pageLink.setSearchPropagatedAlarms(true);
         pageLink.setSeverityList(Arrays.asList(AlarmSeverity.CRITICAL, AlarmSeverity.WARNING));
-        pageLink.setStatusList(Arrays.asList(AlarmSearchStatus.ACTIVE));
+        pageLink.setStatusList(List.of(AlarmSearchStatus.ACTIVE));
 
         alarms = alarmService.findAlarmDataByQueryForEntities(tenantId, toQuery(pageLink), Collections.singletonList(parentId));
         Assert.assertNotNull(alarms.getData());
@@ -593,7 +596,7 @@ public abstract class BaseAlarmServiceTest extends AbstractServiceTest {
         pageLink.setEndTs(System.currentTimeMillis());
         pageLink.setSearchPropagatedAlarms(true);
         pageLink.setSeverityList(Arrays.asList(AlarmSeverity.CRITICAL, AlarmSeverity.WARNING));
-        pageLink.setStatusList(Arrays.asList(AlarmSearchStatus.ACTIVE));
+        pageLink.setStatusList(List.of(AlarmSearchStatus.ACTIVE));
 
         alarms = alarmService.findAlarmDataByQueryForEntities(tenantId, toQuery(pageLink), Collections.singletonList(childId));
         Assert.assertNotNull(alarms.getData());
@@ -603,10 +606,10 @@ public abstract class BaseAlarmServiceTest extends AbstractServiceTest {
 
     @Test
     public void testDeleteAlarm() throws ExecutionException, InterruptedException {
-        AssetId parentId = new AssetId(Uuids.timeBased());
-        AssetId childId = new AssetId(Uuids.timeBased());
+        @NotNull AssetId parentId = new AssetId(Uuids.timeBased());
+        @NotNull AssetId childId = new AssetId(Uuids.timeBased());
 
-        EntityRelation relation = new EntityRelation(parentId, childId, EntityRelation.CONTAINS_TYPE);
+        @NotNull EntityRelation relation = new EntityRelation(parentId, childId, EntityRelation.CONTAINS_TYPE);
 
         Assert.assertTrue(relationService.saveRelationAsync(tenantId, relation).get());
 

@@ -5,23 +5,27 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.MoreExecutors;
 import org.echoiot.rule.engine.api.TbContext;
 import org.echoiot.rule.engine.api.TbNodeException;
+import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.alarm.Alarm;
 import org.echoiot.server.common.data.id.AlarmId;
 import org.echoiot.server.common.data.id.EntityId;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 public class EntitiesAlarmOriginatorIdAsyncLoader {
 
-    public static ListenableFuture<EntityId> findEntityIdAsync(TbContext ctx, EntityId original) {
+    @NotNull
+    public static ListenableFuture<EntityId> findEntityIdAsync(@NotNull TbContext ctx, @NotNull EntityId original) {
 
-        switch (original.getEntityType()) {
-            case ALARM:
-                return getAlarmOriginatorAsync(ctx.getAlarmService().findAlarmByIdAsync(ctx.getTenantId(), (AlarmId) original));
-            default:
-                return Futures.immediateFailedFuture(new TbNodeException("Unexpected original EntityType " + original.getEntityType()));
+        if (Objects.requireNonNull(original.getEntityType()) == EntityType.ALARM) {
+            return getAlarmOriginatorAsync(ctx.getAlarmService().findAlarmByIdAsync(ctx.getTenantId(), (AlarmId) original));
         }
+        return Futures.immediateFailedFuture(new TbNodeException("Unexpected original EntityType " + original.getEntityType()));
     }
 
-    private static ListenableFuture<EntityId> getAlarmOriginatorAsync(ListenableFuture<Alarm> future) {
+    @NotNull
+    private static ListenableFuture<EntityId> getAlarmOriginatorAsync(@NotNull ListenableFuture<Alarm> future) {
         return Futures.transformAsync(future, in -> {
             return in != null ? Futures.immediateFuture(in.getOriginator())
                     : Futures.immediateFuture(null);

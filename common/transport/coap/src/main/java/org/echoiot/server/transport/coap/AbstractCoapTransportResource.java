@@ -6,6 +6,7 @@ import org.echoiot.server.common.transport.TransportServiceCallback;
 import org.echoiot.server.gen.transport.TransportProtos;
 import org.eclipse.californium.core.CoapResource;
 import org.eclipse.californium.core.server.resources.CoapExchange;
+import org.jetbrains.annotations.NotNull;
 
 @Slf4j
 public abstract class AbstractCoapTransportResource extends CoapResource {
@@ -13,7 +14,7 @@ public abstract class AbstractCoapTransportResource extends CoapResource {
     protected final CoapTransportContext transportContext;
     protected final TransportService transportService;
 
-    public AbstractCoapTransportResource(CoapTransportContext context, String name) {
+    public AbstractCoapTransportResource(@NotNull CoapTransportContext context, String name) {
         super(name);
         this.transportContext = context;
         this.transportService = context.getTransportService();

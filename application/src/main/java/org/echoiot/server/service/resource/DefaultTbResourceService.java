@@ -23,6 +23,8 @@ import org.eclipse.leshan.core.model.DDFFileParser;
 import org.eclipse.leshan.core.model.DefaultDDFFileValidator;
 import org.eclipse.leshan.core.model.InvalidDDFFileException;
 import org.eclipse.leshan.core.model.ObjectModel;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
@@ -40,6 +42,7 @@ import java.util.stream.Stream;
 public class DefaultTbResourceService extends AbstractTbEntityService implements TbResourceService {
 
     private final ResourceService resourceService;
+    @NotNull
     private final DDFFileParser ddfFileParser;
 
     public DefaultTbResourceService(ResourceService resourceService) {
@@ -72,8 +75,9 @@ public class DefaultTbResourceService extends AbstractTbEntityService implements
         return resourceService.findTenantResourcesByTenantId(tenantId, pageLink);
     }
 
+    @NotNull
     @Override
-    public List<LwM2mObject> findLwM2mObject(TenantId tenantId, String sortOrder, String sortProperty, String[] objectIds) {
+    public List<LwM2mObject> findLwM2mObject(@NotNull TenantId tenantId, String sortOrder, String sortProperty, String[] objectIds) {
         log.trace("Executing findByTenantId [{}]", tenantId);
         Validator.validateId(tenantId, DeviceServiceImpl.INCORRECT_TENANT_ID + tenantId);
         List<TbResource> resources = resourceService.findTenantResourcesByResourceTypeAndObjectIds(tenantId, ResourceType.LWM2M_MODEL,
@@ -84,8 +88,9 @@ public class DefaultTbResourceService extends AbstractTbEntityService implements
                 .collect(Collectors.toList());
     }
 
+    @NotNull
     @Override
-    public List<LwM2mObject> findLwM2mObjectPage(TenantId tenantId, String sortProperty, String sortOrder, PageLink pageLink) {
+    public List<LwM2mObject> findLwM2mObjectPage(@NotNull TenantId tenantId, String sortProperty, String sortOrder, PageLink pageLink) {
         log.trace("Executing findByTenantId [{}]", tenantId);
         Validator.validateId(tenantId, DeviceServiceImpl.INCORRECT_TENANT_ID + tenantId);
         PageData<TbResource> resourcePageData = resourceService.findTenantResourcesByResourceTypeAndPageLink(tenantId, ResourceType.LWM2M_MODEL, pageLink);
@@ -115,30 +120,31 @@ public class DefaultTbResourceService extends AbstractTbEntityService implements
         return "DESC".equals(sortOrder) ? comparator.reversed() : comparator;
     }
 
-    private LwM2mObject toLwM2mObject(TbResource resource, boolean isSave) {
+    @Nullable
+    private LwM2mObject toLwM2mObject(@NotNull TbResource resource, boolean isSave) {
         try {
-            DDFFileParser ddfFileParser = new DDFFileParser(new DefaultDDFFileValidator());
+            @NotNull DDFFileParser ddfFileParser = new DDFFileParser(new DefaultDDFFileValidator());
             List<ObjectModel> objectModels =
                     ddfFileParser.parse(new ByteArrayInputStream(Base64.getDecoder().decode(resource.getData())), resource.getSearchText());
             if (objectModels.size() == 0) {
                 return null;
             } else {
                 ObjectModel obj = objectModels.get(0);
-                LwM2mObject lwM2mObject = new LwM2mObject();
+                @NotNull LwM2mObject lwM2mObject = new LwM2mObject();
                 lwM2mObject.setId(obj.id);
                 lwM2mObject.setKeyId(resource.getResourceKey());
                 lwM2mObject.setName(obj.name);
                 lwM2mObject.setMultiple(obj.multiple);
                 lwM2mObject.setMandatory(obj.mandatory);
-                LwM2mInstance instance = new LwM2mInstance();
+                @NotNull LwM2mInstance instance = new LwM2mInstance();
                 instance.setId(0);
-                List<LwM2mResourceObserve> resources = new ArrayList<>();
+                @NotNull List<LwM2mResourceObserve> resources = new ArrayList<>();
                 obj.resources.forEach((k, v) -> {
                     if (isSave) {
-                        LwM2mResourceObserve lwM2MResourceObserve = new LwM2mResourceObserve(k, v.name, false, false, false);
+                        @NotNull LwM2mResourceObserve lwM2MResourceObserve = new LwM2mResourceObserve(k, v.name, false, false, false);
                         resources.add(lwM2MResourceObserve);
                     } else if (v.operations.isReadable()) {
-                        LwM2mResourceObserve lwM2MResourceObserve = new LwM2mResourceObserve(k, v.name, false, false, false);
+                        @NotNull LwM2mResourceObserve lwM2MResourceObserve = new LwM2mResourceObserve(k, v.name, false, false, false);
                         resources.add(lwM2MResourceObserve);
                     }
                 });
@@ -156,9 +162,10 @@ public class DefaultTbResourceService extends AbstractTbEntityService implements
         }
     }
 
+    @NotNull
     @Override
-    public TbResource save(TbResource tbResource, User user) throws EchoiotException {
-        ActionType actionType = tbResource.getId() == null ? ActionType.ADDED : ActionType.UPDATED;
+    public TbResource save(@NotNull TbResource tbResource, User user) throws EchoiotException {
+        @NotNull ActionType actionType = tbResource.getId() == null ? ActionType.ADDED : ActionType.UPDATED;
         TenantId tenantId = tbResource.getTenantId();
         try {
             TbResource savedResource = checkNotNull(doSave(tbResource));
@@ -173,7 +180,7 @@ public class DefaultTbResourceService extends AbstractTbEntityService implements
     }
 
     @Override
-    public void delete(TbResource tbResource, User user) {
+    public void delete(@NotNull TbResource tbResource, User user) {
         TbResourceId resourceId = tbResource.getId();
         TenantId tenantId = tbResource.getTenantId();
         try {
@@ -187,7 +194,7 @@ public class DefaultTbResourceService extends AbstractTbEntityService implements
         }
     }
 
-    private TbResource doSave(TbResource resource) throws EchoiotException {
+    private TbResource doSave(@NotNull TbResource resource) throws EchoiotException {
         log.trace("Executing saveResource [{}]", resource);
         if (StringUtils.isEmpty(resource.getData())) {
             throw new DataValidationException("Resource data should be specified!");
@@ -199,7 +206,7 @@ public class DefaultTbResourceService extends AbstractTbEntityService implements
                 if (!objectModels.isEmpty()) {
                     ObjectModel objectModel = objectModels.get(0);
 
-                    String resourceKey = objectModel.id + LwM2mConstants.LWM2M_SEPARATOR_KEY + objectModel.version;
+                    @NotNull String resourceKey = objectModel.id + LwM2mConstants.LWM2M_SEPARATOR_KEY + objectModel.version;
                     String name = objectModel.name;
                     resource.setResourceKey(resourceKey);
                     if (resource.getId() == null) {

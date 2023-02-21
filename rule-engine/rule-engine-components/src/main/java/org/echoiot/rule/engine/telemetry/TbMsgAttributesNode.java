@@ -14,6 +14,7 @@ import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.session.SessionMsgType;
 import org.echoiot.server.common.transport.adaptor.JsonConverter;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +42,7 @@ public class TbMsgAttributesNode implements TbNode {
     private TbMsgAttributesNodeConfiguration config;
 
     @Override
-    public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
+    public void init(TbContext ctx, @NotNull TbNodeConfiguration configuration) throws TbNodeException {
         this.config = TbNodeUtils.convert(configuration, TbMsgAttributesNodeConfiguration.class);
         if (config.getNotifyDevice() == null) {
             config.setNotifyDevice(true);
@@ -49,13 +50,13 @@ public class TbMsgAttributesNode implements TbNode {
     }
 
     @Override
-    public void onMsg(TbContext ctx, TbMsg msg) {
+    public void onMsg(@NotNull TbContext ctx, @NotNull TbMsg msg) {
         if (!msg.getType().equals(SessionMsgType.POST_ATTRIBUTES_REQUEST.name())) {
             ctx.tellFailure(msg, new IllegalArgumentException("Unsupported msg type: " + msg.getType()));
             return;
         }
         String src = msg.getData();
-        List<AttributeKvEntry> attributes = new ArrayList<>(JsonConverter.convertToAttributes(JsonParser.parseString(src)));
+        @NotNull List<AttributeKvEntry> attributes = new ArrayList<>(JsonConverter.convertToAttributes(JsonParser.parseString(src)));
         if (attributes.isEmpty()) {
             ctx.tellSuccess(msg);
             return;

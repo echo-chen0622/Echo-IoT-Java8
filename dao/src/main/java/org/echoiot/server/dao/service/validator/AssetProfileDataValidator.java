@@ -14,6 +14,7 @@ import org.echoiot.server.dao.queue.QueueService;
 import org.echoiot.server.dao.rule.RuleChainService;
 import org.echoiot.server.dao.service.DataValidator;
 import org.echoiot.server.dao.tenant.TenantService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -21,23 +22,23 @@ import org.springframework.stereotype.Component;
 @Component
 public class AssetProfileDataValidator extends DataValidator<AssetProfile> {
 
-    @Autowired
+    @Resource
     private AssetProfileDao assetProfileDao;
-    @Autowired
+    @Resource
     @Lazy
     private AssetProfileService assetProfileService;
-    @Autowired
+    @Resource
     private TenantService tenantService;
     @Lazy
-    @Autowired
+    @Resource
     private QueueService queueService;
-    @Autowired
+    @Resource
     private RuleChainService ruleChainService;
-    @Autowired
+    @Resource
     private DashboardService dashboardService;
 
     @Override
-    protected void validateDataImpl(TenantId tenantId, AssetProfile assetProfile) {
+    protected void validateDataImpl(TenantId tenantId, @NotNull AssetProfile assetProfile) {
         if (StringUtils.isEmpty(assetProfile.getName())) {
             throw new DataValidationException("Asset profile name should be specified!");
         }
@@ -82,8 +83,9 @@ public class AssetProfileDataValidator extends DataValidator<AssetProfile> {
         }
     }
 
+    @NotNull
     @Override
-    protected AssetProfile validateUpdate(TenantId tenantId, AssetProfile assetProfile) {
+    protected AssetProfile validateUpdate(TenantId tenantId, @NotNull AssetProfile assetProfile) {
         AssetProfile old = assetProfileDao.findById(assetProfile.getTenantId(), assetProfile.getId().getId());
         if (old == null) {
             throw new DataValidationException("Can't update non existing asset profile!");

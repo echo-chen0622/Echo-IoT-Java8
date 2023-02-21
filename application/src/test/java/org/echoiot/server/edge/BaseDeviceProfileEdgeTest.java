@@ -21,6 +21,8 @@ import org.echoiot.server.gen.edge.v1.DeviceProfileUpdateMsg;
 import org.echoiot.server.gen.edge.v1.UpdateMsgType;
 import org.echoiot.server.transport.AbstractTransportIntegrationTest;
 import org.echoiot.server.transport.lwm2m.AbstractLwM2MIntegrationTest;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -42,7 +44,7 @@ abstract public class BaseDeviceProfileEdgeTest extends AbstractEdgeTest {
         Assert.assertTrue(edgeImitator.waitForMessages());
         AbstractMessage latestMessage = edgeImitator.getLatestMessage();
         Assert.assertTrue(latestMessage instanceof DeviceProfileUpdateMsg);
-        DeviceProfileUpdateMsg deviceProfileUpdateMsg = (DeviceProfileUpdateMsg) latestMessage;
+        @NotNull DeviceProfileUpdateMsg deviceProfileUpdateMsg = (DeviceProfileUpdateMsg) latestMessage;
         Assert.assertEquals(UpdateMsgType.ENTITY_CREATED_RPC_MESSAGE, deviceProfileUpdateMsg.getMsgType());
         Assert.assertEquals(deviceProfile.getUuidId().getMostSignificantBits(), deviceProfileUpdateMsg.getIdMSB());
         Assert.assertEquals(deviceProfile.getUuidId().getLeastSignificantBits(), deviceProfileUpdateMsg.getIdLSB());
@@ -81,7 +83,7 @@ abstract public class BaseDeviceProfileEdgeTest extends AbstractEdgeTest {
 
         AbstractMessage latestMessage = edgeImitator.getLatestMessage();
         Assert.assertTrue(latestMessage instanceof DeviceProfileUpdateMsg);
-        DeviceProfileUpdateMsg deviceProfileUpdateMsg = (DeviceProfileUpdateMsg) latestMessage;
+        @NotNull DeviceProfileUpdateMsg deviceProfileUpdateMsg = (DeviceProfileUpdateMsg) latestMessage;
         Assert.assertEquals(UpdateMsgType.ENTITY_CREATED_RPC_MESSAGE, deviceProfileUpdateMsg.getMsgType());
         Assert.assertEquals(deviceProfile.getUuidId().getMostSignificantBits(), deviceProfileUpdateMsg.getIdMSB());
         Assert.assertEquals(deviceProfile.getUuidId().getLeastSignificantBits(), deviceProfileUpdateMsg.getIdLSB());
@@ -91,10 +93,10 @@ abstract public class BaseDeviceProfileEdgeTest extends AbstractEdgeTest {
                 dataDecodingEncodingService.decode(deviceProfileUpdateMsg.getProfileDataBytes().toByteArray());
 
         Assert.assertTrue(deviceProfileDataOpt.isPresent());
-        DeviceProfileData deviceProfileData = deviceProfileDataOpt.get();
+        @NotNull DeviceProfileData deviceProfileData = deviceProfileDataOpt.get();
 
         Assert.assertTrue(deviceProfileData.getTransportConfiguration() instanceof SnmpDeviceProfileTransportConfiguration);
-        SnmpDeviceProfileTransportConfiguration transportConfiguration =
+        @NotNull SnmpDeviceProfileTransportConfiguration transportConfiguration =
                 (SnmpDeviceProfileTransportConfiguration) deviceProfileData.getTransportConfiguration();
         Assert.assertEquals(Integer.valueOf(1000), transportConfiguration.getTimeoutMs());
         Assert.assertEquals(Integer.valueOf(3), transportConfiguration.getRetries());
@@ -102,7 +104,7 @@ abstract public class BaseDeviceProfileEdgeTest extends AbstractEdgeTest {
         Assert.assertFalse(transportConfiguration.getCommunicationConfigs().isEmpty());
         SnmpCommunicationConfig communicationConfig = transportConfiguration.getCommunicationConfigs().get(0);
         Assert.assertTrue(communicationConfig instanceof TelemetryQueryingSnmpCommunicationConfig);
-        TelemetryQueryingSnmpCommunicationConfig snmpCommunicationConfig =
+        @NotNull TelemetryQueryingSnmpCommunicationConfig snmpCommunicationConfig =
                 (TelemetryQueryingSnmpCommunicationConfig) communicationConfig;
 
         Assert.assertEquals(Long.valueOf(500L), snmpCommunicationConfig.getQueryingFrequencyMs());
@@ -122,7 +124,7 @@ abstract public class BaseDeviceProfileEdgeTest extends AbstractEdgeTest {
 
         AbstractMessage latestMessage = edgeImitator.getLatestMessage();
         Assert.assertTrue(latestMessage instanceof DeviceProfileUpdateMsg);
-        DeviceProfileUpdateMsg deviceProfileUpdateMsg = (DeviceProfileUpdateMsg) latestMessage;
+        @NotNull DeviceProfileUpdateMsg deviceProfileUpdateMsg = (DeviceProfileUpdateMsg) latestMessage;
         Assert.assertEquals(UpdateMsgType.ENTITY_CREATED_RPC_MESSAGE, deviceProfileUpdateMsg.getMsgType());
         Assert.assertEquals(deviceProfile.getUuidId().getMostSignificantBits(), deviceProfileUpdateMsg.getIdMSB());
         Assert.assertEquals(deviceProfile.getUuidId().getLeastSignificantBits(), deviceProfileUpdateMsg.getIdLSB());
@@ -132,10 +134,10 @@ abstract public class BaseDeviceProfileEdgeTest extends AbstractEdgeTest {
                 dataDecodingEncodingService.decode(deviceProfileUpdateMsg.getProfileDataBytes().toByteArray());
 
         Assert.assertTrue(deviceProfileDataOpt.isPresent());
-        DeviceProfileData deviceProfileData = deviceProfileDataOpt.get();
+        @NotNull DeviceProfileData deviceProfileData = deviceProfileDataOpt.get();
 
         Assert.assertTrue(deviceProfileData.getTransportConfiguration() instanceof Lwm2mDeviceProfileTransportConfiguration);
-        Lwm2mDeviceProfileTransportConfiguration transportConfiguration =
+        @NotNull Lwm2mDeviceProfileTransportConfiguration transportConfiguration =
                 (Lwm2mDeviceProfileTransportConfiguration) deviceProfileData.getTransportConfiguration();
 
         OtherConfiguration clientLwM2mSettings = transportConfiguration.getClientLwM2mSettings();
@@ -149,7 +151,7 @@ abstract public class BaseDeviceProfileEdgeTest extends AbstractEdgeTest {
         Assert.assertFalse(transportConfiguration.getBootstrap().isEmpty());
         LwM2MBootstrapServerCredential lwM2MBootstrapServerCredential = transportConfiguration.getBootstrap().get(0);
         Assert.assertTrue(lwM2MBootstrapServerCredential instanceof NoSecLwM2MBootstrapServerCredential);
-        NoSecLwM2MBootstrapServerCredential noSecLwM2MBootstrapServerCredential = (NoSecLwM2MBootstrapServerCredential) lwM2MBootstrapServerCredential;
+        @NotNull NoSecLwM2MBootstrapServerCredential noSecLwM2MBootstrapServerCredential = (NoSecLwM2MBootstrapServerCredential) lwM2MBootstrapServerCredential;
 
         Assert.assertEquals("PUBLIC_KEY", noSecLwM2MBootstrapServerCredential.getServerPublicKey());
         Assert.assertEquals(Integer.valueOf(123), noSecLwM2MBootstrapServerCredential.getShortServerId());
@@ -174,7 +176,7 @@ abstract public class BaseDeviceProfileEdgeTest extends AbstractEdgeTest {
 
         AbstractMessage latestMessage = edgeImitator.getLatestMessage();
         Assert.assertTrue(latestMessage instanceof DeviceProfileUpdateMsg);
-        DeviceProfileUpdateMsg deviceProfileUpdateMsg = (DeviceProfileUpdateMsg) latestMessage;
+        @NotNull DeviceProfileUpdateMsg deviceProfileUpdateMsg = (DeviceProfileUpdateMsg) latestMessage;
         Assert.assertEquals(UpdateMsgType.ENTITY_CREATED_RPC_MESSAGE, deviceProfileUpdateMsg.getMsgType());
         Assert.assertEquals(deviceProfile.getUuidId().getMostSignificantBits(), deviceProfileUpdateMsg.getIdMSB());
         Assert.assertEquals(deviceProfile.getUuidId().getLeastSignificantBits(), deviceProfileUpdateMsg.getIdLSB());
@@ -184,10 +186,10 @@ abstract public class BaseDeviceProfileEdgeTest extends AbstractEdgeTest {
                 dataDecodingEncodingService.decode(deviceProfileUpdateMsg.getProfileDataBytes().toByteArray());
 
         Assert.assertTrue(deviceProfileDataOpt.isPresent());
-        DeviceProfileData deviceProfileData = deviceProfileDataOpt.get();
+        @NotNull DeviceProfileData deviceProfileData = deviceProfileDataOpt.get();
 
         Assert.assertTrue(deviceProfileData.getTransportConfiguration() instanceof CoapDeviceProfileTransportConfiguration);
-        CoapDeviceProfileTransportConfiguration transportConfiguration =
+        @NotNull CoapDeviceProfileTransportConfiguration transportConfiguration =
                 (CoapDeviceProfileTransportConfiguration) deviceProfileData.getTransportConfiguration();
 
         PowerSavingConfiguration clientSettings = transportConfiguration.getClientSettings();
@@ -198,12 +200,12 @@ abstract public class BaseDeviceProfileEdgeTest extends AbstractEdgeTest {
         Assert.assertEquals(Long.valueOf(1L), clientSettings.getPagingTransmissionWindow());
 
         Assert.assertTrue(transportConfiguration.getCoapDeviceTypeConfiguration() instanceof DefaultCoapDeviceTypeConfiguration);
-        DefaultCoapDeviceTypeConfiguration coapDeviceTypeConfiguration =
+        @NotNull DefaultCoapDeviceTypeConfiguration coapDeviceTypeConfiguration =
                 (DefaultCoapDeviceTypeConfiguration) transportConfiguration.getCoapDeviceTypeConfiguration();
 
         Assert.assertTrue(coapDeviceTypeConfiguration.getTransportPayloadTypeConfiguration() instanceof ProtoTransportPayloadConfiguration);
 
-        ProtoTransportPayloadConfiguration protoTransportPayloadConfiguration =
+        @NotNull ProtoTransportPayloadConfiguration protoTransportPayloadConfiguration =
                 (ProtoTransportPayloadConfiguration) coapDeviceTypeConfiguration.getTransportPayloadTypeConfiguration();
 
         Assert.assertEquals(AbstractTransportIntegrationTest.DEVICE_TELEMETRY_PROTO_SCHEMA, protoTransportPayloadConfiguration.getDeviceTelemetryProtoSchema());
@@ -224,25 +226,26 @@ abstract public class BaseDeviceProfileEdgeTest extends AbstractEdgeTest {
         return deviceProfile;
     }
 
-    private void removeDeviceProfileAndDoBasicAssert(DeviceProfile deviceProfile) throws Exception {
+    private void removeDeviceProfileAndDoBasicAssert(@NotNull DeviceProfile deviceProfile) throws Exception {
         edgeImitator.expectMessageAmount(1);
         doDelete("/api/deviceProfile/" + deviceProfile.getUuidId())
                 .andExpect(status().isOk());
         Assert.assertTrue(edgeImitator.waitForMessages());
         AbstractMessage latestMessage = edgeImitator.getLatestMessage();
         Assert.assertTrue(latestMessage instanceof DeviceProfileUpdateMsg);
-        DeviceProfileUpdateMsg deviceProfileUpdateMsg = (DeviceProfileUpdateMsg) latestMessage;
+        @NotNull DeviceProfileUpdateMsg deviceProfileUpdateMsg = (DeviceProfileUpdateMsg) latestMessage;
         Assert.assertEquals(UpdateMsgType.ENTITY_DELETED_RPC_MESSAGE, deviceProfileUpdateMsg.getMsgType());
         Assert.assertEquals(deviceProfile.getUuidId().getMostSignificantBits(), deviceProfileUpdateMsg.getIdMSB());
         Assert.assertEquals(deviceProfile.getUuidId().getLeastSignificantBits(), deviceProfileUpdateMsg.getIdLSB());
     }
 
+    @NotNull
     private SnmpDeviceProfileTransportConfiguration createSnmpDeviceProfileTransportConfiguration() {
-        SnmpDeviceProfileTransportConfiguration transportConfiguration = new SnmpDeviceProfileTransportConfiguration();
-        List<SnmpCommunicationConfig> communicationConfigs = new ArrayList<>();
-        TelemetryQueryingSnmpCommunicationConfig communicationConfig = new TelemetryQueryingSnmpCommunicationConfig();
+        @NotNull SnmpDeviceProfileTransportConfiguration transportConfiguration = new SnmpDeviceProfileTransportConfiguration();
+        @NotNull List<SnmpCommunicationConfig> communicationConfigs = new ArrayList<>();
+        @NotNull TelemetryQueryingSnmpCommunicationConfig communicationConfig = new TelemetryQueryingSnmpCommunicationConfig();
         communicationConfig.setQueryingFrequencyMs(500L);
-        List<SnmpMapping> mappings = new ArrayList<>();
+        @NotNull List<SnmpMapping> mappings = new ArrayList<>();
         mappings.add(new SnmpMapping("1.3.3.5.6.7.8.9.1", "temperature", DataType.DOUBLE));
         communicationConfig.setMappings(mappings);
         communicationConfigs.add(communicationConfig);
@@ -252,20 +255,21 @@ abstract public class BaseDeviceProfileEdgeTest extends AbstractEdgeTest {
         return transportConfiguration;
     }
 
+    @NotNull
     private Lwm2mDeviceProfileTransportConfiguration createLwm2mDeviceProfileTransportConfiguration() {
-        Lwm2mDeviceProfileTransportConfiguration transportConfiguration = new Lwm2mDeviceProfileTransportConfiguration();
+        @NotNull Lwm2mDeviceProfileTransportConfiguration transportConfiguration = new Lwm2mDeviceProfileTransportConfiguration();
 
-        OtherConfiguration clientLwM2mSettings = JacksonUtil.fromString(AbstractLwM2MIntegrationTest.CLIENT_LWM2M_SETTINGS, OtherConfiguration.class);
+        @Nullable OtherConfiguration clientLwM2mSettings = JacksonUtil.fromString(AbstractLwM2MIntegrationTest.CLIENT_LWM2M_SETTINGS, OtherConfiguration.class);
         transportConfiguration.setClientLwM2mSettings(clientLwM2mSettings);
 
         transportConfiguration.setBootstrapServerUpdateEnable(true);
 
-        TelemetryMappingConfiguration observeAttrConfiguration =
+        @Nullable TelemetryMappingConfiguration observeAttrConfiguration =
                 JacksonUtil.fromString(AbstractLwM2MIntegrationTest.OBSERVE_ATTRIBUTES_WITH_PARAMS, TelemetryMappingConfiguration.class);
         transportConfiguration.setObserveAttr(observeAttrConfiguration);
 
-        List<LwM2MBootstrapServerCredential> bootstrap = new ArrayList<>();
-        AbstractLwM2MBootstrapServerCredential bootstrapServerCredential = new NoSecLwM2MBootstrapServerCredential();
+        @NotNull List<LwM2MBootstrapServerCredential> bootstrap = new ArrayList<>();
+        @NotNull AbstractLwM2MBootstrapServerCredential bootstrapServerCredential = new NoSecLwM2MBootstrapServerCredential();
         bootstrapServerCredential.setServerPublicKey("PUBLIC_KEY");
         bootstrapServerCredential.setShortServerId(123);
         bootstrapServerCredential.setBootstrapServerIs(true);
@@ -277,16 +281,17 @@ abstract public class BaseDeviceProfileEdgeTest extends AbstractEdgeTest {
         return transportConfiguration;
     }
 
+    @NotNull
     private CoapDeviceProfileTransportConfiguration createCoapDeviceProfileTransportConfiguration() {
-        CoapDeviceProfileTransportConfiguration transportConfiguration = new CoapDeviceProfileTransportConfiguration();
-        PowerSavingConfiguration clientSettings = new PowerSavingConfiguration();
+        @NotNull CoapDeviceProfileTransportConfiguration transportConfiguration = new CoapDeviceProfileTransportConfiguration();
+        @NotNull PowerSavingConfiguration clientSettings = new PowerSavingConfiguration();
         clientSettings.setPowerMode(PowerMode.DRX);
         clientSettings.setEdrxCycle(1L);
         clientSettings.setPsmActivityTimer(1L);
         clientSettings.setPagingTransmissionWindow(1L);
         transportConfiguration.setClientSettings(clientSettings);
-        DefaultCoapDeviceTypeConfiguration coapDeviceTypeConfiguration = new DefaultCoapDeviceTypeConfiguration();
-        ProtoTransportPayloadConfiguration transportPayloadTypeConfiguration = new ProtoTransportPayloadConfiguration();
+        @NotNull DefaultCoapDeviceTypeConfiguration coapDeviceTypeConfiguration = new DefaultCoapDeviceTypeConfiguration();
+        @NotNull ProtoTransportPayloadConfiguration transportPayloadTypeConfiguration = new ProtoTransportPayloadConfiguration();
         transportPayloadTypeConfiguration.setDeviceTelemetryProtoSchema(AbstractTransportIntegrationTest.DEVICE_TELEMETRY_PROTO_SCHEMA);
         transportPayloadTypeConfiguration.setDeviceAttributesProtoSchema(AbstractTransportIntegrationTest.DEVICE_ATTRIBUTES_PROTO_SCHEMA);
         transportPayloadTypeConfiguration.setDeviceRpcResponseProtoSchema(AbstractTransportIntegrationTest.DEVICE_RPC_RESPONSE_PROTO_SCHEMA);

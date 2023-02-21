@@ -6,6 +6,7 @@ import org.echoiot.server.common.data.id.AssetProfileId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
+import org.jetbrains.annotations.Nullable;
 
 public interface AssetProfileService {
 
@@ -13,6 +14,7 @@ public interface AssetProfileService {
 
     AssetProfile findAssetProfileByName(TenantId tenantId, String profileName);
 
+    @Nullable
     AssetProfileInfo findAssetProfileInfoById(TenantId tenantId, AssetProfileId assetProfileId);
 
     AssetProfile saveAssetProfile(AssetProfile assetProfile);
@@ -29,6 +31,7 @@ public interface AssetProfileService {
 
     AssetProfile findDefaultAssetProfile(TenantId tenantId);
 
+    @Nullable
     AssetProfileInfo findDefaultAssetProfileInfo(TenantId tenantId);
 
     boolean setDefaultAssetProfile(TenantId tenantId, AssetProfileId assetProfileId);

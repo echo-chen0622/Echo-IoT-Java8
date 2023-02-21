@@ -9,6 +9,7 @@ import org.echoiot.server.common.data.CacheConstants;
 import org.echoiot.server.common.data.kv.*;
 import org.echoiot.server.gen.transport.TransportProtos.AttributeValueProto;
 import org.echoiot.server.gen.transport.TransportProtos.KeyValueType;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.serializer.SerializationException;
@@ -18,10 +19,10 @@ import org.springframework.stereotype.Service;
 @Service("AttributeCache")
 public class AttributeRedisCache extends RedisTbTransactionalCache<AttributeCacheKey, AttributeKvEntry> {
 
-    public AttributeRedisCache(TBRedisCacheConfiguration configuration, CacheSpecsMap cacheSpecsMap, RedisConnectionFactory connectionFactory) {
+    public AttributeRedisCache(@NotNull TBRedisCacheConfiguration configuration, CacheSpecsMap cacheSpecsMap, RedisConnectionFactory connectionFactory) {
         super(CacheConstants.ATTRIBUTES_CACHE, cacheSpecsMap, connectionFactory, configuration, new TbRedisSerializer<>() {
             @Override
-            public byte[] serialize(AttributeKvEntry attributeKvEntry) throws SerializationException {
+            public byte[] serialize(@NotNull AttributeKvEntry attributeKvEntry) throws SerializationException {
                 AttributeValueProto.Builder builder = AttributeValueProto.newBuilder()
                         .setLastUpdateTs(attributeKvEntry.getLastUpdateTs());
                 switch (attributeKvEntry.getDataType()) {
@@ -56,7 +57,7 @@ public class AttributeRedisCache extends RedisTbTransactionalCache<AttributeCach
             }
 
             @Override
-            public AttributeKvEntry deserialize(AttributeCacheKey key, byte[] bytes) throws SerializationException {
+            public AttributeKvEntry deserialize(@NotNull AttributeCacheKey key, byte[] bytes) throws SerializationException {
                 try {
                     AttributeValueProto proto = AttributeValueProto.parseFrom(bytes);
                     boolean hasValue = proto.getHasV();

@@ -12,6 +12,7 @@ import org.echoiot.server.actors.TbRuleNodeUpdateException;
 import org.echoiot.server.actors.stats.StatsPersistMsg;
 import org.echoiot.server.common.msg.plugin.ComponentLifecycleMsg;
 import org.echoiot.server.common.msg.queue.PartitionChangeMsg;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Andrew Shvayka
@@ -81,7 +82,7 @@ public abstract class ComponentActor<T extends EntityId, P extends ComponentMsgP
         }
     }
 
-    protected void onComponentLifecycleMsg(ComponentLifecycleMsg msg) {
+    protected void onComponentLifecycleMsg(@NotNull ComponentLifecycleMsg msg) {
         log.debug("[{}][{}][{}] onComponentLifecycleMsg: [{}]", tenantId, id, id.getEntityType(), msg.getEvent());
         try {
             switch (msg.getEvent()) {
@@ -161,11 +162,11 @@ public abstract class ComponentActor<T extends EntityId, P extends ComponentMsgP
         }
     }
 
-    private void logLifecycleEvent(ComponentLifecycleEvent event) {
+    private void logLifecycleEvent(@NotNull ComponentLifecycleEvent event) {
         logLifecycleEvent(event, null);
     }
 
-    private void logLifecycleEvent(ComponentLifecycleEvent event, Exception e) {
+    private void logLifecycleEvent(@NotNull ComponentLifecycleEvent event, Exception e) {
         systemContext.persistLifecycleEvent(tenantId, id, event, e);
     }
 

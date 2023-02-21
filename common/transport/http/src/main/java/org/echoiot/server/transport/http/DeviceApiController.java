@@ -22,6 +22,8 @@ import org.echoiot.server.common.transport.auth.SessionInfoCreator;
 import org.echoiot.server.common.transport.auth.ValidateDeviceCredentialsResponse;
 import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.gen.transport.TransportProtos.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.core.io.ByteArrayResource;
@@ -92,9 +94,10 @@ public class DeviceApiController implements TbTransportService {
 
     private static final String ACCESS_TOKEN_PARAM_DESCRIPTION = "Your device access token.";
 
-    @Autowired
+    @Resource
     private HttpTransportContext transportContext;
 
+    @NotNull
     @ApiOperation(value = "Get attributes (getDeviceAttributes)",
             notes = "Returns all attributes that belong to device. "
                     + "Use optional 'clientKeys' and/or 'sharedKeys' parameter to return specific attributes. "
@@ -108,16 +111,16 @@ public class DeviceApiController implements TbTransportService {
     public DeferredResult<ResponseEntity> getDeviceAttributes(
             @ApiParam(value = ACCESS_TOKEN_PARAM_DESCRIPTION, required = true, defaultValue = "YOUR_DEVICE_ACCESS_TOKEN")
             @PathVariable("deviceToken") String deviceToken,
-            @ApiParam(value = "Comma separated key names for attribute with client scope", required = true, defaultValue = "state")
+            @NotNull @ApiParam(value = "Comma separated key names for attribute with client scope", required = true, defaultValue = "state")
             @RequestParam(value = "clientKeys", required = false, defaultValue = "") String clientKeys,
-            @ApiParam(value = "Comma separated key names for attribute with shared scope", required = true, defaultValue = "configuration")
+            @NotNull @ApiParam(value = "Comma separated key names for attribute with shared scope", required = true, defaultValue = "configuration")
             @RequestParam(value = "sharedKeys", required = false, defaultValue = "") String sharedKeys) {
-        DeferredResult<ResponseEntity> responseWriter = new DeferredResult<>();
+        @NotNull DeferredResult<ResponseEntity> responseWriter = new DeferredResult<>();
         transportContext.getTransportService().process(DeviceTransportType.DEFAULT, ValidateDeviceTokenRequestMsg.newBuilder().setToken(deviceToken).build(),
                 new DeviceAuthCallback(transportContext, responseWriter, sessionInfo -> {
                     GetAttributeRequestMsg.Builder request = GetAttributeRequestMsg.newBuilder().setRequestId(0);
-                    List<String> clientKeySet = !StringUtils.isEmpty(clientKeys) ? Arrays.asList(clientKeys.split(",")) : null;
-                    List<String> sharedKeySet = !StringUtils.isEmpty(sharedKeys) ? Arrays.asList(sharedKeys.split(",")) : null;
+                    @Nullable List<String> clientKeySet = !StringUtils.isEmpty(clientKeys) ? Arrays.asList(clientKeys.split(",")) : null;
+                    @Nullable List<String> sharedKeySet = !StringUtils.isEmpty(sharedKeys) ? Arrays.asList(sharedKeys.split(",")) : null;
                     if (clientKeySet != null) {
                         request.addAllClientAttributeNames(clientKeySet);
                     }
@@ -133,6 +136,7 @@ public class DeviceApiController implements TbTransportService {
         return responseWriter;
     }
 
+    @NotNull
     @ApiOperation(value = "Post attributes (postDeviceAttributes)",
             notes = "Post client attribute updates on behalf of device. "
                     + "\n Example of the request: "
@@ -145,9 +149,9 @@ public class DeviceApiController implements TbTransportService {
     public DeferredResult<ResponseEntity> postDeviceAttributes(
             @ApiParam(value = ACCESS_TOKEN_PARAM_DESCRIPTION, required = true, defaultValue = "YOUR_DEVICE_ACCESS_TOKEN")
             @PathVariable("deviceToken") String deviceToken,
-            @ApiParam(value = "JSON with attribute key-value pairs. See API call description for example.")
+            @NotNull @ApiParam(value = "JSON with attribute key-value pairs. See API call description for example.")
             @RequestBody String json) {
-        DeferredResult<ResponseEntity> responseWriter = new DeferredResult<>();
+        @NotNull DeferredResult<ResponseEntity> responseWriter = new DeferredResult<>();
         transportContext.getTransportService().process(DeviceTransportType.DEFAULT, ValidateDeviceTokenRequestMsg.newBuilder().setToken(deviceToken).build(),
                 new DeviceAuthCallback(transportContext, responseWriter, sessionInfo -> {
                     TransportService transportService = transportContext.getTransportService();
@@ -157,6 +161,7 @@ public class DeviceApiController implements TbTransportService {
         return responseWriter;
     }
 
+    @NotNull
     @ApiOperation(value = "Post time-series data (postTelemetry)",
             notes = "Post time-series data on behalf of device. "
                     + "\n Example of the request: "
@@ -167,8 +172,8 @@ public class DeviceApiController implements TbTransportService {
     public DeferredResult<ResponseEntity> postTelemetry(
             @ApiParam(value = ACCESS_TOKEN_PARAM_DESCRIPTION, required = true, defaultValue = "YOUR_DEVICE_ACCESS_TOKEN")
             @PathVariable("deviceToken") String deviceToken,
-            @RequestBody String json, HttpServletRequest request) {
-        DeferredResult<ResponseEntity> responseWriter = new DeferredResult<ResponseEntity>();
+            @NotNull @RequestBody String json, HttpServletRequest request) {
+        @NotNull DeferredResult<ResponseEntity> responseWriter = new DeferredResult<ResponseEntity>();
         transportContext.getTransportService().process(DeviceTransportType.DEFAULT, ValidateDeviceTokenRequestMsg.newBuilder().setToken(deviceToken).build(),
                 new DeviceAuthCallback(transportContext, responseWriter, sessionInfo -> {
                     TransportService transportService = transportContext.getTransportService();
@@ -178,6 +183,7 @@ public class DeviceApiController implements TbTransportService {
         return responseWriter;
     }
 
+    @NotNull
     @ApiOperation(value = "Save claiming information (claimDevice)",
             notes = "Saves the information required for user to claim the device. " +
                     "See more info about claiming in the corresponding 'Claiming devices' platform documentation."
@@ -194,17 +200,18 @@ public class DeviceApiController implements TbTransportService {
             @ApiParam(value = ACCESS_TOKEN_PARAM_DESCRIPTION, required = true, defaultValue = "YOUR_DEVICE_ACCESS_TOKEN")
             @PathVariable("deviceToken") String deviceToken,
             @RequestBody(required = false) String json) {
-        DeferredResult<ResponseEntity> responseWriter = new DeferredResult<>();
+        @NotNull DeferredResult<ResponseEntity> responseWriter = new DeferredResult<>();
         transportContext.getTransportService().process(DeviceTransportType.DEFAULT, ValidateDeviceTokenRequestMsg.newBuilder().setToken(deviceToken).build(),
                 new DeviceAuthCallback(transportContext, responseWriter, sessionInfo -> {
                     TransportService transportService = transportContext.getTransportService();
-                    DeviceId deviceId = new DeviceId(new UUID(sessionInfo.getDeviceIdMSB(), sessionInfo.getDeviceIdLSB()));
+                    @NotNull DeviceId deviceId = new DeviceId(new UUID(sessionInfo.getDeviceIdMSB(), sessionInfo.getDeviceIdLSB()));
                     transportService.process(sessionInfo, JsonConverter.convertToClaimDeviceProto(deviceId, json),
                             new HttpOkCallback(responseWriter));
                 }));
         return responseWriter;
     }
 
+    @NotNull
     @ApiOperation(value = "Subscribe to RPC commands (subscribeToCommands) (Deprecated)",
             notes = "Subscribes to RPC commands using http long polling. " +
                     "Deprecated, since long polling is resource and network consuming. " +
@@ -217,7 +224,7 @@ public class DeviceApiController implements TbTransportService {
             @PathVariable("deviceToken") String deviceToken,
             @ApiParam(value = "Optional timeout of the long poll. Typically less then 60 seconds, since limited on the server side.")
             @RequestParam(value = "timeout", required = false, defaultValue = "0") long timeout) {
-        DeferredResult<ResponseEntity> responseWriter = new DeferredResult<>();
+        @NotNull DeferredResult<ResponseEntity> responseWriter = new DeferredResult<>();
         transportContext.getTransportService().process(DeviceTransportType.DEFAULT, ValidateDeviceTokenRequestMsg.newBuilder().setToken(deviceToken).build(),
                 new DeviceAuthCallback(transportContext, responseWriter, sessionInfo -> {
                     TransportService transportService = transportContext.getTransportService();
@@ -231,6 +238,7 @@ public class DeviceApiController implements TbTransportService {
         return responseWriter;
     }
 
+    @NotNull
     @ApiOperation(value = "Reply to RPC commands (replyToCommand)",
             notes = "Replies to server originated RPC command identified by 'requestId' parameter. The response is arbitrary JSON.\n\n" +
                     REQUIRE_ACCESS_TOKEN,
@@ -243,7 +251,7 @@ public class DeviceApiController implements TbTransportService {
             @PathVariable("requestId") Integer requestId,
             @ApiParam(value = "Reply to the RPC request, JSON. For example: {\"status\":\"success\"}", required = true)
             @RequestBody String json) {
-        DeferredResult<ResponseEntity> responseWriter = new DeferredResult<ResponseEntity>();
+        @NotNull DeferredResult<ResponseEntity> responseWriter = new DeferredResult<ResponseEntity>();
         transportContext.getTransportService().process(DeviceTransportType.DEFAULT, ValidateDeviceTokenRequestMsg.newBuilder().setToken(deviceToken).build(),
                 new DeviceAuthCallback(transportContext, responseWriter, sessionInfo -> {
                     TransportService transportService = transportContext.getTransportService();
@@ -252,6 +260,7 @@ public class DeviceApiController implements TbTransportService {
         return responseWriter;
     }
 
+    @NotNull
     @ApiOperation(value = "Send the RPC command (postRpcRequest)",
             notes = "Send the RPC request to server. The request payload is a JSON document that contains 'method' and 'params'. For example:" +
                     MARKDOWN_CODE_BLOCK_START +
@@ -267,9 +276,9 @@ public class DeviceApiController implements TbTransportService {
     public DeferredResult<ResponseEntity> postRpcRequest(
             @ApiParam(value = ACCESS_TOKEN_PARAM_DESCRIPTION, required = true, defaultValue = "YOUR_DEVICE_ACCESS_TOKEN")
             @PathVariable("deviceToken") String deviceToken,
-            @ApiParam(value = "The RPC request JSON", required = true)
+            @NotNull @ApiParam(value = "The RPC request JSON", required = true)
             @RequestBody String json) {
-        DeferredResult<ResponseEntity> responseWriter = new DeferredResult<ResponseEntity>();
+        @NotNull DeferredResult<ResponseEntity> responseWriter = new DeferredResult<ResponseEntity>();
         transportContext.getTransportService().process(DeviceTransportType.DEFAULT, ValidateDeviceTokenRequestMsg.newBuilder().setToken(deviceToken).build(),
                 new DeviceAuthCallback(transportContext, responseWriter, sessionInfo -> {
                     JsonObject request = new JsonParser().parse(json).getAsJsonObject();
@@ -285,6 +294,7 @@ public class DeviceApiController implements TbTransportService {
         return responseWriter;
     }
 
+    @NotNull
     @ApiOperation(value = "Subscribe to attribute updates (subscribeToAttributes) (Deprecated)",
             notes = "Subscribes to client and shared scope attribute updates using http long polling. " +
                     "Deprecated, since long polling is resource and network consuming. " +
@@ -297,7 +307,7 @@ public class DeviceApiController implements TbTransportService {
             @PathVariable("deviceToken") String deviceToken,
             @ApiParam(value = "Optional timeout of the long poll. Typically less then 60 seconds, since limited on the server side.")
             @RequestParam(value = "timeout", required = false, defaultValue = "0") long timeout) {
-        DeferredResult<ResponseEntity> responseWriter = new DeferredResult<>();
+        @NotNull DeferredResult<ResponseEntity> responseWriter = new DeferredResult<>();
         transportContext.getTransportService().process(DeviceTransportType.DEFAULT, ValidateDeviceTokenRequestMsg.newBuilder().setToken(deviceToken).build(),
                 new DeviceAuthCallback(transportContext, responseWriter, sessionInfo -> {
                     TransportService transportService = transportContext.getTransportService();
@@ -311,6 +321,7 @@ public class DeviceApiController implements TbTransportService {
         return responseWriter;
     }
 
+    @NotNull
     @ApiOperation(value = "Get Device Firmware (getFirmware)",
             notes = "Downloads the current firmware package." +
                     "When the platform initiates firmware update, " +
@@ -338,6 +349,7 @@ public class DeviceApiController implements TbTransportService {
         return getOtaPackageCallback(deviceToken, title, version, size, chunk, OtaPackageType.FIRMWARE);
     }
 
+    @NotNull
     @ApiOperation(value = "Get Device Software (getSoftware)",
             notes = "Downloads the current software package." +
                     "When the platform initiates software update, " +
@@ -365,6 +377,7 @@ public class DeviceApiController implements TbTransportService {
         return getOtaPackageCallback(deviceToken, title, version, size, chunk, OtaPackageType.SOFTWARE);
     }
 
+    @NotNull
     @ApiOperation(value = "Provision new device (provisionDevice)",
             notes = "Exchange the provision request to the device credentials. " +
                     "See more info about provisioning in the corresponding 'Device provisioning' platform documentation." +
@@ -390,14 +403,15 @@ public class DeviceApiController implements TbTransportService {
     public DeferredResult<ResponseEntity> provisionDevice(
             @ApiParam(value = "JSON with provision request. See API call description for example.")
             @RequestBody String json) {
-        DeferredResult<ResponseEntity> responseWriter = new DeferredResult<>();
+        @NotNull DeferredResult<ResponseEntity> responseWriter = new DeferredResult<>();
         transportContext.getTransportService().process(JsonConverter.convertToProvisionRequestMsg(json),
                 new DeviceProvisionCallback(responseWriter));
         return responseWriter;
     }
 
-    private DeferredResult<ResponseEntity> getOtaPackageCallback(String deviceToken, String title, String version, int size, int chunk, OtaPackageType firmwareType) {
-        DeferredResult<ResponseEntity> responseWriter = new DeferredResult<>();
+    @NotNull
+    private DeferredResult<ResponseEntity> getOtaPackageCallback(String deviceToken, String title, String version, int size, int chunk, @NotNull OtaPackageType firmwareType) {
+        @NotNull DeferredResult<ResponseEntity> responseWriter = new DeferredResult<>();
         transportContext.getTransportService().process(DeviceTransportType.DEFAULT, ValidateDeviceTokenRequestMsg.newBuilder().setToken(deviceToken).build(),
                 new DeviceAuthCallback(transportContext, responseWriter, sessionInfo -> {
                     TransportProtos.GetOtaPackageRequestMsg requestMsg = TransportProtos.GetOtaPackageRequestMsg.newBuilder()
@@ -423,7 +437,7 @@ public class DeviceApiController implements TbTransportService {
         }
 
         @Override
-        public void onSuccess(ValidateDeviceCredentialsResponse msg) {
+        public void onSuccess(@NotNull ValidateDeviceCredentialsResponse msg) {
             if (msg.hasDeviceInfo()) {
                 onSuccess.accept(SessionInfoCreator.create(msg, transportContext, UUID.randomUUID()));
             } else {
@@ -473,18 +487,18 @@ public class DeviceApiController implements TbTransportService {
         }
 
         @Override
-        public void onSuccess(TransportProtos.GetOtaPackageResponseMsg otaPackageResponseMsg) {
+        public void onSuccess(@NotNull TransportProtos.GetOtaPackageResponseMsg otaPackageResponseMsg) {
             if (!TransportProtos.ResponseStatus.SUCCESS.equals(otaPackageResponseMsg.getResponseStatus())) {
                 responseWriter.setResult(new ResponseEntity<>(HttpStatus.NOT_FOUND));
             } else if (title.equals(otaPackageResponseMsg.getTitle()) && version.equals(otaPackageResponseMsg.getVersion())) {
                 String otaPackageId = new UUID(otaPackageResponseMsg.getOtaPackageIdMSB(), otaPackageResponseMsg.getOtaPackageIdLSB()).toString();
-                ByteArrayResource resource = new ByteArrayResource(transportContext.getOtaPackageDataCache().get(otaPackageId, chuckSize, chuck));
-                ResponseEntity<ByteArrayResource> response = ResponseEntity.ok()
-                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + otaPackageResponseMsg.getFileName())
-                        .header("x-filename", otaPackageResponseMsg.getFileName())
-                        .contentLength(resource.contentLength())
-                        .contentType(parseMediaType(otaPackageResponseMsg.getContentType()))
-                        .body(resource);
+                @NotNull ByteArrayResource resource = new ByteArrayResource(transportContext.getOtaPackageDataCache().get(otaPackageId, chuckSize, chuck));
+                @NotNull ResponseEntity<ByteArrayResource> response = ResponseEntity.ok()
+                                                                                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + otaPackageResponseMsg.getFileName())
+                                                                                    .header("x-filename", otaPackageResponseMsg.getFileName())
+                                                                                    .contentLength(resource.contentLength())
+                                                                                    .contentType(parseMediaType(otaPackageResponseMsg.getContentType()))
+                                                                                    .body(resource);
                 responseWriter.setResult(response);
             } else {
                 responseWriter.setResult(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
@@ -538,23 +552,26 @@ public class DeviceApiController implements TbTransportService {
     @RequiredArgsConstructor
     private static class HttpSessionListener implements SessionMsgListener {
 
+        @NotNull
         private final DeferredResult<ResponseEntity> responseWriter;
+        @NotNull
         private final TransportService transportService;
+        @NotNull
         private final SessionInfoProto sessionInfo;
 
         @Override
-        public void onGetAttributesResponse(GetAttributeResponseMsg msg) {
+        public void onGetAttributesResponse(@NotNull GetAttributeResponseMsg msg) {
             responseWriter.setResult(new ResponseEntity<>(JsonConverter.toJson(msg).toString(), HttpStatus.OK));
         }
 
         @Override
-        public void onAttributeUpdate(UUID sessionId, AttributeUpdateNotificationMsg msg) {
+        public void onAttributeUpdate(UUID sessionId, @NotNull AttributeUpdateNotificationMsg msg) {
             log.trace("[{}] Received attributes update notification to device", sessionId);
             responseWriter.setResult(new ResponseEntity<>(JsonConverter.toJson(msg).toString(), HttpStatus.OK));
         }
 
         @Override
-        public void onRemoteSessionCloseCommand(UUID sessionId, SessionCloseNotificationProto sessionCloseNotification) {
+        public void onRemoteSessionCloseCommand(UUID sessionId, @NotNull SessionCloseNotificationProto sessionCloseNotification) {
             log.trace("[{}] Received the remote command to close the session: {}", sessionId, sessionCloseNotification.getMessage());
             responseWriter.setResult(new ResponseEntity<>(HttpStatus.REQUEST_TIMEOUT));
         }
@@ -567,20 +584,21 @@ public class DeviceApiController implements TbTransportService {
         }
 
         @Override
-        public void onToServerRpcResponse(ToServerRpcResponseMsg msg) {
+        public void onToServerRpcResponse(@NotNull ToServerRpcResponseMsg msg) {
             responseWriter.setResult(new ResponseEntity<>(JsonConverter.toJson(msg).toString(), HttpStatus.OK));
         }
 
         @Override
         public void onDeviceDeleted(DeviceId deviceId) {
-            UUID sessionId = new UUID(sessionInfo.getSessionIdMSB(), sessionInfo.getSessionIdLSB());
+            @NotNull UUID sessionId = new UUID(sessionInfo.getSessionIdMSB(), sessionInfo.getSessionIdLSB());
             log.trace("[{}] Received device deleted notification for device with id: {}",sessionId, deviceId);
             responseWriter.setResult(new ResponseEntity<>("Device was deleted!", HttpStatus.FORBIDDEN));
         }
 
     }
 
-    private static MediaType parseMediaType(String contentType) {
+    @NotNull
+    private static MediaType parseMediaType(@NotNull String contentType) {
         try {
             return MediaType.parseMediaType(contentType);
         } catch (Exception e) {
@@ -588,6 +606,7 @@ public class DeviceApiController implements TbTransportService {
         }
     }
 
+    @NotNull
     @Override
     public String getName() {
         return DataConstants.HTTP_TRANSPORT_NAME;

@@ -13,6 +13,8 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.echoiot.server.common.data.kv.DataType;
 import org.echoiot.server.common.data.kv.KvEntry;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.*;
@@ -34,7 +36,8 @@ public class JacksonUtil {
             .configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true)
             .build();
 
-    public static <T> T convertValue(Object fromValue, Class<T> toValueType) {
+    @Nullable
+    public static <T> T convertValue(@Nullable Object fromValue, Class<T> toValueType) {
         try {
             return fromValue != null ? OBJECT_MAPPER.convertValue(fromValue, toValueType) : null;
         } catch (IllegalArgumentException e) {
@@ -43,7 +46,8 @@ public class JacksonUtil {
         }
     }
 
-    public static <T> T convertValue(Object fromValue, TypeReference<T> toValueTypeRef) {
+    @Nullable
+    public static <T> T convertValue(@Nullable Object fromValue, TypeReference<T> toValueTypeRef) {
         try {
             return fromValue != null ? OBJECT_MAPPER.convertValue(fromValue, toValueTypeRef) : null;
         } catch (IllegalArgumentException e) {
@@ -52,7 +56,8 @@ public class JacksonUtil {
         }
     }
 
-    public static <T> T fromString(String string, Class<T> clazz) {
+    @Nullable
+    public static <T> T fromString(@Nullable String string, Class<T> clazz) {
         try {
             return string != null ? OBJECT_MAPPER.readValue(string, clazz) : null;
         } catch (IOException e) {
@@ -61,7 +66,8 @@ public class JacksonUtil {
         }
     }
 
-    public static <T> T fromString(String string, TypeReference<T> valueTypeRef) {
+    @Nullable
+    public static <T> T fromString(@Nullable String string, TypeReference<T> valueTypeRef) {
         try {
             return string != null ? OBJECT_MAPPER.readValue(string, valueTypeRef) : null;
         } catch (IOException e) {
@@ -70,7 +76,8 @@ public class JacksonUtil {
         }
     }
 
-    public static <T> T fromBytes(byte[] bytes, Class<T> clazz) {
+    @Nullable
+    public static <T> T fromBytes(@Nullable byte[] bytes, Class<T> clazz) {
         try {
             return bytes != null ? OBJECT_MAPPER.readValue(bytes, clazz) : null;
         } catch (IOException e) {
@@ -88,7 +95,8 @@ public class JacksonUtil {
         }
     }
 
-    public static String toString(Object value) {
+    @Nullable
+    public static String toString(@Nullable Object value) {
         try {
             return value != null ? OBJECT_MAPPER.writeValueAsString(value) : null;
         } catch (JsonProcessingException e) {
@@ -105,11 +113,11 @@ public class JacksonUtil {
         }
     }
 
-    public static <T> T treeToValue(JsonNode node, Class<T> clazz) {
+    public static <T> T treeToValue(@NotNull JsonNode node, Class<T> clazz) {
         try {
             return OBJECT_MAPPER.treeToValue(node, clazz);
         } catch (IOException e) {
-            throw new IllegalArgumentException("Can't convert value: " + node.toString(), e);
+            throw new IllegalArgumentException("Can't convert value: " + node, e);
         }
     }
 
@@ -117,7 +125,7 @@ public class JacksonUtil {
         return toJsonNode(value, OBJECT_MAPPER);
     }
 
-    public static JsonNode toJsonNode(String value, ObjectMapper mapper) {
+    public static JsonNode toJsonNode(@Nullable String value, @NotNull ObjectMapper mapper) {
         if (value == null || value.isEmpty()) {
             return null;
         }
@@ -132,11 +140,12 @@ public class JacksonUtil {
         return newObjectNode(OBJECT_MAPPER);
     }
 
-    public static ObjectNode newObjectNode(ObjectMapper mapper) {
+    public static ObjectNode newObjectNode(@NotNull ObjectMapper mapper) {
         return mapper.createObjectNode();
     }
 
-    public static <T> T clone(T value) {
+    @Nullable
+    public static <T> T clone(@NotNull T value) {
         @SuppressWarnings("unchecked")
         Class<T> valueClass = (Class<T>) value.getClass();
         return fromString(toString(value), valueClass);
@@ -156,7 +165,7 @@ public class JacksonUtil {
     }
 
 
-    public static JsonNode getSafely(JsonNode node, String... path) {
+    public static JsonNode getSafely(@Nullable JsonNode node, @NotNull String... path) {
         if (node == null) {
             return null;
         }
@@ -170,13 +179,13 @@ public class JacksonUtil {
         return node;
     }
 
-    public static void replaceUuidsRecursively(JsonNode node, Set<String> skipFieldsSet, UnaryOperator<UUID> replacer) {
+    public static void replaceUuidsRecursively(@Nullable JsonNode node, @NotNull Set<String> skipFieldsSet, @NotNull UnaryOperator<UUID> replacer) {
         if (node == null) {
             return;
         }
         if (node.isObject()) {
-            ObjectNode objectNode = (ObjectNode) node;
-            List<String> fieldNames = new ArrayList<>(objectNode.size());
+            @NotNull ObjectNode objectNode = (ObjectNode) node;
+            @NotNull List<String> fieldNames = new ArrayList<>(objectNode.size());
             objectNode.fieldNames().forEachRemaining(fieldNames::add);
             for (String fieldName : fieldNames) {
                 if (skipFieldsSet.contains(fieldName)) {
@@ -194,7 +203,7 @@ public class JacksonUtil {
                 }
             }
         } else if (node.isArray()) {
-            ArrayNode array = (ArrayNode) node;
+            @NotNull ArrayNode array = (ArrayNode) node;
             for (int i = 0; i < array.size(); i++) {
                 JsonNode arrayElement = array.get(i);
                 if (arrayElement.isObject() || arrayElement.isArray()) {
@@ -210,15 +219,15 @@ public class JacksonUtil {
         }
     }
 
-    public static void addKvEntry(ObjectNode entityNode, KvEntry kvEntry) {
+    public static void addKvEntry(@NotNull ObjectNode entityNode, @NotNull KvEntry kvEntry) {
         addKvEntry(entityNode, kvEntry, kvEntry.getKey());
     }
 
-    public static void addKvEntry(ObjectNode entityNode, KvEntry kvEntry, String key) {
+    public static void addKvEntry(@NotNull ObjectNode entityNode, @NotNull KvEntry kvEntry, String key) {
         addKvEntry(entityNode, kvEntry, key, OBJECT_MAPPER);
     }
 
-    public static void addKvEntry(ObjectNode entityNode, KvEntry kvEntry, String key, ObjectMapper mapper) {
+    public static void addKvEntry(@NotNull ObjectNode entityNode, @NotNull KvEntry kvEntry, String key, @NotNull ObjectMapper mapper) {
         if (kvEntry.getDataType() == DataType.BOOLEAN) {
             kvEntry.getBooleanValue().ifPresent(value -> entityNode.put(key, value));
         } else if (kvEntry.getDataType() == DataType.DOUBLE) {

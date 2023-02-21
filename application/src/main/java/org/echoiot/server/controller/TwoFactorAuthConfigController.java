@@ -14,6 +14,8 @@ import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.security.auth.mfa.TwoFactorAuthService;
 import org.echoiot.server.service.security.auth.mfa.config.TwoFaConfigManager;
 import org.echoiot.server.service.security.model.SecurityUser;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,10 +37,13 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TwoFactorAuthConfigController extends BaseController {
 
+    @NotNull
     private final TwoFaConfigManager twoFaConfigManager;
+    @NotNull
     private final TwoFactorAuthService twoFactorAuthService;
 
 
+    @Nullable
     @ApiOperation(value = "Get account 2FA settings (getAccountTwoFaSettings)",
             notes = "Get user's account 2FA configuration. Configuration contains configs for different 2FA providers." + ControllerConstants.NEW_LINE +
                     "Example:\n" +
@@ -122,7 +127,7 @@ public class TwoFactorAuthConfigController extends BaseController {
                     ControllerConstants.AVAILABLE_FOR_ANY_AUTHORIZED_USER)
     @PostMapping("/account/config")
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
-    public AccountTwoFaSettings verifyAndSaveTwoFaAccountConfig(@Valid @RequestBody TwoFaAccountConfig accountConfig,
+    public AccountTwoFaSettings verifyAndSaveTwoFaAccountConfig(@NotNull @Valid @RequestBody TwoFaAccountConfig accountConfig,
                                                                 @RequestParam(required = false) String verificationCode) throws Exception {
         SecurityUser user = getCurrentUser();
         if (twoFaConfigManager.getTwoFaAccountConfig(user.getTenantId(), user.getId(), accountConfig.getProviderType()).isPresent()) {
@@ -151,7 +156,7 @@ public class TwoFactorAuthConfigController extends BaseController {
     @PutMapping("/account/config")
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     public AccountTwoFaSettings updateTwoFaAccountConfig(@RequestParam TwoFaProviderType providerType,
-                                                         @RequestBody TwoFaAccountConfigUpdateRequest updateRequest) throws EchoiotException {
+                                                         @NotNull @RequestBody TwoFaAccountConfigUpdateRequest updateRequest) throws EchoiotException {
         SecurityUser user = getCurrentUser();
 
         TwoFaAccountConfig accountConfig = twoFaConfigManager.getTwoFaAccountConfig(user.getTenantId(), user.getId(), providerType)
@@ -172,6 +177,7 @@ public class TwoFactorAuthConfigController extends BaseController {
     }
 
 
+    @NotNull
     @ApiOperation(value = "Get available 2FA providers (getAvailableTwoFaProviders)", notes =
             "Get the list of provider types available for user to use (the ones configured by tenant or sysadmin).\n" +
                     "Example of response:\n" +
@@ -188,6 +194,7 @@ public class TwoFactorAuthConfigController extends BaseController {
     }
 
 
+    @Nullable
     @ApiOperation(value = "Get platform 2FA settings (getPlatformTwoFaSettings)",
             notes = "Get platform settings for 2FA. The settings are described for savePlatformTwoFaSettings API method. " +
                     "If 2FA is not configured, then an empty response will be returned." +

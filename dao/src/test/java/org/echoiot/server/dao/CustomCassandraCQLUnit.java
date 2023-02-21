@@ -5,12 +5,15 @@ import org.cassandraunit.BaseCassandraUnit;
 import org.cassandraunit.CQLDataLoader;
 import org.cassandraunit.dataset.CQLDataSet;
 import org.cassandraunit.utils.EmbeddedCassandraServerHelper;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class CustomCassandraCQLUnit extends BaseCassandraUnit {
     protected List<CQLDataSet> dataSets;
 
+    @Nullable
     public CqlSession session;
 
     public CustomCassandraCQLUnit(List<CQLDataSet> dataSets) {
@@ -49,7 +52,7 @@ public class CustomCassandraCQLUnit extends BaseCassandraUnit {
     @Override
     protected void load() {
         session = EmbeddedCassandraServerHelper.getSession();
-        CQLDataLoader dataLoader = new CQLDataLoader(session);
+        @NotNull CQLDataLoader dataLoader = new CQLDataLoader(session);
         dataSets.forEach(dataLoader::load);
         session = dataLoader.getSession();
         System.setSecurityManager(null);

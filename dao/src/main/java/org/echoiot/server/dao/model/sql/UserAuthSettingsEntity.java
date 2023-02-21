@@ -15,6 +15,7 @@ import org.echoiot.server.dao.model.BaseEntity;
 import org.echoiot.server.dao.model.BaseSqlEntity;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.util.mapping.JsonStringType;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -35,7 +36,7 @@ public class UserAuthSettingsEntity extends BaseSqlEntity<UserAuthSettings> impl
     @Column(name = ModelConstants.USER_AUTH_SETTINGS_TWO_FA_SETTINGS)
     private JsonNode twoFaSettings;
 
-    public UserAuthSettingsEntity(UserAuthSettings userAuthSettings) {
+    public UserAuthSettingsEntity(@NotNull UserAuthSettings userAuthSettings) {
         if (userAuthSettings.getId() != null) {
             this.setId(userAuthSettings.getId().getId());
         }
@@ -48,9 +49,10 @@ public class UserAuthSettingsEntity extends BaseSqlEntity<UserAuthSettings> impl
         }
     }
 
+    @NotNull
     @Override
     public UserAuthSettings toData() {
-        UserAuthSettings userAuthSettings = new UserAuthSettings();
+        @NotNull UserAuthSettings userAuthSettings = new UserAuthSettings();
         userAuthSettings.setId(new UserAuthSettingsId(id));
         userAuthSettings.setCreatedTime(createdTime);
         if (userId != null) {

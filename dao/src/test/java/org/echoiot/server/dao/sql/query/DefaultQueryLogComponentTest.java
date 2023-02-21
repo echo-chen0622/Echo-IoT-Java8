@@ -2,6 +2,7 @@ package org.echoiot.server.dao.sql.query;
 
 import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.id.TenantId;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,7 +28,7 @@ import static org.mockito.Mockito.times;
 @EnableConfigurationProperties
 @TestPropertySource(properties = {
         "sql.log_queries=true",
-        "sql.log_queries_threshold:2999"
+        "sql.log_queries_threshold=2999"
 })
 
 public class DefaultQueryLogComponentTest {
@@ -57,13 +58,13 @@ public class DefaultQueryLogComponentTest {
     @Test
     public void substituteParametersInSqlString_StringType() {
 
-        String sql = "Select * from Table Where name = :name AND id = :id";
-        String sqlToUse = "Select * from Table Where name = 'Mery''s' AND id = 'ID_1'";
+        @NotNull String sql = "Select * from Table Where name = :name AND id = :id";
+        @NotNull String sqlToUse = "Select * from Table Where name = 'Mery''s' AND id = 'ID_1'";
 
         ctx.addStringParameter("name", "Mery's");
         ctx.addStringParameter("id", "ID_1");
 
-        String sqlToUseResult = queryLog.substituteParametersInSqlString(sql, ctx);
+        @NotNull String sqlToUseResult = queryLog.substituteParametersInSqlString(sql, ctx);
         assertEquals(sqlToUse, sqlToUseResult);
     }
 
@@ -72,67 +73,67 @@ public class DefaultQueryLogComponentTest {
 
         double sum = 0.00000021d;
         long price = 100000;
-        String sql = "Select * from Table Where sum = :sum AND price = :price";
-        String sqlToUse = "Select * from Table Where sum = 2.1E-7 AND price = 100000";
+        @NotNull String sql = "Select * from Table Where sum = :sum AND price = :price";
+        @NotNull String sqlToUse = "Select * from Table Where sum = 2.1E-7 AND price = 100000";
 
         ctx.addDoubleParameter("sum", sum);
         ctx.addLongParameter("price", price);
 
-        String sqlToUseResult = queryLog.substituteParametersInSqlString(sql, ctx);
+        @NotNull String sqlToUseResult = queryLog.substituteParametersInSqlString(sql, ctx);
         assertEquals(sqlToUse, sqlToUseResult);
     }
 
     @Test
     public void substituteParametersInSqlString_BooleanType() {
 
-        String sql = "Select * from Table Where check = :check AND mark = :mark";
-        String sqlToUse = "Select * from Table Where check = true AND mark = false";
+        @NotNull String sql = "Select * from Table Where check = :check AND mark = :mark";
+        @NotNull String sqlToUse = "Select * from Table Where check = true AND mark = false";
 
         ctx.addBooleanParameter("check", true);
         ctx.addBooleanParameter("mark", false);
 
-        String sqlToUseResult = queryLog.substituteParametersInSqlString(sql, ctx);
+        @NotNull String sqlToUseResult = queryLog.substituteParametersInSqlString(sql, ctx);
         assertEquals(sqlToUse, sqlToUseResult);
     }
 
     @Test
     public void substituteParametersInSqlString_UuidType() {
 
-        UUID guid = UUID.randomUUID();
-        String sql = "Select * from Table Where guid = :guid";
-        String sqlToUse = "Select * from Table Where guid = '" + guid + "'";
+        @NotNull UUID guid = UUID.randomUUID();
+        @NotNull String sql = "Select * from Table Where guid = :guid";
+        @NotNull String sqlToUse = "Select * from Table Where guid = '" + guid + "'";
 
         ctx.addUuidParameter("guid", guid);
 
-        String sqlToUseResult = queryLog.substituteParametersInSqlString(sql, ctx);
+        @NotNull String sqlToUseResult = queryLog.substituteParametersInSqlString(sql, ctx);
         assertEquals(sqlToUse, sqlToUseResult);
     }
 
     @Test
     public void substituteParametersInSqlString_StringListType() {
 
-        List<String> ids = List.of("ID_1'", "ID_2", "ID_3", "ID_4");
+        @NotNull List<String> ids = List.of("ID_1'", "ID_2", "ID_3", "ID_4");
 
-        String sql = "Select * from Table Where id IN (:ids)";
-        String sqlToUse = "Select * from Table Where id IN ('ID_1''', 'ID_2', 'ID_3', 'ID_4')";
+        @NotNull String sql = "Select * from Table Where id IN (:ids)";
+        @NotNull String sqlToUse = "Select * from Table Where id IN ('ID_1''', 'ID_2', 'ID_3', 'ID_4')";
 
         ctx.addStringListParameter("ids", ids);
 
-        String sqlToUseResult = queryLog.substituteParametersInSqlString(sql, ctx);
+        @NotNull String sqlToUseResult = queryLog.substituteParametersInSqlString(sql, ctx);
         assertEquals(sqlToUse, sqlToUseResult);
     }
 
     @Test
     public void substituteParametersInSqlString_UuidListType() {
 
-        List<UUID> guids = List.of(UUID.fromString("634a8d03-6871-4e01-94d0-876bf3e67dff"), UUID.fromString("3adbb5b8-4dc6-4faf-80dc-681a7b518b5e"), UUID.fromString("63a50f0c-2058-4d1d-8f15-812eb7f84412"));
+        @NotNull List<UUID> guids = List.of(UUID.fromString("634a8d03-6871-4e01-94d0-876bf3e67dff"), UUID.fromString("3adbb5b8-4dc6-4faf-80dc-681a7b518b5e"), UUID.fromString("63a50f0c-2058-4d1d-8f15-812eb7f84412"));
 
-        String sql = "Select * from Table Where guid IN (:guids)";
-        String sqlToUse = "Select * from Table Where guid IN ('634a8d03-6871-4e01-94d0-876bf3e67dff', '3adbb5b8-4dc6-4faf-80dc-681a7b518b5e', '63a50f0c-2058-4d1d-8f15-812eb7f84412')";
+        @NotNull String sql = "Select * from Table Where guid IN (:guids)";
+        @NotNull String sqlToUse = "Select * from Table Where guid IN ('634a8d03-6871-4e01-94d0-876bf3e67dff', '3adbb5b8-4dc6-4faf-80dc-681a7b518b5e', '63a50f0c-2058-4d1d-8f15-812eb7f84412')";
 
         ctx.addUuidListParameter("guids", guids);
 
-        String sqlToUseResult = queryLog.substituteParametersInSqlString(sql, ctx);
+        @NotNull String sqlToUseResult = queryLog.substituteParametersInSqlString(sql, ctx);
         assertEquals(sqlToUse, sqlToUseResult);
     }
 }

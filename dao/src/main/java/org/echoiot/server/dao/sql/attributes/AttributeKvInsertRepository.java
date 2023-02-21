@@ -2,6 +2,8 @@ package org.echoiot.server.dao.sql.attributes;
 
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.dao.model.sql.AttributeKvEntity;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
@@ -36,20 +38,20 @@ public abstract class AttributeKvInsertRepository {
                     "ON CONFLICT (entity_type, entity_id, attribute_type, attribute_key) " +
                     "DO UPDATE SET str_v = ?, long_v = ?, dbl_v = ?, bool_v = ?, json_v =  cast(? AS json), last_update_ts = ?;";
 
-    @Autowired
+    @Resource
     protected JdbcTemplate jdbcTemplate;
 
-    @Autowired
+    @Resource
     private TransactionTemplate transactionTemplate;
 
     @Value("${sql.remove_null_chars:true}")
     private boolean removeNullChars;
 
-    public void saveOrUpdate(List<AttributeKvEntity> entities) {
+    public void saveOrUpdate(@NotNull List<AttributeKvEntity> entities) {
         transactionTemplate.execute(new TransactionCallbackWithoutResult() {
             @Override
             protected void doInTransactionWithoutResult(TransactionStatus status) {
-                int[] result = jdbcTemplate.batchUpdate(BATCH_UPDATE, new BatchPreparedStatementSetter() {
+                @NotNull int[] result = jdbcTemplate.batchUpdate(BATCH_UPDATE, new BatchPreparedStatementSetter() {
                     @Override
                     public void setValues(PreparedStatement ps, int i) throws SQLException {
                         AttributeKvEntity kvEntity = entities.get(i);
@@ -95,7 +97,7 @@ public abstract class AttributeKvInsertRepository {
                     }
                 }
 
-                List<AttributeKvEntity> insertEntities = new ArrayList<>(updatedCount);
+                @NotNull List<AttributeKvEntity> insertEntities = new ArrayList<>(updatedCount);
                 for (int i = 0; i < result.length; i++) {
                     if (result[i] == 0) {
                         insertEntities.add(entities.get(i));
@@ -154,7 +156,8 @@ public abstract class AttributeKvInsertRepository {
         });
     }
 
-    private String replaceNullChars(String strValue) {
+    @Nullable
+    private String replaceNullChars(@Nullable String strValue) {
         if (removeNullChars && strValue != null) {
             return PATTERN_THREAD_LOCAL.get().matcher(strValue).replaceAll(EMPTY_STR);
         }

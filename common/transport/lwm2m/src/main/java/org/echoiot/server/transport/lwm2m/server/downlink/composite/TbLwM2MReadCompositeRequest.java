@@ -6,12 +6,14 @@ import org.eclipse.leshan.core.request.ContentFormat;
 import org.eclipse.leshan.core.response.ReadCompositeResponse;
 import org.echoiot.server.transport.lwm2m.server.LwM2MOperationType;
 import org.echoiot.server.transport.lwm2m.server.downlink.HasContentFormat;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
 public class TbLwM2MReadCompositeRequest extends AbstractTbLwM2MTargetedDownlinkCompositeRequest<ReadCompositeResponse> implements HasContentFormat {
 
 
+    @NotNull
     private final Optional<ContentFormat> requestContentFormatOpt;
 
     @Getter
@@ -24,6 +26,7 @@ public class TbLwM2MReadCompositeRequest extends AbstractTbLwM2MTargetedDownlink
         this.responseContentFormat = responseContentFormat;
     }
 
+    @NotNull
     @Override
     public LwM2MOperationType getType() {
         return LwM2MOperationType.READ_COMPOSITE;

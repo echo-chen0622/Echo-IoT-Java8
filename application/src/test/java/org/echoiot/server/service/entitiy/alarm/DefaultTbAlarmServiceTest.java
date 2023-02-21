@@ -14,6 +14,7 @@ import org.echoiot.server.service.entitiy.TbNotificationEntityService;
 import org.echoiot.server.service.executors.DbCallbackExecutorService;
 import org.echoiot.server.service.sync.vc.EntitiesVersionControlService;
 import org.echoiot.server.service.telemetry.AlarmSubscriptionService;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -55,7 +56,7 @@ public class DefaultTbAlarmServiceTest {
 
     @Test
     public void testSave() throws EchoiotException {
-        var alarm = new Alarm();
+        @NotNull var alarm = new Alarm();
         when(alarmSubscriptionService.createOrUpdateAlarm(alarm)).thenReturn(alarm);
         service.save(alarm, new User());
 
@@ -65,7 +66,7 @@ public class DefaultTbAlarmServiceTest {
 
     @Test
     public void testAck() {
-        var alarm = new Alarm();
+        @NotNull var alarm = new Alarm();
         alarm.setStatus(AlarmStatus.ACTIVE_UNACK);
         when(alarmSubscriptionService.ackAlarm(any(), any(), anyLong())).thenReturn(Futures.immediateFuture(true));
         service.ack(alarm, new User());
@@ -76,7 +77,7 @@ public class DefaultTbAlarmServiceTest {
 
     @Test
     public void testClear() {
-        var alarm = new Alarm();
+        @NotNull var alarm = new Alarm();
         alarm.setStatus(AlarmStatus.ACTIVE_ACK);
         when(alarmSubscriptionService.clearAlarm(any(), any(), any(), anyLong())).thenReturn(Futures.immediateFuture(true));
         service.clear(alarm, new User());

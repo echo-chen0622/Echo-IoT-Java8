@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.service.security.model.token.RawAccessJwtToken;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
@@ -38,7 +39,7 @@ public class RefreshTokenProcessingFilter extends AbstractAuthenticationProcessi
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
+    public Authentication attemptAuthentication(@NotNull HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException, IOException, ServletException {
         if (!HttpMethod.POST.name().equals(request.getMethod())) {
             if(log.isDebugEnabled()) {
@@ -58,7 +59,7 @@ public class RefreshTokenProcessingFilter extends AbstractAuthenticationProcessi
             throw new AuthenticationServiceException("Refresh token is not provided");
         }
 
-        RawAccessJwtToken token = new RawAccessJwtToken(refreshTokenRequest.getRefreshToken());
+        @NotNull RawAccessJwtToken token = new RawAccessJwtToken(refreshTokenRequest.getRefreshToken());
 
         return this.getAuthenticationManager().authenticate(new RefreshAuthenticationToken(token));
     }

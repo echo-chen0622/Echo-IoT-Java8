@@ -18,6 +18,8 @@ import org.echoiot.server.transport.coap.AbstractCoapIntegrationTest;
 import org.echoiot.server.transport.coap.CoapTestClient;
 import org.echoiot.server.transport.coap.CoapTestConfigProperties;
 import org.eclipse.californium.core.CoapResponse;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
@@ -27,10 +29,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 @DaoSqlTest
 public class CoapProvisionProtoDeviceTest extends AbstractCoapIntegrationTest {
 
-    @Autowired
+    @Resource
     DeviceCredentialsService deviceCredentialsService;
 
-    @Autowired
+    @Resource
     DeviceService deviceService;
 
     @After
@@ -159,7 +161,7 @@ public class CoapProvisionProtoDeviceTest extends AbstractCoapIntegrationTest {
         Assert.assertEquals(deviceCredentials.getCredentialsType().name(), response.getCredentialsType().toString());
         Assert.assertEquals(deviceCredentials.getCredentialsType(), DeviceCredentialsType.X509_CERTIFICATE);
 
-        String cert = EncryptionUtil.certTrimNewLines(deviceCredentials.getCredentialsValue());
+        @NotNull String cert = EncryptionUtil.certTrimNewLines(deviceCredentials.getCredentialsValue());
         String sha3Hash = EncryptionUtil.getSha3Hash(cert);
 
         Assert.assertEquals(deviceCredentials.getCredentialsId(), sha3Hash);
@@ -211,7 +213,7 @@ public class CoapProvisionProtoDeviceTest extends AbstractCoapIntegrationTest {
         return coapResponse.getPayload();
     }
 
-    private byte[] createTestsProvisionMessage(CredentialsType credentialsType, CredentialsDataProto credentialsData) throws Exception {
+    private byte[] createTestsProvisionMessage(@Nullable CredentialsType credentialsType, @Nullable CredentialsDataProto credentialsData) throws Exception {
         return ProvisionDeviceRequestMsg.newBuilder()
                 .setDeviceName("Test Provision device")
                 .setCredentialsType(credentialsType != null ? credentialsType : CredentialsType.ACCESS_TOKEN)

@@ -10,6 +10,8 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.plugin.ComponentLifecycleEvent;
 import org.echoiot.server.common.data.security.model.JwtSettings;
 import org.echoiot.server.dao.settings.AdminSettingsService;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -24,10 +26,13 @@ import java.util.Optional;
 @Slf4j
 public class DefaultJwtSettingsService implements JwtSettingsService {
 
+    @NotNull
     @Lazy
     private final AdminSettingsService adminSettingsService;
+    @NotNull
     @Lazy
     private final Optional<TbClusterService> tbClusterService;
+    @NotNull
     private final JwtSettingsValidator jwtSettingsValidator;
 
     @Value("${security.jwt.tokenExpirationTime:9000}")
@@ -39,6 +44,7 @@ public class DefaultJwtSettingsService implements JwtSettingsService {
     @Value("${security.jwt.tokenSigningKey:echoiotDefaultSigningKey}")
     private String tokenSigningKey;
 
+    @Nullable
     private volatile JwtSettings jwtSettings = null; //lazy init
 
     /**
@@ -73,7 +79,7 @@ public class DefaultJwtSettingsService implements JwtSettingsService {
     @Override
     public JwtSettings saveJwtSettings(JwtSettings jwtSettings) {
         jwtSettingsValidator.validate(jwtSettings);
-        final AdminSettings adminJwtSettings = mapJwtToAdminSettings(jwtSettings);
+        @NotNull final AdminSettings adminJwtSettings = mapJwtToAdminSettings(jwtSettings);
         final AdminSettings existedSettings = adminSettingsService.findAdminSettingsByKey(TenantId.SYS_TENANT_ID, ADMIN_SETTINGS_JWT_KEY);
         if (existedSettings != null) {
             adminJwtSettings.setId(existedSettings.getId());
@@ -100,7 +106,7 @@ public class DefaultJwtSettingsService implements JwtSettingsService {
         if (this.jwtSettings == null || forceReload) {
             synchronized (this) {
                 if (this.jwtSettings == null || forceReload) {
-                    JwtSettings result = getJwtSettingsFromDb();
+                    @Nullable JwtSettings result = getJwtSettingsFromDb();
                     if (result == null) {
                         result = getJwtSettingsFromYml();
                         log.warn("Loading the JWT settings from YML since there are no settings in DB. Looks like the upgrade script was not applied.");
@@ -117,30 +123,33 @@ public class DefaultJwtSettingsService implements JwtSettingsService {
         return this.jwtSettings;
     }
 
+    @NotNull
     private JwtSettings getJwtSettingsFromYml() {
         return new JwtSettings(this.tokenExpirationTime, this.refreshTokenExpTime, this.tokenIssuer, this.tokenSigningKey);
     }
 
+    @Nullable
     private JwtSettings getJwtSettingsFromDb() {
         AdminSettings adminJwtSettings = adminSettingsService.findAdminSettingsByKey(TenantId.SYS_TENANT_ID, ADMIN_SETTINGS_JWT_KEY);
         return adminJwtSettings != null ? mapAdminToJwtSettings(adminJwtSettings) : null;
     }
 
-    private JwtSettings mapAdminToJwtSettings(AdminSettings adminSettings) {
+    private JwtSettings mapAdminToJwtSettings(@NotNull AdminSettings adminSettings) {
         Objects.requireNonNull(adminSettings, "adminSettings for JWT is null");
         return JacksonUtil.treeToValue(adminSettings.getJsonValue(), JwtSettings.class);
     }
 
+    @NotNull
     private AdminSettings mapJwtToAdminSettings(JwtSettings jwtSettings) {
         Objects.requireNonNull(jwtSettings, "jwtSettings is null");
-        AdminSettings adminJwtSettings = new AdminSettings();
+        @NotNull AdminSettings adminJwtSettings = new AdminSettings();
         adminJwtSettings.setTenantId(TenantId.SYS_TENANT_ID);
         adminJwtSettings.setKey(ADMIN_SETTINGS_JWT_KEY);
         adminJwtSettings.setJsonValue(JacksonUtil.valueToTree(jwtSettings));
         return adminJwtSettings;
     }
 
-    private boolean isSigningKeyDefault(JwtSettings settings) {
+    private boolean isSigningKeyDefault(@NotNull JwtSettings settings) {
         return TOKEN_SIGNING_KEY_DEFAULT.equals(settings.getTokenSigningKey());
     }
 

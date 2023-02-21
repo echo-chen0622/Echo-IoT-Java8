@@ -8,6 +8,7 @@ import org.echoiot.server.common.data.relation.EntityRelation;
 import org.echoiot.server.common.data.relation.EntityRelationsQuery;
 import org.echoiot.server.common.data.relation.RelationEntityTypeFilter;
 import org.echoiot.server.common.data.relation.RelationsSearchParameters;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
@@ -23,8 +24,9 @@ public class EntityViewSearchQuery {
     @ApiModelProperty(position = 2, value = "Array of entity view types to filter the related entities (e.g. 'Temperature Sensor', 'Smoke Sensor').")
     private List<String> entityViewTypes;
 
+    @NotNull
     public EntityRelationsQuery toEntitySearchQuery() {
-        EntityRelationsQuery query = new EntityRelationsQuery();
+        @NotNull EntityRelationsQuery query = new EntityRelationsQuery();
         query.setParameters(parameters);
         query.setFilters(
                 Collections.singletonList(new RelationEntityTypeFilter(relationType == null ? EntityRelation.CONTAINS_TYPE : relationType,

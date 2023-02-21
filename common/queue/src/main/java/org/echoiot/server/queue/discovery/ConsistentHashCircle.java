@@ -1,6 +1,7 @@
 package org.echoiot.server.queue.discovery;
 
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.ConcurrentNavigableMap;
 import java.util.concurrent.ConcurrentSkipListMap;
@@ -28,6 +29,7 @@ public class ConsistentHashCircle<T> {
         return circle.containsKey(hash);
     }
 
+    @NotNull
     public ConcurrentNavigableMap<Long, T> tailMap(Long hash) {
         return circle.tailMap(hash);
     }

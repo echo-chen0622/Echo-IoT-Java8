@@ -9,6 +9,7 @@ import org.echoiot.server.common.data.widget.BaseWidgetType;
 import org.echoiot.server.common.data.widget.WidgetTypeDetails;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.util.mapping.JsonStringType;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -35,17 +36,18 @@ public class WidgetTypeDetailsEntity extends AbstractWidgetTypeEntity<WidgetType
         super();
     }
 
-    public WidgetTypeDetailsEntity(WidgetTypeDetails widgetTypeDetails) {
+    public WidgetTypeDetailsEntity(@NotNull WidgetTypeDetails widgetTypeDetails) {
         super(widgetTypeDetails);
         this.image = widgetTypeDetails.getImage();
         this.description = widgetTypeDetails.getDescription();
         this.descriptor = widgetTypeDetails.getDescriptor();
     }
 
+    @NotNull
     @Override
     public WidgetTypeDetails toData() {
         BaseWidgetType baseWidgetType = super.toBaseWidgetType();
-        WidgetTypeDetails widgetTypeDetails = new WidgetTypeDetails(baseWidgetType);
+        @NotNull WidgetTypeDetails widgetTypeDetails = new WidgetTypeDetails(baseWidgetType);
         widgetTypeDetails.setImage(image);
         widgetTypeDetails.setDescription(description);
         widgetTypeDetails.setDescriptor(descriptor);

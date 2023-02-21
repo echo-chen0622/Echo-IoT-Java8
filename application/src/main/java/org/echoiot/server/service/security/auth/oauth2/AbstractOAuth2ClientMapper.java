@@ -22,6 +22,8 @@ import org.echoiot.server.dao.oauth2.OAuth2User;
 import org.echoiot.server.dao.tenant.TbTenantProfileCache;
 import org.echoiot.server.dao.tenant.TenantService;
 import org.echoiot.server.dao.user.UserService;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -49,31 +51,31 @@ public abstract class AbstractOAuth2ClientMapper {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    @Autowired
+    @Resource
     private UserService userService;
 
-    @Autowired
+    @Resource
     private BCryptPasswordEncoder passwordEncoder;
 
-    @Autowired
+    @Resource
     private TenantService tenantService;
 
-    @Autowired
+    @Resource
     private CustomerService customerService;
 
-    @Autowired
+    @Resource
     private DashboardService dashboardService;
 
-    @Autowired
+    @Resource
     private InstallScripts installScripts;
 
-    @Autowired
+    @Resource
     private TbUserService tbUserService;
 
-    @Autowired
+    @Resource
     protected TbTenantProfileCache tenantProfileCache;
 
-    @Autowired
+    @Resource
     protected TbClusterService tbClusterService;
 
     @Value("${edges.enabled}")
@@ -82,11 +84,11 @@ public abstract class AbstractOAuth2ClientMapper {
 
     private final Lock userCreationLock = new ReentrantLock();
 
-    protected SecurityUser getOrCreateSecurityUserFromOAuth2User(OAuth2User oauth2User, OAuth2Registration registration) {
+    protected SecurityUser getOrCreateSecurityUserFromOAuth2User(@NotNull OAuth2User oauth2User, @NotNull OAuth2Registration registration) {
 
         OAuth2MapperConfig config = registration.getMapperConfig();
 
-        UserPrincipal principal = new UserPrincipal(UserPrincipal.Type.USER_NAME, oauth2User.getEmail());
+        @NotNull UserPrincipal principal = new UserPrincipal(UserPrincipal.Type.USER_NAME, oauth2User.getEmail());
 
         User user = userService.findUserByEmail(TenantId.SYS_TENANT_ID, oauth2User.getEmail());
 
@@ -108,7 +110,7 @@ public abstract class AbstractOAuth2ClientMapper {
                     TenantId tenantId = oauth2User.getTenantId() != null ?
                             oauth2User.getTenantId() : getTenantId(oauth2User.getTenantName());
                     user.setTenantId(tenantId);
-                    CustomerId customerId = oauth2User.getCustomerId() != null ?
+                    @Nullable CustomerId customerId = oauth2User.getCustomerId() != null ?
                             oauth2User.getCustomerId() : getCustomerId(user.getTenantId(), oauth2User.getCustomerName());
                     user.setCustomerId(customerId);
                     user.setEmail(oauth2User.getEmail());
@@ -118,7 +120,7 @@ public abstract class AbstractOAuth2ClientMapper {
                     ObjectNode additionalInfo = objectMapper.createObjectNode();
 
                     if (!StringUtils.isEmpty(oauth2User.getDefaultDashboardName())) {
-                        Optional<DashboardId> dashboardIdOpt =
+                        @NotNull Optional<DashboardId> dashboardIdOpt =
                                 user.getAuthority() == Authority.TENANT_ADMIN ?
                                         getDashboardId(tenantId, oauth2User.getDefaultDashboardName())
                                         : getDashboardId(tenantId, customerId, oauth2User.getDefaultDashboardName());
@@ -150,7 +152,7 @@ public abstract class AbstractOAuth2ClientMapper {
         }
 
         try {
-            SecurityUser securityUser = new SecurityUser(user, true, principal);
+            @NotNull SecurityUser securityUser = new SecurityUser(user, true, principal);
             return (SecurityUser) new UsernamePasswordAuthenticationToken(securityUser, null, securityUser.getAuthorities()).getPrincipal();
         } catch (Exception e) {
             log.error("Can't get or create security user from oauth2 user", e);
@@ -177,6 +179,7 @@ public abstract class AbstractOAuth2ClientMapper {
         return tenant.getTenantId();
     }
 
+    @Nullable
     private CustomerId getCustomerId(TenantId tenantId, String customerName) {
         if (StringUtils.isEmpty(customerName)) {
             return null;
@@ -185,26 +188,28 @@ public abstract class AbstractOAuth2ClientMapper {
         if (customerOpt.isPresent()) {
             return customerOpt.get().getId();
         } else {
-            Customer customer = new Customer();
+            @NotNull Customer customer = new Customer();
             customer.setTenantId(tenantId);
             customer.setTitle(customerName);
             return customerService.saveCustomer(customer).getId();
         }
     }
 
+    @NotNull
     private Optional<DashboardId> getDashboardId(TenantId tenantId, String dashboardName) {
         return Optional.ofNullable(dashboardService.findFirstDashboardInfoByTenantIdAndName(tenantId, dashboardName)).map(IdBased::getId);
     }
 
-    private Optional<DashboardId> getDashboardId(TenantId tenantId, CustomerId customerId, String dashboardName) {
+    @NotNull
+    private Optional<DashboardId> getDashboardId(TenantId tenantId, CustomerId customerId, @NotNull String dashboardName) {
         PageData<DashboardInfo> dashboardsPage;
-        PageLink pageLink = null;
+        @Nullable PageLink pageLink = null;
         do {
             pageLink = pageLink == null ? new PageLink(DASHBOARDS_REQUEST_LIMIT) : pageLink.nextPageLink();
             dashboardsPage = dashboardService.findDashboardsByTenantIdAndCustomerId(tenantId, customerId, pageLink);
-            Optional<DashboardInfo> dashboardInfoOpt = dashboardsPage.getData().stream()
-                    .filter(dashboardInfo -> dashboardName.equals(dashboardInfo.getName()))
-                    .findAny();
+            @NotNull Optional<DashboardInfo> dashboardInfoOpt = dashboardsPage.getData().stream()
+                                                                              .filter(dashboardInfo -> dashboardName.equals(dashboardInfo.getName()))
+                                                                              .findAny();
             if (dashboardInfoOpt.isPresent()) {
                 return dashboardInfoOpt.map(DashboardInfo::getId);
             }

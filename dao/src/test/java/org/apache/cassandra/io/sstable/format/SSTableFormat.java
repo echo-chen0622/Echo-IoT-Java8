@@ -22,13 +22,14 @@ import org.apache.cassandra.config.CFMetaData;
 import org.apache.cassandra.db.RowIndexEntry;
 import org.apache.cassandra.db.SerializationHeader;
 import org.apache.cassandra.io.sstable.format.big.BigFormat;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Provides the accessors to data on disk.
  */
 public interface SSTableFormat
 {
-    static boolean enableSSTableDevelopmentTestMode = Boolean.getBoolean("cassandra.test.sstableformatdevelopment");
+    boolean enableSSTableDevelopmentTestMode = Boolean.getBoolean("cassandra.test.sstableformatdevelopment");
 
 
     Version getLatestVersion();
@@ -39,7 +40,7 @@ public interface SSTableFormat
 
     RowIndexEntry.IndexSerializer<?> getIndexSerializer(CFMetaData cfm, Version version, SerializationHeader header);
 
-    public static enum Type
+    enum Type
     {
         //Used internally to refer to files with no
         //format flag in the filename
@@ -49,15 +50,17 @@ public interface SSTableFormat
         BIG("big", BigFormat.instance);
 
         public final SSTableFormat info;
+        @NotNull
         public final String name;
 
+        @NotNull
         public static Type current()
         {
             return BIG;
         }
 
         @SuppressWarnings("deprecation")
-        private Type(String name, SSTableFormat info)
+        Type(@NotNull String name, SSTableFormat info)
         {
             //Since format comes right after generation
             //we disallow formats with numeric names
@@ -68,9 +71,10 @@ public interface SSTableFormat
             this.info = info;
         }
 
+        @NotNull
         public static Type validate(String name)
         {
-            for (Type valid : Type.values())
+            for (@NotNull Type valid : Type.values())
             {
                 //This is used internally for old sstables
                 if (valid == LEGACY)

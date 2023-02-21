@@ -14,6 +14,7 @@ import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.relation.EntityRelation;
 import org.echoiot.server.common.data.relation.RelationTypeGroup;
 import org.echoiot.server.queue.util.TbCoreComponent;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.common.data.id.AssetId;
@@ -42,16 +43,17 @@ import java.util.UUID;
 @TbCoreComponent
 public class RelationEdgeProcessor extends BaseEdgeProcessor {
 
-    public ListenableFuture<Void> processRelationFromEdge(TenantId tenantId, RelationUpdateMsg relationUpdateMsg) {
+    @NotNull
+    public ListenableFuture<Void> processRelationFromEdge(TenantId tenantId, @NotNull RelationUpdateMsg relationUpdateMsg) {
         log.trace("[{}] onRelationUpdate [{}]", tenantId, relationUpdateMsg);
         try {
-            EntityRelation entityRelation = new EntityRelation();
+            @NotNull EntityRelation entityRelation = new EntityRelation();
 
-            UUID fromUUID = new UUID(relationUpdateMsg.getFromIdMSB(), relationUpdateMsg.getFromIdLSB());
+            @NotNull UUID fromUUID = new UUID(relationUpdateMsg.getFromIdMSB(), relationUpdateMsg.getFromIdLSB());
             EntityId fromId = EntityIdFactory.getByTypeAndUuid(EntityType.valueOf(relationUpdateMsg.getFromEntityType()), fromUUID);
             entityRelation.setFrom(fromId);
 
-            UUID toUUID = new UUID(relationUpdateMsg.getToIdMSB(), relationUpdateMsg.getToIdLSB());
+            @NotNull UUID toUUID = new UUID(relationUpdateMsg.getToIdMSB(), relationUpdateMsg.getToIdLSB());
             EntityId toId = EntityIdFactory.getByTypeAndUuid(EntityType.valueOf(relationUpdateMsg.getToEntityType()), toUUID);
             entityRelation.setTo(toId);
 
@@ -82,7 +84,7 @@ public class RelationEdgeProcessor extends BaseEdgeProcessor {
     }
 
 
-    private boolean isEntityExists(TenantId tenantId, EntityId entityId) throws EchoiotException {
+    private boolean isEntityExists(TenantId tenantId, @NotNull EntityId entityId) throws EchoiotException {
         switch (entityId.getEntityType()) {
             case DEVICE:
                 return deviceService.findDeviceById(tenantId, new DeviceId(entityId.getId())) != null;
@@ -101,9 +103,10 @@ public class RelationEdgeProcessor extends BaseEdgeProcessor {
         }
     }
 
-    public DownlinkMsg convertRelationEventToDownlink(EdgeEvent edgeEvent) {
+    @NotNull
+    public DownlinkMsg convertRelationEventToDownlink(@NotNull EdgeEvent edgeEvent) {
         EntityRelation entityRelation = JacksonUtil.OBJECT_MAPPER.convertValue(edgeEvent.getBody(), EntityRelation.class);
-        UpdateMsgType msgType = getUpdateMsgType(edgeEvent.getAction());
+        @NotNull UpdateMsgType msgType = getUpdateMsgType(edgeEvent.getAction());
         RelationUpdateMsg relationUpdateMsg = relationMsgConstructor.constructRelationUpdatedMsg(msgType, entityRelation);
         return DownlinkMsg.newBuilder()
                 .setDownlinkMsgId(EdgeUtils.nextPositiveInt())
@@ -111,20 +114,21 @@ public class RelationEdgeProcessor extends BaseEdgeProcessor {
                 .build();
     }
 
-    public ListenableFuture<Void> processRelationNotification(TenantId tenantId, TransportProtos.EdgeNotificationMsgProto edgeNotificationMsg) throws JsonProcessingException {
+    @NotNull
+    public ListenableFuture<Void> processRelationNotification(TenantId tenantId, @NotNull TransportProtos.EdgeNotificationMsgProto edgeNotificationMsg) throws JsonProcessingException {
         EntityRelation relation = JacksonUtil.OBJECT_MAPPER.readValue(edgeNotificationMsg.getBody(), EntityRelation.class);
         if (relation.getFrom().getEntityType().equals(EntityType.EDGE) ||
                 relation.getTo().getEntityType().equals(EntityType.EDGE)) {
             return Futures.immediateFuture(null);
         }
 
-        Set<EdgeId> uniqueEdgeIds = new HashSet<>();
+        @NotNull Set<EdgeId> uniqueEdgeIds = new HashSet<>();
         uniqueEdgeIds.addAll(edgeService.findAllRelatedEdgeIds(tenantId, relation.getTo()));
         uniqueEdgeIds.addAll(edgeService.findAllRelatedEdgeIds(tenantId, relation.getFrom()));
         if (uniqueEdgeIds.isEmpty()) {
             return Futures.immediateFuture(null);
         }
-        List<ListenableFuture<Void>> futures = new ArrayList<>();
+        @NotNull List<ListenableFuture<Void>> futures = new ArrayList<>();
         for (EdgeId edgeId : uniqueEdgeIds) {
             futures.add(saveEdgeEvent(tenantId,
                                       edgeId,

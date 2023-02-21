@@ -6,6 +6,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.dao.model.sql.AbstractTsKvEntity;
 import org.hibernate.exception.ConstraintViolationException;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.echoiot.server.common.data.kv.ReadTsKvQuery;
@@ -30,9 +31,10 @@ public abstract class BaseAbstractSqlTimeseriesDao extends JpaAbstractDaoListeni
 
     private final ConcurrentMap<String, Integer> tsKvDictionaryMap = new ConcurrentHashMap<>();
     protected static final ReentrantLock tsCreationLock = new ReentrantLock();
-    @Autowired
+    @Resource
     protected TsKvDictionaryRepository dictionaryRepository;
 
+    @NotNull
     protected Integer getOrSaveKeyId(String strKey) {
         Integer keyId = tsKvDictionaryMap.get(strKey);
         if (keyId == null) {
@@ -43,10 +45,10 @@ public abstract class BaseAbstractSqlTimeseriesDao extends JpaAbstractDaoListeni
                 try {
                     tsKvDictionaryOptional = dictionaryRepository.findById(new TsKvDictionaryCompositeKey(strKey));
                     if (!tsKvDictionaryOptional.isPresent()) {
-                        TsKvDictionary tsKvDictionary = new TsKvDictionary();
+                        @NotNull TsKvDictionary tsKvDictionary = new TsKvDictionary();
                         tsKvDictionary.setKey(strKey);
                         try {
-                            TsKvDictionary saved = dictionaryRepository.save(tsKvDictionary);
+                            @NotNull TsKvDictionary saved = dictionaryRepository.save(tsKvDictionary);
                             tsKvDictionaryMap.put(saved.getKey(), saved.getKeyId());
                             keyId = saved.getKeyId();
                         } catch (DataIntegrityViolationException | ConstraintViolationException e) {
@@ -69,7 +71,8 @@ public abstract class BaseAbstractSqlTimeseriesDao extends JpaAbstractDaoListeni
         return keyId;
     }
 
-    protected ListenableFuture<ReadTsKvQueryResult> getReadTsKvQueryResultFuture(ReadTsKvQuery query, ListenableFuture<List<Optional<? extends AbstractTsKvEntity>>> future) {
+    @NotNull
+    protected ListenableFuture<ReadTsKvQueryResult> getReadTsKvQueryResultFuture(@NotNull ReadTsKvQuery query, @NotNull ListenableFuture<List<Optional<? extends AbstractTsKvEntity>>> future) {
         return Futures.transform(future, new Function<>() {
             @Nullable
             @Override
@@ -77,8 +80,8 @@ public abstract class BaseAbstractSqlTimeseriesDao extends JpaAbstractDaoListeni
                 if (results == null || results.isEmpty()) {
                     return null;
                 }
-                List<? extends AbstractTsKvEntity> data = results.stream().filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList());
-                var lastTs = data.stream().map(AbstractTsKvEntity::getAggValuesLastTs).filter(Objects::nonNull).max(Long::compare);
+                @NotNull List<? extends AbstractTsKvEntity> data = results.stream().filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList());
+                @NotNull var lastTs = data.stream().map(AbstractTsKvEntity::getAggValuesLastTs).filter(Objects::nonNull).max(Long::compare);
                 if (lastTs.isEmpty()) {
                     lastTs = data.stream().map(AbstractTsKvEntity::getTs).filter(Objects::nonNull).max(Long::compare);
                 }

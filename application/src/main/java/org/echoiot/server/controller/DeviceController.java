@@ -32,6 +32,7 @@ import org.echoiot.server.service.entitiy.device.TbDeviceService;
 import org.echoiot.server.service.security.model.SecurityUser;
 import org.echoiot.server.service.security.permission.Operation;
 import org.echoiot.server.service.security.permission.Resource;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -54,8 +55,10 @@ public class DeviceController extends BaseController {
 
     protected static final String DEVICE_NAME = "deviceName";
 
+    @NotNull
     private final DeviceBulkImportService deviceBulkImportService;
 
+    @NotNull
     private final TbDeviceService tbDeviceService;
 
     @ApiOperation(value = "Get Device (getDeviceById)",
@@ -66,10 +69,10 @@ public class DeviceController extends BaseController {
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/device/{deviceId}", method = RequestMethod.GET)
     @ResponseBody
-    public Device getDeviceById(@ApiParam(value = ControllerConstants.DEVICE_ID_PARAM_DESCRIPTION)
+    public Device getDeviceById(@NotNull @ApiParam(value = ControllerConstants.DEVICE_ID_PARAM_DESCRIPTION)
                                 @PathVariable(ControllerConstants.DEVICE_ID) String strDeviceId) throws EchoiotException {
         checkParameter(ControllerConstants.DEVICE_ID, strDeviceId);
-        DeviceId deviceId = new DeviceId(toUUID(strDeviceId));
+        @NotNull DeviceId deviceId = new DeviceId(toUUID(strDeviceId));
         return checkDeviceId(deviceId, Operation.READ);
     }
 
@@ -81,10 +84,10 @@ public class DeviceController extends BaseController {
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/device/info/{deviceId}", method = RequestMethod.GET)
     @ResponseBody
-    public DeviceInfo getDeviceInfoById(@ApiParam(value = ControllerConstants.DEVICE_ID_PARAM_DESCRIPTION)
+    public DeviceInfo getDeviceInfoById(@NotNull @ApiParam(value = ControllerConstants.DEVICE_ID_PARAM_DESCRIPTION)
                                         @PathVariable(ControllerConstants.DEVICE_ID) String strDeviceId) throws EchoiotException {
         checkParameter(ControllerConstants.DEVICE_ID, strDeviceId);
-        DeviceId deviceId = new DeviceId(toUUID(strDeviceId));
+        @NotNull DeviceId deviceId = new DeviceId(toUUID(strDeviceId));
         return checkDeviceInfoId(deviceId, Operation.READ);
     }
 
@@ -100,11 +103,11 @@ public class DeviceController extends BaseController {
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/device", method = RequestMethod.POST)
     @ResponseBody
-    public Device saveDevice(@ApiParam(value = "A JSON value representing the device.") @RequestBody Device device,
+    public Device saveDevice(@NotNull @ApiParam(value = "A JSON value representing the device.") @RequestBody Device device,
                              @ApiParam(value = "Optional value of the device credentials to be used during device creation. " +
                                      "If omitted, access token will be auto-generated.") @RequestParam(name = "accessToken", required = false) String accessToken) throws Exception {
         device.setTenantId(getCurrentUser().getTenantId());
-        Device oldDevice = null;
+        @org.jetbrains.annotations.Nullable Device oldDevice = null;
         if (device.getId() != null) {
             oldDevice = checkDeviceId(device.getId(), Operation.WRITE);
         } else {
@@ -123,7 +126,7 @@ public class DeviceController extends BaseController {
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/device-with-credentials", method = RequestMethod.POST)
     @ResponseBody
-    public Device saveDeviceWithCredentials(@ApiParam(value = "The JSON object with device and credentials. See method description above for example.")
+    public Device saveDeviceWithCredentials(@NotNull @ApiParam(value = "The JSON object with device and credentials. See method description above for example.")
                                             @RequestBody SaveDeviceWithCredentialsRequest deviceAndCredentials) throws EchoiotException {
         Device device = checkNotNull(deviceAndCredentials.getDevice());
         DeviceCredentials credentials = checkNotNull(deviceAndCredentials.getCredentials());
@@ -137,10 +140,10 @@ public class DeviceController extends BaseController {
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
     @RequestMapping(value = "/device/{deviceId}", method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.OK)
-    public void deleteDevice(@ApiParam(value = ControllerConstants.DEVICE_ID_PARAM_DESCRIPTION)
+    public void deleteDevice(@NotNull @ApiParam(value = ControllerConstants.DEVICE_ID_PARAM_DESCRIPTION)
                              @PathVariable(ControllerConstants.DEVICE_ID) String strDeviceId) throws Exception {
         checkParameter(ControllerConstants.DEVICE_ID, strDeviceId);
-        DeviceId deviceId = new DeviceId(toUUID(strDeviceId));
+        @NotNull DeviceId deviceId = new DeviceId(toUUID(strDeviceId));
         Device device = checkDeviceId(deviceId, Operation.DELETE);
         tbDeviceService.delete(device, getCurrentUser()).get();
     }
@@ -150,15 +153,15 @@ public class DeviceController extends BaseController {
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
     @RequestMapping(value = "/customer/{customerId}/device/{deviceId}", method = RequestMethod.POST)
     @ResponseBody
-    public Device assignDeviceToCustomer(@ApiParam(value = ControllerConstants.CUSTOMER_ID_PARAM_DESCRIPTION)
+    public Device assignDeviceToCustomer(@NotNull @ApiParam(value = ControllerConstants.CUSTOMER_ID_PARAM_DESCRIPTION)
                                          @PathVariable("customerId") String strCustomerId,
-                                         @ApiParam(value = ControllerConstants.DEVICE_ID_PARAM_DESCRIPTION)
+                                         @NotNull @ApiParam(value = ControllerConstants.DEVICE_ID_PARAM_DESCRIPTION)
                                          @PathVariable(ControllerConstants.DEVICE_ID) String strDeviceId) throws EchoiotException {
         checkParameter("customerId", strCustomerId);
         checkParameter(ControllerConstants.DEVICE_ID, strDeviceId);
-        CustomerId customerId = new CustomerId(toUUID(strCustomerId));
+        @NotNull CustomerId customerId = new CustomerId(toUUID(strCustomerId));
         Customer customer = checkCustomerId(customerId, Operation.READ);
-        DeviceId deviceId = new DeviceId(toUUID(strDeviceId));
+        @NotNull DeviceId deviceId = new DeviceId(toUUID(strDeviceId));
         checkDeviceId(deviceId, Operation.ASSIGN_TO_CUSTOMER);
         return tbDeviceService.assignDeviceToCustomer(getTenantId(), deviceId, customer, getCurrentUser());
     }
@@ -168,10 +171,10 @@ public class DeviceController extends BaseController {
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
     @RequestMapping(value = "/customer/device/{deviceId}", method = RequestMethod.DELETE)
     @ResponseBody
-    public Device unassignDeviceFromCustomer(@ApiParam(value = ControllerConstants.DEVICE_ID_PARAM_DESCRIPTION)
+    public Device unassignDeviceFromCustomer(@NotNull @ApiParam(value = ControllerConstants.DEVICE_ID_PARAM_DESCRIPTION)
                                              @PathVariable(ControllerConstants.DEVICE_ID) String strDeviceId) throws EchoiotException {
         checkParameter(ControllerConstants.DEVICE_ID, strDeviceId);
-        DeviceId deviceId = new DeviceId(toUUID(strDeviceId));
+        @NotNull DeviceId deviceId = new DeviceId(toUUID(strDeviceId));
         Device device = checkDeviceId(deviceId, Operation.UNASSIGN_FROM_CUSTOMER);
         if (device.getCustomerId() == null || device.getCustomerId().getId().equals(ModelConstants.NULL_UUID)) {
             throw new IncorrectParameterException("Device isn't assigned to any customer!");
@@ -189,10 +192,10 @@ public class DeviceController extends BaseController {
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
     @RequestMapping(value = "/customer/public/device/{deviceId}", method = RequestMethod.POST)
     @ResponseBody
-    public Device assignDeviceToPublicCustomer(@ApiParam(value = ControllerConstants.DEVICE_ID_PARAM_DESCRIPTION)
+    public Device assignDeviceToPublicCustomer(@NotNull @ApiParam(value = ControllerConstants.DEVICE_ID_PARAM_DESCRIPTION)
                                                @PathVariable(ControllerConstants.DEVICE_ID) String strDeviceId) throws EchoiotException {
         checkParameter(ControllerConstants.DEVICE_ID, strDeviceId);
-        DeviceId deviceId = new DeviceId(toUUID(strDeviceId));
+        @NotNull DeviceId deviceId = new DeviceId(toUUID(strDeviceId));
         checkDeviceId(deviceId, Operation.ASSIGN_TO_CUSTOMER);
         return tbDeviceService.assignDeviceToPublicCustomer(getTenantId(), deviceId, getCurrentUser());
     }
@@ -202,10 +205,10 @@ public class DeviceController extends BaseController {
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/device/{deviceId}/credentials", method = RequestMethod.GET)
     @ResponseBody
-    public DeviceCredentials getDeviceCredentialsByDeviceId(@ApiParam(value = ControllerConstants.DEVICE_ID_PARAM_DESCRIPTION)
+    public DeviceCredentials getDeviceCredentialsByDeviceId(@NotNull @ApiParam(value = ControllerConstants.DEVICE_ID_PARAM_DESCRIPTION)
                                                             @PathVariable(ControllerConstants.DEVICE_ID) String strDeviceId) throws EchoiotException {
         checkParameter(ControllerConstants.DEVICE_ID, strDeviceId);
-        DeviceId deviceId = new DeviceId(toUUID(strDeviceId));
+        @NotNull DeviceId deviceId = new DeviceId(toUUID(strDeviceId));
         Device device = checkDeviceId(deviceId, Operation.READ_CREDENTIALS);
         return tbDeviceService.getDeviceCredentialsByDeviceId(device, getCurrentUser());
     }
@@ -218,7 +221,7 @@ public class DeviceController extends BaseController {
     @RequestMapping(value = "/device/credentials", method = RequestMethod.POST)
     @ResponseBody
     public DeviceCredentials updateDeviceCredentials(
-            @ApiParam(value = "A JSON value representing the device credentials.")
+            @NotNull @ApiParam(value = "A JSON value representing the device credentials.")
             @RequestBody DeviceCredentials deviceCredentials) throws EchoiotException {
         checkNotNull(deviceCredentials);
         Device device = checkDeviceId(deviceCredentials.getDeviceId(), Operation.WRITE_CREDENTIALS);
@@ -236,17 +239,17 @@ public class DeviceController extends BaseController {
             @RequestParam int pageSize,
             @ApiParam(value = ControllerConstants.PAGE_NUMBER_DESCRIPTION, required = true)
             @RequestParam int page,
-            @ApiParam(value = ControllerConstants.DEVICE_TYPE_DESCRIPTION)
+            @org.jetbrains.annotations.Nullable @ApiParam(value = ControllerConstants.DEVICE_TYPE_DESCRIPTION)
             @RequestParam(required = false) String type,
             @ApiParam(value = ControllerConstants.DEVICE_TEXT_SEARCH_DESCRIPTION)
             @RequestParam(required = false) String textSearch,
             @ApiParam(value = ControllerConstants.SORT_PROPERTY_DESCRIPTION, allowableValues = ControllerConstants.DEVICE_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
-            @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
+            @NotNull @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortOrder) throws EchoiotException {
         try {
             TenantId tenantId = getCurrentUser().getTenantId();
-            PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
+            @NotNull PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
             if (type != null && type.trim().length() > 0) {
                 return checkNotNull(deviceService.findDevicesByTenantIdAndType(tenantId, type, pageLink));
             } else {
@@ -268,24 +271,24 @@ public class DeviceController extends BaseController {
             @RequestParam int pageSize,
             @ApiParam(value = ControllerConstants.PAGE_NUMBER_DESCRIPTION, required = true)
             @RequestParam int page,
-            @ApiParam(value = ControllerConstants.DEVICE_TYPE_DESCRIPTION)
+            @org.jetbrains.annotations.Nullable @ApiParam(value = ControllerConstants.DEVICE_TYPE_DESCRIPTION)
             @RequestParam(required = false) String type,
-            @ApiParam(value = ControllerConstants.DEVICE_PROFILE_ID_PARAM_DESCRIPTION)
+            @org.jetbrains.annotations.Nullable @ApiParam(value = ControllerConstants.DEVICE_PROFILE_ID_PARAM_DESCRIPTION)
             @RequestParam(required = false) String deviceProfileId,
             @ApiParam(value = ControllerConstants.DEVICE_TEXT_SEARCH_DESCRIPTION)
             @RequestParam(required = false) String textSearch,
             @ApiParam(value = ControllerConstants.SORT_PROPERTY_DESCRIPTION, allowableValues = ControllerConstants.DEVICE_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
-            @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
+            @NotNull @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortOrder
     ) throws EchoiotException {
         try {
             TenantId tenantId = getCurrentUser().getTenantId();
-            PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
+            @NotNull PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
             if (type != null && type.trim().length() > 0) {
                 return checkNotNull(deviceService.findDeviceInfosByTenantIdAndType(tenantId, type, pageLink));
             } else if (deviceProfileId != null && deviceProfileId.length() > 0) {
-                DeviceProfileId profileId = new DeviceProfileId(toUUID(deviceProfileId));
+                @NotNull DeviceProfileId profileId = new DeviceProfileId(toUUID(deviceProfileId));
                 return checkNotNull(deviceService.findDeviceInfosByTenantIdAndDeviceProfileId(tenantId, profileId, pageLink));
             } else {
                 return checkNotNull(deviceService.findDeviceInfosByTenantId(tenantId, pageLink));
@@ -319,26 +322,26 @@ public class DeviceController extends BaseController {
     @RequestMapping(value = "/customer/{customerId}/devices", params = {"pageSize", "page"}, method = RequestMethod.GET)
     @ResponseBody
     public PageData<Device> getCustomerDevices(
-            @ApiParam(value = ControllerConstants.CUSTOMER_ID_PARAM_DESCRIPTION, required = true)
+            @NotNull @ApiParam(value = ControllerConstants.CUSTOMER_ID_PARAM_DESCRIPTION, required = true)
             @PathVariable(ControllerConstants.CUSTOMER_ID) String strCustomerId,
             @ApiParam(value = ControllerConstants.PAGE_SIZE_DESCRIPTION, required = true)
             @RequestParam int pageSize,
             @ApiParam(value = ControllerConstants.PAGE_NUMBER_DESCRIPTION, required = true)
             @RequestParam int page,
-            @ApiParam(value = ControllerConstants.DEVICE_TYPE_DESCRIPTION)
+            @org.jetbrains.annotations.Nullable @ApiParam(value = ControllerConstants.DEVICE_TYPE_DESCRIPTION)
             @RequestParam(required = false) String type,
             @ApiParam(value = ControllerConstants.DEVICE_TEXT_SEARCH_DESCRIPTION)
             @RequestParam(required = false) String textSearch,
             @ApiParam(value = ControllerConstants.SORT_PROPERTY_DESCRIPTION, allowableValues = ControllerConstants.DEVICE_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
-            @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
+            @NotNull @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortOrder) throws EchoiotException {
         checkParameter("customerId", strCustomerId);
         try {
             TenantId tenantId = getCurrentUser().getTenantId();
-            CustomerId customerId = new CustomerId(toUUID(strCustomerId));
+            @NotNull CustomerId customerId = new CustomerId(toUUID(strCustomerId));
             checkCustomerId(customerId, Operation.READ);
-            PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
+            @NotNull PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
             if (type != null && type.trim().length() > 0) {
                 return checkNotNull(deviceService.findDevicesByTenantIdAndCustomerIdAndType(tenantId, customerId, type, pageLink));
             } else {
@@ -356,32 +359,32 @@ public class DeviceController extends BaseController {
     @RequestMapping(value = "/customer/{customerId}/deviceInfos", params = {"pageSize", "page"}, method = RequestMethod.GET)
     @ResponseBody
     public PageData<DeviceInfo> getCustomerDeviceInfos(
-            @ApiParam(value = ControllerConstants.CUSTOMER_ID_PARAM_DESCRIPTION, required = true)
+            @NotNull @ApiParam(value = ControllerConstants.CUSTOMER_ID_PARAM_DESCRIPTION, required = true)
             @PathVariable("customerId") String strCustomerId,
             @ApiParam(value = ControllerConstants.PAGE_SIZE_DESCRIPTION, required = true)
             @RequestParam int pageSize,
             @ApiParam(value = ControllerConstants.PAGE_NUMBER_DESCRIPTION, required = true)
             @RequestParam int page,
-            @ApiParam(value = ControllerConstants.DEVICE_TYPE_DESCRIPTION)
+            @org.jetbrains.annotations.Nullable @ApiParam(value = ControllerConstants.DEVICE_TYPE_DESCRIPTION)
             @RequestParam(required = false) String type,
-            @ApiParam(value = ControllerConstants.DEVICE_PROFILE_ID_PARAM_DESCRIPTION)
+            @org.jetbrains.annotations.Nullable @ApiParam(value = ControllerConstants.DEVICE_PROFILE_ID_PARAM_DESCRIPTION)
             @RequestParam(required = false) String deviceProfileId,
             @ApiParam(value = ControllerConstants.DEVICE_TEXT_SEARCH_DESCRIPTION)
             @RequestParam(required = false) String textSearch,
             @ApiParam(value = ControllerConstants.SORT_PROPERTY_DESCRIPTION, allowableValues = ControllerConstants.DEVICE_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
-            @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
+            @NotNull @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortOrder) throws EchoiotException {
         checkParameter("customerId", strCustomerId);
         try {
             TenantId tenantId = getCurrentUser().getTenantId();
-            CustomerId customerId = new CustomerId(toUUID(strCustomerId));
+            @NotNull CustomerId customerId = new CustomerId(toUUID(strCustomerId));
             checkCustomerId(customerId, Operation.READ);
-            PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
+            @NotNull PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
             if (type != null && type.trim().length() > 0) {
                 return checkNotNull(deviceService.findDeviceInfosByTenantIdAndCustomerIdAndType(tenantId, customerId, type, pageLink));
             } else if (deviceProfileId != null && deviceProfileId.length() > 0) {
-                DeviceProfileId profileId = new DeviceProfileId(toUUID(deviceProfileId));
+                @NotNull DeviceProfileId profileId = new DeviceProfileId(toUUID(deviceProfileId));
                 return checkNotNull(deviceService.findDeviceInfosByTenantIdAndCustomerIdAndDeviceProfileId(tenantId, customerId, profileId, pageLink));
             } else {
                 return checkNotNull(deviceService.findDeviceInfosByTenantIdAndCustomerId(tenantId, customerId, pageLink));
@@ -397,15 +400,15 @@ public class DeviceController extends BaseController {
     @RequestMapping(value = "/devices", params = {"deviceIds"}, method = RequestMethod.GET)
     @ResponseBody
     public List<Device> getDevicesByIds(
-            @ApiParam(value = "A list of devices ids, separated by comma ','")
+            @NotNull @ApiParam(value = "A list of devices ids, separated by comma ','")
             @RequestParam("deviceIds") String[] strDeviceIds) throws EchoiotException {
         checkArrayParameter("deviceIds", strDeviceIds);
         try {
             SecurityUser user = getCurrentUser();
             TenantId tenantId = user.getTenantId();
             CustomerId customerId = user.getCustomerId();
-            List<DeviceId> deviceIds = new ArrayList<>();
-            for (String strDeviceId : strDeviceIds) {
+            @NotNull List<DeviceId> deviceIds = new ArrayList<>();
+            for (@NotNull String strDeviceId : strDeviceIds) {
                 deviceIds.add(new DeviceId(toUUID(strDeviceId)));
             }
             ListenableFuture<List<Device>> devices;
@@ -420,6 +423,7 @@ public class DeviceController extends BaseController {
         }
     }
 
+    @NotNull
     @ApiOperation(value = "Find related devices (findByQuery)",
             notes = "Returns all devices that are related to the specific entity. " +
                     "The entity id, relation type, device types, depth of the search, and other query parameters defined using complex 'DeviceSearchQuery' object. " +
@@ -428,7 +432,7 @@ public class DeviceController extends BaseController {
     @RequestMapping(value = "/devices", method = RequestMethod.POST)
     @ResponseBody
     public List<Device> findByQuery(
-            @ApiParam(value = "The device search query JSON")
+            @NotNull @ApiParam(value = "The device search query JSON")
             @RequestBody DeviceSearchQuery query) throws EchoiotException {
         checkNotNull(query);
         checkNotNull(query.getParameters());
@@ -467,6 +471,7 @@ public class DeviceController extends BaseController {
         }
     }
 
+    @NotNull
     @ApiOperation(value = "Claim device (claimDevice)",
             notes = "Claiming makes it possible to assign a device to the specific customer using device/server side claiming data (in the form of secret key)." +
                     "To make this happen you have to provide unique device name and optional claiming data (it is needed only for device-side claiming)." +
@@ -479,10 +484,10 @@ public class DeviceController extends BaseController {
     @ResponseBody
     public DeferredResult<ResponseEntity> claimDevice(@ApiParam(value = "Unique name of the device which is going to be claimed")
                                                       @PathVariable(DEVICE_NAME) String deviceName,
-                                                      @ApiParam(value = "Claiming request which can optionally contain secret key")
+                                                      @NotNull @ApiParam(value = "Claiming request which can optionally contain secret key")
                                                       @RequestBody(required = false) ClaimRequest claimRequest) throws EchoiotException {
         checkParameter(DEVICE_NAME, deviceName);
-        final DeferredResult<ResponseEntity> deferredResult = new DeferredResult<>();
+        @NotNull final DeferredResult<ResponseEntity> deferredResult = new DeferredResult<>();
 
         SecurityUser user = getCurrentUser();
         TenantId tenantId = user.getTenantId();
@@ -491,7 +496,7 @@ public class DeviceController extends BaseController {
         Device device = checkNotNull(deviceService.findDeviceByTenantIdAndName(tenantId, deviceName));
         accessControlService.checkPermission(user, Resource.DEVICE, Operation.CLAIM_DEVICES,
                 device.getId(), device);
-        String secretKey = getSecretKey(claimRequest);
+        @NotNull String secretKey = getSecretKey(claimRequest);
 
         ListenableFuture<ClaimResult> future = tbDeviceService.claimDevice(tenantId, device, customerId, secretKey, user);
 
@@ -520,6 +525,7 @@ public class DeviceController extends BaseController {
         return deferredResult;
     }
 
+    @NotNull
     @ApiOperation(value = "Reclaim device (reClaimDevice)",
             notes = "Reclaiming means the device will be unassigned from the customer and the device will be available for claiming again."
                     + ControllerConstants.TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
@@ -529,7 +535,7 @@ public class DeviceController extends BaseController {
     public DeferredResult<ResponseEntity> reClaimDevice(@ApiParam(value = "Unique name of the device which is going to be reclaimed")
                                                         @PathVariable(DEVICE_NAME) String deviceName) throws EchoiotException {
         checkParameter(DEVICE_NAME, deviceName);
-        final DeferredResult<ResponseEntity> deferredResult = new DeferredResult<>();
+        @NotNull final DeferredResult<ResponseEntity> deferredResult = new DeferredResult<>();
 
         SecurityUser user = getCurrentUser();
         TenantId tenantId = user.getTenantId();
@@ -553,7 +559,8 @@ public class DeviceController extends BaseController {
         return deferredResult;
     }
 
-    private String getSecretKey(ClaimRequest claimRequest) {
+    @NotNull
+    private String getSecretKey(@NotNull ClaimRequest claimRequest) {
         String secretKey = claimRequest.getSecretKey();
         if (secretKey != null) {
             return secretKey;
@@ -566,16 +573,16 @@ public class DeviceController extends BaseController {
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
     @RequestMapping(value = "/tenant/{tenantId}/device/{deviceId}", method = RequestMethod.POST)
     @ResponseBody
-    public Device assignDeviceToTenant(@ApiParam(value = ControllerConstants.TENANT_ID_PARAM_DESCRIPTION)
+    public Device assignDeviceToTenant(@NotNull @ApiParam(value = ControllerConstants.TENANT_ID_PARAM_DESCRIPTION)
                                        @PathVariable(ControllerConstants.TENANT_ID) String strTenantId,
-                                       @ApiParam(value = ControllerConstants.DEVICE_ID_PARAM_DESCRIPTION)
+                                       @NotNull @ApiParam(value = ControllerConstants.DEVICE_ID_PARAM_DESCRIPTION)
                                        @PathVariable(ControllerConstants.DEVICE_ID) String strDeviceId) throws EchoiotException {
         checkParameter(ControllerConstants.TENANT_ID, strTenantId);
         checkParameter(ControllerConstants.DEVICE_ID, strDeviceId);
-        DeviceId deviceId = new DeviceId(toUUID(strDeviceId));
+        @NotNull DeviceId deviceId = new DeviceId(toUUID(strDeviceId));
         Device device = checkDeviceId(deviceId, Operation.ASSIGN_TO_TENANT);
 
-        TenantId newTenantId = TenantId.fromUUID(toUUID(strTenantId));
+        @NotNull TenantId newTenantId = TenantId.fromUUID(toUUID(strTenantId));
         Tenant newTenant = tenantService.findTenantById(newTenantId);
         if (newTenant == null) {
             throw new EchoiotException("Could not find the specified Tenant!", EchoiotErrorCode.BAD_REQUEST_PARAMS);
@@ -593,16 +600,16 @@ public class DeviceController extends BaseController {
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
     @RequestMapping(value = "/edge/{edgeId}/device/{deviceId}", method = RequestMethod.POST)
     @ResponseBody
-    public Device assignDeviceToEdge(@ApiParam(value = ControllerConstants.EDGE_ID_PARAM_DESCRIPTION)
+    public Device assignDeviceToEdge(@NotNull @ApiParam(value = ControllerConstants.EDGE_ID_PARAM_DESCRIPTION)
                                      @PathVariable(EdgeController.EDGE_ID) String strEdgeId,
-                                     @ApiParam(value = ControllerConstants.DEVICE_ID_PARAM_DESCRIPTION)
+                                     @NotNull @ApiParam(value = ControllerConstants.DEVICE_ID_PARAM_DESCRIPTION)
                                      @PathVariable(ControllerConstants.DEVICE_ID) String strDeviceId) throws EchoiotException {
         checkParameter(EdgeController.EDGE_ID, strEdgeId);
         checkParameter(ControllerConstants.DEVICE_ID, strDeviceId);
-        EdgeId edgeId = new EdgeId(toUUID(strEdgeId));
+        @NotNull EdgeId edgeId = new EdgeId(toUUID(strEdgeId));
         Edge edge = checkEdgeId(edgeId, Operation.READ);
 
-        DeviceId deviceId = new DeviceId(toUUID(strDeviceId));
+        @NotNull DeviceId deviceId = new DeviceId(toUUID(strDeviceId));
         checkDeviceId(deviceId, Operation.READ);
 
         return tbDeviceService.assignDeviceToEdge(getTenantId(), deviceId, edge, getCurrentUser());
@@ -618,16 +625,16 @@ public class DeviceController extends BaseController {
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
     @RequestMapping(value = "/edge/{edgeId}/device/{deviceId}", method = RequestMethod.DELETE)
     @ResponseBody
-    public Device unassignDeviceFromEdge(@ApiParam(value = ControllerConstants.EDGE_ID_PARAM_DESCRIPTION)
+    public Device unassignDeviceFromEdge(@NotNull @ApiParam(value = ControllerConstants.EDGE_ID_PARAM_DESCRIPTION)
                                          @PathVariable(EdgeController.EDGE_ID) String strEdgeId,
-                                         @ApiParam(value = ControllerConstants.DEVICE_ID_PARAM_DESCRIPTION)
+                                         @NotNull @ApiParam(value = ControllerConstants.DEVICE_ID_PARAM_DESCRIPTION)
                                          @PathVariable(ControllerConstants.DEVICE_ID) String strDeviceId) throws EchoiotException {
         checkParameter(EdgeController.EDGE_ID, strEdgeId);
         checkParameter(ControllerConstants.DEVICE_ID, strDeviceId);
-        EdgeId edgeId = new EdgeId(toUUID(strEdgeId));
+        @NotNull EdgeId edgeId = new EdgeId(toUUID(strEdgeId));
         Edge edge = checkEdgeId(edgeId, Operation.READ);
 
-        DeviceId deviceId = new DeviceId(toUUID(strDeviceId));
+        @NotNull DeviceId deviceId = new DeviceId(toUUID(strDeviceId));
         Device device = checkDeviceId(deviceId, Operation.READ);
         return tbDeviceService.unassignDeviceFromEdge(device, edge, getCurrentUser());
     }
@@ -639,19 +646,19 @@ public class DeviceController extends BaseController {
     @RequestMapping(value = "/edge/{edgeId}/devices", params = {"pageSize", "page"}, method = RequestMethod.GET)
     @ResponseBody
     public PageData<Device> getEdgeDevices(
-            @ApiParam(value = ControllerConstants.EDGE_ID_PARAM_DESCRIPTION, required = true)
+            @NotNull @ApiParam(value = ControllerConstants.EDGE_ID_PARAM_DESCRIPTION, required = true)
             @PathVariable(EdgeController.EDGE_ID) String strEdgeId,
             @ApiParam(value = ControllerConstants.PAGE_SIZE_DESCRIPTION, required = true)
             @RequestParam int pageSize,
             @ApiParam(value = ControllerConstants.PAGE_NUMBER_DESCRIPTION, required = true)
             @RequestParam int page,
-            @ApiParam(value = ControllerConstants.DEVICE_TYPE_DESCRIPTION)
+            @org.jetbrains.annotations.Nullable @ApiParam(value = ControllerConstants.DEVICE_TYPE_DESCRIPTION)
             @RequestParam(required = false) String type,
             @ApiParam(value = ControllerConstants.DEVICE_TEXT_SEARCH_DESCRIPTION)
             @RequestParam(required = false) String textSearch,
             @ApiParam(value = ControllerConstants.SORT_PROPERTY_DESCRIPTION, allowableValues = ControllerConstants.DEVICE_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
-            @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
+            @NotNull @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortOrder,
             @ApiParam(value = "Timestamp. Devices with creation time before it won't be queried")
             @RequestParam(required = false) Long startTime,
@@ -660,16 +667,16 @@ public class DeviceController extends BaseController {
         checkParameter(EdgeController.EDGE_ID, strEdgeId);
         try {
             TenantId tenantId = getCurrentUser().getTenantId();
-            EdgeId edgeId = new EdgeId(toUUID(strEdgeId));
+            @NotNull EdgeId edgeId = new EdgeId(toUUID(strEdgeId));
             checkEdgeId(edgeId, Operation.READ);
-            TimePageLink pageLink = createTimePageLink(pageSize, page, textSearch, sortProperty, sortOrder, startTime, endTime);
+            @NotNull TimePageLink pageLink = createTimePageLink(pageSize, page, textSearch, sortProperty, sortOrder, startTime, endTime);
             PageData<Device> nonFilteredResult;
             if (type != null && type.trim().length() > 0) {
                 nonFilteredResult = deviceService.findDevicesByTenantIdAndEdgeIdAndType(tenantId, edgeId, type, pageLink);
             } else {
                 nonFilteredResult = deviceService.findDevicesByTenantIdAndEdgeId(tenantId, edgeId, pageLink);
             }
-            List<Device> filteredDevices = nonFilteredResult.getData().stream().filter(device -> {
+            @NotNull List<Device> filteredDevices = nonFilteredResult.getData().stream().filter(device -> {
                 try {
                     accessControlService.checkPermission(getCurrentUser(), Resource.DEVICE, Operation.READ, device.getId(), device);
                     return true;
@@ -677,10 +684,10 @@ public class DeviceController extends BaseController {
                     return false;
                 }
             }).collect(Collectors.toList());
-            PageData<Device> filteredResult = new PageData<>(filteredDevices,
-                    nonFilteredResult.getTotalPages(),
-                    nonFilteredResult.getTotalElements(),
-                    nonFilteredResult.hasNext());
+            @NotNull PageData<Device> filteredResult = new PageData<>(filteredDevices,
+                                                                      nonFilteredResult.getTotalPages(),
+                                                                      nonFilteredResult.getTotalElements(),
+                                                                      nonFilteredResult.hasNext());
             return checkNotNull(filteredResult);
         } catch (Exception e) {
             throw handleException(e);
@@ -698,7 +705,7 @@ public class DeviceController extends BaseController {
     public Long countByDeviceProfileAndEmptyOtaPackage
             (@ApiParam(value = "OTA package type", allowableValues = "FIRMWARE, SOFTWARE")
              @PathVariable("otaPackageType") String otaPackageType,
-             @ApiParam(value = "Device Profile Id. I.g. '784f394c-42b6-435a-983c-b7beff2784f9'")
+             @NotNull @ApiParam(value = "Device Profile Id. I.g. '784f394c-42b6-435a-983c-b7beff2784f9'")
              @PathVariable("deviceProfileId") String deviceProfileId) throws EchoiotException {
         checkParameter("OtaPackageType", otaPackageType);
         checkParameter("DeviceProfileId", deviceProfileId);
@@ -712,11 +719,12 @@ public class DeviceController extends BaseController {
         }
     }
 
+    @NotNull
     @ApiOperation(value = "Import the bulk of devices (processDevicesBulkImport)",
             notes = "There's an ability to import the bulk of devices using the only .csv file." + ControllerConstants.TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN')")
     @PostMapping("/device/bulk_import")
-    public BulkImportResult<Device> processDevicesBulkImport(@RequestBody BulkImportRequest request) throws
+    public BulkImportResult<Device> processDevicesBulkImport(@NotNull @RequestBody BulkImportRequest request) throws
             Exception {
         SecurityUser user = getCurrentUser();
         return deviceBulkImportService.processBulkImport(request, user);

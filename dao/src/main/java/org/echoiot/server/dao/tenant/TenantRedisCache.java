@@ -1,5 +1,6 @@
 package org.echoiot.server.dao.tenant;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,7 @@ import org.echoiot.server.common.data.id.TenantId;
 @Service("TenantCache")
 public class TenantRedisCache extends RedisTbTransactionalCache<TenantId, Tenant> {
 
-    public TenantRedisCache(TBRedisCacheConfiguration configuration, CacheSpecsMap cacheSpecsMap, RedisConnectionFactory connectionFactory) {
+    public TenantRedisCache(@NotNull TBRedisCacheConfiguration configuration, CacheSpecsMap cacheSpecsMap, RedisConnectionFactory connectionFactory) {
         super(CacheConstants.TENANTS_CACHE, cacheSpecsMap, connectionFactory, configuration, new TbFSTRedisSerializer<>());
     }
 }

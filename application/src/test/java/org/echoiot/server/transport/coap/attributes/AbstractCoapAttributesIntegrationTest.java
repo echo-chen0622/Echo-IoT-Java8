@@ -22,6 +22,7 @@ import org.echoiot.server.transport.coap.CoapTestClient;
 import org.eclipse.californium.core.CoapObserveRelation;
 import org.eclipse.californium.core.CoapResponse;
 import org.eclipse.californium.core.coap.CoAP;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.nio.charset.StandardCharsets;
@@ -40,7 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Slf4j
 public abstract class AbstractCoapAttributesIntegrationTest extends AbstractCoapIntegrationTest {
 
-    @Autowired
+    @Resource
     DefaultTransportService defaultTransportService;
 
     public static final String ATTRIBUTES_SCHEMA_STR = "syntax =\"proto3\";\n" +
@@ -75,13 +76,14 @@ public abstract class AbstractCoapAttributesIntegrationTest extends AbstractCoap
 
     private static final String SHARED_ATTRIBUTES_DELETED_RESPONSE = "{\"deleted\":[\"sharedJson\"]}";
 
+    @NotNull
     private List<TransportProtos.TsKvProto> getTsKvProtoList(String attributePrefix) {
         TransportProtos.TsKvProto tsKvProtoAttribute1 = getTsKvProto(attributePrefix + "Str", "value1", TransportProtos.KeyValueType.STRING_V);
         TransportProtos.TsKvProto tsKvProtoAttribute2 = getTsKvProto(attributePrefix + "Bool", "true", TransportProtos.KeyValueType.BOOLEAN_V);
         TransportProtos.TsKvProto tsKvProtoAttribute3 = getTsKvProto(attributePrefix + "Dbl", "42.0", TransportProtos.KeyValueType.DOUBLE_V);
         TransportProtos.TsKvProto tsKvProtoAttribute4 = getTsKvProto(attributePrefix + "Long", "73", TransportProtos.KeyValueType.LONG_V);
         TransportProtos.TsKvProto tsKvProtoAttribute5 = getTsKvProto(attributePrefix + "Json", "{\"someNumber\":42,\"someArray\":[1,2,3],\"someNestedObject\":{\"key\":\"value\"}}", TransportProtos.KeyValueType.JSON_V);
-        List<TransportProtos.TsKvProto> tsKvProtoList = new ArrayList<>();
+        @NotNull List<TransportProtos.TsKvProto> tsKvProtoList = new ArrayList<>();
         tsKvProtoList.add(tsKvProtoAttribute1);
         tsKvProtoList.add(tsKvProtoAttribute2);
         tsKvProtoList.add(tsKvProtoAttribute3);
@@ -97,32 +99,33 @@ public abstract class AbstractCoapAttributesIntegrationTest extends AbstractCoap
         return tsKvProtoBuilder.build();
     }
 
-    private List<EntityKey> getEntityKeys(List<String> keys, EntityKeyType scope) {
+    @NotNull
+    private List<EntityKey> getEntityKeys(@NotNull List<String> keys, EntityKeyType scope) {
         return keys.stream().map(key -> new EntityKey(scope, key)).collect(Collectors.toList());
     }
 
     private byte[] getAttributesProtoPayloadBytes() {
         DeviceProfileTransportConfiguration transportConfiguration = deviceProfile.getProfileData().getTransportConfiguration();
         assertTrue(transportConfiguration instanceof CoapDeviceProfileTransportConfiguration);
-        CoapDeviceProfileTransportConfiguration coapTransportConfiguration = (CoapDeviceProfileTransportConfiguration) transportConfiguration;
-        CoapDeviceTypeConfiguration coapDeviceTypeConfiguration = coapTransportConfiguration.getCoapDeviceTypeConfiguration();
+        @NotNull CoapDeviceProfileTransportConfiguration coapTransportConfiguration = (CoapDeviceProfileTransportConfiguration) transportConfiguration;
+        @NotNull CoapDeviceTypeConfiguration coapDeviceTypeConfiguration = coapTransportConfiguration.getCoapDeviceTypeConfiguration();
         assertTrue(coapDeviceTypeConfiguration instanceof DefaultCoapDeviceTypeConfiguration);
-        DefaultCoapDeviceTypeConfiguration defaultCoapDeviceTypeConfiguration = (DefaultCoapDeviceTypeConfiguration) coapDeviceTypeConfiguration;
-        TransportPayloadTypeConfiguration transportPayloadTypeConfiguration = defaultCoapDeviceTypeConfiguration.getTransportPayloadTypeConfiguration();
+        @NotNull DefaultCoapDeviceTypeConfiguration defaultCoapDeviceTypeConfiguration = (DefaultCoapDeviceTypeConfiguration) coapDeviceTypeConfiguration;
+        @NotNull TransportPayloadTypeConfiguration transportPayloadTypeConfiguration = defaultCoapDeviceTypeConfiguration.getTransportPayloadTypeConfiguration();
         assertTrue(transportPayloadTypeConfiguration instanceof ProtoTransportPayloadConfiguration);
-        ProtoTransportPayloadConfiguration protoTransportPayloadConfiguration = (ProtoTransportPayloadConfiguration) transportPayloadTypeConfiguration;
-        ProtoFileElement protoFileElement = DynamicProtoUtils.getProtoFileElement(protoTransportPayloadConfiguration.getDeviceAttributesProtoSchema());
+        @NotNull ProtoTransportPayloadConfiguration protoTransportPayloadConfiguration = (ProtoTransportPayloadConfiguration) transportPayloadTypeConfiguration;
+        @NotNull ProtoFileElement protoFileElement = DynamicProtoUtils.getProtoFileElement(protoTransportPayloadConfiguration.getDeviceAttributesProtoSchema());
         DynamicSchema attributesSchema = DynamicProtoUtils.getDynamicSchema(protoFileElement, ProtoTransportPayloadConfiguration.ATTRIBUTES_PROTO_SCHEMA);
 
         DynamicMessage.Builder nestedJsonObjectBuilder = attributesSchema.newMessageBuilder("PostAttributes.JsonObject.NestedJsonObject");
         Descriptors.Descriptor nestedJsonObjectBuilderDescriptor = nestedJsonObjectBuilder.getDescriptorForType();
         assertNotNull(nestedJsonObjectBuilderDescriptor);
-        DynamicMessage nestedJsonObject = nestedJsonObjectBuilder.setField(nestedJsonObjectBuilderDescriptor.findFieldByName("key"), "value").build();
+        @NotNull DynamicMessage nestedJsonObject = nestedJsonObjectBuilder.setField(nestedJsonObjectBuilderDescriptor.findFieldByName("key"), "value").build();
 
         DynamicMessage.Builder jsonObjectBuilder = attributesSchema.newMessageBuilder("PostAttributes.JsonObject");
         Descriptors.Descriptor jsonObjectBuilderDescriptor = jsonObjectBuilder.getDescriptorForType();
         assertNotNull(jsonObjectBuilderDescriptor);
-        DynamicMessage jsonObject = jsonObjectBuilder
+        @NotNull DynamicMessage jsonObject = jsonObjectBuilder
                 .setField(jsonObjectBuilderDescriptor.findFieldByName("someNumber"), 42)
                 .addRepeatedField(jsonObjectBuilderDescriptor.findFieldByName("someArray"), 1)
                 .addRepeatedField(jsonObjectBuilderDescriptor.findFieldByName("someArray"), 2)
@@ -133,7 +136,7 @@ public abstract class AbstractCoapAttributesIntegrationTest extends AbstractCoap
         DynamicMessage.Builder postAttributesBuilder = attributesSchema.newMessageBuilder("PostAttributes");
         Descriptors.Descriptor postAttributesMsgDescriptor = postAttributesBuilder.getDescriptorForType();
         assertNotNull(postAttributesMsgDescriptor);
-        DynamicMessage postAttributesMsg = postAttributesBuilder
+        @NotNull DynamicMessage postAttributesMsg = postAttributesBuilder
                 .setField(postAttributesMsgDescriptor.findFieldByName("clientStr"), "value1")
                 .setField(postAttributesMsgDescriptor.findFieldByName("clientBool"), true)
                 .setField(postAttributesMsgDescriptor.findFieldByName("clientDbl"), 42.0)
@@ -145,15 +148,15 @@ public abstract class AbstractCoapAttributesIntegrationTest extends AbstractCoap
 
     protected void processJsonTestRequestAttributesValuesFromTheServer() throws Exception {
         client = new CoapTestClient(accessToken, FeatureType.ATTRIBUTES);
-        SingleEntityFilter dtf = new SingleEntityFilter();
+        @NotNull SingleEntityFilter dtf = new SingleEntityFilter();
         dtf.setSingleEntity(savedDevice.getId());
-        String clientKeysStr = "clientStr,clientBool,clientDbl,clientLong,clientJson";
-        String sharedKeysStr = "sharedStr,sharedBool,sharedDbl,sharedLong,sharedJson";
-        List<String> clientKeysList = List.of(clientKeysStr.split(","));
-        List<String> sharedKeysList = List.of(sharedKeysStr.split(","));
-        List<EntityKey> csKeys = getEntityKeys(clientKeysList, CLIENT_ATTRIBUTE);
-        List<EntityKey> shKeys = getEntityKeys(sharedKeysList, SHARED_ATTRIBUTE);
-        List<EntityKey> keys = new ArrayList<>();
+        @NotNull String clientKeysStr = "clientStr,clientBool,clientDbl,clientLong,clientJson";
+        @NotNull String sharedKeysStr = "sharedStr,sharedBool,sharedDbl,sharedLong,sharedJson";
+        @NotNull List<String> clientKeysList = List.of(clientKeysStr.split(","));
+        @NotNull List<String> sharedKeysList = List.of(sharedKeysStr.split(","));
+        @NotNull List<EntityKey> csKeys = getEntityKeys(clientKeysList, CLIENT_ATTRIBUTE);
+        @NotNull List<EntityKey> shKeys = getEntityKeys(sharedKeysList, SHARED_ATTRIBUTE);
+        @NotNull List<EntityKey> keys = new ArrayList<>();
         keys.addAll(csKeys);
         keys.addAll(shKeys);
         getWsClient().subscribeLatestUpdate(keys, dtf);
@@ -168,22 +171,22 @@ public abstract class AbstractCoapAttributesIntegrationTest extends AbstractCoap
         String update = getWsClient().waitForUpdate();
         assertThat(update).as("ws update received").isNotBlank();
 
-        String featureTokenUrl = CoapTestClient.getFeatureTokenUrl(accessToken, FeatureType.ATTRIBUTES) + "?clientKeys=" + clientKeysStr + "&sharedKeys=" + sharedKeysStr;
+        @NotNull String featureTokenUrl = CoapTestClient.getFeatureTokenUrl(accessToken, FeatureType.ATTRIBUTES) + "?clientKeys=" + clientKeysStr + "&sharedKeys=" + sharedKeysStr;
         client.setURI(featureTokenUrl);
         validateJsonResponse(client.getMethod());
     }
 
     protected void processProtoTestRequestAttributesValuesFromTheServer() throws Exception {
         client = new CoapTestClient(accessToken, FeatureType.ATTRIBUTES);
-        SingleEntityFilter dtf = new SingleEntityFilter();
+        @NotNull SingleEntityFilter dtf = new SingleEntityFilter();
         dtf.setSingleEntity(savedDevice.getId());
-        String clientKeysStr = "clientStr,clientBool,clientDbl,clientLong,clientJson";
-        String sharedKeysStr = "sharedStr,sharedBool,sharedDbl,sharedLong,sharedJson";
-        List<String> clientKeysList = List.of(clientKeysStr.split(","));
-        List<String> sharedKeysList = List.of(sharedKeysStr.split(","));
-        List<EntityKey> csKeys = getEntityKeys(clientKeysList, CLIENT_ATTRIBUTE);
-        List<EntityKey> shKeys = getEntityKeys(sharedKeysList, SHARED_ATTRIBUTE);
-        List<EntityKey> keys = new ArrayList<>();
+        @NotNull String clientKeysStr = "clientStr,clientBool,clientDbl,clientLong,clientJson";
+        @NotNull String sharedKeysStr = "sharedStr,sharedBool,sharedDbl,sharedLong,sharedJson";
+        @NotNull List<String> clientKeysList = List.of(clientKeysStr.split(","));
+        @NotNull List<String> sharedKeysList = List.of(sharedKeysStr.split(","));
+        @NotNull List<EntityKey> csKeys = getEntityKeys(clientKeysList, CLIENT_ATTRIBUTE);
+        @NotNull List<EntityKey> shKeys = getEntityKeys(sharedKeysList, SHARED_ATTRIBUTE);
+        @NotNull List<EntityKey> keys = new ArrayList<>();
         keys.addAll(csKeys);
         keys.addAll(shKeys);
         getWsClient().subscribeLatestUpdate(keys, dtf);
@@ -198,7 +201,7 @@ public abstract class AbstractCoapAttributesIntegrationTest extends AbstractCoap
         String update = getWsClient().waitForUpdate();
         assertThat(update).as("ws update received").isNotBlank();
 
-        String featureTokenUrl = CoapTestClient.getFeatureTokenUrl(accessToken, FeatureType.ATTRIBUTES) + "?clientKeys=" + clientKeysStr + "&sharedKeys=" + sharedKeysStr;
+        @NotNull String featureTokenUrl = CoapTestClient.getFeatureTokenUrl(accessToken, FeatureType.ATTRIBUTES) + "?clientKeys=" + clientKeysStr + "&sharedKeys=" + sharedKeysStr;
         client.setURI(featureTokenUrl);
         validateProtoResponse(client.getMethod());
     }
@@ -209,10 +212,10 @@ public abstract class AbstractCoapAttributesIntegrationTest extends AbstractCoap
         }
 
         client = new CoapTestClient(accessToken, FeatureType.ATTRIBUTES);
-        CoapTestCallback callbackCoap = new CoapTestCallback(1);
+        @NotNull CoapTestCallback callbackCoap = new CoapTestCallback(1);
 
         CoapObserveRelation observeRelation = client.getObserveRelation(callbackCoap);
-        String awaitAlias = "await Json Test Subscribe To AttributesUpdates (client.getObserveRelation)";
+        @NotNull String awaitAlias = "await Json Test Subscribe To AttributesUpdates (client.getObserveRelation)";
         await(awaitAlias)
                 .atMost(DEFAULT_WAIT_TIMEOUT_SECONDS, TimeUnit.SECONDS)
                 .until(() -> CoAP.ResponseCode.CONTENT.equals(callbackCoap.getResponseCode()) &&
@@ -256,9 +259,9 @@ public abstract class AbstractCoapAttributesIntegrationTest extends AbstractCoap
         }
 
         client = new CoapTestClient(accessToken, FeatureType.ATTRIBUTES);
-        CoapTestCallback callbackCoap = new CoapTestCallback(1);
+        @NotNull CoapTestCallback callbackCoap = new CoapTestCallback(1);
 
-        String awaitAlias = "await Proto Test Subscribe To Attributes Updates (add attributes)";
+        @NotNull String awaitAlias = "await Proto Test Subscribe To Attributes Updates (add attributes)";
         CoapObserveRelation observeRelation = client.getObserveRelation(callbackCoap);
         await(awaitAlias)
                 .atMost(DEFAULT_WAIT_TIMEOUT_SECONDS, TimeUnit.SECONDS)
@@ -298,13 +301,13 @@ public abstract class AbstractCoapAttributesIntegrationTest extends AbstractCoap
         awaitClientAfterCancelObserve();
     }
 
-    protected void validateJsonResponse(CoapResponse getAttributesResponse) throws InvalidProtocolBufferException {
+    protected void validateJsonResponse(@NotNull CoapResponse getAttributesResponse) throws InvalidProtocolBufferException {
         assertEquals(CoAP.ResponseCode.CONTENT, getAttributesResponse.getCode());
-        String expectedResponse = "{\"client\":" + CLIENT_ATTRIBUTES_PAYLOAD + ",\"shared\":" + SHARED_ATTRIBUTES_PAYLOAD + "}";
+        @NotNull String expectedResponse = "{\"client\":" + CLIENT_ATTRIBUTES_PAYLOAD + ",\"shared\":" + SHARED_ATTRIBUTES_PAYLOAD + "}";
         assertEquals(JacksonUtil.toJsonNode(expectedResponse), JacksonUtil.fromBytes(getAttributesResponse.getPayload()));
     }
 
-    protected void validateProtoResponse(CoapResponse getAttributesResponse) throws InterruptedException, InvalidProtocolBufferException {
+    protected void validateProtoResponse(@NotNull CoapResponse getAttributesResponse) throws InterruptedException, InvalidProtocolBufferException {
         TransportProtos.GetAttributeResponseMsg expectedAttributesResponse = getExpectedAttributeResponseMsg();
         TransportProtos.GetAttributeResponseMsg actualAttributesResponse = TransportProtos.GetAttributeResponseMsg.parseFrom(getAttributesResponse.getPayload());
         assertEquals(expectedAttributesResponse.getRequestId(), actualAttributesResponse.getRequestId());
@@ -316,17 +319,17 @@ public abstract class AbstractCoapAttributesIntegrationTest extends AbstractCoap
         assertTrue(actualSharedKeyValueProtos.containsAll(expectedSharedKeyValueProtos));
     }
 
-    protected void validateUpdateAttributesJsonResponse(CoapTestCallback callback, String expectedResponse) {
+    protected void validateUpdateAttributesJsonResponse(@NotNull CoapTestCallback callback, String expectedResponse) {
         assertNotNull(callback.getPayloadBytes());
-        String response = new String(callback.getPayloadBytes(), StandardCharsets.UTF_8);
+        @NotNull String response = new String(callback.getPayloadBytes(), StandardCharsets.UTF_8);
         assertEquals(JacksonUtil.toJsonNode(expectedResponse), JacksonUtil.toJsonNode(response));
     }
 
-    protected void validateEmptyCurrentStateAttributesProtoResponse(CoapTestCallback callback) throws InvalidProtocolBufferException {
+    protected void validateEmptyCurrentStateAttributesProtoResponse(@NotNull CoapTestCallback callback) throws InvalidProtocolBufferException {
         assertArrayEquals(EMPTY_PAYLOAD, callback.getPayloadBytes());
     }
 
-    protected void validateCurrentStateAttributesProtoResponse(CoapTestCallback callback) throws InvalidProtocolBufferException {
+    protected void validateCurrentStateAttributesProtoResponse(@NotNull CoapTestCallback callback) throws InvalidProtocolBufferException {
         assertNotNull(callback.getPayloadBytes());
         TransportProtos.AttributeUpdateNotificationMsg.Builder expectedCurrentStateNotificationMsgBuilder = TransportProtos.AttributeUpdateNotificationMsg.newBuilder();
         TransportProtos.TsKvProto tsKvProtoAttribute1 = getTsKvProto("sharedStr", "value", TransportProtos.KeyValueType.STRING_V);
@@ -334,7 +337,7 @@ public abstract class AbstractCoapAttributesIntegrationTest extends AbstractCoap
         TransportProtos.TsKvProto tsKvProtoAttribute3 = getTsKvProto("sharedDbl", "41.0", TransportProtos.KeyValueType.DOUBLE_V);
         TransportProtos.TsKvProto tsKvProtoAttribute4 = getTsKvProto("sharedLong", "72", TransportProtos.KeyValueType.LONG_V);
         TransportProtos.TsKvProto tsKvProtoAttribute5 = getTsKvProto("sharedJson", "{\"someNumber\":41,\"someArray\":[],\"someNestedObject\":{\"key\":\"value\"}}", TransportProtos.KeyValueType.JSON_V);
-        List<TransportProtos.TsKvProto> tsKvProtoList = new ArrayList<>();
+        @NotNull List<TransportProtos.TsKvProto> tsKvProtoList = new ArrayList<>();
         tsKvProtoList.add(tsKvProtoAttribute1);
         tsKvProtoList.add(tsKvProtoAttribute2);
         tsKvProtoList.add(tsKvProtoAttribute3);
@@ -350,10 +353,10 @@ public abstract class AbstractCoapAttributesIntegrationTest extends AbstractCoap
         assertTrue(actualSharedUpdatedList.containsAll(expectedSharedUpdatedList));
     }
 
-    protected void validateUpdateProtoAttributesResponse(CoapTestCallback callback, int expectedObserveCnt) throws InvalidProtocolBufferException {
+    protected void validateUpdateProtoAttributesResponse(@NotNull CoapTestCallback callback, int expectedObserveCnt) throws InvalidProtocolBufferException {
         assertNotNull(callback.getPayloadBytes());
         TransportProtos.AttributeUpdateNotificationMsg.Builder attributeUpdateNotificationMsgBuilder = TransportProtos.AttributeUpdateNotificationMsg.newBuilder();
-        List<TransportProtos.TsKvProto> tsKvProtoList = getTsKvProtoList("shared");
+        @NotNull List<TransportProtos.TsKvProto> tsKvProtoList = getTsKvProtoList("shared");
         attributeUpdateNotificationMsgBuilder.addAllSharedUpdated(tsKvProtoList);
 
         TransportProtos.AttributeUpdateNotificationMsg expectedAttributeUpdateNotificationMsg = attributeUpdateNotificationMsgBuilder.build();
@@ -366,7 +369,7 @@ public abstract class AbstractCoapAttributesIntegrationTest extends AbstractCoap
         assertTrue(actualSharedUpdatedList.containsAll(expectedSharedUpdatedList));
     }
 
-    protected void validateDeleteProtoAttributesResponse(CoapTestCallback callback, int expectedObserveCnt) throws InvalidProtocolBufferException {
+    protected void validateDeleteProtoAttributesResponse(@NotNull CoapTestCallback callback, int expectedObserveCnt) throws InvalidProtocolBufferException {
         assertNotNull(callback.getPayloadBytes());
         TransportProtos.AttributeUpdateNotificationMsg.Builder attributeUpdateNotificationMsgBuilder = TransportProtos.AttributeUpdateNotificationMsg.newBuilder();
         attributeUpdateNotificationMsgBuilder.addSharedDeleted("sharedJson");
@@ -390,8 +393,8 @@ public abstract class AbstractCoapAttributesIntegrationTest extends AbstractCoap
 
     private TransportProtos.GetAttributeResponseMsg getExpectedAttributeResponseMsg() {
         TransportProtos.GetAttributeResponseMsg.Builder result = TransportProtos.GetAttributeResponseMsg.newBuilder();
-        List<TransportProtos.TsKvProto> csTsKvProtoList = getTsKvProtoList("client");
-        List<TransportProtos.TsKvProto> shTsKvProtoList = getTsKvProtoList("shared");
+        @NotNull List<TransportProtos.TsKvProto> csTsKvProtoList = getTsKvProtoList("client");
+        @NotNull List<TransportProtos.TsKvProto> shTsKvProtoList = getTsKvProtoList("shared");
         result.addAllClientAttributeList(csTsKvProtoList);
         result.addAllSharedAttributeList(shTsKvProtoList);
         result.setRequestId(0);

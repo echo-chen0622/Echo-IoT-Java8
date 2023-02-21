@@ -2,6 +2,7 @@ package org.echoiot.rule.engine.geo;
 
 import lombok.Data;
 import org.echoiot.rule.engine.api.NodeConfiguration;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by Echo on 19.01.18.
@@ -26,9 +27,10 @@ public class TbGpsGeofencingFilterNodeConfiguration implements NodeConfiguration
     private Double range;
     private RangeUnit rangeUnit;
 
+    @NotNull
     @Override
     public TbGpsGeofencingFilterNodeConfiguration defaultConfiguration() {
-        TbGpsGeofencingFilterNodeConfiguration configuration = new TbGpsGeofencingFilterNodeConfiguration();
+        @NotNull TbGpsGeofencingFilterNodeConfiguration configuration = new TbGpsGeofencingFilterNodeConfiguration();
         configuration.setLatitudeKeyName("latitude");
         configuration.setLongitudeKeyName("longitude");
         configuration.setPerimeterType(PerimeterType.POLYGON);

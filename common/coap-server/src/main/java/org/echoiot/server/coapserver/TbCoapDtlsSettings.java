@@ -6,6 +6,7 @@ import org.eclipse.californium.elements.util.SslContextUtil;
 import org.eclipse.californium.scandium.config.DtlsConnectorConfig;
 import org.eclipse.californium.scandium.dtls.CertificateType;
 import org.eclipse.californium.scandium.dtls.x509.SingleCertificateProvider;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,14 +45,14 @@ public class TbCoapDtlsSettings {
     @Value("${transport.coap.dtls.retransmission_timeout:9000}")
     private int dtlsRetransmissionTimeout;
 
+    @NotNull
     @Bean
     @ConfigurationProperties(prefix = "transport.coap.dtls.credentials")
     public SslCredentialsConfig coapDtlsCredentials() {
         return new SslCredentialsConfig("COAP DTLS Credentials", false);
     }
 
-    @Autowired
-    @Qualifier("coapDtlsCredentials")
+    @Resource(name = "coapDtlsCredentials")
     private SslCredentialsConfig coapDtlsCredentialsConfig;
 
     @Value("${transport.coap.dtls.x509.skip_validity_check_for_client_cert:false}")
@@ -63,17 +64,17 @@ public class TbCoapDtlsSettings {
     @Value("${transport.coap.dtls.x509.dtls_session_report_timeout:1800000}")
     private long dtlsSessionReportTimeout;
 
-    @Autowired
+    @Resource
     private TransportService transportService;
 
-    @Autowired
+    @Resource
     private TbServiceInfoProvider serviceInfoProvider;
 
-    public DtlsConnectorConfig dtlsConnectorConfig(Configuration configuration) throws UnknownHostException {
-        DtlsConnectorConfig.Builder configBuilder = new DtlsConnectorConfig.Builder(configuration);
+    public DtlsConnectorConfig dtlsConnectorConfig(@NotNull Configuration configuration) throws UnknownHostException {
+        @NotNull DtlsConnectorConfig.Builder configBuilder = new DtlsConnectorConfig.Builder(configuration);
         configBuilder.setAddress(getInetSocketAddress());
         SslCredentials sslCredentials = this.coapDtlsCredentialsConfig.getCredentials();
-        SslContextUtil.Credentials serverCredentials =
+        @NotNull SslContextUtil.Credentials serverCredentials =
                 new SslContextUtil.Credentials(sslCredentials.getPrivateKey(), null, sslCredentials.getCertificateChain());
         configBuilder.set(DTLS_CLIENT_AUTHENTICATION_MODE, WANTED);
         configBuilder.set(DTLS_RETRANSMISSION_TIMEOUT, dtlsRetransmissionTimeout, MILLISECONDS);
@@ -92,6 +93,7 @@ public class TbCoapDtlsSettings {
         return configBuilder.build();
     }
 
+    @NotNull
     private InetSocketAddress getInetSocketAddress() throws UnknownHostException {
         InetAddress addr = InetAddress.getByName(host);
         return new InetSocketAddress(addr, port);

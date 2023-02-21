@@ -32,6 +32,8 @@ import org.echoiot.server.service.state.DefaultDeviceStateService;
 import org.echoiot.server.service.state.DeviceStateService;
 import org.echoiot.server.service.telemetry.sub.AlarmSubscriptionUpdate;
 import org.echoiot.server.service.telemetry.sub.TelemetrySubscriptionUpdate;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -50,31 +52,31 @@ import java.util.function.Predicate;
 @Service
 public class DefaultSubscriptionManagerService extends TbApplicationEventListener<PartitionChangeEvent> implements SubscriptionManagerService {
 
-    @Autowired
+    @Resource
     private AttributesService attrService;
 
-    @Autowired
+    @Resource
     private TimeseriesService tsService;
 
-    @Autowired
+    @Resource
     private NotificationsTopicService notificationsTopicService;
 
-    @Autowired
+    @Resource
     private PartitionService partitionService;
 
-    @Autowired
+    @Resource
     private TbServiceInfoProvider serviceInfoProvider;
 
-    @Autowired
+    @Resource
     private TbQueueProducerProvider producerProvider;
 
-    @Autowired
+    @Resource
     private TbLocalSubscriptionService localSubscriptionService;
 
-    @Autowired
+    @Resource
     private DeviceStateService deviceStateService;
 
-    @Autowired
+    @Resource
     private TbClusterService clusterService;
 
     private final Map<EntityId, Set<TbSubscription>> subscriptionsByEntityId = new ConcurrentHashMap<>();
@@ -101,7 +103,7 @@ public class DefaultSubscriptionManagerService extends TbApplicationEventListene
     }
 
     @Override
-    public void addSubscription(TbSubscription subscription, TbCallback callback) {
+    public void addSubscription(@NotNull TbSubscription subscription, @NotNull TbCallback callback) {
         log.trace("[{}][{}][{}] Registering subscription for entity [{}]",
                 subscription.getServiceId(), subscription.getSessionId(), subscription.getSubscriptionId(), subscription.getEntityId());
         TopicPartitionInfo tpi = partitionService.resolve(ServiceType.TB_CORE, subscription.getTenantId(), subscription.getEntityId());
@@ -132,7 +134,7 @@ public class DefaultSubscriptionManagerService extends TbApplicationEventListene
     }
 
     @Override
-    public void cancelSubscription(String sessionId, int subscriptionId, TbCallback callback) {
+    public void cancelSubscription(String sessionId, int subscriptionId, @NotNull TbCallback callback) {
         log.debug("[{}][{}] Going to remove subscription.", sessionId, subscriptionId);
         Map<Integer, TbSubscription> sessionSubscriptions = subscriptionsByWsSessionId.get(sessionId);
         if (sessionSubscriptions != null) {
@@ -153,9 +155,9 @@ public class DefaultSubscriptionManagerService extends TbApplicationEventListene
     }
 
     @Override
-    protected void onTbApplicationEvent(PartitionChangeEvent partitionChangeEvent) {
+    protected void onTbApplicationEvent(@NotNull PartitionChangeEvent partitionChangeEvent) {
         if (ServiceType.TB_CORE.equals(partitionChangeEvent.getServiceType())) {
-            Set<TopicPartitionInfo> removedPartitions = new HashSet<>(currentPartitions);
+            @NotNull Set<TopicPartitionInfo> removedPartitions = new HashSet<>(currentPartitions);
             removedPartitions.removeAll(partitionChangeEvent.getPartitions());
 
             currentPartitions.clear();
@@ -176,7 +178,7 @@ public class DefaultSubscriptionManagerService extends TbApplicationEventListene
     }
 
     @Override
-    public void onTimeSeriesUpdate(TenantId tenantId, EntityId entityId, List<TsKvEntry> ts, TbCallback callback) {
+    public void onTimeSeriesUpdate(TenantId tenantId, @NotNull EntityId entityId, @NotNull List<TsKvEntry> ts, @NotNull TbCallback callback) {
         onLocalTelemetrySubUpdate(entityId,
                 s -> {
                     if (TbSubscriptionType.TIMESERIES.equals(s.getType())) {
@@ -185,8 +187,8 @@ public class DefaultSubscriptionManagerService extends TbApplicationEventListene
                         return null;
                     }
                 }, s -> true, s -> {
-                    List<TsKvEntry> subscriptionUpdate = null;
-                    for (TsKvEntry kv : ts) {
+                    @Nullable List<TsKvEntry> subscriptionUpdate = null;
+                    for (@NotNull TsKvEntry kv : ts) {
                         if ((s.isAllKeys() || s.getKeyStates().containsKey((kv.getKey())))) {
                             if (subscriptionUpdate == null) {
                                 subscriptionUpdate = new ArrayList<>();
@@ -203,12 +205,12 @@ public class DefaultSubscriptionManagerService extends TbApplicationEventListene
     }
 
     @Override
-    public void onAttributesUpdate(TenantId tenantId, EntityId entityId, String scope, List<AttributeKvEntry> attributes, TbCallback callback) {
+    public void onAttributesUpdate(TenantId tenantId, @NotNull EntityId entityId, @NotNull String scope, @NotNull List<AttributeKvEntry> attributes, @NotNull TbCallback callback) {
         onAttributesUpdate(tenantId, entityId, scope, attributes, true, callback);
     }
 
     @Override
-    public void onAttributesUpdate(TenantId tenantId, EntityId entityId, String scope, List<AttributeKvEntry> attributes, boolean notifyDevice, TbCallback callback) {
+    public void onAttributesUpdate(TenantId tenantId, @NotNull EntityId entityId, @NotNull String scope, @NotNull List<AttributeKvEntry> attributes, boolean notifyDevice, @NotNull TbCallback callback) {
         onLocalTelemetrySubUpdate(entityId,
                 s -> {
                     if (TbSubscriptionType.ATTRIBUTES.equals(s.getType())) {
@@ -219,8 +221,8 @@ public class DefaultSubscriptionManagerService extends TbApplicationEventListene
                 },
                 s -> (TbAttributeSubscriptionScope.ANY_SCOPE.equals(s.getScope()) || scope.equals(s.getScope().name())),
                 s -> {
-                    List<TsKvEntry> subscriptionUpdate = null;
-                    for (AttributeKvEntry kv : attributes) {
+                    @Nullable List<TsKvEntry> subscriptionUpdate = null;
+                    for (@NotNull AttributeKvEntry kv : attributes) {
                         if (s.isAllKeys() || s.getKeyStates().containsKey(kv.getKey())) {
                             if (subscriptionUpdate == null) {
                                 subscriptionUpdate = new ArrayList<>();
@@ -242,16 +244,16 @@ public class DefaultSubscriptionManagerService extends TbApplicationEventListene
         callback.onSuccess();
     }
 
-    private void updateDeviceInactivityTimeout(TenantId tenantId, EntityId entityId, List<? extends KvEntry> kvEntries) {
-        for (KvEntry kvEntry : kvEntries) {
+    private void updateDeviceInactivityTimeout(TenantId tenantId, @NotNull EntityId entityId, @NotNull List<? extends KvEntry> kvEntries) {
+        for (@NotNull KvEntry kvEntry : kvEntries) {
             if (kvEntry.getKey().equals(DefaultDeviceStateService.INACTIVITY_TIMEOUT)) {
                 deviceStateService.onDeviceInactivityTimeoutUpdate(tenantId, new DeviceId(entityId.getId()), getLongValue(kvEntry));
             }
         }
     }
 
-    private void deleteDeviceInactivityTimeout(TenantId tenantId, EntityId entityId, List<String> keys) {
-        for (String key : keys) {
+    private void deleteDeviceInactivityTimeout(TenantId tenantId, @NotNull EntityId entityId, @NotNull List<String> keys) {
+        for (@NotNull String key : keys) {
             if (key.equals(DefaultDeviceStateService.INACTIVITY_TIMEOUT)) {
                 deviceStateService.onDeviceInactivityTimeoutUpdate(tenantId, new DeviceId(entityId.getId()), 0);
             }
@@ -259,7 +261,7 @@ public class DefaultSubscriptionManagerService extends TbApplicationEventListene
     }
 
     @Override
-    public void onAlarmUpdate(TenantId tenantId, EntityId entityId, Alarm alarm, TbCallback callback) {
+    public void onAlarmUpdate(TenantId tenantId, EntityId entityId, @NotNull Alarm alarm, @NotNull TbCallback callback) {
         onLocalAlarmSubUpdate(entityId,
                 s -> {
                     if (TbSubscriptionType.ALARMS.equals(s.getType())) {
@@ -276,7 +278,7 @@ public class DefaultSubscriptionManagerService extends TbApplicationEventListene
     }
 
     @Override
-    public void onAlarmDeleted(TenantId tenantId, EntityId entityId, Alarm alarm, TbCallback callback) {
+    public void onAlarmDeleted(TenantId tenantId, EntityId entityId, @NotNull Alarm alarm, @NotNull TbCallback callback) {
         onLocalAlarmSubUpdate(entityId,
                 s -> {
                     if (TbSubscriptionType.ALARMS.equals(s.getType())) {
@@ -293,7 +295,7 @@ public class DefaultSubscriptionManagerService extends TbApplicationEventListene
     }
 
     @Override
-    public void onAttributesDelete(TenantId tenantId, EntityId entityId, String scope, List<String> keys, boolean notifyDevice, TbCallback callback) {
+    public void onAttributesDelete(TenantId tenantId, @NotNull EntityId entityId, @NotNull String scope, @NotNull List<String> keys, boolean notifyDevice, @NotNull TbCallback callback) {
         onLocalTelemetrySubUpdate(entityId,
                 s -> {
                     if (TbSubscriptionType.ATTRIBUTES.equals(s.getType())) {
@@ -304,7 +306,7 @@ public class DefaultSubscriptionManagerService extends TbApplicationEventListene
                 },
                 s -> (TbAttributeSubscriptionScope.ANY_SCOPE.equals(s.getScope()) || scope.equals(s.getScope().name())),
                 s -> {
-                    List<TsKvEntry> subscriptionUpdate = null;
+                    @Nullable List<TsKvEntry> subscriptionUpdate = null;
                     for (String key : keys) {
                         if (s.isAllKeys() || s.getKeyStates().containsKey(key)) {
                             if (subscriptionUpdate == null) {
@@ -328,7 +330,7 @@ public class DefaultSubscriptionManagerService extends TbApplicationEventListene
     }
 
     @Override
-    public void onTimeSeriesDelete(TenantId tenantId, EntityId entityId, List<String> keys, TbCallback callback) {
+    public void onTimeSeriesDelete(TenantId tenantId, @NotNull EntityId entityId, @NotNull List<String> keys, @NotNull TbCallback callback) {
         onLocalTelemetrySubUpdate(entityId,
                 s -> {
                     if (TbSubscriptionType.TIMESERIES.equals(s.getType())) {
@@ -337,7 +339,7 @@ public class DefaultSubscriptionManagerService extends TbApplicationEventListene
                         return null;
                     }
                 }, s -> true, s -> {
-                    List<TsKvEntry> subscriptionUpdate = null;
+                    @Nullable List<TsKvEntry> subscriptionUpdate = null;
                     for (String key : keys) {
                         if (s.isAllKeys() || s.getKeyStates().containsKey(key)) {
                             if (subscriptionUpdate == null) {
@@ -357,7 +359,7 @@ public class DefaultSubscriptionManagerService extends TbApplicationEventListene
     private <T extends TbSubscription> void onLocalTelemetrySubUpdate(EntityId entityId,
                                                                       Function<TbSubscription, T> castFunction,
                                                                       Predicate<T> filterFunction,
-                                                                      Function<T, List<TsKvEntry>> processFunction,
+                                                                      @NotNull Function<T, List<TsKvEntry>> processFunction,
                                                                       boolean ignoreEmptyUpdates) {
         Set<TbSubscription> entitySubscriptions = subscriptionsByEntityId.get(entityId);
         if (entitySubscriptions != null) {
@@ -365,10 +367,10 @@ public class DefaultSubscriptionManagerService extends TbApplicationEventListene
                 List<TsKvEntry> subscriptionUpdate = processFunction.apply(s);
                 if (subscriptionUpdate != null && !subscriptionUpdate.isEmpty()) {
                     if (serviceId.equals(s.getServiceId())) {
-                        TelemetrySubscriptionUpdate update = new TelemetrySubscriptionUpdate(s.getSubscriptionId(), subscriptionUpdate);
+                        @NotNull TelemetrySubscriptionUpdate update = new TelemetrySubscriptionUpdate(s.getSubscriptionId(), subscriptionUpdate);
                         localSubscriptionService.onSubscriptionUpdate(s.getSessionId(), update, TbCallback.EMPTY);
                     } else {
-                        TopicPartitionInfo tpi = notificationsTopicService.getNotificationsTopic(ServiceType.TB_CORE, s.getServiceId());
+                        @NotNull TopicPartitionInfo tpi = notificationsTopicService.getNotificationsTopic(ServiceType.TB_CORE, s.getServiceId());
                         toCoreNotificationsProducer.send(tpi, toProto(s, subscriptionUpdate, ignoreEmptyUpdates), null);
                     }
                 }
@@ -381,17 +383,17 @@ public class DefaultSubscriptionManagerService extends TbApplicationEventListene
     private void onLocalAlarmSubUpdate(EntityId entityId,
                                        Function<TbSubscription, TbAlarmsSubscription> castFunction,
                                        Predicate<TbAlarmsSubscription> filterFunction,
-                                       Function<TbAlarmsSubscription, Alarm> processFunction, boolean deleted) {
+                                       @NotNull Function<TbAlarmsSubscription, Alarm> processFunction, boolean deleted) {
         Set<TbSubscription> entitySubscriptions = subscriptionsByEntityId.get(entityId);
         if (entitySubscriptions != null) {
             entitySubscriptions.stream().map(castFunction).filter(Objects::nonNull).filter(filterFunction).forEach(s -> {
                 Alarm alarm = processFunction.apply(s);
                 if (alarm != null) {
                     if (serviceId.equals(s.getServiceId())) {
-                        AlarmSubscriptionUpdate update = new AlarmSubscriptionUpdate(s.getSubscriptionId(), alarm, deleted);
+                        @NotNull AlarmSubscriptionUpdate update = new AlarmSubscriptionUpdate(s.getSubscriptionId(), alarm, deleted);
                         localSubscriptionService.onSubscriptionUpdate(s.getSessionId(), update, TbCallback.EMPTY);
                     } else {
-                        TopicPartitionInfo tpi = notificationsTopicService.getNotificationsTopic(ServiceType.TB_CORE, s.getServiceId());
+                        @NotNull TopicPartitionInfo tpi = notificationsTopicService.getNotificationsTopic(ServiceType.TB_CORE, s.getServiceId());
                         toCoreNotificationsProducer.send(tpi, toProto(s, alarm, deleted), null);
                     }
                 }
@@ -401,7 +403,7 @@ public class DefaultSubscriptionManagerService extends TbApplicationEventListene
         }
     }
 
-    private void removeSubscriptionFromEntityMap(TbSubscription sub) {
+    private void removeSubscriptionFromEntityMap(@NotNull TbSubscription sub) {
         Set<TbSubscription> entitySubSet = subscriptionsByEntityId.get(sub.getEntityId());
         if (entitySubSet != null) {
             entitySubSet.remove(sub);
@@ -411,7 +413,7 @@ public class DefaultSubscriptionManagerService extends TbApplicationEventListene
         }
     }
 
-    private void removeSubscriptionFromPartitionMap(TbSubscription sub) {
+    private void removeSubscriptionFromPartitionMap(@NotNull TbSubscription sub) {
         TopicPartitionInfo tpi = partitionService.resolve(ServiceType.TB_CORE, sub.getTenantId(), sub.getEntityId());
         Set<TbSubscription> subs = partitionedSubscriptions.get(tpi);
         if (subs != null) {
@@ -419,33 +421,33 @@ public class DefaultSubscriptionManagerService extends TbApplicationEventListene
         }
     }
 
-    private void handleNewAttributeSubscription(TbAttributeSubscription subscription) {
+    private void handleNewAttributeSubscription(@NotNull TbAttributeSubscription subscription) {
         log.trace("[{}][{}][{}] Processing remote attribute subscription for entity [{}]",
                 serviceId, subscription.getSessionId(), subscription.getSubscriptionId(), subscription.getEntityId());
 
         final Map<String, Long> keyStates = subscription.getKeyStates();
         DonAsynchron.withCallback(attrService.find(subscription.getTenantId(), subscription.getEntityId(), DataConstants.CLIENT_SCOPE, keyStates.keySet()), values -> {
-                    List<TsKvEntry> missedUpdates = new ArrayList<>();
+                    @NotNull List<TsKvEntry> missedUpdates = new ArrayList<>();
                     values.forEach(latestEntry -> {
                         if (latestEntry.getLastUpdateTs() > keyStates.get(latestEntry.getKey())) {
                             missedUpdates.add(new BasicTsKvEntry(latestEntry.getLastUpdateTs(), latestEntry));
                         }
                     });
                     if (!missedUpdates.isEmpty()) {
-                        TopicPartitionInfo tpi = notificationsTopicService.getNotificationsTopic(ServiceType.TB_CORE, subscription.getServiceId());
+                        @NotNull TopicPartitionInfo tpi = notificationsTopicService.getNotificationsTopic(ServiceType.TB_CORE, subscription.getServiceId());
                         toCoreNotificationsProducer.send(tpi, toProto(subscription, missedUpdates), null);
                     }
                 },
                 e -> log.error("Failed to fetch missed updates.", e), tsCallBackExecutor);
     }
 
-    private void handleNewAlarmsSubscription(TbAlarmsSubscription subscription) {
+    private void handleNewAlarmsSubscription(@NotNull TbAlarmsSubscription subscription) {
         log.trace("[{}][{}][{}] Processing remote alarm subscription for entity [{}]",
                 serviceId, subscription.getSessionId(), subscription.getSubscriptionId(), subscription.getEntityId());
         //TODO: @dlandiak search all new alarms for this entity.
     }
 
-    private void handleNewTelemetrySubscription(TbTimeseriesSubscription subscription) {
+    private void handleNewTelemetrySubscription(@NotNull TbTimeseriesSubscription subscription) {
         log.trace("[{}][{}][{}] Processing remote telemetry subscription for entity [{}]",
                 serviceId, subscription.getSessionId(), subscription.getSubscriptionId(), subscription.getEntityId());
 
@@ -455,14 +457,14 @@ public class DefaultSubscriptionManagerService extends TbApplicationEventListene
             DonAsynchron.withCallback(tsService.findLatest(subscription.getTenantId(), subscription.getEntityId(), subscription.getKeyStates().keySet()),
                     missedUpdates -> {
                         if (missedUpdates != null && !missedUpdates.isEmpty()) {
-                            TopicPartitionInfo tpi = notificationsTopicService.getNotificationsTopic(ServiceType.TB_CORE, subscription.getServiceId());
+                            @NotNull TopicPartitionInfo tpi = notificationsTopicService.getNotificationsTopic(ServiceType.TB_CORE, subscription.getServiceId());
                             toCoreNotificationsProducer.send(tpi, toProto(subscription, missedUpdates), null);
                         }
                     },
                     e -> log.error("Failed to fetch missed updates.", e),
                     tsCallBackExecutor);
         } else {
-            List<ReadTsKvQuery> queries = new ArrayList<>();
+            @NotNull List<ReadTsKvQuery> queries = new ArrayList<>();
             subscription.getKeyStates().forEach((key, value) -> {
                 if (curTs > value) {
                     long startTs = subscription.getStartTime() > 0 ? Math.max(subscription.getStartTime(), value + 1L) : (value + 1L);
@@ -474,7 +476,7 @@ public class DefaultSubscriptionManagerService extends TbApplicationEventListene
                 DonAsynchron.withCallback(tsService.findAll(subscription.getTenantId(), subscription.getEntityId(), queries),
                         missedUpdates -> {
                             if (missedUpdates != null && !missedUpdates.isEmpty()) {
-                                TopicPartitionInfo tpi = notificationsTopicService.getNotificationsTopic(ServiceType.TB_CORE, subscription.getServiceId());
+                                @NotNull TopicPartitionInfo tpi = notificationsTopicService.getNotificationsTopic(ServiceType.TB_CORE, subscription.getServiceId());
                                 toCoreNotificationsProducer.send(tpi, toProto(subscription, missedUpdates), null);
                             }
                         },
@@ -484,20 +486,22 @@ public class DefaultSubscriptionManagerService extends TbApplicationEventListene
         }
     }
 
-    private TbProtoQueueMsg<ToCoreNotificationMsg> toProto(TbSubscription subscription, List<TsKvEntry> updates) {
+    @NotNull
+    private TbProtoQueueMsg<ToCoreNotificationMsg> toProto(@NotNull TbSubscription subscription, @NotNull List<TsKvEntry> updates) {
         return toProto(subscription, updates, true);
     }
 
-    private TbProtoQueueMsg<ToCoreNotificationMsg> toProto(TbSubscription subscription, List<TsKvEntry> updates, boolean ignoreEmptyUpdates) {
+    @NotNull
+    private TbProtoQueueMsg<ToCoreNotificationMsg> toProto(@NotNull TbSubscription subscription, @NotNull List<TsKvEntry> updates, boolean ignoreEmptyUpdates) {
         TbSubscriptionUpdateProto.Builder builder = TbSubscriptionUpdateProto.newBuilder();
 
         builder.setSessionId(subscription.getSessionId());
         builder.setSubscriptionId(subscription.getSubscriptionId());
 
-        Map<String, List<Object>> data = new TreeMap<>();
-        for (TsKvEntry tsEntry : updates) {
-            List<Object> values = data.computeIfAbsent(tsEntry.getKey(), k -> new ArrayList<>());
-            Object[] value = new Object[2];
+        @NotNull Map<String, List<Object>> data = new TreeMap<>();
+        for (@NotNull TsKvEntry tsEntry : updates) {
+            @NotNull List<Object> values = data.computeIfAbsent(tsEntry.getKey(), k -> new ArrayList<>());
+            @NotNull Object[] value = new Object[2];
             value[0] = tsEntry.getTs();
             value[1] = tsEntry.getValueAsString();
             values.add(value);
@@ -529,7 +533,8 @@ public class DefaultSubscriptionManagerService extends TbApplicationEventListene
         return new TbProtoQueueMsg<>(subscription.getEntityId().getId(), toCoreMsg);
     }
 
-    private TbProtoQueueMsg<ToCoreNotificationMsg> toProto(TbSubscription subscription, Alarm alarm, boolean deleted) {
+    @NotNull
+    private TbProtoQueueMsg<ToCoreNotificationMsg> toProto(@NotNull TbSubscription subscription, Alarm alarm, boolean deleted) {
         TbAlarmSubscriptionUpdateProto.Builder builder = TbAlarmSubscriptionUpdateProto.newBuilder();
 
         builder.setSessionId(subscription.getSessionId());
@@ -544,7 +549,7 @@ public class DefaultSubscriptionManagerService extends TbApplicationEventListene
         return new TbProtoQueueMsg<>(subscription.getEntityId().getId(), toCoreMsg);
     }
 
-    private static long getLongValue(KvEntry kve) {
+    private static long getLongValue(@NotNull KvEntry kve) {
         switch (kve.getDataType()) {
             case LONG:
                 return kve.getLongValue().orElse(0L);

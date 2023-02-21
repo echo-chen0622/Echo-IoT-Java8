@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.echoiot.server.common.data.DeviceTransportType;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,6 +15,7 @@ public class CoapDeviceTransportConfiguration extends PowerSavingConfiguration i
 
     private static final long serialVersionUID = 6061442236008925609L;
 
+    @NotNull
     @JsonIgnore
     private Map<String, Object> properties = new HashMap<>();
 
@@ -27,6 +29,7 @@ public class CoapDeviceTransportConfiguration extends PowerSavingConfiguration i
         this.properties.put(name, value);
     }
 
+    @NotNull
     @Override
     public DeviceTransportType getType() {
         return DeviceTransportType.COAP;

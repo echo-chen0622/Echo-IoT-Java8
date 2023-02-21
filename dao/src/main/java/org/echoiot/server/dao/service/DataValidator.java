@@ -9,6 +9,8 @@ import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.dao.TenantEntityDao;
 import org.echoiot.server.dao.TenantEntityWithDataDao;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -28,7 +30,8 @@ public abstract class DataValidator<D extends BaseData<?>> {
     private static final String TOPIC = "topic";
 
     // Returns old instance of the same object that is fetched during validation.
-    public D validate(D data, Function<D, TenantId> tenantIdFunction) {
+    @Nullable
+    public D validate(@NotNull D data, @NotNull Function<D, TenantId> tenantIdFunction) {
         try {
             if (data == null) {
                 throw new DataValidationException("Data object can't be null!");
@@ -38,7 +41,7 @@ public abstract class DataValidator<D extends BaseData<?>> {
 
             TenantId tenantId = tenantIdFunction.apply(data);
             validateDataImpl(tenantId, data);
-            D old;
+            @Nullable D old;
             if (data.getId() == null) {
                 validateCreate(tenantId, data);
                 old = null;
@@ -58,11 +61,12 @@ public abstract class DataValidator<D extends BaseData<?>> {
     protected void validateCreate(TenantId tenantId, D data) {
     }
 
+    @Nullable
     protected D validateUpdate(TenantId tenantId, D data) {
         return null;
     }
 
-    protected boolean isSameData(D existentData, D actualData) {
+    protected boolean isSameData(@NotNull D existentData, @NotNull D actualData) {
         return actualData.getId() != null && existentData.getId().equals(actualData.getId());
     }
 
@@ -72,19 +76,19 @@ public abstract class DataValidator<D extends BaseData<?>> {
         }
     }
 
-    private static boolean doValidateEmail(String email) {
+    private static boolean doValidateEmail(@Nullable String email) {
         if (email == null) {
             return false;
         }
 
-        Matcher emailMatcher = EMAIL_PATTERN.matcher(email);
+        @NotNull Matcher emailMatcher = EMAIL_PATTERN.matcher(email);
         return emailMatcher.matches();
     }
 
     protected void validateNumberOfEntitiesPerTenant(TenantId tenantId,
-                                                     TenantEntityDao tenantEntityDao,
+                                                     @NotNull TenantEntityDao tenantEntityDao,
                                                      long maxEntities,
-                                                     EntityType entityType) {
+                                                     @NotNull EntityType entityType) {
         if (maxEntities > 0) {
             long currentEntitiesCount = tenantEntityDao.countByTenantId(tenantId);
             if (currentEntitiesCount >= maxEntities) {
@@ -95,10 +99,10 @@ public abstract class DataValidator<D extends BaseData<?>> {
     }
 
     protected void validateMaxSumDataSizePerTenant(TenantId tenantId,
-                                                   TenantEntityWithDataDao dataDao,
+                                                   @NotNull TenantEntityWithDataDao dataDao,
                                                    long maxSumDataSize,
                                                    long currentDataSize,
-                                                   EntityType entityType) {
+                                                   @NotNull EntityType entityType) {
         if (maxSumDataSize > 0) {
             if (dataDao.sumDataSizeByTenantId(tenantId) + currentDataSize > maxSumDataSize) {
                 throw new DataValidationException(String.format("Failed to create the %s, files size limit is exhausted %d bytes!",
@@ -107,14 +111,14 @@ public abstract class DataValidator<D extends BaseData<?>> {
         }
     }
 
-    protected static void validateJsonStructure(JsonNode expectedNode, JsonNode actualNode) {
-        Set<String> expectedFields = new HashSet<>();
+    protected static void validateJsonStructure(@NotNull JsonNode expectedNode, @NotNull JsonNode actualNode) {
+        @NotNull Set<String> expectedFields = new HashSet<>();
         Iterator<String> fieldsIterator = expectedNode.fieldNames();
         while (fieldsIterator.hasNext()) {
             expectedFields.add(fieldsIterator.next());
         }
 
-        Set<String> actualFields = new HashSet<>();
+        @NotNull Set<String> actualFields = new HashSet<>();
         fieldsIterator = actualNode.fieldNames();
         while (fieldsIterator.hasNext()) {
             actualFields.add(fieldsIterator.next());
@@ -125,15 +129,15 @@ public abstract class DataValidator<D extends BaseData<?>> {
         }
     }
 
-    protected static void validateQueueName(String name) {
+    protected static void validateQueueName(@NotNull String name) {
         validateQueueNameOrTopic(name, NAME);
     }
 
-    protected static void validateQueueTopic(String topic) {
+    protected static void validateQueueTopic(@NotNull String topic) {
         validateQueueNameOrTopic(topic, TOPIC);
     }
 
-    private static void validateQueueNameOrTopic(String value, String fieldName) {
+    private static void validateQueueNameOrTopic(@NotNull String value, String fieldName) {
         if (StringUtils.isEmpty(value)) {
             throw new DataValidationException(String.format("Queue %s should be specified!", fieldName));
         }

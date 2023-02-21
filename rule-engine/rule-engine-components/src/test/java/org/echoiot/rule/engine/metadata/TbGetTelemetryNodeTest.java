@@ -1,6 +1,7 @@
 package org.echoiot.rule.engine.metadata;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.echoiot.common.util.JacksonUtil;
@@ -28,7 +29,7 @@ public class TbGetTelemetryNodeTest {
         node = spy(new TbGetTelemetryNode());
         config = new TbGetTelemetryNodeConfiguration();
         config.setFetchMode("ALL");
-        ObjectMapper mapper = JacksonUtil.OBJECT_MAPPER;
+        @NotNull ObjectMapper mapper = JacksonUtil.OBJECT_MAPPER;
         nodeConfiguration = new TbNodeConfiguration(mapper.valueToTree(config));
         node.init(ctx, nodeConfiguration);
 
@@ -50,7 +51,7 @@ public class TbGetTelemetryNodeTest {
         assertThat(node.parseAggregationConfig("NONE"), is(Aggregation.NONE));
 
         //all possible values in future
-        for (Aggregation aggEnum : Aggregation.values()) {
+        for (@NotNull Aggregation aggEnum : Aggregation.values()) {
             assertThat(node.parseAggregationConfig(aggEnum.name()), is(aggEnum));
         }
     }

@@ -11,6 +11,7 @@ import org.echoiot.server.gen.edge.v1.RelationRequestMsg;
 import org.echoiot.server.gen.edge.v1.RelationUpdateMsg;
 import org.echoiot.server.gen.edge.v1.UpdateMsgType;
 import org.echoiot.server.gen.edge.v1.UplinkMsg;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -24,9 +25,9 @@ abstract public class BaseRelationEdgeTest extends AbstractEdgeTest {
     @Test
     public void testRelations() throws Exception {
         // create relation
-        Device device = findDeviceByName("Edge Device 1");
-        Asset asset = findAssetByName("Edge Asset 1");
-        EntityRelation relation = new EntityRelation();
+        @NotNull Device device = findDeviceByName("Edge Device 1");
+        @NotNull Asset asset = findAssetByName("Edge Asset 1");
+        @NotNull EntityRelation relation = new EntityRelation();
         relation.setType("test");
         relation.setFrom(device.getId());
         relation.setTo(asset.getId());
@@ -36,7 +37,7 @@ abstract public class BaseRelationEdgeTest extends AbstractEdgeTest {
         Assert.assertTrue(edgeImitator.waitForMessages());
         AbstractMessage latestMessage = edgeImitator.getLatestMessage();
         Assert.assertTrue(latestMessage instanceof RelationUpdateMsg);
-        RelationUpdateMsg relationUpdateMsg = (RelationUpdateMsg) latestMessage;
+        @NotNull RelationUpdateMsg relationUpdateMsg = (RelationUpdateMsg) latestMessage;
         Assert.assertEquals(UpdateMsgType.ENTITY_CREATED_RPC_MESSAGE, relationUpdateMsg.getMsgType());
         Assert.assertEquals(relationUpdateMsg.getType(), relation.getType());
         Assert.assertEquals(relationUpdateMsg.getFromIdMSB(), relation.getFrom().getId().getMostSignificantBits());
@@ -74,8 +75,8 @@ abstract public class BaseRelationEdgeTest extends AbstractEdgeTest {
 
     @Test
     public void testSendRelationToCloud() throws Exception {
-        Device device1 = saveDeviceOnCloudAndVerifyDeliveryToEdge();
-        Device device2 = saveDeviceOnCloudAndVerifyDeliveryToEdge();
+        @NotNull Device device1 = saveDeviceOnCloudAndVerifyDeliveryToEdge();
+        @NotNull Device device2 = saveDeviceOnCloudAndVerifyDeliveryToEdge();
 
         UplinkMsg.Builder uplinkMsgBuilder = UplinkMsg.newBuilder();
         RelationUpdateMsg.Builder relationUpdateMsgBuilder = RelationUpdateMsg.newBuilder();
@@ -109,10 +110,10 @@ abstract public class BaseRelationEdgeTest extends AbstractEdgeTest {
 
     @Test
     public void testSendRelationRequestToCloud() throws Exception {
-        Device device = findDeviceByName("Edge Device 1");
-        Asset asset = findAssetByName("Edge Asset 1");
+        @NotNull Device device = findDeviceByName("Edge Device 1");
+        @NotNull Asset asset = findAssetByName("Edge Asset 1");
 
-        EntityRelation relation = new EntityRelation();
+        @NotNull EntityRelation relation = new EntityRelation();
         relation.setType("test");
         relation.setFrom(device.getId());
         relation.setTo(asset.getId());
@@ -140,15 +141,15 @@ abstract public class BaseRelationEdgeTest extends AbstractEdgeTest {
 
         AbstractMessage latestMessage = edgeImitator.getLatestMessage();
         Assert.assertTrue(latestMessage instanceof RelationUpdateMsg);
-        RelationUpdateMsg relationUpdateMsg = (RelationUpdateMsg) latestMessage;
+        @NotNull RelationUpdateMsg relationUpdateMsg = (RelationUpdateMsg) latestMessage;
         Assert.assertEquals(UpdateMsgType.ENTITY_CREATED_RPC_MESSAGE, relationUpdateMsg.getMsgType());
         Assert.assertEquals(relation.getType(), relationUpdateMsg.getType());
 
-        UUID fromUUID = new UUID(relationUpdateMsg.getFromIdMSB(), relationUpdateMsg.getFromIdLSB());
+        @NotNull UUID fromUUID = new UUID(relationUpdateMsg.getFromIdMSB(), relationUpdateMsg.getFromIdLSB());
         EntityId fromEntityId = EntityIdFactory.getByTypeAndUuid(relationUpdateMsg.getFromEntityType(), fromUUID);
         Assert.assertEquals(relation.getFrom(), fromEntityId);
 
-        UUID toUUID = new UUID(relationUpdateMsg.getToIdMSB(), relationUpdateMsg.getToIdLSB());
+        @NotNull UUID toUUID = new UUID(relationUpdateMsg.getToIdMSB(), relationUpdateMsg.getToIdLSB());
         EntityId toEntityId = EntityIdFactory.getByTypeAndUuid(relationUpdateMsg.getToEntityType(), toUUID);
         Assert.assertEquals(relation.getTo(), toEntityId);
 

@@ -12,6 +12,7 @@ import org.echoiot.server.common.transport.TransportServiceCallback;
 import org.echoiot.server.common.transport.auth.TransportDeviceInfo;
 import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.gen.transport.TransportProtos.SessionInfoProto;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 import java.util.concurrent.ConcurrentMap;
@@ -25,7 +26,7 @@ public class GatewayDeviceSessionCtx extends MqttDeviceAwareSessionContext imple
     private final GatewaySessionHandler parent;
     private final TransportService transportService;
 
-    public GatewayDeviceSessionCtx(GatewaySessionHandler parent, TransportDeviceInfo deviceInfo,
+    public GatewayDeviceSessionCtx(@NotNull GatewaySessionHandler parent, @NotNull TransportDeviceInfo deviceInfo,
                                    DeviceProfile deviceProfile, ConcurrentMap<MqttTopicMatcher, Integer> mqttQoSMap,
                                    TransportService transportService) {
         super(UUID.randomUUID(), mqttQoSMap);
@@ -83,7 +84,7 @@ public class GatewayDeviceSessionCtx extends MqttDeviceAwareSessionContext imple
     }
 
     @Override
-    public void onToDeviceRpcRequest(UUID sessionId, TransportProtos.ToDeviceRpcRequestMsg request) {
+    public void onToDeviceRpcRequest(UUID sessionId, @NotNull TransportProtos.ToDeviceRpcRequestMsg request) {
         log.trace("[{}] Received RPC command to device", sessionId);
         try {
             parent.getPayloadAdaptor().convertToGatewayPublish(this, getDeviceInfo().getDeviceName(), request).ifPresent(
@@ -112,7 +113,7 @@ public class GatewayDeviceSessionCtx extends MqttDeviceAwareSessionContext imple
     }
 
     @Override
-    public void onRemoteSessionCloseCommand(UUID sessionId, TransportProtos.SessionCloseNotificationProto sessionCloseNotification) {
+    public void onRemoteSessionCloseCommand(UUID sessionId, @NotNull TransportProtos.SessionCloseNotificationProto sessionCloseNotification) {
         log.trace("[{}] Received the remote command to close the session: {}", sessionId, sessionCloseNotification.getMessage());
         parent.deregisterSession(getDeviceInfo().getDeviceName());
     }
@@ -127,7 +128,7 @@ public class GatewayDeviceSessionCtx extends MqttDeviceAwareSessionContext imple
         parent.onDeviceDeleted(this.getSessionInfo().getDeviceName());
     }
 
-    private boolean isAckExpected(MqttMessage message) {
+    private boolean isAckExpected(@NotNull MqttMessage message) {
         return message.fixedHeader().qosLevel().value() > 0;
     }
 

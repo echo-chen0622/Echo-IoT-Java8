@@ -15,6 +15,8 @@ import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.session.SessionMsgType;
 import org.echoiot.server.dao.timeseries.TimeseriesService;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -41,7 +43,7 @@ public class CalculateDeltaNode implements TbNode {
     private boolean useCache;
 
     @Override
-    public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
+    public void init(@NotNull TbContext ctx, @NotNull TbNodeConfiguration configuration) throws TbNodeException {
         this.config = TbNodeUtils.convert(configuration, CalculateDeltaNodeConfiguration.class);
         this.ctx = ctx;
         this.timeseriesService = ctx.getTimeseriesService();
@@ -53,7 +55,7 @@ public class CalculateDeltaNode implements TbNode {
     }
 
     @Override
-    public void onMsg(TbContext ctx, TbMsg msg) {
+    public void onMsg(@NotNull TbContext ctx, @NotNull TbMsg msg) {
         if (msg.getType().equals(SessionMsgType.POST_TELEMETRY_REQUEST.name())) {
             JsonNode json = JacksonUtil.toJsonNode(msg.getData());
             String inputKey = config.getInputValueKey();
@@ -67,7 +69,7 @@ public class CalculateDeltaNode implements TbNode {
                                 cache.put(msg.getOriginator(), new ValueWithTs(currentTs, currentValue));
                             }
 
-                            BigDecimal delta = BigDecimal.valueOf(previousData != null ? currentValue - previousData.value : 0.0);
+                            @NotNull BigDecimal delta = BigDecimal.valueOf(previousData != null ? currentValue - previousData.value : 0.0);
 
                             if (config.isTellFailureIfDeltaIsNegative() && delta.doubleValue() < 0) {
                                 ctx.tellNext(msg, TbRelationTypes.FAILURE);
@@ -79,7 +81,7 @@ public class CalculateDeltaNode implements TbNode {
                                 delta = delta.setScale(config.getRound(), RoundingMode.HALF_UP);
                             }
 
-                            ObjectNode result = (ObjectNode) json;
+                            @NotNull ObjectNode result = (ObjectNode) json;
                             if (delta.stripTrailingZeros().scale() > 0) {
                                 result.put(config.getOutputValueKey(), delta.doubleValue());
                             } else {
@@ -108,12 +110,14 @@ public class CalculateDeltaNode implements TbNode {
         }
     }
 
+    @NotNull
     private ListenableFuture<ValueWithTs> fetchLatestValue(EntityId entityId) {
         return Futures.transform(timeseriesService.findLatest(ctx.getTenantId(), entityId, Collections.singletonList(config.getInputValueKey())),
                 list -> extractValue(list.get(0))
                 , ctx.getDbCallbackExecutor());
     }
 
+    @NotNull
     private ListenableFuture<ValueWithTs> getLastValue(EntityId entityId) {
         ValueWithTs latestValue;
         if (useCache && (latestValue = cache.get(entityId)) != null) {
@@ -123,7 +127,7 @@ public class CalculateDeltaNode implements TbNode {
         }
     }
 
-    private ValueWithTs extractValue(TsKvEntry kvEntry) {
+    private ValueWithTs extractValue(@Nullable TsKvEntry kvEntry) {
         if (kvEntry == null || kvEntry.getValue() == null) {
             return null;
         }

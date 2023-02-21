@@ -33,6 +33,8 @@ import org.echoiot.server.service.entitiy.edge.TbEdgeService;
 import org.echoiot.server.service.security.model.SecurityUser;
 import org.echoiot.server.service.security.permission.Operation;
 import org.echoiot.server.service.security.permission.Resource;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -53,7 +55,9 @@ import static org.echoiot.server.controller.ControllerConstants.*;
 @RequestMapping("/api")
 @RequiredArgsConstructor
 public class EdgeController extends BaseController {
+    @NotNull
     private final EdgeBulkImportService edgeBulkImportService;
+    @NotNull
     private final TbEdgeService tbEdgeService;
 
     public static final String EDGE_ID = "edgeId";
@@ -75,11 +79,11 @@ public class EdgeController extends BaseController {
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/edge/{edgeId}", method = RequestMethod.GET)
     @ResponseBody
-    public Edge getEdgeById(@ApiParam(value = EDGE_ID_PARAM_DESCRIPTION, required = true)
+    public Edge getEdgeById(@NotNull @ApiParam(value = EDGE_ID_PARAM_DESCRIPTION, required = true)
                             @PathVariable(EDGE_ID) String strEdgeId) throws EchoiotException {
         checkParameter(EDGE_ID, strEdgeId);
         try {
-            EdgeId edgeId = new EdgeId(toUUID(strEdgeId));
+            @NotNull EdgeId edgeId = new EdgeId(toUUID(strEdgeId));
             return checkEdgeId(edgeId, Operation.READ);
         } catch (Exception e) {
             throw handleException(e);
@@ -92,11 +96,11 @@ public class EdgeController extends BaseController {
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/edge/info/{edgeId}", method = RequestMethod.GET)
     @ResponseBody
-    public EdgeInfo getEdgeInfoById(@ApiParam(value = EDGE_ID_PARAM_DESCRIPTION, required = true)
+    public EdgeInfo getEdgeInfoById(@NotNull @ApiParam(value = EDGE_ID_PARAM_DESCRIPTION, required = true)
                                     @PathVariable(EDGE_ID) String strEdgeId) throws EchoiotException {
         checkParameter(EDGE_ID, strEdgeId);
         try {
-            EdgeId edgeId = new EdgeId(toUUID(strEdgeId));
+            @NotNull EdgeId edgeId = new EdgeId(toUUID(strEdgeId));
             return checkEdgeInfoId(edgeId, Operation.READ);
         } catch (Exception e) {
             throw handleException(e);
@@ -115,13 +119,13 @@ public class EdgeController extends BaseController {
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
     @RequestMapping(value = "/edge", method = RequestMethod.POST)
     @ResponseBody
-    public Edge saveEdge(@ApiParam(value = "A JSON value representing the edge.", required = true)
+    public Edge saveEdge(@NotNull @ApiParam(value = "A JSON value representing the edge.", required = true)
                          @RequestBody Edge edge) throws Exception {
         TenantId tenantId = getTenantId();
         edge.setTenantId(tenantId);
         boolean created = edge.getId() == null;
 
-        RuleChain edgeTemplateRootRuleChain = null;
+        @Nullable RuleChain edgeTemplateRootRuleChain = null;
         if (created) {
             edgeTemplateRootRuleChain = ruleChainService.getEdgeTemplateRootRuleChain(tenantId);
             if (edgeTemplateRootRuleChain == null) {
@@ -129,7 +133,7 @@ public class EdgeController extends BaseController {
             }
         }
 
-        Operation operation = created ? Operation.CREATE : Operation.WRITE;
+        @NotNull Operation operation = created ? Operation.CREATE : Operation.WRITE;
 
         accessControlService.checkPermission(getCurrentUser(), Resource.EDGE, operation, edge.getId(), edge);
 
@@ -141,10 +145,10 @@ public class EdgeController extends BaseController {
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
     @RequestMapping(value = "/edge/{edgeId}", method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.OK)
-    public void deleteEdge(@ApiParam(value = EDGE_ID_PARAM_DESCRIPTION, required = true)
+    public void deleteEdge(@NotNull @ApiParam(value = EDGE_ID_PARAM_DESCRIPTION, required = true)
                            @PathVariable(EDGE_ID) String strEdgeId) throws EchoiotException {
         checkParameter(EDGE_ID, strEdgeId);
-        EdgeId edgeId = new EdgeId(toUUID(strEdgeId));
+        @NotNull EdgeId edgeId = new EdgeId(toUUID(strEdgeId));
         Edge edge = checkEdgeId(edgeId, Operation.DELETE);
         tbEdgeService.delete(edge, getCurrentUser());
     }
@@ -163,10 +167,10 @@ public class EdgeController extends BaseController {
                                    @RequestParam(required = false) String textSearch,
                                    @ApiParam(value = SORT_PROPERTY_DESCRIPTION, allowableValues = EDGE_SORT_PROPERTY_ALLOWABLE_VALUES)
                                    @RequestParam(required = false) String sortProperty,
-                                   @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
+                                   @NotNull @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
                                    @RequestParam(required = false) String sortOrder) throws EchoiotException {
         try {
-            PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
+            @NotNull PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
             TenantId tenantId = getCurrentUser().getTenantId();
             return checkNotNull(edgeService.findEdgesByTenantId(tenantId, pageLink));
         } catch (Exception e) {
@@ -180,15 +184,15 @@ public class EdgeController extends BaseController {
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
     @RequestMapping(value = "/customer/{customerId}/edge/{edgeId}", method = RequestMethod.POST)
     @ResponseBody
-    public Edge assignEdgeToCustomer(@ApiParam(value = CUSTOMER_ID_PARAM_DESCRIPTION, required = true)
+    public Edge assignEdgeToCustomer(@NotNull @ApiParam(value = CUSTOMER_ID_PARAM_DESCRIPTION, required = true)
                                      @PathVariable("customerId") String strCustomerId,
-                                     @ApiParam(value = EDGE_ID_PARAM_DESCRIPTION, required = true)
+                                     @NotNull @ApiParam(value = EDGE_ID_PARAM_DESCRIPTION, required = true)
                                      @PathVariable(EDGE_ID) String strEdgeId) throws EchoiotException {
         checkParameter("customerId", strCustomerId);
         checkParameter(EDGE_ID, strEdgeId);
-        CustomerId customerId = new CustomerId(toUUID(strCustomerId));
+        @NotNull CustomerId customerId = new CustomerId(toUUID(strCustomerId));
         Customer customer = checkCustomerId(customerId, Operation.READ);
-        EdgeId edgeId = new EdgeId(toUUID(strEdgeId));
+        @NotNull EdgeId edgeId = new EdgeId(toUUID(strEdgeId));
         checkEdgeId(edgeId, Operation.ASSIGN_TO_CUSTOMER);
         return tbEdgeService.assignEdgeToCustomer(getTenantId(), edgeId, customer, getCurrentUser());
     }
@@ -199,10 +203,10 @@ public class EdgeController extends BaseController {
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
     @RequestMapping(value = "/customer/edge/{edgeId}", method = RequestMethod.DELETE)
     @ResponseBody
-    public Edge unassignEdgeFromCustomer(@ApiParam(value = EDGE_ID_PARAM_DESCRIPTION, required = true)
+    public Edge unassignEdgeFromCustomer(@NotNull @ApiParam(value = EDGE_ID_PARAM_DESCRIPTION, required = true)
                                          @PathVariable(EDGE_ID) String strEdgeId) throws EchoiotException {
         checkParameter(EDGE_ID, strEdgeId);
-        EdgeId edgeId = new EdgeId(toUUID(strEdgeId));
+        @NotNull EdgeId edgeId = new EdgeId(toUUID(strEdgeId));
         Edge edge = checkEdgeId(edgeId, Operation.UNASSIGN_FROM_CUSTOMER);
         if (edge.getCustomerId() == null || edge.getCustomerId().getId().equals(ModelConstants.NULL_UUID)) {
             throw new IncorrectParameterException("Edge isn't assigned to any customer!");
@@ -220,10 +224,10 @@ public class EdgeController extends BaseController {
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
     @RequestMapping(value = "/customer/public/edge/{edgeId}", method = RequestMethod.POST)
     @ResponseBody
-    public Edge assignEdgeToPublicCustomer(@ApiParam(value = EDGE_ID_PARAM_DESCRIPTION, required = true)
+    public Edge assignEdgeToPublicCustomer(@NotNull @ApiParam(value = EDGE_ID_PARAM_DESCRIPTION, required = true)
                                            @PathVariable(EDGE_ID) String strEdgeId) throws EchoiotException {
         checkParameter(EDGE_ID, strEdgeId);
-        EdgeId edgeId = new EdgeId(toUUID(strEdgeId));
+        @NotNull EdgeId edgeId = new EdgeId(toUUID(strEdgeId));
         checkEdgeId(edgeId, Operation.ASSIGN_TO_CUSTOMER);
         return tbEdgeService.assignEdgeToPublicCustomer(getTenantId(), edgeId, getCurrentUser());
     }
@@ -239,17 +243,17 @@ public class EdgeController extends BaseController {
             @RequestParam int pageSize,
             @ApiParam(value = PAGE_NUMBER_DESCRIPTION, required = true)
             @RequestParam int page,
-            @ApiParam(value = EDGE_TYPE_DESCRIPTION)
+            @Nullable @ApiParam(value = EDGE_TYPE_DESCRIPTION)
             @RequestParam(required = false) String type,
             @ApiParam(value = EDGE_TEXT_SEARCH_DESCRIPTION)
             @RequestParam(required = false) String textSearch,
             @ApiParam(value = SORT_PROPERTY_DESCRIPTION, allowableValues = EDGE_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
-            @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
+            @NotNull @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortOrder) throws EchoiotException {
         try {
             TenantId tenantId = getCurrentUser().getTenantId();
-            PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
+            @NotNull PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
             if (type != null && type.trim().length() > 0) {
                 return checkNotNull(edgeService.findEdgesByTenantIdAndType(tenantId, type, pageLink));
             } else {
@@ -272,17 +276,17 @@ public class EdgeController extends BaseController {
             @RequestParam int pageSize,
             @ApiParam(value = PAGE_NUMBER_DESCRIPTION, required = true)
             @RequestParam int page,
-            @ApiParam(value = EDGE_TYPE_DESCRIPTION)
+            @Nullable @ApiParam(value = EDGE_TYPE_DESCRIPTION)
             @RequestParam(required = false) String type,
             @ApiParam(value = EDGE_TEXT_SEARCH_DESCRIPTION)
             @RequestParam(required = false) String textSearch,
             @ApiParam(value = SORT_PROPERTY_DESCRIPTION, allowableValues = EDGE_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
-            @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
+            @NotNull @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortOrder) throws EchoiotException {
         try {
             TenantId tenantId = getCurrentUser().getTenantId();
-            PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
+            @NotNull PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
             if (type != null && type.trim().length() > 0) {
                 return checkNotNull(edgeService.findEdgeInfosByTenantIdAndType(tenantId, type, pageLink));
             } else {
@@ -317,15 +321,15 @@ public class EdgeController extends BaseController {
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN')")
     @RequestMapping(value = "/edge/{edgeId}/{ruleChainId}/root", method = RequestMethod.POST)
     @ResponseBody
-    public Edge setEdgeRootRuleChain(@ApiParam(value = EDGE_ID_PARAM_DESCRIPTION, required = true)
+    public Edge setEdgeRootRuleChain(@NotNull @ApiParam(value = EDGE_ID_PARAM_DESCRIPTION, required = true)
                                      @PathVariable(EDGE_ID) String strEdgeId,
-                                     @ApiParam(value = RULE_CHAIN_ID_PARAM_DESCRIPTION, required = true)
+                                     @NotNull @ApiParam(value = RULE_CHAIN_ID_PARAM_DESCRIPTION, required = true)
                                      @PathVariable("ruleChainId") String strRuleChainId) throws Exception {
         checkParameter(EDGE_ID, strEdgeId);
         checkParameter("ruleChainId", strRuleChainId);
-        RuleChainId ruleChainId = new RuleChainId(toUUID(strRuleChainId));
+        @NotNull RuleChainId ruleChainId = new RuleChainId(toUUID(strRuleChainId));
         checkRuleChain(ruleChainId, Operation.WRITE);
-        EdgeId edgeId = new EdgeId(toUUID(strEdgeId));
+        @NotNull EdgeId edgeId = new EdgeId(toUUID(strEdgeId));
         Edge edge = checkEdgeId(edgeId, Operation.WRITE);
         accessControlService.checkPermission(getCurrentUser(), Resource.EDGE, Operation.WRITE, edge.getId(), edge);
         return tbEdgeService.setEdgeRootRuleChain(edge, ruleChainId, getCurrentUser());
@@ -338,27 +342,27 @@ public class EdgeController extends BaseController {
     @RequestMapping(value = "/customer/{customerId}/edges", params = {"pageSize", "page"}, method = RequestMethod.GET)
     @ResponseBody
     public PageData<Edge> getCustomerEdges(
-            @ApiParam(value = CUSTOMER_ID_PARAM_DESCRIPTION)
+            @NotNull @ApiParam(value = CUSTOMER_ID_PARAM_DESCRIPTION)
             @PathVariable("customerId") String strCustomerId,
             @ApiParam(value = PAGE_SIZE_DESCRIPTION, required = true)
             @RequestParam int pageSize,
             @ApiParam(value = PAGE_NUMBER_DESCRIPTION, required = true)
             @RequestParam int page,
-            @ApiParam(value = EDGE_TYPE_DESCRIPTION)
+            @Nullable @ApiParam(value = EDGE_TYPE_DESCRIPTION)
             @RequestParam(required = false) String type,
             @ApiParam(value = EDGE_TEXT_SEARCH_DESCRIPTION)
             @RequestParam(required = false) String textSearch,
             @ApiParam(value = SORT_PROPERTY_DESCRIPTION, allowableValues = EDGE_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
-            @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
+            @NotNull @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortOrder) throws EchoiotException {
         checkParameter("customerId", strCustomerId);
         try {
             SecurityUser user = getCurrentUser();
             TenantId tenantId = user.getTenantId();
-            CustomerId customerId = new CustomerId(toUUID(strCustomerId));
+            @NotNull CustomerId customerId = new CustomerId(toUUID(strCustomerId));
             checkCustomerId(customerId, Operation.READ);
-            PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
+            @NotNull PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
             PageData<Edge> result;
             if (type != null && type.trim().length() > 0) {
                 result = edgeService.findEdgesByTenantIdAndCustomerIdAndType(tenantId, customerId, type, pageLink);
@@ -378,27 +382,27 @@ public class EdgeController extends BaseController {
     @RequestMapping(value = "/customer/{customerId}/edgeInfos", params = {"pageSize", "page"}, method = RequestMethod.GET)
     @ResponseBody
     public PageData<EdgeInfo> getCustomerEdgeInfos(
-            @ApiParam(value = CUSTOMER_ID_PARAM_DESCRIPTION)
+            @NotNull @ApiParam(value = CUSTOMER_ID_PARAM_DESCRIPTION)
             @PathVariable("customerId") String strCustomerId,
             @ApiParam(value = PAGE_SIZE_DESCRIPTION, required = true)
             @RequestParam int pageSize,
             @ApiParam(value = PAGE_NUMBER_DESCRIPTION, required = true)
             @RequestParam int page,
-            @ApiParam(value = EDGE_TYPE_DESCRIPTION)
+            @Nullable @ApiParam(value = EDGE_TYPE_DESCRIPTION)
             @RequestParam(required = false) String type,
             @ApiParam(value = EDGE_TEXT_SEARCH_DESCRIPTION)
             @RequestParam(required = false) String textSearch,
             @ApiParam(value = SORT_PROPERTY_DESCRIPTION, allowableValues = EDGE_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
-            @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
+            @NotNull @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortOrder) throws EchoiotException {
         checkParameter("customerId", strCustomerId);
         try {
             SecurityUser user = getCurrentUser();
             TenantId tenantId = user.getTenantId();
-            CustomerId customerId = new CustomerId(toUUID(strCustomerId));
+            @NotNull CustomerId customerId = new CustomerId(toUUID(strCustomerId));
             checkCustomerId(customerId, Operation.READ);
-            PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
+            @NotNull PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
             PageData<EdgeInfo> result;
             if (type != null && type.trim().length() > 0) {
                 result = edgeService.findEdgeInfosByTenantIdAndCustomerIdAndType(tenantId, customerId, type, pageLink);
@@ -418,15 +422,15 @@ public class EdgeController extends BaseController {
     @RequestMapping(value = "/edges", params = {"edgeIds"}, method = RequestMethod.GET)
     @ResponseBody
     public List<Edge> getEdgesByIds(
-            @ApiParam(value = "A list of edges ids, separated by comma ','", required = true)
+            @NotNull @ApiParam(value = "A list of edges ids, separated by comma ','", required = true)
             @RequestParam("edgeIds") String[] strEdgeIds) throws EchoiotException {
         checkArrayParameter("edgeIds", strEdgeIds);
         try {
             SecurityUser user = getCurrentUser();
             TenantId tenantId = user.getTenantId();
             CustomerId customerId = user.getCustomerId();
-            List<EdgeId> edgeIds = new ArrayList<>();
-            for (String strEdgeId : strEdgeIds) {
+            @NotNull List<EdgeId> edgeIds = new ArrayList<>();
+            for (@NotNull String strEdgeId : strEdgeIds) {
                 edgeIds.add(new EdgeId(toUUID(strEdgeId)));
             }
             ListenableFuture<List<Edge>> edgesFuture;
@@ -442,6 +446,7 @@ public class EdgeController extends BaseController {
         }
     }
 
+    @NotNull
     @ApiOperation(value = "Find related edges (findByQuery)",
             notes = "Returns all edges that are related to the specific entity. " +
                     "The entity id, relation type, edge types, depth of the search, and other query parameters defined using complex 'EdgeSearchQuery' object. " +
@@ -450,7 +455,7 @@ public class EdgeController extends BaseController {
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/edges", method = RequestMethod.POST)
     @ResponseBody
-    public List<Edge> findByQuery(@RequestBody EdgeSearchQuery query) throws EchoiotException {
+    public List<Edge> findByQuery(@NotNull @RequestBody EdgeSearchQuery query) throws EchoiotException {
         checkNotNull(query);
         checkNotNull(query.getParameters());
         checkNotNull(query.getEdgeTypes());
@@ -491,22 +496,23 @@ public class EdgeController extends BaseController {
         }
     }
 
+    @NotNull
     @ApiOperation(value = "Sync edge (syncEdge)",
             notes = "Starts synchronization process between edge and cloud. \n" +
                     "All entities that are assigned to particular edge are going to be send to remote edge service." + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
     @RequestMapping(value = "/edge/sync/{edgeId}", method = RequestMethod.POST)
-    public DeferredResult<ResponseEntity> syncEdge(@ApiParam(value = EDGE_ID_PARAM_DESCRIPTION, required = true)
+    public DeferredResult<ResponseEntity> syncEdge(@NotNull @ApiParam(value = EDGE_ID_PARAM_DESCRIPTION, required = true)
                          @PathVariable("edgeId") String strEdgeId) throws EchoiotException {
         checkParameter("edgeId", strEdgeId);
         try {
-            final DeferredResult<ResponseEntity> response = new DeferredResult<>();
+            @NotNull final DeferredResult<ResponseEntity> response = new DeferredResult<>();
             if (isEdgesEnabled()) {
                 EdgeId edgeId = new EdgeId(toUUID(strEdgeId));
                 edgeId = checkNotNull(edgeId);
                 SecurityUser user = getCurrentUser();
                 TenantId tenantId = user.getTenantId();
-                ToEdgeSyncRequest request = new ToEdgeSyncRequest(UUID.randomUUID(), tenantId, edgeId);
+                @NotNull ToEdgeSyncRequest request = new ToEdgeSyncRequest(UUID.randomUUID(), tenantId, edgeId);
                 edgeRpcService.processSyncRequest(request, fromEdgeSyncResponse -> reply(response, fromEdgeSyncResponse));
             } else {
                 throw new EchoiotException("Edges support disabled", EchoiotErrorCode.GENERAL);
@@ -517,7 +523,7 @@ public class EdgeController extends BaseController {
         }
     }
 
-    private void reply(DeferredResult<ResponseEntity> response, FromEdgeSyncResponse fromEdgeSyncResponse) {
+    private void reply(@NotNull DeferredResult<ResponseEntity> response, @NotNull FromEdgeSyncResponse fromEdgeSyncResponse) {
         if (fromEdgeSyncResponse.isSuccess()) {
             response.setResult(new ResponseEntity<>(HttpStatus.OK));
         } else {
@@ -530,7 +536,7 @@ public class EdgeController extends BaseController {
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
     @RequestMapping(value = "/edge/missingToRelatedRuleChains/{edgeId}", method = RequestMethod.GET)
     @ResponseBody
-    public String findMissingToRelatedRuleChains(@ApiParam(value = EDGE_ID_PARAM_DESCRIPTION, required = true)
+    public String findMissingToRelatedRuleChains(@NotNull @ApiParam(value = EDGE_ID_PARAM_DESCRIPTION, required = true)
                                                  @PathVariable("edgeId") String strEdgeId) throws EchoiotException {
         try {
             EdgeId edgeId = new EdgeId(toUUID(strEdgeId));
@@ -543,12 +549,13 @@ public class EdgeController extends BaseController {
         }
     }
 
+    @NotNull
     @ApiOperation(value = "Import the bulk of edges (processEdgesBulkImport)",
             notes = "There's an ability to import the bulk of edges using the only .csv file." + TENANT_AUTHORITY_PARAGRAPH,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN')")
     @PostMapping("/edge/bulk_import")
-    public BulkImportResult<Edge> processEdgesBulkImport(@RequestBody BulkImportRequest request) throws Exception {
+    public BulkImportResult<Edge> processEdgesBulkImport(@NotNull @RequestBody BulkImportRequest request) throws Exception {
         SecurityUser user = getCurrentUser();
         RuleChain edgeTemplateRootRuleChain = ruleChainService.getEdgeTemplateRootRuleChain(user.getTenantId());
         if (edgeTemplateRootRuleChain == null) {

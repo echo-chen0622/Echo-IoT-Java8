@@ -16,6 +16,7 @@ import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.common.data.query.AlarmData;
 import org.echoiot.server.common.data.query.AlarmDataQuery;
 import org.echoiot.server.dao.Dao;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -27,6 +28,7 @@ import java.util.UUID;
  */
 public interface AlarmDao extends Dao<Alarm> {
 
+    @Nullable
     Alarm findLatestByOriginatorAndType(TenantId tenantId, EntityId originator, String type);
 
     ListenableFuture<Alarm> findLatestByOriginatorAndTypeAsync(TenantId tenantId, EntityId originator, String type);

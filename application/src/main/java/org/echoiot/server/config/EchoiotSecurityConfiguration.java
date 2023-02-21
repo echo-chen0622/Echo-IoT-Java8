@@ -1,21 +1,16 @@
-/**
- * Copyright © 2016-2023 The Echoiot Authors
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.echoiot.server.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.echoiot.server.dao.oauth2.OAuth2Configuration;
+import org.echoiot.server.exception.EchoiotErrorResponseHandler;
+import org.echoiot.server.queue.util.TbCoreComponent;
+import org.echoiot.server.service.security.auth.jwt.*;
+import org.echoiot.server.service.security.auth.jwt.extractor.TokenExtractor;
+import org.echoiot.server.service.security.auth.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
+import org.echoiot.server.service.security.auth.rest.RestAuthenticationProvider;
+import org.echoiot.server.service.security.auth.rest.RestLoginProcessingFilter;
+import org.echoiot.server.service.security.auth.rest.RestPublicLoginProcessingFilter;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -41,16 +36,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
-import org.echoiot.server.dao.oauth2.OAuth2Configuration;
-import org.echoiot.server.exception.EchoiotErrorResponseHandler;
-import org.echoiot.server.queue.util.TbCoreComponent;
-import org.echoiot.server.service.security.auth.jwt.*;
-import org.echoiot.server.service.security.auth.jwt.extractor.TokenExtractor;
-import org.echoiot.server.service.security.auth.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
-import org.echoiot.server.service.security.auth.rest.RestAuthenticationProvider;
-import org.echoiot.server.service.security.auth.rest.RestLoginProcessingFilter;
-import org.echoiot.server.service.security.auth.rest.RestPublicLoginProcessingFilter;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -71,11 +58,12 @@ public class EchoiotSecurityConfiguration {
     public static final String FORM_BASED_LOGIN_ENTRY_POINT = "/api/auth/login";
     public static final String PUBLIC_LOGIN_ENTRY_POINT = "/api/auth/login/public";
     public static final String TOKEN_REFRESH_ENTRY_POINT = "/api/auth/token";
-    protected static final String[] NON_TOKEN_BASED_AUTH_ENTRY_POINTS = new String[] {"/index.html", "/assets/**", "/static/**", "/api/noauth/**", "/webjars/**",  "/api/license/**"};
+    protected static final String[] NON_TOKEN_BASED_AUTH_ENTRY_POINTS = new String[]{"/index.html", "/assets/**", "/static/**", "/api/noauth/**", "/webjars/**", "/api/license/**"};
     public static final String TOKEN_BASED_AUTH_ENTRY_POINT = "/api/**";
     public static final String WS_TOKEN_BASED_AUTH_ENTRY_POINT = "/api/ws/**";
 
-    @Autowired private EchoiotErrorResponseHandler restAccessDeniedHandler;
+    @Resource
+    private EchoiotErrorResponseHandler restAccessDeniedHandler;
 
     @Autowired(required = false)
     @Qualifier("oauth2AuthenticationSuccessHandler")
@@ -88,80 +76,92 @@ public class EchoiotSecurityConfiguration {
     @Autowired(required = false)
     private HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
 
-    @Autowired
-    @Qualifier("defaultAuthenticationSuccessHandler")
-    private AuthenticationSuccessHandler successHandler;
+    @Resource
+    private AuthenticationSuccessHandler defaultAuthenticationSuccessHandler;
 
-    @Autowired
-    @Qualifier("defaultAuthenticationFailureHandler")
-    private AuthenticationFailureHandler failureHandler;
+    @Resource
+    private AuthenticationFailureHandler defaultAuthenticationFailureHandler;
 
-    @Autowired private RestAuthenticationProvider restAuthenticationProvider;
-    @Autowired private JwtAuthenticationProvider jwtAuthenticationProvider;
-    @Autowired private RefreshTokenAuthenticationProvider refreshTokenAuthenticationProvider;
+    @Resource
+    private RestAuthenticationProvider restAuthenticationProvider;
+    @Resource
+    private JwtAuthenticationProvider jwtAuthenticationProvider;
+    @Resource
+    private RefreshTokenAuthenticationProvider refreshTokenAuthenticationProvider;
 
-    @Autowired(required = false) OAuth2Configuration oauth2Configuration;
+    @Autowired(required = false)
+    OAuth2Configuration oauth2Configuration;
 
-    @Autowired
-    @Qualifier("jwtHeaderTokenExtractor")
+    @Resource
     private TokenExtractor jwtHeaderTokenExtractor;
 
-    @Autowired
-    @Qualifier("jwtQueryTokenExtractor")
+    @Resource
     private TokenExtractor jwtQueryTokenExtractor;
 
-    @Autowired private AuthenticationManager authenticationManager;
+    @Resource
+    private AuthenticationManager authenticationManager;
 
-    @Autowired private ObjectMapper objectMapper;
+    @Resource
+    private ObjectMapper objectMapper;
 
-    @Autowired private RateLimitProcessingFilter rateLimitProcessingFilter;
+    @Resource
+    private RateLimitProcessingFilter rateLimitProcessingFilter;
 
+    @NotNull
     @Bean
     protected RestLoginProcessingFilter buildRestLoginProcessingFilter() throws Exception {
-        RestLoginProcessingFilter filter = new RestLoginProcessingFilter(FORM_BASED_LOGIN_ENTRY_POINT, successHandler, failureHandler, objectMapper);
+        @NotNull RestLoginProcessingFilter filter = new RestLoginProcessingFilter(FORM_BASED_LOGIN_ENTRY_POINT, defaultAuthenticationSuccessHandler, defaultAuthenticationFailureHandler, objectMapper);
         filter.setAuthenticationManager(this.authenticationManager);
         return filter;
     }
 
+    @NotNull
     @Bean
     protected RestPublicLoginProcessingFilter buildRestPublicLoginProcessingFilter() throws Exception {
-        RestPublicLoginProcessingFilter filter = new RestPublicLoginProcessingFilter(PUBLIC_LOGIN_ENTRY_POINT, successHandler, failureHandler, objectMapper);
+        @NotNull RestPublicLoginProcessingFilter filter = new RestPublicLoginProcessingFilter(PUBLIC_LOGIN_ENTRY_POINT, defaultAuthenticationSuccessHandler,
+                                                                                              defaultAuthenticationFailureHandler, objectMapper);
         filter.setAuthenticationManager(this.authenticationManager);
         return filter;
     }
 
+    @NotNull
     protected JwtTokenAuthenticationProcessingFilter buildJwtTokenAuthenticationProcessingFilter() throws Exception {
-        List<String> pathsToSkip = new ArrayList<>(Arrays.asList(NON_TOKEN_BASED_AUTH_ENTRY_POINTS));
-        pathsToSkip.addAll(Arrays.asList(WS_TOKEN_BASED_AUTH_ENTRY_POINT, TOKEN_REFRESH_ENTRY_POINT, FORM_BASED_LOGIN_ENTRY_POINT,
-                PUBLIC_LOGIN_ENTRY_POINT, DEVICE_API_ENTRY_POINT, WEBJARS_ENTRY_POINT));
-        SkipPathRequestMatcher matcher = new SkipPathRequestMatcher(pathsToSkip, TOKEN_BASED_AUTH_ENTRY_POINT);
-        JwtTokenAuthenticationProcessingFilter filter
-                = new JwtTokenAuthenticationProcessingFilter(failureHandler, jwtHeaderTokenExtractor, matcher);
+        @NotNull List<String> pathsToSkip = new ArrayList<>(Arrays.asList(NON_TOKEN_BASED_AUTH_ENTRY_POINTS));
+        pathsToSkip.addAll(Arrays.asList(WS_TOKEN_BASED_AUTH_ENTRY_POINT,
+                                         TOKEN_REFRESH_ENTRY_POINT,
+                                         FORM_BASED_LOGIN_ENTRY_POINT,
+                                         PUBLIC_LOGIN_ENTRY_POINT,
+                                         DEVICE_API_ENTRY_POINT,
+                                         WEBJARS_ENTRY_POINT
+                                        ));
+        @NotNull SkipPathRequestMatcher matcher = new SkipPathRequestMatcher(pathsToSkip, TOKEN_BASED_AUTH_ENTRY_POINT);
+        @NotNull JwtTokenAuthenticationProcessingFilter filter = new JwtTokenAuthenticationProcessingFilter(defaultAuthenticationFailureHandler, jwtHeaderTokenExtractor, matcher);
         filter.setAuthenticationManager(this.authenticationManager);
         return filter;
     }
 
+    @NotNull
     @Bean
     protected RefreshTokenProcessingFilter buildRefreshTokenProcessingFilter() throws Exception {
-        RefreshTokenProcessingFilter filter = new RefreshTokenProcessingFilter(TOKEN_REFRESH_ENTRY_POINT, successHandler, failureHandler, objectMapper);
+        @NotNull RefreshTokenProcessingFilter filter = new RefreshTokenProcessingFilter(TOKEN_REFRESH_ENTRY_POINT, defaultAuthenticationSuccessHandler,
+                                                                                        defaultAuthenticationFailureHandler, objectMapper);
         filter.setAuthenticationManager(this.authenticationManager);
         return filter;
     }
 
+    @NotNull
     @Bean
     protected JwtTokenAuthenticationProcessingFilter buildWsJwtTokenAuthenticationProcessingFilter() throws Exception {
-        AntPathRequestMatcher matcher = new AntPathRequestMatcher(WS_TOKEN_BASED_AUTH_ENTRY_POINT);
-        JwtTokenAuthenticationProcessingFilter filter
-                = new JwtTokenAuthenticationProcessingFilter(failureHandler, jwtQueryTokenExtractor, matcher);
+        @NotNull AntPathRequestMatcher matcher = new AntPathRequestMatcher(WS_TOKEN_BASED_AUTH_ENTRY_POINT);
+        @NotNull JwtTokenAuthenticationProcessingFilter filter = new JwtTokenAuthenticationProcessingFilter(defaultAuthenticationFailureHandler, jwtQueryTokenExtractor, matcher);
         filter.setAuthenticationManager(this.authenticationManager);
         return filter;
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(ObjectPostProcessor<Object> objectPostProcessor) throws Exception {
-        DefaultAuthenticationEventPublisher eventPublisher = objectPostProcessor
-                .postProcess(new DefaultAuthenticationEventPublisher());
-        var auth = new AuthenticationManagerBuilder(objectPostProcessor);
+    public AuthenticationManager authenticationManager(@NotNull ObjectPostProcessor<Object> objectPostProcessor) throws Exception {
+        DefaultAuthenticationEventPublisher eventPublisher = objectPostProcessor.postProcess(new DefaultAuthenticationEventPublisher());
+        @NotNull var auth = new AuthenticationManagerBuilder(objectPostProcessor);
         auth.authenticationEventPublisher(eventPublisher);
         auth.authenticationProvider(restAuthenticationProvider);
         auth.authenticationProvider(jwtAuthenticationProvider);
@@ -169,31 +169,38 @@ public class EchoiotSecurityConfiguration {
         return auth.build();
     }
 
+    @NotNull
     @Bean
     protected BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    @Autowired
+    @Resource
     private OAuth2AuthorizationRequestResolver oAuth2AuthorizationRequestResolver;
 
+    @NotNull
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring().antMatchers("/*.js","/*.css","/*.ico","/assets/**","/static/**");
     }
 
     @Bean
-    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.headers().cacheControl().and().frameOptions().disable()
-                .and()
-                .cors()
-                .and()
-                .csrf().disable()
-                .exceptionHandling()
-                .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
+    SecurityFilterChain filterChain(@NotNull HttpSecurity http) throws Exception {
+        http.headers()
+            .cacheControl()
+            .and()
+            .frameOptions()
+            .disable()
+            .and()
+            .cors()
+            .and()
+            .csrf()
+            .disable()
+            .exceptionHandling()
+            .and()
+            .sessionManagement()
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and()
                 .authorizeRequests()
                 .antMatchers(WEBJARS_ENTRY_POINT).permitAll() // Webjars
                 .antMatchers(DEVICE_API_ENTRY_POINT).permitAll() // Device HTTP Transport API
@@ -228,13 +235,14 @@ public class EchoiotSecurityConfiguration {
         return http.build();
     }
 
+    @NotNull
     @Bean
     @ConditionalOnMissingBean(CorsFilter.class)
-    public CorsFilter corsFilter(@Autowired MvcCorsProperties mvcCorsProperties) {
+    public CorsFilter corsFilter(@NotNull @Autowired MvcCorsProperties mvcCorsProperties) {
         if (mvcCorsProperties.getMappings().size() == 0) {
             return new CorsFilter(new UrlBasedCorsConfigurationSource());
         } else {
-            UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+            @NotNull UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
             source.setCorsConfigurations(mvcCorsProperties.getMappings());
             return new CorsFilter(source);
         }

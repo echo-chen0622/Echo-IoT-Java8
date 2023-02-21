@@ -3,6 +3,7 @@ package org.echoiot.rule.engine.edge;
 import lombok.Data;
 import org.echoiot.rule.engine.api.NodeConfiguration;
 import org.echoiot.server.common.data.DataConstants;
+import org.jetbrains.annotations.NotNull;
 
 @Data
 public class BaseTbMsgPushNodeConfiguration implements NodeConfiguration<BaseTbMsgPushNodeConfiguration> {
@@ -11,7 +12,7 @@ public class BaseTbMsgPushNodeConfiguration implements NodeConfiguration<BaseTbM
 
     @Override
     public BaseTbMsgPushNodeConfiguration defaultConfiguration() {
-        BaseTbMsgPushNodeConfiguration configuration = new BaseTbMsgPushNodeConfiguration();
+        @NotNull BaseTbMsgPushNodeConfiguration configuration = new BaseTbMsgPushNodeConfiguration();
         configuration.setScope(DataConstants.SERVER_SCOPE);
         return configuration;
     }

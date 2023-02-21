@@ -16,6 +16,8 @@ import org.echoiot.server.common.stats.TbApiUsageReportClient;
 import org.echoiot.server.dao.exception.IncorrectParameterException;
 import org.echoiot.server.dao.settings.AdminSettingsService;
 import org.echoiot.server.service.apiusage.TbApiUsageStateService;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Lazy;
@@ -55,13 +57,13 @@ public class DefaultMailService implements MailService {
     private static final long DEFAULT_TIMEOUT = 10_000;
 
     @Lazy
-    @Autowired
+    @Resource
     private TbApiUsageStateService apiUsageStateService;
 
-    @Autowired
+    @Resource
     private MailExecutorService mailExecutorService;
 
-    @Autowired
+    @Resource
     private PasswordResetExecutorService passwordResetExecutorService;
 
     private JavaMailSenderImpl mailSender;
@@ -95,8 +97,9 @@ public class DefaultMailService implements MailService {
         }
     }
 
-    private JavaMailSenderImpl createMailSender(JsonNode jsonConfig) {
-        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+    @NotNull
+    private JavaMailSenderImpl createMailSender(@NotNull JsonNode jsonConfig) {
+        @NotNull JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost(jsonConfig.get("smtpHost").asText());
         mailSender.setPort(parsePort(jsonConfig.get("smtpPort").asText()));
         mailSender.setUsername(jsonConfig.get("username").asText());
@@ -105,8 +108,9 @@ public class DefaultMailService implements MailService {
         return mailSender;
     }
 
-    private Properties createJavaMailProperties(JsonNode jsonConfig) {
-        Properties javaMailProperties = new Properties();
+    @NotNull
+    private Properties createJavaMailProperties(@NotNull JsonNode jsonConfig) {
+        @NotNull Properties javaMailProperties = new Properties();
         String protocol = jsonConfig.get("smtpProtocol").asText();
         javaMailProperties.put("mail.transport.protocol", protocol);
         javaMailProperties.put(MAIL_PROP + protocol + ".host", jsonConfig.get("smtpHost").asText());
@@ -146,7 +150,7 @@ public class DefaultMailService implements MailService {
         return javaMailProperties;
     }
 
-    private int parsePort(String strPort) {
+    private int parsePort(@NotNull String strPort) {
         try {
             return Integer.valueOf(strPort);
         } catch (NumberFormatException e) {
@@ -155,69 +159,69 @@ public class DefaultMailService implements MailService {
     }
 
     @Override
-    public void sendEmail(TenantId tenantId, String email, String subject, String message) throws EchoiotException {
+    public void sendEmail(TenantId tenantId, @NotNull String email, @NotNull String subject, @NotNull String message) throws EchoiotException {
         sendMail(mailSender, mailFrom, email, subject, message, timeout);
     }
 
     @Override
-    public void sendTestMail(JsonNode jsonConfig, String email) throws EchoiotException {
-        JavaMailSenderImpl testMailSender = createMailSender(jsonConfig);
+    public void sendTestMail(@NotNull JsonNode jsonConfig, @NotNull String email) throws EchoiotException {
+        @NotNull JavaMailSenderImpl testMailSender = createMailSender(jsonConfig);
         String mailFrom = jsonConfig.get("mailFrom").asText();
-        String subject = messages.getMessage("test.message.subject", null, Locale.US);
+        @NotNull String subject = messages.getMessage("test.message.subject", null, Locale.US);
         long timeout = jsonConfig.get("timeout").asLong(DEFAULT_TIMEOUT);
 
-        Map<String, Object> model = new HashMap<>();
+        @NotNull Map<String, Object> model = new HashMap<>();
         model.put(TARGET_EMAIL, email);
 
-        String message = mergeTemplateIntoString("test.ftl", model);
+        @NotNull String message = mergeTemplateIntoString("test.ftl", model);
 
         sendMail(testMailSender, mailFrom, email, subject, message, timeout);
     }
 
     @Override
-    public void sendActivationEmail(String activationLink, String email) throws EchoiotException {
+    public void sendActivationEmail(String activationLink, @NotNull String email) throws EchoiotException {
 
-        String subject = messages.getMessage("activation.subject", null, Locale.US);
+        @NotNull String subject = messages.getMessage("activation.subject", null, Locale.US);
 
-        Map<String, Object> model = new HashMap<>();
+        @NotNull Map<String, Object> model = new HashMap<>();
         model.put("activationLink", activationLink);
         model.put(TARGET_EMAIL, email);
 
-        String message = mergeTemplateIntoString("activation.ftl", model);
+        @NotNull String message = mergeTemplateIntoString("activation.ftl", model);
 
         sendMail(mailSender, mailFrom, email, subject, message, timeout);
     }
 
     @Override
-    public void sendAccountActivatedEmail(String loginLink, String email) throws EchoiotException {
+    public void sendAccountActivatedEmail(String loginLink, @NotNull String email) throws EchoiotException {
 
-        String subject = messages.getMessage("account.activated.subject", null, Locale.US);
+        @NotNull String subject = messages.getMessage("account.activated.subject", null, Locale.US);
 
-        Map<String, Object> model = new HashMap<>();
+        @NotNull Map<String, Object> model = new HashMap<>();
         model.put("loginLink", loginLink);
         model.put(TARGET_EMAIL, email);
 
-        String message = mergeTemplateIntoString("account.activated.ftl", model);
+        @NotNull String message = mergeTemplateIntoString("account.activated.ftl", model);
 
         sendMail(mailSender, mailFrom, email, subject, message, timeout);
     }
 
     @Override
-    public void sendResetPasswordEmail(String passwordResetLink, String email) throws EchoiotException {
+    public void sendResetPasswordEmail(String passwordResetLink, @NotNull String email) throws EchoiotException {
 
-        String subject = messages.getMessage("reset.password.subject", null, Locale.US);
+        @NotNull String subject = messages.getMessage("reset.password.subject", null, Locale.US);
 
-        Map<String, Object> model = new HashMap<>();
+        @NotNull Map<String, Object> model = new HashMap<>();
         model.put("passwordResetLink", passwordResetLink);
         model.put(TARGET_EMAIL, email);
 
-        String message = mergeTemplateIntoString("reset.password.ftl", model);
+        @NotNull String message = mergeTemplateIntoString("reset.password.ftl", model);
 
         sendMail(mailSender, mailFrom, email, subject, message, timeout);
     }
 
     @Override
-    public void sendResetPasswordEmailAsync(String passwordResetLink, String email) {
+    public void sendResetPasswordEmailAsync(String passwordResetLink, @NotNull String email) {
         passwordResetExecutorService.execute(() -> {
             try {
                 this.sendResetPasswordEmail(passwordResetLink, email);
@@ -228,35 +232,35 @@ public class DefaultMailService implements MailService {
     }
 
     @Override
-    public void sendPasswordWasResetEmail(String loginLink, String email) throws EchoiotException {
+    public void sendPasswordWasResetEmail(String loginLink, @NotNull String email) throws EchoiotException {
 
-        String subject = messages.getMessage("password.was.reset.subject", null, Locale.US);
+        @NotNull String subject = messages.getMessage("password.was.reset.subject", null, Locale.US);
 
-        Map<String, Object> model = new HashMap<>();
+        @NotNull Map<String, Object> model = new HashMap<>();
         model.put("loginLink", loginLink);
         model.put(TARGET_EMAIL, email);
 
-        String message = mergeTemplateIntoString("password.was.reset.ftl", model);
+        @NotNull String message = mergeTemplateIntoString("password.was.reset.ftl", model);
 
         sendMail(mailSender, mailFrom, email, subject, message, timeout);
     }
 
     @Override
-    public void send(TenantId tenantId, CustomerId customerId, TbEmail tbEmail) throws EchoiotException {
+    public void send(TenantId tenantId, CustomerId customerId, @NotNull TbEmail tbEmail) throws EchoiotException {
         sendMail(tenantId, customerId, tbEmail, this.mailSender, timeout);
     }
 
     @Override
-    public void send(TenantId tenantId, CustomerId customerId, TbEmail tbEmail, JavaMailSender javaMailSender, long timeout) throws EchoiotException {
+    public void send(TenantId tenantId, CustomerId customerId, @NotNull TbEmail tbEmail, @NotNull JavaMailSender javaMailSender, long timeout) throws EchoiotException {
         sendMail(tenantId, customerId, tbEmail, javaMailSender, timeout);
     }
 
-    private void sendMail(TenantId tenantId, CustomerId customerId, TbEmail tbEmail, JavaMailSender javaMailSender, long timeout) throws EchoiotException {
+    private void sendMail(TenantId tenantId, CustomerId customerId, @NotNull TbEmail tbEmail, @NotNull JavaMailSender javaMailSender, long timeout) throws EchoiotException {
         if (apiUsageStateService.getApiUsageState(tenantId).isEmailSendEnabled()) {
             try {
-                MimeMessage mailMsg = javaMailSender.createMimeMessage();
+                @NotNull MimeMessage mailMsg = javaMailSender.createMimeMessage();
                 boolean multipart = (tbEmail.getImages() != null && !tbEmail.getImages().isEmpty());
-                MimeMessageHelper helper = new MimeMessageHelper(mailMsg, multipart, "UTF-8");
+                @NotNull MimeMessageHelper helper = new MimeMessageHelper(mailMsg, multipart, "UTF-8");
                 helper.setFrom(StringUtils.isBlank(tbEmail.getFrom()) ? mailFrom : tbEmail.getFrom());
                 helper.setTo(tbEmail.getTo().split("\\s*,\\s*"));
                 if (!StringUtils.isBlank(tbEmail.getCc())) {
@@ -269,12 +273,12 @@ public class DefaultMailService implements MailService {
                 helper.setText(tbEmail.getBody(), tbEmail.isHtml());
 
                 if (multipart) {
-                    for (String imgId : tbEmail.getImages().keySet()) {
+                    for (@NotNull String imgId : tbEmail.getImages().keySet()) {
                         String imgValue = tbEmail.getImages().get(imgId);
-                        String value = imgValue.replaceFirst("^data:image/[^;]*;base64,?", "");
+                        @NotNull String value = imgValue.replaceFirst("^data:image/[^;]*;base64,?", "");
                         byte[] bytes = javax.xml.bind.DatatypeConverter.parseBase64Binary(value);
                         String contentType = helper.getFileTypeMap().getContentType(imgId);
-                        InputStreamSource iss = () -> new ByteArrayInputStream(bytes);
+                        @NotNull InputStreamSource iss = () -> new ByteArrayInputStream(bytes);
                         helper.addInline(imgId, iss, contentType);
                     }
                 }
@@ -289,40 +293,40 @@ public class DefaultMailService implements MailService {
     }
 
     @Override
-    public void sendAccountLockoutEmail(String lockoutEmail, String email, Integer maxFailedLoginAttempts) throws EchoiotException {
-        String subject = messages.getMessage("account.lockout.subject", null, Locale.US);
+    public void sendAccountLockoutEmail(String lockoutEmail, @NotNull String email, Integer maxFailedLoginAttempts) throws EchoiotException {
+        @NotNull String subject = messages.getMessage("account.lockout.subject", null, Locale.US);
 
-        Map<String, Object> model = new HashMap<>();
+        @NotNull Map<String, Object> model = new HashMap<>();
         model.put("lockoutAccount", lockoutEmail);
         model.put("maxFailedLoginAttempts", maxFailedLoginAttempts);
         model.put(TARGET_EMAIL, email);
 
-        String message = mergeTemplateIntoString("account.lockout.ftl", model);
+        @NotNull String message = mergeTemplateIntoString("account.lockout.ftl", model);
 
         sendMail(mailSender, mailFrom, email, subject, message, timeout);
     }
 
     @Override
-    public void sendTwoFaVerificationEmail(String email, String verificationCode, int expirationTimeSeconds) throws EchoiotException {
-        String subject = messages.getMessage("2fa.verification.code.subject", null, Locale.US);
-        String message = mergeTemplateIntoString("2fa.verification.code.ftl", Map.of(
+    public void sendTwoFaVerificationEmail(@NotNull String email, @NotNull String verificationCode, int expirationTimeSeconds) throws EchoiotException {
+        @NotNull String subject = messages.getMessage("2fa.verification.code.subject", null, Locale.US);
+        @NotNull String message = mergeTemplateIntoString("2fa.verification.code.ftl", Map.of(
                 TARGET_EMAIL, email,
                 "code", verificationCode,
                 "expirationTimeSeconds", expirationTimeSeconds
-        ));
+                                                                                             ));
 
         sendMail(mailSender, mailFrom, email, subject, message, timeout);
     }
 
     @Override
-    public void sendApiFeatureStateEmail(ApiFeature apiFeature, ApiUsageStateValue stateValue, String email, ApiUsageStateMailMessage msg) throws EchoiotException {
-        String subject = messages.getMessage("api.usage.state", null, Locale.US);
+    public void sendApiFeatureStateEmail(@NotNull ApiFeature apiFeature, @NotNull ApiUsageStateValue stateValue, @NotNull String email, @NotNull ApiUsageStateMailMessage msg) throws EchoiotException {
+        @NotNull String subject = messages.getMessage("api.usage.state", null, Locale.US);
 
-        Map<String, Object> model = new HashMap<>();
+        @NotNull Map<String, Object> model = new HashMap<>();
         model.put("apiFeature", apiFeature.getLabel());
         model.put(TARGET_EMAIL, email);
 
-        String message = null;
+        @Nullable String message = null;
 
         switch (stateValue) {
             case ENABLED:
@@ -346,7 +350,8 @@ public class DefaultMailService implements MailService {
         mailSender.testConnection();
     }
 
-    private String toEnabledValueLabel(ApiFeature apiFeature) {
+    @NotNull
+    private String toEnabledValueLabel(@NotNull ApiFeature apiFeature) {
         switch (apiFeature) {
             case DB:
                 return "save";
@@ -366,7 +371,8 @@ public class DefaultMailService implements MailService {
         }
     }
 
-    private String toDisabledValueLabel(ApiFeature apiFeature) {
+    @NotNull
+    private String toDisabledValueLabel(@NotNull ApiFeature apiFeature) {
         switch (apiFeature) {
             case DB:
                 return "saved";
@@ -386,7 +392,8 @@ public class DefaultMailService implements MailService {
         }
     }
 
-    private String toWarningValueLabel(ApiUsageRecordKey key, long value, long threshold) {
+    @NotNull
+    private String toWarningValueLabel(@NotNull ApiUsageRecordKey key, long value, long threshold) {
         String valueInM = getValueAsString(value);
         String thresholdInM = getValueAsString(threshold);
         switch (key) {
@@ -408,7 +415,8 @@ public class DefaultMailService implements MailService {
         }
     }
 
-    private String toDisabledValueLabel(ApiUsageRecordKey key, long value) {
+    @NotNull
+    private String toDisabledValueLabel(@NotNull ApiUsageRecordKey key, long value) {
         switch (key) {
             case STORAGE_DP_COUNT:
             case TRANSPORT_DP_COUNT:
@@ -438,11 +446,11 @@ public class DefaultMailService implements MailService {
         }
     }
 
-    private void sendMail(JavaMailSenderImpl mailSender, String mailFrom, String email,
-                          String subject, String message, long timeout) throws EchoiotException {
+    private void sendMail(@NotNull JavaMailSenderImpl mailSender, @NotNull String mailFrom, @NotNull String email,
+                          @NotNull String subject, @NotNull String message, long timeout) throws EchoiotException {
         try {
-            MimeMessage mimeMsg = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(mimeMsg, UTF_8);
+            @NotNull MimeMessage mimeMsg = mailSender.createMimeMessage();
+            @NotNull MimeMessageHelper helper = new MimeMessageHelper(mimeMsg, UTF_8);
             helper.setFrom(mailFrom);
             helper.setTo(email);
             helper.setSubject(subject);
@@ -454,7 +462,7 @@ public class DefaultMailService implements MailService {
         }
     }
 
-    private void sendMailWithTimeout(JavaMailSender mailSender, MimeMessage msg, long timeout) {
+    private void sendMailWithTimeout(@NotNull JavaMailSender mailSender, @NotNull MimeMessage msg, long timeout) {
         try {
             mailExecutorService.submit(() -> mailSender.send(msg)).get(timeout, TimeUnit.MILLISECONDS);
         } catch (TimeoutException e) {
@@ -465,8 +473,9 @@ public class DefaultMailService implements MailService {
         }
     }
 
+    @NotNull
     private String mergeTemplateIntoString(String templateLocation,
-                                           Map<String, Object> model) throws EchoiotException {
+                                           @NotNull Map<String, Object> model) throws EchoiotException {
         try {
             Template template = freemarkerConfig.getTemplate(templateLocation);
             return FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
@@ -475,6 +484,7 @@ public class DefaultMailService implements MailService {
         }
     }
 
+    @NotNull
     protected EchoiotException handleException(Exception exception) {
         String message;
         if (exception instanceof NestedRuntimeException) {

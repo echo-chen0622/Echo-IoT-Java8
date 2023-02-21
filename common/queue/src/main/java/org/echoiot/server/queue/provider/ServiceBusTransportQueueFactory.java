@@ -10,6 +10,7 @@ import org.echoiot.server.queue.settings.TbQueueCoreSettings;
 import org.echoiot.server.queue.settings.TbQueueRuleEngineSettings;
 import org.echoiot.server.queue.settings.TbQueueTransportApiSettings;
 import org.echoiot.server.queue.settings.TbQueueTransportNotificationSettings;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Component;
 import org.echoiot.server.gen.transport.TransportProtos.ToCoreMsg;
@@ -39,18 +40,22 @@ public class ServiceBusTransportQueueFactory implements TbTransportQueueFactory 
     private final TbQueueCoreSettings coreSettings;
     private final TbQueueRuleEngineSettings ruleEngineSettings;
 
+    @NotNull
     private final TbQueueAdmin coreAdmin;
+    @NotNull
     private final TbQueueAdmin transportApiAdmin;
+    @NotNull
     private final TbQueueAdmin notificationAdmin;
+    @NotNull
     private final TbQueueAdmin ruleEngineAdmin;
 
     public ServiceBusTransportQueueFactory(TbQueueTransportApiSettings transportApiSettings,
                                            TbQueueTransportNotificationSettings transportNotificationSettings,
-                                           TbServiceBusSettings serviceBusSettings,
+                                           @NotNull TbServiceBusSettings serviceBusSettings,
                                            TbQueueRuleEngineSettings ruleEngineSettings,
                                            TbServiceInfoProvider serviceInfoProvider,
                                            TbQueueCoreSettings coreSettings,
-                                           TbServiceBusQueueConfigs serviceBusQueueConfigs) {
+                                           @NotNull TbServiceBusQueueConfigs serviceBusQueueConfigs) {
         this.transportApiSettings = transportApiSettings;
         this.transportNotificationSettings = transportNotificationSettings;
         this.serviceBusSettings = serviceBusSettings;
@@ -66,10 +71,10 @@ public class ServiceBusTransportQueueFactory implements TbTransportQueueFactory 
 
     @Override
     public TbQueueRequestTemplate<TbProtoQueueMsg<TransportApiRequestMsg>, TbProtoQueueMsg<TransportApiResponseMsg>> createTransportApiRequestTemplate() {
-        TbQueueProducer<TbProtoQueueMsg<TransportApiRequestMsg>> producerTemplate =
+        @NotNull TbQueueProducer<TbProtoQueueMsg<TransportApiRequestMsg>> producerTemplate =
                 new TbServiceBusProducerTemplate<>(transportApiAdmin, serviceBusSettings, transportApiSettings.getRequestsTopic());
 
-        TbQueueConsumer<TbProtoQueueMsg<TransportApiResponseMsg>> consumerTemplate =
+        @NotNull TbQueueConsumer<TbProtoQueueMsg<TransportApiResponseMsg>> consumerTemplate =
                 new TbServiceBusConsumerTemplate<>(transportApiAdmin, serviceBusSettings,
                         transportApiSettings.getResponsesTopic() + "." + serviceInfoProvider.getServiceId(),
                         msg -> new TbProtoQueueMsg<>(msg.getKey(), TransportApiResponseMsg.parseFrom(msg.getData()), msg.getHeaders()));
@@ -85,16 +90,19 @@ public class ServiceBusTransportQueueFactory implements TbTransportQueueFactory 
         return templateBuilder.build();
     }
 
+    @NotNull
     @Override
     public TbQueueProducer<TbProtoQueueMsg<ToRuleEngineMsg>> createRuleEngineMsgProducer() {
         return new TbServiceBusProducerTemplate<>(ruleEngineAdmin, serviceBusSettings, ruleEngineSettings.getTopic());
     }
 
+    @NotNull
     @Override
     public TbQueueProducer<TbProtoQueueMsg<ToCoreMsg>> createTbCoreMsgProducer() {
         return new TbServiceBusProducerTemplate<>(coreAdmin, serviceBusSettings, coreSettings.getTopic());
     }
 
+    @NotNull
     @Override
     public TbQueueConsumer<TbProtoQueueMsg<ToTransportMsg>> createTransportNotificationsConsumer() {
         return new TbServiceBusConsumerTemplate<>(notificationAdmin, serviceBusSettings,
@@ -102,6 +110,7 @@ public class ServiceBusTransportQueueFactory implements TbTransportQueueFactory 
                 msg -> new TbProtoQueueMsg<>(msg.getKey(), ToTransportMsg.parseFrom(msg.getData()), msg.getHeaders()));
     }
 
+    @NotNull
     @Override
     public TbQueueProducer<TbProtoQueueMsg<ToUsageStatsServiceMsg>> createToUsageStatsServiceMsgProducer() {
         return new TbServiceBusProducerTemplate<>(coreAdmin, serviceBusSettings, coreSettings.getUsageStatsTopic());

@@ -8,6 +8,7 @@ import org.eclipse.leshan.core.node.LwM2mResource;
 import org.eclipse.leshan.core.node.LwM2mResourceInstance;
 import org.eclipse.leshan.core.node.LwM2mSingleResource;
 import org.eclipse.leshan.core.request.WriteRequest.Mode;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -30,7 +31,7 @@ public class ResourceValue {
             this.lwM2mResource = LwM2mSingleResource.newResource(lwM2mResource.getId(), lwM2mResource.getValue(), lwM2mResource.getType());
         } else if (lwM2mResource instanceof LwM2mMultipleResource) {
             if (lwM2mResource.getInstances().values().size() > 0) {
-                Set<LwM2mResourceInstance> instancesSet = new HashSet<>(lwM2mResource.getInstances().values());
+                @NotNull Set<LwM2mResourceInstance> instancesSet = new HashSet<>(lwM2mResource.getInstances().values());
                 if (Mode.REPLACE.equals(mode) && this.lwM2mResource != null) {
                     Map<Integer, LwM2mResourceInstance> oldInstances = this.lwM2mResource.getInstances();
                     oldInstances.values().forEach(v -> {
@@ -39,7 +40,7 @@ public class ResourceValue {
                         }
                     });
                 }
-                LwM2mResourceInstance[] instances = instancesSet.toArray(new LwM2mResourceInstance[0]);
+                @NotNull LwM2mResourceInstance[] instances = instancesSet.toArray(new LwM2mResourceInstance[0]);
                 this.lwM2mResource = new LwM2mMultipleResource(lwM2mResource.getId(), lwM2mResource.getType(), instances);
             }
         }

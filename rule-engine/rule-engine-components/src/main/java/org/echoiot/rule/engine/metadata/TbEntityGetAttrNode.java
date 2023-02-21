@@ -14,6 +14,8 @@ import org.echoiot.server.common.data.kv.AttributeKvEntry;
 import org.echoiot.server.common.data.kv.KvEntry;
 import org.echoiot.server.common.data.kv.TsKvEntry;
 import org.echoiot.server.common.msg.TbMsg;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -30,12 +32,12 @@ public abstract class TbEntityGetAttrNode<T extends EntityId> implements TbNode 
     private TbGetEntityAttrNodeConfiguration config;
 
     @Override
-    public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
+    public void init(TbContext ctx, @NotNull TbNodeConfiguration configuration) throws TbNodeException {
         this.config = TbNodeUtils.convert(configuration, TbGetEntityAttrNodeConfiguration.class);
     }
 
     @Override
-    public void onMsg(TbContext ctx, TbMsg msg) {
+    public void onMsg(@NotNull TbContext ctx, @NotNull TbMsg msg) {
         try {
             withCallback(findEntityAsync(ctx, msg.getOriginator()),
                     entityId -> safeGetAttributes(ctx, msg, entityId),
@@ -45,13 +47,13 @@ public abstract class TbEntityGetAttrNode<T extends EntityId> implements TbNode 
         }
     }
 
-    private void safeGetAttributes(TbContext ctx, TbMsg msg, T entityId) {
+    private void safeGetAttributes(@NotNull TbContext ctx, @NotNull TbMsg msg, @Nullable T entityId) {
         if (entityId == null || entityId.isNullUid()) {
             ctx.tellNext(msg, FAILURE);
             return;
         }
 
-        Map<String, String> mappingsMap = new HashMap<>();
+        @NotNull Map<String, String> mappingsMap = new HashMap<>();
         config.getAttrMapping().forEach((key, value) -> {
             String processPatternKey = TbNodeUtils.processPattern(key, msg);
             String processPatternValue = TbNodeUtils.processPattern(value, msg);
@@ -64,20 +66,22 @@ public abstract class TbEntityGetAttrNode<T extends EntityId> implements TbNode 
                 t -> ctx.tellFailure(msg, t), ctx.getDbCallbackExecutor());
     }
 
-    private ListenableFuture<List<KvEntry>> getAttributesAsync(TbContext ctx, EntityId entityId, List<String> attrKeys) {
+    @NotNull
+    private ListenableFuture<List<KvEntry>> getAttributesAsync(@NotNull TbContext ctx, EntityId entityId, List<String> attrKeys) {
         ListenableFuture<List<AttributeKvEntry>> latest = ctx.getAttributesService().find(ctx.getTenantId(), entityId, SERVER_SCOPE, attrKeys);
         return Futures.transform(latest, l ->
                 l.stream().map(i -> (KvEntry) i).collect(Collectors.toList()), MoreExecutors.directExecutor());
     }
 
-    private ListenableFuture<List<KvEntry>> getLatestTelemetry(TbContext ctx, EntityId entityId, List<String> timeseriesKeys) {
+    @NotNull
+    private ListenableFuture<List<KvEntry>> getLatestTelemetry(@NotNull TbContext ctx, EntityId entityId, List<String> timeseriesKeys) {
         ListenableFuture<List<TsKvEntry>> latest = ctx.getTimeseriesService().findLatest(ctx.getTenantId(), entityId, timeseriesKeys);
         return Futures.transform(latest, l ->
                 l.stream().map(i -> (KvEntry) i).collect(Collectors.toList()), MoreExecutors.directExecutor());
     }
 
 
-    private void putAttributesAndTell(TbContext ctx, TbMsg msg, List<? extends KvEntry> attributes, Map<String, String> map) {
+    private void putAttributesAndTell(@NotNull TbContext ctx, @NotNull TbMsg msg, @NotNull List<? extends KvEntry> attributes, @NotNull Map<String, String> map) {
         attributes.forEach(r -> {
             String attrName = map.get(r.getKey());
             msg.getMetaData().putValue(attrName, r.getValueAsString());

@@ -8,6 +8,7 @@ import org.echoiot.server.common.data.edge.EdgeEvent;
 import org.echoiot.server.gen.edge.v1.AdminSettingsUpdateMsg;
 import org.echoiot.server.gen.edge.v1.DownlinkMsg;
 import org.echoiot.server.queue.util.TbCoreComponent;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -15,7 +16,8 @@ import org.springframework.stereotype.Component;
 @TbCoreComponent
 public class AdminSettingsEdgeProcessor extends BaseEdgeProcessor {
 
-    public DownlinkMsg convertAdminSettingsEventToDownlink(EdgeEvent edgeEvent) {
+    @NotNull
+    public DownlinkMsg convertAdminSettingsEventToDownlink(@NotNull EdgeEvent edgeEvent) {
         AdminSettings adminSettings = JacksonUtil.OBJECT_MAPPER.convertValue(edgeEvent.getBody(), AdminSettings.class);
         AdminSettingsUpdateMsg adminSettingsUpdateMsg = adminSettingsMsgConstructor.constructAdminSettingsUpdateMsg(adminSettings);
         return DownlinkMsg.newBuilder()

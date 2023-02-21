@@ -4,5 +4,5 @@ package org.echoiot.server.common.data.rpc;
  * @author Andrew Shvayka
  */
 public enum RpcError {
-    NOT_FOUND, FORBIDDEN, NO_ACTIVE_CONNECTION, TIMEOUT, INTERNAL;
+    NOT_FOUND, FORBIDDEN, NO_ACTIVE_CONNECTION, TIMEOUT, INTERNAL
 }

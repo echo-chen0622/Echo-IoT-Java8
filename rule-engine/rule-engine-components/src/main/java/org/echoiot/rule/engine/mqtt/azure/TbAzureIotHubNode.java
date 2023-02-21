@@ -15,6 +15,7 @@ import org.echoiot.rule.engine.credentials.CredentialsType;
 import org.echoiot.rule.engine.mqtt.TbMqttNode;
 import org.echoiot.rule.engine.mqtt.TbMqttNodeConfiguration;
 import org.echoiot.server.common.data.plugin.ComponentType;
+import org.jetbrains.annotations.NotNull;
 
 import javax.net.ssl.SSLException;
 
@@ -30,14 +31,14 @@ import javax.net.ssl.SSLException;
 )
 public class TbAzureIotHubNode extends TbMqttNode {
     @Override
-    public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
+    public void init(TbContext ctx, @NotNull TbNodeConfiguration configuration) throws TbNodeException {
         try {
             this.mqttNodeConfiguration = TbNodeUtils.convert(configuration, TbMqttNodeConfiguration.class);
             mqttNodeConfiguration.setPort(8883);
             mqttNodeConfiguration.setCleanSession(true);
             ClientCredentials credentials = mqttNodeConfiguration.getCredentials();
             if (CredentialsType.CERT_PEM == credentials.getType()) {
-                CertPemCredentials pemCredentials = (CertPemCredentials) credentials;
+                @NotNull CertPemCredentials pemCredentials = (CertPemCredentials) credentials;
                 if (pemCredentials.getCaCert() == null || pemCredentials.getCaCert().isEmpty()) {
                     pemCredentials.setCaCert(AzureIotHubUtil.getDefaultCaCert());
                 }
@@ -48,7 +49,7 @@ public class TbAzureIotHubNode extends TbMqttNode {
         }
     }
 
-    protected void prepareMqttClientConfig(MqttClientConfig config) throws SSLException {
+    protected void prepareMqttClientConfig(@NotNull MqttClientConfig config) throws SSLException {
         config.setProtocolVersion(MqttVersion.MQTT_3_1_1);
         config.setUsername(AzureIotHubUtil.buildUsername(mqttNodeConfiguration.getHost(), config.getClientId()));
         ClientCredentials credentials = mqttNodeConfiguration.getCredentials();

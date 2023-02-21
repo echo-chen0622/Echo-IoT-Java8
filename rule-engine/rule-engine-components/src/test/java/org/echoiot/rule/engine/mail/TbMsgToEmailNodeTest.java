@@ -2,6 +2,7 @@ package org.echoiot.rule.engine.mail;
 
 import com.datastax.oss.driver.api.core.uuid.Uuids;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -33,12 +34,12 @@ public class TbMsgToEmailNodeTest {
     @Mock
     private TbContext ctx;
 
-    private EntityId originator = new DeviceId(Uuids.timeBased());
-    private TbMsgMetaData metaData = new TbMsgMetaData();
-    private String rawJson = "{\"name\": \"temp\", \"passed\": 5 , \"complex\": {\"val\":12, \"count\":100}}";
+    private final EntityId originator = new DeviceId(Uuids.timeBased());
+    private final TbMsgMetaData metaData = new TbMsgMetaData();
+    private final String rawJson = "{\"name\": \"temp\", \"passed\": 5 , \"complex\": {\"val\":12, \"count\":100}}";
 
-    private RuleChainId ruleChainId = new RuleChainId(Uuids.timeBased());
-    private RuleNodeId ruleNodeId = new RuleNodeId(Uuids.timeBased());
+    private final RuleChainId ruleChainId = new RuleChainId(Uuids.timeBased());
+    private final RuleNodeId ruleNodeId = new RuleNodeId(Uuids.timeBased());
 
     @Test
     public void msgCanBeConverted() throws IOException {
@@ -48,15 +49,15 @@ public class TbMsgToEmailNodeTest {
         metaData.putValue("name", "temp");
         metaData.putValue("passed", "5");
         metaData.putValue("count", "100");
-        TbMsg msg = TbMsg.newMsg( "USER", originator, metaData, TbMsgDataType.JSON, rawJson, ruleChainId, ruleNodeId);
+        @NotNull TbMsg msg = TbMsg.newMsg("USER", originator, metaData, TbMsgDataType.JSON, rawJson, ruleChainId, ruleNodeId);
 
         emailNode.onMsg(ctx, msg);
 
-        ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
-        ArgumentCaptor<String> typeCaptor = ArgumentCaptor.forClass(String.class);
-        ArgumentCaptor<EntityId> originatorCaptor = ArgumentCaptor.forClass(EntityId.class);
-        ArgumentCaptor<TbMsgMetaData> metadataCaptor = ArgumentCaptor.forClass(TbMsgMetaData.class);
-        ArgumentCaptor<String> dataCaptor = ArgumentCaptor.forClass(String.class);
+        @NotNull ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        @NotNull ArgumentCaptor<String> typeCaptor = ArgumentCaptor.forClass(String.class);
+        @NotNull ArgumentCaptor<EntityId> originatorCaptor = ArgumentCaptor.forClass(EntityId.class);
+        @NotNull ArgumentCaptor<TbMsgMetaData> metadataCaptor = ArgumentCaptor.forClass(TbMsgMetaData.class);
+        @NotNull ArgumentCaptor<String> dataCaptor = ArgumentCaptor.forClass(String.class);
         verify(ctx).transformMsg(msgCaptor.capture(), typeCaptor.capture(), originatorCaptor.capture(), metadataCaptor.capture(), dataCaptor.capture());
 
 
@@ -78,14 +79,14 @@ public class TbMsgToEmailNodeTest {
 
     private void initWithScript() {
         try {
-            TbMsgToEmailNodeConfiguration config = new TbMsgToEmailNodeConfiguration();
+            @NotNull TbMsgToEmailNodeConfiguration config = new TbMsgToEmailNodeConfiguration();
             config.setFromTemplate("test@mail.org");
             config.setToTemplate("${userEmail}");
             config.setSubjectTemplate("Hi ${username} there");
             config.setBodyTemplate("${name} is to high. Current ${passed} and ${count}");
             config.setMailBodyType("false");
-            ObjectMapper mapper = new ObjectMapper();
-            TbNodeConfiguration nodeConfiguration = new TbNodeConfiguration(mapper.valueToTree(config));
+            @NotNull ObjectMapper mapper = new ObjectMapper();
+            @NotNull TbNodeConfiguration nodeConfiguration = new TbNodeConfiguration(mapper.valueToTree(config));
 
             emailNode = new TbMsgToEmailNode();
             emailNode.init(ctx, nodeConfiguration);

@@ -9,6 +9,7 @@ import org.eclipse.leshan.core.util.Hex;
 import org.echoiot.server.transport.lwm2m.server.client.LwM2mClient;
 import org.echoiot.server.transport.lwm2m.server.log.LwM2MTelemetryLogService;
 import org.echoiot.server.transport.lwm2m.server.uplink.LwM2mUplinkMsgHandler;
+import org.jetbrains.annotations.NotNull;
 
 @Slf4j
 public class TbLwM2MReadCallback extends TbLwM2MUplinkTargetedCallback<ReadRequest, ReadResponse> {
@@ -18,20 +19,20 @@ public class TbLwM2MReadCallback extends TbLwM2MUplinkTargetedCallback<ReadReque
     }
 
     @Override
-    public void onSuccess(ReadRequest request, ReadResponse response) {
+    public void onSuccess(@NotNull ReadRequest request, @NotNull ReadResponse response) {
         logForBadResponse(response.getCode().getCode(), responseToString(response), request.getClass().getSimpleName());
         handler.onUpdateValueAfterReadResponse(client.getRegistration(), versionedId, response);
     }
 
-    private String responseToString(ReadResponse response) {
+    private String responseToString(@NotNull ReadResponse response) {
         if (response.getContent() instanceof LwM2mSingleResource) {
             LwM2mSingleResource singleResource = (LwM2mSingleResource) response.getContent();
             if (ResourceModel.Type.OPAQUE.equals(singleResource.getType())) {
                 byte[] valueInBytes = (byte[]) singleResource.getValue();
                 int len = valueInBytes.length;
                 if (len > 0) {
-                    String valueReplace = len + "Bytes";
-                    String valueStr = Hex.encodeHexString(valueInBytes);
+                    @NotNull String valueReplace = len + "Bytes";
+                    @NotNull String valueStr = Hex.encodeHexString(valueInBytes);
                     return response.toString().replace(valueReplace, valueStr);
                 }
             }

@@ -8,6 +8,7 @@ import org.echoiot.server.common.msg.MsgType;
 import org.echoiot.server.common.msg.TbActorStopReason;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.TbRuleEngineActorMsg;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
@@ -32,6 +33,7 @@ public final class QueueToRuleEngineMsg extends TbRuleEngineActorMsg {
         this.failureMessage = failureMessage;
     }
 
+    @NotNull
     @Override
     public MsgType getMsgType() {
         return MsgType.QUEUE_TO_RULE_ENGINE_MSG;

@@ -9,6 +9,8 @@ import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.kv.AttributeKvEntry;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
@@ -27,11 +29,13 @@ public class DynamicPredicateValueCtxImpl implements DynamicPredicateValueCtx {
         resetCustomer();
     }
 
+    @Nullable
     @Override
     public EntityKeyValue getTenantValue(String key) {
         return getValue(tenantId, key);
     }
 
+    @Nullable
     @Override
     public EntityKeyValue getCustomerValue(String key) {
         return customerId == null || customerId.isNullUid() ? null : getValue(customerId, key);
@@ -45,7 +49,8 @@ public class DynamicPredicateValueCtxImpl implements DynamicPredicateValueCtx {
         }
     }
 
-    private EntityKeyValue getValue(EntityId entityId, String key) {
+    @Nullable
+    private EntityKeyValue getValue(@NotNull EntityId entityId, String key) {
         try {
             Optional<AttributeKvEntry> entry = ctx.getAttributesService().find(tenantId, entityId, DataConstants.SERVER_SCOPE, key).get();
             if (entry.isPresent()) {

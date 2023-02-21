@@ -1,6 +1,7 @@
 package org.echoiot.rule.engine.transform;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -53,17 +54,17 @@ public class TbRenameKeysNodeTest {
 
     @Test
     void givenDefaultConfig_whenVerify_thenOK() {
-        TbRenameKeysNodeConfiguration defaultConfig = new TbRenameKeysNodeConfiguration().defaultConfiguration();
+        @NotNull TbRenameKeysNodeConfiguration defaultConfig = new TbRenameKeysNodeConfiguration().defaultConfiguration();
         assertThat(defaultConfig.getRenameKeysMapping()).isEqualTo(Map.of("temp", "temperature"));
         assertThat(defaultConfig.isFromMetadata()).isEqualTo(false);
     }
 
     @Test
     void givenMsg_whenOnMsg_thenVerifyOutput() throws Exception {
-        String data = "{\"Temperature_1\":22.5,\"TestKey_2\":10.3}";
+        @NotNull String data = "{\"Temperature_1\":22.5,\"TestKey_2\":10.3}";
         node.onMsg(ctx, getTbMsg(deviceId, data));
 
-        ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        @NotNull ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
         verify(ctx, times(1)).tellSuccess(newMsgCaptor.capture());
         verify(ctx, never()).tellFailure(any(), any());
 
@@ -83,10 +84,10 @@ public class TbRenameKeysNodeTest {
         nodeConfiguration = new TbNodeConfiguration(JacksonUtil.valueToTree(config));
         node.init(ctx, nodeConfiguration);
 
-        String data = "{\"Temperature_1\":22.5,\"TestKey_2\":10.3}";
+        @NotNull String data = "{\"Temperature_1\":22.5,\"TestKey_2\":10.3}";
         node.onMsg(ctx, getTbMsg(deviceId, data));
 
-        ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        @NotNull ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
         verify(ctx, times(1)).tellSuccess(newMsgCaptor.capture());
         verify(ctx, never()).tellFailure(any(), any());
 
@@ -99,15 +100,15 @@ public class TbRenameKeysNodeTest {
 
     @Test
     void givenEmptyKeys_whenOnMsg_thenVerifyOutput() throws Exception {
-        TbRenameKeysNodeConfiguration defaultConfig = new TbRenameKeysNodeConfiguration().defaultConfiguration();
+        @NotNull TbRenameKeysNodeConfiguration defaultConfig = new TbRenameKeysNodeConfiguration().defaultConfiguration();
         nodeConfiguration = new TbNodeConfiguration(JacksonUtil.valueToTree(defaultConfig));
         node.init(ctx, nodeConfiguration);
 
-        String data = "{\"Temperature_1\":22.5,\"TestKey_2\":10.3}";
-        TbMsg msg = getTbMsg(deviceId, data);
+        @NotNull String data = "{\"Temperature_1\":22.5,\"TestKey_2\":10.3}";
+        @NotNull TbMsg msg = getTbMsg(deviceId, data);
         node.onMsg(ctx, msg);
 
-        ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        @NotNull ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
         verify(ctx, times(1)).tellSuccess(newMsgCaptor.capture());
         verify(ctx, never()).tellFailure(any(), any());
 
@@ -119,11 +120,11 @@ public class TbRenameKeysNodeTest {
 
     @Test
     void givenMsgDataNotJSONObject_whenOnMsg_thenVerifyOutput() throws Exception {
-        String data = "[]";
-        TbMsg msg = getTbMsg(deviceId, data);
+        @NotNull String data = "[]";
+        @NotNull TbMsg msg = getTbMsg(deviceId, data);
         node.onMsg(ctx, msg);
 
-        ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        @NotNull ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
         verify(ctx, times(1)).tellSuccess(newMsgCaptor.capture());
         verify(ctx, never()).tellFailure(any(), any());
 
@@ -133,12 +134,13 @@ public class TbRenameKeysNodeTest {
         assertThat(newMsg).isSameAs(msg);
     }
 
+    @NotNull
     private TbMsg getTbMsg(EntityId entityId, String data) {
-        final Map<String, String> mdMap = Map.of(
+        @NotNull final Map<String, String> mdMap = Map.of(
                 "TestKey_1", "Test",
                 "country", "US",
                 "city", "NY"
-        );
+                                                         );
         return TbMsg.newMsg("POST_ATTRIBUTES_REQUEST", entityId, new TbMsgMetaData(mdMap), data, callback);
     }
 }

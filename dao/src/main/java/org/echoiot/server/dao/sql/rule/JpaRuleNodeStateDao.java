@@ -2,6 +2,7 @@ package org.echoiot.server.dao.sql.rule;
 
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.dao.model.sql.RuleNodeStateEntity;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
@@ -21,9 +22,10 @@ import java.util.UUID;
 @SqlDao
 public class JpaRuleNodeStateDao extends JpaAbstractDao<RuleNodeStateEntity, RuleNodeState> implements RuleNodeStateDao {
 
-    @Autowired
+    @Resource
     private RuleNodeStateRepository ruleNodeStateRepository;
 
+    @NotNull
     @Override
     protected Class<RuleNodeStateEntity> getEntityClass() {
         return RuleNodeStateEntity.class;
@@ -34,6 +36,7 @@ public class JpaRuleNodeStateDao extends JpaAbstractDao<RuleNodeStateEntity, Rul
         return ruleNodeStateRepository;
     }
 
+    @NotNull
     @Override
     public PageData<RuleNodeState> findByRuleNodeId(UUID ruleNodeId, PageLink pageLink) {
         return DaoUtil.toPageData(ruleNodeStateRepository.findByRuleNodeId(ruleNodeId, DaoUtil.toPageable(pageLink)));

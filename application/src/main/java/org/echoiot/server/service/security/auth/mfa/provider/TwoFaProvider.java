@@ -16,7 +16,7 @@ public interface TwoFaProvider<C extends TwoFaProviderConfig, A extends TwoFaAcc
 
     boolean checkVerificationCode(SecurityUser user, String code, C providerConfig, A accountConfig);
 
-    default void check(TenantId tenantId) throws EchoiotException {};
+    default void check(TenantId tenantId) throws EchoiotException {}
 
 
     TwoFaProviderType getType();

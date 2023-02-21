@@ -1,6 +1,8 @@
 package org.echoiot.server.service.telemetry.sub;
 
 import org.echoiot.server.common.data.kv.TsKvEntry;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,19 +13,19 @@ import java.util.stream.Collectors;
 
 public class TelemetrySubscriptionUpdate {
 
-    private int subscriptionId;
+    private final int subscriptionId;
     private int errorCode;
     private String errorMsg;
     private Map<String, List<Object>> data;
 
-    public TelemetrySubscriptionUpdate(int subscriptionId, List<TsKvEntry> data) {
+    public TelemetrySubscriptionUpdate(int subscriptionId, @Nullable List<TsKvEntry> data) {
         super();
         this.subscriptionId = subscriptionId;
         this.data = new TreeMap<>();
         if (data != null) {
-            for (TsKvEntry tsEntry : data) {
-                List<Object> values = this.data.computeIfAbsent(tsEntry.getKey(), k -> new ArrayList<>());
-                Object[] value = new Object[2];
+            for (@NotNull TsKvEntry tsEntry : data) {
+                @NotNull List<Object> values = this.data.computeIfAbsent(tsEntry.getKey(), k -> new ArrayList<>());
+                @NotNull Object[] value = new Object[2];
                 value[0] = tsEntry.getTs();
                 value[1] = tsEntry.getValueAsString();
                 values.add(value);
@@ -37,11 +39,11 @@ public class TelemetrySubscriptionUpdate {
         this.data = data;
     }
 
-    public TelemetrySubscriptionUpdate(int subscriptionId, SubscriptionErrorCode errorCode) {
+    public TelemetrySubscriptionUpdate(int subscriptionId, @NotNull SubscriptionErrorCode errorCode) {
         this(subscriptionId, errorCode, null);
     }
 
-    public TelemetrySubscriptionUpdate(int subscriptionId, SubscriptionErrorCode errorCode, String errorMsg) {
+    public TelemetrySubscriptionUpdate(int subscriptionId, @NotNull SubscriptionErrorCode errorCode, @Nullable String errorMsg) {
         super();
         this.subscriptionId = subscriptionId;
         this.errorCode = errorCode.getCode();
@@ -56,6 +58,7 @@ public class TelemetrySubscriptionUpdate {
         return data;
     }
 
+    @NotNull
     public Map<String, Long> getLatestValues() {
         if (data == null) {
             return Collections.emptyMap();
@@ -76,6 +79,7 @@ public class TelemetrySubscriptionUpdate {
         return errorMsg;
     }
 
+    @NotNull
     @Override
     public String toString() {
         return "TsSubscriptionUpdate [subscriptionId=" + subscriptionId + ", errorCode=" + errorCode + ", errorMsg=" + errorMsg + ", data="

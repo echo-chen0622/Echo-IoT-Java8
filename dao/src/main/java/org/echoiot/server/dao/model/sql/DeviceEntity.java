@@ -8,6 +8,7 @@ import org.echoiot.server.common.data.Device;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.util.mapping.JsonBinaryType;
 import org.echoiot.server.dao.util.mapping.JsonStringType;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -26,7 +27,7 @@ public final class DeviceEntity extends AbstractDeviceEntity<Device> {
         super();
     }
 
-    public DeviceEntity(Device device) {
+    public DeviceEntity(@NotNull Device device) {
         super(device);
     }
 

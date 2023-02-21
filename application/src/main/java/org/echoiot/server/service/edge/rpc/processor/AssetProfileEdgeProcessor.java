@@ -12,6 +12,8 @@ import org.echoiot.server.gen.edge.v1.DownlinkMsg;
 import org.echoiot.server.gen.edge.v1.UpdateMsgType;
 import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.queue.util.TbCoreComponent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -19,15 +21,16 @@ import org.springframework.stereotype.Component;
 @TbCoreComponent
 public class AssetProfileEdgeProcessor extends BaseEdgeProcessor {
 
-    public DownlinkMsg convertAssetProfileEventToDownlink(EdgeEvent edgeEvent) {
-        AssetProfileId assetProfileId = new AssetProfileId(edgeEvent.getEntityId());
-        DownlinkMsg downlinkMsg = null;
+    @Nullable
+    public DownlinkMsg convertAssetProfileEventToDownlink(@NotNull EdgeEvent edgeEvent) {
+        @NotNull AssetProfileId assetProfileId = new AssetProfileId(edgeEvent.getEntityId());
+        @Nullable DownlinkMsg downlinkMsg = null;
         switch (edgeEvent.getAction()) {
             case ADDED:
             case UPDATED:
                 AssetProfile assetProfile = assetProfileService.findAssetProfileById(edgeEvent.getTenantId(), assetProfileId);
                 if (assetProfile != null) {
-                    UpdateMsgType msgType = getUpdateMsgType(edgeEvent.getAction());
+                    @NotNull UpdateMsgType msgType = getUpdateMsgType(edgeEvent.getAction());
                     AssetProfileUpdateMsg assetProfileUpdateMsg =
                             assetProfileMsgConstructor.constructAssetProfileUpdatedMsg(msgType, assetProfile);
                     downlinkMsg = DownlinkMsg.newBuilder()
@@ -48,7 +51,7 @@ public class AssetProfileEdgeProcessor extends BaseEdgeProcessor {
         return downlinkMsg;
     }
 
-    public ListenableFuture<Void> processAssetProfileNotification(TenantId tenantId, TransportProtos.EdgeNotificationMsgProto edgeNotificationMsg) {
+    public ListenableFuture<Void> processAssetProfileNotification(TenantId tenantId, @NotNull TransportProtos.EdgeNotificationMsgProto edgeNotificationMsg) {
         return processEntityNotificationForAllEdges(tenantId, edgeNotificationMsg);
     }
 

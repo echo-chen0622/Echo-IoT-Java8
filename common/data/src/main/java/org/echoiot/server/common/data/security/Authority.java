@@ -1,5 +1,8 @@
 package org.echoiot.server.common.data.security;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 public enum Authority {
 
     SYS_ADMIN(0),
@@ -8,7 +11,7 @@ public enum Authority {
     REFRESH_TOKEN(10),
     PRE_VERIFICATION_TOKEN(11);
 
-    private int code;
+    private final int code;
 
     Authority(int code) {
         this.code = code;
@@ -18,10 +21,11 @@ public enum Authority {
         return code;
     }
 
-    public static Authority parse(String value) {
-        Authority authority = null;
+    @Nullable
+    public static Authority parse(@Nullable String value) {
+        @Nullable Authority authority = null;
         if (value != null && value.length() != 0) {
-            for (Authority current : Authority.values()) {
+            for (@NotNull Authority current : Authority.values()) {
                 if (current.name().equalsIgnoreCase(value)) {
                     authority = current;
                     break;

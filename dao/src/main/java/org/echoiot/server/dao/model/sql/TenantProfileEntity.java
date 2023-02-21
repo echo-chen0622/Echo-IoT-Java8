@@ -14,6 +14,8 @@ import org.echoiot.server.dao.model.BaseSqlEntity;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.model.SearchTextEntity;
 import org.echoiot.server.dao.util.mapping.JsonBinaryType;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -41,6 +43,7 @@ public final class TenantProfileEntity extends BaseSqlEntity<TenantProfile> impl
     @Column(name = ModelConstants.TENANT_PROFILE_ISOLATED_TB_RULE_ENGINE)
     private boolean isolatedTbRuleEngine;
 
+    @Nullable
     @Type(type = "jsonb")
     @Column(name = ModelConstants.TENANT_PROFILE_PROFILE_DATA_PROPERTY, columnDefinition = "jsonb")
     private JsonNode profileData;
@@ -49,7 +52,7 @@ public final class TenantProfileEntity extends BaseSqlEntity<TenantProfile> impl
         super();
     }
 
-    public TenantProfileEntity(TenantProfile tenantProfile) {
+    public TenantProfileEntity(@NotNull TenantProfile tenantProfile) {
         if (tenantProfile.getId() != null) {
             this.setUuid(tenantProfile.getId().getId());
         }
@@ -75,9 +78,10 @@ public final class TenantProfileEntity extends BaseSqlEntity<TenantProfile> impl
         return searchText;
     }
 
+    @NotNull
     @Override
     public TenantProfile toData() {
-        TenantProfile tenantProfile = new TenantProfile(new TenantProfileId(this.getUuid()));
+        @NotNull TenantProfile tenantProfile = new TenantProfile(new TenantProfileId(this.getUuid()));
         tenantProfile.setCreatedTime(createdTime);
         tenantProfile.setName(name);
         tenantProfile.setDescription(description);

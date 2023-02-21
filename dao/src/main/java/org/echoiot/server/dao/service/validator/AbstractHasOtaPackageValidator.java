@@ -9,16 +9,17 @@ import org.echoiot.server.common.data.ota.OtaPackageType;
 import org.echoiot.server.dao.exception.DataValidationException;
 import org.echoiot.server.dao.ota.OtaPackageService;
 import org.echoiot.server.dao.service.DataValidator;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 
 public abstract class AbstractHasOtaPackageValidator<D extends BaseData<?>> extends DataValidator<D> {
 
-    @Autowired
+    @Resource
     @Lazy
     private OtaPackageService otaPackageService;
 
-    protected <T extends HasOtaPackage> void validateOtaPackage(TenantId tenantId, T entity, DeviceProfileId deviceProfileId) {
+    protected <T extends HasOtaPackage> void validateOtaPackage(TenantId tenantId, @NotNull T entity, DeviceProfileId deviceProfileId) {
         if (entity.getFirmwareId() != null) {
             OtaPackage firmware = otaPackageService.findOtaPackageById(tenantId, entity.getFirmwareId());
             validateOtaPackage(tenantId, OtaPackageType.FIRMWARE, deviceProfileId, firmware);
@@ -29,7 +30,7 @@ public abstract class AbstractHasOtaPackageValidator<D extends BaseData<?>> exte
         }
     }
 
-    private void validateOtaPackage(TenantId tenantId, OtaPackageType type, DeviceProfileId deviceProfileId, OtaPackage otaPackage) {
+    private void validateOtaPackage(TenantId tenantId, @NotNull OtaPackageType type, DeviceProfileId deviceProfileId, @NotNull OtaPackage otaPackage) {
         if (otaPackage == null) {
             throw new DataValidationException(prepareMsg("Can't assign non-existent %s!", type));
         }
@@ -47,7 +48,7 @@ public abstract class AbstractHasOtaPackageValidator<D extends BaseData<?>> exte
         }
     }
 
-    private String prepareMsg(String msg, OtaPackageType type) {
+    private String prepareMsg(@NotNull String msg, @NotNull OtaPackageType type) {
         return String.format(msg, type.name().toLowerCase());
     }
 }

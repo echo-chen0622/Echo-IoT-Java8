@@ -5,6 +5,7 @@ import com.google.protobuf.Descriptors;
 import com.google.protobuf.DynamicMessage;
 import com.squareup.wire.schema.internal.parser.ProtoFileElement;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.echoiot.server.common.data.CoapDeviceType;
@@ -42,26 +43,26 @@ public abstract class AbstractCoapTimeseriesProtoIntegrationTest extends Abstrac
         processBeforeTest(configProperties);
         DeviceProfileTransportConfiguration transportConfiguration = deviceProfile.getProfileData().getTransportConfiguration();
         assertTrue(transportConfiguration instanceof CoapDeviceProfileTransportConfiguration);
-        CoapDeviceProfileTransportConfiguration coapDeviceProfileTransportConfiguration = (CoapDeviceProfileTransportConfiguration) transportConfiguration;
-        CoapDeviceTypeConfiguration coapDeviceTypeConfiguration = coapDeviceProfileTransportConfiguration.getCoapDeviceTypeConfiguration();
+        @NotNull CoapDeviceProfileTransportConfiguration coapDeviceProfileTransportConfiguration = (CoapDeviceProfileTransportConfiguration) transportConfiguration;
+        @NotNull CoapDeviceTypeConfiguration coapDeviceTypeConfiguration = coapDeviceProfileTransportConfiguration.getCoapDeviceTypeConfiguration();
         assertTrue(coapDeviceTypeConfiguration instanceof DefaultCoapDeviceTypeConfiguration);
-        DefaultCoapDeviceTypeConfiguration defaultCoapDeviceTypeConfiguration = (DefaultCoapDeviceTypeConfiguration) coapDeviceTypeConfiguration;
-        TransportPayloadTypeConfiguration transportPayloadTypeConfiguration = defaultCoapDeviceTypeConfiguration.getTransportPayloadTypeConfiguration();
+        @NotNull DefaultCoapDeviceTypeConfiguration defaultCoapDeviceTypeConfiguration = (DefaultCoapDeviceTypeConfiguration) coapDeviceTypeConfiguration;
+        @NotNull TransportPayloadTypeConfiguration transportPayloadTypeConfiguration = defaultCoapDeviceTypeConfiguration.getTransportPayloadTypeConfiguration();
         assertTrue(transportPayloadTypeConfiguration instanceof ProtoTransportPayloadConfiguration);
-        ProtoTransportPayloadConfiguration protoTransportPayloadConfiguration = (ProtoTransportPayloadConfiguration) transportPayloadTypeConfiguration;
+        @NotNull ProtoTransportPayloadConfiguration protoTransportPayloadConfiguration = (ProtoTransportPayloadConfiguration) transportPayloadTypeConfiguration;
         String deviceTelemetryProtoSchema = protoTransportPayloadConfiguration.getDeviceTelemetryProtoSchema();
-        ProtoFileElement protoFileElement = DynamicProtoUtils.getProtoFileElement(deviceTelemetryProtoSchema);
+        @NotNull ProtoFileElement protoFileElement = DynamicProtoUtils.getProtoFileElement(deviceTelemetryProtoSchema);
         DynamicSchema telemetrySchema = DynamicProtoUtils.getDynamicSchema(protoFileElement, ProtoTransportPayloadConfiguration.TELEMETRY_PROTO_SCHEMA);
 
         DynamicMessage.Builder nestedJsonObjectBuilder = telemetrySchema.newMessageBuilder("PostTelemetry.JsonObject.NestedJsonObject");
         Descriptors.Descriptor nestedJsonObjectBuilderDescriptor = nestedJsonObjectBuilder.getDescriptorForType();
         assertNotNull(nestedJsonObjectBuilderDescriptor);
-        DynamicMessage nestedJsonObject = nestedJsonObjectBuilder.setField(nestedJsonObjectBuilderDescriptor.findFieldByName("key"), "value").build();
+        @NotNull DynamicMessage nestedJsonObject = nestedJsonObjectBuilder.setField(nestedJsonObjectBuilderDescriptor.findFieldByName("key"), "value").build();
 
         DynamicMessage.Builder jsonObjectBuilder = telemetrySchema.newMessageBuilder("PostTelemetry.JsonObject");
         Descriptors.Descriptor jsonObjectBuilderDescriptor = jsonObjectBuilder.getDescriptorForType();
         assertNotNull(jsonObjectBuilderDescriptor);
-        DynamicMessage jsonObject = jsonObjectBuilder
+        @NotNull DynamicMessage jsonObject = jsonObjectBuilder
                 .setField(jsonObjectBuilderDescriptor.findFieldByName("someNumber"), 42)
                 .addRepeatedField(jsonObjectBuilderDescriptor.findFieldByName("someArray"), 1)
                 .addRepeatedField(jsonObjectBuilderDescriptor.findFieldByName("someArray"), 2)
@@ -72,7 +73,7 @@ public abstract class AbstractCoapTimeseriesProtoIntegrationTest extends Abstrac
         DynamicMessage.Builder postTelemetryBuilder = telemetrySchema.newMessageBuilder("PostTelemetry");
         Descriptors.Descriptor postTelemetryMsgDescriptor = postTelemetryBuilder.getDescriptorForType();
         assertNotNull(postTelemetryMsgDescriptor);
-        DynamicMessage postTelemetryMsg = postTelemetryBuilder
+        @NotNull DynamicMessage postTelemetryMsg = postTelemetryBuilder
                 .setField(postTelemetryMsgDescriptor.findFieldByName("key1"), "value1")
                 .setField(postTelemetryMsgDescriptor.findFieldByName("key2"), true)
                 .setField(postTelemetryMsgDescriptor.findFieldByName("key3"), 3.0)
@@ -84,31 +85,31 @@ public abstract class AbstractCoapTimeseriesProtoIntegrationTest extends Abstrac
 
     @Test
     public void testPushTelemetryWithTs() throws Exception {
-        String schemaStr = "syntax =\"proto3\";\n" +
-                "\n" +
-                "package test;\n" +
-                "\n" +
-                "message PostTelemetry {\n" +
-                "  optional int64 ts = 1;\n" +
-                "  Values values = 2;\n" +
-                "  \n" +
-                "  message Values {\n" +
-                "    optional string key1 = 3;\n" +
-                "    optional bool key2 = 4;\n" +
-                "    optional double key3 = 5;\n" +
-                "    optional int32 key4 = 6;\n" +
-                "    JsonObject key5 = 7;\n" +
-                "  }\n" +
-                "  \n" +
-                "  message JsonObject {\n" +
-                "    optional int32 someNumber = 8;\n" +
-                "    repeated int32 someArray = 9;\n" +
-                "    NestedJsonObject someNestedObject = 10;\n" +
-                "    message NestedJsonObject {\n" +
-                "       optional string key = 11;\n" +
-                "    }\n" +
-                "  }\n" +
-                "}";
+        @NotNull String schemaStr = "syntax =\"proto3\";\n" +
+                                    "\n" +
+                                    "package test;\n" +
+                                    "\n" +
+                                    "message PostTelemetry {\n" +
+                                    "  optional int64 ts = 1;\n" +
+                                    "  Values values = 2;\n" +
+                                    "  \n" +
+                                    "  message Values {\n" +
+                                    "    optional string key1 = 3;\n" +
+                                    "    optional bool key2 = 4;\n" +
+                                    "    optional double key3 = 5;\n" +
+                                    "    optional int32 key4 = 6;\n" +
+                                    "    JsonObject key5 = 7;\n" +
+                                    "  }\n" +
+                                    "  \n" +
+                                    "  message JsonObject {\n" +
+                                    "    optional int32 someNumber = 8;\n" +
+                                    "    repeated int32 someArray = 9;\n" +
+                                    "    NestedJsonObject someNestedObject = 10;\n" +
+                                    "    message NestedJsonObject {\n" +
+                                    "       optional string key = 11;\n" +
+                                    "    }\n" +
+                                    "  }\n" +
+                                    "}";
         CoapTestConfigProperties configProperties = CoapTestConfigProperties.builder()
                 .deviceName("Test Post Telemetry device proto payload")
                 .coapDeviceType(CoapDeviceType.DEFAULT)
@@ -118,26 +119,26 @@ public abstract class AbstractCoapTimeseriesProtoIntegrationTest extends Abstrac
         processBeforeTest(configProperties);
         DeviceProfileTransportConfiguration transportConfiguration = deviceProfile.getProfileData().getTransportConfiguration();
         assertTrue(transportConfiguration instanceof CoapDeviceProfileTransportConfiguration);
-        CoapDeviceProfileTransportConfiguration coapDeviceProfileTransportConfiguration = (CoapDeviceProfileTransportConfiguration) transportConfiguration;
-        CoapDeviceTypeConfiguration coapDeviceTypeConfiguration = coapDeviceProfileTransportConfiguration.getCoapDeviceTypeConfiguration();
+        @NotNull CoapDeviceProfileTransportConfiguration coapDeviceProfileTransportConfiguration = (CoapDeviceProfileTransportConfiguration) transportConfiguration;
+        @NotNull CoapDeviceTypeConfiguration coapDeviceTypeConfiguration = coapDeviceProfileTransportConfiguration.getCoapDeviceTypeConfiguration();
         assertTrue(coapDeviceTypeConfiguration instanceof DefaultCoapDeviceTypeConfiguration);
-        DefaultCoapDeviceTypeConfiguration defaultCoapDeviceTypeConfiguration = (DefaultCoapDeviceTypeConfiguration) coapDeviceTypeConfiguration;
-        TransportPayloadTypeConfiguration transportPayloadTypeConfiguration = defaultCoapDeviceTypeConfiguration.getTransportPayloadTypeConfiguration();
+        @NotNull DefaultCoapDeviceTypeConfiguration defaultCoapDeviceTypeConfiguration = (DefaultCoapDeviceTypeConfiguration) coapDeviceTypeConfiguration;
+        @NotNull TransportPayloadTypeConfiguration transportPayloadTypeConfiguration = defaultCoapDeviceTypeConfiguration.getTransportPayloadTypeConfiguration();
         assertTrue(transportPayloadTypeConfiguration instanceof ProtoTransportPayloadConfiguration);
-        ProtoTransportPayloadConfiguration protoTransportPayloadConfiguration = (ProtoTransportPayloadConfiguration) transportPayloadTypeConfiguration;
+        @NotNull ProtoTransportPayloadConfiguration protoTransportPayloadConfiguration = (ProtoTransportPayloadConfiguration) transportPayloadTypeConfiguration;
         String deviceTelemetryProtoSchema = protoTransportPayloadConfiguration.getDeviceTelemetryProtoSchema();
-        ProtoFileElement protoFileElement = DynamicProtoUtils.getProtoFileElement(deviceTelemetryProtoSchema);
+        @NotNull ProtoFileElement protoFileElement = DynamicProtoUtils.getProtoFileElement(deviceTelemetryProtoSchema);
         DynamicSchema telemetrySchema = DynamicProtoUtils.getDynamicSchema(protoFileElement, ProtoTransportPayloadConfiguration.TELEMETRY_PROTO_SCHEMA);
 
         DynamicMessage.Builder nestedJsonObjectBuilder = telemetrySchema.newMessageBuilder("PostTelemetry.JsonObject.NestedJsonObject");
         Descriptors.Descriptor nestedJsonObjectBuilderDescriptor = nestedJsonObjectBuilder.getDescriptorForType();
         assertNotNull(nestedJsonObjectBuilderDescriptor);
-        DynamicMessage nestedJsonObject = nestedJsonObjectBuilder.setField(nestedJsonObjectBuilderDescriptor.findFieldByName("key"), "value").build();
+        @NotNull DynamicMessage nestedJsonObject = nestedJsonObjectBuilder.setField(nestedJsonObjectBuilderDescriptor.findFieldByName("key"), "value").build();
 
         DynamicMessage.Builder jsonObjectBuilder = telemetrySchema.newMessageBuilder("PostTelemetry.JsonObject");
         Descriptors.Descriptor jsonObjectBuilderDescriptor = jsonObjectBuilder.getDescriptorForType();
         assertNotNull(jsonObjectBuilderDescriptor);
-        DynamicMessage jsonObject = jsonObjectBuilder
+        @NotNull DynamicMessage jsonObject = jsonObjectBuilder
                 .setField(jsonObjectBuilderDescriptor.findFieldByName("someNumber"), 42)
                 .addRepeatedField(jsonObjectBuilderDescriptor.findFieldByName("someArray"), 1)
                 .addRepeatedField(jsonObjectBuilderDescriptor.findFieldByName("someArray"), 2)
@@ -150,7 +151,7 @@ public abstract class AbstractCoapTimeseriesProtoIntegrationTest extends Abstrac
         Descriptors.Descriptor valuesDescriptor = valuesBuilder.getDescriptorForType();
         assertNotNull(valuesDescriptor);
 
-        DynamicMessage valuesMsg = valuesBuilder
+        @NotNull DynamicMessage valuesMsg = valuesBuilder
                 .setField(valuesDescriptor.findFieldByName("key1"), "value1")
                 .setField(valuesDescriptor.findFieldByName("key2"), true)
                 .setField(valuesDescriptor.findFieldByName("key3"), 3.0)
@@ -161,7 +162,7 @@ public abstract class AbstractCoapTimeseriesProtoIntegrationTest extends Abstrac
         DynamicMessage.Builder postTelemetryBuilder = telemetrySchema.newMessageBuilder("PostTelemetry");
         Descriptors.Descriptor postTelemetryMsgDescriptor = postTelemetryBuilder.getDescriptorForType();
         assertNotNull(postTelemetryMsgDescriptor);
-        DynamicMessage postTelemetryMsg = postTelemetryBuilder
+        @NotNull DynamicMessage postTelemetryMsg = postTelemetryBuilder
                 .setField(postTelemetryMsgDescriptor.findFieldByName("ts"), 10000L)
                 .setField(postTelemetryMsgDescriptor.findFieldByName("values"), valuesMsg)
                 .build();
@@ -179,26 +180,26 @@ public abstract class AbstractCoapTimeseriesProtoIntegrationTest extends Abstrac
         processBeforeTest(configProperties);
         DeviceProfileTransportConfiguration transportConfiguration = deviceProfile.getProfileData().getTransportConfiguration();
         assertTrue(transportConfiguration instanceof CoapDeviceProfileTransportConfiguration);
-        CoapDeviceProfileTransportConfiguration coapDeviceProfileTransportConfiguration = (CoapDeviceProfileTransportConfiguration) transportConfiguration;
-        CoapDeviceTypeConfiguration coapDeviceTypeConfiguration = coapDeviceProfileTransportConfiguration.getCoapDeviceTypeConfiguration();
+        @NotNull CoapDeviceProfileTransportConfiguration coapDeviceProfileTransportConfiguration = (CoapDeviceProfileTransportConfiguration) transportConfiguration;
+        @NotNull CoapDeviceTypeConfiguration coapDeviceTypeConfiguration = coapDeviceProfileTransportConfiguration.getCoapDeviceTypeConfiguration();
         assertTrue(coapDeviceTypeConfiguration instanceof DefaultCoapDeviceTypeConfiguration);
-        DefaultCoapDeviceTypeConfiguration defaultCoapDeviceTypeConfiguration = (DefaultCoapDeviceTypeConfiguration) coapDeviceTypeConfiguration;
-        TransportPayloadTypeConfiguration transportPayloadTypeConfiguration = defaultCoapDeviceTypeConfiguration.getTransportPayloadTypeConfiguration();
+        @NotNull DefaultCoapDeviceTypeConfiguration defaultCoapDeviceTypeConfiguration = (DefaultCoapDeviceTypeConfiguration) coapDeviceTypeConfiguration;
+        @NotNull TransportPayloadTypeConfiguration transportPayloadTypeConfiguration = defaultCoapDeviceTypeConfiguration.getTransportPayloadTypeConfiguration();
         assertTrue(transportPayloadTypeConfiguration instanceof ProtoTransportPayloadConfiguration);
-        ProtoTransportPayloadConfiguration protoTransportPayloadConfiguration = (ProtoTransportPayloadConfiguration) transportPayloadTypeConfiguration;
+        @NotNull ProtoTransportPayloadConfiguration protoTransportPayloadConfiguration = (ProtoTransportPayloadConfiguration) transportPayloadTypeConfiguration;
         String deviceTelemetryProtoSchema = protoTransportPayloadConfiguration.getDeviceTelemetryProtoSchema();
-        ProtoFileElement protoFileElement = DynamicProtoUtils.getProtoFileElement(deviceTelemetryProtoSchema);
+        @NotNull ProtoFileElement protoFileElement = DynamicProtoUtils.getProtoFileElement(deviceTelemetryProtoSchema);
         DynamicSchema telemetrySchema = DynamicProtoUtils.getDynamicSchema(protoFileElement, ProtoTransportPayloadConfiguration.TELEMETRY_PROTO_SCHEMA);
 
         DynamicMessage.Builder nestedJsonObjectBuilder = telemetrySchema.newMessageBuilder("PostTelemetry.JsonObject.NestedJsonObject");
         Descriptors.Descriptor nestedJsonObjectBuilderDescriptor = nestedJsonObjectBuilder.getDescriptorForType();
         assertNotNull(nestedJsonObjectBuilderDescriptor);
-        DynamicMessage nestedJsonObject = nestedJsonObjectBuilder.setField(nestedJsonObjectBuilderDescriptor.findFieldByName("key"), "value").build();
+        @NotNull DynamicMessage nestedJsonObject = nestedJsonObjectBuilder.setField(nestedJsonObjectBuilderDescriptor.findFieldByName("key"), "value").build();
 
         DynamicMessage.Builder jsonObjectBuilder = telemetrySchema.newMessageBuilder("PostTelemetry.JsonObject");
         Descriptors.Descriptor jsonObjectBuilderDescriptor = jsonObjectBuilder.getDescriptorForType();
         assertNotNull(jsonObjectBuilderDescriptor);
-        DynamicMessage jsonObject = jsonObjectBuilder
+        @NotNull DynamicMessage jsonObject = jsonObjectBuilder
                 .addRepeatedField(jsonObjectBuilderDescriptor.findFieldByName("someArray"), 1)
                 .addRepeatedField(jsonObjectBuilderDescriptor.findFieldByName("someArray"), 2)
                 .addRepeatedField(jsonObjectBuilderDescriptor.findFieldByName("someArray"), 3)
@@ -208,7 +209,7 @@ public abstract class AbstractCoapTimeseriesProtoIntegrationTest extends Abstrac
         DynamicMessage.Builder postTelemetryBuilder = telemetrySchema.newMessageBuilder("PostTelemetry");
         Descriptors.Descriptor postTelemetryMsgDescriptor = postTelemetryBuilder.getDescriptorForType();
         assertNotNull(postTelemetryMsgDescriptor);
-        DynamicMessage postTelemetryMsg = postTelemetryBuilder
+        @NotNull DynamicMessage postTelemetryMsg = postTelemetryBuilder
                 .setField(postTelemetryMsgDescriptor.findFieldByName("key1"), "")
                 .setField(postTelemetryMsgDescriptor.findFieldByName("key2"), false)
                 .setField(postTelemetryMsgDescriptor.findFieldByName("key3"), 0.0)
@@ -219,31 +220,31 @@ public abstract class AbstractCoapTimeseriesProtoIntegrationTest extends Abstrac
 
     @Test
     public void testPushTelemetryWithTsAndNoPresenceFields() throws Exception {
-        String schemaStr = "syntax =\"proto3\";\n" +
-                "\n" +
-                "package test;\n" +
-                "\n" +
-                "message PostTelemetry {\n" +
-                "  optional int64 ts = 1;\n" +
-                "  Values values = 2;\n" +
-                "  \n" +
-                "  message Values {\n" +
-                "    string key1 = 3;\n" +
-                "    bool key2 = 4;\n" +
-                "    double key3 = 5;\n" +
-                "    int32 key4 = 6;\n" +
-                "    JsonObject key5 = 7;\n" +
-                "  }\n" +
-                "  \n" +
-                "  message JsonObject {\n" +
-                "    optional int32 someNumber = 8;\n" +
-                "    repeated int32 someArray = 9;\n" +
-                "    NestedJsonObject someNestedObject = 10;\n" +
-                "    message NestedJsonObject {\n" +
-                "       optional string key = 11;\n" +
-                "    }\n" +
-                "  }\n" +
-                "}";
+        @NotNull String schemaStr = "syntax =\"proto3\";\n" +
+                                    "\n" +
+                                    "package test;\n" +
+                                    "\n" +
+                                    "message PostTelemetry {\n" +
+                                    "  optional int64 ts = 1;\n" +
+                                    "  Values values = 2;\n" +
+                                    "  \n" +
+                                    "  message Values {\n" +
+                                    "    string key1 = 3;\n" +
+                                    "    bool key2 = 4;\n" +
+                                    "    double key3 = 5;\n" +
+                                    "    int32 key4 = 6;\n" +
+                                    "    JsonObject key5 = 7;\n" +
+                                    "  }\n" +
+                                    "  \n" +
+                                    "  message JsonObject {\n" +
+                                    "    optional int32 someNumber = 8;\n" +
+                                    "    repeated int32 someArray = 9;\n" +
+                                    "    NestedJsonObject someNestedObject = 10;\n" +
+                                    "    message NestedJsonObject {\n" +
+                                    "       optional string key = 11;\n" +
+                                    "    }\n" +
+                                    "  }\n" +
+                                    "}";
         CoapTestConfigProperties configProperties = CoapTestConfigProperties.builder()
                 .deviceName("Test Post Telemetry device proto payload")
                 .coapDeviceType(CoapDeviceType.DEFAULT)
@@ -253,26 +254,26 @@ public abstract class AbstractCoapTimeseriesProtoIntegrationTest extends Abstrac
         processBeforeTest(configProperties);
         DeviceProfileTransportConfiguration transportConfiguration = deviceProfile.getProfileData().getTransportConfiguration();
         assertTrue(transportConfiguration instanceof CoapDeviceProfileTransportConfiguration);
-        CoapDeviceProfileTransportConfiguration coapDeviceProfileTransportConfiguration = (CoapDeviceProfileTransportConfiguration) transportConfiguration;
-        CoapDeviceTypeConfiguration coapDeviceTypeConfiguration = coapDeviceProfileTransportConfiguration.getCoapDeviceTypeConfiguration();
+        @NotNull CoapDeviceProfileTransportConfiguration coapDeviceProfileTransportConfiguration = (CoapDeviceProfileTransportConfiguration) transportConfiguration;
+        @NotNull CoapDeviceTypeConfiguration coapDeviceTypeConfiguration = coapDeviceProfileTransportConfiguration.getCoapDeviceTypeConfiguration();
         assertTrue(coapDeviceTypeConfiguration instanceof DefaultCoapDeviceTypeConfiguration);
-        DefaultCoapDeviceTypeConfiguration defaultCoapDeviceTypeConfiguration = (DefaultCoapDeviceTypeConfiguration) coapDeviceTypeConfiguration;
-        TransportPayloadTypeConfiguration transportPayloadTypeConfiguration = defaultCoapDeviceTypeConfiguration.getTransportPayloadTypeConfiguration();
+        @NotNull DefaultCoapDeviceTypeConfiguration defaultCoapDeviceTypeConfiguration = (DefaultCoapDeviceTypeConfiguration) coapDeviceTypeConfiguration;
+        @NotNull TransportPayloadTypeConfiguration transportPayloadTypeConfiguration = defaultCoapDeviceTypeConfiguration.getTransportPayloadTypeConfiguration();
         assertTrue(transportPayloadTypeConfiguration instanceof ProtoTransportPayloadConfiguration);
-        ProtoTransportPayloadConfiguration protoTransportPayloadConfiguration = (ProtoTransportPayloadConfiguration) transportPayloadTypeConfiguration;
+        @NotNull ProtoTransportPayloadConfiguration protoTransportPayloadConfiguration = (ProtoTransportPayloadConfiguration) transportPayloadTypeConfiguration;
         String deviceTelemetryProtoSchema = protoTransportPayloadConfiguration.getDeviceTelemetryProtoSchema();
-        ProtoFileElement protoFileElement = DynamicProtoUtils.getProtoFileElement(deviceTelemetryProtoSchema);
+        @NotNull ProtoFileElement protoFileElement = DynamicProtoUtils.getProtoFileElement(deviceTelemetryProtoSchema);
         DynamicSchema telemetrySchema = DynamicProtoUtils.getDynamicSchema(protoFileElement, ProtoTransportPayloadConfiguration.TELEMETRY_PROTO_SCHEMA);
 
         DynamicMessage.Builder nestedJsonObjectBuilder = telemetrySchema.newMessageBuilder("PostTelemetry.JsonObject.NestedJsonObject");
         Descriptors.Descriptor nestedJsonObjectBuilderDescriptor = nestedJsonObjectBuilder.getDescriptorForType();
         assertNotNull(nestedJsonObjectBuilderDescriptor);
-        DynamicMessage nestedJsonObject = nestedJsonObjectBuilder.setField(nestedJsonObjectBuilderDescriptor.findFieldByName("key"), "value").build();
+        @NotNull DynamicMessage nestedJsonObject = nestedJsonObjectBuilder.setField(nestedJsonObjectBuilderDescriptor.findFieldByName("key"), "value").build();
 
         DynamicMessage.Builder jsonObjectBuilder = telemetrySchema.newMessageBuilder("PostTelemetry.JsonObject");
         Descriptors.Descriptor jsonObjectBuilderDescriptor = jsonObjectBuilder.getDescriptorForType();
         assertNotNull(jsonObjectBuilderDescriptor);
-        DynamicMessage jsonObject = jsonObjectBuilder
+        @NotNull DynamicMessage jsonObject = jsonObjectBuilder
                 .addRepeatedField(jsonObjectBuilderDescriptor.findFieldByName("someArray"), 1)
                 .addRepeatedField(jsonObjectBuilderDescriptor.findFieldByName("someArray"), 2)
                 .addRepeatedField(jsonObjectBuilderDescriptor.findFieldByName("someArray"), 3)
@@ -284,14 +285,14 @@ public abstract class AbstractCoapTimeseriesProtoIntegrationTest extends Abstrac
         Descriptors.Descriptor valuesDescriptor = valuesBuilder.getDescriptorForType();
         assertNotNull(valuesDescriptor);
 
-        DynamicMessage valuesMsg = valuesBuilder
+        @NotNull DynamicMessage valuesMsg = valuesBuilder
                 .setField(valuesDescriptor.findFieldByName("key5"), jsonObject)
                 .build();
 
         DynamicMessage.Builder postTelemetryBuilder = telemetrySchema.newMessageBuilder("PostTelemetry");
         Descriptors.Descriptor postTelemetryMsgDescriptor = postTelemetryBuilder.getDescriptorForType();
         assertNotNull(postTelemetryMsgDescriptor);
-        DynamicMessage postTelemetryMsg = postTelemetryBuilder
+        @NotNull DynamicMessage postTelemetryMsg = postTelemetryBuilder
                 .setField(postTelemetryMsgDescriptor.findFieldByName("ts"), 10000L)
                 .setField(postTelemetryMsgDescriptor.findFieldByName("values"), valuesMsg)
                 .build();

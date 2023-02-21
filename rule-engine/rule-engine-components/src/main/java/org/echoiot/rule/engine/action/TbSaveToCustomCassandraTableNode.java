@@ -27,6 +27,7 @@ import org.echoiot.server.dao.cassandra.CassandraCluster;
 import org.echoiot.server.dao.cassandra.guava.GuavaSession;
 import org.echoiot.server.dao.nosql.CassandraStatementTask;
 import org.echoiot.server.dao.nosql.TbResultSetFuture;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -64,12 +65,13 @@ public class TbSaveToCustomCassandraTableNode implements TbNode {
     private GuavaSession session;
     private CassandraCluster cassandraCluster;
     private ConsistencyLevel defaultWriteLevel;
+    @org.jetbrains.annotations.Nullable
     private PreparedStatement saveStmt;
     private ExecutorService readResultsProcessingExecutor;
     private Map<String, String> fieldsMap;
 
     @Override
-    public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
+    public void init(@NotNull TbContext ctx, @NotNull TbNodeConfiguration configuration) throws TbNodeException {
         config = TbNodeUtils.convert(configuration, TbSaveToCustomCassandraTableNodeConfiguration.class);
         cassandraCluster = ctx.getCassandraCluster();
         if (cassandraCluster == null) {
@@ -81,7 +83,7 @@ public class TbSaveToCustomCassandraTableNode implements TbNode {
     }
 
     @Override
-    public void onMsg(TbContext ctx, TbMsg msg) {
+    public void onMsg(@NotNull TbContext ctx, @NotNull TbMsg msg) {
         withCallback(save(msg, ctx), aVoid -> ctx.tellSuccess(msg), e -> ctx.tellFailure(msg, e), ctx.getDbCallbackExecutor());
     }
 
@@ -101,7 +103,8 @@ public class TbSaveToCustomCassandraTableNode implements TbNode {
         }
     }
 
-    private PreparedStatement prepare(String query) {
+    @NotNull
+    private PreparedStatement prepare(@NotNull String query) {
         return getSession().prepare(query);
     }
 
@@ -113,6 +116,7 @@ public class TbSaveToCustomCassandraTableNode implements TbNode {
         return session;
     }
 
+    @NotNull
     private PreparedStatement getSaveStmt() {
         fieldsMap = config.getFieldsMapping();
         if (fieldsMap.isEmpty()) {
@@ -122,13 +126,15 @@ public class TbSaveToCustomCassandraTableNode implements TbNode {
         }
     }
 
-    private PreparedStatement prepareStatement(List<String> fieldsList) {
+    @NotNull
+    private PreparedStatement prepareStatement(@NotNull List<String> fieldsList) {
         return prepare(createQuery(fieldsList));
     }
 
-    private String createQuery(List<String> fieldsList) {
+    @NotNull
+    private String createQuery(@NotNull List<String> fieldsList) {
         int size = fieldsList.size();
-        StringBuilder query = new StringBuilder();
+        @NotNull StringBuilder query = new StringBuilder();
         query.append("INSERT INTO ")
                 .append(TABLE_PREFIX)
                 .append(config.getTableName())
@@ -152,14 +158,15 @@ public class TbSaveToCustomCassandraTableNode implements TbNode {
         return query.toString();
     }
 
-    private ListenableFuture<Void> save(TbMsg msg, TbContext ctx) {
+    @NotNull
+    private ListenableFuture<Void> save(@NotNull TbMsg msg, @NotNull TbContext ctx) {
         JsonElement data = parser.parse(msg.getData());
         if (!data.isJsonObject()) {
             throw new IllegalStateException("Invalid message structure, it is not a JSON Object:" + data);
         } else {
             JsonObject dataAsObject = data.getAsJsonObject();
-            BoundStatementBuilder stmtBuilder = new BoundStatementBuilder(saveStmt.bind());
-            AtomicInteger i = new AtomicInteger(0);
+            @NotNull BoundStatementBuilder stmtBuilder = new BoundStatementBuilder(saveStmt.bind());
+            @NotNull AtomicInteger i = new AtomicInteger(0);
             fieldsMap.forEach((key, value) -> {
                 if (key.equals(ENTITY_ID)) {
                     stmtBuilder.setUuid(i.get(), msg.getOriginator().getId());
@@ -194,11 +201,11 @@ public class TbSaveToCustomCassandraTableNode implements TbNode {
         }
     }
 
-    private TbResultSetFuture executeAsyncWrite(TbContext ctx, Statement statement) {
+    private TbResultSetFuture executeAsyncWrite(@NotNull TbContext ctx, @NotNull Statement statement) {
         return executeAsync(ctx, statement, defaultWriteLevel);
     }
 
-    private TbResultSetFuture executeAsync(TbContext ctx, Statement statement, ConsistencyLevel level) {
+    private TbResultSetFuture executeAsync(@NotNull TbContext ctx, @NotNull Statement statement, ConsistencyLevel level) {
         if (log.isDebugEnabled()) {
             log.debug("Execute cassandra async statement {}", statementToString(statement));
         }
@@ -216,7 +223,8 @@ public class TbSaveToCustomCassandraTableNode implements TbNode {
         }
     }
 
-    private <T> ListenableFuture<T> getFuture(TbResultSetFuture future, java.util.function.Function<AsyncResultSet, T> transformer) {
+    @NotNull
+    private <T> ListenableFuture<T> getFuture(@NotNull TbResultSetFuture future, @NotNull java.util.function.Function<AsyncResultSet, T> transformer) {
         return Futures.transform(future, new Function<AsyncResultSet, T>() {
             @Nullable
             @Override

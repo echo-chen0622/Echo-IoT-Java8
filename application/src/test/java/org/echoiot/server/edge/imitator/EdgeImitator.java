@@ -38,6 +38,7 @@ import org.echoiot.server.gen.edge.v1.UserCredentialsUpdateMsg;
 import org.echoiot.server.gen.edge.v1.UserUpdateMsg;
 import org.echoiot.server.gen.edge.v1.WidgetTypeUpdateMsg;
 import org.echoiot.server.gen.edge.v1.WidgetsBundleUpdateMsg;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -55,16 +56,16 @@ public class EdgeImitator {
 
     public static final int TIMEOUT_IN_SECONDS = 30;
 
-    private String routingKey;
-    private String routingSecret;
+    private final String routingKey;
+    private final String routingSecret;
 
-    private EdgeRpcClient edgeRpcClient;
+    private final EdgeRpcClient edgeRpcClient;
 
     private final Lock lock = new ReentrantLock();
 
     private CountDownLatch messagesLatch;
     private CountDownLatch responsesLatch;
-    private List<Class<? extends AbstractMessage>> ignoredTypes;
+    private final List<Class<? extends AbstractMessage>> ignoredTypes;
 
     @Setter
     private boolean randomFailuresOnTimeseriesDownlink = false;
@@ -74,7 +75,7 @@ public class EdgeImitator {
     @Getter
     private EdgeConfiguration configuration;
     @Getter
-    private List<AbstractMessage> downlinkMsgs;
+    private final List<AbstractMessage> downlinkMsgs;
 
     @Getter
     private UplinkResponseMsg latestResponseMsg;
@@ -95,8 +96,8 @@ public class EdgeImitator {
         setEdgeCredentials("keepAliveTimeSec", 300);
     }
 
-    private void setEdgeCredentials(String fieldName, Object value) throws NoSuchFieldException, IllegalAccessException {
-        Field fieldToSet = edgeRpcClient.getClass().getDeclaredField(fieldName);
+    private void setEdgeCredentials(@NotNull String fieldName, Object value) throws NoSuchFieldException, IllegalAccessException {
+        @NotNull Field fieldToSet = edgeRpcClient.getClass().getDeclaredField(fieldName);
         fieldToSet.setAccessible(true);
         fieldToSet.set(edgeRpcClient, value);
         fieldToSet.setAccessible(false);
@@ -132,90 +133,91 @@ public class EdgeImitator {
         this.configuration = edgeConfiguration;
     }
 
-    private void onDownlink(DownlinkMsg downlinkMsg) {
-        ListenableFuture<List<Void>> future = processDownlinkMsg(downlinkMsg);
+    private void onDownlink(@NotNull DownlinkMsg downlinkMsg) {
+        @NotNull ListenableFuture<List<Void>> future = processDownlinkMsg(downlinkMsg);
         Futures.addCallback(future, new FutureCallback<>() {
             @Override
             public void onSuccess(@Nullable List<Void> result) {
-                DownlinkResponseMsg downlinkResponseMsg = DownlinkResponseMsg.newBuilder()
-                        .setDownlinkMsgId(downlinkMsg.getDownlinkMsgId())
-                        .setSuccess(true).build();
+                @NotNull DownlinkResponseMsg downlinkResponseMsg = DownlinkResponseMsg.newBuilder()
+                                                                                      .setDownlinkMsgId(downlinkMsg.getDownlinkMsgId())
+                                                                                      .setSuccess(true).build();
                 edgeRpcClient.sendDownlinkResponseMsg(downlinkResponseMsg);
             }
 
             @Override
             public void onFailure(Throwable t) {
-                DownlinkResponseMsg downlinkResponseMsg = DownlinkResponseMsg.newBuilder()
-                        .setDownlinkMsgId(downlinkMsg.getDownlinkMsgId())
-                        .setSuccess(false).setErrorMsg(t.getMessage()).build();
+                @NotNull DownlinkResponseMsg downlinkResponseMsg = DownlinkResponseMsg.newBuilder()
+                                                                                      .setDownlinkMsgId(downlinkMsg.getDownlinkMsgId())
+                                                                                      .setSuccess(false).setErrorMsg(t.getMessage()).build();
                 edgeRpcClient.sendDownlinkResponseMsg(downlinkResponseMsg);
             }
         }, MoreExecutors.directExecutor());
     }
 
-    private void onClose(Exception e) {
+    private void onClose(@NotNull Exception e) {
         log.info("onClose: {}", e.getMessage());
     }
 
-    private ListenableFuture<List<Void>> processDownlinkMsg(DownlinkMsg downlinkMsg) {
-        List<ListenableFuture<Void>> result = new ArrayList<>();
+    @NotNull
+    private ListenableFuture<List<Void>> processDownlinkMsg(@NotNull DownlinkMsg downlinkMsg) {
+        @NotNull List<ListenableFuture<Void>> result = new ArrayList<>();
         if (downlinkMsg.getAdminSettingsUpdateMsgCount() > 0) {
-            for (AdminSettingsUpdateMsg adminSettingsUpdateMsg : downlinkMsg.getAdminSettingsUpdateMsgList()) {
+            for (@NotNull AdminSettingsUpdateMsg adminSettingsUpdateMsg : downlinkMsg.getAdminSettingsUpdateMsgList()) {
                 result.add(saveDownlinkMsg(adminSettingsUpdateMsg));
             }
         }
         if (downlinkMsg.getDeviceUpdateMsgCount() > 0) {
-            for (DeviceUpdateMsg deviceUpdateMsg : downlinkMsg.getDeviceUpdateMsgList()) {
+            for (@NotNull DeviceUpdateMsg deviceUpdateMsg : downlinkMsg.getDeviceUpdateMsgList()) {
                 result.add(saveDownlinkMsg(deviceUpdateMsg));
             }
         }
         if (downlinkMsg.getDeviceProfileUpdateMsgCount() > 0) {
-            for (DeviceProfileUpdateMsg deviceProfileUpdateMsg : downlinkMsg.getDeviceProfileUpdateMsgList()) {
+            for (@NotNull DeviceProfileUpdateMsg deviceProfileUpdateMsg : downlinkMsg.getDeviceProfileUpdateMsgList()) {
                 result.add(saveDownlinkMsg(deviceProfileUpdateMsg));
             }
         }
         if (downlinkMsg.getDeviceCredentialsUpdateMsgCount() > 0) {
-            for (DeviceCredentialsUpdateMsg deviceCredentialsUpdateMsg : downlinkMsg.getDeviceCredentialsUpdateMsgList()) {
+            for (@NotNull DeviceCredentialsUpdateMsg deviceCredentialsUpdateMsg : downlinkMsg.getDeviceCredentialsUpdateMsgList()) {
                 result.add(saveDownlinkMsg(deviceCredentialsUpdateMsg));
             }
         }
         if (downlinkMsg.getAssetProfileUpdateMsgCount() > 0) {
-            for (AssetProfileUpdateMsg assetProfileUpdateMsg : downlinkMsg.getAssetProfileUpdateMsgList()) {
+            for (@NotNull AssetProfileUpdateMsg assetProfileUpdateMsg : downlinkMsg.getAssetProfileUpdateMsgList()) {
                 result.add(saveDownlinkMsg(assetProfileUpdateMsg));
             }
         }
         if (downlinkMsg.getAssetUpdateMsgCount() > 0) {
-            for (AssetUpdateMsg assetUpdateMsg : downlinkMsg.getAssetUpdateMsgList()) {
+            for (@NotNull AssetUpdateMsg assetUpdateMsg : downlinkMsg.getAssetUpdateMsgList()) {
                 result.add(saveDownlinkMsg(assetUpdateMsg));
             }
         }
         if (downlinkMsg.getRuleChainUpdateMsgCount() > 0) {
-            for (RuleChainUpdateMsg ruleChainUpdateMsg : downlinkMsg.getRuleChainUpdateMsgList()) {
+            for (@NotNull RuleChainUpdateMsg ruleChainUpdateMsg : downlinkMsg.getRuleChainUpdateMsgList()) {
                 result.add(saveDownlinkMsg(ruleChainUpdateMsg));
             }
         }
         if (downlinkMsg.getRuleChainMetadataUpdateMsgCount() > 0) {
-            for (RuleChainMetadataUpdateMsg ruleChainMetadataUpdateMsg : downlinkMsg.getRuleChainMetadataUpdateMsgList()) {
+            for (@NotNull RuleChainMetadataUpdateMsg ruleChainMetadataUpdateMsg : downlinkMsg.getRuleChainMetadataUpdateMsgList()) {
                 result.add(saveDownlinkMsg(ruleChainMetadataUpdateMsg));
             }
         }
         if (downlinkMsg.getDashboardUpdateMsgCount() > 0) {
-            for (DashboardUpdateMsg dashboardUpdateMsg : downlinkMsg.getDashboardUpdateMsgList()) {
+            for (@NotNull DashboardUpdateMsg dashboardUpdateMsg : downlinkMsg.getDashboardUpdateMsgList()) {
                 result.add(saveDownlinkMsg(dashboardUpdateMsg));
             }
         }
         if (downlinkMsg.getRelationUpdateMsgCount() > 0) {
-            for (RelationUpdateMsg relationUpdateMsg : downlinkMsg.getRelationUpdateMsgList()) {
+            for (@NotNull RelationUpdateMsg relationUpdateMsg : downlinkMsg.getRelationUpdateMsgList()) {
                 result.add(saveDownlinkMsg(relationUpdateMsg));
             }
         }
         if (downlinkMsg.getAlarmUpdateMsgCount() > 0) {
-            for (AlarmUpdateMsg alarmUpdateMsg : downlinkMsg.getAlarmUpdateMsgList()) {
+            for (@NotNull AlarmUpdateMsg alarmUpdateMsg : downlinkMsg.getAlarmUpdateMsgList()) {
                 result.add(saveDownlinkMsg(alarmUpdateMsg));
             }
         }
         if (downlinkMsg.getEntityDataCount() > 0) {
-            for (EntityDataProto entityData : downlinkMsg.getEntityDataList()) {
+            for (@NotNull EntityDataProto entityData : downlinkMsg.getEntityDataList()) {
                 if (randomFailuresOnTimeseriesDownlink) {
                     if (getRandomBoolean()) {
                         result.add(Futures.immediateFailedFuture(new RuntimeException("Random failure. This is expected error for edge test")));
@@ -228,52 +230,52 @@ public class EdgeImitator {
             }
         }
         if (downlinkMsg.getEntityViewUpdateMsgCount() > 0) {
-            for (EntityViewUpdateMsg entityViewUpdateMsg : downlinkMsg.getEntityViewUpdateMsgList()) {
+            for (@NotNull EntityViewUpdateMsg entityViewUpdateMsg : downlinkMsg.getEntityViewUpdateMsgList()) {
                 result.add(saveDownlinkMsg(entityViewUpdateMsg));
             }
         }
         if (downlinkMsg.getCustomerUpdateMsgCount() > 0) {
-            for (CustomerUpdateMsg customerUpdateMsg : downlinkMsg.getCustomerUpdateMsgList()) {
+            for (@NotNull CustomerUpdateMsg customerUpdateMsg : downlinkMsg.getCustomerUpdateMsgList()) {
                 result.add(saveDownlinkMsg(customerUpdateMsg));
             }
         }
         if (downlinkMsg.getWidgetsBundleUpdateMsgCount() > 0) {
-            for (WidgetsBundleUpdateMsg widgetsBundleUpdateMsg : downlinkMsg.getWidgetsBundleUpdateMsgList()) {
+            for (@NotNull WidgetsBundleUpdateMsg widgetsBundleUpdateMsg : downlinkMsg.getWidgetsBundleUpdateMsgList()) {
                 result.add(saveDownlinkMsg(widgetsBundleUpdateMsg));
             }
         }
         if (downlinkMsg.getWidgetTypeUpdateMsgCount() > 0) {
-            for (WidgetTypeUpdateMsg widgetTypeUpdateMsg : downlinkMsg.getWidgetTypeUpdateMsgList()) {
+            for (@NotNull WidgetTypeUpdateMsg widgetTypeUpdateMsg : downlinkMsg.getWidgetTypeUpdateMsgList()) {
                 result.add(saveDownlinkMsg(widgetTypeUpdateMsg));
             }
         }
         if (downlinkMsg.getUserUpdateMsgCount() > 0) {
-            for (UserUpdateMsg userUpdateMsg : downlinkMsg.getUserUpdateMsgList()) {
+            for (@NotNull UserUpdateMsg userUpdateMsg : downlinkMsg.getUserUpdateMsgList()) {
                 result.add(saveDownlinkMsg(userUpdateMsg));
             }
         }
         if (downlinkMsg.getUserCredentialsUpdateMsgCount() > 0) {
-            for (UserCredentialsUpdateMsg userCredentialsUpdateMsg : downlinkMsg.getUserCredentialsUpdateMsgList()) {
+            for (@NotNull UserCredentialsUpdateMsg userCredentialsUpdateMsg : downlinkMsg.getUserCredentialsUpdateMsgList()) {
                 result.add(saveDownlinkMsg(userCredentialsUpdateMsg));
             }
         }
         if (downlinkMsg.getDeviceRpcCallMsgCount() > 0) {
-            for (DeviceRpcCallMsg deviceRpcCallMsg : downlinkMsg.getDeviceRpcCallMsgList()) {
+            for (@NotNull DeviceRpcCallMsg deviceRpcCallMsg : downlinkMsg.getDeviceRpcCallMsgList()) {
                 result.add(saveDownlinkMsg(deviceRpcCallMsg));
             }
         }
         if (downlinkMsg.getDeviceCredentialsRequestMsgCount() > 0) {
-            for (DeviceCredentialsRequestMsg deviceCredentialsRequestMsg : downlinkMsg.getDeviceCredentialsRequestMsgList()) {
+            for (@NotNull DeviceCredentialsRequestMsg deviceCredentialsRequestMsg : downlinkMsg.getDeviceCredentialsRequestMsgList()) {
                 result.add(saveDownlinkMsg(deviceCredentialsRequestMsg));
             }
         }
         if (downlinkMsg.getOtaPackageUpdateMsgCount() > 0) {
-            for (OtaPackageUpdateMsg otaPackageUpdateMsg : downlinkMsg.getOtaPackageUpdateMsgList()) {
+            for (@NotNull OtaPackageUpdateMsg otaPackageUpdateMsg : downlinkMsg.getOtaPackageUpdateMsgList()) {
                 result.add(saveDownlinkMsg(otaPackageUpdateMsg));
             }
         }
         if (downlinkMsg.getQueueUpdateMsgCount() > 0) {
-            for (QueueUpdateMsg queueUpdateMsg : downlinkMsg.getQueueUpdateMsgList()) {
+            for (@NotNull QueueUpdateMsg queueUpdateMsg : downlinkMsg.getQueueUpdateMsgList()) {
                 result.add(saveDownlinkMsg(queueUpdateMsg));
             }
         }
@@ -289,7 +291,8 @@ public class EdgeImitator {
         return randomValue <= this.failureProbability;
     }
 
-    private ListenableFuture<Void> saveDownlinkMsg(AbstractMessage message) {
+    @NotNull
+    private ListenableFuture<Void> saveDownlinkMsg(@NotNull AbstractMessage message) {
         if (!ignoredTypes.contains(message.getClass())) {
             lock.lock();
             try {
@@ -325,8 +328,9 @@ public class EdgeImitator {
         responsesLatch = new CountDownLatch(messageAmount);
     }
 
+    @NotNull
     @SuppressWarnings("unchecked")
-    public <T extends AbstractMessage> Optional<T> findMessageByType(Class<T> tClass) {
+    public <T extends AbstractMessage> Optional<T> findMessageByType(@NotNull Class<T> tClass) {
         Optional<T> result;
         lock.lock();
         try {
@@ -337,8 +341,9 @@ public class EdgeImitator {
         return result;
     }
 
+    @NotNull
     @SuppressWarnings("unchecked")
-    public <T extends AbstractMessage> List<T> findAllMessagesByType(Class<T> tClass) {
+    public <T extends AbstractMessage> List<T> findAllMessagesByType(@NotNull Class<T> tClass) {
         List<T> result;
         lock.lock();
         try {

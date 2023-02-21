@@ -10,6 +10,7 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.id.UserId;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.TimePageLink;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -23,6 +24,7 @@ public interface AuditLogService {
 
     PageData<AuditLog> findAuditLogsByTenantId(TenantId tenantId, List<ActionType> actionTypes, TimePageLink pageLink);
 
+    @Nullable
     <E extends HasName, I extends EntityId> ListenableFuture<List<Void>> logEntityAction(
             TenantId tenantId,
             CustomerId customerId,

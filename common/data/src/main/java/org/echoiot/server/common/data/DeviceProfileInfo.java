@@ -9,6 +9,8 @@ import lombok.Value;
 import org.echoiot.server.common.data.id.DashboardId;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.EntityIdFactory;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -19,6 +21,7 @@ public class DeviceProfileInfo extends EntityInfo {
 
     @ApiModelProperty(position = 3, value = "Either URL or Base64 data of the icon. Used in the mobile application to visualize set of device profiles in the grid view. ")
     private final String image;
+    @Nullable
     @ApiModelProperty(position = 4, value = "Reference to the dashboard. Used in the mobile application to open the default dashboard when user navigates to device details.")
     private final DashboardId defaultDashboardId;
     @ApiModelProperty(position = 5, value = "Type of the profile. Always 'DEFAULT' for now. Reserved for future use.")
@@ -40,7 +43,7 @@ public class DeviceProfileInfo extends EntityInfo {
         this.transportType = transportType;
     }
 
-    public DeviceProfileInfo(UUID uuid, String name, String image, UUID defaultDashboardId, DeviceProfileType type, DeviceTransportType transportType) {
+    public DeviceProfileInfo(UUID uuid, String name, String image, @Nullable UUID defaultDashboardId, DeviceProfileType type, DeviceTransportType transportType) {
         super(EntityIdFactory.getByTypeAndUuid(EntityType.DEVICE_PROFILE, uuid), name);
         this.image = image;
         this.defaultDashboardId = defaultDashboardId != null ? new DashboardId(defaultDashboardId) : null;
@@ -48,7 +51,7 @@ public class DeviceProfileInfo extends EntityInfo {
         this.transportType = transportType;
     }
 
-    public DeviceProfileInfo(DeviceProfile profile) {
+    public DeviceProfileInfo(@NotNull DeviceProfile profile) {
         this(profile.getId(), profile.getName(), profile.getImage(), profile.getDefaultDashboardId(),
                 profile.getType(), profile.getTransportType());
     }

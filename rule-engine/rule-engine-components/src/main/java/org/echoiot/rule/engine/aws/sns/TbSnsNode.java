@@ -18,6 +18,7 @@ import org.echoiot.rule.engine.api.util.TbNodeUtils;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.TbMsgMetaData;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.ExecutionException;
 
@@ -46,10 +47,10 @@ public class TbSnsNode implements TbNode {
     private AmazonSNS snsClient;
 
     @Override
-    public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
+    public void init(TbContext ctx, @NotNull TbNodeConfiguration configuration) throws TbNodeException {
         this.config = TbNodeUtils.convert(configuration, TbSnsNodeConfiguration.class);
-        AWSCredentials awsCredentials = new BasicAWSCredentials(this.config.getAccessKeyId(), this.config.getSecretAccessKey());
-        AWSStaticCredentialsProvider credProvider = new AWSStaticCredentialsProvider(awsCredentials);
+        @NotNull AWSCredentials awsCredentials = new BasicAWSCredentials(this.config.getAccessKeyId(), this.config.getSecretAccessKey());
+        @NotNull AWSStaticCredentialsProvider credProvider = new AWSStaticCredentialsProvider(awsCredentials);
         try {
             this.snsClient = AmazonSNSClient.builder()
                     .withCredentials(credProvider)
@@ -61,17 +62,17 @@ public class TbSnsNode implements TbNode {
     }
 
     @Override
-    public void onMsg(TbContext ctx, TbMsg msg) throws ExecutionException, InterruptedException, TbNodeException {
+    public void onMsg(@NotNull TbContext ctx, @NotNull TbMsg msg) throws ExecutionException, InterruptedException, TbNodeException {
         withCallback(publishMessageAsync(ctx, msg),
                 ctx::tellSuccess,
                 t -> ctx.tellFailure(processException(ctx, msg, t), t));
     }
 
-    private ListenableFuture<TbMsg> publishMessageAsync(TbContext ctx, TbMsg msg) {
+    private ListenableFuture<TbMsg> publishMessageAsync(@NotNull TbContext ctx, @NotNull TbMsg msg) {
         return ctx.getExternalCallExecutor().executeAsync(() -> publishMessage(ctx, msg));
     }
 
-    private TbMsg publishMessage(TbContext ctx, TbMsg msg) {
+    private TbMsg publishMessage(@NotNull TbContext ctx, @NotNull TbMsg msg) {
         String topicArn = TbNodeUtils.processPattern(this.config.getTopicArnPattern(), msg);
         PublishRequest publishRequest = new PublishRequest()
                 .withTopicArn(topicArn)
@@ -80,15 +81,15 @@ public class TbSnsNode implements TbNode {
         return processPublishResult(ctx, msg, result);
     }
 
-    private TbMsg processPublishResult(TbContext ctx, TbMsg origMsg, PublishResult result) {
-        TbMsgMetaData metaData = origMsg.getMetaData().copy();
+    private TbMsg processPublishResult(@NotNull TbContext ctx, @NotNull TbMsg origMsg, @NotNull PublishResult result) {
+        @NotNull TbMsgMetaData metaData = origMsg.getMetaData().copy();
         metaData.putValue(MESSAGE_ID, result.getMessageId());
         metaData.putValue(REQUEST_ID, result.getSdkResponseMetadata().getRequestId());
         return ctx.transformMsg(origMsg, origMsg.getType(), origMsg.getOriginator(), metaData, origMsg.getData());
     }
 
-    private TbMsg processException(TbContext ctx, TbMsg origMsg, Throwable t) {
-        TbMsgMetaData metaData = origMsg.getMetaData().copy();
+    private TbMsg processException(@NotNull TbContext ctx, @NotNull TbMsg origMsg, @NotNull Throwable t) {
+        @NotNull TbMsgMetaData metaData = origMsg.getMetaData().copy();
         metaData.putValue(ERROR, t.getClass() + ": " + t.getMessage());
         return ctx.transformMsg(origMsg, origMsg.getType(), origMsg.getOriginator(), metaData, origMsg.getData());
     }

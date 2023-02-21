@@ -1,5 +1,7 @@
 package org.echoiot.server.transport.lwm2m.server.store;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.nustaq.serialization.FSTConfiguration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.echoiot.server.transport.lwm2m.secure.TbX509DtlsSessionInfo;
@@ -17,7 +19,7 @@ public class TbLwM2MDtlsSessionRedisStore implements TbLwM2MDtlsSessionStore {
 
     @Override
     public void put(String endpoint, TbX509DtlsSessionInfo msg) {
-        try (var c = connectionFactory.getConnection()) {
+        try (@NotNull var c = connectionFactory.getConnection()) {
             var serializedMsg = serializer.asByteArray(msg);
             if (serializedMsg != null) {
                 c.set(getKey(endpoint), serializedMsg);
@@ -27,10 +29,11 @@ public class TbLwM2MDtlsSessionRedisStore implements TbLwM2MDtlsSessionStore {
         }
     }
 
+    @Nullable
     @Override
     public TbX509DtlsSessionInfo get(String endpoint) {
-        try (var c = connectionFactory.getConnection()) {
-            var data = c.get(getKey(endpoint));
+        try (@NotNull var c = connectionFactory.getConnection()) {
+            @Nullable var data = c.get(getKey(endpoint));
             if (data != null) {
                 return (TbX509DtlsSessionInfo) serializer.asObject(data);
             } else {
@@ -41,7 +44,7 @@ public class TbLwM2MDtlsSessionRedisStore implements TbLwM2MDtlsSessionStore {
 
     @Override
     public void remove(String endpoint) {
-        try (var c = connectionFactory.getConnection()) {
+        try (@NotNull var c = connectionFactory.getConnection()) {
             c.del(getKey(endpoint));
         }
     }

@@ -3,6 +3,7 @@ package org.echoiot.server.dao.attributes;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -34,22 +35,25 @@ public class BaseAttributesService implements AttributesService {
         this.attributesDao = attributesDao;
     }
 
+    @NotNull
     @Override
-    public ListenableFuture<Optional<AttributeKvEntry>> find(TenantId tenantId, EntityId entityId, String scope, String attributeKey) {
+    public ListenableFuture<Optional<AttributeKvEntry>> find(TenantId tenantId, @NotNull EntityId entityId, @NotNull String scope, @NotNull String attributeKey) {
         AttributeUtils.validate(entityId, scope);
         Validator.validateString(attributeKey, "Incorrect attribute key " + attributeKey);
         return Futures.immediateFuture(attributesDao.find(tenantId, entityId, scope, attributeKey));
     }
 
+    @NotNull
     @Override
-    public ListenableFuture<List<AttributeKvEntry>> find(TenantId tenantId, EntityId entityId, String scope, Collection<String> attributeKeys) {
+    public ListenableFuture<List<AttributeKvEntry>> find(TenantId tenantId, @NotNull EntityId entityId, @NotNull String scope, @NotNull Collection<String> attributeKeys) {
         AttributeUtils.validate(entityId, scope);
         attributeKeys.forEach(attributeKey -> Validator.validateString(attributeKey, "Incorrect attribute key " + attributeKey));
         return Futures.immediateFuture(attributesDao.find(tenantId, entityId, scope, attributeKeys));
     }
 
+    @NotNull
     @Override
-    public ListenableFuture<List<AttributeKvEntry>> findAll(TenantId tenantId, EntityId entityId, String scope) {
+    public ListenableFuture<List<AttributeKvEntry>> findAll(TenantId tenantId, @NotNull EntityId entityId, @NotNull String scope) {
         AttributeUtils.validate(entityId, scope);
         return Futures.immediateFuture(attributesDao.findAll(tenantId, entityId, scope));
     }
@@ -65,22 +69,24 @@ public class BaseAttributesService implements AttributesService {
     }
 
     @Override
-    public ListenableFuture<String> save(TenantId tenantId, EntityId entityId, String scope, AttributeKvEntry attribute) {
+    public ListenableFuture<String> save(TenantId tenantId, @NotNull EntityId entityId, @NotNull String scope, @NotNull AttributeKvEntry attribute) {
         AttributeUtils.validate(entityId, scope);
         AttributeUtils.validate(attribute);
         return attributesDao.save(tenantId, entityId, scope, attribute);
     }
 
+    @NotNull
     @Override
-    public ListenableFuture<List<String>> save(TenantId tenantId, EntityId entityId, String scope, List<AttributeKvEntry> attributes) {
+    public ListenableFuture<List<String>> save(TenantId tenantId, @NotNull EntityId entityId, @NotNull String scope, @NotNull List<AttributeKvEntry> attributes) {
         AttributeUtils.validate(entityId, scope);
         attributes.forEach(AttributeUtils::validate);
-        List<ListenableFuture<String>> saveFutures = attributes.stream().map(attribute -> attributesDao.save(tenantId, entityId, scope, attribute)).collect(Collectors.toList());
+        @NotNull List<ListenableFuture<String>> saveFutures = attributes.stream().map(attribute -> attributesDao.save(tenantId, entityId, scope, attribute)).collect(Collectors.toList());
         return Futures.allAsList(saveFutures);
     }
 
+    @NotNull
     @Override
-    public ListenableFuture<List<String>> removeAll(TenantId tenantId, EntityId entityId, String scope, List<String> attributeKeys) {
+    public ListenableFuture<List<String>> removeAll(TenantId tenantId, @NotNull EntityId entityId, @NotNull String scope, List<String> attributeKeys) {
         AttributeUtils.validate(entityId, scope);
         return Futures.allAsList(attributesDao.removeAll(tenantId, entityId, scope, attributeKeys));
     }

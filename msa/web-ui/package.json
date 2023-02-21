@@ -1,7 +1,7 @@
 {
   "name": "echoiot-web-ui",
   "private": true,
-  "version": "3.4.4",
+  "version": "1.0.0",
   "description": "Echoiot Web UI Microservice",
   "main": "server.ts",
   "bin": "server.js",

@@ -6,6 +6,7 @@ import org.apache.kafka.clients.admin.CreateTopicsResult;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.common.errors.TopicExistsException;
 import org.echoiot.server.queue.TbQueueAdmin;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.Map;
@@ -26,7 +27,7 @@ public class TbKafkaAdmin implements TbQueueAdmin {
 
     private final short replicationFactor;
 
-    public TbKafkaAdmin(TbKafkaSettings settings, Map<String, String> topicConfigs) {
+    public TbKafkaAdmin(@NotNull TbKafkaSettings settings, @NotNull Map<String, String> topicConfigs) {
         client = AdminClient.create(settings.toAdminProps());
         this.topicConfigs = topicConfigs;
 

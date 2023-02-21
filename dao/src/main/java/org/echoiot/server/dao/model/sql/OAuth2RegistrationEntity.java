@@ -18,6 +18,7 @@ import org.echoiot.server.common.data.oauth2.TenantNameStrategyType;
 import org.echoiot.server.dao.model.BaseSqlEntity;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.util.mapping.JsonStringType;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -103,7 +104,7 @@ public class OAuth2RegistrationEntity extends BaseSqlEntity<OAuth2Registration> 
         super();
     }
 
-    public OAuth2RegistrationEntity(OAuth2Registration registration) {
+    public OAuth2RegistrationEntity(@NotNull OAuth2Registration registration) {
         if (registration.getId() != null) {
             this.setUuid(registration.getId().getId());
         }
@@ -150,9 +151,10 @@ public class OAuth2RegistrationEntity extends BaseSqlEntity<OAuth2Registration> 
         }
     }
 
+    @NotNull
     @Override
     public OAuth2Registration toData() {
-        OAuth2Registration registration = new OAuth2Registration();
+        @NotNull OAuth2Registration registration = new OAuth2Registration();
         registration.setId(new OAuth2RegistrationId(id));
         registration.setCreatedTime(createdTime);
         registration.setOauth2ParamsId(new OAuth2ParamsId(oauth2ParamsId));

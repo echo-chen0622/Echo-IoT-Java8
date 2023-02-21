@@ -2,6 +2,7 @@ package org.echoiot.rule.engine.filter;
 
 import lombok.Data;
 import org.echoiot.rule.engine.api.NodeConfiguration;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
@@ -15,9 +16,10 @@ public class TbCheckMessageNodeConfiguration implements NodeConfiguration {
     private boolean checkAllKeys;
 
 
+    @NotNull
     @Override
     public TbCheckMessageNodeConfiguration defaultConfiguration() {
-        TbCheckMessageNodeConfiguration configuration = new TbCheckMessageNodeConfiguration();
+        @NotNull TbCheckMessageNodeConfiguration configuration = new TbCheckMessageNodeConfiguration();
         configuration.setMessageNames(Collections.emptyList());
         configuration.setMetadataNames(Collections.emptyList());
         configuration.setCheckAllKeys(true);

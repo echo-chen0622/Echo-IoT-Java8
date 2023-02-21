@@ -10,6 +10,7 @@ import org.echoiot.server.common.data.oauth2.OAuth2Registration;
 import org.echoiot.server.common.data.security.model.JwtPair;
 import org.echoiot.server.dao.oauth2.OAuth2Service;
 import org.echoiot.server.service.security.model.token.JwtTokenFactory;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
@@ -23,6 +24,7 @@ import org.echoiot.server.service.security.auth.rest.RestAuthenticationDetails;
 import org.echoiot.server.service.security.model.SecurityUser;
 import org.echoiot.server.service.security.system.SystemSecurityService;
 
+import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -46,7 +48,7 @@ public class Oauth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
     private final SystemSecurityService systemSecurityService;
 
-    @Autowired
+    @Resource
     public Oauth2AuthenticationSuccessHandler(final JwtTokenFactory tokenFactory,
                                               final OAuth2ClientMapperProvider oauth2ClientMapperProvider,
                                               final OAuth2Service oAuth2Service,
@@ -62,8 +64,8 @@ public class Oauth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     }
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request,
-                                        HttpServletResponse response,
+    public void onAuthenticationSuccess(@NotNull HttpServletRequest request,
+                                        @NotNull HttpServletResponse response,
                                         Authentication authentication) throws IOException {
         OAuth2AuthorizationRequest authorizationRequest = httpCookieOAuth2AuthorizationRequestRepository.loadAuthorizationRequest(request);
         String callbackUrlScheme = authorizationRequest.getAttribute(TbOAuth2ParameterNames.CALLBACK_URL_SCHEME);
@@ -72,7 +74,7 @@ public class Oauth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             baseUrl = callbackUrlScheme + ":";
         } else {
             baseUrl = this.systemSecurityService.getBaseUrl(TenantId.SYS_TENANT_ID, new CustomerId(EntityId.NULL_UUID), request);
-            Optional<Cookie> prevUrlOpt = CookieUtils.getCookie(request, PREV_URI_COOKIE_NAME);
+            @NotNull Optional<Cookie> prevUrlOpt = CookieUtils.getCookie(request, PREV_URI_COOKIE_NAME);
             if (prevUrlOpt.isPresent()) {
                 baseUrl += prevUrlOpt.get().getValue();
                 CookieUtils.deleteCookie(request, response, PREV_URI_COOKIE_NAME);
@@ -105,16 +107,17 @@ public class Oauth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                 errorPrefix = "/login?loginError=";
             }
             getRedirectStrategy().sendRedirect(request, response, baseUrl + errorPrefix +
-                    URLEncoder.encode(e.getMessage(), StandardCharsets.UTF_8.toString()));
+                    URLEncoder.encode(e.getMessage(), StandardCharsets.UTF_8));
         }
     }
 
-    protected void clearAuthenticationAttributes(HttpServletRequest request, HttpServletResponse response) {
+    protected void clearAuthenticationAttributes(@NotNull HttpServletRequest request, HttpServletResponse response) {
         super.clearAuthenticationAttributes(request);
         httpCookieOAuth2AuthorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
     }
 
-    String getRedirectUrl(String baseUrl, JwtPair tokenPair) {
+    @NotNull
+    String getRedirectUrl(@NotNull String baseUrl, @NotNull JwtPair tokenPair) {
         if (baseUrl.indexOf("?") > 0) {
             baseUrl += "&";
         } else {

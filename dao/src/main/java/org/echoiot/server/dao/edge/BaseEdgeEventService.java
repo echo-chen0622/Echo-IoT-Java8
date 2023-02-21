@@ -4,6 +4,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.dao.service.DataValidator;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.echoiot.server.common.data.edge.EdgeEvent;
 import org.echoiot.server.common.data.id.EdgeId;
@@ -16,8 +17,10 @@ import org.echoiot.server.common.data.page.TimePageLink;
 @AllArgsConstructor
 public class BaseEdgeEventService implements EdgeEventService {
 
+    @NotNull
     private final EdgeEventDao edgeEventDao;
 
+    @NotNull
     private final DataValidator<EdgeEvent> edgeEventValidator;
 
     @Override
@@ -27,7 +30,7 @@ public class BaseEdgeEventService implements EdgeEventService {
     }
 
     @Override
-    public PageData<EdgeEvent> findEdgeEvents(TenantId tenantId, EdgeId edgeId, TimePageLink pageLink, boolean withTsUpdate) {
+    public PageData<EdgeEvent> findEdgeEvents(@NotNull TenantId tenantId, EdgeId edgeId, TimePageLink pageLink, boolean withTsUpdate) {
         return edgeEventDao.findEdgeEvents(tenantId.getId(), edgeId, pageLink, withTsUpdate);
     }
 

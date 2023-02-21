@@ -6,6 +6,7 @@ import org.echoiot.server.queue.common.TbProtoQueueMsg;
 import org.echoiot.server.common.msg.queue.RuleEngineException;
 import org.echoiot.server.gen.transport.TransportProtos.ToRuleEngineMsg;
 import org.echoiot.server.service.queue.TbMsgPackProcessingContext;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 import java.util.concurrent.ConcurrentMap;
@@ -21,7 +22,7 @@ public class TbRuleEngineProcessingResult {
     @Getter
     private final TbMsgPackProcessingContext ctx;
 
-    public TbRuleEngineProcessingResult(String queueName, boolean timeout, TbMsgPackProcessingContext ctx) {
+    public TbRuleEngineProcessingResult(String queueName, boolean timeout, @NotNull TbMsgPackProcessingContext ctx) {
         this.queueName = queueName;
         this.timeout = timeout;
         this.ctx = ctx;

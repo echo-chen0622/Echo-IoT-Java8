@@ -20,6 +20,8 @@ import org.echoiot.server.common.data.script.ScriptLanguage;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.TbMsgMetaData;
 import org.echoiot.server.common.msg.queue.PartitionChangeMsg;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -46,17 +48,19 @@ public class TbMsgGeneratorNode implements TbNode {
     private static final String TB_MSG_GENERATOR_NODE_MSG = "TbMsgGeneratorNodeMsg";
 
     private TbMsgGeneratorNodeConfiguration config;
+    @Nullable
     private ScriptEngine scriptEngine;
     private long delay;
     private long lastScheduledTs;
     private int currentMsgCount;
     private EntityId originatorId;
     private UUID nextTickId;
+    @Nullable
     private TbMsg prevMsg;
     private final AtomicBoolean initialized = new AtomicBoolean(false);
 
     @Override
-    public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
+    public void init(@NotNull TbContext ctx, @NotNull TbNodeConfiguration configuration) throws TbNodeException {
         log.trace("init generator with config {}", configuration);
         this.config = TbNodeUtils.convert(configuration, TbMsgGeneratorNodeConfiguration.class);
         this.delay = TimeUnit.SECONDS.toMillis(config.getPeriodInSeconds());
@@ -71,12 +75,12 @@ public class TbMsgGeneratorNode implements TbNode {
     }
 
     @Override
-    public void onPartitionChangeMsg(TbContext ctx, PartitionChangeMsg msg) {
+    public void onPartitionChangeMsg(@NotNull TbContext ctx, PartitionChangeMsg msg) {
         log.trace("onPartitionChangeMsg, PartitionChangeMsg {}, config {}", msg, config);
         updateGeneratorState(ctx);
     }
 
-    private void updateGeneratorState(TbContext ctx) {
+    private void updateGeneratorState(@NotNull TbContext ctx) {
         log.trace("updateGeneratorState, config {}", config);
         if (ctx.isLocalEntity(originatorId)) {
             if (initialized.compareAndSet(false, true)) {
@@ -90,10 +94,10 @@ public class TbMsgGeneratorNode implements TbNode {
     }
 
     @Override
-    public void onMsg(TbContext ctx, TbMsg msg) {
+    public void onMsg(@NotNull TbContext ctx, @NotNull TbMsg msg) {
         log.trace("onMsg, config {}, msg {}", config, msg);
         if (initialized.get() && msg.getType().equals(TB_MSG_GENERATOR_NODE_MSG) && msg.getId().equals(nextTickId)) {
-            TbStopWatch sw = TbStopWatch.create();
+            @NotNull TbStopWatch sw = TbStopWatch.create();
             withCallback(generate(ctx, msg),
                     m -> {
                         log.trace("onMsg onSuccess callback, took {}ms, config {}, msg {}", sw.stopAndGetTotalTimeMillis(), config, msg);
@@ -114,7 +118,7 @@ public class TbMsgGeneratorNode implements TbNode {
         }
     }
 
-    private void scheduleTickMsg(TbContext ctx) {
+    private void scheduleTickMsg(@NotNull TbContext ctx) {
         log.trace("scheduleTickMsg, config {}", config);
         long curTs = System.currentTimeMillis();
         if (lastScheduledTs == 0L) {
@@ -127,7 +131,8 @@ public class TbMsgGeneratorNode implements TbNode {
         ctx.tellSelf(tickMsg, curDelay);
     }
 
-    private ListenableFuture<TbMsg> generate(TbContext ctx, TbMsg msg) {
+    @NotNull
+    private ListenableFuture<TbMsg> generate(@NotNull TbContext ctx, @NotNull TbMsg msg) {
         log.trace("generate, config {}", config);
         if (prevMsg == null) {
             prevMsg = ctx.newMsg(null, "", originatorId, msg.getCustomerId(), new TbMsgMetaData(), "{}");

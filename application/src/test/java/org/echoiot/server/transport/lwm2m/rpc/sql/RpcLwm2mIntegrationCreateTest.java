@@ -3,6 +3,8 @@ package org.echoiot.server.transport.lwm2m.rpc.sql;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.eclipse.leshan.core.ResponseCode;
 import org.eclipse.leshan.core.node.LwM2mPath;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.junit.Test;
 import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.transport.lwm2m.rpc.AbstractRpcLwM2MIntegrationTest;
@@ -28,10 +30,10 @@ public class RpcLwm2mIntegrationCreateTest extends AbstractRpcLwM2MIntegrationTe
      */
     @Test
     public void testCreateObjectInstanceWithInstanceIdByIdKey_Result_CREATED() throws Exception {
-        String expectedPath = objectIdVer_19 + "/" + OBJECT_INSTANCE_ID_12;
-        String expectedValue = "{\"" + RESOURCE_ID_0 + "\":{\"0\":\"00AC\"}, \"1\":1}";
+        @NotNull String expectedPath = objectIdVer_19 + "/" + OBJECT_INSTANCE_ID_12;
+        @NotNull String expectedValue = "{\"" + RESOURCE_ID_0 + "\":{\"0\":\"00AC\"}, \"1\":1}";
         String actualResult = sendRPCreateById(expectedPath, expectedValue);
-        ObjectNode rpcActualResult = JacksonUtil.fromString(actualResult, ObjectNode.class);
+        @Nullable ObjectNode rpcActualResult = JacksonUtil.fromString(actualResult, ObjectNode.class);
         assertEquals(ResponseCode.CREATED.getName(), rpcActualResult.get("result").asText());
     }
 
@@ -45,14 +47,14 @@ public class RpcLwm2mIntegrationCreateTest extends AbstractRpcLwM2MIntegrationTe
      */
     @Test
     public void testCreateObjectInstanceWithInstanceIdAlreadyExistsById_Result_BAD_REQUEST() throws Exception {
-        String expectedPath = objectIdVer_19 + "/" + OBJECT_INSTANCE_ID_0;
-        String expectedValue = "{\"" + RESOURCE_ID_0 + "\":{\"0\":\"00AC\"}, \"1\":1}";
+        @NotNull String expectedPath = objectIdVer_19 + "/" + OBJECT_INSTANCE_ID_0;
+        @NotNull String expectedValue = "{\"" + RESOURCE_ID_0 + "\":{\"0\":\"00AC\"}, \"1\":1}";
         String actualResult = sendRPCreateById(expectedPath, expectedValue);
-        ObjectNode rpcActualResult = JacksonUtil.fromString(actualResult, ObjectNode.class);
+        @Nullable ObjectNode rpcActualResult = JacksonUtil.fromString(actualResult, ObjectNode.class);
         assertEquals(ResponseCode.BAD_REQUEST.getName(), rpcActualResult.get("result").asText());
-        String expected = "instance " + OBJECT_INSTANCE_ID_0 + " already exists";
+        @NotNull String expected = "instance " + OBJECT_INSTANCE_ID_0 + " already exists";
         String actual = rpcActualResult.get("error").asText();
-        assertTrue(actual.equals(expected));
+        assertEquals(actual, expected);
     }
 
     /**
@@ -62,14 +64,14 @@ public class RpcLwm2mIntegrationCreateTest extends AbstractRpcLwM2MIntegrationTe
      */
     @Test
     public void testCreateObjectInstanceWithInstanceIdMandatorySingleObjectById_Result_BAD_REQUEST() throws Exception {
-        String expectedPath = objectIdVer_3 + "/" + OBJECT_INSTANCE_ID_1;
-        String expectedValue = "{\"" + RESOURCE_ID_0 + "\":{\"0\":\"00AC\"}}";
+        @NotNull String expectedPath = objectIdVer_3 + "/" + OBJECT_INSTANCE_ID_1;
+        @NotNull String expectedValue = "{\"" + RESOURCE_ID_0 + "\":{\"0\":\"00AC\"}}";
         String actualResult = sendRPCreateById(expectedPath, expectedValue);
-        ObjectNode rpcActualResult = JacksonUtil.fromString(actualResult, ObjectNode.class);
+        @Nullable ObjectNode rpcActualResult = JacksonUtil.fromString(actualResult, ObjectNode.class);
         assertEquals(ResponseCode.BAD_REQUEST.getName(), rpcActualResult.get("result").asText());
-        String expected = "Path " + expectedPath + ". Object must be Multiple !";
+        @NotNull String expected = "Path " + expectedPath + ". Object must be Multiple !";
         String actual = rpcActualResult.get("error").asText();
-        assertTrue(actual.equals(expected));
+        assertEquals(actual, expected);
     }
 
     /**
@@ -79,16 +81,16 @@ public class RpcLwm2mIntegrationCreateTest extends AbstractRpcLwM2MIntegrationTe
      */
     @Test
     public void testCreateObjectInstanceWithInstanceIdSecurityObjectById_Result_BAD_REQUEST() throws Exception {
-        String expectedPath = objectIdVer_0 + "/" + OBJECT_INSTANCE_ID_1;
-        String expectedValue = "{\"" + RESOURCE_ID_0 + "\":{\"2\":4}}";
+        @NotNull String expectedPath = objectIdVer_0 + "/" + OBJECT_INSTANCE_ID_1;
+        @NotNull String expectedValue = "{\"" + RESOURCE_ID_0 + "\":{\"2\":4}}";
         String actualResult = sendRPCreateById(expectedPath, expectedValue);
-        ObjectNode rpcActualResult = JacksonUtil.fromString(actualResult, ObjectNode.class);
+        @Nullable ObjectNode rpcActualResult = JacksonUtil.fromString(actualResult, ObjectNode.class);
         assertEquals(ResponseCode.BAD_REQUEST.getName(), rpcActualResult.get("result").asText());
-        String expectedObjectId = pathIdVerToObjectId((String) expectedPath);
-        LwM2mPath expectedPathId = new LwM2mPath(expectedObjectId);
-        String expected = "Specified object id " + expectedPathId.getObjectId() + " absent in the list supported objects of the client or is security object!";
+        String expectedObjectId = pathIdVerToObjectId(expectedPath);
+        @NotNull LwM2mPath expectedPathId = new LwM2mPath(expectedObjectId);
+        @NotNull String expected = "Specified object id " + expectedPathId.getObjectId() + " absent in the list supported objects of the client or is security object!";
         String actual = rpcActualResult.get("error").asText();
-        assertTrue(actual.equals(expected));
+        assertEquals(actual, expected);
     }
 
     /**
@@ -98,20 +100,20 @@ public class RpcLwm2mIntegrationCreateTest extends AbstractRpcLwM2MIntegrationTe
      */
     @Test
     public void testCreateObjectInstanceWithInstanceIdAbsentObjectById_Result_BAD_REQUEST() throws Exception {
-        String expectedPath = OBJECT_ID_VER_50 + "/" + OBJECT_INSTANCE_ID_1;
-        String expectedValue = "{\"" + RESOURCE_ID_0 + "\":{\"0\":\"00AC\"}}";
+        @NotNull String expectedPath = OBJECT_ID_VER_50 + "/" + OBJECT_INSTANCE_ID_1;
+        @NotNull String expectedValue = "{\"" + RESOURCE_ID_0 + "\":{\"0\":\"00AC\"}}";
         String actualResult = sendRPCreateById(expectedPath, expectedValue);
-        ObjectNode rpcActualResult = JacksonUtil.fromString(actualResult, ObjectNode.class);
+        @Nullable ObjectNode rpcActualResult = JacksonUtil.fromString(actualResult, ObjectNode.class);
         assertEquals(ResponseCode.BAD_REQUEST.getName(), rpcActualResult.get("result").asText());
-        String expectedObjectId = pathIdVerToObjectId((String) expectedPath);
-        LwM2mPath expectedPathId = new LwM2mPath(expectedObjectId);
-        String expected = "Specified object id " + expectedPathId.getObjectId() + " absent in the list supported objects of the client or is security object!";
+        String expectedObjectId = pathIdVerToObjectId(expectedPath);
+        @NotNull LwM2mPath expectedPathId = new LwM2mPath(expectedObjectId);
+        @NotNull String expected = "Specified object id " + expectedPathId.getObjectId() + " absent in the list supported objects of the client or is security object!";
         String actual = rpcActualResult.get("error").asText();
-        assertTrue(actual.equals(expected));
+        assertEquals(actual, expected);
     }
 
     private String sendRPCreateById(String path, String value) throws Exception {
-        String setRpcRequest = "{\"method\": \"Create\", \"params\": {\"id\": \"" + path + "\", \"value\": " + value + " }}";
+        @NotNull String setRpcRequest = "{\"method\": \"Create\", \"params\": {\"id\": \"" + path + "\", \"value\": " + value + " }}";
         return doPostAsync("/api/plugins/rpc/twoway/" + deviceId, setRpcRequest, String.class, status().isOk());
     }
 

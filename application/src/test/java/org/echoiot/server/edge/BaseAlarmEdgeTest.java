@@ -13,6 +13,7 @@ import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.gen.edge.v1.AlarmUpdateMsg;
 import org.echoiot.server.gen.edge.v1.UpdateMsgType;
 import org.echoiot.server.gen.edge.v1.UplinkMsg;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -25,7 +26,7 @@ abstract public class BaseAlarmEdgeTest extends AbstractEdgeTest {
 
     @Test
     public void testSendAlarmToCloud() throws Exception {
-        Device device = saveDeviceOnCloudAndVerifyDeliveryToEdge();
+        @NotNull Device device = saveDeviceOnCloudAndVerifyDeliveryToEdge();
 
         UplinkMsg.Builder uplinkMsgBuilder = UplinkMsg.newBuilder();
         AlarmUpdateMsg.Builder alarmUpdateMgBuilder = AlarmUpdateMsg.newBuilder();
@@ -47,9 +48,9 @@ abstract public class BaseAlarmEdgeTest extends AbstractEdgeTest {
                 new TypeReference<PageData<AlarmInfo>>() {},
                 new PageLink(100), device.getId().getEntityType().name(), device.getUuidId())
                 .getData();
-        Optional<AlarmInfo> foundAlarm = alarms.stream().filter(alarm -> alarm.getType().equals("alarm from edge")).findAny();
+        @NotNull Optional<AlarmInfo> foundAlarm = alarms.stream().filter(alarm -> alarm.getType().equals("alarm from edge")).findAny();
         Assert.assertTrue(foundAlarm.isPresent());
-        AlarmInfo alarmInfo = foundAlarm.get();
+        @NotNull AlarmInfo alarmInfo = foundAlarm.get();
         Assert.assertEquals(device.getId(), alarmInfo.getOriginator());
         Assert.assertEquals(AlarmStatus.ACTIVE_UNACK, alarmInfo.getStatus());
         Assert.assertEquals(AlarmSeverity.CRITICAL, alarmInfo.getSeverity());
@@ -58,8 +59,8 @@ abstract public class BaseAlarmEdgeTest extends AbstractEdgeTest {
     @Test
     public void testAlarms() throws Exception {
         // create alarm
-        Device device = findDeviceByName("Edge Device 1");
-        Alarm alarm = new Alarm();
+        @NotNull Device device = findDeviceByName("Edge Device 1");
+        @NotNull Alarm alarm = new Alarm();
         alarm.setOriginator(device.getId());
         alarm.setStatus(AlarmStatus.ACTIVE_UNACK);
         alarm.setType("alarm");
@@ -69,7 +70,7 @@ abstract public class BaseAlarmEdgeTest extends AbstractEdgeTest {
         Assert.assertTrue(edgeImitator.waitForMessages());
         AbstractMessage latestMessage = edgeImitator.getLatestMessage();
         Assert.assertTrue(latestMessage instanceof AlarmUpdateMsg);
-        AlarmUpdateMsg alarmUpdateMsg = (AlarmUpdateMsg) latestMessage;
+        @NotNull AlarmUpdateMsg alarmUpdateMsg = (AlarmUpdateMsg) latestMessage;
         Assert.assertEquals(UpdateMsgType.ENTITY_CREATED_RPC_MESSAGE, alarmUpdateMsg.getMsgType());
         Assert.assertEquals(savedAlarm.getType(), alarmUpdateMsg.getType());
         Assert.assertEquals(savedAlarm.getName(), alarmUpdateMsg.getName());

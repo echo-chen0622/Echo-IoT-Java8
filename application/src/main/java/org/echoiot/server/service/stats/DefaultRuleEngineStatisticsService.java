@@ -14,6 +14,7 @@ import org.echoiot.server.dao.asset.AssetService;
 import org.echoiot.server.queue.discovery.TbServiceInfoProvider;
 import org.echoiot.server.queue.util.TbRuleEngineComponent;
 import org.echoiot.server.service.telemetry.TelemetrySubscriptionService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.echoiot.server.service.queue.TbRuleEngineConsumerStats;
 
@@ -48,6 +49,7 @@ public class DefaultRuleEngineStatisticsService implements RuleEngineStatisticsS
     private final TelemetrySubscriptionService tsService;
     private final Lock lock = new ReentrantLock();
     private final AssetService assetService;
+    @NotNull
     private final ConcurrentMap<TenantQueueKey, AssetId> tenantQueueAssets;
 
     public DefaultRuleEngineStatisticsService(TelemetrySubscriptionService tsService, TbServiceInfoProvider serviceInfoProvider, AssetService assetService) {
@@ -58,16 +60,16 @@ public class DefaultRuleEngineStatisticsService implements RuleEngineStatisticsS
     }
 
     @Override
-    public void reportQueueStats(long ts, TbRuleEngineConsumerStats ruleEngineStats) {
+    public void reportQueueStats(long ts, @NotNull TbRuleEngineConsumerStats ruleEngineStats) {
         String queueName = ruleEngineStats.getQueueName();
         ruleEngineStats.getTenantStats().forEach((id, stats) -> {
             try {
-                TenantId tenantId = TenantId.fromUUID(id);
+                @NotNull TenantId tenantId = TenantId.fromUUID(id);
                 AssetId serviceAssetId = getServiceAssetId(tenantId, queueName);
                 if (stats.getTotalMsgCounter().get() > 0) {
-                    List<TsKvEntry> tsList = stats.getCounters().entrySet().stream()
-                                                  .map(kv -> new BasicTsKvEntry(ts, new LongDataEntry(kv.getKey(), (long) kv.getValue().get())))
-                                                  .collect(Collectors.toList());
+                    @NotNull List<TsKvEntry> tsList = stats.getCounters().entrySet().stream()
+                                                           .map(kv -> new BasicTsKvEntry(ts, new LongDataEntry(kv.getKey(), (long) kv.getValue().get())))
+                                                           .collect(Collectors.toList());
                     if (!tsList.isEmpty()) {
                         tsService.saveAndNotifyInternal(tenantId, serviceAssetId, tsList, CALLBACK);
                     }
@@ -80,7 +82,7 @@ public class DefaultRuleEngineStatisticsService implements RuleEngineStatisticsS
         });
         ruleEngineStats.getTenantExceptions().forEach((tenantId, e) -> {
             try {
-                TsKvEntry tsKv = new BasicTsKvEntry(e.getTs(), new JsonDataEntry("ruleEngineException", e.toJsonString()));
+                @NotNull TsKvEntry tsKv = new BasicTsKvEntry(e.getTs(), new JsonDataEntry("ruleEngineException", e.toJsonString()));
                 tsService.saveAndNotifyInternal(tenantId, getServiceAssetId(tenantId, queueName), Collections.singletonList(tsKv), CALLBACK);
             } catch (Exception e2) {
                 if (!"Asset is referencing to non-existent tenant!".equalsIgnoreCase(e2.getMessage())) {
@@ -91,7 +93,7 @@ public class DefaultRuleEngineStatisticsService implements RuleEngineStatisticsS
     }
 
     private AssetId getServiceAssetId(TenantId tenantId, String queueName) {
-        TenantQueueKey key = new TenantQueueKey(tenantId, queueName);
+        @NotNull TenantQueueKey key = new TenantQueueKey(tenantId, queueName);
         AssetId assetId = tenantQueueAssets.get(key);
         if (assetId == null) {
             lock.lock();
@@ -118,7 +120,9 @@ public class DefaultRuleEngineStatisticsService implements RuleEngineStatisticsS
 
     @Data
     private static class TenantQueueKey {
+        @NotNull
         private final TenantId tenantId;
+        @NotNull
         private final String queueName;
     }
 }

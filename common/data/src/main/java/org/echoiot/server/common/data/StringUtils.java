@@ -2,6 +2,8 @@ package org.echoiot.server.common.data;
 
 import com.google.common.base.Splitter;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import static org.apache.commons.lang3.StringUtils.repeat;
 
@@ -10,23 +12,24 @@ public class StringUtils {
 
     public static final int INDEX_NOT_FOUND = -1;
 
-    public static boolean isEmpty(String source) {
+    public static boolean isEmpty(@Nullable String source) {
         return source == null || source.isEmpty();
     }
 
-    public static boolean isBlank(String source) {
+    public static boolean isBlank(@Nullable String source) {
         return source == null || source.isEmpty() || source.trim().isEmpty();
     }
 
-    public static boolean isNotEmpty(String source) {
+    public static boolean isNotEmpty(@Nullable String source) {
         return source != null && !source.isEmpty();
     }
 
-    public static boolean isNotBlank(String source) {
+    public static boolean isNotBlank(@Nullable String source) {
         return source != null && !source.isEmpty() && !source.trim().isEmpty();
     }
 
-    public static String removeStart(final String str, final String remove) {
+    @Nullable
+    public static String removeStart(@NotNull final String str, @NotNull final String remove) {
         if (isEmpty(str) || isEmpty(remove)) {
             return str;
         }
@@ -36,7 +39,8 @@ public class StringUtils {
         return str;
     }
 
-    public static String substringBefore(final String str, final String separator) {
+    @Nullable
+    public static String substringBefore(@NotNull final String str, @Nullable final String separator) {
         if (isEmpty(str) || separator == null) {
             return str;
         }
@@ -50,7 +54,7 @@ public class StringUtils {
         return str.substring(0, pos);
     }
 
-    public static String substringBetween(final String str, final String open, final String close) {
+    public static String substringBetween(@Nullable final String str, @Nullable final String open, @Nullable final String close) {
         if (str == null || open == null || close == null) {
             return null;
         }
@@ -64,10 +68,11 @@ public class StringUtils {
         return null;
     }
 
-    public static String obfuscate(String input, int seenMargin, char obfuscationChar,
+    @NotNull
+    public static String obfuscate(@NotNull String input, int seenMargin, char obfuscationChar,
                                    int startIndexInclusive, int endIndexExclusive) {
 
-        String part = input.substring(startIndexInclusive, endIndexExclusive);
+        @NotNull String part = input.substring(startIndexInclusive, endIndexExclusive);
         String obfuscatedPart;
         if (part.length() <= seenMargin * 2) {
             obfuscatedPart = repeat(obfuscationChar, part.length());
@@ -79,11 +84,12 @@ public class StringUtils {
         return input.substring(0, startIndexInclusive) + obfuscatedPart + input.substring(endIndexExclusive);
     }
 
-    public static Iterable<String> split(String value, int maxPartSize) {
+    @NotNull
+    public static Iterable<String> split(@NotNull String value, int maxPartSize) {
         return Splitter.fixedLength(maxPartSize).split(value);
     }
 
-    public static boolean equalsIgnoreCase(String str1, String str2) {
+    public static boolean equalsIgnoreCase(@Nullable String str1, @Nullable String str2) {
         return str1 == null ? str2 == null : str1.equalsIgnoreCase(str2);
     }
 
@@ -131,9 +137,9 @@ public class StringUtils {
         return org.apache.commons.lang3.StringUtils.substringAfterLast(str, sep);
     }
 
-    public static boolean containedByAny(String searchString, String... strings) {
+    public static boolean containedByAny(@Nullable String searchString, @NotNull String... strings) {
         if (searchString == null) return false;
-        for (String string : strings) {
+        for (@Nullable String string : strings) {
             if (string != null && string.contains(searchString)) {
                 return true;
             }
@@ -145,22 +151,27 @@ public class StringUtils {
         return org.apache.commons.lang3.StringUtils.contains(seq, searchSeq);
     }
 
+    @NotNull
     public static String randomNumeric(int length) {
         return RandomStringUtils.randomNumeric(length);
     }
 
+    @NotNull
     public static String random(int length) {
         return RandomStringUtils.random(length);
     }
 
+    @NotNull
     public static String random(int length, String chars) {
         return RandomStringUtils.random(length, chars);
     }
 
+    @NotNull
     public static String randomAlphanumeric(int count) {
         return RandomStringUtils.randomAlphanumeric(count);
     }
 
+    @NotNull
     public static String randomAlphabetic(int count) {
         return RandomStringUtils.randomAlphabetic(count);
     }

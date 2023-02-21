@@ -3,6 +3,7 @@ package org.echoiot.server.service.security.auth.rest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -38,7 +39,7 @@ public class RestPublicLoginProcessingFilter extends AbstractAuthenticationProce
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
+    public Authentication attemptAuthentication(@NotNull HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException, IOException, ServletException {
         if (!HttpMethod.POST.name().equals(request.getMethod())) {
             if(log.isDebugEnabled()) {
@@ -58,9 +59,9 @@ public class RestPublicLoginProcessingFilter extends AbstractAuthenticationProce
             throw new AuthenticationServiceException("Public Id is not provided");
         }
 
-        UserPrincipal principal = new UserPrincipal(UserPrincipal.Type.PUBLIC_ID, loginRequest.getPublicId());
+        @NotNull UserPrincipal principal = new UserPrincipal(UserPrincipal.Type.PUBLIC_ID, loginRequest.getPublicId());
 
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(principal, "");
+        @NotNull UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(principal, "");
 
         return this.getAuthenticationManager().authenticate(token);
     }

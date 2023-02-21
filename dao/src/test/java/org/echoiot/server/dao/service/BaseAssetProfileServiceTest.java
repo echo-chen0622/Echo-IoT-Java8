@@ -13,6 +13,7 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.dao.exception.DataValidationException;
+import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -27,14 +28,14 @@ import java.util.stream.Collectors;
 
 public abstract class BaseAssetProfileServiceTest extends AbstractServiceTest {
 
-    private IdComparator<AssetProfile> idComparator = new IdComparator<>();
-    private IdComparator<AssetProfileInfo> assetProfileInfoIdComparator = new IdComparator<>();
+    private final IdComparator<AssetProfile> idComparator = new IdComparator<>();
+    private final IdComparator<AssetProfileInfo> assetProfileInfoIdComparator = new IdComparator<>();
 
     private TenantId tenantId;
 
     @Before
     public void before() {
-        Tenant tenant = new Tenant();
+        @NotNull Tenant tenant = new Tenant();
         tenant.setTitle("My tenant");
         Tenant savedTenant = tenantService.saveTenant(tenant);
         Assert.assertNotNull(savedTenant);
@@ -48,7 +49,7 @@ public abstract class BaseAssetProfileServiceTest extends AbstractServiceTest {
 
     @Test
     public void testSaveAssetProfile() {
-        AssetProfile assetProfile = this.createAssetProfile(tenantId, "Asset Profile");
+        @NotNull AssetProfile assetProfile = this.createAssetProfile(tenantId, "Asset Profile");
         AssetProfile savedAssetProfile = assetProfileService.saveAssetProfile(assetProfile);
         Assert.assertNotNull(savedAssetProfile);
         Assert.assertNotNull(savedAssetProfile.getId());
@@ -65,7 +66,7 @@ public abstract class BaseAssetProfileServiceTest extends AbstractServiceTest {
 
     @Test
     public void testFindAssetProfileById() {
-        AssetProfile assetProfile = this.createAssetProfile(tenantId, "Asset Profile");
+        @NotNull AssetProfile assetProfile = this.createAssetProfile(tenantId, "Asset Profile");
         AssetProfile savedAssetProfile = assetProfileService.saveAssetProfile(assetProfile);
         AssetProfile foundAssetProfile = assetProfileService.findAssetProfileById(tenantId, savedAssetProfile.getId());
         Assert.assertNotNull(foundAssetProfile);
@@ -74,7 +75,7 @@ public abstract class BaseAssetProfileServiceTest extends AbstractServiceTest {
 
     @Test
     public void testFindAssetProfileInfoById() {
-        AssetProfile assetProfile = this.createAssetProfile(tenantId, "Asset Profile");
+        @NotNull AssetProfile assetProfile = this.createAssetProfile(tenantId, "Asset Profile");
         AssetProfile savedAssetProfile = assetProfileService.saveAssetProfile(assetProfile);
         AssetProfileInfo foundAssetProfileInfo = assetProfileService.findAssetProfileInfoById(tenantId, savedAssetProfile.getId());
         Assert.assertNotNull(foundAssetProfileInfo);
@@ -100,9 +101,9 @@ public abstract class BaseAssetProfileServiceTest extends AbstractServiceTest {
 
     @Test
     public void testFindOrCreateAssetProfile() throws ExecutionException, InterruptedException {
-        ListeningExecutorService testExecutor = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(100, EchoiotThreadFactory.forName(getClass().getSimpleName() + "-test-scope")));
+        @NotNull ListeningExecutorService testExecutor = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(100, EchoiotThreadFactory.forName(getClass().getSimpleName() + "-test-scope")));
         try {
-            List<ListenableFuture<AssetProfile>> futures = new ArrayList<>();
+            @NotNull List<ListenableFuture<AssetProfile>> futures = new ArrayList<>();
             for (int i = 0; i < 50; i++) {
                 futures.add(testExecutor.submit(() -> assetProfileService.findOrCreateAssetProfile(tenantId, "Asset Profile 1")));
                 futures.add(testExecutor.submit(() -> assetProfileService.findOrCreateAssetProfile(tenantId, "Asset Profile 2")));
@@ -117,8 +118,8 @@ public abstract class BaseAssetProfileServiceTest extends AbstractServiceTest {
 
     @Test
     public void testSetDefaultAssetProfile() {
-        AssetProfile assetProfile1 = this.createAssetProfile(tenantId, "Asset Profile 1");
-        AssetProfile assetProfile2 = this.createAssetProfile(tenantId, "Asset Profile 2");
+        @NotNull AssetProfile assetProfile1 = this.createAssetProfile(tenantId, "Asset Profile 1");
+        @NotNull AssetProfile assetProfile2 = this.createAssetProfile(tenantId, "Asset Profile 2");
 
         AssetProfile savedAssetProfile1 = assetProfileService.saveAssetProfile(assetProfile1);
         AssetProfile savedAssetProfile2 = assetProfileService.saveAssetProfile(assetProfile2);
@@ -137,24 +138,24 @@ public abstract class BaseAssetProfileServiceTest extends AbstractServiceTest {
 
     @Test(expected = DataValidationException.class)
     public void testSaveAssetProfileWithEmptyName() {
-        AssetProfile assetProfile = new AssetProfile();
+        @NotNull AssetProfile assetProfile = new AssetProfile();
         assetProfile.setTenantId(tenantId);
         assetProfileService.saveAssetProfile(assetProfile);
     }
 
     @Test(expected = DataValidationException.class)
     public void testSaveAssetProfileWithSameName() {
-        AssetProfile assetProfile = this.createAssetProfile(tenantId, "Asset Profile");
+        @NotNull AssetProfile assetProfile = this.createAssetProfile(tenantId, "Asset Profile");
         assetProfileService.saveAssetProfile(assetProfile);
-        AssetProfile assetProfile2 = this.createAssetProfile(tenantId, "Asset Profile");
+        @NotNull AssetProfile assetProfile2 = this.createAssetProfile(tenantId, "Asset Profile");
         assetProfileService.saveAssetProfile(assetProfile2);
     }
 
     @Test(expected = DataValidationException.class)
     public void testDeleteAssetProfileWithExistingAsset() {
-        AssetProfile assetProfile = this.createAssetProfile(tenantId, "Asset Profile");
+        @NotNull AssetProfile assetProfile = this.createAssetProfile(tenantId, "Asset Profile");
         AssetProfile savedAssetProfile = assetProfileService.saveAssetProfile(assetProfile);
-        Asset asset = new Asset();
+        @NotNull Asset asset = new Asset();
         asset.setTenantId(tenantId);
         asset.setName("Test asset");
         asset.setAssetProfileId(savedAssetProfile.getId());
@@ -164,7 +165,7 @@ public abstract class BaseAssetProfileServiceTest extends AbstractServiceTest {
 
     @Test
     public void testDeleteAssetProfile() {
-        AssetProfile assetProfile = this.createAssetProfile(tenantId, "Asset Profile");
+        @NotNull AssetProfile assetProfile = this.createAssetProfile(tenantId, "Asset Profile");
         AssetProfile savedAssetProfile = assetProfileService.saveAssetProfile(assetProfile);
         assetProfileService.deleteAssetProfile(tenantId, savedAssetProfile.getId());
         AssetProfile foundAssetProfile = assetProfileService.findAssetProfileById(tenantId, savedAssetProfile.getId());
@@ -174,7 +175,7 @@ public abstract class BaseAssetProfileServiceTest extends AbstractServiceTest {
     @Test
     public void testFindAssetProfiles() {
 
-        List<AssetProfile> assetProfiles = new ArrayList<>();
+        @NotNull List<AssetProfile> assetProfiles = new ArrayList<>();
         PageLink pageLink = new PageLink(17);
         PageData<AssetProfile> pageData = assetProfileService.findAssetProfiles(tenantId, pageLink);
         Assert.assertFalse(pageData.hasNext());
@@ -182,11 +183,11 @@ public abstract class BaseAssetProfileServiceTest extends AbstractServiceTest {
         assetProfiles.addAll(pageData.getData());
 
         for (int i = 0; i < 28; i++) {
-            AssetProfile assetProfile = this.createAssetProfile(tenantId, "Asset Profile" + i);
+            @NotNull AssetProfile assetProfile = this.createAssetProfile(tenantId, "Asset Profile" + i);
             assetProfiles.add(assetProfileService.saveAssetProfile(assetProfile));
         }
 
-        List<AssetProfile> loadedAssetProfiles = new ArrayList<>();
+        @NotNull List<AssetProfile> loadedAssetProfiles = new ArrayList<>();
         pageLink = new PageLink(17);
         do {
             pageData = assetProfileService.findAssetProfiles(tenantId, pageLink);
@@ -201,7 +202,7 @@ public abstract class BaseAssetProfileServiceTest extends AbstractServiceTest {
 
         Assert.assertEquals(assetProfiles, loadedAssetProfiles);
 
-        for (AssetProfile assetProfile : loadedAssetProfiles) {
+        for (@NotNull AssetProfile assetProfile : loadedAssetProfiles) {
             if (!assetProfile.isDefault()) {
                 assetProfileService.deleteAssetProfile(tenantId, assetProfile.getId());
             }
@@ -216,7 +217,7 @@ public abstract class BaseAssetProfileServiceTest extends AbstractServiceTest {
     @Test
     public void testFindAssetProfileInfos() {
 
-        List<AssetProfile> assetProfiles = new ArrayList<>();
+        @NotNull List<AssetProfile> assetProfiles = new ArrayList<>();
         PageLink pageLink = new PageLink(17);
         PageData<AssetProfile> assetProfilePageData = assetProfileService.findAssetProfiles(tenantId, pageLink);
         Assert.assertFalse(assetProfilePageData.hasNext());
@@ -224,11 +225,11 @@ public abstract class BaseAssetProfileServiceTest extends AbstractServiceTest {
         assetProfiles.addAll(assetProfilePageData.getData());
 
         for (int i = 0; i < 28; i++) {
-            AssetProfile assetProfile = this.createAssetProfile(tenantId, "Asset Profile" + i);
+            @NotNull AssetProfile assetProfile = this.createAssetProfile(tenantId, "Asset Profile" + i);
             assetProfiles.add(assetProfileService.saveAssetProfile(assetProfile));
         }
 
-        List<AssetProfileInfo> loadedAssetProfileInfos = new ArrayList<>();
+        @NotNull List<AssetProfileInfo> loadedAssetProfileInfos = new ArrayList<>();
         pageLink = new PageLink(17);
         PageData<AssetProfileInfo> pageData;
         do {
@@ -243,13 +244,13 @@ public abstract class BaseAssetProfileServiceTest extends AbstractServiceTest {
         Collections.sort(assetProfiles, idComparator);
         Collections.sort(loadedAssetProfileInfos, assetProfileInfoIdComparator);
 
-        List<AssetProfileInfo> assetProfileInfos = assetProfiles.stream()
-                .map(assetProfile -> new AssetProfileInfo(assetProfile.getId(),
+        @NotNull List<AssetProfileInfo> assetProfileInfos = assetProfiles.stream()
+                                                                         .map(assetProfile -> new AssetProfileInfo(assetProfile.getId(),
                         assetProfile.getName(), assetProfile.getImage(), assetProfile.getDefaultDashboardId())).collect(Collectors.toList());
 
         Assert.assertEquals(assetProfileInfos, loadedAssetProfileInfos);
 
-        for (AssetProfile assetProfile : assetProfiles) {
+        for (@NotNull AssetProfile assetProfile : assetProfiles) {
             if (!assetProfile.isDefault()) {
                 assetProfileService.deleteAssetProfile(tenantId, assetProfile.getId());
             }

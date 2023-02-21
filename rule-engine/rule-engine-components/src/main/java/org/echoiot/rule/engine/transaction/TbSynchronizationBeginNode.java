@@ -9,6 +9,7 @@ import org.echoiot.rule.engine.api.TbNodeConfiguration;
 import org.echoiot.rule.engine.api.TbNodeException;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.msg.TbMsg;
+import org.jetbrains.annotations.NotNull;
 
 @Slf4j
 @RuleNode(
@@ -29,7 +30,7 @@ public class TbSynchronizationBeginNode implements TbNode {
     }
 
     @Override
-    public void onMsg(TbContext ctx, TbMsg msg) {
+    public void onMsg(@NotNull TbContext ctx, TbMsg msg) {
         log.warn("Synchronization Start/End nodes are deprecated since TB 2.5. Use queue with submit strategy SEQUENTIAL_BY_ORIGINATOR instead.");
         ctx.tellSuccess(msg);
     }

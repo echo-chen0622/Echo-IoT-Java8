@@ -6,11 +6,13 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.id.TenantProfileId;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
+import org.jetbrains.annotations.Nullable;
 
 public interface TenantProfileService {
 
     TenantProfile findTenantProfileById(TenantId tenantId, TenantProfileId tenantProfileId);
 
+    @Nullable
     EntityInfo findTenantProfileInfoById(TenantId tenantId, TenantProfileId tenantProfileId);
 
     TenantProfile saveTenantProfile(TenantId tenantId, TenantProfile tenantProfile);
@@ -25,6 +27,7 @@ public interface TenantProfileService {
 
     TenantProfile findDefaultTenantProfile(TenantId tenantId);
 
+    @Nullable
     EntityInfo findDefaultTenantProfileInfo(TenantId tenantId);
 
     boolean setDefaultTenantProfile(TenantId tenantId, TenantProfileId tenantProfileId);

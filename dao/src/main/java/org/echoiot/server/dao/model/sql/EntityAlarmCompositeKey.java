@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.echoiot.server.common.data.alarm.EntityAlarm;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Transient;
 import java.io.Serializable;
@@ -20,7 +21,7 @@ public class EntityAlarmCompositeKey implements Serializable {
     private UUID entityId;
     private UUID alarmId;
 
-    public EntityAlarmCompositeKey(EntityAlarm entityAlarm) {
+    public EntityAlarmCompositeKey(@NotNull EntityAlarm entityAlarm) {
         this.entityId = entityAlarm.getEntityId().getId();
         this.alarmId = entityAlarm.getAlarmId().getId();
     }

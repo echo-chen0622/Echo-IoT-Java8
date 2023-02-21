@@ -16,6 +16,7 @@ import org.echoiot.server.queue.memory.InMemoryTbQueueProducer;
 import org.echoiot.server.queue.settings.TbQueueCoreSettings;
 import org.echoiot.server.queue.settings.TbQueueTransportApiSettings;
 import org.echoiot.server.queue.settings.TbQueueTransportNotificationSettings;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Component;
 
@@ -43,10 +44,10 @@ public class InMemoryTbTransportQueueFactory implements TbTransportQueueFactory 
 
     @Override
     public TbQueueRequestTemplate<TbProtoQueueMsg<TransportApiRequestMsg>, TbProtoQueueMsg<TransportApiResponseMsg>> createTransportApiRequestTemplate() {
-        InMemoryTbQueueProducer<TbProtoQueueMsg<TransportApiRequestMsg>> producerTemplate =
+        @NotNull InMemoryTbQueueProducer<TbProtoQueueMsg<TransportApiRequestMsg>> producerTemplate =
                 new InMemoryTbQueueProducer<>(storage, transportApiSettings.getRequestsTopic());
 
-        InMemoryTbQueueConsumer<TbProtoQueueMsg<TransportApiResponseMsg>> consumerTemplate =
+        @NotNull InMemoryTbQueueConsumer<TbProtoQueueMsg<TransportApiResponseMsg>> consumerTemplate =
                 new InMemoryTbQueueConsumer<>(storage, transportApiSettings.getResponsesTopic() + "." + serviceInfoProvider.getServiceId());
 
         DefaultTbQueueRequestTemplate.DefaultTbQueueRequestTemplateBuilder
@@ -71,21 +72,25 @@ public class InMemoryTbTransportQueueFactory implements TbTransportQueueFactory 
         return templateBuilder.build();
     }
 
+    @NotNull
     @Override
     public TbQueueProducer<TbProtoQueueMsg<ToRuleEngineMsg>> createRuleEngineMsgProducer() {
         return new InMemoryTbQueueProducer<>(storage, transportApiSettings.getRequestsTopic());
     }
 
+    @NotNull
     @Override
     public TbQueueProducer<TbProtoQueueMsg<ToCoreMsg>> createTbCoreMsgProducer() {
         return new InMemoryTbQueueProducer<>(storage, coreSettings.getTopic());
     }
 
+    @NotNull
     @Override
     public TbQueueConsumer<TbProtoQueueMsg<ToTransportMsg>> createTransportNotificationsConsumer() {
         return new InMemoryTbQueueConsumer<>(storage, transportNotificationSettings.getNotificationsTopic() + "." + serviceInfoProvider.getServiceId());
     }
 
+    @NotNull
     @Override
     public TbQueueProducer<TbProtoQueueMsg<TransportProtos.ToUsageStatsServiceMsg>> createToUsageStatsServiceMsgProducer() {
         return new InMemoryTbQueueProducer<>(storage, coreSettings.getUsageStatsTopic());

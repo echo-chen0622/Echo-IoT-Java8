@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.stream.Stream;
 
@@ -33,22 +34,24 @@ public class LwM2mResourceObserve {
         this.keyName = getCamelCase (this.name);
     }
 
-    private String getCamelCase (String name) {
+    @NotNull
+    private String getCamelCase(String name) {
         name = name.replaceAll("-", " ");
         name = name.replaceAll("_", " ");
-        String [] nameCamel1 = name.split(" ");
-        String [] nameCamel2 = new String[nameCamel1.length];
-        int[] idx = { 0 };
+        @NotNull String [] nameCamel1 = name.split(" ");
+        @NotNull String [] nameCamel2 = new String[nameCamel1.length];
+        @NotNull int[] idx = {0 };
         Stream.of(nameCamel1).forEach((s -> {
             nameCamel2[idx[0]] = toProperCase(idx[0]++,  s);
         }));
         return String.join("", nameCamel2);
     }
 
-    private String toProperCase(int idx, String s) {
+    @NotNull
+    private String toProperCase(int idx, @NotNull String s) {
         if (!s.isEmpty() && s.length()> 0) {
-            String s1 = (idx == 0) ? s.substring(0, 1).toLowerCase() : s.substring(0, 1).toUpperCase();
-            String s2 = "";
+            @NotNull String s1 = (idx == 0) ? s.substring(0, 1).toLowerCase() : s.substring(0, 1).toUpperCase();
+            @NotNull String s2 = "";
             if (s.length()> 1) s2 = s.substring(1).toLowerCase();
             s = s1 + s2;
         }

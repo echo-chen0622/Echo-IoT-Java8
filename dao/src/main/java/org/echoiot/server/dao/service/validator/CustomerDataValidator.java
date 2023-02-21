@@ -11,6 +11,8 @@ import org.echoiot.server.dao.exception.DataValidationException;
 import org.echoiot.server.dao.service.DataValidator;
 import org.echoiot.server.dao.tenant.TbTenantProfileCache;
 import org.echoiot.server.dao.tenant.TenantService;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -20,18 +22,18 @@ import java.util.Optional;
 @Component
 public class CustomerDataValidator extends DataValidator<Customer> {
 
-    @Autowired
+    @Resource
     private CustomerDao customerDao;
 
-    @Autowired
+    @Resource
     private TenantService tenantService;
 
-    @Autowired
+    @Resource
     @Lazy
     private TbTenantProfileCache tenantProfileCache;
 
     @Override
-    protected void validateCreate(TenantId tenantId, Customer customer) {
+    protected void validateCreate(TenantId tenantId, @NotNull Customer customer) {
         DefaultTenantProfileConfiguration profileConfiguration =
                 (DefaultTenantProfileConfiguration) tenantProfileCache.get(tenantId).getProfileData().getConfiguration();
         long maxCustomers = profileConfiguration.getMaxCustomers();
@@ -44,8 +46,9 @@ public class CustomerDataValidator extends DataValidator<Customer> {
         );
     }
 
+    @Nullable
     @Override
-    protected Customer validateUpdate(TenantId tenantId, Customer customer) {
+    protected Customer validateUpdate(TenantId tenantId, @NotNull Customer customer) {
         Optional<Customer> customerOpt = customerDao.findCustomersByTenantIdAndTitle(customer.getTenantId().getId(), customer.getTitle());
         customerOpt.ifPresent(
                 c -> {
@@ -58,7 +61,7 @@ public class CustomerDataValidator extends DataValidator<Customer> {
     }
 
     @Override
-    protected void validateDataImpl(TenantId tenantId, Customer customer) {
+    protected void validateDataImpl(TenantId tenantId, @NotNull Customer customer) {
         if (StringUtils.isEmpty(customer.getTitle())) {
             throw new DataValidationException("Customer title should be specified!");
         }

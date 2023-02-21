@@ -2,6 +2,7 @@ package org.echoiot.server.service.edge.rpc.constructor;
 
 import org.echoiot.server.common.data.edge.Edge;
 import org.echoiot.server.queue.util.TbCoreComponent;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.gen.edge.v1.EdgeConfiguration;
@@ -10,7 +11,8 @@ import org.echoiot.server.gen.edge.v1.EdgeConfiguration;
 @TbCoreComponent
 public class EdgeMsgConstructor {
 
-    public EdgeConfiguration constructEdgeConfiguration(Edge edge) {
+    @NotNull
+    public EdgeConfiguration constructEdgeConfiguration(@NotNull Edge edge) {
         EdgeConfiguration.Builder builder = EdgeConfiguration.newBuilder()
                 .setEdgeIdMSB(edge.getId().getId().getMostSignificantBits())
                 .setEdgeIdLSB(edge.getId().getId().getLeastSignificantBits())

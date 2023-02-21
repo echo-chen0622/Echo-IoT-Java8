@@ -5,6 +5,7 @@ import org.echoiot.server.common.data.audit.ActionType;
 import org.echoiot.server.common.data.audit.AuditLog;
 import org.echoiot.server.common.data.page.TimePageLink;
 import org.echoiot.server.dao.audit.AuditLogDao;
+import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -28,6 +29,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 public class JpaAuditLogDaoTest extends AbstractJpaDaoTest {
+    @NotNull
     List<AuditLog> auditLogList = new ArrayList<>();
     UUID tenantId;
     CustomerId customerId1;
@@ -37,14 +39,14 @@ public class JpaAuditLogDaoTest extends AbstractJpaDaoTest {
     EntityId entityId1;
     EntityId entityId2;
     AuditLog neededFoundedAuditLog;
-    @Autowired
+    @Resource
     private AuditLogDao auditLogDao;
 
     @Before
     public void setUp() {
         setUpIds();
         for (int i = 0; i < 60; i++) {
-            ActionType actionType = i % 2 == 0 ? ActionType.ADDED : ActionType.DELETED;
+            @NotNull ActionType actionType = i % 2 == 0 ? ActionType.ADDED : ActionType.DELETED;
             CustomerId customerId = i % 4 == 0 ? customerId1 : customerId2;
             UserId userId = i % 6 == 0 ? userId1 : userId2;
             EntityId entityId = i % 10 == 0 ? entityId1 : entityId2;
@@ -67,7 +69,7 @@ public class JpaAuditLogDaoTest extends AbstractJpaDaoTest {
 
     @After
     public void tearDown() {
-        for (AuditLog auditLog : auditLogList) {
+        for (@NotNull AuditLog auditLog : auditLogList) {
             auditLogDao.removeById(TenantId.fromUUID(tenantId), auditLog.getUuidId());
         }
         auditLogList.clear();
@@ -126,13 +128,13 @@ public class JpaAuditLogDaoTest extends AbstractJpaDaoTest {
         checkFoundedAuditLogsList(foundedAuditLogs, 6);
     }
 
-    private void checkFoundedAuditLogsList(List<AuditLog> foundedAuditLogs, int neededSizeForFoundedList) {
+    private void checkFoundedAuditLogsList(@NotNull List<AuditLog> foundedAuditLogs, int neededSizeForFoundedList) {
         assertNotNull(foundedAuditLogs);
         assertEquals(neededSizeForFoundedList, foundedAuditLogs.size());
     }
 
     private AuditLog createAuditLog(int number, ActionType actionType, CustomerId customerId, UserId userId, EntityId entityId) {
-        AuditLog auditLog = new AuditLog();
+        @NotNull AuditLog auditLog = new AuditLog();
         auditLog.setTenantId(TenantId.fromUUID(tenantId));
         auditLog.setCustomerId(customerId);
         auditLog.setUserId(userId);

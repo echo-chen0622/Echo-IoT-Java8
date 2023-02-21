@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.echoiot.server.common.data.EntityViewInfo;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,9 +26,9 @@ public class EntityViewInfoEntity extends AbstractEntityViewEntity<EntityViewInf
         super();
     }
 
-    public EntityViewInfoEntity(EntityViewEntity entityViewEntity,
+    public EntityViewInfoEntity(@NotNull EntityViewEntity entityViewEntity,
                                 String customerTitle,
-                                Object customerAdditionalInfo) {
+                                @Nullable Object customerAdditionalInfo) {
         super(entityViewEntity);
         this.customerTitle = customerTitle;
         if (customerAdditionalInfo != null && ((JsonNode)customerAdditionalInfo).has("isPublic")) {
@@ -36,6 +38,7 @@ public class EntityViewInfoEntity extends AbstractEntityViewEntity<EntityViewInf
         }
     }
 
+    @NotNull
     @Override
     public EntityViewInfo toData() {
         return new EntityViewInfo(super.toEntityView(), customerTitle, customerIsPublic);

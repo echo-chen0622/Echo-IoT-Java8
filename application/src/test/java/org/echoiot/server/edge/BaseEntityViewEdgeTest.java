@@ -12,6 +12,7 @@ import org.echoiot.server.gen.edge.v1.EntityViewUpdateMsg;
 import org.echoiot.server.gen.edge.v1.EntityViewsRequestMsg;
 import org.echoiot.server.gen.edge.v1.UpdateMsgType;
 import org.echoiot.server.gen.edge.v1.UplinkMsg;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -25,8 +26,8 @@ abstract public class BaseEntityViewEdgeTest extends AbstractEdgeTest {
     public void testEntityViews() throws Exception {
         // create entity view and assign to edge
         edgeImitator.expectMessageAmount(1);
-        Device device = findDeviceByName("Edge Device 1");
-        EntityView entityView = new EntityView();
+        @NotNull Device device = findDeviceByName("Edge Device 1");
+        @NotNull EntityView entityView = new EntityView();
         entityView.setName("Edge EntityView 1");
         entityView.setType("test");
         entityView.setEntityId(device.getId());
@@ -43,7 +44,7 @@ abstract public class BaseEntityViewEdgeTest extends AbstractEdgeTest {
         Assert.assertTrue(edgeImitator.waitForMessages());
         AbstractMessage latestMessage = edgeImitator.getLatestMessage();
         Assert.assertTrue(latestMessage instanceof EntityViewUpdateMsg);
-        EntityViewUpdateMsg entityViewUpdateMsg = (EntityViewUpdateMsg) latestMessage;
+        @NotNull EntityViewUpdateMsg entityViewUpdateMsg = (EntityViewUpdateMsg) latestMessage;
         Assert.assertEquals(UpdateMsgType.ENTITY_UPDATED_RPC_MESSAGE, entityViewUpdateMsg.getMsgType());
         Assert.assertEquals(savedEntityView.getName(), entityViewUpdateMsg.getName());
 
@@ -96,7 +97,7 @@ abstract public class BaseEntityViewEdgeTest extends AbstractEdgeTest {
         verifyEntityViewUpdateMsg(savedEntityView, device);
 
         // assign entity view #2 to customer
-        Customer customer = new Customer();
+        @NotNull Customer customer = new Customer();
         customer.setTitle("Edge Customer");
         Customer savedCustomer = doPost("/api/customer", customer, Customer.class);
         edgeImitator.expectMessageAmount(2);
@@ -141,10 +142,10 @@ abstract public class BaseEntityViewEdgeTest extends AbstractEdgeTest {
 
     }
 
-    private void verifyEntityViewUpdateMsg(EntityView entityView, Device device) throws InvalidProtocolBufferException {
+    private void verifyEntityViewUpdateMsg(@NotNull EntityView entityView, @NotNull Device device) throws InvalidProtocolBufferException {
         AbstractMessage latestMessage = edgeImitator.getLatestMessage();
         Assert.assertTrue(latestMessage instanceof EntityViewUpdateMsg);
-        EntityViewUpdateMsg entityViewUpdateMsg = (EntityViewUpdateMsg) latestMessage;
+        @NotNull EntityViewUpdateMsg entityViewUpdateMsg = (EntityViewUpdateMsg) latestMessage;
         Assert.assertEquals(UpdateMsgType.ENTITY_CREATED_RPC_MESSAGE, entityViewUpdateMsg.getMsgType());
         Assert.assertEquals(entityView.getType(), entityViewUpdateMsg.getType());
         Assert.assertEquals(entityView.getName(), entityViewUpdateMsg.getName());

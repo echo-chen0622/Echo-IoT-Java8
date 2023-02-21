@@ -3,6 +3,7 @@ package org.echoiot.server.exception;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.echoiot.server.common.data.exception.EchoiotErrorCode;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 
 @ApiModel
@@ -15,6 +16,7 @@ public class EchoiotCredentialsExpiredResponse extends EchoiotErrorResponse {
         this.resetToken = resetToken;
     }
 
+    @NotNull
     public static EchoiotCredentialsExpiredResponse of(final String message, final String resetToken) {
         return new EchoiotCredentialsExpiredResponse(message, resetToken);
     }

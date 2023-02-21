@@ -8,6 +8,7 @@ import org.eclipse.leshan.core.request.DiscoverRequest;
 import org.eclipse.leshan.core.response.DiscoverResponse;
 import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.transport.lwm2m.server.client.LwM2mClient;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
@@ -19,7 +20,8 @@ public class RpcDiscoverCallback extends RpcLwM2MDownlinkCallback<DiscoverReques
         super(transportService, client, requestMsg, callback);
     }
 
-    protected Optional<String> serializeSuccessfulResponse(DiscoverResponse response) {
+    @NotNull
+    protected Optional<String> serializeSuccessfulResponse(@NotNull DiscoverResponse response) {
         return Optional.of(serializer.serialize(response.getObjectLinks()));
     }
 

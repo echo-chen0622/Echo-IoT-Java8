@@ -2,6 +2,7 @@ package org.echoiot.server.dao.service;
 
 import com.fasterxml.jackson.databind.node.TextNode;
 import org.echoiot.server.common.data.asset.Asset;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -23,7 +24,7 @@ public class NoXssValidatorTest {
             "123 <input type=text value=a onfocus=alert(1337) AUTOFOCUS>bebe"
     })
     public void givenEntityWithMaliciousPropertyValue_thenReturnValidationError(String maliciousString) {
-        Asset invalidAsset = new Asset();
+        @NotNull Asset invalidAsset = new Asset();
         invalidAsset.setName(maliciousString);
 
         assertThatThrownBy(() -> {
@@ -33,8 +34,8 @@ public class NoXssValidatorTest {
 
     @Test
     public void givenEntityWithMaliciousValueInAdditionalInfo_thenReturnValidationError() {
-        Asset invalidAsset = new Asset();
-        String maliciousValue = "qwerty<script>alert(document.cookie)</script>qwerty";
+        @NotNull Asset invalidAsset = new Asset();
+        @NotNull String maliciousValue = "qwerty<script>alert(document.cookie)</script>qwerty";
         invalidAsset.setAdditionalInfo(JacksonUtil.newObjectNode()
                 .set("description", new TextNode(maliciousValue)));
 

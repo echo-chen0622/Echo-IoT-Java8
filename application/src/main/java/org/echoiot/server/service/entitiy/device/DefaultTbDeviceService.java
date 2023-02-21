@@ -23,6 +23,8 @@ import org.echoiot.server.dao.device.claim.ReclaimResult;
 import org.echoiot.server.dao.tenant.TenantService;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.entitiy.AbstractTbEntityService;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,14 +35,19 @@ import java.util.List;
 @Slf4j
 public class DefaultTbDeviceService extends AbstractTbEntityService implements TbDeviceService {
 
+    @NotNull
     private final DeviceService deviceService;
+    @NotNull
     private final DeviceCredentialsService deviceCredentialsService;
+    @NotNull
     private final ClaimDevicesService claimDevicesService;
+    @NotNull
     private final TenantService tenantService;
 
+    @NotNull
     @Override
-    public Device save(Device device, Device oldDevice, String accessToken, User user) throws Exception {
-        ActionType actionType = device.getId() == null ? ActionType.ADDED : ActionType.UPDATED;
+    public Device save(@NotNull Device device, Device oldDevice, String accessToken, User user) throws Exception {
+        @NotNull ActionType actionType = device.getId() == null ? ActionType.ADDED : ActionType.UPDATED;
         TenantId tenantId = device.getTenantId();
         try {
             Device savedDevice = checkNotNull(deviceService.saveDeviceWithAccessToken(device, accessToken));
@@ -55,10 +62,11 @@ public class DefaultTbDeviceService extends AbstractTbEntityService implements T
         }
     }
 
+    @NotNull
     @Override
-    public Device saveDeviceWithCredentials(Device device, DeviceCredentials credentials, User user) throws EchoiotException {
+    public Device saveDeviceWithCredentials(@NotNull Device device, DeviceCredentials credentials, User user) throws EchoiotException {
         boolean isCreate = device.getId() == null;
-        ActionType actionType = isCreate ? ActionType.ADDED : ActionType.UPDATED;
+        @NotNull ActionType actionType = isCreate ? ActionType.ADDED : ActionType.UPDATED;
         TenantId tenantId = device.getTenantId();
         try {
             Device oldDevice = isCreate ? null : deviceService.findDeviceById(tenantId, device.getId());
@@ -74,11 +82,11 @@ public class DefaultTbDeviceService extends AbstractTbEntityService implements T
     }
 
     @Override
-    public ListenableFuture<Void> delete(Device device, User user) {
+    public ListenableFuture<Void> delete(@NotNull Device device, User user) {
         TenantId tenantId = device.getTenantId();
         DeviceId deviceId = device.getId();
         try {
-            List<EdgeId> relatedEdgeIds = edgeService.findAllRelatedEdgeIds(tenantId, deviceId);
+            @Nullable List<EdgeId> relatedEdgeIds = edgeService.findAllRelatedEdgeIds(tenantId, deviceId);
             deviceService.deleteDevice(tenantId, deviceId);
             notificationEntityService.notifyDeleteDevice(tenantId, deviceId, device.getCustomerId(), device,
                     relatedEdgeIds, user, deviceId.toString());
@@ -92,8 +100,8 @@ public class DefaultTbDeviceService extends AbstractTbEntityService implements T
     }
 
     @Override
-    public Device assignDeviceToCustomer(TenantId tenantId, DeviceId deviceId, Customer customer, User user) throws EchoiotException {
-        ActionType actionType = ActionType.ASSIGNED_TO_CUSTOMER;
+    public Device assignDeviceToCustomer(TenantId tenantId, @NotNull DeviceId deviceId, @NotNull Customer customer, User user) throws EchoiotException {
+        @NotNull ActionType actionType = ActionType.ASSIGNED_TO_CUSTOMER;
         CustomerId customerId = customer.getId();
         try {
             Device savedDevice = checkNotNull(deviceService.assignDeviceToCustomer(tenantId, deviceId, customerId));
@@ -109,8 +117,8 @@ public class DefaultTbDeviceService extends AbstractTbEntityService implements T
     }
 
     @Override
-    public Device unassignDeviceFromCustomer(Device device, Customer customer, User user) throws EchoiotException {
-        ActionType actionType = ActionType.UNASSIGNED_FROM_CUSTOMER;
+    public Device unassignDeviceFromCustomer(@NotNull Device device, @NotNull Customer customer, User user) throws EchoiotException {
+        @NotNull ActionType actionType = ActionType.UNASSIGNED_FROM_CUSTOMER;
         TenantId tenantId = device.getTenantId();
         DeviceId deviceId = device.getId();
         try {
@@ -128,9 +136,10 @@ public class DefaultTbDeviceService extends AbstractTbEntityService implements T
         }
     }
 
+    @NotNull
     @Override
-    public Device assignDeviceToPublicCustomer(TenantId tenantId, DeviceId deviceId, User user) throws EchoiotException {
-        ActionType actionType = ActionType.ASSIGNED_TO_CUSTOMER;
+    public Device assignDeviceToPublicCustomer(TenantId tenantId, @NotNull DeviceId deviceId, User user) throws EchoiotException {
+        @NotNull ActionType actionType = ActionType.ASSIGNED_TO_CUSTOMER;
         Customer publicCustomer = customerService.findOrCreatePublicCustomer(tenantId);
         try {
             Device savedDevice = checkNotNull(deviceService.assignDeviceToCustomer(tenantId, deviceId, publicCustomer.getId()));
@@ -148,7 +157,7 @@ public class DefaultTbDeviceService extends AbstractTbEntityService implements T
     }
 
     @Override
-    public DeviceCredentials getDeviceCredentialsByDeviceId(Device device, User user) throws EchoiotException {
+    public DeviceCredentials getDeviceCredentialsByDeviceId(@NotNull Device device, User user) throws EchoiotException {
         TenantId tenantId = device.getTenantId();
         DeviceId deviceId = device.getId();
         try {
@@ -164,7 +173,7 @@ public class DefaultTbDeviceService extends AbstractTbEntityService implements T
     }
 
     @Override
-    public DeviceCredentials updateDeviceCredentials(Device device, DeviceCredentials deviceCredentials, User user) throws EchoiotException {
+    public DeviceCredentials updateDeviceCredentials(@NotNull Device device, DeviceCredentials deviceCredentials, User user) throws EchoiotException {
         TenantId tenantId = device.getTenantId();
         DeviceId deviceId = device.getId();
         try {
@@ -178,8 +187,9 @@ public class DefaultTbDeviceService extends AbstractTbEntityService implements T
         }
     }
 
+    @NotNull
     @Override
-    public ListenableFuture<ClaimResult> claimDevice(TenantId tenantId, Device device, CustomerId customerId, String secretKey, User user) {
+    public ListenableFuture<ClaimResult> claimDevice(TenantId tenantId, @NotNull Device device, @NotNull CustomerId customerId, String secretKey, User user) {
         ListenableFuture<ClaimResult> future = claimDevicesService.claimDevice(device, customerId, secretKey);
 
         return Futures.transform(future, result -> {
@@ -192,8 +202,9 @@ public class DefaultTbDeviceService extends AbstractTbEntityService implements T
         }, MoreExecutors.directExecutor());
     }
 
+    @NotNull
     @Override
-    public ListenableFuture<ReclaimResult> reclaimDevice(TenantId tenantId, Device device, User user) {
+    public ListenableFuture<ReclaimResult> reclaimDevice(TenantId tenantId, @NotNull Device device, User user) {
         ListenableFuture<ReclaimResult> future = claimDevicesService.reClaimDevice(tenantId, device);
 
         return Futures.transform(future, result -> {
@@ -207,8 +218,9 @@ public class DefaultTbDeviceService extends AbstractTbEntityService implements T
         }, MoreExecutors.directExecutor());
     }
 
+    @NotNull
     @Override
-    public Device assignDeviceToTenant(Device device, Tenant newTenant, User user) {
+    public Device assignDeviceToTenant(@NotNull Device device, @NotNull Tenant newTenant, User user) {
         TenantId tenantId = device.getTenantId();
         TenantId newTenantId = newTenant.getId();
         DeviceId deviceId = device.getId();
@@ -227,9 +239,10 @@ public class DefaultTbDeviceService extends AbstractTbEntityService implements T
         }
     }
 
+    @NotNull
     @Override
-    public Device assignDeviceToEdge(TenantId tenantId, DeviceId deviceId, Edge edge, User user) throws EchoiotException {
-        ActionType actionType = ActionType.ASSIGNED_TO_EDGE;
+    public Device assignDeviceToEdge(TenantId tenantId, @NotNull DeviceId deviceId, @NotNull Edge edge, User user) throws EchoiotException {
+        @NotNull ActionType actionType = ActionType.ASSIGNED_TO_EDGE;
         EdgeId edgeId = edge.getId();
         try {
             Device savedDevice = checkNotNull(deviceService.assignDeviceToEdge(tenantId, deviceId, edgeId));
@@ -244,7 +257,7 @@ public class DefaultTbDeviceService extends AbstractTbEntityService implements T
     }
 
     @Override
-    public Device unassignDeviceFromEdge(Device device, Edge edge, User user) throws EchoiotException {
+    public Device unassignDeviceFromEdge(@NotNull Device device, @NotNull Edge edge, User user) throws EchoiotException {
         TenantId tenantId = device.getTenantId();
         DeviceId deviceId = device.getId();
         EdgeId edgeId = edge.getId();

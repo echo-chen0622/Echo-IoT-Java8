@@ -6,6 +6,7 @@ import org.eclipse.leshan.core.request.LwM2mRequest;
 import org.eclipse.leshan.core.response.ReadResponse;
 import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.transport.lwm2m.server.client.LwM2mClient;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
@@ -18,7 +19,7 @@ public class RpcReadResponseCallback<R extends LwM2mRequest<T>, T extends ReadRe
     }
 
     @Override
-    protected Optional<String> serializeSuccessfulResponse(T response) {
+    protected Optional<String> serializeSuccessfulResponse(@NotNull T response) {
         return contentToString(response.getContent());
     }
 }

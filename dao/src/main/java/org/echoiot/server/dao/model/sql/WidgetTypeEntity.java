@@ -9,6 +9,7 @@ import org.echoiot.server.common.data.widget.BaseWidgetType;
 import org.echoiot.server.common.data.widget.WidgetType;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.util.mapping.JsonStringType;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -29,10 +30,11 @@ public final class WidgetTypeEntity extends AbstractWidgetTypeEntity<WidgetType>
         super();
     }
 
+    @NotNull
     @Override
     public WidgetType toData() {
         BaseWidgetType baseWidgetType = super.toBaseWidgetType();
-        WidgetType widgetType = new WidgetType(baseWidgetType);
+        @NotNull WidgetType widgetType = new WidgetType(baseWidgetType);
         widgetType.setDescriptor(descriptor);
         return widgetType;
     }

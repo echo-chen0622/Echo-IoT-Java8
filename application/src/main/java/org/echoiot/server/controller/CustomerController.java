@@ -16,6 +16,7 @@ import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.entitiy.customer.TbCustomerService;
 import org.echoiot.server.service.security.permission.Operation;
 import org.echoiot.server.service.security.permission.Resource;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,12 +34,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api")
 public class CustomerController extends BaseController {
 
+    @NotNull
     private final TbCustomerService tbCustomerService;
 
     public static final String IS_PUBLIC = "isPublic";
     public static final String CUSTOMER_SECURITY_CHECK = "If the user has the authority of 'Tenant Administrator', the server checks that the customer is owned by the same tenant. " +
             "If the user has the authority of 'Customer User', the server checks that the user belongs to the customer.";
 
+    @NotNull
     @ApiOperation(value = "Get Customer (getCustomerById)",
             notes = "Get the Customer object based on the provided Customer Id. "
                     + CUSTOMER_SECURITY_CHECK + ControllerConstants.TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
@@ -46,11 +49,11 @@ public class CustomerController extends BaseController {
     @RequestMapping(value = "/customer/{customerId}", method = RequestMethod.GET)
     @ResponseBody
     public Customer getCustomerById(
-            @ApiParam(value = ControllerConstants.CUSTOMER_ID_PARAM_DESCRIPTION)
+            @NotNull @ApiParam(value = ControllerConstants.CUSTOMER_ID_PARAM_DESCRIPTION)
             @PathVariable(ControllerConstants.CUSTOMER_ID) String strCustomerId) throws EchoiotException {
         checkParameter(ControllerConstants.CUSTOMER_ID, strCustomerId);
         try {
-            CustomerId customerId = new CustomerId(toUUID(strCustomerId));
+            @NotNull CustomerId customerId = new CustomerId(toUUID(strCustomerId));
             Customer customer = checkCustomerId(customerId, Operation.READ);
             if (!customer.getAdditionalInfo().isNull()) {
                 processDashboardIdFromAdditionalInfo((ObjectNode) customer.getAdditionalInfo(), ControllerConstants.HOME_DASHBOARD);
@@ -62,6 +65,7 @@ public class CustomerController extends BaseController {
     }
 
 
+    @NotNull
     @ApiOperation(value = "Get short Customer info (getShortCustomerInfoById)",
             notes = "Get the short customer object that contains only the title and 'isPublic' flag. "
                     + CUSTOMER_SECURITY_CHECK + ControllerConstants.TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
@@ -69,13 +73,13 @@ public class CustomerController extends BaseController {
     @RequestMapping(value = "/customer/{customerId}/shortInfo", method = RequestMethod.GET)
     @ResponseBody
     public JsonNode getShortCustomerInfoById(
-            @ApiParam(value = ControllerConstants.CUSTOMER_ID_PARAM_DESCRIPTION)
+            @NotNull @ApiParam(value = ControllerConstants.CUSTOMER_ID_PARAM_DESCRIPTION)
             @PathVariable(ControllerConstants.CUSTOMER_ID) String strCustomerId) throws EchoiotException {
         checkParameter(ControllerConstants.CUSTOMER_ID, strCustomerId);
         try {
-            CustomerId customerId = new CustomerId(toUUID(strCustomerId));
+            @NotNull CustomerId customerId = new CustomerId(toUUID(strCustomerId));
             Customer customer = checkCustomerId(customerId, Operation.READ);
-            ObjectMapper objectMapper = new ObjectMapper();
+            @NotNull ObjectMapper objectMapper = new ObjectMapper();
             ObjectNode infoObject = objectMapper.createObjectNode();
             infoObject.put("title", customer.getTitle());
             infoObject.put(IS_PUBLIC, customer.isPublic());
@@ -92,11 +96,11 @@ public class CustomerController extends BaseController {
     @RequestMapping(value = "/customer/{customerId}/title", method = RequestMethod.GET, produces = "application/text")
     @ResponseBody
     public String getCustomerTitleById(
-            @ApiParam(value = ControllerConstants.CUSTOMER_ID_PARAM_DESCRIPTION)
+            @NotNull @ApiParam(value = ControllerConstants.CUSTOMER_ID_PARAM_DESCRIPTION)
             @PathVariable(ControllerConstants.CUSTOMER_ID) String strCustomerId) throws EchoiotException {
         checkParameter(ControllerConstants.CUSTOMER_ID, strCustomerId);
         try {
-            CustomerId customerId = new CustomerId(toUUID(strCustomerId));
+            @NotNull CustomerId customerId = new CustomerId(toUUID(strCustomerId));
             Customer customer = checkCustomerId(customerId, Operation.READ);
             return customer.getTitle();
         } catch (Exception e) {
@@ -114,7 +118,7 @@ public class CustomerController extends BaseController {
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
     @RequestMapping(value = "/customer", method = RequestMethod.POST)
     @ResponseBody
-    public Customer saveCustomer(@ApiParam(value = "A JSON value representing the customer.") @RequestBody Customer customer) throws Exception {
+    public Customer saveCustomer(@NotNull @ApiParam(value = "A JSON value representing the customer.") @RequestBody Customer customer) throws Exception {
         customer.setTenantId(getTenantId());
         checkEntity(customer.getId(), customer, Resource.CUSTOMER);
         return tbCustomerService.save(customer, getCurrentUser());
@@ -127,10 +131,10 @@ public class CustomerController extends BaseController {
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
     @RequestMapping(value = "/customer/{customerId}", method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.OK)
-    public void deleteCustomer(@ApiParam(value = ControllerConstants.CUSTOMER_ID_PARAM_DESCRIPTION)
+    public void deleteCustomer(@NotNull @ApiParam(value = ControllerConstants.CUSTOMER_ID_PARAM_DESCRIPTION)
                                @PathVariable(ControllerConstants.CUSTOMER_ID) String strCustomerId) throws EchoiotException {
         checkParameter(ControllerConstants.CUSTOMER_ID, strCustomerId);
-        CustomerId customerId = new CustomerId(toUUID(strCustomerId));
+        @NotNull CustomerId customerId = new CustomerId(toUUID(strCustomerId));
         Customer customer = checkCustomerId(customerId, Operation.DELETE);
         tbCustomerService.delete(customer, getCurrentUser());
     }
@@ -150,10 +154,10 @@ public class CustomerController extends BaseController {
             @RequestParam(required = false) String textSearch,
             @ApiParam(value = ControllerConstants.SORT_PROPERTY_DESCRIPTION, allowableValues = ControllerConstants.CUSTOMER_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
-            @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
+            @NotNull @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortOrder) throws EchoiotException {
         try {
-            PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
+            @NotNull PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
             TenantId tenantId = getCurrentUser().getTenantId();
             return checkNotNull(customerService.findCustomersByTenantId(tenantId, pageLink));
         } catch (Exception e) {

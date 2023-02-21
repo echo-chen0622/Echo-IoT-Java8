@@ -8,6 +8,8 @@ import org.echoiot.server.common.data.edge.EdgeEvent;
 import org.echoiot.server.common.data.id.OtaPackageId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.queue.util.TbCoreComponent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Component;
 import org.echoiot.server.gen.edge.v1.DownlinkMsg;
 import org.echoiot.server.gen.edge.v1.OtaPackageUpdateMsg;
@@ -19,15 +21,16 @@ import org.echoiot.server.gen.transport.TransportProtos;
 @TbCoreComponent
 public class OtaPackageEdgeProcessor extends BaseEdgeProcessor {
 
-    public DownlinkMsg convertOtaPackageEventToDownlink(EdgeEvent edgeEvent) {
-        OtaPackageId otaPackageId = new OtaPackageId(edgeEvent.getEntityId());
-        DownlinkMsg downlinkMsg = null;
+    @Nullable
+    public DownlinkMsg convertOtaPackageEventToDownlink(@NotNull EdgeEvent edgeEvent) {
+        @NotNull OtaPackageId otaPackageId = new OtaPackageId(edgeEvent.getEntityId());
+        @Nullable DownlinkMsg downlinkMsg = null;
         switch (edgeEvent.getAction()) {
             case ADDED:
             case UPDATED:
                 OtaPackage otaPackage = otaPackageService.findOtaPackageById(edgeEvent.getTenantId(), otaPackageId);
                 if (otaPackage != null) {
-                    UpdateMsgType msgType = getUpdateMsgType(edgeEvent.getAction());
+                    @NotNull UpdateMsgType msgType = getUpdateMsgType(edgeEvent.getAction());
                     OtaPackageUpdateMsg otaPackageUpdateMsg =
                             otaPackageMsgConstructor.constructOtaPackageUpdatedMsg(msgType, otaPackage);
                     downlinkMsg = DownlinkMsg.newBuilder()
@@ -48,7 +51,7 @@ public class OtaPackageEdgeProcessor extends BaseEdgeProcessor {
         return downlinkMsg;
     }
 
-    public ListenableFuture<Void> processOtaPackageNotification(TenantId tenantId, TransportProtos.EdgeNotificationMsgProto edgeNotificationMsg) {
+    public ListenableFuture<Void> processOtaPackageNotification(TenantId tenantId, @NotNull TransportProtos.EdgeNotificationMsgProto edgeNotificationMsg) {
         return processEntityNotificationForAllEdges(tenantId, edgeNotificationMsg);
     }
 }

@@ -1,6 +1,8 @@
 package org.echoiot.server.dao.sql.customer;
 
 import org.echoiot.server.dao.model.sql.CustomerEntity;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
@@ -26,9 +28,10 @@ import java.util.UUID;
 @SqlDao
 public class JpaCustomerDao extends JpaAbstractSearchTextDao<CustomerEntity, Customer> implements CustomerDao {
 
-    @Autowired
+    @Resource
     private CustomerRepository customerRepository;
 
+    @NotNull
     @Override
     protected Class<CustomerEntity> getEntityClass() {
         return CustomerEntity.class;
@@ -39,14 +42,16 @@ public class JpaCustomerDao extends JpaAbstractSearchTextDao<CustomerEntity, Cus
         return customerRepository;
     }
 
+    @NotNull
     @Override
-    public PageData<Customer> findCustomersByTenantId(UUID tenantId, PageLink pageLink) {
+    public PageData<Customer> findCustomersByTenantId(UUID tenantId, @NotNull PageLink pageLink) {
         return DaoUtil.toPageData(customerRepository.findByTenantId(
                 tenantId,
                 Objects.toString(pageLink.getTextSearch(), ""),
                 DaoUtil.toPageable(pageLink)));
     }
 
+    @NotNull
     @Override
     public Optional<Customer> findCustomersByTenantIdAndTitle(UUID tenantId, String title) {
         Customer customer = DaoUtil.getData(customerRepository.findByTenantIdAndTitle(tenantId, title));
@@ -54,7 +59,7 @@ public class JpaCustomerDao extends JpaAbstractSearchTextDao<CustomerEntity, Cus
     }
 
     @Override
-    public Long countByTenantId(TenantId tenantId) {
+    public Long countByTenantId(@NotNull TenantId tenantId) {
         return customerRepository.countByTenantId(tenantId.getId());
     }
 
@@ -63,22 +68,25 @@ public class JpaCustomerDao extends JpaAbstractSearchTextDao<CustomerEntity, Cus
         return DaoUtil.getData(customerRepository.findByTenantIdAndExternalId(tenantId, externalId));
     }
 
+    @Nullable
     @Override
     public Customer findByTenantIdAndName(UUID tenantId, String name) {
         return findCustomersByTenantIdAndTitle(tenantId, name).orElse(null);
     }
 
     @Override
-    public PageData<Customer> findByTenantId(UUID tenantId, PageLink pageLink) {
+    public PageData<Customer> findByTenantId(UUID tenantId, @NotNull PageLink pageLink) {
         return findCustomersByTenantId(tenantId, pageLink);
     }
 
+    @Nullable
     @Override
-    public CustomerId getExternalIdByInternal(CustomerId internalId) {
+    public CustomerId getExternalIdByInternal(@NotNull CustomerId internalId) {
         return Optional.ofNullable(customerRepository.getExternalIdById(internalId.getId()))
                 .map(CustomerId::new).orElse(null);
     }
 
+    @NotNull
     @Override
     public EntityType getEntityType() {
         return EntityType.CUSTOMER;

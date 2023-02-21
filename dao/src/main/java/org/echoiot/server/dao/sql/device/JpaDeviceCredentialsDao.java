@@ -1,6 +1,7 @@
 package org.echoiot.server.dao.sql.device;
 
 import org.echoiot.server.dao.model.sql.DeviceCredentialsEntity;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
@@ -21,9 +22,10 @@ import java.util.UUID;
 @SqlDao
 public class JpaDeviceCredentialsDao extends JpaAbstractDao<DeviceCredentialsEntity, DeviceCredentials> implements DeviceCredentialsDao {
 
-    @Autowired
+    @Resource
     private DeviceCredentialsRepository deviceCredentialsRepository;
 
+    @NotNull
     @Override
     protected Class<DeviceCredentialsEntity> getEntityClass() {
         return DeviceCredentialsEntity.class;

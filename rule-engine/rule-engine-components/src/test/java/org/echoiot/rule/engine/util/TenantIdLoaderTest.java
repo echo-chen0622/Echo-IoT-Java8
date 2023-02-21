@@ -1,5 +1,7 @@
 package org.echoiot.rule.engine.util;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -122,7 +124,7 @@ public class TenantIdLoaderTest {
 
         when(ctx.getTenantId()).thenReturn(tenantId);
 
-        for (EntityType entityType : EntityType.values()) {
+        for (@NotNull EntityType entityType : EntityType.values()) {
             initMocks(entityType, tenantId);
         }
     }
@@ -132,12 +134,12 @@ public class TenantIdLoaderTest {
         dbExecutor.destroy();
     }
 
-    private void initMocks(EntityType entityType, TenantId tenantId) {
+    private void initMocks(@NotNull EntityType entityType, TenantId tenantId) {
         switch (entityType) {
             case TENANT:
                 break;
             case CUSTOMER:
-                Customer customer = new Customer();
+                @NotNull Customer customer = new Customer();
                 customer.setTenantId(tenantId);
 
                 when(ctx.getCustomerService()).thenReturn(customerService);
@@ -145,7 +147,7 @@ public class TenantIdLoaderTest {
 
                 break;
             case USER:
-                User user = new User();
+                @NotNull User user = new User();
                 user.setTenantId(tenantId);
 
                 when(ctx.getUserService()).thenReturn(userService);
@@ -153,7 +155,7 @@ public class TenantIdLoaderTest {
 
                 break;
             case ASSET:
-                Asset asset = new Asset();
+                @NotNull Asset asset = new Asset();
                 asset.setTenantId(tenantId);
 
                 when(ctx.getAssetService()).thenReturn(assetService);
@@ -161,7 +163,7 @@ public class TenantIdLoaderTest {
 
                 break;
             case DEVICE:
-                Device device = new Device();
+                @NotNull Device device = new Device();
                 device.setTenantId(tenantId);
 
                 when(ctx.getDeviceService()).thenReturn(deviceService);
@@ -169,7 +171,7 @@ public class TenantIdLoaderTest {
 
                 break;
             case ALARM:
-                Alarm alarm = new Alarm();
+                @NotNull Alarm alarm = new Alarm();
                 alarm.setTenantId(tenantId);
 
                 when(ctx.getAlarmService()).thenReturn(alarmService);
@@ -177,7 +179,7 @@ public class TenantIdLoaderTest {
 
                 break;
             case RULE_CHAIN:
-                RuleChain ruleChain = new RuleChain();
+                @NotNull RuleChain ruleChain = new RuleChain();
                 ruleChain.setTenantId(tenantId);
 
                 when(ctx.getRuleChainService()).thenReturn(ruleChainService);
@@ -185,7 +187,7 @@ public class TenantIdLoaderTest {
 
                 break;
             case ENTITY_VIEW:
-                EntityView entityView = new EntityView();
+                @NotNull EntityView entityView = new EntityView();
                 entityView.setTenantId(tenantId);
 
                 when(ctx.getEntityViewService()).thenReturn(entityViewService);
@@ -193,7 +195,7 @@ public class TenantIdLoaderTest {
 
                 break;
             case DASHBOARD:
-                Dashboard dashboard = new Dashboard();
+                @NotNull Dashboard dashboard = new Dashboard();
                 dashboard.setTenantId(tenantId);
 
                 when(ctx.getDashboardService()).thenReturn(dashboardService);
@@ -201,7 +203,7 @@ public class TenantIdLoaderTest {
 
                 break;
             case EDGE:
-                Edge edge = new Edge();
+                @NotNull Edge edge = new Edge();
                 edge.setTenantId(tenantId);
 
                 when(ctx.getEdgeService()).thenReturn(edgeService);
@@ -209,7 +211,7 @@ public class TenantIdLoaderTest {
 
                 break;
             case OTA_PACKAGE:
-                OtaPackage otaPackage = new OtaPackage();
+                @NotNull OtaPackage otaPackage = new OtaPackage();
                 otaPackage.setTenantId(tenantId);
 
                 when(ctx.getOtaPackageService()).thenReturn(otaPackageService);
@@ -217,7 +219,7 @@ public class TenantIdLoaderTest {
 
                 break;
             case ASSET_PROFILE:
-                AssetProfile assetProfile = new AssetProfile();
+                @NotNull AssetProfile assetProfile = new AssetProfile();
                 assetProfile.setTenantId(tenantId);
 
                 when(ctx.getAssetProfileCache()).thenReturn(assetProfileCache);
@@ -225,7 +227,7 @@ public class TenantIdLoaderTest {
 
                 break;
             case DEVICE_PROFILE:
-                DeviceProfile deviceProfile = new DeviceProfile();
+                @NotNull DeviceProfile deviceProfile = new DeviceProfile();
                 deviceProfile.setTenantId(tenantId);
 
                 when(ctx.getDeviceProfileCache()).thenReturn(deviceProfileCache);
@@ -233,7 +235,7 @@ public class TenantIdLoaderTest {
 
                 break;
             case WIDGET_TYPE:
-                WidgetType widgetType = new WidgetType();
+                @NotNull WidgetType widgetType = new WidgetType();
                 widgetType.setTenantId(tenantId);
 
                 when(ctx.getWidgetTypeService()).thenReturn(widgetTypeService);
@@ -241,7 +243,7 @@ public class TenantIdLoaderTest {
 
                 break;
             case WIDGETS_BUNDLE:
-                WidgetsBundle widgetsBundle = new WidgetsBundle();
+                @NotNull WidgetsBundle widgetsBundle = new WidgetsBundle();
                 widgetsBundle.setTenantId(tenantId);
 
                 when(ctx.getWidgetBundleService()).thenReturn(widgetsBundleService);
@@ -249,7 +251,7 @@ public class TenantIdLoaderTest {
 
                 break;
             case RPC:
-                Rpc rpc = new Rpc();
+                @NotNull Rpc rpc = new Rpc();
                 rpc.setTenantId(tenantId);
 
                 when(ctx.getRpcService()).thenReturn(rpcService);
@@ -257,7 +259,7 @@ public class TenantIdLoaderTest {
 
                 break;
             case QUEUE:
-                Queue queue = new Queue();
+                @NotNull Queue queue = new Queue();
                 queue.setTenantId(tenantId);
 
                 when(ctx.getQueueService()).thenReturn(queueService);
@@ -265,7 +267,7 @@ public class TenantIdLoaderTest {
 
                 break;
             case API_USAGE_STATE:
-                ApiUsageState apiUsageState = new ApiUsageState();
+                @NotNull ApiUsageState apiUsageState = new ApiUsageState();
                 apiUsageState.setTenantId(tenantId);
 
                 when(ctx.getRuleEngineApiUsageStateService()).thenReturn(ruleEngineApiUsageStateService);
@@ -273,7 +275,7 @@ public class TenantIdLoaderTest {
 
                 break;
             case TB_RESOURCE:
-                TbResource tbResource = new TbResource();
+                @NotNull TbResource tbResource = new TbResource();
                 tbResource.setTenantId(tenantId);
 
                 when(ctx.getResourceService()).thenReturn(resourceService);
@@ -281,14 +283,14 @@ public class TenantIdLoaderTest {
 
                 break;
             case RULE_NODE:
-                RuleNode ruleNode = new RuleNode();
+                @NotNull RuleNode ruleNode = new RuleNode();
 
                 when(ctx.getRuleChainService()).thenReturn(ruleChainService);
                 doReturn(ruleNode).when(ruleChainService).findRuleNodeById(eq(tenantId), any());
 
                 break;
             case TENANT_PROFILE:
-                TenantProfile tenantProfile = new TenantProfile(tenantProfileId);
+                @NotNull TenantProfile tenantProfile = new TenantProfile(tenantProfileId);
 
                 when(ctx.getTenantProfile()).thenReturn(tenantProfile);
 
@@ -299,12 +301,12 @@ public class TenantIdLoaderTest {
 
     }
 
-    private EntityId getEntityId(EntityType entityType) {
+    private EntityId getEntityId(@NotNull EntityType entityType) {
         return EntityIdFactory.getByTypeAndUuid(entityType, UUID.randomUUID());
     }
 
     private void checkTenant(TenantId checkTenantId, boolean equals) {
-        for (EntityType entityType : EntityType.values()) {
+        for (@NotNull EntityType entityType : EntityType.values()) {
             EntityId entityId;
             if (EntityType.TENANT.equals(entityType)) {
                 entityId = tenantId;
@@ -313,8 +315,8 @@ public class TenantIdLoaderTest {
             } else {
                 entityId = getEntityId(entityType);
             }
-            TenantId targetTenantId = TenantIdLoader.findTenantId(ctx, entityId);
-            String msg = "Check entity type <" + entityType.name() + ">:";
+            @Nullable TenantId targetTenantId = TenantIdLoader.findTenantId(ctx, entityId);
+            @NotNull String msg = "Check entity type <" + entityType.name() + ">:";
             if (equals) {
                 Assert.assertEquals(msg, targetTenantId, checkTenantId);
             } else {

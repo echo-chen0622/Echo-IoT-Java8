@@ -3,14 +3,17 @@ package org.echoiot.server.transport.lwm2m.bootstrap.store;
 import org.eclipse.leshan.server.bootstrap.BootstrapConfig;
 import org.eclipse.leshan.server.bootstrap.ConfigurationChecker;
 import org.eclipse.leshan.server.bootstrap.InvalidConfigurationException;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Map;
 
 public class LwM2MConfigurationChecker extends ConfigurationChecker {
 
     @Override
-    public void verify(BootstrapConfig config) throws InvalidConfigurationException {
+    public void verify(@NotNull BootstrapConfig config) throws InvalidConfigurationException {
         // check security configurations
-        for (Map.Entry<Integer, BootstrapConfig.ServerSecurity> e : config.security.entrySet()) {
+        for (@NotNull Map.Entry<Integer, BootstrapConfig.ServerSecurity> e : config.security.entrySet()) {
             BootstrapConfig.ServerSecurity sec = e.getValue();
 
             // checks security config
@@ -38,8 +41,8 @@ public class LwM2MConfigurationChecker extends ConfigurationChecker {
         validateOneSecurityByServer(config);
     }
 
-    protected void validateOneSecurityByServer(BootstrapConfig config) throws InvalidConfigurationException {
-        for (Map.Entry<Integer, BootstrapConfig.ServerConfig> e : config.servers.entrySet()) {
+    protected void validateOneSecurityByServer(@NotNull BootstrapConfig config) throws InvalidConfigurationException {
+        for (@NotNull Map.Entry<Integer, BootstrapConfig.ServerConfig> e : config.servers.entrySet()) {
             BootstrapConfig.ServerConfig srvCfg = e.getValue();
 
             // shortId checks
@@ -48,7 +51,7 @@ public class LwM2MConfigurationChecker extends ConfigurationChecker {
             }
 
             // look for security entry
-            BootstrapConfig.ServerSecurity security = getSecurityEntry(config, srvCfg.shortId);
+            @Nullable BootstrapConfig.ServerSecurity security = getSecurityEntry(config, srvCfg.shortId);
 
             if (security == null) {
                 throw new InvalidConfigurationException("no security entry for server instance: " + e.getKey());
@@ -56,8 +59,9 @@ public class LwM2MConfigurationChecker extends ConfigurationChecker {
         }
     }
 
-    protected static BootstrapConfig.ServerSecurity getSecurityEntry(BootstrapConfig config, int shortId) {
-        for (Map.Entry<Integer, BootstrapConfig.ServerSecurity> es : config.security.entrySet()) {
+    @Nullable
+    protected static BootstrapConfig.ServerSecurity getSecurityEntry(@NotNull BootstrapConfig config, int shortId) {
+        for (@NotNull Map.Entry<Integer, BootstrapConfig.ServerSecurity> es : config.security.entrySet()) {
             if (es.getValue().serverId == shortId) {
                 return es.getValue();
             }

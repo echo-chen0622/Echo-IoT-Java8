@@ -40,6 +40,8 @@ import org.eclipse.leshan.core.util.Hex;
 import org.eclipse.leshan.server.registration.Registration;
 import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.transport.lwm2m.server.client.LwM2mClient;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -87,8 +89,9 @@ public class LwM2MTransportUtil {
             this.type = type;
         }
 
+        @NotNull
         public static LwM2MClientStrategy fromStrategyClientByType(String type) {
-            for (LwM2MClientStrategy to : LwM2MClientStrategy.values()) {
+            for (@NotNull LwM2MClientStrategy to : LwM2MClientStrategy.values()) {
                 if (to.type.equals(type)) {
                     return to;
                 }
@@ -96,8 +99,9 @@ public class LwM2MTransportUtil {
             throw new IllegalArgumentException(String.format("Unsupported Client Strategy type  : %s", type));
         }
 
+        @NotNull
         public static LwM2MClientStrategy fromStrategyClientByCode(int code) {
-            for (LwM2MClientStrategy to : LwM2MClientStrategy.values()) {
+            for (@NotNull LwM2MClientStrategy to : LwM2MClientStrategy.values()) {
                 if (to.code == code) {
                     return to;
                 }
@@ -106,7 +110,7 @@ public class LwM2MTransportUtil {
         }
     }
 
-    public static boolean equalsResourceValue(Object valueOld, Object valueNew, ResourceModel.Type type, LwM2mPath
+    public static boolean equalsResourceValue(@NotNull Object valueOld, @NotNull Object valueNew, @NotNull ResourceModel.Type type, LwM2mPath
             resourcePath) throws CodecException {
         switch (type) {
             case BOOLEAN:
@@ -125,9 +129,10 @@ public class LwM2MTransportUtil {
         }
     }
 
-    public static LwM2mOtaConvert convertOtaUpdateValueToString(String pathIdVer, Object value, ResourceModel.Type currentType) {
-        String path = fromVersionedIdToObjectId(pathIdVer);
-        LwM2mOtaConvert lwM2mOtaConvert = new LwM2mOtaConvert();
+    @NotNull
+    public static LwM2mOtaConvert convertOtaUpdateValueToString(String pathIdVer, @NotNull Object value, ResourceModel.Type currentType) {
+        @Nullable String path = fromVersionedIdToObjectId(pathIdVer);
+        @NotNull LwM2mOtaConvert lwM2mOtaConvert = new LwM2mOtaConvert();
         if (path != null) {
             if (DefaultLwM2MOtaUpdateService.FW_STATE_ID.equals(path)) {
                 lwM2mOtaConvert.setCurrentType(STRING);
@@ -152,7 +157,8 @@ public class LwM2MTransportUtil {
         return lwM2mOtaConvert;
     }
 
-    public static Lwm2mDeviceProfileTransportConfiguration toLwM2MClientProfile(DeviceProfile deviceProfile) {
+    @NotNull
+    public static Lwm2mDeviceProfileTransportConfiguration toLwM2MClientProfile(@NotNull DeviceProfile deviceProfile) {
         DeviceProfileTransportConfiguration transportConfiguration = deviceProfile.getProfileData().getTransportConfiguration();
         if (transportConfiguration.getType().equals(DeviceTransportType.LWM2M)) {
             return (Lwm2mDeviceProfileTransportConfiguration) transportConfiguration;
@@ -162,16 +168,17 @@ public class LwM2MTransportUtil {
         }
     }
 
-    public static List<LwM2MBootstrapServerCredential> getBootstrapParametersFromEchoiot(DeviceProfile deviceProfile) {
+    public static List<LwM2MBootstrapServerCredential> getBootstrapParametersFromEchoiot(@NotNull DeviceProfile deviceProfile) {
         return toLwM2MClientProfile(deviceProfile).getBootstrap();
     }
 
-    public static String fromVersionedIdToObjectId(String pathIdVer) {
+    @Nullable
+    public static String fromVersionedIdToObjectId(@Nullable String pathIdVer) {
         try {
             if (pathIdVer == null) {
                 return null;
             }
-            String[] keyArray = pathIdVer.split(LwM2mConstants.LWM2M_SEPARATOR_PATH);
+            @NotNull String[] keyArray = pathIdVer.split(LwM2mConstants.LWM2M_SEPARATOR_PATH);
             if (keyArray.length > 1 && keyArray[1].split(LwM2mConstants.LWM2M_SEPARATOR_KEY).length == 2) {
                 keyArray[1] = keyArray[1].split(LwM2mConstants.LWM2M_SEPARATOR_KEY)[0];
                 return StringUtils.join(keyArray, LwM2mConstants.LWM2M_SEPARATOR_PATH);
@@ -188,11 +195,12 @@ public class LwM2MTransportUtil {
      * @param path - pathId or pathIdVer
      * @return
      */
-    public static String getVerFromPathIdVerOrId(String path) {
+    @Nullable
+    public static String getVerFromPathIdVerOrId(@NotNull String path) {
         try {
-            String[] keyArray = path.split(LwM2mConstants.LWM2M_SEPARATOR_PATH);
+            @NotNull String[] keyArray = path.split(LwM2mConstants.LWM2M_SEPARATOR_PATH);
             if (keyArray.length > 1) {
-                String[] keyArrayVer = keyArray[1].split(LwM2mConstants.LWM2M_SEPARATOR_KEY);
+                @NotNull String[] keyArrayVer = keyArray[1].split(LwM2mConstants.LWM2M_SEPARATOR_KEY);
                 return keyArrayVer.length == 2 ? keyArrayVer[1] : LWM2M_OBJECT_VERSION_DEFAULT;
             }
         } catch (Exception e) {
@@ -201,12 +209,13 @@ public class LwM2MTransportUtil {
         return null;
     }
 
-    public static String validPathIdVer(String pathIdVer, Registration registration) throws
+    @Nullable
+    public static String validPathIdVer(@NotNull String pathIdVer, @NotNull Registration registration) throws
             IllegalArgumentException {
         if (!pathIdVer.contains(LwM2mConstants.LWM2M_SEPARATOR_PATH)) {
-            throw new IllegalArgumentException(String.format("Error:"));
+            throw new IllegalArgumentException("Error:");
         } else {
-            String[] keyArray = pathIdVer.split(LwM2mConstants.LWM2M_SEPARATOR_PATH);
+            @NotNull String[] keyArray = pathIdVer.split(LwM2mConstants.LWM2M_SEPARATOR_PATH);
             if (keyArray.length > 1 && keyArray[1].split(LwM2mConstants.LWM2M_SEPARATOR_KEY).length == 2) {
                 return pathIdVer;
             } else {
@@ -215,11 +224,12 @@ public class LwM2MTransportUtil {
         }
     }
 
-    public static String convertObjectIdToVersionedId(String path, Registration registration) {
+    @Nullable
+    public static String convertObjectIdToVersionedId(@NotNull String path, @NotNull Registration registration) {
         String ver = registration.getSupportedObject().get(new LwM2mPath(path).getObjectId());
         ver = ver != null ? ver : TbLwM2mVersion.VERSION_1_0.getVersion().toString();
         try {
-            String[] keyArray = path.split(LwM2mConstants.LWM2M_SEPARATOR_PATH);
+            @NotNull String[] keyArray = path.split(LwM2mConstants.LWM2M_SEPARATOR_PATH);
             if (keyArray.length > 1) {
                 keyArray[1] = keyArray[1] + LwM2mConstants.LWM2M_SEPARATOR_KEY + ver;
                 return StringUtils.join(keyArray, LwM2mConstants.LWM2M_SEPARATOR_PATH);
@@ -231,7 +241,7 @@ public class LwM2MTransportUtil {
         }
     }
 
-    public static String validateObjectVerFromKey(String key) {
+    public static String validateObjectVerFromKey(@NotNull String key) {
         try {
             return (key.split(LwM2mConstants.LWM2M_SEPARATOR_PATH)[1].split(LwM2mConstants.LWM2M_SEPARATOR_KEY)[1]);
         } catch (Exception e) {
@@ -270,20 +280,21 @@ public class LwM2MTransportUtil {
      * Attribute pmax = new Attribute(MAXIMUM_PERIOD, "60");
      * Attribute [] attrs = {gt, st};
      */
-    public static SimpleDownlinkRequest createWriteAttributeRequest(String target, Object params, DefaultLwM2mUplinkMsgHandler serviceImpl) {
-        AttributeSet attrSet = new AttributeSet(createWriteAttributes(params, serviceImpl, target));
+    @Nullable
+    public static SimpleDownlinkRequest createWriteAttributeRequest(@NotNull String target, Object params, @NotNull DefaultLwM2mUplinkMsgHandler serviceImpl) {
+        @NotNull AttributeSet attrSet = new AttributeSet(createWriteAttributes(params, serviceImpl, target));
         return attrSet.getAttributes().size() > 0 ? new WriteAttributesRequest(target, attrSet) : null;
     }
 
-    private static Attribute[] createWriteAttributes(Object params, DefaultLwM2mUplinkMsgHandler serviceImpl, String target) {
-        List<Attribute> attributeLists = new ArrayList<>();
-        Map<String, Object> map = JacksonUtil.convertValue(params, new TypeReference<>() {
+    private static Attribute[] createWriteAttributes(Object params, @NotNull DefaultLwM2mUplinkMsgHandler serviceImpl, @NotNull String target) {
+        @NotNull List<Attribute> attributeLists = new ArrayList<>();
+        @Nullable Map<String, Object> map = JacksonUtil.convertValue(params, new TypeReference<>() {
         });
         map.forEach((k, v) -> {
             if (StringUtils.trimToNull(v.toString()) != null) {
-                Object attrValue = convertWriteAttributes(k, v, serviceImpl, target);
+                @Nullable Object attrValue = convertWriteAttributes(k, v, serviceImpl, target);
                 if (attrValue != null) {
-                    Attribute attribute = createAttribute(k, attrValue);
+                    @Nullable Attribute attribute = createAttribute(k, attrValue);
                     if (attribute != null) {
                         attributeLists.add(new Attribute(k, attrValue));
                     }
@@ -299,7 +310,8 @@ public class LwM2MTransportUtil {
      * Short Server ID, Object ID, Object Instance ID, Resource ID, Resource Instance ID
      * "CORELINK": // String used in Attribute
      */
-    public static ResourceModel.Type equalsResourceTypeGetSimpleName(Object value) {
+    @Nullable
+    public static ResourceModel.Type equalsResourceTypeGetSimpleName(@NotNull Object value) {
         switch (value.getClass().getSimpleName()) {
             case "Double":
                 return FLOAT;
@@ -320,7 +332,7 @@ public class LwM2MTransportUtil {
         }
     }
 
-    public static void validateVersionedId(LwM2mClient client, HasVersionedId request) {
+    public static void validateVersionedId(@NotNull LwM2mClient client, @NotNull HasVersionedId request) {
         String msgExceptionStr = "";
         if (request.getObjectId() == null) {
             msgExceptionStr = "Specified object id is null!";
@@ -332,14 +344,16 @@ public class LwM2MTransportUtil {
         }
     }
 
+    @NotNull
     public static Map<Integer, Object> convertMultiResourceValuesFromRpcBody(Object value, ResourceModel.Type type, String versionedId) throws Exception {
-            String valueJsonStr = JacksonUtil.toString(value);
+            @Nullable String valueJsonStr = JacksonUtil.toString(value);
             JsonElement element = JsonUtils.parse(valueJsonStr);
             return convertMultiResourceValuesFromJson(element, type, versionedId);
     }
 
-    public static Map<Integer, Object> convertMultiResourceValuesFromJson(JsonElement newValProto, ResourceModel.Type type, String versionedId) {
-        Map<Integer, Object> newValues = new HashMap<>();
+    @NotNull
+    public static Map<Integer, Object> convertMultiResourceValuesFromJson(@NotNull JsonElement newValProto, ResourceModel.Type type, String versionedId) {
+        @NotNull Map<Integer, Object> newValues = new HashMap<>();
         newValProto.getAsJsonObject().entrySet().forEach((obj) -> {
             newValues.put(Integer.valueOf(obj.getKey()), LwM2mValueConverterImpl.getInstance().convertValue(obj.getValue().getAsString(),
                     STRING, type, new LwM2mPath(fromVersionedIdToObjectId(versionedId))));
@@ -347,7 +361,8 @@ public class LwM2MTransportUtil {
         return newValues;
     }
 
-    public static Object convertWriteAttributes(String type, Object value, DefaultLwM2mUplinkMsgHandler serviceImpl, String target) {
+    @Nullable
+    public static Object convertWriteAttributes(@NotNull String type, @NotNull Object value, @NotNull DefaultLwM2mUplinkMsgHandler serviceImpl, @NotNull String target) {
         switch (type) {
             /** Integer [0:255]; */
             case DIMENSION:
@@ -373,7 +388,8 @@ public class LwM2MTransportUtil {
         }
     }
 
-    private static Attribute createAttribute(String key, Object attrValue) {
+    @Nullable
+    private static Attribute createAttribute(@NotNull String key, @NotNull Object attrValue) {
         try {
             return new Attribute(key, attrValue);
         } catch (Exception e) {
@@ -387,8 +403,9 @@ public class LwM2MTransportUtil {
      * @param path        -
      * @return - return value of Resource by idPath
      */
-    public static LwM2mResource getResourceValueFromLwM2MClient(LwM2mClient lwM2MClient, String path) {
-        LwM2mResource lwm2mResourceValue = null;
+    @Nullable
+    public static LwM2mResource getResourceValueFromLwM2MClient(@NotNull LwM2mClient lwM2MClient, String path) {
+        @Nullable LwM2mResource lwm2mResourceValue = null;
         ResourceValue resourceValue = lwM2MClient.getResources().get(path);
         if (resourceValue != null) {
             if (new LwM2mPath(fromVersionedIdToObjectId(path)).isResource()) {
@@ -398,16 +415,17 @@ public class LwM2MTransportUtil {
         return lwm2mResourceValue;
     }
 
+    @NotNull
     @SuppressWarnings("unchecked")
     public static Optional<String> contentToString(Object content) {
         try {
-            String value = null;
-            LwM2mResource resource = null;
-            String key = null;
+            @Nullable String value = null;
+            @Nullable LwM2mResource resource = null;
+            @Nullable String key = null;
             if (content instanceof Map) {
-                Map<Object, Object> contentAsMap = (Map<Object, Object>) content;
+                @NotNull Map<Object, Object> contentAsMap = (Map<Object, Object>) content;
                 if (contentAsMap.size() == 1) {
-                    for (Map.Entry<Object, Object> kv : contentAsMap.entrySet()) {
+                    for (@NotNull Map.Entry<Object, Object> kv : contentAsMap.entrySet()) {
                         if (kv.getValue() instanceof LwM2mResource) {
                             key = kv.getKey().toString();
                             resource = (LwM2mResource) kv.getValue();
@@ -428,23 +446,24 @@ public class LwM2MTransportUtil {
         }
     }
 
-    private static String opaqueResourceToString(LwM2mResource resource, String key) {
-        String value = null;
-        StringBuilder builder = new StringBuilder();
+    @Nullable
+    private static String opaqueResourceToString(LwM2mResource resource, @Nullable String key) {
+        @Nullable String value = null;
+        @NotNull StringBuilder builder = new StringBuilder();
         if (resource instanceof LwM2mSingleResource) {
             builder.append("LwM2mSingleResource");
             if (key == null) {
-                builder.append(" id=").append(String.valueOf(resource.getId()));
+                builder.append(" id=").append(resource.getId());
             } else {
                 builder.append(" key=").append(key);
             }
             builder.append(" value=").append(opaqueToString((byte[]) resource.getValue()));
-            builder.append(" type=").append(OPAQUE.toString());
+            builder.append(" type=").append(OPAQUE);
             value = builder.toString();
         } else if (resource instanceof LwM2mMultipleResource) {
             builder.append("LwM2mMultipleResource");
             if (key == null) {
-                builder.append(" id=").append(String.valueOf(resource.getId()));
+                builder.append(" id=").append(resource.getId());
             } else {
                 builder.append(" key=").append(key);
             }
@@ -453,14 +472,15 @@ public class LwM2MTransportUtil {
                 builder.append(multiInstanceOpaqueToString((LwM2mMultipleResource) resource));
             }
             builder.append("}");
-            builder.append(" type=").append(OPAQUE.toString());
+            builder.append(" type=").append(OPAQUE);
             value = builder.toString();
         }
         return value;
     }
 
-    private static String multiInstanceOpaqueToString(LwM2mMultipleResource resource) {
-        StringBuilder builder = new StringBuilder();
+    @NotNull
+    private static String multiInstanceOpaqueToString(@NotNull LwM2mMultipleResource resource) {
+        @NotNull StringBuilder builder = new StringBuilder();
         resource.getInstances().values()
                 .forEach(v -> builder.append(" id=").append(v.getId()).append(" value=").append(Hex.encodeHexString((byte[]) v.getValue())).append(", "));
         int startInd = builder.lastIndexOf(", ");
@@ -470,17 +490,19 @@ public class LwM2MTransportUtil {
         return builder.toString();
     }
 
-    private static String opaqueToString(byte[] value) {
-        String opaque = Hex.encodeHexString(value);
+    @NotNull
+    private static String opaqueToString(@NotNull byte[] value) {
+        @NotNull String opaque = Hex.encodeHexString(value);
         return opaque.length() > 1024 ? opaque.substring(0, 1024) : opaque;
     }
 
+    @NotNull
     public static LwM2mModel createModelsDefault() {
         return new StaticModel(ObjectLoader.loadDefault());
     }
 
-    public static boolean compareAttNameKeyOta(String attrName) {
-        for (OtaPackageKey value : OtaPackageKey.values()) {
+    public static boolean compareAttNameKeyOta(@NotNull String attrName) {
+        for (@NotNull OtaPackageKey value : OtaPackageKey.values()) {
             if (attrName.contains(value.getValue())) return true;
         }
         return false;

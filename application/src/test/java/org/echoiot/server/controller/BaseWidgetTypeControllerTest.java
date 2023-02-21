@@ -9,6 +9,7 @@ import org.echoiot.server.common.data.security.Authority;
 import org.echoiot.server.common.data.widget.WidgetType;
 import org.echoiot.server.common.data.widget.WidgetTypeDetails;
 import org.echoiot.server.common.data.widget.WidgetsBundle;
+import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -23,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public abstract class BaseWidgetTypeControllerTest extends AbstractControllerTest {
 
-    private IdComparator<WidgetType> idComparator = new IdComparator<>();
+    private final IdComparator<WidgetType> idComparator = new IdComparator<>();
 
     private Tenant savedTenant;
     private WidgetsBundle savedWidgetsBundle;
@@ -33,7 +34,7 @@ public abstract class BaseWidgetTypeControllerTest extends AbstractControllerTes
     public void beforeTest() throws Exception {
         loginSysAdmin();
 
-        Tenant tenant = new Tenant();
+        @NotNull Tenant tenant = new Tenant();
         tenant.setTitle("My tenant");
         savedTenant = doPost("/api/tenant", tenant, Tenant.class);
         Assert.assertNotNull(savedTenant);
@@ -47,7 +48,7 @@ public abstract class BaseWidgetTypeControllerTest extends AbstractControllerTes
 
         tenantAdmin = createUserAndLogin(tenantAdmin, "testPassword1");
 
-        WidgetsBundle widgetsBundle = new WidgetsBundle();
+        @NotNull WidgetsBundle widgetsBundle = new WidgetsBundle();
         widgetsBundle.setTitle("My widgets bundle");
         savedWidgetsBundle = doPost("/api/widgetsBundle", widgetsBundle, WidgetsBundle.class);
     }
@@ -62,7 +63,7 @@ public abstract class BaseWidgetTypeControllerTest extends AbstractControllerTes
 
     @Test
     public void testSaveWidgetType() throws Exception {
-        WidgetTypeDetails widgetType = new WidgetTypeDetails();
+        @NotNull WidgetTypeDetails widgetType = new WidgetTypeDetails();
         widgetType.setBundleAlias(savedWidgetsBundle.getAlias());
         widgetType.setName("Widget Type");
         widgetType.setDescriptor(new ObjectMapper().readValue("{ \"someKey\": \"someValue\" }", JsonNode.class));
@@ -87,7 +88,7 @@ public abstract class BaseWidgetTypeControllerTest extends AbstractControllerTes
 
     @Test
     public void testUpdateWidgetTypeFromDifferentTenant() throws Exception {
-        WidgetTypeDetails widgetType = new WidgetTypeDetails();
+        @NotNull WidgetTypeDetails widgetType = new WidgetTypeDetails();
         widgetType.setBundleAlias(savedWidgetsBundle.getAlias());
         widgetType.setName("Widget Type");
         widgetType.setDescriptor(new ObjectMapper().readValue("{ \"someKey\": \"someValue\" }", JsonNode.class));
@@ -100,7 +101,7 @@ public abstract class BaseWidgetTypeControllerTest extends AbstractControllerTes
 
     @Test
     public void testFindWidgetTypeById() throws Exception {
-        WidgetTypeDetails widgetType = new WidgetTypeDetails();
+        @NotNull WidgetTypeDetails widgetType = new WidgetTypeDetails();
         widgetType.setBundleAlias(savedWidgetsBundle.getAlias());
         widgetType.setName("Widget Type");
         widgetType.setDescriptor(new ObjectMapper().readValue("{ \"someKey\": \"someValue\" }", JsonNode.class));
@@ -112,7 +113,7 @@ public abstract class BaseWidgetTypeControllerTest extends AbstractControllerTes
 
     @Test
     public void testDeleteWidgetType() throws Exception {
-        WidgetTypeDetails widgetType = new WidgetTypeDetails();
+        @NotNull WidgetTypeDetails widgetType = new WidgetTypeDetails();
         widgetType.setBundleAlias(savedWidgetsBundle.getAlias());
         widgetType.setName("Widget Type");
         widgetType.setDescriptor(new ObjectMapper().readValue("{ \"someKey\": \"someValue\" }", JsonNode.class));
@@ -127,7 +128,7 @@ public abstract class BaseWidgetTypeControllerTest extends AbstractControllerTes
 
     @Test
     public void testSaveWidgetTypeWithEmptyName() throws Exception {
-        WidgetTypeDetails widgetType = new WidgetTypeDetails();
+        @NotNull WidgetTypeDetails widgetType = new WidgetTypeDetails();
         widgetType.setBundleAlias(savedWidgetsBundle.getAlias());
         widgetType.setDescriptor(new ObjectMapper().readValue("{ \"someKey\": \"someValue\" }", JsonNode.class));
         doPost("/api/widgetType", widgetType)
@@ -137,7 +138,7 @@ public abstract class BaseWidgetTypeControllerTest extends AbstractControllerTes
 
     @Test
     public void testSaveWidgetTypeWithEmptyBundleAlias() throws Exception {
-        WidgetTypeDetails widgetType = new WidgetTypeDetails();
+        @NotNull WidgetTypeDetails widgetType = new WidgetTypeDetails();
         widgetType.setName("Widget Type");
         widgetType.setDescriptor(new ObjectMapper().readValue("{ \"someKey\": \"someValue\" }", JsonNode.class));
         doPost("/api/widgetType", widgetType)
@@ -147,7 +148,7 @@ public abstract class BaseWidgetTypeControllerTest extends AbstractControllerTes
 
     @Test
     public void testSaveWidgetTypeWithEmptyDescriptor() throws Exception {
-        WidgetTypeDetails widgetType = new WidgetTypeDetails();
+        @NotNull WidgetTypeDetails widgetType = new WidgetTypeDetails();
         widgetType.setBundleAlias(savedWidgetsBundle.getAlias());
         widgetType.setName("Widget Type");
         widgetType.setDescriptor(new ObjectMapper().readValue("{}", JsonNode.class));
@@ -158,7 +159,7 @@ public abstract class BaseWidgetTypeControllerTest extends AbstractControllerTes
 
     @Test
     public void testSaveWidgetTypeWithInvalidBundleAlias() throws Exception {
-        WidgetTypeDetails widgetType = new WidgetTypeDetails();
+        @NotNull WidgetTypeDetails widgetType = new WidgetTypeDetails();
         widgetType.setBundleAlias("some_alias");
         widgetType.setName("Widget Type");
         widgetType.setDescriptor(new ObjectMapper().readValue("{ \"someKey\": \"someValue\" }", JsonNode.class));
@@ -169,7 +170,7 @@ public abstract class BaseWidgetTypeControllerTest extends AbstractControllerTes
 
     @Test
     public void testUpdateWidgetTypeBundleAlias() throws Exception {
-        WidgetTypeDetails widgetType = new WidgetTypeDetails();
+        @NotNull WidgetTypeDetails widgetType = new WidgetTypeDetails();
         widgetType.setBundleAlias(savedWidgetsBundle.getAlias());
         widgetType.setName("Widget Type");
         widgetType.setDescriptor(new ObjectMapper().readValue("{ \"someKey\": \"someValue\" }", JsonNode.class));
@@ -183,7 +184,7 @@ public abstract class BaseWidgetTypeControllerTest extends AbstractControllerTes
 
     @Test
     public void testUpdateWidgetTypeAlias() throws Exception {
-        WidgetTypeDetails widgetType = new WidgetTypeDetails();
+        @NotNull WidgetTypeDetails widgetType = new WidgetTypeDetails();
         widgetType.setBundleAlias(savedWidgetsBundle.getAlias());
         widgetType.setName("Widget Type");
         widgetType.setDescriptor(new ObjectMapper().readValue("{ \"someKey\": \"someValue\" }", JsonNode.class));
@@ -197,9 +198,9 @@ public abstract class BaseWidgetTypeControllerTest extends AbstractControllerTes
 
     @Test
     public void testGetBundleWidgetTypes() throws Exception {
-        List<WidgetType> widgetTypes = new ArrayList<>();
+        @NotNull List<WidgetType> widgetTypes = new ArrayList<>();
         for (int i=0;i<89;i++) {
-            WidgetTypeDetails widgetType = new WidgetTypeDetails();
+            @NotNull WidgetTypeDetails widgetType = new WidgetTypeDetails();
             widgetType.setBundleAlias(savedWidgetsBundle.getAlias());
             widgetType.setName("Widget Type " + i);
             widgetType.setDescriptor(new ObjectMapper().readValue("{ \"someKey\": \"someValue\" }", JsonNode.class));
@@ -217,7 +218,7 @@ public abstract class BaseWidgetTypeControllerTest extends AbstractControllerTes
 
     @Test
     public void testGetWidgetType() throws Exception {
-        WidgetTypeDetails widgetType = new WidgetTypeDetails();
+        @NotNull WidgetTypeDetails widgetType = new WidgetTypeDetails();
         widgetType.setBundleAlias(savedWidgetsBundle.getAlias());
         widgetType.setName("Widget Type");
         widgetType.setDescriptor(new ObjectMapper().readValue("{ \"someKey\": \"someValue\" }", JsonNode.class));

@@ -8,6 +8,8 @@ import org.echoiot.server.common.data.oauth2.OAuth2Registration;
 import org.echoiot.server.dao.oauth2.OAuth2Configuration;
 import org.echoiot.server.dao.oauth2.OAuth2User;
 import org.echoiot.server.queue.util.TbCoreComponent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
@@ -30,24 +32,25 @@ public class GithubOAuth2ClientMapper extends AbstractOAuth2ClientMapper impleme
 
     private RestTemplateBuilder restTemplateBuilder = new RestTemplateBuilder();
 
-    @Autowired
+    @Resource
     private OAuth2Configuration oAuth2Configuration;
 
     @Override
-    public SecurityUser getOrCreateUserByClientPrincipal(HttpServletRequest request, OAuth2AuthenticationToken token, String providerAccessToken, OAuth2Registration registration) {
+    public SecurityUser getOrCreateUserByClientPrincipal(HttpServletRequest request, @NotNull OAuth2AuthenticationToken token, String providerAccessToken, @NotNull OAuth2Registration registration) {
         OAuth2MapperConfig config = registration.getMapperConfig();
         Map<String, String> githubMapperConfig = oAuth2Configuration.getGithubMapper();
-        String email = getEmail(githubMapperConfig.get(EMAIL_URL_KEY), providerAccessToken);
+        @NotNull String email = getEmail(githubMapperConfig.get(EMAIL_URL_KEY), providerAccessToken);
         Map<String, Object> attributes = token.getPrincipal().getAttributes();
-        OAuth2User oAuth2User = BasicMapperUtils.getOAuth2User(email, attributes, config);
+        @NotNull OAuth2User oAuth2User = BasicMapperUtils.getOAuth2User(email, attributes, config);
         return getOrCreateSecurityUserFromOAuth2User(oAuth2User, registration);
     }
 
-    private synchronized String getEmail(String emailUrl, String oauth2Token) {
+    @NotNull
+    private synchronized String getEmail(@NotNull String emailUrl, String oauth2Token) {
         restTemplateBuilder = restTemplateBuilder.defaultHeader(AUTHORIZATION, "token " + oauth2Token);
 
         RestTemplate restTemplate = restTemplateBuilder.build();
-        GithubEmailsResponse githubEmailsResponse;
+        @Nullable GithubEmailsResponse githubEmailsResponse;
         try {
             githubEmailsResponse = restTemplate.getForEntity(emailUrl, GithubEmailsResponse.class).getBody();
             if (githubEmailsResponse == null){
@@ -57,10 +60,10 @@ public class GithubOAuth2ClientMapper extends AbstractOAuth2ClientMapper impleme
             log.error("There was an error during connection to Github API", e);
             throw new RuntimeException("Unable to login. Please contact your Administrator!");
         }
-        Optional<String> emailOpt = githubEmailsResponse.stream()
-                .filter(GithubEmailResponse::isPrimary)
-                .map(GithubEmailResponse::getEmail)
-                .findAny();
+        @NotNull Optional<String> emailOpt = githubEmailsResponse.stream()
+                                                                 .filter(GithubEmailResponse::isPrimary)
+                                                                 .map(GithubEmailResponse::getEmail)
+                                                                 .findAny();
         if (emailOpt.isPresent()){
             return emailOpt.get();
         } else {

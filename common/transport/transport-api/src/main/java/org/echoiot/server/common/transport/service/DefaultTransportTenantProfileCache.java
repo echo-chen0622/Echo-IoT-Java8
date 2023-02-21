@@ -14,6 +14,8 @@ import org.echoiot.server.common.transport.profile.TenantProfileUpdateResult;
 import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.queue.util.DataDecodingEncodingService;
 import org.echoiot.server.queue.util.TbTransportComponent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -41,13 +43,13 @@ public class DefaultTransportTenantProfileCache implements TransportTenantProfil
     private TransportService transportService;
 
     @Lazy
-    @Autowired
+    @Resource
     public void setRateLimitService(TransportRateLimitService rateLimitService) {
         this.rateLimitService = rateLimitService;
     }
 
     @Lazy
-    @Autowired
+    @Resource
     public void setTransportService(TransportService transportService) {
         this.transportService = transportService;
     }
@@ -57,20 +59,21 @@ public class DefaultTransportTenantProfileCache implements TransportTenantProfil
     }
 
     @Override
-    public TenantProfile get(TenantId tenantId) {
+    public TenantProfile get(@NotNull TenantId tenantId) {
         return getTenantProfile(tenantId);
     }
 
+    @NotNull
     @Override
-    public TenantProfileUpdateResult put(ByteString profileBody) {
+    public TenantProfileUpdateResult put(@NotNull ByteString profileBody) {
         Optional<TenantProfile> profileOpt = dataDecodingEncodingService.decode(profileBody.toByteArray());
         if (profileOpt.isPresent()) {
-            TenantProfile newProfile = profileOpt.get();
+            @NotNull TenantProfile newProfile = profileOpt.get();
             log.trace("[{}] put: {}", newProfile.getId(), newProfile);
             Set<TenantId> affectedTenants = tenantProfileIds.get(newProfile.getId());
             return new TenantProfileUpdateResult(newProfile, affectedTenants != null ? affectedTenants : Collections.emptySet());
         } else {
-            log.warn("Failed to decode profile: {}", profileBody.toString());
+            log.warn("Failed to decode profile: {}", profileBody);
             return new TenantProfileUpdateResult(null, Collections.emptySet());
         }
     }
@@ -89,6 +92,7 @@ public class DefaultTransportTenantProfileCache implements TransportTenantProfil
         }
     }
 
+    @Nullable
     @Override
     public Set<TenantId> remove(TenantProfileId profileId) {
         Set<TenantId> tenants = tenantProfileIds.remove(profileId);
@@ -99,8 +103,9 @@ public class DefaultTransportTenantProfileCache implements TransportTenantProfil
         return tenants;
     }
 
-    private TenantProfile getTenantProfile(TenantId tenantId) {
-        TenantProfile profile = null;
+    @NotNull
+    private TenantProfile getTenantProfile(@NotNull TenantId tenantId) {
+        @Nullable TenantProfile profile = null;
         TenantProfileId tenantProfileId = tenantIds.get(tenantId);
         if (tenantProfileId != null) {
             profile = profiles.get(tenantProfileId);

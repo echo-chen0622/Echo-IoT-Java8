@@ -5,6 +5,6 @@ package org.echoiot.server.common.data.relation;
  */
 public enum EntitySearchDirection {
 
-    FROM, TO;
+    FROM, TO
 
 }

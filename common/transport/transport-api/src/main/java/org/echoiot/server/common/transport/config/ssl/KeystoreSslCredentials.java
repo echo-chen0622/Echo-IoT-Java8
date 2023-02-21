@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.echoiot.server.common.data.ResourceUtils;
 import org.echoiot.server.common.data.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,11 +26,12 @@ public class KeystoreSslCredentials extends AbstractSslCredentials {
         return ResourceUtils.resourceExists(this, this.storeFile);
     }
 
+    @NotNull
     @Override
     protected KeyStore loadKeyStore(boolean trustsOnly, char[] keyPasswordArray) throws IOException, GeneralSecurityException {
         String keyStoreType = StringUtils.isEmpty(this.type) ? KeyStore.getDefaultType() : this.type;
-        KeyStore keyStore = KeyStore.getInstance(keyStoreType);
-        try (InputStream tsFileInputStream = ResourceUtils.getInputStream(this, this.storeFile)) {
+        @NotNull KeyStore keyStore = KeyStore.getInstance(keyStoreType);
+        try (@NotNull InputStream tsFileInputStream = ResourceUtils.getInputStream(this, this.storeFile)) {
             keyStore.load(tsFileInputStream, StringUtils.isEmpty(this.storePassword) ? new char[0] : this.storePassword.toCharArray());
         }
         return keyStore;

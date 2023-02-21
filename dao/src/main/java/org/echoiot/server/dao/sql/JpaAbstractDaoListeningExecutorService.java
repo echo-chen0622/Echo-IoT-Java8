@@ -1,6 +1,7 @@
 package org.echoiot.server.dao.sql;
 
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -12,16 +13,16 @@ import java.sql.Statement;
 @Slf4j
 public abstract class JpaAbstractDaoListeningExecutorService {
 
-    @Autowired
+    @Resource
     protected JpaExecutorService service;
 
-    @Autowired
+    @Resource
     protected DataSource dataSource;
 
-    @Autowired
+    @Resource
     protected JdbcTemplate jdbcTemplate;
 
-    protected void printWarnings(Statement statement) throws SQLException {
+    protected void printWarnings(@NotNull Statement statement) throws SQLException {
         SQLWarning warnings = statement.getWarnings();
         if (warnings != null) {
             log.debug("{}", warnings.getMessage());

@@ -3,6 +3,7 @@ package org.echoiot.server.dao.entity;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.dao.exception.DataValidationException;
 import org.hibernate.exception.ConstraintViolationException;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.echoiot.server.common.data.EntityView;
@@ -29,15 +30,15 @@ public abstract class AbstractEntityService {
     public static final String INCORRECT_PAGE_LINK = "Incorrect page link ";
 
     @Lazy
-    @Autowired
+    @Resource
     protected RelationService relationService;
 
     @Lazy
-    @Autowired
+    @Resource
     protected AlarmService alarmService;
 
     @Lazy
-    @Autowired
+    @Resource
     protected EntityViewService entityViewService;
 
     @Lazy
@@ -61,6 +62,7 @@ public abstract class AbstractEntityService {
         alarmService.deleteEntityAlarmRelations(tenantId, entityId);
     }
 
+    @NotNull
     protected static Optional<ConstraintViolationException> extractConstraintViolationException(Exception t) {
         if (t instanceof ConstraintViolationException) {
             return Optional.of((ConstraintViolationException) t);
@@ -75,17 +77,17 @@ public abstract class AbstractEntityService {
         checkConstraintViolation(t, Collections.singletonMap(constraintName, constraintMessage));
     }
 
-    public static final void checkConstraintViolation(Exception t, String constraintName1, String constraintMessage1, String constraintName2, String constraintMessage2) {
+    public static final void checkConstraintViolation(Exception t, @NotNull String constraintName1, @NotNull String constraintMessage1, @NotNull String constraintName2, @NotNull String constraintMessage2) {
         checkConstraintViolation(t, Map.of(constraintName1, constraintMessage1, constraintName2, constraintMessage2));
     }
 
-    public static final void checkConstraintViolation(Exception t, Map<String, String> constraints) {
-        var exOpt = extractConstraintViolationException(t);
+    public static final void checkConstraintViolation(Exception t, @NotNull Map<String, String> constraints) {
+        @NotNull var exOpt = extractConstraintViolationException(t);
         if (exOpt.isPresent()) {
-            var ex = exOpt.get();
+            @NotNull var ex = exOpt.get();
             if (StringUtils.isNotEmpty(ex.getConstraintName())) {
                 var constraintName = ex.getConstraintName();
-                for (var constraintMessage : constraints.entrySet()) {
+                for (@NotNull var constraintMessage : constraints.entrySet()) {
                     if (constraintName.equals(constraintMessage.getKey())) {
                         throw new DataValidationException(constraintMessage.getValue());
                     }
@@ -98,10 +100,10 @@ public abstract class AbstractEntityService {
         List<EntityView> entityViews = entityViewService.findEntityViewsByTenantIdAndEntityId(tenantId, entityId);
         if (entityViews != null && !entityViews.isEmpty()) {
             EntityView entityView = entityViews.get(0);
-            Boolean relationExists = relationService.checkRelation(
+            @NotNull Boolean relationExists = relationService.checkRelation(
                     tenantId, edgeId, entityView.getId(),
                     EntityRelation.CONTAINS_TYPE, RelationTypeGroup.EDGE
-            );
+                                                                           );
             if (relationExists) {
                 throw new DataValidationException("Can't unassign device/asset from edge that is related to entity view and entity view is assigned to edge!");
             }

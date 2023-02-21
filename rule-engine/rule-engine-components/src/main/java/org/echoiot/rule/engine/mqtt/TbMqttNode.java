@@ -21,9 +21,12 @@ import org.echoiot.rule.engine.credentials.CredentialsType;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.TbMsgMetaData;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.net.ssl.SSLException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -40,7 +43,7 @@ import java.util.concurrent.TimeoutException;
 )
 public class TbMqttNode implements TbNode {
 
-    private static final Charset UTF8 = Charset.forName("UTF-8");
+    private static final Charset UTF8 = StandardCharsets.UTF_8;
 
     private static final String ERROR = "error";
 
@@ -49,7 +52,7 @@ public class TbMqttNode implements TbNode {
     protected MqttClient mqttClient;
 
     @Override
-    public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
+    public void init(@NotNull TbContext ctx, @NotNull TbNodeConfiguration configuration) throws TbNodeException {
         try {
             this.mqttNodeConfiguration = TbNodeUtils.convert(configuration, TbMqttNodeConfiguration.class);
             this.mqttClient = initClient(ctx);
@@ -59,7 +62,7 @@ public class TbMqttNode implements TbNode {
     }
 
     @Override
-    public void onMsg(TbContext ctx, TbMsg msg) {
+    public void onMsg(@NotNull TbContext ctx, @NotNull TbMsg msg) {
         String topic = TbNodeUtils.processPattern(this.mqttNodeConfiguration.getTopicPattern(), msg);
         this.mqttClient.publish(topic, Unpooled.wrappedBuffer(msg.getData().getBytes(UTF8)), MqttQoS.AT_LEAST_ONCE, mqttNodeConfiguration.isRetainedMessage())
                 .addListener(future -> {
@@ -73,8 +76,8 @@ public class TbMqttNode implements TbNode {
                 );
     }
 
-    private TbMsg processException(TbContext ctx, TbMsg origMsg, Throwable e) {
-        TbMsgMetaData metaData = origMsg.getMetaData().copy();
+    private TbMsg processException(@NotNull TbContext ctx, @NotNull TbMsg origMsg, @NotNull Throwable e) {
+        @NotNull TbMsgMetaData metaData = origMsg.getMetaData().copy();
         metaData.putValue(ERROR, e.getClass() + ": " + e.getMessage());
         return ctx.transformMsg(origMsg, origMsg.getType(), origMsg.getOriginator(), metaData, origMsg.getData());
     }
@@ -86,8 +89,9 @@ public class TbMqttNode implements TbNode {
         }
     }
 
-    protected MqttClient initClient(TbContext ctx) throws Exception {
-        MqttClientConfig config = new MqttClientConfig(getSslContext());
+    @NotNull
+    protected MqttClient initClient(@NotNull TbContext ctx) throws Exception {
+        @NotNull MqttClientConfig config = new MqttClientConfig(getSslContext());
         if (!StringUtils.isEmpty(this.mqttNodeConfiguration.getClientId())) {
             config.setClientId(this.mqttNodeConfiguration.isAppendClientIdSuffix() ?
                     this.mqttNodeConfiguration.getClientId() + "_" + ctx.getServiceId() : this.mqttNodeConfiguration.getClientId());
@@ -95,7 +99,7 @@ public class TbMqttNode implements TbNode {
         config.setCleanSession(this.mqttNodeConfiguration.isCleanSession());
 
         prepareMqttClientConfig(config);
-        MqttClient client = MqttClient.create(config, null);
+        @NotNull MqttClient client = MqttClient.create(config, null);
         client.setEventLoop(ctx.getSharedEventLoop());
         Future<MqttConnectResult> connectFuture = client.connect(this.mqttNodeConfiguration.getHost(), this.mqttNodeConfiguration.getPort());
         MqttConnectResult result;
@@ -104,27 +108,28 @@ public class TbMqttNode implements TbNode {
         } catch (TimeoutException ex) {
             connectFuture.cancel(true);
             client.disconnect();
-            String hostPort = this.mqttNodeConfiguration.getHost() + ":" + this.mqttNodeConfiguration.getPort();
+            @NotNull String hostPort = this.mqttNodeConfiguration.getHost() + ":" + this.mqttNodeConfiguration.getPort();
             throw new RuntimeException(String.format("Failed to connect to MQTT broker at %s.", hostPort));
         }
         if (!result.isSuccess()) {
             connectFuture.cancel(true);
             client.disconnect();
-            String hostPort = this.mqttNodeConfiguration.getHost() + ":" + this.mqttNodeConfiguration.getPort();
+            @NotNull String hostPort = this.mqttNodeConfiguration.getHost() + ":" + this.mqttNodeConfiguration.getPort();
             throw new RuntimeException(String.format("Failed to connect to MQTT broker at %s. Result code is: %s", hostPort, result.getReturnCode()));
         }
         return client;
     }
 
-    protected void prepareMqttClientConfig(MqttClientConfig config) throws SSLException {
+    protected void prepareMqttClientConfig(@NotNull MqttClientConfig config) throws SSLException {
         ClientCredentials credentials = this.mqttNodeConfiguration.getCredentials();
         if (credentials.getType() == CredentialsType.BASIC) {
-            BasicCredentials basicCredentials = (BasicCredentials) credentials;
+            @NotNull BasicCredentials basicCredentials = (BasicCredentials) credentials;
             config.setUsername(basicCredentials.getUsername());
             config.setPassword(basicCredentials.getPassword());
         }
     }
 
+    @Nullable
     private SslContext getSslContext() throws SSLException {
         return this.mqttNodeConfiguration.isSsl() ? this.mqttNodeConfiguration.getCredentials().initSslContext() : null;
     }

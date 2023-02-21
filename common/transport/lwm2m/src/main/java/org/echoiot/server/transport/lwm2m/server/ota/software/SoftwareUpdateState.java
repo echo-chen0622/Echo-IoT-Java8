@@ -1,6 +1,7 @@
 package org.echoiot.server.transport.lwm2m.server.ota.software;
 
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * SW Update State R
@@ -21,17 +22,18 @@ public enum SoftwareUpdateState {
     INSTALLED(4, "Installed");
 
     @Getter
-    private int code;
+    private final int code;
     @Getter
-    private String type;
+    private final String type;
 
     SoftwareUpdateState(int code, String type) {
         this.code = code;
         this.type = type;
     }
 
+    @NotNull
     public static SoftwareUpdateState fromUpdateStateSwByType(String type) {
-        for (SoftwareUpdateState to : SoftwareUpdateState.values()) {
+        for (@NotNull SoftwareUpdateState to : SoftwareUpdateState.values()) {
             if (to.type.equals(type)) {
                 return to;
             }
@@ -39,8 +41,9 @@ public enum SoftwareUpdateState {
         throw new IllegalArgumentException(String.format("Unsupported SW State type  : %s", type));
     }
 
+    @NotNull
     public static SoftwareUpdateState fromUpdateStateSwByCode(int code) {
-        for (SoftwareUpdateState to : SoftwareUpdateState.values()) {
+        for (@NotNull SoftwareUpdateState to : SoftwareUpdateState.values()) {
             if (to.code == code) {
                 return to;
             }

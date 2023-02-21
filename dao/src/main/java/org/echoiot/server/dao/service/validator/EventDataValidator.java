@@ -5,13 +5,14 @@ import org.echoiot.server.common.data.event.Event;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.dao.exception.DataValidationException;
 import org.echoiot.server.dao.service.DataValidator;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 @Component
 public class EventDataValidator extends DataValidator<Event> {
 
     @Override
-    protected void validateDataImpl(TenantId tenantId, Event event) {
+    protected void validateDataImpl(TenantId tenantId, @NotNull Event event) {
         if (event.getTenantId() == null) {
             throw new DataValidationException("Tenant id should be specified!.");
         }

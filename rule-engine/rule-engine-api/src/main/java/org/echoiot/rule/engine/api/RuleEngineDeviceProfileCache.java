@@ -5,6 +5,7 @@ import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.data.id.DeviceProfileId;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.TenantId;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -14,8 +15,10 @@ import java.util.function.Consumer;
  */
 public interface RuleEngineDeviceProfileCache {
 
+    @Nullable
     DeviceProfile get(TenantId tenantId, DeviceProfileId deviceProfileId);
 
+    @Nullable
     DeviceProfile get(TenantId tenantId, DeviceId deviceId);
 
     void addListener(TenantId tenantId, EntityId listenerId, Consumer<DeviceProfile> profileListener, BiConsumer<DeviceId, DeviceProfile> devicelistener);

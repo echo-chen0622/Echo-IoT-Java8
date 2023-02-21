@@ -2,6 +2,7 @@ package org.echoiot.server.transport.lwm2m.ota.sql;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Test;
 import org.echoiot.server.common.data.Device;
@@ -82,9 +83,9 @@ public class OtaLwM2MIntegrationTest extends AbstractOtaLwM2MIntegrationTest {
     public void testFirmwareUpdateWithClientWithoutFirmwareOtaInfoFromProfile() throws Exception {
         Lwm2mDeviceProfileTransportConfiguration transportConfiguration = getTransportConfiguration(OBSERVE_ATTRIBUTES_WITH_PARAMS, getBootstrapServerCredentialsNoSec(NONE));
         createDeviceProfile(transportConfiguration);
-        LwM2MDeviceCredentials deviceCredentials = getDeviceCredentialsNoSec(createNoSecClientCredentials(this.CLIENT_ENDPOINT_WITHOUT_FW_INFO));
-        final Device device = createDevice(deviceCredentials, this.CLIENT_ENDPOINT_WITHOUT_FW_INFO);
-        createNewClient(SECURITY_NO_SEC, COAP_CONFIG, false, this.CLIENT_ENDPOINT_WITHOUT_FW_INFO, false, null);
+        LwM2MDeviceCredentials deviceCredentials = getDeviceCredentialsNoSec(createNoSecClientCredentials(CLIENT_ENDPOINT_WITHOUT_FW_INFO));
+        final Device device = createDevice(deviceCredentials, CLIENT_ENDPOINT_WITHOUT_FW_INFO);
+        createNewClient(SECURITY_NO_SEC, COAP_CONFIG, false, CLIENT_ENDPOINT_WITHOUT_FW_INFO, false, null);
         awaitObserveReadAll(0, false, device.getId().getId().toString());
 
         device.setFirmwareId(createFirmware().getId());
@@ -95,10 +96,10 @@ public class OtaLwM2MIntegrationTest extends AbstractOtaLwM2MIntegrationTest {
         assertThat(savedDevice).as("saved device").isNotNull();
         assertThat(getDeviceFromAPI(device.getId().getId())).as("fetched device").isEqualTo(savedDevice);
 
-        List<TsKvEntry> ts = toTimeseries(doGetAsyncTyped("/api/plugins/telemetry/DEVICE/" +
-                savedDevice.getId().getId() + "/values/timeseries?keys=fw_state", new TypeReference<>() {}));
-        List<OtaPackageUpdateStatus> statuses = ts.stream().map(KvEntry::getValueAsString).map(OtaPackageUpdateStatus::valueOf).collect(Collectors.toList());
-        List<OtaPackageUpdateStatus> expectedStatuses = Collections.singletonList(FAILED);
+        @NotNull List<TsKvEntry> ts = toTimeseries(doGetAsyncTyped("/api/plugins/telemetry/DEVICE/" +
+                                                                   savedDevice.getId().getId() + "/values/timeseries?keys=fw_state", new TypeReference<>() {}));
+        @NotNull List<OtaPackageUpdateStatus> statuses = ts.stream().map(KvEntry::getValueAsString).map(OtaPackageUpdateStatus::valueOf).collect(Collectors.toList());
+        @NotNull List<OtaPackageUpdateStatus> expectedStatuses = Collections.singletonList(FAILED);
 
         Assert.assertEquals(expectedStatuses, statuses);
     }
@@ -107,9 +108,9 @@ public class OtaLwM2MIntegrationTest extends AbstractOtaLwM2MIntegrationTest {
     public void testFirmwareUpdateByObject5() throws Exception {
         Lwm2mDeviceProfileTransportConfiguration transportConfiguration = getTransportConfiguration(OBSERVE_ATTRIBUTES_WITH_PARAMS_OTA, getBootstrapServerCredentialsNoSec(NONE));
         createDeviceProfile(transportConfiguration);
-        LwM2MDeviceCredentials deviceCredentials = getDeviceCredentialsNoSec(createNoSecClientCredentials(this.CLIENT_ENDPOINT_OTA5));
-        final Device device = createDevice(deviceCredentials, this.CLIENT_ENDPOINT_OTA5);
-        createNewClient(SECURITY_NO_SEC, COAP_CONFIG, false, this.CLIENT_ENDPOINT_OTA5, false, null);
+        LwM2MDeviceCredentials deviceCredentials = getDeviceCredentialsNoSec(createNoSecClientCredentials(CLIENT_ENDPOINT_OTA5));
+        final Device device = createDevice(deviceCredentials, CLIENT_ENDPOINT_OTA5);
+        createNewClient(SECURITY_NO_SEC, COAP_CONFIG, false, CLIENT_ENDPOINT_OTA5, false, null);
         awaitObserveReadAll(9, false, device.getId().getId().toString());
 
         device.setFirmwareId(createFirmware().getId());
@@ -137,9 +138,9 @@ public class OtaLwM2MIntegrationTest extends AbstractOtaLwM2MIntegrationTest {
     public void testSoftwareUpdateByObject9() throws Exception {
         Lwm2mDeviceProfileTransportConfiguration transportConfiguration = getTransportConfiguration(OBSERVE_ATTRIBUTES_WITH_PARAMS_OTA, getBootstrapServerCredentialsNoSec(NONE));
         createDeviceProfile(transportConfiguration);
-        LwM2MDeviceCredentials deviceCredentials = getDeviceCredentialsNoSec(createNoSecClientCredentials(this.CLIENT_ENDPOINT_OTA9));
-        final Device device = createDevice(deviceCredentials, this.CLIENT_ENDPOINT_OTA9);
-        createNewClient(SECURITY_NO_SEC, COAP_CONFIG, false, this.CLIENT_ENDPOINT_OTA9, false, null);
+        LwM2MDeviceCredentials deviceCredentials = getDeviceCredentialsNoSec(createNoSecClientCredentials(CLIENT_ENDPOINT_OTA9));
+        final Device device = createDevice(deviceCredentials, CLIENT_ENDPOINT_OTA9);
+        createNewClient(SECURITY_NO_SEC, COAP_CONFIG, false, CLIENT_ENDPOINT_OTA9, false, null);
         awaitObserveReadAll(9, false, device.getId().getId().toString());
 
         device.setSoftwareId(createSoftware().getId());
@@ -163,18 +164,19 @@ public class OtaLwM2MIntegrationTest extends AbstractOtaLwM2MIntegrationTest {
         return device;
     }
 
+    @NotNull
     private List<TsKvEntry> getSwStateTelemetryFromAPI(UUID deviceId) throws Exception {
-        final List<TsKvEntry> tsKvEntries = toTimeseries(doGetAsyncTyped("/api/plugins/telemetry/DEVICE/" + deviceId + "/values/timeseries?orderBy=ASC&keys=sw_state&startTs=0&endTs=" + System.currentTimeMillis(), new TypeReference<>() {
+        @NotNull final List<TsKvEntry> tsKvEntries = toTimeseries(doGetAsyncTyped("/api/plugins/telemetry/DEVICE/" + deviceId + "/values/timeseries?orderBy=ASC&keys=sw_state&startTs=0&endTs=" + System.currentTimeMillis(), new TypeReference<>() {
         }));
         log.warn("Fetched telemetry by API for deviceId {}, list size {}, tsKvEntries {}", deviceId, tsKvEntries.size(), tsKvEntries);
         return tsKvEntries;
     }
 
-    private boolean predicateForStatuses (List<TsKvEntry> ts) {
-        List<OtaPackageUpdateStatus> statuses = ts.stream().sorted(Comparator
+    private boolean predicateForStatuses(@NotNull List<TsKvEntry> ts) {
+        @NotNull List<OtaPackageUpdateStatus> statuses = ts.stream().sorted(Comparator
                 .comparingLong(TsKvEntry::getTs)).map(KvEntry::getValueAsString)
-                .map(OtaPackageUpdateStatus::valueOf)
-                .collect(Collectors.toList());
+                                                           .map(OtaPackageUpdateStatus::valueOf)
+                                                           .collect(Collectors.toList());
         log.warn("{}", statuses);
         return statuses.containsAll(expectedStatuses);
     }

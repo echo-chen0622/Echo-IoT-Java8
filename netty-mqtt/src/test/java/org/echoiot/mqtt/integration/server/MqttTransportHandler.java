@@ -16,6 +16,7 @@ import io.netty.util.ReferenceCountUtil;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.UUID;
@@ -32,6 +33,7 @@ import static io.netty.handler.codec.mqtt.MqttQoS.AT_MOST_ONCE;
 public class MqttTransportHandler extends ChannelInboundHandlerAdapter implements GenericFutureListener<Future<? super Void>> {
 
     private final List<MqttMessageType> eventsFromClient;
+    @NotNull
     private final UUID sessionId;
 
     MqttTransportHandler(List<MqttMessageType> eventsFromClient) {
@@ -40,11 +42,11 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
     }
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) {
+    public void channelRead(@NotNull ChannelHandlerContext ctx, Object msg) {
         log.trace("[{}] Processing msg: {}", sessionId, msg);
         try {
             if (msg instanceof MqttMessage) {
-                MqttMessage message = (MqttMessage) msg;
+                @NotNull MqttMessage message = (MqttMessage) msg;
                 if (message.decoderResult().isSuccess()) {
                     processMqttMsg(ctx, message);
                 } else {
@@ -60,7 +62,7 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
         }
     }
 
-    void processMqttMsg(ChannelHandlerContext ctx, MqttMessage msg) {
+    void processMqttMsg(@NotNull ChannelHandlerContext ctx, @NotNull MqttMessage msg) {
         if (msg.fixedHeader() == null) {
             ctx.close();
             return;
@@ -77,7 +79,7 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
             case PUBLISH:
                 // QoS 0 and 1 supported only here
                 eventsFromClient.add(PUBLISH);
-                MqttPublishMessage mqttPubMsg = (MqttPublishMessage) msg;
+                @NotNull MqttPublishMessage mqttPubMsg = (MqttPublishMessage) msg;
                 ack(ctx, mqttPubMsg.variableHeader().packetId());
                 break;
             case PINGREQ:
@@ -89,7 +91,7 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
         }
     }
 
-    void processConnect(ChannelHandlerContext ctx, MqttConnectMessage msg) {
+    void processConnect(@NotNull ChannelHandlerContext ctx, @NotNull MqttConnectMessage msg) {
         String userName = msg.payload().userName();
         String clientId = msg.payload().clientIdentifier();
 
@@ -97,24 +99,26 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
         ctx.writeAndFlush(createMqttConnAckMsg(msg));
     }
 
-    private MqttConnAckMessage createMqttConnAckMsg(MqttConnectMessage msg) {
-        MqttFixedHeader mqttFixedHeader =
+    @NotNull
+    private MqttConnAckMessage createMqttConnAckMsg(@NotNull MqttConnectMessage msg) {
+        @NotNull MqttFixedHeader mqttFixedHeader =
                 new MqttFixedHeader(CONNACK, false, AT_MOST_ONCE, false, 0);
-        MqttConnAckVariableHeader mqttConnAckVariableHeader =
+        @NotNull MqttConnAckVariableHeader mqttConnAckVariableHeader =
                 new MqttConnAckVariableHeader(MqttConnectReturnCode.CONNECTION_ACCEPTED, !msg.variableHeader().isCleanSession());
         return new MqttConnAckMessage(mqttFixedHeader, mqttConnAckVariableHeader);
     }
 
-    private void ack(ChannelHandlerContext ctx, int msgId) {
+    private void ack(@NotNull ChannelHandlerContext ctx, int msgId) {
         if (msgId > 0) {
             ctx.writeAndFlush(createMqttPubAckMsg(msgId));
         }
     }
 
+    @NotNull
     public static MqttPubAckMessage createMqttPubAckMsg(int requestId) {
-        MqttFixedHeader mqttFixedHeader =
+        @NotNull MqttFixedHeader mqttFixedHeader =
                 new MqttFixedHeader(PUBACK, false, AT_MOST_ONCE, false, 0);
-        MqttMessageIdVariableHeader mqttMsgIdVariableHeader =
+        @NotNull MqttMessageIdVariableHeader mqttMsgIdVariableHeader =
                 MqttMessageIdVariableHeader.from(requestId);
         return new MqttPubAckMessage(mqttFixedHeader, mqttMsgIdVariableHeader);
     }

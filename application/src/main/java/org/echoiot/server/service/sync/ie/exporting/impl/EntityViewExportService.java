@@ -4,6 +4,7 @@ import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.EntityView;
 import org.echoiot.server.common.data.id.EntityViewId;
 import org.echoiot.server.common.data.sync.ie.EntityExportData;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.sync.vc.data.EntitiesExportCtx;
@@ -15,11 +16,12 @@ import java.util.Set;
 public class EntityViewExportService extends BaseEntityExportService<EntityViewId, EntityView, EntityExportData<EntityView>> {
 
     @Override
-    protected void setRelatedEntities(EntitiesExportCtx<?> ctx, EntityView entityView, EntityExportData<EntityView> exportData) {
+    protected void setRelatedEntities(EntitiesExportCtx<?> ctx, @NotNull EntityView entityView, EntityExportData<EntityView> exportData) {
         entityView.setEntityId(getExternalIdOrElseInternal(ctx, entityView.getEntityId()));
         entityView.setCustomerId(getExternalIdOrElseInternal(ctx, entityView.getCustomerId()));
     }
 
+    @NotNull
     @Override
     public Set<EntityType> getSupportedEntityTypes() {
         return Set.of(EntityType.ENTITY_VIEW);

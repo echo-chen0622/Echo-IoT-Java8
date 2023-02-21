@@ -22,6 +22,7 @@ import org.echoiot.server.queue.settings.TbQueueRemoteJsInvokeSettings;
 import org.echoiot.server.queue.settings.TbQueueRuleEngineSettings;
 import org.echoiot.server.queue.settings.TbQueueTransportNotificationSettings;
 import org.echoiot.server.queue.sqs.*;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
@@ -41,17 +42,22 @@ public class AwsSqsTbRuleEngineQueueFactory implements TbRuleEngineQueueFactory 
     private final TbQueueRemoteJsInvokeSettings jsInvokeSettings;
     private final TbQueueTransportNotificationSettings transportNotificationSettings;
 
+    @NotNull
     private final TbQueueAdmin coreAdmin;
+    @NotNull
     private final TbQueueAdmin ruleEngineAdmin;
+    @NotNull
     private final TbQueueAdmin jsExecutorAdmin;
+    @NotNull
     private final TbQueueAdmin notificationAdmin;
+    @NotNull
     private final TbQueueAdmin otaAdmin;
 
     public AwsSqsTbRuleEngineQueueFactory(NotificationsTopicService notificationsTopicService, TbQueueCoreSettings coreSettings,
                                           TbQueueRuleEngineSettings ruleEngineSettings,
                                           TbServiceInfoProvider serviceInfoProvider,
-                                          TbAwsSqsSettings sqsSettings,
-                                          TbAwsSqsQueueAttributes sqsQueueAttributes,
+                                          @NotNull TbAwsSqsSettings sqsSettings,
+                                          @NotNull TbAwsSqsQueueAttributes sqsQueueAttributes,
                                           TbQueueRemoteJsInvokeSettings jsInvokeSettings,
                                           TbQueueTransportNotificationSettings transportNotificationSettings) {
         this.notificationsTopicService = notificationsTopicService;
@@ -69,37 +75,44 @@ public class AwsSqsTbRuleEngineQueueFactory implements TbRuleEngineQueueFactory 
         this.otaAdmin = new TbAwsSqsAdmin(sqsSettings, sqsQueueAttributes.getOtaAttributes());
     }
 
+    @NotNull
     @Override
     public TbQueueProducer<TbProtoQueueMsg<ToTransportMsg>> createTransportNotificationsMsgProducer() {
         return new TbAwsSqsProducerTemplate<>(notificationAdmin, sqsSettings, transportNotificationSettings.getNotificationsTopic());
     }
 
+    @NotNull
     @Override
     public TbQueueProducer<TbProtoQueueMsg<ToRuleEngineMsg>> createRuleEngineMsgProducer() {
         return new TbAwsSqsProducerTemplate<>(ruleEngineAdmin, sqsSettings, ruleEngineSettings.getTopic());
     }
 
+    @NotNull
     @Override
     public TbQueueProducer<TbProtoQueueMsg<TransportProtos.ToRuleEngineNotificationMsg>> createRuleEngineNotificationsMsgProducer() {
         return new TbAwsSqsProducerTemplate<>(notificationAdmin, sqsSettings, ruleEngineSettings.getTopic());
     }
 
+    @NotNull
     @Override
     public TbQueueProducer<TbProtoQueueMsg<ToCoreMsg>> createTbCoreMsgProducer() {
         return new TbAwsSqsProducerTemplate<>(coreAdmin, sqsSettings, coreSettings.getTopic());
     }
 
+    @NotNull
     @Override
     public TbQueueProducer<TbProtoQueueMsg<TransportProtos.ToCoreNotificationMsg>> createTbCoreNotificationsMsgProducer() {
         return new TbAwsSqsProducerTemplate<>(notificationAdmin, sqsSettings, coreSettings.getTopic());
     }
 
+    @NotNull
     @Override
-    public TbQueueConsumer<TbProtoQueueMsg<ToRuleEngineMsg>> createToRuleEngineMsgConsumer(Queue configuration) {
+    public TbQueueConsumer<TbProtoQueueMsg<ToRuleEngineMsg>> createToRuleEngineMsgConsumer(@NotNull Queue configuration) {
         return new TbAwsSqsConsumerTemplate<>(ruleEngineAdmin, sqsSettings, configuration.getTopic(),
                 msg -> new TbProtoQueueMsg<>(msg.getKey(), ToRuleEngineMsg.parseFrom(msg.getData()), msg.getHeaders()));
     }
 
+    @NotNull
     @Override
     public TbQueueConsumer<TbProtoQueueMsg<TransportProtos.ToRuleEngineNotificationMsg>> createToRuleEngineNotificationsMsgConsumer() {
         return new TbAwsSqsConsumerTemplate<>(notificationAdmin, sqsSettings,
@@ -110,8 +123,8 @@ public class AwsSqsTbRuleEngineQueueFactory implements TbRuleEngineQueueFactory 
     @Override
     @Bean
     public TbQueueRequestTemplate<TbProtoJsQueueMsg<JsInvokeProtos.RemoteJsRequest>, TbProtoQueueMsg<JsInvokeProtos.RemoteJsResponse>> createRemoteJsRequestTemplate() {
-        TbQueueProducer<TbProtoJsQueueMsg<JsInvokeProtos.RemoteJsRequest>> producer = new TbAwsSqsProducerTemplate<>(jsExecutorAdmin, sqsSettings, jsInvokeSettings.getRequestTopic());
-        TbQueueConsumer<TbProtoQueueMsg<JsInvokeProtos.RemoteJsResponse>> consumer = new TbAwsSqsConsumerTemplate<>(jsExecutorAdmin, sqsSettings,
+        @NotNull TbQueueProducer<TbProtoJsQueueMsg<JsInvokeProtos.RemoteJsRequest>> producer = new TbAwsSqsProducerTemplate<>(jsExecutorAdmin, sqsSettings, jsInvokeSettings.getRequestTopic());
+        @NotNull TbQueueConsumer<TbProtoQueueMsg<JsInvokeProtos.RemoteJsResponse>> consumer = new TbAwsSqsConsumerTemplate<>(jsExecutorAdmin, sqsSettings,
                 jsInvokeSettings.getResponseTopic() + "_" + serviceInfoProvider.getServiceId(),
                 msg -> {
                     JsInvokeProtos.RemoteJsResponse.Builder builder = JsInvokeProtos.RemoteJsResponse.newBuilder();
@@ -130,11 +143,13 @@ public class AwsSqsTbRuleEngineQueueFactory implements TbRuleEngineQueueFactory 
         return builder.build();
     }
 
+    @NotNull
     @Override
     public TbQueueProducer<TbProtoQueueMsg<TransportProtos.ToUsageStatsServiceMsg>> createToUsageStatsServiceMsgProducer() {
         return new TbAwsSqsProducerTemplate<>(coreAdmin, sqsSettings, coreSettings.getUsageStatsTopic());
     }
 
+    @NotNull
     @Override
     public TbQueueProducer<TbProtoQueueMsg<TransportProtos.ToOtaPackageStateServiceMsg>> createToOtaPackageStateServiceMsgProducer() {
         return new TbAwsSqsProducerTemplate<>(otaAdmin, sqsSettings, coreSettings.getOtaPackageTopic());

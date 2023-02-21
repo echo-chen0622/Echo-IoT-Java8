@@ -114,6 +114,6 @@ public enum MsgType {
      * Messages that are sent to and from edge session to start edge synchronization process
      */
     EDGE_SYNC_REQUEST_TO_EDGE_SESSION_MSG,
-    EDGE_SYNC_RESPONSE_FROM_EDGE_SESSION_MSG;
+    EDGE_SYNC_RESPONSE_FROM_EDGE_SESSION_MSG
 
 }

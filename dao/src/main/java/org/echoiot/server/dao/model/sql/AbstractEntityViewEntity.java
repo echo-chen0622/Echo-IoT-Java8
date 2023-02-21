@@ -18,6 +18,7 @@ import org.echoiot.server.dao.model.BaseSqlEntity;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.model.SearchTextEntity;
 import org.echoiot.server.dao.util.mapping.JsonStringType;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.EnumType;
@@ -83,7 +84,7 @@ public abstract class AbstractEntityViewEntity<T extends EntityView> extends Bas
         super();
     }
 
-    public AbstractEntityViewEntity(EntityView entityView) {
+    public AbstractEntityViewEntity(@NotNull EntityView entityView) {
         if (entityView.getId() != null) {
             this.setUuid(entityView.getId().getId());
         }
@@ -114,7 +115,7 @@ public abstract class AbstractEntityViewEntity<T extends EntityView> extends Bas
         }
     }
 
-    public AbstractEntityViewEntity(EntityViewEntity entityViewEntity) {
+    public AbstractEntityViewEntity(@NotNull EntityViewEntity entityViewEntity) {
         this.setId(entityViewEntity.getId());
         this.setCreatedTime(entityViewEntity.getCreatedTime());
         this.entityId = entityViewEntity.getEntityId();
@@ -141,8 +142,9 @@ public abstract class AbstractEntityViewEntity<T extends EntityView> extends Bas
         this.searchText = searchText;
     }
 
+    @NotNull
     protected EntityView toEntityView() {
-        EntityView entityView = new EntityView(new EntityViewId(getUuid()));
+        @NotNull EntityView entityView = new EntityView(new EntityViewId(getUuid()));
         entityView.setCreatedTime(createdTime);
 
         if (entityId != null) {

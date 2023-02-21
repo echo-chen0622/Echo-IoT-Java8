@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.dao.entity.AbstractEntityService;
 import org.echoiot.server.dao.exception.DataValidationException;
 import org.hibernate.exception.ConstraintViolationException;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.echoiot.server.common.data.id.EntityId;
@@ -17,11 +19,11 @@ import org.echoiot.server.common.data.rule.RuleNodeState;
 @Slf4j
 public class BaseRuleNodeStateService extends AbstractEntityService implements RuleNodeStateService {
 
-    @Autowired
+    @Resource
     private RuleNodeStateDao ruleNodeStateDao;
 
     @Override
-    public PageData<RuleNodeState> findByRuleNodeId(TenantId tenantId, RuleNodeId ruleNodeId, PageLink pageLink) {
+    public PageData<RuleNodeState> findByRuleNodeId(@NotNull TenantId tenantId, @NotNull RuleNodeId ruleNodeId, PageLink pageLink) {
         if (tenantId == null) {
             throw new DataValidationException("Tenant id should be specified!.");
         }
@@ -32,7 +34,7 @@ public class BaseRuleNodeStateService extends AbstractEntityService implements R
     }
 
     @Override
-    public RuleNodeState findByRuleNodeIdAndEntityId(TenantId tenantId, RuleNodeId ruleNodeId, EntityId entityId) {
+    public RuleNodeState findByRuleNodeIdAndEntityId(@NotNull TenantId tenantId, @NotNull RuleNodeId ruleNodeId, @NotNull EntityId entityId) {
         if (tenantId == null) {
             throw new DataValidationException("Tenant id should be specified!.");
         }
@@ -46,7 +48,7 @@ public class BaseRuleNodeStateService extends AbstractEntityService implements R
     }
 
     @Override
-    public RuleNodeState save(TenantId tenantId, RuleNodeState ruleNodeState) {
+    public RuleNodeState save(@NotNull TenantId tenantId, @NotNull RuleNodeState ruleNodeState) {
         if (tenantId == null) {
             throw new DataValidationException("Tenant id should be specified!.");
         }
@@ -54,7 +56,7 @@ public class BaseRuleNodeStateService extends AbstractEntityService implements R
     }
 
     @Override
-    public void removeByRuleNodeId(TenantId tenantId, RuleNodeId ruleNodeId) {
+    public void removeByRuleNodeId(@NotNull TenantId tenantId, @NotNull RuleNodeId ruleNodeId) {
         if (tenantId == null) {
             throw new DataValidationException("Tenant id should be specified!.");
         }
@@ -65,7 +67,7 @@ public class BaseRuleNodeStateService extends AbstractEntityService implements R
     }
 
     @Override
-    public void removeByRuleNodeIdAndEntityId(TenantId tenantId, RuleNodeId ruleNodeId, EntityId entityId) {
+    public void removeByRuleNodeIdAndEntityId(@NotNull TenantId tenantId, @NotNull RuleNodeId ruleNodeId, @NotNull EntityId entityId) {
         if (tenantId == null) {
             throw new DataValidationException("Tenant id should be specified!.");
         }
@@ -78,7 +80,7 @@ public class BaseRuleNodeStateService extends AbstractEntityService implements R
         ruleNodeStateDao.removeByRuleNodeIdAndEntityId(ruleNodeId.getId(), entityId.getId());
     }
 
-    public RuleNodeState saveOrUpdate(TenantId tenantId, RuleNodeState ruleNodeState, boolean update) {
+    public RuleNodeState saveOrUpdate(TenantId tenantId, @NotNull RuleNodeState ruleNodeState, boolean update) {
         try {
             if (update) {
                 RuleNodeState old = ruleNodeStateDao.findByRuleNodeIdAndEntityId(ruleNodeState.getRuleNodeId().getId(), ruleNodeState.getEntityId().getId());
@@ -89,7 +91,7 @@ public class BaseRuleNodeStateService extends AbstractEntityService implements R
             }
             return ruleNodeStateDao.save(tenantId, ruleNodeState);
         } catch (Exception t) {
-            ConstraintViolationException e = extractConstraintViolationException(t).orElse(null);
+            @Nullable ConstraintViolationException e = extractConstraintViolationException(t).orElse(null);
             if (e != null && e.getConstraintName() != null && e.getConstraintName().equalsIgnoreCase("rule_node_state_unq_key")) {
                 if (!update) {
                     return saveOrUpdate(tenantId, ruleNodeState, true);

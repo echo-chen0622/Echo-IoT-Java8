@@ -17,6 +17,7 @@ import org.echoiot.server.common.data.id.AssetProfileId;
 import org.echoiot.server.common.data.id.DashboardId;
 import org.echoiot.server.common.data.id.RuleChainId;
 import org.echoiot.server.common.data.id.TenantId;
+import org.jetbrains.annotations.NotNull;
 
 @ApiModel
 @Data
@@ -63,7 +64,7 @@ public class AssetProfile extends SearchTextBased<AssetProfileId> implements Has
         super(assetProfileId);
     }
 
-    public AssetProfile(AssetProfile assetProfile) {
+    public AssetProfile(@NotNull AssetProfile assetProfile) {
         super(assetProfile);
         this.tenantId = assetProfile.getTenantId();
         this.name = assetProfile.getName();

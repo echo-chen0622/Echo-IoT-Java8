@@ -1,5 +1,7 @@
 package org.echoiot.server.transport.lwm2m.server.uplink;
 
+import org.jetbrains.annotations.NotNull;
+
 public enum LwM2mTypeServer {
     BOOTSTRAP(0, "bootstrap"),
     CLIENT(1, "client");
@@ -12,8 +14,9 @@ public enum LwM2mTypeServer {
         this.type = type;
     }
 
+    @NotNull
     public static LwM2mTypeServer fromLwM2mTypeServer(String type) {
-        for (LwM2mTypeServer sm : LwM2mTypeServer.values()) {
+        for (@NotNull LwM2mTypeServer sm : LwM2mTypeServer.values()) {
             if (sm.type.equals(type)) {
                 return sm;
             }

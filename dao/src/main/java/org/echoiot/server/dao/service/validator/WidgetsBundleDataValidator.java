@@ -9,17 +9,20 @@ import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.service.DataValidator;
 import org.echoiot.server.dao.tenant.TenantService;
 import org.echoiot.server.dao.widget.WidgetsBundleDao;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 @Component
 @AllArgsConstructor
 public class WidgetsBundleDataValidator extends DataValidator<WidgetsBundle> {
 
+    @NotNull
     private final WidgetsBundleDao widgetsBundleDao;
+    @NotNull
     private final TenantService tenantService;
 
     @Override
-    protected void validateDataImpl(TenantId tenantId, WidgetsBundle widgetsBundle) {
+    protected void validateDataImpl(TenantId tenantId, @NotNull WidgetsBundle widgetsBundle) {
         if (StringUtils.isEmpty(widgetsBundle.getTitle())) {
             throw new DataValidationException("Widgets bundle title should be specified!");
         }
@@ -34,12 +37,12 @@ public class WidgetsBundleDataValidator extends DataValidator<WidgetsBundle> {
     }
 
     @Override
-    protected void validateCreate(TenantId tenantId, WidgetsBundle widgetsBundle) {
+    protected void validateCreate(TenantId tenantId, @NotNull WidgetsBundle widgetsBundle) {
         String alias = widgetsBundle.getAlias();
         if (alias == null || alias.trim().isEmpty()) {
             alias = widgetsBundle.getTitle().toLowerCase().replaceAll("\\W+", "_");
         }
-        String originalAlias = alias;
+        @NotNull String originalAlias = alias;
         int c = 1;
         WidgetsBundle withSameAlias;
         do {
@@ -51,8 +54,9 @@ public class WidgetsBundleDataValidator extends DataValidator<WidgetsBundle> {
         widgetsBundle.setAlias(alias);
     }
 
+    @NotNull
     @Override
-    protected WidgetsBundle validateUpdate(TenantId tenantId, WidgetsBundle widgetsBundle) {
+    protected WidgetsBundle validateUpdate(TenantId tenantId, @NotNull WidgetsBundle widgetsBundle) {
         WidgetsBundle storedWidgetsBundle = widgetsBundleDao.findById(tenantId, widgetsBundle.getId().getId());
         if (!storedWidgetsBundle.getTenantId().getId().equals(widgetsBundle.getTenantId().getId())) {
             throw new DataValidationException("Can't move existing widgets bundle to different tenant!");

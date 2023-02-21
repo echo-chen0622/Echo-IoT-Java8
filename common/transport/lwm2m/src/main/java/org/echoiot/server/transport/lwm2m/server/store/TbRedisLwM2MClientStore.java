@@ -3,6 +3,8 @@ package org.echoiot.server.transport.lwm2m.server.store;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.transport.lwm2m.server.client.LwM2MClientState;
 import org.echoiot.server.transport.lwm2m.server.store.util.LwM2MClientSerDes;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.data.redis.connection.RedisClusterConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.Cursor;
@@ -24,10 +26,11 @@ public class TbRedisLwM2MClientStore implements TbLwM2MClientStore {
         this.connectionFactory = redisConnectionFactory;
     }
 
+    @Nullable
     @Override
     public LwM2mClient get(String endpoint) {
-        try (var connection = connectionFactory.getConnection()) {
-            byte[] data = connection.get(getKey(endpoint));
+        try (@NotNull var connection = connectionFactory.getConnection()) {
+            @Nullable byte[] data = connection.get(getKey(endpoint));
             if (data == null) {
                 return null;
             } else {
@@ -36,12 +39,13 @@ public class TbRedisLwM2MClientStore implements TbLwM2MClientStore {
         }
     }
 
+    @NotNull
     @Override
     public Set<LwM2mClient> getAll() {
-        try (var connection = connectionFactory.getConnection()) {
-            Set<LwM2mClient> clients = new HashSet<>();
-            ScanOptions scanOptions = ScanOptions.scanOptions().count(100).match(CLIENT_EP + "*").build();
-            List<Cursor<byte[]>> scans = new ArrayList<>();
+        try (@NotNull var connection = connectionFactory.getConnection()) {
+            @NotNull Set<LwM2mClient> clients = new HashSet<>();
+            @NotNull ScanOptions scanOptions = ScanOptions.scanOptions().count(100).match(CLIENT_EP + "*").build();
+            @NotNull List<Cursor<byte[]>> scans = new ArrayList<>();
             if (connection instanceof RedisClusterConnection) {
                 ((RedisClusterConnection) connection).clusterGetNodes().forEach(node -> {
                     scans.add(((RedisClusterConnection) connection).scan(node, scanOptions));
@@ -52,7 +56,7 @@ public class TbRedisLwM2MClientStore implements TbLwM2MClientStore {
 
             scans.forEach(scan -> {
                 scan.forEachRemaining(key -> {
-                    byte[] element = connection.get(key);
+                    @Nullable byte[] element = connection.get(key);
                     clients.add(LwM2MClientSerDes.deserialize(element));
                 });
             });
@@ -61,12 +65,12 @@ public class TbRedisLwM2MClientStore implements TbLwM2MClientStore {
     }
 
     @Override
-    public void put(LwM2mClient client) {
+    public void put(@NotNull LwM2mClient client) {
         if (client.getState().equals(LwM2MClientState.UNREGISTERED)) {
             log.error("[{}] Client is in invalid state: {}!", client.getEndpoint(), client.getState(), new Exception());
         } else {
-            byte[] clientSerialized = LwM2MClientSerDes.serialize(client);
-            try (var connection = connectionFactory.getConnection()) {
+            @NotNull byte[] clientSerialized = LwM2MClientSerDes.serialize(client);
+            try (@NotNull var connection = connectionFactory.getConnection()) {
                 connection.getSet(getKey(client.getEndpoint()), clientSerialized);
             }
         }
@@ -74,7 +78,7 @@ public class TbRedisLwM2MClientStore implements TbLwM2MClientStore {
 
     @Override
     public void remove(String endpoint) {
-        try (var connection = connectionFactory.getConnection()) {
+        try (@NotNull var connection = connectionFactory.getConnection()) {
             connection.del(getKey(endpoint));
         }
     }

@@ -36,6 +36,7 @@ import org.echoiot.server.service.security.permission.AccessControlService;
 import org.echoiot.server.service.security.permission.Operation;
 import org.echoiot.server.service.security.permission.Resource;
 import org.echoiot.server.service.telemetry.exception.ToErrorResponseEntity;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -62,52 +63,52 @@ public class AccessValidator {
     public static final String EDGE_WITH_REQUESTED_ID_NOT_FOUND = "Edge with requested id wasn't found!";
     public static final String ENTITY_VIEW_WITH_REQUESTED_ID_NOT_FOUND = "Entity-view with requested id wasn't found!";
 
-    @Autowired
+    @Resource
     protected TenantService tenantService;
 
-    @Autowired
+    @Resource
     protected CustomerService customerService;
 
-    @Autowired
+    @Resource
     protected UserService userService;
 
-    @Autowired
+    @Resource
     protected DeviceService deviceService;
 
-    @Autowired
+    @Resource
     protected DeviceProfileService deviceProfileService;
 
-    @Autowired
+    @Resource
     protected AssetProfileService assetProfileService;
 
-    @Autowired
+    @Resource
     protected AssetService assetService;
 
-    @Autowired
+    @Resource
     protected AlarmService alarmService;
 
-    @Autowired
+    @Resource
     protected RuleChainService ruleChainService;
 
-    @Autowired
+    @Resource
     protected EntityViewService entityViewService;
 
     @Autowired(required = false)
     protected EdgeService edgeService;
 
-    @Autowired
+    @Resource
     protected AccessControlService accessControlService;
 
-    @Autowired
+    @Resource
     protected ApiUsageStateService apiUsageStateService;
 
-    @Autowired
+    @Resource
     protected ResourceService resourceService;
 
-    @Autowired
+    @Resource
     protected OtaPackageService otaPackageService;
 
-    @Autowired
+    @Resource
     protected RpcService rpcService;
 
     private ExecutorService executor;
@@ -124,28 +125,29 @@ public class AccessValidator {
         }
     }
 
-    public DeferredResult<ResponseEntity> validateEntityAndCallback(SecurityUser currentUser, Operation operation, String entityType, String entityIdStr,
-                                                                    ThreeConsumer<DeferredResult<ResponseEntity>, TenantId, EntityId> onSuccess) throws EchoiotException {
+    public DeferredResult<ResponseEntity> validateEntityAndCallback(@NotNull SecurityUser currentUser, @NotNull Operation operation, String entityType, @NotNull String entityIdStr,
+                                                                    @NotNull ThreeConsumer<DeferredResult<ResponseEntity>, TenantId, EntityId> onSuccess) throws EchoiotException {
         return validateEntityAndCallback(currentUser, operation, entityType, entityIdStr, onSuccess, (result, t) -> handleError(t, result, HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
-    public DeferredResult<ResponseEntity> validateEntityAndCallback(SecurityUser currentUser, Operation operation, String entityType, String entityIdStr,
-                                                                    ThreeConsumer<DeferredResult<ResponseEntity>, TenantId, EntityId> onSuccess,
-                                                                    BiConsumer<DeferredResult<ResponseEntity>, Throwable> onFailure) throws EchoiotException {
+    public DeferredResult<ResponseEntity> validateEntityAndCallback(@NotNull SecurityUser currentUser, @NotNull Operation operation, String entityType, @NotNull String entityIdStr,
+                                                                    @NotNull ThreeConsumer<DeferredResult<ResponseEntity>, TenantId, EntityId> onSuccess,
+                                                                    @NotNull BiConsumer<DeferredResult<ResponseEntity>, Throwable> onFailure) throws EchoiotException {
         return validateEntityAndCallback(currentUser, operation, EntityIdFactory.getByTypeAndId(entityType, entityIdStr),
                                          onSuccess, onFailure);
     }
 
-    public DeferredResult<ResponseEntity> validateEntityAndCallback(SecurityUser currentUser, Operation operation, EntityId entityId,
-                                                                    ThreeConsumer<DeferredResult<ResponseEntity>, TenantId, EntityId> onSuccess) throws EchoiotException {
+    public DeferredResult<ResponseEntity> validateEntityAndCallback(@NotNull SecurityUser currentUser, @NotNull Operation operation, @NotNull EntityId entityId,
+                                                                    @NotNull ThreeConsumer<DeferredResult<ResponseEntity>, TenantId, EntityId> onSuccess) throws EchoiotException {
         return validateEntityAndCallback(currentUser, operation, entityId, onSuccess, (result, t) -> handleError(t, result, HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
-    public DeferredResult<ResponseEntity> validateEntityAndCallback(SecurityUser currentUser, Operation operation, EntityId entityId,
-                                                                    ThreeConsumer<DeferredResult<ResponseEntity>, TenantId, EntityId> onSuccess,
-                                                                    BiConsumer<DeferredResult<ResponseEntity>, Throwable> onFailure) throws EchoiotException {
+    @NotNull
+    public DeferredResult<ResponseEntity> validateEntityAndCallback(@NotNull SecurityUser currentUser, @NotNull Operation operation, @NotNull EntityId entityId,
+                                                                    @NotNull ThreeConsumer<DeferredResult<ResponseEntity>, TenantId, EntityId> onSuccess,
+                                                                    @NotNull BiConsumer<DeferredResult<ResponseEntity>, Throwable> onFailure) throws EchoiotException {
 
-        final DeferredResult<ResponseEntity> response = new DeferredResult<>();
+        @NotNull final DeferredResult<ResponseEntity> response = new DeferredResult<>();
 
         validate(currentUser, operation, entityId, new HttpValidationCallback(response,
                 new FutureCallback<DeferredResult<ResponseEntity>>() {
@@ -167,7 +169,7 @@ public class AccessValidator {
         return response;
     }
 
-    public void validate(SecurityUser currentUser, Operation operation, EntityId entityId, FutureCallback<ValidationResult> callback) {
+    public void validate(@NotNull SecurityUser currentUser, @NotNull Operation operation, @NotNull EntityId entityId, @NotNull FutureCallback<ValidationResult> callback) {
         switch (entityId.getEntityType()) {
             case DEVICE:
                 validateDevice(currentUser, operation, entityId, callback);
@@ -220,7 +222,7 @@ public class AccessValidator {
         }
     }
 
-    private void validateDevice(final SecurityUser currentUser, Operation operation, EntityId entityId, FutureCallback<ValidationResult> callback) {
+    private void validateDevice(@NotNull final SecurityUser currentUser, Operation operation, @NotNull EntityId entityId, @NotNull FutureCallback<ValidationResult> callback) {
         if (currentUser.isSystemAdmin()) {
             callback.onSuccess(ValidationResult.accessDenied(SYSTEM_ADMINISTRATOR_IS_NOT_ALLOWED_TO_PERFORM_THIS_OPERATION));
         } else {
@@ -240,7 +242,7 @@ public class AccessValidator {
         }
     }
 
-    private void validateRpc(final SecurityUser currentUser, Operation operation, EntityId entityId, FutureCallback<ValidationResult> callback) {
+    private void validateRpc(@NotNull final SecurityUser currentUser, Operation operation, @NotNull EntityId entityId, @NotNull FutureCallback<ValidationResult> callback) {
         ListenableFuture<Rpc> rpcFurure = rpcService.findRpcByIdAsync(currentUser.getTenantId(), new RpcId(entityId.getId()));
         Futures.addCallback(rpcFurure, getCallback(callback, rpc -> {
             if (rpc == null) {
@@ -256,7 +258,7 @@ public class AccessValidator {
         }), executor);
     }
 
-    private void validateDeviceProfile(final SecurityUser currentUser, Operation operation, EntityId entityId, FutureCallback<ValidationResult> callback) {
+    private void validateDeviceProfile(@NotNull final SecurityUser currentUser, Operation operation, @NotNull EntityId entityId, @NotNull FutureCallback<ValidationResult> callback) {
         if (currentUser.isSystemAdmin()) {
             callback.onSuccess(ValidationResult.accessDenied(SYSTEM_ADMINISTRATOR_IS_NOT_ALLOWED_TO_PERFORM_THIS_OPERATION));
         } else {
@@ -274,7 +276,7 @@ public class AccessValidator {
         }
     }
 
-    private void validateAssetProfile(final SecurityUser currentUser, Operation operation, EntityId entityId, FutureCallback<ValidationResult> callback) {
+    private void validateAssetProfile(@NotNull final SecurityUser currentUser, Operation operation, @NotNull EntityId entityId, @NotNull FutureCallback<ValidationResult> callback) {
         if (currentUser.isSystemAdmin()) {
             callback.onSuccess(ValidationResult.accessDenied(SYSTEM_ADMINISTRATOR_IS_NOT_ALLOWED_TO_PERFORM_THIS_OPERATION));
         } else {
@@ -292,7 +294,7 @@ public class AccessValidator {
         }
     }
 
-    private void validateApiUsageState(final SecurityUser currentUser, Operation operation, EntityId entityId, FutureCallback<ValidationResult> callback) {
+    private void validateApiUsageState(@NotNull final SecurityUser currentUser, @NotNull Operation operation, @NotNull EntityId entityId, @NotNull FutureCallback<ValidationResult> callback) {
         if (currentUser.isSystemAdmin()) {
             callback.onSuccess(ValidationResult.accessDenied(SYSTEM_ADMINISTRATOR_IS_NOT_ALLOWED_TO_PERFORM_THIS_OPERATION));
         } else {
@@ -313,7 +315,7 @@ public class AccessValidator {
         }
     }
 
-    private void validateOtaPackage(final SecurityUser currentUser, Operation operation, EntityId entityId, FutureCallback<ValidationResult> callback) {
+    private void validateOtaPackage(@NotNull final SecurityUser currentUser, Operation operation, @NotNull EntityId entityId, @NotNull FutureCallback<ValidationResult> callback) {
         if (currentUser.isSystemAdmin()) {
             callback.onSuccess(ValidationResult.accessDenied(SYSTEM_ADMINISTRATOR_IS_NOT_ALLOWED_TO_PERFORM_THIS_OPERATION));
         } else {
@@ -331,7 +333,7 @@ public class AccessValidator {
         }
     }
 
-    private void validateResource(SecurityUser currentUser, Operation operation, EntityId entityId, FutureCallback<ValidationResult> callback) {
+    private void validateResource(@NotNull SecurityUser currentUser, Operation operation, @NotNull EntityId entityId, @NotNull FutureCallback<ValidationResult> callback) {
         ListenableFuture<TbResourceInfo> resourceFuture = resourceService.findResourceInfoByIdAsync(currentUser.getTenantId(), new TbResourceId(entityId.getId()));
         Futures.addCallback(resourceFuture, getCallback(callback, resource -> {
             if (resource == null) {
@@ -347,7 +349,7 @@ public class AccessValidator {
         }), executor);
     }
 
-    private void validateAsset(final SecurityUser currentUser, Operation operation, EntityId entityId, FutureCallback<ValidationResult> callback) {
+    private void validateAsset(@NotNull final SecurityUser currentUser, Operation operation, @NotNull EntityId entityId, @NotNull FutureCallback<ValidationResult> callback) {
         if (currentUser.isSystemAdmin()) {
             callback.onSuccess(ValidationResult.accessDenied(SYSTEM_ADMINISTRATOR_IS_NOT_ALLOWED_TO_PERFORM_THIS_OPERATION));
         } else {
@@ -367,7 +369,7 @@ public class AccessValidator {
         }
     }
 
-    private void validateRuleChain(final SecurityUser currentUser, Operation operation, EntityId entityId, FutureCallback<ValidationResult> callback) {
+    private void validateRuleChain(@NotNull final SecurityUser currentUser, Operation operation, @NotNull EntityId entityId, @NotNull FutureCallback<ValidationResult> callback) {
         if (currentUser.isCustomerUser()) {
             callback.onSuccess(ValidationResult.accessDenied(CUSTOMER_USER_IS_NOT_ALLOWED_TO_PERFORM_THIS_OPERATION));
         } else {
@@ -387,7 +389,7 @@ public class AccessValidator {
         }
     }
 
-    private void validateRule(final SecurityUser currentUser, Operation operation, EntityId entityId, FutureCallback<ValidationResult> callback) {
+    private void validateRule(@NotNull final SecurityUser currentUser, Operation operation, @NotNull EntityId entityId, @NotNull FutureCallback<ValidationResult> callback) {
         if (currentUser.isCustomerUser()) {
             callback.onSuccess(ValidationResult.accessDenied(CUSTOMER_USER_IS_NOT_ALLOWED_TO_PERFORM_THIS_OPERATION));
         } else {
@@ -412,7 +414,7 @@ public class AccessValidator {
         }
     }
 
-    private void validateCustomer(final SecurityUser currentUser, Operation operation, EntityId entityId, FutureCallback<ValidationResult> callback) {
+    private void validateCustomer(@NotNull final SecurityUser currentUser, Operation operation, @NotNull EntityId entityId, @NotNull FutureCallback<ValidationResult> callback) {
         if (currentUser.isSystemAdmin()) {
             callback.onSuccess(ValidationResult.accessDenied(SYSTEM_ADMINISTRATOR_IS_NOT_ALLOWED_TO_PERFORM_THIS_OPERATION));
         } else {
@@ -432,7 +434,7 @@ public class AccessValidator {
         }
     }
 
-    private void validateTenant(final SecurityUser currentUser, Operation operation, EntityId entityId, FutureCallback<ValidationResult> callback) {
+    private void validateTenant(@NotNull final SecurityUser currentUser, Operation operation, @NotNull EntityId entityId, @NotNull FutureCallback<ValidationResult> callback) {
         if (currentUser.isCustomerUser()) {
             callback.onSuccess(ValidationResult.accessDenied(CUSTOMER_USER_IS_NOT_ALLOWED_TO_PERFORM_THIS_OPERATION));
         } else if (currentUser.isSystemAdmin()) {
@@ -454,7 +456,7 @@ public class AccessValidator {
         }
     }
 
-    private void validateTenantProfile(final SecurityUser currentUser, Operation operation, EntityId entityId, FutureCallback<ValidationResult> callback) {
+    private void validateTenantProfile(@NotNull final SecurityUser currentUser, Operation operation, EntityId entityId, @NotNull FutureCallback<ValidationResult> callback) {
         if (currentUser.isSystemAdmin()) {
             callback.onSuccess(ValidationResult.ok(null));
         } else {
@@ -462,7 +464,7 @@ public class AccessValidator {
         }
     }
 
-    private void validateUser(final SecurityUser currentUser, Operation operation, EntityId entityId, FutureCallback<ValidationResult> callback) {
+    private void validateUser(@NotNull final SecurityUser currentUser, Operation operation, @NotNull EntityId entityId, @NotNull FutureCallback<ValidationResult> callback) {
         ListenableFuture<User> userFuture = userService.findUserByIdAsync(currentUser.getTenantId(), new UserId(entityId.getId()));
         Futures.addCallback(userFuture, getCallback(callback, user -> {
             if (user == null) {
@@ -478,7 +480,7 @@ public class AccessValidator {
         }), executor);
     }
 
-    private void validateEntityView(final SecurityUser currentUser, Operation operation, EntityId entityId, FutureCallback<ValidationResult> callback) {
+    private void validateEntityView(@NotNull final SecurityUser currentUser, Operation operation, @NotNull EntityId entityId, @NotNull FutureCallback<ValidationResult> callback) {
         if (currentUser.isSystemAdmin()) {
             callback.onSuccess(ValidationResult.accessDenied(SYSTEM_ADMINISTRATOR_IS_NOT_ALLOWED_TO_PERFORM_THIS_OPERATION));
         } else {
@@ -498,7 +500,7 @@ public class AccessValidator {
         }
     }
 
-    private void validateEdge(final SecurityUser currentUser, Operation operation, EntityId entityId, FutureCallback<ValidationResult> callback) {
+    private void validateEdge(@NotNull final SecurityUser currentUser, Operation operation, @NotNull EntityId entityId, @NotNull FutureCallback<ValidationResult> callback) {
         if (currentUser.isSystemAdmin()) {
             callback.onSuccess(ValidationResult.accessDenied(SYSTEM_ADMINISTRATOR_IS_NOT_ALLOWED_TO_PERFORM_THIS_OPERATION));
         } else {
@@ -518,7 +520,8 @@ public class AccessValidator {
         }
     }
 
-    private <T, V> FutureCallback<T> getCallback(FutureCallback<ValidationResult> callback, Function<T, ValidationResult<V>> transformer) {
+    @NotNull
+    private <T, V> FutureCallback<T> getCallback(@NotNull FutureCallback<ValidationResult> callback, @NotNull Function<T, ValidationResult<V>> transformer) {
         return new FutureCallback<T>() {
             @Override
             public void onSuccess(@Nullable T result) {
@@ -532,7 +535,7 @@ public class AccessValidator {
         };
     }
 
-    public static void handleError(Throwable e, final DeferredResult<ResponseEntity> response, HttpStatus defaultErrorStatus) {
+    public static void handleError(Throwable e, @NotNull final DeferredResult<ResponseEntity> response, @NotNull HttpStatus defaultErrorStatus) {
         ResponseEntity responseEntity;
         if (e instanceof ToErrorResponseEntity) {
             responseEntity = ((ToErrorResponseEntity) e).toErrorResponseEntity();

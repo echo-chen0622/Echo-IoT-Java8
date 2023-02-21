@@ -4,6 +4,8 @@ import org.eclipse.leshan.core.SecurityMode;
 import org.eclipse.leshan.server.security.NonUniqueSecurityInfoException;
 import org.eclipse.leshan.server.security.SecurityInfo;
 import org.echoiot.server.transport.lwm2m.secure.TbLwM2MSecurityInfo;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,9 +20,11 @@ public class TbInMemorySecurityStore implements TbEditableSecurityStore {
     protected final Lock writeLock = readWriteLock.writeLock();
 
     // by client end-point
+    @NotNull
     protected Map<String, TbLwM2MSecurityInfo> securityByEp = new HashMap<>();
 
     // by PSK identity
+    @NotNull
     protected Map<String, TbLwM2MSecurityInfo> securityByIdentity = new HashMap<>();
 
     public TbInMemorySecurityStore() {
@@ -29,6 +33,7 @@ public class TbInMemorySecurityStore implements TbEditableSecurityStore {
     /**
      * {@inheritDoc}
      */
+    @Nullable
     @Override
     public SecurityInfo getByEndpoint(String endpoint) {
         readLock.lock();
@@ -53,6 +58,7 @@ public class TbInMemorySecurityStore implements TbEditableSecurityStore {
     /**
      * {@inheritDoc}
      */
+    @Nullable
     @Override
     public SecurityInfo getByIdentity(String identity) {
         readLock.lock();
@@ -69,10 +75,10 @@ public class TbInMemorySecurityStore implements TbEditableSecurityStore {
     }
 
     @Override
-    public void put(TbLwM2MSecurityInfo tbSecurityInfo) throws NonUniqueSecurityInfoException {
+    public void put(@NotNull TbLwM2MSecurityInfo tbSecurityInfo) throws NonUniqueSecurityInfoException {
         writeLock.lock();
         try {
-            String identity = null;
+            @Nullable String identity = null;
             if (tbSecurityInfo.getSecurityInfo() != null) {
                 identity = tbSecurityInfo.getSecurityInfo().getIdentity();
                 if (identity != null) {
@@ -84,7 +90,7 @@ public class TbInMemorySecurityStore implements TbEditableSecurityStore {
                 }
             }
 
-            TbLwM2MSecurityInfo previous = securityByEp.put(tbSecurityInfo.getEndpoint(), tbSecurityInfo);
+            @Nullable TbLwM2MSecurityInfo previous = securityByEp.put(tbSecurityInfo.getEndpoint(), tbSecurityInfo);
             if (previous != null && previous.getSecurityInfo() != null) {
                 String previousIdentity = previous.getSecurityInfo().getIdentity();
                 if (previousIdentity != null && !previousIdentity.equals(identity)) {

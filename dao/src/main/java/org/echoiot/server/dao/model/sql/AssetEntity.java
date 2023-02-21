@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import org.echoiot.server.dao.util.mapping.JsonStringType;
 import org.hibernate.annotations.TypeDef;
 import org.echoiot.server.common.data.asset.Asset;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -22,7 +23,7 @@ public final class AssetEntity extends AbstractAssetEntity<Asset> {
         super();
     }
 
-    public AssetEntity(Asset asset) {
+    public AssetEntity(@NotNull Asset asset) {
         super(asset);
     }
 

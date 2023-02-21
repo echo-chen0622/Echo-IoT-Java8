@@ -39,6 +39,8 @@ import org.echoiot.server.queue.discovery.PartitionService;
 import org.echoiot.server.queue.provider.TbQueueProducerProvider;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.state.DeviceStateService;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -58,39 +60,40 @@ public class DeviceProvisionServiceImpl implements DeviceProvisionService {
     private static final String DEVICE_PROVISION_STATE = "provisionState";
     private static final String PROVISIONED_STATE = "provisioned";
 
-    @Autowired
+    @Resource
     TbClusterService clusterService;
 
-    @Autowired
+    @Resource
     DeviceDao deviceDao;
 
-    @Autowired
+    @Resource
     DeviceProfileDao deviceProfileDao;
 
-    @Autowired
+    @Resource
     DeviceService deviceService;
 
-    @Autowired
+    @Resource
     DeviceCredentialsService deviceCredentialsService;
 
-    @Autowired
+    @Resource
     AttributesService attributesService;
 
-    @Autowired
+    @Resource
     DeviceStateService deviceStateService;
 
-    @Autowired
+    @Resource
     AuditLogService auditLogService;
 
-    @Autowired
+    @Resource
     PartitionService partitionService;
 
-    public DeviceProvisionServiceImpl(TbQueueProducerProvider producerProvider) {
+    public DeviceProvisionServiceImpl(@NotNull TbQueueProducerProvider producerProvider) {
         ruleEngineMsgProducer = producerProvider.getRuleEngineMsgProducer();
     }
 
+    @NotNull
     @Override
-    public ProvisionResponse provisionDevice(ProvisionRequest provisionRequest) {
+    public ProvisionResponse provisionDevice(@NotNull ProvisionRequest provisionRequest) {
         String provisionRequestKey = provisionRequest.getCredentials().getProvisionDeviceKey();
         String provisionRequestSecret = provisionRequest.getCredentials().getProvisionDeviceSecret();
         if (!StringUtils.isEmpty(provisionRequest.getDeviceName())) {
@@ -112,7 +115,7 @@ public class DeviceProvisionServiceImpl implements DeviceProvisionService {
             throw new ProvisionFailedException(ProvisionResponseStatus.NOT_FOUND.name());
         }
 
-        Device targetDevice = deviceDao.findDeviceByTenantIdAndName(targetProfile.getTenantId().getId(), provisionRequest.getDeviceName()).orElse(null);
+        @Nullable Device targetDevice = deviceDao.findDeviceByTenantIdAndName(targetProfile.getTenantId().getId(), provisionRequest.getDeviceName()).orElse(null);
 
         switch (targetProfile.getProvisionType()) {
             case ALLOW_CREATE_NEW_DEVICES:
@@ -140,7 +143,8 @@ public class DeviceProvisionServiceImpl implements DeviceProvisionService {
         throw new ProvisionFailedException(ProvisionResponseStatus.NOT_FOUND.name());
     }
 
-    private ProvisionResponse processProvision(Device device, ProvisionRequest provisionRequest) {
+    @NotNull
+    private ProvisionResponse processProvision(@NotNull Device device, ProvisionRequest provisionRequest) {
         try {
             Optional<AttributeKvEntry> provisionState = attributesService.find(device.getTenantId(), device.getId(),
                                                                                DataConstants.SERVER_SCOPE, DEVICE_PROVISION_STATE).get();
@@ -157,19 +161,21 @@ public class DeviceProvisionServiceImpl implements DeviceProvisionService {
         return new ProvisionResponse(deviceCredentialsService.findDeviceCredentialsByDeviceId(device.getTenantId(), device.getId()), ProvisionResponseStatus.SUCCESS);
     }
 
-    private ProvisionResponse createDevice(ProvisionRequest provisionRequest, DeviceProfile profile) {
+    @NotNull
+    private ProvisionResponse createDevice(@NotNull ProvisionRequest provisionRequest, @NotNull DeviceProfile profile) {
         return processCreateDevice(provisionRequest, profile);
     }
 
-    private void notify(Device device, ProvisionRequest provisionRequest, String type, boolean success) {
+    private void notify(@NotNull Device device, ProvisionRequest provisionRequest, String type, boolean success) {
         pushProvisionEventToRuleEngine(provisionRequest, device, type);
         logAction(device.getTenantId(), device.getCustomerId(), device, success, provisionRequest);
     }
 
-    private ProvisionResponse processCreateDevice(ProvisionRequest provisionRequest, DeviceProfile profile) {
+    @NotNull
+    private ProvisionResponse processCreateDevice(@NotNull ProvisionRequest provisionRequest, @NotNull DeviceProfile profile) {
         try {
             if (StringUtils.isEmpty(provisionRequest.getDeviceName())) {
-                String newDeviceName = StringUtils.randomAlphanumeric(20);
+                @NotNull String newDeviceName = StringUtils.randomAlphanumeric(20);
                 log.info("Device name not found in provision request. Generated name is: {}", newDeviceName);
                 provisionRequest.setDeviceName(newDeviceName);
             }
@@ -190,37 +196,37 @@ public class DeviceProvisionServiceImpl implements DeviceProvisionService {
         }
     }
 
-    private ListenableFuture<List<String>> saveProvisionStateAttribute(Device device) {
+    private ListenableFuture<List<String>> saveProvisionStateAttribute(@NotNull Device device) {
         return attributesService.save(device.getTenantId(), device.getId(), DataConstants.SERVER_SCOPE,
                 Collections.singletonList(new BaseAttributeKvEntry(new StringDataEntry(DEVICE_PROVISION_STATE, PROVISIONED_STATE),
                                                                    System.currentTimeMillis())));
     }
 
-    private DeviceCredentials getDeviceCredentials(Device device) {
+    private DeviceCredentials getDeviceCredentials(@NotNull Device device) {
         return deviceCredentialsService.findDeviceCredentialsByDeviceId(device.getTenantId(), device.getId());
     }
 
-    private void pushProvisionEventToRuleEngine(ProvisionRequest request, Device device, String type) {
+    private void pushProvisionEventToRuleEngine(ProvisionRequest request, @NotNull Device device, String type) {
         try {
             JsonNode entityNode = JacksonUtil.valueToTree(request);
-            TbMsg msg = TbMsg.newMsg(type, device.getId(), device.getCustomerId(), createTbMsgMetaData(device), JacksonUtil.toString(entityNode));
+            @NotNull TbMsg msg = TbMsg.newMsg(type, device.getId(), device.getCustomerId(), createTbMsgMetaData(device), JacksonUtil.toString(entityNode));
             sendToRuleEngine(device.getTenantId(), msg, null);
         } catch (IllegalArgumentException e) {
             log.warn("[{}] Failed to push device action to rule engine: {}", device.getId(), type, e);
         }
     }
 
-    private void pushDeviceCreatedEventToRuleEngine(Device device) {
+    private void pushDeviceCreatedEventToRuleEngine(@NotNull Device device) {
         try {
             ObjectNode entityNode = JacksonUtil.OBJECT_MAPPER.valueToTree(device);
-            TbMsg msg = TbMsg.newMsg(DataConstants.ENTITY_CREATED, device.getId(), device.getCustomerId(), createTbMsgMetaData(device), JacksonUtil.OBJECT_MAPPER.writeValueAsString(entityNode));
+            @NotNull TbMsg msg = TbMsg.newMsg(DataConstants.ENTITY_CREATED, device.getId(), device.getCustomerId(), createTbMsgMetaData(device), JacksonUtil.OBJECT_MAPPER.writeValueAsString(entityNode));
             sendToRuleEngine(device.getTenantId(), msg, null);
         } catch (JsonProcessingException | IllegalArgumentException e) {
             log.warn("[{}] Failed to push device action to rule engine: {}", device.getId(), DataConstants.ENTITY_CREATED, e);
         }
     }
 
-    protected void sendToRuleEngine(TenantId tenantId, TbMsg tbMsg, TbQueueCallback callback) {
+    protected void sendToRuleEngine(@NotNull TenantId tenantId, @NotNull TbMsg tbMsg, TbQueueCallback callback) {
         TopicPartitionInfo tpi = partitionService.resolve(ServiceType.TB_RULE_ENGINE, tenantId, tbMsg.getOriginator());
         TransportProtos.ToRuleEngineMsg msg = TransportProtos.ToRuleEngineMsg.newBuilder().setTbMsg(TbMsg.toByteString(tbMsg))
                 .setTenantIdMSB(tenantId.getId().getMostSignificantBits())
@@ -228,14 +234,15 @@ public class DeviceProvisionServiceImpl implements DeviceProvisionService {
         ruleEngineMsgProducer.send(tpi, new TbProtoQueueMsg<>(tbMsg.getId(), msg), callback);
     }
 
-    private TbMsgMetaData createTbMsgMetaData(Device device) {
-        TbMsgMetaData metaData = new TbMsgMetaData();
+    @NotNull
+    private TbMsgMetaData createTbMsgMetaData(@NotNull Device device) {
+        @NotNull TbMsgMetaData metaData = new TbMsgMetaData();
         metaData.putValue("tenantId", device.getTenantId().toString());
         return metaData;
     }
 
-    private void logAction(TenantId tenantId, CustomerId customerId, Device device, boolean success, ProvisionRequest provisionRequest) {
-        ActionType actionType = success ? ActionType.PROVISION_SUCCESS : ActionType.PROVISION_FAILURE;
+    private void logAction(TenantId tenantId, CustomerId customerId, @NotNull Device device, boolean success, ProvisionRequest provisionRequest) {
+        @NotNull ActionType actionType = success ? ActionType.PROVISION_SUCCESS : ActionType.PROVISION_FAILURE;
         auditLogService.logEntityAction(tenantId, customerId, new UserId(UserId.NULL_UUID), device.getName(), device.getId(), device, actionType, null, provisionRequest);
     }
 }

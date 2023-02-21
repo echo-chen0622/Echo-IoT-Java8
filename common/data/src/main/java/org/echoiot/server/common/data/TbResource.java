@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.id.TbResourceId;
 import org.echoiot.server.common.data.validation.Length;
 import org.echoiot.server.common.data.validation.NoXss;
+import org.jetbrains.annotations.NotNull;
 
 @Slf4j
 @Data
@@ -35,31 +36,31 @@ public class TbResource extends TbResourceInfo {
         super(resourceInfo);
     }
 
-    public TbResource(TbResource resource) {
+    public TbResource(@NotNull TbResource resource) {
         super(resource);
         this.data = resource.getData();
     }
 
+    @NotNull
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Resource [tenantId=");
-        builder.append(getTenantId());
-        builder.append(", id=");
-        builder.append(getUuidId());
-        builder.append(", createdTime=");
-        builder.append(createdTime);
-        builder.append(", title=");
-        builder.append(getTitle());
-        builder.append(", resourceType=");
-        builder.append(getResourceType());
-        builder.append(", resourceKey=");
-        builder.append(getResourceKey());
-        builder.append(", fileName=");
-        builder.append(fileName);
-        builder.append(", data=");
-        builder.append(data);
-        builder.append("]");
-        return builder.toString();
+        String builder = "Resource [tenantId=" +
+                         getTenantId() +
+                         ", id=" +
+                         getUuidId() +
+                         ", createdTime=" +
+                         createdTime +
+                         ", title=" +
+                         getTitle() +
+                         ", resourceType=" +
+                         getResourceType() +
+                         ", resourceKey=" +
+                         getResourceKey() +
+                         ", fileName=" +
+                         fileName +
+                         ", data=" +
+                         data +
+                         "]";
+        return builder;
     }
 }

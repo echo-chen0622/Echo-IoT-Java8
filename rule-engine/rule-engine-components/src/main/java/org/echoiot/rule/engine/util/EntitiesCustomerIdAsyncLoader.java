@@ -11,11 +11,13 @@ import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.UserId;
+import org.jetbrains.annotations.NotNull;
 
 public class EntitiesCustomerIdAsyncLoader {
 
 
-    public static ListenableFuture<CustomerId> findEntityIdAsync(TbContext ctx, EntityId original) {
+    @NotNull
+    public static ListenableFuture<CustomerId> findEntityIdAsync(@NotNull TbContext ctx, @NotNull EntityId original) {
 
         switch (original.getEntityType()) {
             case CUSTOMER:
@@ -31,7 +33,8 @@ public class EntitiesCustomerIdAsyncLoader {
         }
     }
 
-    private static <T extends HasCustomerId> ListenableFuture<CustomerId> getCustomerAsync(ListenableFuture<T> future) {
+    @NotNull
+    private static <T extends HasCustomerId> ListenableFuture<CustomerId> getCustomerAsync(@NotNull ListenableFuture<T> future) {
         return Futures.transformAsync(future, in -> in != null ? Futures.immediateFuture(in.getCustomerId())
                 : Futures.immediateFuture(null), MoreExecutors.directExecutor());
     }

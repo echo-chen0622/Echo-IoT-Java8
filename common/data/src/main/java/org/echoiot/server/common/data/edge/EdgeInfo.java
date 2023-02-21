@@ -2,6 +2,7 @@ package org.echoiot.server.common.data.edge;
 
 import lombok.Data;
 import org.echoiot.server.common.data.id.EdgeId;
+import org.jetbrains.annotations.NotNull;
 
 @Data
 public class EdgeInfo extends Edge {
@@ -17,7 +18,7 @@ public class EdgeInfo extends Edge {
         super(edgeId);
     }
 
-    public EdgeInfo(Edge edge, String customerTitle, boolean customerIsPublic) {
+    public EdgeInfo(@NotNull Edge edge, String customerTitle, boolean customerIsPublic) {
         super(edge);
         this.customerTitle = customerTitle;
         this.customerIsPublic = customerIsPublic;

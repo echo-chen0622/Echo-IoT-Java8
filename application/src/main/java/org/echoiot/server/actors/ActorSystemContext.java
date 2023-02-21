@@ -81,6 +81,7 @@ import org.echoiot.server.service.state.DeviceStateService;
 import org.echoiot.server.service.telemetry.AlarmSubscriptionService;
 import org.echoiot.server.service.telemetry.TelemetrySubscriptionService;
 import org.echoiot.server.service.transport.TbCoreToTransportService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
@@ -129,19 +130,20 @@ public class ActorSystemContext {
 
     private final ConcurrentMap<TenantId, DebugTbRateLimits> debugPerTenantLimits = new ConcurrentHashMap<>();
 
+    @NotNull
     public ConcurrentMap<TenantId, DebugTbRateLimits> getDebugPerTenantLimits() {
         return debugPerTenantLimits;
     }
 
-    @Autowired
+    @Resource
     @Getter
     private TbApiUsageStateService apiUsageStateService;
 
-    @Autowired
+    @Resource
     @Getter
     private TbApiUsageReportClient apiUsageClient;
 
-    @Autowired
+    @Resource
     @Getter
     @Setter
     private TbServiceInfoProvider serviceInfoProvider;
@@ -150,103 +152,103 @@ public class ActorSystemContext {
     @Setter
     private ActorService actorService;
 
-    @Autowired
+    @Resource
     @Getter
     @Setter
     private ComponentDiscoveryService componentService;
 
-    @Autowired
+    @Resource
     @Getter
     private DataDecodingEncodingService encodingService;
 
-    @Autowired
+    @Resource
     @Getter
     private DeviceService deviceService;
 
-    @Autowired
+    @Resource
     @Getter
     private DeviceProfileService deviceProfileService;
 
-    @Autowired
+    @Resource
     @Getter
     private AssetProfileService assetProfileService;
 
-    @Autowired
+    @Resource
     @Getter
     private DeviceCredentialsService deviceCredentialsService;
 
-    @Autowired
+    @Resource
     @Getter
     private TbTenantProfileCache tenantProfileCache;
 
-    @Autowired
+    @Resource
     @Getter
     private TbDeviceProfileCache deviceProfileCache;
 
-    @Autowired
+    @Resource
     @Getter
     private TbAssetProfileCache assetProfileCache;
 
-    @Autowired
+    @Resource
     @Getter
     private AssetService assetService;
 
-    @Autowired
+    @Resource
     @Getter
     private DashboardService dashboardService;
 
-    @Autowired
+    @Resource
     @Getter
     private TenantService tenantService;
 
-    @Autowired
+    @Resource
     @Getter
     private TenantProfileService tenantProfileService;
 
-    @Autowired
+    @Resource
     @Getter
     private CustomerService customerService;
 
-    @Autowired
+    @Resource
     @Getter
     private UserService userService;
 
-    @Autowired
+    @Resource
     @Getter
     private RuleChainService ruleChainService;
 
-    @Autowired
+    @Resource
     @Getter
     private RuleNodeStateService ruleNodeStateService;
 
-    @Autowired
+    @Resource
     private PartitionService partitionService;
 
-    @Autowired
+    @Resource
     @Getter
     private TbClusterService clusterService;
 
-    @Autowired
+    @Resource
     @Getter
     private TimeseriesService tsService;
 
-    @Autowired
+    @Resource
     @Getter
     private AttributesService attributesService;
 
-    @Autowired
+    @Resource
     @Getter
     private EventService eventService;
 
-    @Autowired
+    @Resource
     @Getter
     private RelationService relationService;
 
-    @Autowired
+    @Resource
     @Getter
     private AuditLogService auditLogService;
 
-    @Autowired
+    @Resource
     @Getter
     private EntityViewService entityViewService;
 
@@ -255,15 +257,15 @@ public class ActorSystemContext {
     @Getter
     private TbEntityViewService tbEntityViewService;
 
-    @Autowired
+    @Resource
     @Getter
     private TelemetrySubscriptionService tsSubService;
 
-    @Autowired
+    @Resource
     @Getter
     private AlarmSubscriptionService alarmService;
 
-    @Autowired
+    @Resource
     @Getter
     private JsInvokeService jsInvokeService;
 
@@ -271,35 +273,35 @@ public class ActorSystemContext {
     @Getter
     private TbelInvokeService tbelInvokeService;
 
-    @Autowired
+    @Resource
     @Getter
     private MailExecutorService mailExecutor;
 
-    @Autowired
+    @Resource
     @Getter
     private SmsExecutorService smsExecutor;
 
-    @Autowired
+    @Resource
     @Getter
     private DbCallbackExecutorService dbCallbackExecutor;
 
-    @Autowired
+    @Resource
     @Getter
     private ExternalCallExecutorService externalCallExecutorService;
 
-    @Autowired
+    @Resource
     @Getter
     private SharedEventLoopGroupService sharedEventLoopGroupService;
 
-    @Autowired
+    @Resource
     @Getter
     private MailService mailService;
 
-    @Autowired
+    @Resource
     @Getter
     private SmsService smsService;
 
-    @Autowired
+    @Resource
     @Getter
     private SmsSenderFactory smsSenderFactory;
 
@@ -308,7 +310,7 @@ public class ActorSystemContext {
     @Getter
     private ClaimDevicesService claimDevicesService;
 
-    @Autowired
+    @Resource
     @Getter
     private JsInvokeStats jsInvokeStats;
 
@@ -504,7 +506,7 @@ public class ActorSystemContext {
         return actorSystem.getScheduler();
     }
 
-    public void persistError(TenantId tenantId, EntityId entityId, String method, Exception e) {
+    public void persistError(TenantId tenantId, @NotNull EntityId entityId, String method, @NotNull Exception e) {
         eventService.saveAsync(ErrorEvent.builder()
                                          .tenantId(tenantId)
                                          .entityId(entityId.getId())
@@ -513,7 +515,7 @@ public class ActorSystemContext {
                                          .error(toString(e)).build());
     }
 
-    public void persistLifecycleEvent(TenantId tenantId, EntityId entityId, ComponentLifecycleEvent lcEvent, Exception e) {
+    public void persistLifecycleEvent(TenantId tenantId, @NotNull EntityId entityId, @NotNull ComponentLifecycleEvent lcEvent, @org.jetbrains.annotations.Nullable Exception e) {
         LifecycleEvent.LifecycleEventBuilder event = LifecycleEvent.builder()
                                                                    .tenantId(tenantId)
                                                                    .entityId(entityId.getId())
@@ -529,8 +531,8 @@ public class ActorSystemContext {
         eventService.saveAsync(event.build());
     }
 
-    private String toString(Throwable e) {
-        StringWriter sw = new StringWriter();
+    private String toString(@NotNull Throwable e) {
+        @NotNull StringWriter sw = new StringWriter();
         e.printStackTrace(new PrintWriter(sw));
         return sw.toString();
     }
@@ -547,27 +549,27 @@ public class ActorSystemContext {
         return serviceInfoProvider.getServiceId();
     }
 
-    public void persistDebugInput(TenantId tenantId, EntityId entityId, TbMsg tbMsg, String relationType) {
+    public void persistDebugInput(TenantId tenantId, @NotNull EntityId entityId, @NotNull TbMsg tbMsg, String relationType) {
         persistDebugAsync(tenantId, entityId, "IN", tbMsg, relationType, null, null);
     }
 
-    public void persistDebugInput(TenantId tenantId, EntityId entityId, TbMsg tbMsg, String relationType, Throwable error) {
+    public void persistDebugInput(TenantId tenantId, @NotNull EntityId entityId, @NotNull TbMsg tbMsg, String relationType, Throwable error) {
         persistDebugAsync(tenantId, entityId, "IN", tbMsg, relationType, error, null);
     }
 
-    public void persistDebugOutput(TenantId tenantId, EntityId entityId, TbMsg tbMsg, String relationType, Throwable error, String failureMessage) {
+    public void persistDebugOutput(TenantId tenantId, @NotNull EntityId entityId, @NotNull TbMsg tbMsg, String relationType, Throwable error, String failureMessage) {
         persistDebugAsync(tenantId, entityId, "OUT", tbMsg, relationType, error, failureMessage);
     }
 
-    public void persistDebugOutput(TenantId tenantId, EntityId entityId, TbMsg tbMsg, String relationType, Throwable error) {
+    public void persistDebugOutput(TenantId tenantId, @NotNull EntityId entityId, @NotNull TbMsg tbMsg, String relationType, Throwable error) {
         persistDebugAsync(tenantId, entityId, "OUT", tbMsg, relationType, error, null);
     }
 
-    public void persistDebugOutput(TenantId tenantId, EntityId entityId, TbMsg tbMsg, String relationType) {
+    public void persistDebugOutput(TenantId tenantId, @NotNull EntityId entityId, @NotNull TbMsg tbMsg, String relationType) {
         persistDebugAsync(tenantId, entityId, "OUT", tbMsg, relationType, null, null);
     }
 
-    private void persistDebugAsync(TenantId tenantId, EntityId entityId, String type, TbMsg tbMsg, String relationType, Throwable error, String failureMessage) {
+    private void persistDebugAsync(TenantId tenantId, @NotNull EntityId entityId, String type, @NotNull TbMsg tbMsg, String relationType, @org.jetbrains.annotations.Nullable Throwable error, @org.jetbrains.annotations.Nullable String failureMessage) {
         if (checkLimits(tenantId, tbMsg, error)) {
             try {
                 RuleNodeDebugEvent.RuleNodeDebugEventBuilder event = RuleNodeDebugEvent.builder()
@@ -597,9 +599,9 @@ public class ActorSystemContext {
         }
     }
 
-    private boolean checkLimits(TenantId tenantId, TbMsg tbMsg, Throwable error) {
+    private boolean checkLimits(TenantId tenantId, @NotNull TbMsg tbMsg, Throwable error) {
         if (debugPerTenantEnabled) {
-            DebugTbRateLimits debugTbRateLimits = debugPerTenantLimits.computeIfAbsent(tenantId, id ->
+            @NotNull DebugTbRateLimits debugTbRateLimits = debugPerTenantLimits.computeIfAbsent(tenantId, id ->
                     new DebugTbRateLimits(new TbRateLimits(debugPerTenantLimitsConfiguration), false));
 
             if (!debugTbRateLimits.getTbRateLimits().tryConsume()) {
@@ -616,7 +618,7 @@ public class ActorSystemContext {
         return true;
     }
 
-    private void persistRuleChainDebugModeEvent(TenantId tenantId, EntityId entityId, Throwable error) {
+    private void persistRuleChainDebugModeEvent(TenantId tenantId, @NotNull EntityId entityId, @org.jetbrains.annotations.Nullable Throwable error) {
         RuleChainDebugEvent.RuleChainDebugEventBuilder event = RuleChainDebugEvent.builder()
                                                                                   .tenantId(tenantId)
                                                                                   .entityId(entityId.getId())
@@ -630,8 +632,9 @@ public class ActorSystemContext {
         Futures.addCallback(future, RULE_CHAIN_DEBUG_EVENT_ERROR_CALLBACK, MoreExecutors.directExecutor());
     }
 
-    public static Exception toException(Throwable error) {
-        return Exception.class.isInstance(error) ? (Exception) error : new Exception(error);
+    @NotNull
+    public static Exception toException(@NotNull Throwable error) {
+        return error instanceof Exception ? (Exception) error : new Exception(error);
     }
 
     public void tell(TbActorMsg tbActorMsg) {
@@ -642,12 +645,12 @@ public class ActorSystemContext {
         appActor.tellWithHighPriority(tbActorMsg);
     }
 
-    public void schedulePeriodicMsgWithDelay(TbActorRef ctx, TbActorMsg msg, long delayInMs, long periodInMs) {
+    public void schedulePeriodicMsgWithDelay(@NotNull TbActorRef ctx, TbActorMsg msg, long delayInMs, long periodInMs) {
         log.debug("Scheduling periodic msg {} every {} ms with delay {} ms", msg, periodInMs, delayInMs);
         getScheduler().scheduleWithFixedDelay(() -> ctx.tell(msg), delayInMs, periodInMs, TimeUnit.MILLISECONDS);
     }
 
-    public void scheduleMsgWithDelay(TbActorRef ctx, TbActorMsg msg, long delayInMs) {
+    public void scheduleMsgWithDelay(@NotNull TbActorRef ctx, TbActorMsg msg, long delayInMs) {
         log.debug("Scheduling msg {} with delay {} ms", msg, delayInMs);
         if (delayInMs > 0) {
             getScheduler().schedule(() -> ctx.tell(msg), delayInMs, TimeUnit.MILLISECONDS);

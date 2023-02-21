@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.californium.core.CoapResponse;
 import org.eclipse.californium.core.coap.CoAP;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,42 +49,42 @@ public class CoapAttributesIntegrationTest extends AbstractCoapIntegrationTest {
 
     @Test
     public void testPushAttributes() throws Exception {
-        List<String> expectedKeys = Arrays.asList("key1", "key2", "key3", "key4", "key5");
+        @NotNull List<String> expectedKeys = Arrays.asList("key1", "key2", "key3", "key4", "key5");
         processJsonPayloadAttributesTest(expectedKeys, PAYLOAD_VALUES_STR.getBytes());
     }
 
-    protected void processJsonPayloadAttributesTest(List<String> expectedKeys, byte[] payload) throws Exception {
+    protected void processJsonPayloadAttributesTest(@NotNull List<String> expectedKeys, byte[] payload) throws Exception {
         processAttributesTest(expectedKeys, payload, false);
     }
 
-    protected void processAttributesTest(List<String> expectedKeys, byte[] payload, boolean presenceFieldsTest) throws Exception {
+    protected void processAttributesTest(@NotNull List<String> expectedKeys, byte[] payload, boolean presenceFieldsTest) throws Exception {
 
         client = new CoapTestClient(accessToken, FeatureType.ATTRIBUTES);
         CoapResponse coapResponse = client.postMethod(payload);
         assertEquals(CoAP.ResponseCode.CREATED, coapResponse.getCode());
 
         DeviceId deviceId = savedDevice.getId();
-        List<String> actualKeys = getActualKeysList(deviceId, expectedKeys);
+        @Nullable List<String> actualKeys = getActualKeysList(deviceId, expectedKeys);
         assertNotNull(actualKeys);
 
-        Set<String> actualKeySet = new HashSet<>(actualKeys);
-        Set<String> expectedKeySet = new HashSet<>(expectedKeys);
+        @NotNull Set<String> actualKeySet = new HashSet<>(actualKeys);
+        @NotNull Set<String> expectedKeySet = new HashSet<>(expectedKeys);
         assertEquals(expectedKeySet, actualKeySet);
 
-        String getAttributesValuesUrl = getAttributesValuesUrl(deviceId, actualKeySet);
+        @NotNull String getAttributesValuesUrl = getAttributesValuesUrl(deviceId, actualKeySet);
         List<Map<String, Object>> values = doGetAsyncTyped(getAttributesValuesUrl, new TypeReference<>() {});
         if (presenceFieldsTest) {
             assertAttributesProtoValues(values, actualKeySet);
         } else {
             assertAttributesValues(values, actualKeySet);
         }
-        String deleteAttributesUrl = "/api/plugins/telemetry/DEVICE/" + deviceId + "/CLIENT_SCOPE?keys=" + String.join(",", actualKeySet);
+        @NotNull String deleteAttributesUrl = "/api/plugins/telemetry/DEVICE/" + deviceId + "/CLIENT_SCOPE?keys=" + String.join(",", actualKeySet);
         doDelete(deleteAttributesUrl);
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    protected void assertAttributesValues(List<Map<String, Object>> deviceValues, Set<String> keySet) {
-        for (Map<String, Object> map : deviceValues) {
+    protected void assertAttributesValues(@NotNull List<Map<String, Object>> deviceValues, @NotNull Set<String> keySet) {
+        for (@NotNull Map<String, Object> map : deviceValues) {
             String key = (String) map.get("key");
             Object value = map.get("value");
             assertTrue(keySet.contains(key));
@@ -112,8 +114,8 @@ public class CoapAttributesIntegrationTest extends AbstractCoapIntegrationTest {
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private void assertAttributesProtoValues(List<Map<String, Object>> values, Set<String> keySet) {
-        for (Map<String, Object> map : values) {
+    private void assertAttributesProtoValues(@NotNull List<Map<String, Object>> values, @NotNull Set<String> keySet) {
+        for (@NotNull Map<String, Object> map : values) {
             String key = (String) map.get("key");
             Object value = map.get("value");
             assertTrue(keySet.contains(key));
@@ -132,11 +134,12 @@ public class CoapAttributesIntegrationTest extends AbstractCoapIntegrationTest {
         }
     }
 
-    private List<String> getActualKeysList(DeviceId deviceId, List<String> expectedKeys) throws Exception {
+    @Nullable
+    private List<String> getActualKeysList(DeviceId deviceId, @NotNull List<String> expectedKeys) throws Exception {
         long start = System.currentTimeMillis();
         long end = System.currentTimeMillis() + 5000;
 
-        List<String> actualKeys = null;
+        @Nullable List<String> actualKeys = null;
         while (start <= end) {
             actualKeys = doGetAsyncTyped("/api/plugins/telemetry/DEVICE/" + deviceId + "/keys/attributes/CLIENT_SCOPE", new TypeReference<>() {});
             if (actualKeys.size() == expectedKeys.size()) {
@@ -148,7 +151,8 @@ public class CoapAttributesIntegrationTest extends AbstractCoapIntegrationTest {
         return actualKeys;
     }
 
-    private String getAttributesValuesUrl(DeviceId deviceId, Set<String> actualKeySet) {
+    @NotNull
+    private String getAttributesValuesUrl(DeviceId deviceId, @NotNull Set<String> actualKeySet) {
         return "/api/plugins/telemetry/DEVICE/" + deviceId + "/values/attributes/CLIENT_SCOPE?keys=" + String.join(",", actualKeySet);
     }
 

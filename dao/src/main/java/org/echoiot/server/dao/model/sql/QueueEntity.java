@@ -15,6 +15,7 @@ import org.echoiot.server.dao.DaoUtil;
 import org.echoiot.server.dao.model.BaseSqlEntity;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.util.mapping.JsonStringType;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -65,7 +66,7 @@ public class QueueEntity extends BaseSqlEntity<Queue> {
     public QueueEntity() {
     }
 
-    public QueueEntity(Queue queue) {
+    public QueueEntity(@NotNull Queue queue) {
         if (queue.getId() != null) {
             this.setId(queue.getId().getId());
         }
@@ -82,9 +83,10 @@ public class QueueEntity extends BaseSqlEntity<Queue> {
         this.additionalInfo = queue.getAdditionalInfo();
     }
 
+    @NotNull
     @Override
     public Queue toData() {
-        Queue queue = new Queue(new QueueId(getUuid()));
+        @NotNull Queue queue = new Queue(new QueueId(getUuid()));
         queue.setCreatedTime(createdTime);
         queue.setTenantId(new TenantId(tenantId));
         queue.setName(name);

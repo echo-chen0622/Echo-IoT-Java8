@@ -15,6 +15,8 @@ import org.echoiot.server.transport.snmp.service.SnmpAuthService;
 import org.echoiot.server.transport.snmp.service.SnmpTransportBalancingService;
 import org.echoiot.server.transport.snmp.service.SnmpTransportService;
 import org.echoiot.server.transport.snmp.session.DeviceSessionContext;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.echoiot.server.common.data.Device;
@@ -46,12 +48,18 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 @Slf4j
 @RequiredArgsConstructor
 public class SnmpTransportContext extends TransportContext {
+    @NotNull
     @Getter
     private final SnmpTransportService snmpTransportService;
+    @NotNull
     private final TransportDeviceProfileCache deviceProfileCache;
+    @NotNull
     private final TransportService transportService;
+    @NotNull
     private final ProtoTransportEntityService protoEntityService;
+    @NotNull
     private final SnmpTransportBalancingService balancingService;
+    @NotNull
     @Getter
     private final SnmpAuthService snmpAuthService;
 
@@ -82,7 +90,7 @@ public class SnmpTransportContext extends TransportContext {
         log.debug("Found all SNMP devices ids: {}", allSnmpDevicesIds);
     }
 
-    private void establishDeviceSession(Device device) {
+    private void establishDeviceSession(@Nullable Device device) {
         if (device == null) return;
         log.info("Establishing SNMP session for device {}", device.getId());
 
@@ -114,7 +122,7 @@ public class SnmpTransportContext extends TransportContext {
         log.info("Established SNMP device session for device {}", device.getId());
     }
 
-    private void updateDeviceSession(DeviceSessionContext sessionContext, Device device, DeviceProfile deviceProfile) {
+    private void updateDeviceSession(@NotNull DeviceSessionContext sessionContext, @NotNull Device device, @NotNull DeviceProfile deviceProfile) {
         log.info("Updating SNMP session for device {}", device.getId());
 
         DeviceCredentials credentials = protoEntityService.getDeviceCredentialsByDeviceId(device.getId());
@@ -145,7 +153,7 @@ public class SnmpTransportContext extends TransportContext {
         }
     }
 
-    private void destroyDeviceSession(DeviceSessionContext sessionContext) {
+    private void destroyDeviceSession(@Nullable DeviceSessionContext sessionContext) {
         if (sessionContext == null) return;
         log.info("Destroying SNMP device session for device {}", sessionContext.getDevice().getId());
         sessionContext.close();
@@ -156,12 +164,12 @@ public class SnmpTransportContext extends TransportContext {
         log.trace("Unregistered and removed session");
     }
 
-    private void registerSessionMsgListener(DeviceSessionContext deviceSessionContext) {
+    private void registerSessionMsgListener(@NotNull DeviceSessionContext deviceSessionContext) {
         transportService.process(DeviceTransportType.SNMP,
                 TransportProtos.ValidateDeviceTokenRequestMsg.newBuilder().setToken(deviceSessionContext.getToken()).build(),
                 new TransportServiceCallback<>() {
                     @Override
-                    public void onSuccess(ValidateDeviceCredentialsResponse msg) {
+                    public void onSuccess(@NotNull ValidateDeviceCredentialsResponse msg) {
                         if (msg.hasDeviceInfo()) {
                             SessionInfoProto sessionInfo = SessionInfoCreator.create(
                                     msg, SnmpTransportContext.this, UUID.randomUUID()
@@ -187,7 +195,7 @@ public class SnmpTransportContext extends TransportContext {
     }
 
     @EventListener(DeviceUpdatedEvent.class)
-    public void onDeviceUpdatedOrCreated(DeviceUpdatedEvent deviceUpdatedEvent) {
+    public void onDeviceUpdatedOrCreated(@NotNull DeviceUpdatedEvent deviceUpdatedEvent) {
         Device device = deviceUpdatedEvent.getDevice();
         log.trace("Got creating or updating device event for device {}", device);
         DeviceTransportType transportType = Optional.ofNullable(device.getDeviceData().getTransportConfiguration())
@@ -222,17 +230,17 @@ public class SnmpTransportContext extends TransportContext {
         destroyDeviceSession(sessionContext);
     }
 
-    public void onDeviceProfileUpdated(DeviceProfile deviceProfile, DeviceSessionContext sessionContext) {
+    public void onDeviceProfileUpdated(@NotNull DeviceProfile deviceProfile, @NotNull DeviceSessionContext sessionContext) {
         updateDeviceSession(sessionContext, sessionContext.getDevice(), deviceProfile);
     }
 
     public void onSnmpTransportListChanged() {
         log.trace("SNMP transport list changed. Updating sessions");
-        List<DeviceId> deleted = new LinkedList<>();
-        for (DeviceId deviceId : allSnmpDevicesIds) {
+        @NotNull List<DeviceId> deleted = new LinkedList<>();
+        for (@NotNull DeviceId deviceId : allSnmpDevicesIds) {
             if (balancingService.isManagedByCurrentTransport(deviceId.getId())) {
                 if (!sessions.containsKey(deviceId)) {
-                    Device device = protoEntityService.getDeviceById(deviceId);
+                    @Nullable Device device = protoEntityService.getDeviceById(deviceId);
                     if (device != null) {
                         log.info("SNMP device {} is now managed by current transport node", deviceId);
                         establishDeviceSession(device);
@@ -253,6 +261,7 @@ public class SnmpTransportContext extends TransportContext {
     }
 
 
+    @NotNull
     public Collection<DeviceSessionContext> getSessions() {
         return sessions.values();
     }

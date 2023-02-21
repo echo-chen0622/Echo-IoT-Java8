@@ -7,6 +7,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.id.UUIDBased;
 import org.echoiot.server.common.data.validation.NoXss;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -35,11 +37,12 @@ public abstract class SearchTextBasedWithAdditionalInfo<I extends UUIDBased> ext
         super(id);
     }
 
-    public SearchTextBasedWithAdditionalInfo(SearchTextBasedWithAdditionalInfo<I> searchTextBased) {
+    public SearchTextBasedWithAdditionalInfo(@NotNull SearchTextBasedWithAdditionalInfo<I> searchTextBased) {
         super(searchTextBased);
         setAdditionalInfo(searchTextBased.getAdditionalInfo());
     }
 
+    @Nullable
     @Override
     public JsonNode getAdditionalInfo() {
         return getJson(() -> additionalInfo, () -> additionalInfoBytes);
@@ -50,11 +53,11 @@ public abstract class SearchTextBasedWithAdditionalInfo<I extends UUIDBased> ext
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-        SearchTextBasedWithAdditionalInfo<?> that = (SearchTextBasedWithAdditionalInfo<?>) o;
+        @NotNull SearchTextBasedWithAdditionalInfo<?> that = (SearchTextBasedWithAdditionalInfo<?>) o;
         return Arrays.equals(additionalInfoBytes, that.additionalInfoBytes);
     }
 
@@ -63,7 +66,8 @@ public abstract class SearchTextBasedWithAdditionalInfo<I extends UUIDBased> ext
         return Objects.hash(super.hashCode(), additionalInfoBytes);
     }
 
-    public static JsonNode getJson(Supplier<JsonNode> jsonData, Supplier<byte[]> binaryData) {
+    @Nullable
+    public static JsonNode getJson(@NotNull Supplier<JsonNode> jsonData, @NotNull Supplier<byte[]> binaryData) {
         JsonNode json = jsonData.get();
         if (json != null) {
             return json;
@@ -82,7 +86,7 @@ public abstract class SearchTextBasedWithAdditionalInfo<I extends UUIDBased> ext
         }
     }
 
-    public static void setJson(JsonNode json, Consumer<JsonNode> jsonConsumer, Consumer<byte[]> bytesConsumer) {
+    public static void setJson(JsonNode json, @NotNull Consumer<JsonNode> jsonConsumer, @NotNull Consumer<byte[]> bytesConsumer) {
         jsonConsumer.accept(json);
         try {
             bytesConsumer.accept(mapper.writeValueAsBytes(json));

@@ -2,6 +2,7 @@ package org.echoiot.server.dao.sql.dashboard;
 
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.dao.model.sql.DashboardInfoEntity;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
@@ -27,9 +28,10 @@ import java.util.UUID;
 @SqlDao
 public class JpaDashboardInfoDao extends JpaAbstractSearchTextDao<DashboardInfoEntity, DashboardInfo> implements DashboardInfoDao {
 
-    @Autowired
+    @Resource
     private DashboardInfoRepository dashboardInfoRepository;
 
+    @NotNull
     @Override
     protected Class<DashboardInfoEntity> getEntityClass() {
         return DashboardInfoEntity.class;
@@ -40,8 +42,9 @@ public class JpaDashboardInfoDao extends JpaAbstractSearchTextDao<DashboardInfoE
         return dashboardInfoRepository;
     }
 
+    @NotNull
     @Override
-    public PageData<DashboardInfo> findDashboardsByTenantId(UUID tenantId, PageLink pageLink) {
+    public PageData<DashboardInfo> findDashboardsByTenantId(UUID tenantId, @NotNull PageLink pageLink) {
         return DaoUtil.toPageData(dashboardInfoRepository
                 .findByTenantId(
                         tenantId,
@@ -49,9 +52,10 @@ public class JpaDashboardInfoDao extends JpaAbstractSearchTextDao<DashboardInfoE
                         DaoUtil.toPageable(pageLink)));
     }
 
+    @NotNull
     @Override
-    public PageData<DashboardInfo> findMobileDashboardsByTenantId(UUID tenantId, PageLink pageLink) {
-        List<SortOrder> sortOrders = new ArrayList<>();
+    public PageData<DashboardInfo> findMobileDashboardsByTenantId(UUID tenantId, @NotNull PageLink pageLink) {
+        @NotNull List<SortOrder> sortOrders = new ArrayList<>();
         sortOrders.add(new SortOrder("mobileOrder", SortOrder.Direction.ASC));
         if (pageLink.getSortOrder() != null) {
             sortOrders.add(pageLink.getSortOrder());
@@ -63,8 +67,9 @@ public class JpaDashboardInfoDao extends JpaAbstractSearchTextDao<DashboardInfoE
                         DaoUtil.toPageable(pageLink, sortOrders)));
     }
 
+    @NotNull
     @Override
-    public PageData<DashboardInfo> findDashboardsByTenantIdAndCustomerId(UUID tenantId, UUID customerId, PageLink pageLink) {
+    public PageData<DashboardInfo> findDashboardsByTenantIdAndCustomerId(UUID tenantId, UUID customerId, @NotNull PageLink pageLink) {
         return DaoUtil.toPageData(dashboardInfoRepository
                 .findByTenantIdAndCustomerId(
                         tenantId,
@@ -73,9 +78,10 @@ public class JpaDashboardInfoDao extends JpaAbstractSearchTextDao<DashboardInfoE
                         DaoUtil.toPageable(pageLink)));
     }
 
+    @NotNull
     @Override
-    public PageData<DashboardInfo> findMobileDashboardsByTenantIdAndCustomerId(UUID tenantId, UUID customerId, PageLink pageLink) {
-        List<SortOrder> sortOrders = new ArrayList<>();
+    public PageData<DashboardInfo> findMobileDashboardsByTenantIdAndCustomerId(UUID tenantId, UUID customerId, @NotNull PageLink pageLink) {
+        @NotNull List<SortOrder> sortOrders = new ArrayList<>();
         sortOrders.add(new SortOrder("mobileOrder", SortOrder.Direction.ASC));
         if (pageLink.getSortOrder() != null) {
             sortOrders.add(pageLink.getSortOrder());
@@ -88,8 +94,9 @@ public class JpaDashboardInfoDao extends JpaAbstractSearchTextDao<DashboardInfoE
                         DaoUtil.toPageable(pageLink, sortOrders)));
     }
 
+    @NotNull
     @Override
-    public PageData<DashboardInfo> findDashboardsByTenantIdAndEdgeId(UUID tenantId, UUID edgeId, PageLink pageLink) {
+    public PageData<DashboardInfo> findDashboardsByTenantIdAndEdgeId(UUID tenantId, UUID edgeId, @NotNull PageLink pageLink) {
         log.debug("Try to find dashboards by tenantId [{}], edgeId [{}] and pageLink [{}]", tenantId, edgeId, pageLink);
         return DaoUtil.toPageData(dashboardInfoRepository
                 .findByTenantIdAndEdgeId(

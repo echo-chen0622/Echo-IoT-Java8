@@ -1,5 +1,7 @@
 package org.echoiot.script.api.tbel;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -26,7 +28,7 @@ public class TbDate extends Date {
         super();
     }
 
-    public TbDate(String s) {
+    public TbDate(@NotNull String s) {
         super(parse(s));
     }
 
@@ -47,26 +49,31 @@ public class TbDate extends Date {
         super(new GregorianCalendar(year, month, date, hrs, min, second).getTimeInMillis());
     }
 
+    @NotNull
     public String toDateString() {
         DateFormat formatter = DateFormat.getDateInstance();
         return formatter.format(this);
     }
 
+    @NotNull
     public String toTimeString() {
         DateFormat formatter = DateFormat.getTimeInstance(DateFormat.LONG);
         return formatter.format(this);
     }
 
+    @NotNull
     public String toISOString() {
         return isoDateFormat.format(this);
     }
 
-    public String toLocaleString(String locale) {
+    @NotNull
+    public String toLocaleString(@NotNull String locale) {
         DateFormat formatter = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, Locale.forLanguageTag(locale));
         return formatter.format(this);
     }
 
-    public String toLocaleString(String locale, String tz) {
+    @NotNull
+    public String toLocaleString(@NotNull String locale, String tz) {
         DateFormat formatter = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, Locale.forLanguageTag(locale));
         formatter.setTimeZone(TimeZone.getTimeZone(tz));
         return formatter.format(this);
@@ -76,16 +83,16 @@ public class TbDate extends Date {
         return System.currentTimeMillis();
     }
 
-    public static long parse(String value, String format) {
+    public static long parse(String value, @NotNull String format) {
         try {
-            DateFormat dateFormat = new SimpleDateFormat(format);
+            @NotNull DateFormat dateFormat = new SimpleDateFormat(format);
             return dateFormat.parse(value).getTime();
         } catch (Exception e) {
             return -1;
         }
     }
 
-    public static long parse(String value) {
+    public static long parse(@NotNull String value) {
         try {
             TemporalAccessor accessor = isoDateFormatter.parseBest(value,
                     ZonedDateTime::from,

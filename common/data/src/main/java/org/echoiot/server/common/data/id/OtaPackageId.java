@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import org.echoiot.server.common.data.EntityType;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
@@ -16,10 +17,12 @@ public class OtaPackageId extends UUIDBased implements EntityId {
         super(id);
     }
 
-    public static OtaPackageId fromString(String firmwareId) {
+    @NotNull
+    public static OtaPackageId fromString(@NotNull String firmwareId) {
         return new OtaPackageId(UUID.fromString(firmwareId));
     }
 
+    @NotNull
     @ApiModelProperty(position = 2, required = true, value = "string", example = "OTA_PACKAGE", allowableValues = "OTA_PACKAGE")
     @Override
     public EntityType getEntityType() {

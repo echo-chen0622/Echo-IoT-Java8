@@ -9,6 +9,8 @@ import org.echoiot.server.service.queue.processing.TbRuleEngineSubmitStrategy;
 import org.echoiot.server.common.msg.queue.RuleEngineException;
 import org.echoiot.server.common.msg.queue.RuleNodeInfo;
 import org.echoiot.server.gen.transport.TransportProtos;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
 import java.util.Map;
@@ -27,6 +29,7 @@ public class TbMsgPackProcessingContext {
     private final boolean skipTimeoutMsgsPossible;
     @Getter
     private final boolean profilerEnabled;
+    @NotNull
     private final AtomicInteger pendingCount;
     private final CountDownLatch processingTimeoutLatch = new CountDownLatch(1);
     @Getter
@@ -42,7 +45,7 @@ public class TbMsgPackProcessingContext {
 
     private volatile boolean canceled = false;
 
-    public TbMsgPackProcessingContext(String queueName, TbRuleEngineSubmitStrategy submitStrategy, boolean skipTimeoutMsgsPossible) {
+    public TbMsgPackProcessingContext(String queueName, @NotNull TbRuleEngineSubmitStrategy submitStrategy, boolean skipTimeoutMsgsPossible) {
         this.queueName = queueName;
         this.submitStrategy = submitStrategy;
         this.skipTimeoutMsgsPossible = skipTimeoutMsgsPossible;
@@ -51,7 +54,7 @@ public class TbMsgPackProcessingContext {
         this.pendingCount = new AtomicInteger(pendingMap.size());
     }
 
-    public boolean await(long packProcessingTimeout, TimeUnit milliseconds) throws InterruptedException {
+    public boolean await(long packProcessingTimeout, @NotNull TimeUnit milliseconds) throws InterruptedException {
         boolean success = processingTimeoutLatch.await(packProcessingTimeout, milliseconds);
         if (!success && profilerEnabled) {
             msgProfilerMap.values().forEach(this::onTimeout);
@@ -73,7 +76,7 @@ public class TbMsgPackProcessingContext {
         }
     }
 
-    public void onFailure(TenantId tenantId, UUID id, RuleEngineException e) {
+    public void onFailure(@NotNull TenantId tenantId, UUID id, RuleEngineException e) {
         TbProtoQueueMsg<TransportProtos.ToRuleEngineMsg> msg;
         boolean empty = false;
         msg = pendingMap.remove(id);
@@ -90,7 +93,7 @@ public class TbMsgPackProcessingContext {
     private final ConcurrentHashMap<UUID, TbMsgProfilerInfo> msgProfilerMap = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<UUID, TbRuleNodeProfilerInfo> ruleNodeProfilerMap = new ConcurrentHashMap<>();
 
-    public void onProcessingStart(UUID id, RuleNodeInfo ruleNodeInfo) {
+    public void onProcessingStart(UUID id, @NotNull RuleNodeInfo ruleNodeInfo) {
         lastRuleNodeMap.put(id, ruleNodeInfo);
         if (profilerEnabled) {
             msgProfilerMap.computeIfAbsent(id, TbMsgProfilerInfo::new).onStart(ruleNodeInfo.getRuleNodeId());
@@ -98,7 +101,7 @@ public class TbMsgPackProcessingContext {
         }
     }
 
-    public void onProcessingEnd(UUID id, RuleNodeId ruleNodeId) {
+    public void onProcessingEnd(UUID id, @NotNull RuleNodeId ruleNodeId) {
         if (profilerEnabled) {
             long processingTime = msgProfilerMap.computeIfAbsent(id, TbMsgProfilerInfo::new).onEnd(ruleNodeId);
             if (processingTime > 0) {
@@ -107,8 +110,8 @@ public class TbMsgPackProcessingContext {
         }
     }
 
-    public void onTimeout(TbMsgProfilerInfo profilerInfo) {
-        Map.Entry<UUID, Long> ruleNodeInfo = profilerInfo.onTimeout();
+    public void onTimeout(@NotNull TbMsgProfilerInfo profilerInfo) {
+        @Nullable Map.Entry<UUID, Long> ruleNodeInfo = profilerInfo.onTimeout();
         if (ruleNodeInfo != null) {
             ruleNodeProfilerMap.computeIfAbsent(ruleNodeInfo.getKey(), TbRuleNodeProfilerInfo::new).record(ruleNodeInfo.getValue());
         }

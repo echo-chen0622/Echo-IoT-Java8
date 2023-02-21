@@ -7,5 +7,5 @@ public enum EntityKeyType {
     SERVER_ATTRIBUTE,
     TIME_SERIES,
     ENTITY_FIELD,
-    ALARM_FIELD;
+    ALARM_FIELD
 }

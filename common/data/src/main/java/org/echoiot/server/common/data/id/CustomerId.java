@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.echoiot.server.common.data.EntityType;
+import org.jetbrains.annotations.NotNull;
 
 @ApiModel
 public final class CustomerId extends UUIDBased implements EntityId {
@@ -18,6 +19,7 @@ public final class CustomerId extends UUIDBased implements EntityId {
         super(id);
     }
 
+    @NotNull
     @ApiModelProperty(position = 2, required = true, value = "string", example = "CUSTOMER", allowableValues = "CUSTOMER")
     @Override
     public EntityType getEntityType() {

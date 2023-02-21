@@ -3,6 +3,7 @@ package org.echoiot.server.service.security.auth;
 import org.echoiot.server.common.data.security.event.UserCredentialsInvalidationEvent;
 import org.echoiot.server.common.data.security.event.UserSessionInvalidationEvent;
 import org.echoiot.server.common.data.security.model.JwtToken;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -63,28 +64,28 @@ public class TokenOutdatingTest {
     private JwtAuthenticationProvider accessTokenAuthenticationProvider;
     private RefreshTokenAuthenticationProvider refreshTokenAuthenticationProvider;
 
-    @Autowired
+    @Resource
     private TokenOutdatingService tokenOutdatingService;
-    @Autowired
+    @Resource
     private ApplicationEventPublisher eventPublisher;
-    @Autowired
+    @Resource
     private JwtTokenFactory tokenFactory;
     private SecurityUser securityUser;
 
     @Before
     public void setUp() {
-        UserId userId = new UserId(UUID.randomUUID());
+        @NotNull UserId userId = new UserId(UUID.randomUUID());
         securityUser = createMockSecurityUser(userId);
 
         UserService userService = mock(UserService.class);
 
-        User user = new User();
+        @NotNull User user = new User();
         user.setId(userId);
         user.setAuthority(Authority.TENANT_ADMIN);
         user.setEmail("email");
         when(userService.findUserById(any(), eq(userId))).thenReturn(user);
 
-        UserCredentials userCredentials = new UserCredentials();
+        @NotNull UserCredentials userCredentials = new UserCredentials();
         userCredentials.setEnabled(true);
         when(userService.findUserCredentialsByUserId(any(), eq(userId))).thenReturn(userCredentials);
 
@@ -94,7 +95,7 @@ public class TokenOutdatingTest {
 
     @Test
     public void testOutdateOldUserTokens() throws Exception {
-        JwtToken jwtToken = tokenFactory.createAccessJwtToken(securityUser);
+        @NotNull JwtToken jwtToken = tokenFactory.createAccessJwtToken(securityUser);
 
         // Token outdatage time is rounded to 1 sec. Need to wait before outdating so that outdatage time is strictly after token issue time
         SECONDS.sleep(1);
@@ -103,13 +104,13 @@ public class TokenOutdatingTest {
 
         SECONDS.sleep(1);
 
-        JwtToken newJwtToken = tokenFactory.createAccessJwtToken(securityUser);
+        @NotNull JwtToken newJwtToken = tokenFactory.createAccessJwtToken(securityUser);
         assertFalse(tokenOutdatingService.isOutdated(newJwtToken, securityUser.getId()));
     }
 
     @Test
     public void testAuthenticateWithOutdatedAccessToken() throws InterruptedException {
-        RawAccessJwtToken accessJwtToken = getRawJwtToken(tokenFactory.createAccessJwtToken(securityUser));
+        @NotNull RawAccessJwtToken accessJwtToken = getRawJwtToken(tokenFactory.createAccessJwtToken(securityUser));
 
         assertDoesNotThrow(() -> {
             accessTokenAuthenticationProvider.authenticate(new JwtAuthenticationToken(accessJwtToken));
@@ -125,7 +126,7 @@ public class TokenOutdatingTest {
 
     @Test
     public void testAuthenticateWithOutdatedRefreshToken() throws InterruptedException {
-        RawAccessJwtToken refreshJwtToken = getRawJwtToken(tokenFactory.createRefreshToken(securityUser));
+        @NotNull RawAccessJwtToken refreshJwtToken = getRawJwtToken(tokenFactory.createRefreshToken(securityUser));
 
         assertDoesNotThrow(() -> {
             refreshTokenAuthenticationProvider.authenticate(new RefreshAuthenticationToken(refreshJwtToken));
@@ -162,10 +163,10 @@ public class TokenOutdatingTest {
 
     @Test
     public void testOnlyOneTokenExpired() throws InterruptedException {
-        JwtToken jwtToken = tokenFactory.createAccessJwtToken(securityUser);
+        @NotNull JwtToken jwtToken = tokenFactory.createAccessJwtToken(securityUser);
 
-        SecurityUser anotherSecurityUser = new SecurityUser(securityUser, securityUser.isEnabled(), securityUser.getUserPrincipal());
-        JwtToken anotherJwtToken = tokenFactory.createAccessJwtToken(anotherSecurityUser);
+        @NotNull SecurityUser anotherSecurityUser = new SecurityUser(securityUser, securityUser.isEnabled(), securityUser.getUserPrincipal());
+        @NotNull JwtToken anotherJwtToken = tokenFactory.createAccessJwtToken(anotherSecurityUser);
 
         assertDoesNotThrow(() -> {
             accessTokenAuthenticationProvider.authenticate(new JwtAuthenticationToken(getRawJwtToken(jwtToken)));
@@ -186,10 +187,10 @@ public class TokenOutdatingTest {
 
     @Test
     public void testResetAllSessions() throws InterruptedException {
-        JwtToken jwtToken = tokenFactory.createAccessJwtToken(securityUser);
+        @NotNull JwtToken jwtToken = tokenFactory.createAccessJwtToken(securityUser);
 
-        SecurityUser anotherSecurityUser = new SecurityUser(securityUser, securityUser.isEnabled(), securityUser.getUserPrincipal());
-        JwtToken anotherJwtToken = tokenFactory.createAccessJwtToken(anotherSecurityUser);
+        @NotNull SecurityUser anotherSecurityUser = new SecurityUser(securityUser, securityUser.isEnabled(), securityUser.getUserPrincipal());
+        @NotNull JwtToken anotherJwtToken = tokenFactory.createAccessJwtToken(anotherSecurityUser);
 
         assertDoesNotThrow(() -> {
             accessTokenAuthenticationProvider.authenticate(new JwtAuthenticationToken(getRawJwtToken(jwtToken)));
@@ -213,12 +214,14 @@ public class TokenOutdatingTest {
     }
 
 
-    private RawAccessJwtToken getRawJwtToken(JwtToken token) {
+    @NotNull
+    private RawAccessJwtToken getRawJwtToken(@NotNull JwtToken token) {
         return new RawAccessJwtToken(token.getToken());
     }
 
+    @NotNull
     private SecurityUser createMockSecurityUser(UserId userId) {
-        SecurityUser securityUser = new SecurityUser();
+        @NotNull SecurityUser securityUser = new SecurityUser();
         securityUser.setEmail("email");
         securityUser.setUserPrincipal(new UserPrincipal(UserPrincipal.Type.USER_NAME, securityUser.getEmail()));
         securityUser.setAuthority(Authority.CUSTOMER_USER);

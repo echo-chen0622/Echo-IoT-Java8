@@ -14,6 +14,7 @@ import org.echoiot.server.common.data.kv.BaseAttributeKvEntry;
 import org.echoiot.server.common.data.kv.StringDataEntry;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.msg.TbMsg;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -45,11 +46,11 @@ public class TbGpsGeofencingActionNode extends AbstractGeofencingNode<TbGpsGeofe
     private final JsonParser parser = new JsonParser();
 
     @Override
-    public void onMsg(TbContext ctx, TbMsg msg) throws TbNodeException {
+    public void onMsg(@NotNull TbContext ctx, @NotNull TbMsg msg) throws TbNodeException {
         boolean matches = checkMatches(msg);
         long ts = System.currentTimeMillis();
 
-        EntityGeofencingState entityState = entityStates.computeIfAbsent(msg.getOriginator(), key -> {
+        @NotNull EntityGeofencingState entityState = entityStates.computeIfAbsent(msg.getOriginator(), key -> {
             try {
                 Optional<AttributeKvEntry> entry = ctx.getAttributesService()
                         .find(ctx.getTenantId(), msg.getOriginator(), DataConstants.SERVER_SCOPE, ctx.getServiceId())
@@ -86,28 +87,29 @@ public class TbGpsGeofencingActionNode extends AbstractGeofencingNode<TbGpsGeofe
         }
     }
 
-    private void switchState(TbContext ctx, EntityId entityId, EntityGeofencingState entityState, boolean matches, long ts) {
+    private void switchState(@NotNull TbContext ctx, EntityId entityId, @NotNull EntityGeofencingState entityState, boolean matches, long ts) {
         entityState.setInside(matches);
         entityState.setStateSwitchTime(ts);
         entityState.setStayed(false);
         persist(ctx, entityId, entityState);
     }
 
-    private void setStaid(TbContext ctx, EntityId entityId, EntityGeofencingState entityState) {
+    private void setStaid(@NotNull TbContext ctx, EntityId entityId, @NotNull EntityGeofencingState entityState) {
         entityState.setStayed(true);
         persist(ctx, entityId, entityState);
     }
 
-    private void persist(TbContext ctx, EntityId entityId, EntityGeofencingState entityState) {
-        JsonObject object = new JsonObject();
+    private void persist(@NotNull TbContext ctx, EntityId entityId, @NotNull EntityGeofencingState entityState) {
+        @NotNull JsonObject object = new JsonObject();
         object.addProperty("inside", entityState.isInside());
         object.addProperty("stateSwitchTime", entityState.getStateSwitchTime());
         object.addProperty("stayed", entityState.isStayed());
-        AttributeKvEntry entry = new BaseAttributeKvEntry(new StringDataEntry(ctx.getServiceId(), gson.toJson(object)), System.currentTimeMillis());
-        List<AttributeKvEntry> attributeKvEntryList = Collections.singletonList(entry);
+        @NotNull AttributeKvEntry entry = new BaseAttributeKvEntry(new StringDataEntry(ctx.getServiceId(), gson.toJson(object)), System.currentTimeMillis());
+        @NotNull List<AttributeKvEntry> attributeKvEntryList = Collections.singletonList(entry);
         ctx.getAttributesService().save(ctx.getTenantId(), entityId, DataConstants.SERVER_SCOPE, attributeKvEntryList);
     }
 
+    @NotNull
     @Override
     protected Class<TbGpsGeofencingActionNodeConfiguration> getConfigClazz() {
         return TbGpsGeofencingActionNodeConfiguration.class;

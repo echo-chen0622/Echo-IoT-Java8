@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.transport.config.ssl.SslCredentials;
 import org.echoiot.server.common.transport.config.ssl.SslCredentialsConfig;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,14 +38,14 @@ public class LwM2MTransportBootstrapConfig implements LwM2MSecureServerConfig {
     @Value("${transport.lwm2m.bootstrap.security.bind_port:}")
     private Integer securePort;
 
+    @NotNull
     @Bean
     @ConfigurationProperties(prefix = "transport.lwm2m.bootstrap.security.credentials")
     public SslCredentialsConfig lwm2mBootstrapCredentials() {
         return new SslCredentialsConfig("LWM2M Bootstrap DTLS Credentials", false);
     }
 
-    @Autowired
-    @Qualifier("lwm2mBootstrapCredentials")
+    @Resource(name = "lwm2mBootstrapCredentials")
     private SslCredentialsConfig credentialsConfig;
 
     @Override

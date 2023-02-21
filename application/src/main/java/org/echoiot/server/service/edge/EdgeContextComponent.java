@@ -53,126 +53,126 @@ import org.echoiot.server.service.edge.rpc.processor.WidgetTypeEdgeProcessor;
 @Lazy
 public class EdgeContextComponent {
 
-    @Autowired
+    @Resource
     private TbClusterService clusterService;
 
-    @Autowired
+    @Resource
     private EdgeService edgeService;
 
-    @Autowired
+    @Resource
     private EdgeEventService edgeEventService;
 
-    @Autowired
+    @Resource
     private AdminSettingsService adminSettingsService;
 
-    @Autowired
+    @Resource
     private Configuration freemarkerConfig;
 
-    @Autowired
+    @Resource
     private DeviceService deviceService;
 
-    @Autowired
+    @Resource
     private AssetService assetService;
 
-    @Autowired
+    @Resource
     private EntityViewService entityViewService;
 
-    @Autowired
+    @Resource
     private DeviceProfileService deviceProfileService;
 
-    @Autowired
+    @Resource
     private AssetProfileService assetProfileService;
 
-    @Autowired
+    @Resource
     private AttributesService attributesService;
 
-    @Autowired
+    @Resource
     private DashboardService dashboardService;
 
-    @Autowired
+    @Resource
     private RuleChainService ruleChainService;
 
-    @Autowired
+    @Resource
     private UserService userService;
 
-    @Autowired
+    @Resource
     private CustomerService customerService;
 
-    @Autowired
+    @Resource
     private WidgetsBundleService widgetsBundleService;
 
-    @Autowired
+    @Resource
     private EdgeRequestsService edgeRequestsService;
 
-    @Autowired
+    @Resource
     private OtaPackageService otaPackageService;
 
-    @Autowired
+    @Resource
     private QueueService queueService;
 
-    @Autowired
+    @Resource
     private AlarmEdgeProcessor alarmProcessor;
 
-    @Autowired
+    @Resource
     private DeviceProfileEdgeProcessor deviceProfileProcessor;
 
-    @Autowired
+    @Resource
     private AssetProfileEdgeProcessor assetProfileProcessor;
 
-    @Autowired
+    @Resource
     private EdgeProcessor edgeProcessor;
 
-    @Autowired
+    @Resource
     private DeviceEdgeProcessor deviceProcessor;
 
-    @Autowired
+    @Resource
     private AssetEdgeProcessor assetProcessor;
 
-    @Autowired
+    @Resource
     private EntityViewEdgeProcessor entityViewProcessor;
 
-    @Autowired
+    @Resource
     private UserEdgeProcessor userProcessor;
 
-    @Autowired
+    @Resource
     private RelationEdgeProcessor relationProcessor;
 
-    @Autowired
+    @Resource
     private TelemetryEdgeProcessor telemetryProcessor;
 
-    @Autowired
+    @Resource
     private DashboardEdgeProcessor dashboardProcessor;
 
-    @Autowired
+    @Resource
     private RuleChainEdgeProcessor ruleChainProcessor;
 
-    @Autowired
+    @Resource
     private CustomerEdgeProcessor customerProcessor;
 
-    @Autowired
+    @Resource
     private WidgetBundleEdgeProcessor widgetBundleProcessor;
 
-    @Autowired
+    @Resource
     private WidgetTypeEdgeProcessor widgetTypeProcessor;
 
-    @Autowired
+    @Resource
     private AdminSettingsEdgeProcessor adminSettingsProcessor;
 
-    @Autowired
+    @Resource
     private OtaPackageEdgeProcessor otaPackageEdgeProcessor;
 
-    @Autowired
+    @Resource
     private QueueEdgeProcessor queueEdgeProcessor;
 
-    @Autowired
+    @Resource
     private EdgeMsgConstructor edgeMsgConstructor;
 
-    @Autowired
+    @Resource
     private EdgeEventStorageSettings edgeEventStorageSettings;
 
-    @Autowired
+    @Resource
     private DbCallbackExecutorService dbCallbackExecutor;
 
-    @Autowired
+    @Resource
     private GrpcCallbackExecutorService grpcCallbackExecutorService;
 }

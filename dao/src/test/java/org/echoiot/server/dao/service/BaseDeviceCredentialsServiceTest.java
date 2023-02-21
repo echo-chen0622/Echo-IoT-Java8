@@ -9,6 +9,7 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.security.DeviceCredentials;
 import org.echoiot.server.common.data.security.DeviceCredentialsType;
 import org.echoiot.server.dao.exception.DataValidationException;
+import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -20,7 +21,7 @@ public abstract class BaseDeviceCredentialsServiceTest extends AbstractServiceTe
 
     @Before
     public void before() {
-        Tenant tenant = new Tenant();
+        @NotNull Tenant tenant = new Tenant();
         tenant.setTitle("My tenant");
         Tenant savedTenant = tenantService.saveTenant(tenant);
         Assert.assertNotNull(savedTenant);
@@ -34,7 +35,7 @@ public abstract class BaseDeviceCredentialsServiceTest extends AbstractServiceTe
 
     @Test(expected = DataValidationException.class)
     public void testCreateDeviceCredentials() {
-        DeviceCredentials deviceCredentials = new DeviceCredentials();
+        @NotNull DeviceCredentials deviceCredentials = new DeviceCredentials();
         deviceCredentialsService.updateDeviceCredentials(tenantId, deviceCredentials);
     }
 
@@ -94,7 +95,7 @@ public abstract class BaseDeviceCredentialsServiceTest extends AbstractServiceTe
         device.setTenantId(tenantId);
         device = deviceService.saveDevice(device);
         DeviceCredentials deviceCredentials = deviceCredentialsService.findDeviceCredentialsByDeviceId(tenantId, device.getId());
-        DeviceCredentials newDeviceCredentials = new DeviceCredentials(new DeviceCredentialsId(Uuids.timeBased()));
+        @NotNull DeviceCredentials newDeviceCredentials = new DeviceCredentials(new DeviceCredentialsId(Uuids.timeBased()));
         newDeviceCredentials.setCreatedTime(deviceCredentials.getCreatedTime());
         newDeviceCredentials.setDeviceId(deviceCredentials.getDeviceId());
         newDeviceCredentials.setCredentialsType(deviceCredentials.getCredentialsType());
@@ -124,7 +125,7 @@ public abstract class BaseDeviceCredentialsServiceTest extends AbstractServiceTe
 
     @Test
     public void testFindDeviceCredentialsByDeviceId() {
-        Device device = new Device();
+        @NotNull Device device = new Device();
         device.setTenantId(tenantId);
         device.setName("My device");
         device.setType("default");
@@ -138,7 +139,7 @@ public abstract class BaseDeviceCredentialsServiceTest extends AbstractServiceTe
 
     @Test
     public void testFindDeviceCredentialsByCredentialsId() {
-        Device device = new Device();
+        @NotNull Device device = new Device();
         device.setTenantId(tenantId);
         device.setName("My device");
         device.setType("default");
@@ -154,7 +155,7 @@ public abstract class BaseDeviceCredentialsServiceTest extends AbstractServiceTe
 
     @Test
     public void testSaveDeviceCredentials() {
-        Device device = new Device();
+        @NotNull Device device = new Device();
         device.setTenantId(tenantId);
         device.setName("My device");
         device.setType("default");

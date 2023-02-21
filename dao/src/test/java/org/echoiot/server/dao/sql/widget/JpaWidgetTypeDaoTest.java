@@ -4,6 +4,7 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.widget.WidgetType;
 import org.echoiot.server.common.data.widget.WidgetTypeDetails;
 import org.echoiot.server.dao.widget.WidgetTypeDao;
+import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -26,7 +27,7 @@ public class JpaWidgetTypeDaoTest extends AbstractJpaDaoTest {
     final int WIDGET_TYPE_COUNT = 3;
     List<WidgetType> widgetTypeList;
 
-    @Autowired
+    @Resource
     private WidgetTypeDao widgetTypeDao;
 
     @Before
@@ -38,7 +39,7 @@ public class JpaWidgetTypeDaoTest extends AbstractJpaDaoTest {
     }
 
     WidgetType createAndSaveWidgetType(int number) {
-        WidgetTypeDetails widgetType = new WidgetTypeDetails();
+        @NotNull WidgetTypeDetails widgetType = new WidgetTypeDetails();
         widgetType.setTenantId(TenantId.SYS_TENANT_ID);
         widgetType.setName("WIDGET_TYPE_" + number);
         widgetType.setAlias("ALIAS_" + number);
@@ -48,7 +49,7 @@ public class JpaWidgetTypeDaoTest extends AbstractJpaDaoTest {
 
     @After
     public void deleteAllWidgetType() {
-        for (WidgetType widgetType : widgetTypeList) {
+        for (@NotNull WidgetType widgetType : widgetTypeList) {
             widgetTypeDao.removeById(TenantId.SYS_TENANT_ID, widgetType.getUuidId());
         }
     }

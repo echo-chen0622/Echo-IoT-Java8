@@ -9,6 +9,8 @@ import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.dao.asset.AssetProfileService;
 import org.echoiot.server.dao.asset.AssetService;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -36,6 +38,7 @@ public class DefaultTbAssetProfileCache implements TbAssetProfileCache {
         this.assetService = assetService;
     }
 
+    @Nullable
     @Override
     public AssetProfile get(TenantId tenantId, AssetProfileId assetProfileId) {
         AssetProfile profile = assetProfilesMap.get(assetProfileId);
@@ -58,6 +61,7 @@ public class DefaultTbAssetProfileCache implements TbAssetProfileCache {
         return profile;
     }
 
+    @Nullable
     @Override
     public AssetProfile get(TenantId tenantId, AssetId assetId) {
         AssetProfileId profileId = assetsMap.get(assetId);
@@ -77,7 +81,7 @@ public class DefaultTbAssetProfileCache implements TbAssetProfileCache {
     public void evict(TenantId tenantId, AssetProfileId profileId) {
         AssetProfile oldProfile = assetProfilesMap.remove(profileId);
         log.debug("[{}] evict asset profile from cache: {}", profileId, oldProfile);
-        AssetProfile newProfile = get(tenantId, profileId);
+        @Nullable AssetProfile newProfile = get(tenantId, profileId);
         if (newProfile != null) {
             notifyProfileListeners(newProfile);
         }
@@ -87,7 +91,7 @@ public class DefaultTbAssetProfileCache implements TbAssetProfileCache {
     public void evict(TenantId tenantId, AssetId assetId) {
         AssetProfileId old = assetsMap.remove(assetId);
         if (old != null) {
-            AssetProfile newProfile = get(tenantId, assetId);
+            @Nullable AssetProfile newProfile = get(tenantId, assetId);
             if (newProfile == null || !old.equals(newProfile.getId())) {
                 notifyAssetListeners(tenantId, assetId, newProfile);
             }
@@ -96,8 +100,8 @@ public class DefaultTbAssetProfileCache implements TbAssetProfileCache {
 
     @Override
     public void addListener(TenantId tenantId, EntityId listenerId,
-                            Consumer<AssetProfile> profileListener,
-                            BiConsumer<AssetId, AssetProfile> assetListener) {
+                            @Nullable Consumer<AssetProfile> profileListener,
+                            @Nullable BiConsumer<AssetId, AssetProfile> assetListener) {
         if (profileListener != null) {
             profileListeners.computeIfAbsent(tenantId, id -> new ConcurrentHashMap<>()).put(listenerId, profileListener);
         }
@@ -128,14 +132,14 @@ public class DefaultTbAssetProfileCache implements TbAssetProfileCache {
         }
     }
 
-    private void notifyProfileListeners(AssetProfile profile) {
+    private void notifyProfileListeners(@NotNull AssetProfile profile) {
         ConcurrentMap<EntityId, Consumer<AssetProfile>> tenantListeners = profileListeners.get(profile.getTenantId());
         if (tenantListeners != null) {
             tenantListeners.forEach((id, listener) -> listener.accept(profile));
         }
     }
 
-    private void notifyAssetListeners(TenantId tenantId, AssetId assetId, AssetProfile profile) {
+    private void notifyAssetListeners(TenantId tenantId, AssetId assetId, @Nullable AssetProfile profile) {
         if (profile != null) {
             ConcurrentMap<EntityId, BiConsumer<AssetId, AssetProfile>> tenantListeners = assetProfileListeners.get(tenantId);
             if (tenantListeners != null) {

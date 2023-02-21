@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.echoiot.server.common.data.event.StatisticsEvent;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.dao.model.BaseEntity;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,7 +28,7 @@ public class StatisticsEventEntity extends EventEntity<StatisticsEvent> implemen
     @Column(name = EVENT_ERRORS_OCCURRED_COLUMN_NAME)
     private long errorsOccurred;
 
-    public StatisticsEventEntity(StatisticsEvent event) {
+    public StatisticsEventEntity(@NotNull StatisticsEvent event) {
         super(event);
         this.messagesProcessed = event.getMessagesProcessed();
         this.errorsOccurred = event.getErrorsOccurred();

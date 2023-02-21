@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.Getter;
 import org.echoiot.server.common.data.validation.NoXss;
+import org.jetbrains.annotations.NotNull;
 
 import javax.validation.Valid;
 
@@ -50,14 +51,17 @@ public class FilterPredicateValue<T> implements Serializable {
         }
     }
 
+    @NotNull
     public static FilterPredicateValue<Double> fromDouble(double value) {
         return new FilterPredicateValue<>(value);
     }
 
+    @NotNull
     public static FilterPredicateValue<String> fromString(String value) {
         return new FilterPredicateValue<>(value);
     }
 
+    @NotNull
     public static FilterPredicateValue<Boolean> fromBoolean(boolean value) {
         return new FilterPredicateValue<>(value);
     }

@@ -25,6 +25,7 @@ import org.echoiot.server.queue.TbQueueProducer;
 import org.echoiot.server.queue.common.TbProtoQueueMsg;
 import org.echoiot.server.queue.provider.TbCoreQueueFactory;
 import org.echoiot.server.queue.provider.TbRuleEngineQueueFactory;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -48,8 +49,8 @@ public class DefaultOtaPackageStateService implements OtaPackageStateService {
                                          DeviceService deviceService,
                                          DeviceProfileService deviceProfileService,
                                          @Lazy RuleEngineTelemetryService telemetryService,
-                                         Optional<TbCoreQueueFactory> coreQueueFactory,
-                                         Optional<TbRuleEngineQueueFactory> reQueueFactory) {
+                                         @NotNull Optional<TbCoreQueueFactory> coreQueueFactory,
+                                         @NotNull Optional<TbRuleEngineQueueFactory> reQueueFactory) {
         this.tbClusterService = tbClusterService;
         this.otaPackageService = otaPackageService;
         this.deviceService = deviceService;
@@ -63,12 +64,12 @@ public class DefaultOtaPackageStateService implements OtaPackageStateService {
     }
 
     @Override
-    public void update(Device device, Device oldDevice) {
+    public void update(@NotNull Device device, Device oldDevice) {
         updateFirmware(device, oldDevice);
         updateSoftware(device, oldDevice);
     }
 
-    private void updateFirmware(Device device, Device oldDevice) {
+    private void updateFirmware(@NotNull Device device, @org.jetbrains.annotations.Nullable Device oldDevice) {
         OtaPackageId newFirmwareId = device.getFirmwareId();
         if (newFirmwareId == null) {
             DeviceProfile newDeviceProfile = deviceProfileService.findDeviceProfileById(device.getTenantId(), device.getDeviceProfileId());
@@ -95,7 +96,7 @@ public class DefaultOtaPackageStateService implements OtaPackageStateService {
         }
     }
 
-    private void updateSoftware(Device device, Device oldDevice) {
+    private void updateSoftware(@NotNull Device device, @org.jetbrains.annotations.Nullable Device oldDevice) {
         OtaPackageId newSoftwareId = device.getSoftwareId();
         if (newSoftwareId == null) {
             DeviceProfile newDeviceProfile = deviceProfileService.findDeviceProfileById(device.getTenantId(), device.getDeviceProfileId());
@@ -123,7 +124,7 @@ public class DefaultOtaPackageStateService implements OtaPackageStateService {
     }
 
     @Override
-    public void update(DeviceProfile deviceProfile, boolean isFirmwareChanged, boolean isSoftwareChanged) {
+    public void update(@NotNull DeviceProfile deviceProfile, boolean isFirmwareChanged, boolean isSoftwareChanged) {
         TenantId tenantId = deviceProfile.getTenantId();
 
         if (isFirmwareChanged) {
@@ -134,9 +135,9 @@ public class DefaultOtaPackageStateService implements OtaPackageStateService {
         }
     }
 
-    private void update(TenantId tenantId, DeviceProfile deviceProfile, OtaPackageType otaPackageType) {
+    private void update(TenantId tenantId, @NotNull DeviceProfile deviceProfile, @NotNull OtaPackageType otaPackageType) {
         Consumer<Device> updateConsumer;
-        OtaPackageId packageId = OtaPackageUtil.getOtaPackageId(deviceProfile, otaPackageType);
+        @org.jetbrains.annotations.Nullable OtaPackageId packageId = OtaPackageUtil.getOtaPackageId(deviceProfile, otaPackageType);
 
         if (packageId != null) {
             long ts = System.currentTimeMillis();
@@ -158,19 +159,19 @@ public class DefaultOtaPackageStateService implements OtaPackageStateService {
     }
 
     @Override
-    public boolean process(ToOtaPackageStateServiceMsg msg) {
+    public boolean process(@NotNull ToOtaPackageStateServiceMsg msg) {
         boolean isSuccess = false;
-        OtaPackageId targetOtaPackageId = new OtaPackageId(new UUID(msg.getOtaPackageIdMSB(), msg.getOtaPackageIdLSB()));
-        DeviceId deviceId = new DeviceId(new UUID(msg.getDeviceIdMSB(), msg.getDeviceIdLSB()));
-        TenantId tenantId = TenantId.fromUUID(new UUID(msg.getTenantIdMSB(), msg.getTenantIdLSB()));
-        OtaPackageType firmwareType = OtaPackageType.valueOf(msg.getType());
+        @NotNull OtaPackageId targetOtaPackageId = new OtaPackageId(new UUID(msg.getOtaPackageIdMSB(), msg.getOtaPackageIdLSB()));
+        @NotNull DeviceId deviceId = new DeviceId(new UUID(msg.getDeviceIdMSB(), msg.getDeviceIdLSB()));
+        @NotNull TenantId tenantId = TenantId.fromUUID(new UUID(msg.getTenantIdMSB(), msg.getTenantIdLSB()));
+        @NotNull OtaPackageType firmwareType = OtaPackageType.valueOf(msg.getType());
         long ts = msg.getTs();
 
         Device device = deviceService.findDeviceById(tenantId, deviceId);
         if (device == null) {
             log.warn("[{}] [{}] Device was removed during firmware update msg was queued!", tenantId, deviceId);
         } else {
-            OtaPackageId currentOtaPackageId = OtaPackageUtil.getOtaPackageId(device, firmwareType);
+            @org.jetbrains.annotations.Nullable OtaPackageId currentOtaPackageId = OtaPackageUtil.getOtaPackageId(device, firmwareType);
             if (currentOtaPackageId == null) {
                 DeviceProfile deviceProfile = deviceProfileService.findDeviceProfileById(tenantId, device.getDeviceProfileId());
                 currentOtaPackageId = OtaPackageUtil.getOtaPackageId(deviceProfile, firmwareType);
@@ -186,7 +187,7 @@ public class DefaultOtaPackageStateService implements OtaPackageStateService {
         return isSuccess;
     }
 
-    private void send(TenantId tenantId, DeviceId deviceId, OtaPackageId firmwareId, long ts, OtaPackageType firmwareType) {
+    private void send(@NotNull TenantId tenantId, @NotNull DeviceId deviceId, @NotNull OtaPackageId firmwareId, long ts, @NotNull OtaPackageType firmwareType) {
         ToOtaPackageStateServiceMsg msg = ToOtaPackageStateServiceMsg.newBuilder()
                 .setTenantIdMSB(tenantId.getId().getMostSignificantBits())
                 .setTenantIdLSB(tenantId.getId().getLeastSignificantBits())
@@ -204,10 +205,10 @@ public class DefaultOtaPackageStateService implements OtaPackageStateService {
             return;
         }
 
-        TopicPartitionInfo tpi = new TopicPartitionInfo(otaPackageStateMsgProducer.getDefaultTopic(), null, null, false);
+        @NotNull TopicPartitionInfo tpi = new TopicPartitionInfo(otaPackageStateMsgProducer.getDefaultTopic(), null, null, false);
         otaPackageStateMsgProducer.send(tpi, new TbProtoQueueMsg<>(UUID.randomUUID(), msg), null);
 
-        List<TsKvEntry> telemetry = new ArrayList<>();
+        @NotNull List<TsKvEntry> telemetry = new ArrayList<>();
         telemetry.add(new BasicTsKvEntry(ts, new StringDataEntry(OtaPackageUtil.getTargetTelemetryKey(firmware.getType(), OtaPackageKey.TITLE), firmware.getTitle())));
         telemetry.add(new BasicTsKvEntry(ts, new StringDataEntry(OtaPackageUtil.getTargetTelemetryKey(firmware.getType(), OtaPackageKey.VERSION), firmware.getVersion())));
 
@@ -232,12 +233,12 @@ public class DefaultOtaPackageStateService implements OtaPackageStateService {
     }
 
 
-    private void update(Device device, OtaPackageInfo otaPackage, long ts) {
+    private void update(@NotNull Device device, @NotNull OtaPackageInfo otaPackage, long ts) {
         TenantId tenantId = device.getTenantId();
         DeviceId deviceId = device.getId();
         OtaPackageType otaPackageType = otaPackage.getType();
 
-        BasicTsKvEntry status = new BasicTsKvEntry(System.currentTimeMillis(), new StringDataEntry(OtaPackageUtil.getTelemetryKey(otaPackageType, OtaPackageKey.STATE), OtaPackageUpdateStatus.INITIATED.name()));
+        @NotNull BasicTsKvEntry status = new BasicTsKvEntry(System.currentTimeMillis(), new StringDataEntry(OtaPackageUtil.getTelemetryKey(otaPackageType, OtaPackageKey.STATE), OtaPackageUpdateStatus.INITIATED.name()));
 
         telemetryService.saveAndNotify(tenantId, deviceId, Collections.singletonList(status), new FutureCallback<>() {
             @Override
@@ -254,9 +255,9 @@ public class DefaultOtaPackageStateService implements OtaPackageStateService {
         });
     }
 
-    private void updateAttributes(Device device, OtaPackageInfo otaPackage, long ts, TenantId tenantId, DeviceId deviceId, OtaPackageType otaPackageType) {
-        List<AttributeKvEntry> attributes = new ArrayList<>();
-        List<String> attrToRemove = new ArrayList<>();
+    private void updateAttributes(@NotNull Device device, @NotNull OtaPackageInfo otaPackage, long ts, TenantId tenantId, DeviceId deviceId, @NotNull OtaPackageType otaPackageType) {
+        @NotNull List<AttributeKvEntry> attributes = new ArrayList<>();
+        @NotNull List<String> attrToRemove = new ArrayList<>();
         attributes.add(new BaseAttributeKvEntry(ts, new StringDataEntry(OtaPackageUtil.getAttributeKey(otaPackageType, OtaPackageKey.TITLE), otaPackage.getTitle())));
         attributes.add(new BaseAttributeKvEntry(ts, new StringDataEntry(OtaPackageUtil.getAttributeKey(otaPackageType, OtaPackageKey.VERSION), otaPackage.getVersion())));
         if (StringUtils.isNotEmpty(otaPackage.getTag())) {
@@ -306,11 +307,11 @@ public class DefaultOtaPackageStateService implements OtaPackageStateService {
         });
     }
 
-    private void remove(Device device, OtaPackageType otaPackageType) {
+    private void remove(@NotNull Device device, @NotNull OtaPackageType otaPackageType) {
         remove(device, otaPackageType, OtaPackageUtil.getAttributeKeys(otaPackageType));
     }
 
-    private void remove(Device device, OtaPackageType otaPackageType, List<String> attributesKeys) {
+    private void remove(@NotNull Device device, OtaPackageType otaPackageType, @NotNull List<String> attributesKeys) {
         telemetryService.deleteAndNotify(device.getTenantId(), device.getId(), DataConstants.SHARED_SCOPE, attributesKeys,
                 new FutureCallback<>() {
                     @Override

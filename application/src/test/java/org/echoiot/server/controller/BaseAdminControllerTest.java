@@ -9,6 +9,7 @@ import org.echoiot.rule.engine.api.MailService;
 import org.echoiot.server.common.data.AdminSettings;
 import org.echoiot.server.common.data.security.model.JwtSettings;
 import org.echoiot.server.service.mail.DefaultMailService;
+import org.jetbrains.annotations.Nullable;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +25,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public abstract class BaseAdminControllerTest extends AbstractControllerTest {
     final JwtSettings defaultJwtSettings = new JwtSettings(9000, 604800, "echoiot.io", "echoiotDefaultSigningKey");
 
-    @Autowired
+    @Resource
     MailService mailService;
 
-    @Autowired
+    @Resource
     DefaultMailService defaultMailService;
 
     @Test
@@ -109,7 +110,7 @@ public abstract class BaseAdminControllerTest extends AbstractControllerTest {
     public void testSendTestMailTimeout() throws Exception {
         loginSysAdmin();
         AdminSettings adminSettings = doGet("/api/admin/settings/mail", AdminSettings.class);
-        ObjectNode objectNode = JacksonUtil.fromString(adminSettings.getJsonValue().toString(), ObjectNode.class);
+        @Nullable ObjectNode objectNode = JacksonUtil.fromString(adminSettings.getJsonValue().toString(), ObjectNode.class);
 
         objectNode.put("smtpHost", "mail.gandi.net");
         objectNode.put("timeout", 1_000);

@@ -19,6 +19,7 @@ import org.echoiot.server.common.data.security.Authority;
 import org.echoiot.server.common.data.security.model.JwtPair;
 import org.echoiot.server.common.data.security.model.JwtToken;
 import org.echoiot.server.service.security.auth.jwt.settings.JwtSettingsService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
@@ -48,12 +49,14 @@ public class JwtTokenFactory {
     private static final String CUSTOMER_ID = "customerId";
     private static final String SESSION_ID = "sessionId";
 
+    @NotNull
     private final JwtSettingsService jwtSettingsService;
 
     /**
      * Factory method for issuing new JWT Tokens.
      */
-    public AccessJwtToken createAccessJwtToken(SecurityUser securityUser) {
+    @NotNull
+    public AccessJwtToken createAccessJwtToken(@NotNull SecurityUser securityUser) {
         if (securityUser.getAuthority() == null) {
             throw new IllegalArgumentException("User doesn't have any privileges");
         }
@@ -78,7 +81,8 @@ public class JwtTokenFactory {
         return new AccessJwtToken(token);
     }
 
-    public SecurityUser parseAccessJwtToken(RawAccessJwtToken rawAccessToken) {
+    @NotNull
+    public SecurityUser parseAccessJwtToken(@NotNull RawAccessJwtToken rawAccessToken) {
         Jws<Claims> jwsClaims = parseTokenClaims(rawAccessToken);
         Claims claims = jwsClaims.getBody();
         String subject = claims.getSubject();
@@ -88,7 +92,7 @@ public class JwtTokenFactory {
             throw new IllegalArgumentException("JWT Token doesn't have any scopes");
         }
 
-        SecurityUser securityUser = new SecurityUser(new UserId(UUID.fromString(claims.get(USER_ID, String.class))));
+        @NotNull SecurityUser securityUser = new SecurityUser(new UserId(UUID.fromString(claims.get(USER_ID, String.class))));
         securityUser.setEmail(subject);
         securityUser.setAuthority(Authority.parse(scopes.get(0)));
         String tenantId = claims.get(TENANT_ID, String.class);
@@ -120,7 +124,8 @@ public class JwtTokenFactory {
         return securityUser;
     }
 
-    public JwtToken createRefreshToken(SecurityUser securityUser) {
+    @NotNull
+    public JwtToken createRefreshToken(@NotNull SecurityUser securityUser) {
         UserPrincipal principal = securityUser.getUserPrincipal();
 
         String token = setUpToken(securityUser, Collections.singletonList(Authority.REFRESH_TOKEN.name()), jwtSettingsService.getJwtSettings().getRefreshTokenExpTime())
@@ -130,7 +135,8 @@ public class JwtTokenFactory {
         return new AccessJwtToken(token);
     }
 
-    public SecurityUser parseRefreshToken(RawAccessJwtToken rawAccessToken) {
+    @NotNull
+    public SecurityUser parseRefreshToken(@NotNull RawAccessJwtToken rawAccessToken) {
         Jws<Claims> jwsClaims = parseTokenClaims(rawAccessToken);
         Claims claims = jwsClaims.getBody();
         String subject = claims.getSubject();
@@ -143,8 +149,8 @@ public class JwtTokenFactory {
             throw new IllegalArgumentException("Invalid Refresh Token scope");
         }
         boolean isPublic = claims.get(IS_PUBLIC, Boolean.class);
-        UserPrincipal principal = new UserPrincipal(isPublic ? UserPrincipal.Type.PUBLIC_ID : UserPrincipal.Type.USER_NAME, subject);
-        SecurityUser securityUser = new SecurityUser(new UserId(UUID.fromString(claims.get(USER_ID, String.class))));
+        @NotNull UserPrincipal principal = new UserPrincipal(isPublic ? UserPrincipal.Type.PUBLIC_ID : UserPrincipal.Type.USER_NAME, subject);
+        @NotNull SecurityUser securityUser = new SecurityUser(new UserId(UUID.fromString(claims.get(USER_ID, String.class))));
         securityUser.setUserPrincipal(principal);
         if (claims.get(SESSION_ID, String.class) != null) {
             securityUser.setSessionId(claims.get(SESSION_ID, String.class));
@@ -152,7 +158,8 @@ public class JwtTokenFactory {
         return securityUser;
     }
 
-    public JwtToken createPreVerificationToken(SecurityUser user, Integer expirationTime) {
+    @NotNull
+    public JwtToken createPreVerificationToken(@NotNull SecurityUser user, Integer expirationTime) {
         JwtBuilder jwtBuilder = setUpToken(user, Collections.singletonList(Authority.PRE_VERIFICATION_TOKEN.name()), expirationTime)
                 .claim(TENANT_ID, user.getTenantId().toString());
         if (user.getCustomerId() != null) {
@@ -161,7 +168,7 @@ public class JwtTokenFactory {
         return new AccessJwtToken(jwtBuilder.compact());
     }
 
-    private JwtBuilder setUpToken(SecurityUser securityUser, List<String> scopes, long expirationTime) {
+    private JwtBuilder setUpToken(@NotNull SecurityUser securityUser, List<String> scopes, long expirationTime) {
         if (StringUtils.isBlank(securityUser.getEmail())) {
             throw new IllegalArgumentException("Cannot create JWT Token without username/email");
         }
@@ -175,7 +182,7 @@ public class JwtTokenFactory {
             claims.put(SESSION_ID, securityUser.getSessionId());
         }
 
-        ZonedDateTime currentTime = ZonedDateTime.now();
+        @NotNull ZonedDateTime currentTime = ZonedDateTime.now();
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -185,7 +192,7 @@ public class JwtTokenFactory {
                 .signWith(SignatureAlgorithm.HS512, jwtSettingsService.getJwtSettings().getTokenSigningKey());
     }
 
-    public Jws<Claims> parseTokenClaims(JwtToken token) {
+    public Jws<Claims> parseTokenClaims(@NotNull JwtToken token) {
         try {
             return Jwts.parser()
                     .setSigningKey(jwtSettingsService.getJwtSettings().getTokenSigningKey())
@@ -199,9 +206,10 @@ public class JwtTokenFactory {
         }
     }
 
-    public JwtPair createTokenPair(SecurityUser securityUser) {
-        JwtToken accessToken = createAccessJwtToken(securityUser);
-        JwtToken refreshToken = createRefreshToken(securityUser);
+    @NotNull
+    public JwtPair createTokenPair(@NotNull SecurityUser securityUser) {
+        @NotNull JwtToken accessToken = createAccessJwtToken(securityUser);
+        @NotNull JwtToken refreshToken = createRefreshToken(securityUser);
         return new JwtPair(accessToken.getToken(), refreshToken.getToken());
     }
 

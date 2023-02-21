@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.echoiot.server.common.data.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 @Data
 @ApiModel
@@ -16,6 +17,7 @@ public class ErrorEventFilter implements EventFilter {
     @ApiModelProperty(position = 3, value = "The case insensitive 'contains' filter based on error message", example = "not present in the DB")
     protected String errorStr;
 
+    @NotNull
     @Override
     public EventType getEventType() {
         return EventType.ERROR;

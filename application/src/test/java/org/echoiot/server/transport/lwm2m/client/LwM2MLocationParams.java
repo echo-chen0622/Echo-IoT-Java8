@@ -2,13 +2,18 @@ package org.echoiot.server.transport.lwm2m.client;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Slf4j
 @Data
 public class LwM2MLocationParams {
 
+    @Nullable
     private Float latitude;
+    @Nullable
     private Float longitude;
+    @NotNull
     private Float scaleFactor = 1.0F;
     private final String locationPos = "50.4501:30.5234";
     private final Float locationScaleFactor = 1.0F;

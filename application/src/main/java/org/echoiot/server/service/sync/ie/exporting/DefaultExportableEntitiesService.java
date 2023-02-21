@@ -18,6 +18,8 @@ import org.echoiot.server.dao.device.DeviceService;
 import org.echoiot.server.dao.rule.RuleChainService;
 import org.echoiot.server.dao.widget.WidgetsBundleService;
 import org.echoiot.server.queue.util.TbCoreComponent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.echoiot.server.common.data.id.AssetId;
@@ -47,18 +49,20 @@ public class DefaultExportableEntitiesService implements ExportableEntitiesServi
     private final Map<EntityType, Dao<?>> daos = new HashMap<>();
     private final Map<EntityType, BiConsumer<TenantId, EntityId>> removers = new HashMap<>();
 
+    @NotNull
     private final AccessControlService accessControlService;
 
 
+    @Nullable
     @Override
-    public <E extends ExportableEntity<I>, I extends EntityId> E findEntityByTenantIdAndExternalId(TenantId tenantId, I externalId) {
+    public <E extends ExportableEntity<I>, I extends EntityId> E findEntityByTenantIdAndExternalId(@NotNull TenantId tenantId, @NotNull I externalId) {
         EntityType entityType = externalId.getEntityType();
         Dao<E> dao = getDao(entityType);
 
-        E entity = null;
+        @Nullable E entity = null;
 
         if (dao instanceof ExportableEntityDao) {
-            ExportableEntityDao<I, E> exportableEntityDao = (ExportableEntityDao<I, E>) dao;
+            @NotNull ExportableEntityDao<I, E> exportableEntityDao = (ExportableEntityDao<I, E>) dao;
             entity = exportableEntityDao.findByTenantIdAndExternalId(tenantId.getId(), externalId.getId());
         }
         if (entity == null || !belongsToTenant(entity, tenantId)) {
@@ -68,8 +72,9 @@ public class DefaultExportableEntitiesService implements ExportableEntitiesServi
         return entity;
     }
 
+    @Nullable
     @Override
-    public <E extends HasId<I>, I extends EntityId> E findEntityByTenantIdAndId(TenantId tenantId, I id) {
+    public <E extends HasId<I>, I extends EntityId> E findEntityByTenantIdAndId(@NotNull TenantId tenantId, @NotNull I id) {
         E entity = findEntityById(id);
 
         if (entity == null || !belongsToTenant(entity, tenantId)) {
@@ -79,7 +84,7 @@ public class DefaultExportableEntitiesService implements ExportableEntitiesServi
     }
 
     @Override
-    public <E extends HasId<I>, I extends EntityId> E findEntityById(I id) {
+    public <E extends HasId<I>, I extends EntityId> E findEntityById(@NotNull I id) {
         EntityType entityType = id.getEntityType();
         Dao<E> dao = getDao(entityType);
         if (dao == null) {
@@ -89,14 +94,15 @@ public class DefaultExportableEntitiesService implements ExportableEntitiesServi
         return dao.findById(TenantId.SYS_TENANT_ID, id.getId());
     }
 
+    @Nullable
     @Override
-    public <E extends ExportableEntity<I>, I extends EntityId> E findEntityByTenantIdAndName(TenantId tenantId, EntityType entityType, String name) {
+    public <E extends ExportableEntity<I>, I extends EntityId> E findEntityByTenantIdAndName(@NotNull TenantId tenantId, EntityType entityType, String name) {
         Dao<E> dao = getDao(entityType);
 
-        E entity = null;
+        @Nullable E entity = null;
 
         if (dao instanceof ExportableEntityDao) {
-            ExportableEntityDao<I, E> exportableEntityDao = (ExportableEntityDao<I, E>) dao;
+            @NotNull ExportableEntityDao<I, E> exportableEntityDao = (ExportableEntityDao<I, E>) dao;
             try {
                 entity = exportableEntityDao.findByTenantIdAndName(tenantId.getId(), name);
             } catch (UnsupportedOperationException ignored) {
@@ -110,8 +116,8 @@ public class DefaultExportableEntitiesService implements ExportableEntitiesServi
     }
 
     @Override
-    public <E extends ExportableEntity<I>, I extends EntityId> PageData<E> findEntitiesByTenantId(TenantId tenantId, EntityType entityType, PageLink pageLink) {
-        ExportableEntityDao<I, E> dao = getExportableEntityDao(entityType);
+    public <E extends ExportableEntity<I>, I extends EntityId> PageData<E> findEntitiesByTenantId(@NotNull TenantId tenantId, EntityType entityType, PageLink pageLink) {
+        @Nullable ExportableEntityDao<I, E> dao = getExportableEntityDao(entityType);
         if (dao != null) {
             return dao.findByTenantId(tenantId.getId(), pageLink);
         } else {
@@ -119,9 +125,10 @@ public class DefaultExportableEntitiesService implements ExportableEntitiesServi
         }
     }
 
+    @Nullable
     @Override
-    public <I extends EntityId> I getExternalIdByInternal(I internalId) {
-        ExportableEntityDao<I, ?> dao = getExportableEntityDao(internalId.getEntityType());
+    public <I extends EntityId> I getExternalIdByInternal(@NotNull I internalId) {
+        @Nullable ExportableEntityDao<I, ?> dao = getExportableEntityDao(internalId.getEntityType());
         if (dao != null) {
             return dao.getExternalIdByInternal(internalId);
         } else {
@@ -129,13 +136,13 @@ public class DefaultExportableEntitiesService implements ExportableEntitiesServi
         }
     }
 
-    private boolean belongsToTenant(HasId<? extends EntityId> entity, TenantId tenantId) {
+    private boolean belongsToTenant(@NotNull HasId<? extends EntityId> entity, @NotNull TenantId tenantId) {
         return tenantId.equals(((HasTenantId) entity).getTenantId());
     }
 
 
     @Override
-    public <I extends EntityId> void removeById(TenantId tenantId, I id) {
+    public <I extends EntityId> void removeById(TenantId tenantId, @NotNull I id) {
         EntityType entityType = id.getEntityType();
         BiConsumer<TenantId, EntityId> entityRemover = removers.get(entityType);
         if (entityRemover == null) {
@@ -144,6 +151,7 @@ public class DefaultExportableEntitiesService implements ExportableEntitiesServi
         entityRemover.accept(tenantId, id);
     }
 
+    @Nullable
     private <I extends EntityId, E extends ExportableEntity<I>> ExportableEntityDao<I, E> getExportableEntityDao(EntityType entityType) {
         Dao<E> dao = getDao(entityType);
         if (dao instanceof ExportableEntityDao) {
@@ -158,8 +166,8 @@ public class DefaultExportableEntitiesService implements ExportableEntitiesServi
         return (Dao<E>) daos.get(entityType);
     }
 
-    @Autowired
-    private void setDaos(Collection<Dao<?>> daos) {
+    @Resource
+    private void setDaos(@NotNull Collection<Dao<?>> daos) {
         daos.forEach(dao -> {
             if (dao.getEntityType() != null) {
                 this.daos.put(dao.getEntityType(), dao);
@@ -167,10 +175,10 @@ public class DefaultExportableEntitiesService implements ExportableEntitiesServi
         });
     }
 
-    @Autowired
-    private void setRemovers(CustomerService customerService, AssetService assetService, RuleChainService ruleChainService,
-                             DashboardService dashboardService, DeviceProfileService deviceProfileService,
-                             AssetProfileService assetProfileService, DeviceService deviceService, WidgetsBundleService widgetsBundleService) {
+    @Resource
+    private void setRemovers(@NotNull CustomerService customerService, @NotNull AssetService assetService, @NotNull RuleChainService ruleChainService,
+                             @NotNull DashboardService dashboardService, @NotNull DeviceProfileService deviceProfileService,
+                             @NotNull AssetProfileService assetProfileService, @NotNull DeviceService deviceService, @NotNull WidgetsBundleService widgetsBundleService) {
         removers.put(EntityType.CUSTOMER, (tenantId, entityId) -> {
             customerService.deleteCustomer(tenantId, (CustomerId) entityId);
         });

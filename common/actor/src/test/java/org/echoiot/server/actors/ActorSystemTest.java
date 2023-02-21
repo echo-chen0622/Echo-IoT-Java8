@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.echoiot.common.util.EchoiotExecutors;
 import org.echoiot.common.util.EchoiotThreadFactory;
 import org.echoiot.server.common.data.id.DeviceId;
+import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -39,7 +40,7 @@ public class ActorSystemTest {
     public void initActorSystem() {
         int cores = Runtime.getRuntime().availableProcessors();
         parallelism = Math.max(2, cores / 2);
-        TbActorSystemSettings settings = new TbActorSystemSettings(5, parallelism, 42);
+        @NotNull TbActorSystemSettings settings = new TbActorSystemSettings(5, parallelism, 42);
         actorSystem = new DefaultTbActorSystem(settings);
         submitPool = Executors.newFixedThreadPool(parallelism, EchoiotThreadFactory.forName(getClass().getSimpleName() + "-submit-test-scope")); //order guaranteed
     }
@@ -99,8 +100,8 @@ public class ActorSystemTest {
     public void testNoMessagesAfterDestroy() throws InterruptedException {
         executor = EchoiotExecutors.newWorkStealingPool(parallelism, getClass());
         actorSystem.createDispatcher(ROOT_DISPATCHER, executor);
-        ActorTestCtx testCtx1 = getActorTestCtx(1);
-        ActorTestCtx testCtx2 = getActorTestCtx(1);
+        @NotNull ActorTestCtx testCtx1 = getActorTestCtx(1);
+        @NotNull ActorTestCtx testCtx2 = getActorTestCtx(1);
 
         TbActorRef actorId1 = actorSystem.createRootActor(ROOT_DISPATCHER, new SlowInitActor.SlowInitActorCreator(
                 new TbEntityActorId(new DeviceId(UUID.randomUUID())), testCtx1));
@@ -119,11 +120,11 @@ public class ActorSystemTest {
     public void testOneActorCreated() throws InterruptedException {
         executor = EchoiotExecutors.newWorkStealingPool(parallelism, getClass());
         actorSystem.createDispatcher(ROOT_DISPATCHER, executor);
-        ActorTestCtx testCtx1 = getActorTestCtx(1);
-        ActorTestCtx testCtx2 = getActorTestCtx(1);
-        TbActorId actorId = new TbEntityActorId(new DeviceId(UUID.randomUUID()));
-        final CountDownLatch initLatch = new CountDownLatch(1);
-        final CountDownLatch actorsReadyLatch = new CountDownLatch(2);
+        @NotNull ActorTestCtx testCtx1 = getActorTestCtx(1);
+        @NotNull ActorTestCtx testCtx2 = getActorTestCtx(1);
+        @NotNull TbActorId actorId = new TbEntityActorId(new DeviceId(UUID.randomUUID()));
+        @NotNull final CountDownLatch initLatch = new CountDownLatch(1);
+        @NotNull final CountDownLatch actorsReadyLatch = new CountDownLatch(2);
         submitPool.submit(() -> {
             actorSystem.createRootActor(ROOT_DISPATCHER, new SlowCreateActor.SlowCreateActorCreator(actorId, testCtx1, initLatch));
             actorsReadyLatch.countDown();
@@ -146,11 +147,11 @@ public class ActorSystemTest {
     public void testActorCreatorCalledOnce() throws InterruptedException {
         executor = EchoiotExecutors.newWorkStealingPool(parallelism, getClass());
         actorSystem.createDispatcher(ROOT_DISPATCHER, executor);
-        ActorTestCtx testCtx = getActorTestCtx(1);
-        TbActorId actorId = new TbEntityActorId(new DeviceId(UUID.randomUUID()));
+        @NotNull ActorTestCtx testCtx = getActorTestCtx(1);
+        @NotNull TbActorId actorId = new TbEntityActorId(new DeviceId(UUID.randomUUID()));
         final int actorsCount = 1000;
-        final CountDownLatch initLatch = new CountDownLatch(1);
-        final CountDownLatch actorsReadyLatch = new CountDownLatch(actorsCount);
+        @NotNull final CountDownLatch initLatch = new CountDownLatch(1);
+        @NotNull final CountDownLatch actorsReadyLatch = new CountDownLatch(actorsCount);
         for (int i = 0; i < actorsCount; i++) {
             submitPool.submit(() -> {
                 actorSystem.createRootActor(ROOT_DISPATCHER, new SlowCreateActor.SlowCreateActorCreator(actorId, testCtx, initLatch));
@@ -171,8 +172,8 @@ public class ActorSystemTest {
     public void testFailedInit() throws InterruptedException {
         executor = EchoiotExecutors.newWorkStealingPool(parallelism, getClass());
         actorSystem.createDispatcher(ROOT_DISPATCHER, executor);
-        ActorTestCtx testCtx1 = getActorTestCtx(1);
-        ActorTestCtx testCtx2 = getActorTestCtx(1);
+        @NotNull ActorTestCtx testCtx1 = getActorTestCtx(1);
+        @NotNull ActorTestCtx testCtx2 = getActorTestCtx(1);
 
         TbActorRef actorId1 = actorSystem.createRootActor(ROOT_DISPATCHER, new FailedToInitActor.FailedToInitActorCreator(
                 new TbEntityActorId(new DeviceId(UUID.randomUUID())), testCtx1, 1, 3000));
@@ -189,8 +190,8 @@ public class ActorSystemTest {
 
 
     public void testActorsAndMessages(int actorsCount, int msgNumber, int times) throws InterruptedException {
-        Random random = new Random();
-        int[] randomIntegers = new int[msgNumber];
+        @NotNull Random random = new Random();
+        @NotNull int[] randomIntegers = new int[msgNumber];
         long sumTmp = 0;
         for (int i = 0; i < msgNumber; i++) {
             int tmp = random.nextInt();
@@ -199,11 +200,11 @@ public class ActorSystemTest {
         }
         long expected = sumTmp;
 
-        List<ActorTestCtx> testCtxes = new ArrayList<>();
+        @NotNull List<ActorTestCtx> testCtxes = new ArrayList<>();
 
-        List<TbActorRef> actorRefs = new ArrayList<>();
+        @NotNull List<TbActorRef> actorRefs = new ArrayList<>();
         for (int actorIdx = 0; actorIdx < actorsCount; actorIdx++) {
-            ActorTestCtx testCtx = getActorTestCtx(msgNumber);
+            @NotNull ActorTestCtx testCtx = getActorTestCtx(msgNumber);
             actorRefs.add(actorSystem.createRootActor(ROOT_DISPATCHER, new TestRootActor.TestRootActorCreator(
                     new TbEntityActorId(new DeviceId(UUID.randomUUID())), testCtx)));
             testCtxes.add(testCtx);
@@ -235,10 +236,11 @@ public class ActorSystemTest {
         }
     }
 
+    @NotNull
     private ActorTestCtx getActorTestCtx(int i) {
-        CountDownLatch countDownLatch = new CountDownLatch(1);
-        AtomicLong actual = new AtomicLong();
-        AtomicInteger invocations = new AtomicInteger();
+        @NotNull CountDownLatch countDownLatch = new CountDownLatch(1);
+        @NotNull AtomicLong actual = new AtomicLong();
+        @NotNull AtomicInteger invocations = new AtomicInteger();
         return new ActorTestCtx(countDownLatch, invocations, i, actual);
     }
 }

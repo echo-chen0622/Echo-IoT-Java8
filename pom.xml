@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.echoiot</groupId>
     <artifactId>echoiot</artifactId>
-    <version>3.4.4</version>
+    <version>1.0.0</version>
     <packaging>pom</packaging>
 
     <name>Echoiot</name>
@@ -764,6 +764,11 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>5.8.11</version>
         </dependency>
     </dependencies>
 

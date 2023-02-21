@@ -1,6 +1,7 @@
 package org.echoiot.server.transport.lwm2m.server.ota.firmware;
 
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * /** State R
@@ -16,17 +17,18 @@ public enum FirmwareUpdateState {
     UPDATING(3, "Updating");
 
     @Getter
-    private int code;
+    private final int code;
     @Getter
-    private String type;
+    private final String type;
 
     FirmwareUpdateState(int code, String type) {
         this.code = code;
         this.type = type;
     }
 
+    @NotNull
     public static FirmwareUpdateState fromStateFwByType(String type) {
-        for (FirmwareUpdateState to : FirmwareUpdateState.values()) {
+        for (@NotNull FirmwareUpdateState to : FirmwareUpdateState.values()) {
             if (to.type.equals(type)) {
                 return to;
             }
@@ -34,8 +36,9 @@ public enum FirmwareUpdateState {
         throw new IllegalArgumentException(String.format("Unsupported FW State type  : %s", type));
     }
 
+    @NotNull
     public static FirmwareUpdateState fromStateFwByCode(int code) {
-        for (FirmwareUpdateState to : FirmwareUpdateState.values()) {
+        for (@NotNull FirmwareUpdateState to : FirmwareUpdateState.values()) {
             if (to.code == code) {
                 return to;
             }

@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.echoiot.server.common.data.id.DashboardId;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
@@ -38,7 +39,7 @@ public class Dashboard extends DashboardInfo implements ExportableEntity<Dashboa
         super(dashboardInfo);
     }
 
-    public Dashboard(Dashboard dashboard) {
+    public Dashboard(@NotNull Dashboard dashboard) {
         super(dashboard);
         this.configuration = dashboard.getConfiguration();
         this.externalId = dashboard.getExternalId();
@@ -66,6 +67,7 @@ public class Dashboard extends DashboardInfo implements ExportableEntity<Dashboa
         return getChildObjects("widgets");
     }
 
+    @NotNull
     @JsonIgnore
     private List<ObjectNode> getChildObjects(String propertyName) {
         return Optional.ofNullable(configuration)
@@ -80,14 +82,7 @@ public class Dashboard extends DashboardInfo implements ExportableEntity<Dashboa
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Dashboard [tenantId=");
-        builder.append(getTenantId());
-        builder.append(", title=");
-        builder.append(getTitle());
-        builder.append(", configuration=");
-        builder.append(configuration);
-        builder.append("]");
-        return builder.toString();
+        String builder = "Dashboard [tenantId=" + getTenantId() + ", title=" + getTitle() + ", configuration=" + configuration + "]";
+        return builder;
     }
 }

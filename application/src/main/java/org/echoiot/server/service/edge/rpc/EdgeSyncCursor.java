@@ -19,6 +19,7 @@ import org.echoiot.server.service.edge.rpc.fetch.RuleChainsEdgeEventFetcher;
 import org.echoiot.server.service.edge.rpc.fetch.SystemWidgetsBundlesEdgeEventFetcher;
 import org.echoiot.server.service.edge.rpc.fetch.TenantAdminUsersEdgeEventFetcher;
 import org.echoiot.server.service.edge.rpc.fetch.TenantWidgetsBundlesEdgeEventFetcher;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -26,11 +27,12 @@ import java.util.NoSuchElementException;
 
 public class EdgeSyncCursor {
 
+    @NotNull
     List<EdgeEventFetcher> fetchers = new LinkedList<>();
 
     int currentIdx = 0;
 
-    public EdgeSyncCursor(EdgeContextComponent ctx, Edge edge, boolean fullSync) {
+    public EdgeSyncCursor(@NotNull EdgeContextComponent ctx, @NotNull Edge edge, boolean fullSync) {
         if (fullSync) {
             fetchers.add(new QueuesEdgeEventFetcher(ctx.getQueueService()));
             fetchers.add(new RuleChainsEdgeEventFetcher(ctx.getRuleChainService()));

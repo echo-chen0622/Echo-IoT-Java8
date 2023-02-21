@@ -5,6 +5,7 @@ import org.echoiot.server.common.stats.StatsCounter;
 import org.echoiot.server.common.stats.StatsFactory;
 import org.echoiot.server.common.stats.StatsType;
 import org.echoiot.server.gen.transport.TransportProtos;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +43,7 @@ public class TbCoreConsumerStats {
 
     private final List<StatsCounter> counters = new ArrayList<>();
 
-    public TbCoreConsumerStats(StatsFactory statsFactory) {
+    public TbCoreConsumerStats(@NotNull StatsFactory statsFactory) {
         String statsKey = StatsType.CORE.getName();
 
         this.totalCounter = register(statsFactory.createStatsCounter(statsKey, TOTAL_MSGS));
@@ -65,7 +66,7 @@ public class TbCoreConsumerStats {
         return counter;
     }
 
-    public void log(TransportProtos.TransportToDeviceActorMsg msg) {
+    public void log(@NotNull TransportProtos.TransportToDeviceActorMsg msg) {
         totalCounter.increment();
         if (msg.hasSessionEvent()) {
             sessionEventCounter.increment();
@@ -118,7 +119,7 @@ public class TbCoreConsumerStats {
     public void printStats() {
         int total = totalCounter.get();
         if (total > 0) {
-            StringBuilder stats = new StringBuilder();
+            @NotNull StringBuilder stats = new StringBuilder();
             counters.forEach(counter -> {
                 stats.append(counter.getName()).append(" = [").append(counter.get()).append("] ");
             });

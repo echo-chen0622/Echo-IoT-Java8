@@ -13,6 +13,8 @@ import org.echoiot.server.common.transport.auth.ValidateDeviceCredentialsRespons
 import org.echoiot.server.transport.coap.adaptors.CoapTransportAdaptor;
 import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.transport.coap.TransportConfigurationContainer;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -26,6 +28,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public class TbCoapClientState {
 
     private final DeviceId deviceId;
+    @NotNull
     private final Lock lock;
 
     private volatile TransportConfigurationContainer configuration;
@@ -37,6 +40,7 @@ public class TbCoapClientState {
     private volatile TbCoapObservationState rpc;
     private volatile int contentFormat;
 
+    @Nullable
     private TransportProtos.AttributeUpdateNotificationMsg missedAttributeUpdates;
 
     private DeviceProfileId profileId;
@@ -65,7 +69,7 @@ public class TbCoapClientState {
         this.lock = new ReentrantLock();
     }
 
-    public void init(ValidateDeviceCredentialsResponse credentials) {
+    public void init(@NotNull ValidateDeviceCredentialsResponse credentials) {
         this.credentials = credentials;
         this.profileId = credentials.getDeviceInfo().getDeviceProfileId();
         this.powerMode = credentials.getDeviceInfo().getPowerMode();
@@ -96,9 +100,9 @@ public class TbCoapClientState {
         return result;
     }
 
-    public void onDeviceUpdate(Device device) {
+    public void onDeviceUpdate(@NotNull Device device) {
         this.profileId = device.getDeviceProfileId();
-        var data = device.getDeviceData();
+        @Nullable var data = device.getDeviceData();
         if (data.getTransportConfiguration() != null && data.getTransportConfiguration().getType().equals(DeviceTransportType.COAP)) {
             CoapDeviceTransportConfiguration configuration = (CoapDeviceTransportConfiguration) data.getTransportConfiguration();
             this.powerMode = configuration.getPowerMode();
@@ -108,17 +112,17 @@ public class TbCoapClientState {
         }
     }
 
-    public void addQueuedNotification(TransportProtos.AttributeUpdateNotificationMsg msg) {
+    public void addQueuedNotification(@NotNull TransportProtos.AttributeUpdateNotificationMsg msg) {
         if (missedAttributeUpdates == null) {
             missedAttributeUpdates = msg;
         } else {
-            Map<String, TransportProtos.TsKvProto> updatedAttrs = new HashMap<>(missedAttributeUpdates.getSharedUpdatedCount() + msg.getSharedUpdatedCount());
-            Set<String> deletedKeys = new HashSet<>(missedAttributeUpdates.getSharedDeletedCount() + msg.getSharedDeletedCount());
-            for (TransportProtos.TsKvProto oldUpdatedAttrs : missedAttributeUpdates.getSharedUpdatedList()) {
+            @NotNull Map<String, TransportProtos.TsKvProto> updatedAttrs = new HashMap<>(missedAttributeUpdates.getSharedUpdatedCount() + msg.getSharedUpdatedCount());
+            @NotNull Set<String> deletedKeys = new HashSet<>(missedAttributeUpdates.getSharedDeletedCount() + msg.getSharedDeletedCount());
+            for (@NotNull TransportProtos.TsKvProto oldUpdatedAttrs : missedAttributeUpdates.getSharedUpdatedList()) {
                 updatedAttrs.put(oldUpdatedAttrs.getKv().getKey(), oldUpdatedAttrs);
             }
             deletedKeys.addAll(msg.getSharedDeletedList());
-            for (TransportProtos.TsKvProto newUpdatedAttrs : msg.getSharedUpdatedList()) {
+            for (@NotNull TransportProtos.TsKvProto newUpdatedAttrs : msg.getSharedUpdatedList()) {
                 updatedAttrs.put(newUpdatedAttrs.getKv().getKey(), newUpdatedAttrs);
             }
             deletedKeys.addAll(msg.getSharedDeletedList());

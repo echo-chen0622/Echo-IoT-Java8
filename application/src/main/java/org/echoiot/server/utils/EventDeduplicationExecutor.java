@@ -1,6 +1,7 @@
 package org.echoiot.server.utils;
 
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.ExecutorService;
 import java.util.function.Consumer;
@@ -18,6 +19,7 @@ public class EventDeduplicationExecutor<P> {
     private final String name;
     private final ExecutorService executor;
     private final Consumer<P> function;
+    @Nullable
     private P pendingTask;
     private boolean busy;
 

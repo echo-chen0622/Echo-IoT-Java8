@@ -18,6 +18,7 @@ import org.echoiot.server.queue.TbQueueMsg;
 import org.echoiot.server.queue.TbQueueMsgDecoder;
 import org.echoiot.server.queue.common.AbstractTbQueueConsumerTemplate;
 import org.echoiot.server.queue.common.DefaultTbQueueMsg;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.util.CollectionUtils;
 import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
 
@@ -55,7 +56,7 @@ public class TbServiceBusConsumerTemplate<T extends TbQueueMsg> extends Abstract
 
     @Override
     protected List<MessageWithDeliveryTag> doPoll(long durationInMillis) {
-        List<CompletableFuture<Collection<MessageWithDeliveryTag>>> messageFutures =
+        @NotNull List<CompletableFuture<Collection<MessageWithDeliveryTag>>> messageFutures =
                 receivers.stream()
                         .map(receiver -> receiver
                                 .receiveAsync(messagesPerQueue, Duration.ofMillis(durationInMillis))
@@ -102,9 +103,9 @@ public class TbServiceBusConsumerTemplate<T extends TbQueueMsg> extends Abstract
     }
 
     private void createReceivers() {
-        List<CompletableFuture<CoreMessageReceiver>> receiverFutures = partitions.stream()
-                .map(TopicPartitionInfo::getFullTopicName)
-                .map(queue -> {
+        @NotNull List<CompletableFuture<CoreMessageReceiver>> receiverFutures = partitions.stream()
+                                                                                          .map(TopicPartitionInfo::getFullTopicName)
+                                                                                          .map(queue -> {
                     MessagingFactory factory;
                     try {
                         factory = MessagingFactory.createFromConnectionStringBuilder(createConnection(queue));
@@ -129,6 +130,7 @@ public class TbServiceBusConsumerTemplate<T extends TbQueueMsg> extends Abstract
         }
     }
 
+    @NotNull
     private ConnectionStringBuilder createConnection(String queue) {
         admin.createTopicIfNotExists(queue);
         return new ConnectionStringBuilder(
@@ -138,8 +140,8 @@ public class TbServiceBusConsumerTemplate<T extends TbQueueMsg> extends Abstract
                 serviceBusSettings.getSasKey());
     }
 
-    private <V> CompletableFuture<List<V>> fromList(List<CompletableFuture<V>> futures) {
-        @SuppressWarnings("unchecked")
+    private <V> CompletableFuture<List<V>> fromList(@NotNull List<CompletableFuture<V>> futures) {
+        @NotNull @SuppressWarnings("unchecked")
         CompletableFuture<Collection<V>>[] arrayFuture = new CompletableFuture[futures.size()];
         futures.toArray(arrayFuture);
 
@@ -152,7 +154,7 @@ public class TbServiceBusConsumerTemplate<T extends TbQueueMsg> extends Abstract
     }
 
     @Override
-    protected T decode(MessageWithDeliveryTag data) throws InvalidProtocolBufferException {
+    protected T decode(@NotNull MessageWithDeliveryTag data) throws InvalidProtocolBufferException {
         DefaultTbQueueMsg msg = gson.fromJson(new String(((Data) data.getMessage().getBody()).getValue().getArray()), DefaultTbQueueMsg.class);
         return decoder.decode(msg);
     }

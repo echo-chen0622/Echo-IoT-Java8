@@ -13,6 +13,7 @@ import org.echoiot.server.common.data.rpc.RpcStatus;
 import org.echoiot.server.dao.model.BaseEntity;
 import org.echoiot.server.dao.model.BaseSqlEntity;
 import org.echoiot.server.dao.util.mapping.JsonStringType;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -66,7 +67,7 @@ public class RpcEntity extends BaseSqlEntity<Rpc> implements BaseEntity<Rpc> {
         super();
     }
 
-    public RpcEntity(Rpc rpc) {
+    public RpcEntity(@NotNull Rpc rpc) {
         this.setUuid(rpc.getUuidId());
         this.createdTime = rpc.getCreatedTime();
         this.tenantId = rpc.getTenantId().getId();
@@ -78,9 +79,10 @@ public class RpcEntity extends BaseSqlEntity<Rpc> implements BaseEntity<Rpc> {
         this.additionalInfo = rpc.getAdditionalInfo();
     }
 
+    @NotNull
     @Override
     public Rpc toData() {
-        Rpc rpc = new Rpc(new RpcId(id));
+        @NotNull Rpc rpc = new Rpc(new RpcId(id));
         rpc.setCreatedTime(createdTime);
         rpc.setTenantId(TenantId.fromUUID(tenantId));
         rpc.setDeviceId(new DeviceId(deviceId));

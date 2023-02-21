@@ -1,6 +1,7 @@
 package org.echoiot.server.dao.sql.user;
 
 import org.echoiot.server.dao.model.sql.UserEntity;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
@@ -27,9 +28,10 @@ import static org.echoiot.server.dao.model.ModelConstants.NULL_UUID;
 @SqlDao
 public class JpaUserDao extends JpaAbstractSearchTextDao<UserEntity, User> implements UserDao {
 
-    @Autowired
+    @Resource
     private UserRepository userRepository;
 
+    @NotNull
     @Override
     protected Class<UserEntity> getEntityClass() {
         return UserEntity.class;
@@ -46,12 +48,13 @@ public class JpaUserDao extends JpaAbstractSearchTextDao<UserEntity, User> imple
     }
 
     @Override
-    public User findByTenantIdAndEmail(TenantId tenantId, String email) {
+    public User findByTenantIdAndEmail(@NotNull TenantId tenantId, String email) {
         return DaoUtil.getData(userRepository.findByTenantIdAndEmail(tenantId.getId(), email));
     }
 
+    @NotNull
     @Override
-    public PageData<User> findByTenantId(UUID tenantId, PageLink pageLink) {
+    public PageData<User> findByTenantId(UUID tenantId, @NotNull PageLink pageLink) {
         return DaoUtil.toPageData(
                 userRepository
                         .findByTenantId(
@@ -60,8 +63,9 @@ public class JpaUserDao extends JpaAbstractSearchTextDao<UserEntity, User> imple
                                 DaoUtil.toPageable(pageLink)));
     }
 
+    @NotNull
     @Override
-    public PageData<User> findTenantAdmins(UUID tenantId, PageLink pageLink) {
+    public PageData<User> findTenantAdmins(UUID tenantId, @NotNull PageLink pageLink) {
         return DaoUtil.toPageData(
                 userRepository
                         .findUsersByAuthority(
@@ -72,8 +76,9 @@ public class JpaUserDao extends JpaAbstractSearchTextDao<UserEntity, User> imple
                                 DaoUtil.toPageable(pageLink)));
     }
 
+    @NotNull
     @Override
-    public PageData<User> findCustomerUsers(UUID tenantId, UUID customerId, PageLink pageLink) {
+    public PageData<User> findCustomerUsers(UUID tenantId, UUID customerId, @NotNull PageLink pageLink) {
         return DaoUtil.toPageData(
                 userRepository
                         .findUsersByAuthority(
@@ -86,10 +91,11 @@ public class JpaUserDao extends JpaAbstractSearchTextDao<UserEntity, User> imple
     }
 
     @Override
-    public Long countByTenantId(TenantId tenantId) {
+    public Long countByTenantId(@NotNull TenantId tenantId) {
         return userRepository.countByTenantId(tenantId.getId());
     }
 
+    @NotNull
     @Override
     public EntityType getEntityType() {
         return EntityType.USER;

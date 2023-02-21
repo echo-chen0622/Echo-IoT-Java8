@@ -10,6 +10,8 @@ import org.echoiot.server.common.transport.TransportService;
 import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.queue.util.DataDecodingEncodingService;
 import org.echoiot.server.queue.util.TbTransportComponent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
@@ -37,10 +39,11 @@ public class DefaultTransportResourceCache implements TransportResourceCache {
         this.transportService = transportService;
     }
 
+    @NotNull
     @Override
     public Optional<TbResource> get(TenantId tenantId, ResourceType resourceType, String resourceKey) {
-        ResourceCompositeKey compositeKey = new ResourceCompositeKey(tenantId, resourceType, resourceKey);
-        TbResource resource;
+        @NotNull ResourceCompositeKey compositeKey = new ResourceCompositeKey(tenantId, resourceType, resourceKey);
+        @Nullable TbResource resource;
 
         if (keys.contains(compositeKey)) {
             resource = resources.get(compositeKey);
@@ -67,7 +70,8 @@ public class DefaultTransportResourceCache implements TransportResourceCache {
         return Optional.ofNullable(resource);
     }
 
-    private TbResource fetchResource(ResourceCompositeKey compositeKey) {
+    @Nullable
+    private TbResource fetchResource(@NotNull ResourceCompositeKey compositeKey) {
         UUID tenantId = compositeKey.getTenantId().getId();
         TransportProtos.GetResourceRequestMsg.Builder builder = TransportProtos.GetResourceRequestMsg.newBuilder();
         builder
@@ -79,7 +83,7 @@ public class DefaultTransportResourceCache implements TransportResourceCache {
 
         Optional<TbResource> optionalResource = dataDecodingEncodingService.decode(responseMsg.getResource().toByteArray());
         if (optionalResource.isPresent()) {
-            TbResource resource = optionalResource.get();
+            @NotNull TbResource resource = optionalResource.get();
             resources.put(new ResourceCompositeKey(resource.getTenantId(), resource.getResourceType(), resource.getResourceKey()), resource);
             return resource;
         }
@@ -89,7 +93,7 @@ public class DefaultTransportResourceCache implements TransportResourceCache {
 
     @Override
     public void update(TenantId tenantId, ResourceType resourceType, String resourceKey) {
-        ResourceCompositeKey compositeKey = new ResourceCompositeKey(tenantId, resourceType, resourceKey);
+        @NotNull ResourceCompositeKey compositeKey = new ResourceCompositeKey(tenantId, resourceType, resourceKey);
         if (keys.contains(compositeKey) || resources.containsKey(compositeKey)) {
             fetchResource(compositeKey);
         }
@@ -97,17 +101,21 @@ public class DefaultTransportResourceCache implements TransportResourceCache {
 
     @Override
     public void evict(TenantId tenantId, ResourceType resourceType, String resourceKey) {
-        ResourceCompositeKey compositeKey = new ResourceCompositeKey(tenantId, resourceType, resourceKey);
+        @NotNull ResourceCompositeKey compositeKey = new ResourceCompositeKey(tenantId, resourceType, resourceKey);
         keys.remove(compositeKey);
         resources.remove(compositeKey);
     }
 
     @Data
     private static class ResourceCompositeKey {
+        @NotNull
         private final TenantId tenantId;
+        @NotNull
         private final ResourceType resourceType;
+        @NotNull
         private final String resourceKey;
 
+        @NotNull
         public ResourceCompositeKey getSystemKey() {
             return new ResourceCompositeKey(TenantId.SYS_TENANT_ID, resourceType, resourceKey);
         }

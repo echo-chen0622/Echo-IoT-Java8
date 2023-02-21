@@ -10,6 +10,8 @@ import org.echoiot.server.common.data.query.EntityDataPageLink;
 import org.echoiot.server.common.data.query.EntityKey;
 import org.echoiot.server.common.data.query.EntityKeyType;
 import org.echoiot.server.common.data.query.TsValue;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,29 +21,32 @@ import java.util.stream.Collectors;
 
 public class EntityDataAdapter {
 
-    public static PageData<EntityData> createEntityData(EntityDataPageLink pageLink,
-                                                        List<EntityKeyMapping> selectionMapping,
-                                                        List<Map<String, Object>> rows,
+    @NotNull
+    public static PageData<EntityData> createEntityData(@NotNull EntityDataPageLink pageLink,
+                                                        @NotNull List<EntityKeyMapping> selectionMapping,
+                                                        @NotNull List<Map<String, Object>> rows,
                                                         int totalElements) {
         int totalPages = pageLink.getPageSize() > 0 ? (int) Math.ceil((float) totalElements / pageLink.getPageSize()) : 1;
         int startIndex = pageLink.getPageSize() * pageLink.getPage();
         boolean hasNext = pageLink.getPageSize() > 0 && totalElements > startIndex + rows.size();
-        List<EntityData> entitiesData = convertListToEntityData(rows, selectionMapping);
+        @NotNull List<EntityData> entitiesData = convertListToEntityData(rows, selectionMapping);
         return new PageData<>(entitiesData, totalPages, totalElements, hasNext);
     }
 
-    private static List<EntityData> convertListToEntityData(List<Map<String, Object>> result, List<EntityKeyMapping> selectionMapping) {
+    @NotNull
+    private static List<EntityData> convertListToEntityData(@NotNull List<Map<String, Object>> result, @NotNull List<EntityKeyMapping> selectionMapping) {
         return result.stream().map(row -> toEntityData(row, selectionMapping)).collect(Collectors.toList());
     }
 
-    private static EntityData toEntityData(Map<String, Object> row, List<EntityKeyMapping> selectionMapping) {
+    @NotNull
+    private static EntityData toEntityData(@NotNull Map<String, Object> row, @NotNull List<EntityKeyMapping> selectionMapping) {
         UUID id = (UUID)row.get("id");
-        EntityType entityType = EntityType.valueOf((String) row.get("entity_type"));
+        @NotNull EntityType entityType = EntityType.valueOf((String) row.get("entity_type"));
         EntityId entityId = EntityIdFactory.getByTypeAndUuid(entityType, id);
-        Map<EntityKeyType, Map<String, TsValue>> latest = new HashMap<>();
+        @NotNull Map<EntityKeyType, Map<String, TsValue>> latest = new HashMap<>();
         //Maybe avoid empty hashmaps?
-        EntityData entityData = new EntityData(entityId, latest, new HashMap<>(), new HashMap<>());
-        for (EntityKeyMapping mapping : selectionMapping) {
+        @NotNull EntityData entityData = new EntityData(entityId, latest, new HashMap<>(), new HashMap<>());
+        for (@NotNull EntityKeyMapping mapping : selectionMapping) {
             if (!mapping.isIgnore()) {
                 EntityKey entityKey = mapping.getEntityKey();
                 Object value = row.get(mapping.getValueAlias());
@@ -55,14 +60,14 @@ public class EntityDataAdapter {
                     Object tsObject = row.get(mapping.getTsAlias());
                     ts = tsObject != null ? Long.parseLong(tsObject.toString()) : 0;
                 }
-                TsValue tsValue = new TsValue(ts, strValue);
+                @NotNull TsValue tsValue = new TsValue(ts, strValue);
                 latest.computeIfAbsent(entityKey.getType(), entityKeyType -> new HashMap<>()).put(entityKey.getKey(), tsValue);
             }
         }
         return entityData;
     }
 
-    static String convertValue(Object value) {
+    static String convertValue(@Nullable Object value) {
         if (value != null) {
             String strVal = value.toString();
             // check number
@@ -90,7 +95,7 @@ public class EntityDataAdapter {
         }
     }
 
-    private static boolean isSimpleDouble(String valueAsString) {
+    private static boolean isSimpleDouble(@NotNull String valueAsString) {
         return valueAsString.contains(".") && !valueAsString.contains("E") && !valueAsString.contains("e");
     }
 

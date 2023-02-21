@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.echoiot</groupId>
-        <version>3.4.4</version>
+        <version>1.0.0</version>
         <artifactId>msa</artifactId>
     </parent>
     <groupId>org.echoiot.msa</groupId>
@@ -20,7 +20,7 @@
         <tb-postgres.docker.name>tb-postgres</tb-postgres.docker.name>
         <tb-cassandra.docker.name>tb-cassandra</tb-cassandra.docker.name>
         <pkg.installFolder>/usr/share/${pkg.name}</pkg.installFolder>
-        <pkg.upgradeVersion>3.4.4</pkg.upgradeVersion>
+        <pkg.upgradeVersion>1.0.0</pkg.upgradeVersion>
     </properties>
 
     <dependencies>

@@ -15,6 +15,7 @@ import org.echoiot.server.common.data.alarm.AlarmQuery;
 import org.echoiot.server.common.data.alarm.AlarmSearchStatus;
 import org.echoiot.server.common.data.alarm.AlarmSeverity;
 import org.echoiot.server.common.data.alarm.AlarmStatus;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -43,6 +44,7 @@ public interface AlarmService {
 
     ListenableFuture<PageData<AlarmInfo>> findCustomerAlarms(TenantId tenantId, CustomerId customerId, AlarmQuery query);
 
+    @Nullable
     AlarmSeverity findHighestAlarmSeverity(TenantId tenantId, EntityId entityId, AlarmSearchStatus alarmSearchStatus,
                                            AlarmStatus alarmStatus);
 

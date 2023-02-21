@@ -3,6 +3,7 @@ package org.echoiot.server.queue.sqs;
 import com.amazonaws.services.sqs.model.QueueAttributeName;
 import lombok.Getter;
 import org.echoiot.server.common.data.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Component;
@@ -59,13 +60,14 @@ public class TbAwsSqsQueueAttributes {
         vcAttributes = getConfigs(vcProperties);
     }
 
-    private Map<String, String> getConfigs(String properties) {
-        Map<String, String> configs = new HashMap<>(defaultAttributes);
+    @NotNull
+    private Map<String, String> getConfigs(@NotNull String properties) {
+        @NotNull Map<String, String> configs = new HashMap<>(defaultAttributes);
         if (StringUtils.isNotEmpty(properties)) {
-            for (String property : properties.split(";")) {
+            for (@NotNull String property : properties.split(";")) {
                 int delimiterPosition = property.indexOf(":");
-                String key = property.substring(0, delimiterPosition);
-                String value = property.substring(delimiterPosition + 1);
+                @NotNull String key = property.substring(0, delimiterPosition);
+                @NotNull String value = property.substring(delimiterPosition + 1);
                 validateAttributeName(key);
                 configs.put(key, value);
             }
@@ -73,7 +75,7 @@ public class TbAwsSqsQueueAttributes {
         return configs;
     }
 
-    private void validateAttributeName(String key) {
+    private void validateAttributeName(@NotNull String key) {
         QueueAttributeName.fromValue(key);
     }
 }

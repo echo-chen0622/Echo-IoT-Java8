@@ -11,6 +11,8 @@ import org.echoiot.server.actors.TbActorCtx;
 import org.echoiot.server.actors.stats.StatsPersistTick;
 import org.echoiot.server.common.msg.queue.PartitionChangeMsg;
 import org.echoiot.server.common.msg.queue.RuleNodeException;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Slf4j
 public abstract class ComponentMsgProcessor<T extends EntityId> extends AbstractContextAwareMsgProcessor {
@@ -66,7 +68,7 @@ public abstract class ComponentMsgProcessor<T extends EntityId> extends Abstract
         schedulePeriodicMsgWithDelay(context, new StatsPersistTick(), statsPersistFrequency, statsPersistFrequency);
     }
 
-    protected boolean checkMsgValid(TbMsg tbMsg) {
+    protected boolean checkMsgValid(@NotNull TbMsg tbMsg) {
         var valid = tbMsg.isValid();
         if (!valid) {
             if (log.isTraceEnabled()) {
@@ -76,7 +78,7 @@ public abstract class ComponentMsgProcessor<T extends EntityId> extends Abstract
         return valid;
     }
 
-    protected void checkComponentStateActive(TbMsg tbMsg) throws RuleNodeException {
+    protected void checkComponentStateActive(@Nullable TbMsg tbMsg) throws RuleNodeException {
         if (state != ComponentLifecycleState.ACTIVE) {
             log.debug("Component is not active. Current state [{}] for processor [{}][{}] tenant [{}]", state, entityId.getEntityType(), entityId, tenantId);
             RuleNodeException ruleNodeException = getInactiveException();

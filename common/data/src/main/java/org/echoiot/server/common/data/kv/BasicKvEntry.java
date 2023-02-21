@@ -1,6 +1,7 @@
 package org.echoiot.server.common.data.kv;
 
 import org.echoiot.server.common.data.validation.Length;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -48,7 +49,7 @@ public abstract class BasicKvEntry implements KvEntry {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof BasicKvEntry)) return false;
-        BasicKvEntry that = (BasicKvEntry) o;
+        @NotNull BasicKvEntry that = (BasicKvEntry) o;
         return Objects.equals(key, that.key);
     }
 

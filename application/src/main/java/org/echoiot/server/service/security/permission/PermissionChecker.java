@@ -3,6 +3,7 @@ package org.echoiot.server.service.security.permission;
 import org.echoiot.server.common.data.HasTenantId;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.service.security.model.SecurityUser;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -18,8 +19,9 @@ public interface PermissionChecker<I extends EntityId, T extends HasTenantId> {
         return false;
     }
 
-    public class GenericPermissionChecker<I extends EntityId, T extends HasTenantId> implements PermissionChecker<I,T> {
+    class GenericPermissionChecker<I extends EntityId, T extends HasTenantId> implements PermissionChecker<I,T> {
 
+        @NotNull
         private final Set<Operation> allowedOperations;
 
         public GenericPermissionChecker(Operation... operations) {
@@ -37,9 +39,9 @@ public interface PermissionChecker<I extends EntityId, T extends HasTenantId> {
         }
     }
 
-    public static PermissionChecker denyAllPermissionChecker = new PermissionChecker() {};
+    PermissionChecker denyAllPermissionChecker = new PermissionChecker() {};
 
-    public static PermissionChecker allowAllPermissionChecker = new PermissionChecker<EntityId, HasTenantId>() {
+    PermissionChecker allowAllPermissionChecker = new PermissionChecker<EntityId, HasTenantId>() {
 
         @Override
         public boolean hasPermission(SecurityUser user, Operation operation) {

@@ -4,6 +4,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.dao.model.sql.AbstractTsKvEntity;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.persistence.ColumnResult;
 import javax.persistence.ConstructorResult;
@@ -101,7 +103,7 @@ public final class TimescaleTsKvEntity extends AbstractTsKvEntity {
     public TimescaleTsKvEntity() {
     }
 
-    public TimescaleTsKvEntity(Long tsBucket, Long interval, Long longValue, Double doubleValue, Long longCountValue, Long doubleCountValue, String strValue, String aggType, Long aggValuesLastTs) {
+    public TimescaleTsKvEntity(Long tsBucket, Long interval, @Nullable Long longValue, @Nullable Double doubleValue, Long longCountValue, Long doubleCountValue, String strValue, @NotNull String aggType, Long aggValuesLastTs) {
         super(aggValuesLastTs);
         if (!StringUtils.isEmpty(strValue)) {
             this.strValue = strValue;

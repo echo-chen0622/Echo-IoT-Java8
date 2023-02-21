@@ -3,6 +3,7 @@ package org.echoiot.rule.engine.metadata;
 import lombok.Data;
 import org.echoiot.rule.engine.api.NodeConfiguration;
 import org.echoiot.server.common.data.kv.Aggregation;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
@@ -37,9 +38,10 @@ public class TbGetTelemetryNodeConfiguration implements NodeConfiguration<TbGetT
 
     private List<String> latestTsKeyNames;
 
+    @NotNull
     @Override
     public TbGetTelemetryNodeConfiguration defaultConfiguration() {
-        TbGetTelemetryNodeConfiguration configuration = new TbGetTelemetryNodeConfiguration();
+        @NotNull TbGetTelemetryNodeConfiguration configuration = new TbGetTelemetryNodeConfiguration();
         configuration.setLatestTsKeyNames(Collections.emptyList());
         configuration.setFetchMode("FIRST");
         configuration.setStartIntervalTimeUnit(TimeUnit.MINUTES.name());

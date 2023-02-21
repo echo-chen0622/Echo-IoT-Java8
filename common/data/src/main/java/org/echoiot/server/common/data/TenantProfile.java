@@ -13,6 +13,8 @@ import org.echoiot.server.common.data.tenant.profile.DefaultTenantProfileConfigu
 import org.echoiot.server.common.data.tenant.profile.TenantProfileData;
 import org.echoiot.server.common.data.validation.Length;
 import org.echoiot.server.common.data.validation.NoXss;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -52,7 +54,7 @@ public class TenantProfile extends SearchTextBased<TenantProfileId> implements H
         super(tenantProfileId);
     }
 
-    public TenantProfile(TenantProfile tenantProfile) {
+    public TenantProfile(@NotNull TenantProfile tenantProfile) {
         super(tenantProfile);
         this.name = tenantProfile.getName();
         this.description = tenantProfile.getDescription();
@@ -104,6 +106,7 @@ public class TenantProfile extends SearchTextBased<TenantProfileId> implements H
         }
     }
 
+    @NotNull
     @JsonIgnore
     public Optional<DefaultTenantProfileConfiguration> getProfileConfiguration() {
         return Optional.ofNullable(getProfileData().getConfiguration())
@@ -111,19 +114,21 @@ public class TenantProfile extends SearchTextBased<TenantProfileId> implements H
                 .map(profileConfiguration -> (DefaultTenantProfileConfiguration) profileConfiguration);
     }
 
+    @Nullable
     @JsonIgnore
     public DefaultTenantProfileConfiguration getDefaultProfileConfiguration() {
         return getProfileConfiguration().orElse(null);
     }
 
+    @NotNull
     public TenantProfileData createDefaultTenantProfileData() {
-        TenantProfileData tpd = new TenantProfileData();
+        @NotNull TenantProfileData tpd = new TenantProfileData();
         tpd.setConfiguration(new DefaultTenantProfileConfiguration());
         this.profileData = tpd;
         return tpd;
     }
 
-    public void setProfileData(TenantProfileData data) {
+    public void setProfileData(@Nullable TenantProfileData data) {
         this.profileData = data;
         try {
             this.profileDataBytes = data != null ? SearchTextBasedWithAdditionalInfo.mapper.writeValueAsBytes(data) : null;

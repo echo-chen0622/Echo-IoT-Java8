@@ -13,6 +13,8 @@ import org.echoiot.server.common.data.HasName;
 import org.echoiot.server.common.data.SearchTextBasedWithAdditionalInfo;
 import org.echoiot.server.common.data.id.RuleChainId;
 import org.echoiot.server.common.data.id.RuleNodeId;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @ApiModel
 @Data
@@ -48,7 +50,7 @@ public class RuleNode extends SearchTextBasedWithAdditionalInfo<RuleNodeId> impl
         super(id);
     }
 
-    public RuleNode(RuleNode ruleNode) {
+    public RuleNode(@NotNull RuleNode ruleNode) {
         super(ruleNode);
         this.ruleChainId = ruleNode.getRuleChainId();
         this.type = ruleNode.getType();
@@ -68,6 +70,7 @@ public class RuleNode extends SearchTextBasedWithAdditionalInfo<RuleNodeId> impl
         return name;
     }
 
+    @Nullable
     public JsonNode getConfiguration() {
         return SearchTextBasedWithAdditionalInfo.getJson(() -> configuration, () -> configurationBytes);
     }

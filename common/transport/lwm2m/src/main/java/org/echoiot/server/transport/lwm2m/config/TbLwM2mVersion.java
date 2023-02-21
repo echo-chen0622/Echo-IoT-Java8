@@ -3,6 +3,7 @@ package org.echoiot.server.transport.lwm2m.config;
 import lombok.Getter;
 import org.eclipse.leshan.core.LwM2m.LwM2mVersion;
 import org.eclipse.leshan.core.request.ContentFormat;
+import org.jetbrains.annotations.NotNull;
 
 public enum TbLwM2mVersion {
     VERSION_1_0(0, LwM2mVersion.V1_0, ContentFormat.TLV, false),
@@ -24,8 +25,9 @@ public enum TbLwM2mVersion {
         this.composite = composite;
     }
 
+    @NotNull
     public static TbLwM2mVersion fromVersion(LwM2mVersion version) {
-        for (TbLwM2mVersion to : TbLwM2mVersion.values()) {
+        for (@NotNull TbLwM2mVersion to : TbLwM2mVersion.values()) {
             if (to.version.equals(version)) {
                 return to;
             }
@@ -33,8 +35,9 @@ public enum TbLwM2mVersion {
         throw new IllegalArgumentException(String.format("Unsupported typeLwM2mVersion type : %s", version));
     }
 
+    @NotNull
     public static TbLwM2mVersion fromVersionStr(String versionStr) {
-        for (TbLwM2mVersion to : TbLwM2mVersion.values()) {
+        for (@NotNull TbLwM2mVersion to : TbLwM2mVersion.values()) {
             if (to.version.toString().equals(versionStr)) {
                 return to;
             }
@@ -42,8 +45,9 @@ public enum TbLwM2mVersion {
         throw new IllegalArgumentException(String.format("Unsupported contentFormatLwM2mVersion version : %s", versionStr));
     }
 
+    @NotNull
     public static TbLwM2mVersion fromCode(int code) {
-        for (TbLwM2mVersion to : TbLwM2mVersion.values()) {
+        for (@NotNull TbLwM2mVersion to : TbLwM2mVersion.values()) {
             if (to.code == code) {
                 return to;
             }

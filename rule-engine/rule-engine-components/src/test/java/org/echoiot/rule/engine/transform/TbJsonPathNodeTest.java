@@ -3,6 +3,7 @@ package org.echoiot.rule.engine.transform;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.PathNotFoundException;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -65,13 +66,13 @@ public class TbJsonPathNodeTest {
 
     @Test
     void givenDefaultConfig_whenVerify_thenOK() {
-        TbJsonPathNodeConfiguration defaultConfig = new TbJsonPathNodeConfiguration().defaultConfiguration();
+        @NotNull TbJsonPathNodeConfiguration defaultConfig = new TbJsonPathNodeConfiguration().defaultConfiguration();
         assertThat(defaultConfig.getJsonPath()).isEqualTo(TbJsonPathNodeConfiguration.DEFAULT_JSON_PATH);
     }
 
     @Test
     void givenJsonMsg_whenOnMsg_thenVerifyOutputJsonPrimitiveNode() throws Exception {
-        String data = "{\"Attribute_1\":22.5,\"Attribute_2\":100}";
+        @NotNull String data = "{\"Attribute_1\":22.5,\"Attribute_2\":100}";
         VerifyOutputMsg(data, 1, 100);
 
         data = "{\"Attribute_1\":22.5,\"Attribute_2\":\"StringValue\"}";
@@ -84,20 +85,20 @@ public class TbJsonPathNodeTest {
         nodeConfiguration = new TbNodeConfiguration(mapper.valueToTree(config));
         node.init(ctx, nodeConfiguration);
 
-        String data = "{\"attributes\":[{\"attribute_1\":10},{\"attribute_2\":20},{\"attribute_3\":30},{\"attribute_4\":40}]}";
+        @NotNull String data = "{\"attributes\":[{\"attribute_1\":10},{\"attribute_2\":20},{\"attribute_3\":30},{\"attribute_4\":40}]}";
         VerifyOutputMsg(data, 1, 4);
 
     }
 
     @Test
     void givenJsonArray_whenOnMsg_thenVerifyOutput() throws Exception {
-        String data = "{\"Attribute_1\":22.5,\"Attribute_2\":[{\"Attribute_3\":22.5,\"Attribute_4\":10.3}, {\"Attribute_5\":22.5,\"Attribute_6\":10.3}]}";
+        @NotNull String data = "{\"Attribute_1\":22.5,\"Attribute_2\":[{\"Attribute_3\":22.5,\"Attribute_4\":10.3}, {\"Attribute_5\":22.5,\"Attribute_6\":10.3}]}";
         VerifyOutputMsg(data, 1, JacksonUtil.toJsonNode(data).get("Attribute_2"));
     }
 
     @Test
     void givenJsonNode_whenOnMsg_thenVerifyOutput() throws Exception {
-        String data = "{\"Attribute_1\":22.5,\"Attribute_2\":{\"Attribute_3\":22.5,\"Attribute_4\":10.3}}";
+        @NotNull String data = "{\"Attribute_1\":22.5,\"Attribute_2\":{\"Attribute_3\":22.5,\"Attribute_4\":10.3}}";
         VerifyOutputMsg(data, 1, JacksonUtil.toJsonNode(data).get("Attribute_2"));
     }
 
@@ -107,19 +108,19 @@ public class TbJsonPathNodeTest {
         nodeConfiguration = new TbNodeConfiguration(mapper.valueToTree(config));
         node.init(ctx, nodeConfiguration);
 
-        String data = "{\"Attribute_1\":22.5,\"Attribute_2\":[{\"voltage\":220}, {\"voltage\":250}, {\"voltage\":110}]}";
+        @NotNull String data = "{\"Attribute_1\":22.5,\"Attribute_2\":[{\"voltage\":220}, {\"voltage\":250}, {\"voltage\":110}]}";
         VerifyOutputMsg(data, 1, JacksonUtil.toJsonNode("[{\"voltage\":220}, {\"voltage\":250}]"));
     }
 
     @Test
     void givenNoArrayMsg_whenOnMsg_thenTellFailure() throws Exception {
-        String data = "{\"Attribute_1\":22.5,\"Attribute_5\":10.3}";
+        @NotNull String data = "{\"Attribute_1\":22.5,\"Attribute_5\":10.3}";
         JsonNode dataNode = JacksonUtil.toJsonNode(data);
-        TbMsg msg = getTbMsg(deviceId, dataNode.toString());
+        @NotNull TbMsg msg = getTbMsg(deviceId, dataNode.toString());
         node.onMsg(ctx, msg);
 
-        ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
-        ArgumentCaptor<Exception> exceptionCaptor = ArgumentCaptor.forClass(Exception.class);
+        @NotNull ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        @NotNull ArgumentCaptor<Exception> exceptionCaptor = ArgumentCaptor.forClass(Exception.class);
         verify(ctx, never()).tellSuccess(any());
         verify(ctx, times(1)).tellFailure(newMsgCaptor.capture(), exceptionCaptor.capture());
 
@@ -129,13 +130,13 @@ public class TbJsonPathNodeTest {
 
     @Test
     void givenNoResultsForPath_whenOnMsg_thenTellFailure() throws Exception {
-        String data = "{\"Attribute_1\":22.5,\"Attribute_5\":10.3}";
+        @NotNull String data = "{\"Attribute_1\":22.5,\"Attribute_5\":10.3}";
         JsonNode dataNode = JacksonUtil.toJsonNode(data);
-        TbMsg msg = getTbMsg(deviceId, dataNode.toString());
+        @NotNull TbMsg msg = getTbMsg(deviceId, dataNode.toString());
         node.onMsg(ctx, msg);
 
-        ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
-        ArgumentCaptor<Exception> exceptionCaptor = ArgumentCaptor.forClass(Exception.class);
+        @NotNull ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        @NotNull ArgumentCaptor<Exception> exceptionCaptor = ArgumentCaptor.forClass(Exception.class);
         verify(ctx, never()).tellSuccess(any());
         verify(ctx, times(1)).tellFailure(newMsgCaptor.capture(), exceptionCaptor.capture());
 
@@ -147,17 +148,18 @@ public class TbJsonPathNodeTest {
         JsonNode dataNode = JacksonUtil.toJsonNode(data);
         node.onMsg(ctx, getTbMsg(deviceId, dataNode.toString()));
 
-        ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        @NotNull ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
         verify(ctx, times(countTellSuccess)).tellSuccess(newMsgCaptor.capture());
         verify(ctx, never()).tellFailure(any(), any());
 
         assertThat(newMsgCaptor.getValue().getData()).isEqualTo(JacksonUtil.toString(value));
     }
 
+    @NotNull
     private TbMsg getTbMsg(EntityId entityId, String data) {
-        Map<String, String> mdMap = Map.of("country", "US",
-                "city", "NY"
-        );
+        @NotNull Map<String, String> mdMap = Map.of("country", "US",
+                                                    "city", "NY"
+                                                   );
         return TbMsg.newMsg("POST_ATTRIBUTES_REQUEST", entityId, new TbMsgMetaData(mdMap), data, callback);
     }
 }

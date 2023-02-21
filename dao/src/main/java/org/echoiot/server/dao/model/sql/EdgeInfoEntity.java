@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.echoiot.server.common.data.edge.EdgeInfo;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,9 +26,9 @@ public class EdgeInfoEntity extends AbstractEdgeEntity<EdgeInfo> {
         super();
     }
 
-    public EdgeInfoEntity(EdgeEntity edgeEntity,
+    public EdgeInfoEntity(@NotNull EdgeEntity edgeEntity,
                           String customerTitle,
-                          Object customerAdditionalInfo) {
+                          @Nullable Object customerAdditionalInfo) {
         super(edgeEntity);
         this.customerTitle = customerTitle;
         if (customerAdditionalInfo != null && ((JsonNode)customerAdditionalInfo).has("isPublic")) {
@@ -36,6 +38,7 @@ public class EdgeInfoEntity extends AbstractEdgeEntity<EdgeInfo> {
         }
     }
 
+    @NotNull
     @Override
     public EdgeInfo toData() {
         return new EdgeInfo(super.toEdge(), customerTitle, customerIsPublic);

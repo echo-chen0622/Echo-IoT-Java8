@@ -7,6 +7,7 @@ import org.eclipse.leshan.core.response.LwM2mResponse;
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.transport.lwm2m.server.client.LwM2mClient;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
@@ -17,7 +18,7 @@ public abstract class RpcLwM2MDownlinkCallback<R extends LwM2mRequest<T>, T exte
     }
 
     @Override
-    protected void sendRpcReplyOnSuccess(T response) {
+    protected void sendRpcReplyOnSuccess(@NotNull T response) {
         LwM2MRpcResponseBody.LwM2MRpcResponseBodyBuilder builder = LwM2MRpcResponseBody.builder().result(response.getCode().getName());
         if (response.isSuccess()) {
             Optional<String> responseValue = serializeSuccessfulResponse(response);

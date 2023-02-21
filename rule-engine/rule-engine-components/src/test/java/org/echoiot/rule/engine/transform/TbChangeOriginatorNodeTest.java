@@ -4,6 +4,7 @@ import com.datastax.oss.driver.api.core.uuid.Uuids;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,8 +51,9 @@ public class TbChangeOriginatorNodeTest {
     @Before
     public void before() {
         dbExecutor = new ListeningExecutor() {
+            @NotNull
             @Override
-            public <T> ListenableFuture<T> executeAsync(Callable<T> task) {
+            public <T> ListenableFuture<T> executeAsync(@NotNull Callable<T> task) {
                 try {
                     return Futures.immediateFuture(task.call());
                 } catch (Exception e) {
@@ -60,7 +62,7 @@ public class TbChangeOriginatorNodeTest {
             }
 
             @Override
-            public void execute(Runnable command) {
+            public void execute(@NotNull Runnable command) {
                 command.run();
             }
         };
@@ -69,26 +71,26 @@ public class TbChangeOriginatorNodeTest {
     @Test
     public void originatorCanBeChangedToCustomerId() throws TbNodeException {
         init();
-        AssetId assetId = new AssetId(Uuids.timeBased());
-        CustomerId customerId = new CustomerId(Uuids.timeBased());
-        Asset asset = new Asset();
+        @NotNull AssetId assetId = new AssetId(Uuids.timeBased());
+        @NotNull CustomerId customerId = new CustomerId(Uuids.timeBased());
+        @NotNull Asset asset = new Asset();
         asset.setCustomerId(customerId);
 
-        RuleChainId ruleChainId = new RuleChainId(Uuids.timeBased());
-        RuleNodeId ruleNodeId = new RuleNodeId(Uuids.timeBased());
+        @NotNull RuleChainId ruleChainId = new RuleChainId(Uuids.timeBased());
+        @NotNull RuleNodeId ruleNodeId = new RuleNodeId(Uuids.timeBased());
 
-        TbMsg msg = TbMsg.newMsg( "ASSET", assetId, new TbMsgMetaData(), TbMsgDataType.JSON, "{}", ruleChainId, ruleNodeId);
+        @NotNull TbMsg msg = TbMsg.newMsg("ASSET", assetId, new TbMsgMetaData(), TbMsgDataType.JSON, "{}", ruleChainId, ruleNodeId);
 
         when(ctx.getAssetService()).thenReturn(assetService);
         when(assetService.findAssetByIdAsync(any(),eq( assetId))).thenReturn(Futures.immediateFuture(asset));
 
         node.onMsg(ctx, msg);
 
-        ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
-        ArgumentCaptor<String> typeCaptor = ArgumentCaptor.forClass(String.class);
-        ArgumentCaptor<EntityId> originatorCaptor = ArgumentCaptor.forClass(EntityId.class);
-        ArgumentCaptor<TbMsgMetaData> metadataCaptor = ArgumentCaptor.forClass(TbMsgMetaData.class);
-        ArgumentCaptor<String> dataCaptor = ArgumentCaptor.forClass(String.class);
+        @NotNull ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        @NotNull ArgumentCaptor<String> typeCaptor = ArgumentCaptor.forClass(String.class);
+        @NotNull ArgumentCaptor<EntityId> originatorCaptor = ArgumentCaptor.forClass(EntityId.class);
+        @NotNull ArgumentCaptor<TbMsgMetaData> metadataCaptor = ArgumentCaptor.forClass(TbMsgMetaData.class);
+        @NotNull ArgumentCaptor<String> dataCaptor = ArgumentCaptor.forClass(String.class);
         verify(ctx).transformMsg(msgCaptor.capture(), typeCaptor.capture(), originatorCaptor.capture(), metadataCaptor.capture(), dataCaptor.capture());
 
         assertEquals(customerId, originatorCaptor.getValue());
@@ -97,25 +99,25 @@ public class TbChangeOriginatorNodeTest {
     @Test
     public void newChainCanBeStarted() throws TbNodeException {
         init();
-        AssetId assetId = new AssetId(Uuids.timeBased());
-        CustomerId customerId = new CustomerId(Uuids.timeBased());
-        Asset asset = new Asset();
+        @NotNull AssetId assetId = new AssetId(Uuids.timeBased());
+        @NotNull CustomerId customerId = new CustomerId(Uuids.timeBased());
+        @NotNull Asset asset = new Asset();
         asset.setCustomerId(customerId);
 
-        RuleChainId ruleChainId = new RuleChainId(Uuids.timeBased());
-        RuleNodeId ruleNodeId = new RuleNodeId(Uuids.timeBased());
+        @NotNull RuleChainId ruleChainId = new RuleChainId(Uuids.timeBased());
+        @NotNull RuleNodeId ruleNodeId = new RuleNodeId(Uuids.timeBased());
 
-        TbMsg msg = TbMsg.newMsg( "ASSET", assetId, new TbMsgMetaData(), TbMsgDataType.JSON,"{}", ruleChainId, ruleNodeId);
+        @NotNull TbMsg msg = TbMsg.newMsg("ASSET", assetId, new TbMsgMetaData(), TbMsgDataType.JSON, "{}", ruleChainId, ruleNodeId);
 
         when(ctx.getAssetService()).thenReturn(assetService);
         when(assetService.findAssetByIdAsync(any(), eq(assetId))).thenReturn(Futures.immediateFuture(asset));
 
         node.onMsg(ctx, msg);
-        ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
-        ArgumentCaptor<String> typeCaptor = ArgumentCaptor.forClass(String.class);
-        ArgumentCaptor<EntityId> originatorCaptor = ArgumentCaptor.forClass(EntityId.class);
-        ArgumentCaptor<TbMsgMetaData> metadataCaptor = ArgumentCaptor.forClass(TbMsgMetaData.class);
-        ArgumentCaptor<String> dataCaptor = ArgumentCaptor.forClass(String.class);
+        @NotNull ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        @NotNull ArgumentCaptor<String> typeCaptor = ArgumentCaptor.forClass(String.class);
+        @NotNull ArgumentCaptor<EntityId> originatorCaptor = ArgumentCaptor.forClass(EntityId.class);
+        @NotNull ArgumentCaptor<TbMsgMetaData> metadataCaptor = ArgumentCaptor.forClass(TbMsgMetaData.class);
+        @NotNull ArgumentCaptor<String> dataCaptor = ArgumentCaptor.forClass(String.class);
         verify(ctx).transformMsg(msgCaptor.capture(), typeCaptor.capture(), originatorCaptor.capture(), metadataCaptor.capture(), dataCaptor.capture());
 
         assertEquals(customerId, originatorCaptor.getValue());
@@ -124,15 +126,15 @@ public class TbChangeOriginatorNodeTest {
     @Test
     public void exceptionThrownIfCannotFindNewOriginator() throws TbNodeException {
         init();
-        AssetId assetId = new AssetId(Uuids.timeBased());
-        CustomerId customerId = new CustomerId(Uuids.timeBased());
-        Asset asset = new Asset();
+        @NotNull AssetId assetId = new AssetId(Uuids.timeBased());
+        @NotNull CustomerId customerId = new CustomerId(Uuids.timeBased());
+        @NotNull Asset asset = new Asset();
         asset.setCustomerId(customerId);
 
-        RuleChainId ruleChainId = new RuleChainId(Uuids.timeBased());
-        RuleNodeId ruleNodeId = new RuleNodeId(Uuids.timeBased());
+        @NotNull RuleChainId ruleChainId = new RuleChainId(Uuids.timeBased());
+        @NotNull RuleNodeId ruleNodeId = new RuleNodeId(Uuids.timeBased());
 
-        TbMsg msg = TbMsg.newMsg( "ASSET", assetId, new TbMsgMetaData(), TbMsgDataType.JSON,"{}", ruleChainId, ruleNodeId);
+        @NotNull TbMsg msg = TbMsg.newMsg("ASSET", assetId, new TbMsgMetaData(), TbMsgDataType.JSON, "{}", ruleChainId, ruleNodeId);
 
         when(ctx.getAssetService()).thenReturn(assetService);
         when(assetService.findAssetByIdAsync(any(), eq(assetId))).thenReturn(Futures.immediateFuture(null));
@@ -142,10 +144,10 @@ public class TbChangeOriginatorNodeTest {
     }
 
     public void init() throws TbNodeException {
-        TbChangeOriginatorNodeConfiguration config = new TbChangeOriginatorNodeConfiguration();
+        @NotNull TbChangeOriginatorNodeConfiguration config = new TbChangeOriginatorNodeConfiguration();
         config.setOriginatorSource(TbChangeOriginatorNode.CUSTOMER_SOURCE);
-        ObjectMapper mapper = new ObjectMapper();
-        TbNodeConfiguration nodeConfiguration = new TbNodeConfiguration(mapper.valueToTree(config));
+        @NotNull ObjectMapper mapper = new ObjectMapper();
+        @NotNull TbNodeConfiguration nodeConfiguration = new TbNodeConfiguration(mapper.valueToTree(config));
 
         when(ctx.getDbCallbackExecutor()).thenReturn(dbExecutor);
 

@@ -1,5 +1,7 @@
 package org.echoiot.server.common.data;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * @author Andrew Shvayka
  */
@@ -35,6 +37,7 @@ public class DataConstants {
     public static final String SNMP_TRANSPORT_NAME = "SNMP";
 
 
+    @NotNull
     public static final String[] allScopes() {
         return new String[]{CLIENT_SCOPE, SHARED_SCOPE, SERVER_SCOPE};
     }

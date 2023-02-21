@@ -3,6 +3,7 @@ package org.echoiot.server.queue.memory;
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.queue.TbQueueMsg;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import org.echoiot.server.queue.common.DefaultTbQueueMsg;
 
@@ -19,6 +20,7 @@ public class DefaultInMemoryStorageTest {
     final Gson gson = new Gson();
     final String topic = "tb_core_notification.tb-node-0";
 
+    @NotNull
     InMemoryStorage storage = new DefaultInMemoryStorage();
 
     @Test
@@ -36,7 +38,7 @@ public class DefaultInMemoryStorageTest {
 
     @Test
     public void givenQueueWithMoreThenBatchSize_whenPoll_thenReturnFullListAndSecondList() throws InterruptedException {
-        List<TbQueueMsg> msgs = new ArrayList<>(MAX_POLL_SIZE + 1);
+        @NotNull List<TbQueueMsg> msgs = new ArrayList<>(MAX_POLL_SIZE + 1);
         for (int i = 0; i < MAX_POLL_SIZE + 1; i++) {
             DefaultTbQueueMsg msg = gson.fromJson("{\"key\": \"" + UUID.randomUUID() + "\"}", DefaultTbQueueMsg.class);
             msgs.add(msg);
@@ -50,7 +52,7 @@ public class DefaultInMemoryStorageTest {
     }
 
     private void testPollOnce(final int msgCount) throws InterruptedException {
-        List<TbQueueMsg> msgs = new ArrayList<>(msgCount);
+        @NotNull List<TbQueueMsg> msgs = new ArrayList<>(msgCount);
         for (int i = 0; i < msgCount; i++) {
             DefaultTbQueueMsg msg = gson.fromJson("{\"key\": \"" + UUID.randomUUID() + "\"}", DefaultTbQueueMsg.class);
             msgs.add(msg);

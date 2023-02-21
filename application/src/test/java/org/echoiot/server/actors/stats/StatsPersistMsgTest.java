@@ -1,5 +1,6 @@
 package org.echoiot.server.actors.stats;
 
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.echoiot.server.common.data.id.TenantId;
 
@@ -9,7 +10,7 @@ class StatsPersistMsgTest {
 
     @Test
     void testIsEmpty() {
-        StatsPersistMsg emptyStats = new StatsPersistMsg(0, 0, TenantId.SYS_TENANT_ID, TenantId.SYS_TENANT_ID);
+        @NotNull StatsPersistMsg emptyStats = new StatsPersistMsg(0, 0, TenantId.SYS_TENANT_ID, TenantId.SYS_TENANT_ID);
         assertThat(emptyStats.isEmpty()).isTrue();
     }
 

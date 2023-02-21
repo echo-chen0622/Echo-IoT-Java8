@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.echoiot.server.common.data.ota.OtaPackageType;
 import org.echoiot.server.transport.lwm2m.server.ota.LwM2MClientOtaInfo;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -18,6 +21,7 @@ public class LwM2MClientSwOtaInfo extends LwM2MClientOtaInfo<LwM2MSoftwareUpdate
         super(endpoint, baseUrl, strategy);
     }
 
+    @NotNull
     @JsonIgnore
     @Override
     public OtaPackageType getType() {
@@ -25,15 +29,11 @@ public class LwM2MClientSwOtaInfo extends LwM2MClientOtaInfo<LwM2MSoftwareUpdate
     }
 
 
-    public void update(SoftwareUpdateResult result) {
+    public void update(@NotNull SoftwareUpdateResult result) {
         this.result = result;
-        switch (result) {
-            case INITIAL:
-                break;
-                //TODO: implement
-            default:
-                failedPackageId = getPackageId(targetName, targetVersion);
-                break;
+        if (Objects.requireNonNull(result) == SoftwareUpdateResult.INITIAL) {//TODO: implement
+        } else {
+            failedPackageId = getPackageId(targetName, targetVersion);
         }
     }
 

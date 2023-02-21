@@ -12,6 +12,8 @@ import org.echoiot.server.dao.tenant.TenantService;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.entitiy.AbstractTbEntityService;
 import org.echoiot.server.service.entitiy.queue.TbQueueService;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,13 +23,18 @@ import java.util.List;
 @TbCoreComponent
 @AllArgsConstructor
 public class DefaultTbTenantProfileService extends AbstractTbEntityService implements TbTenantProfileService {
+    @NotNull
     private final TbQueueService tbQueueService;
+    @NotNull
     private final TenantProfileService tenantProfileService;
+    @NotNull
     private final TenantService tenantService;
+    @NotNull
     private final TbTenantProfileCache tenantProfileCache;
 
+    @NotNull
     @Override
-    public TenantProfile save(TenantId tenantId, TenantProfile tenantProfile, TenantProfile oldTenantProfile) throws EchoiotException {
+    public TenantProfile save(TenantId tenantId, @NotNull TenantProfile tenantProfile, @Nullable TenantProfile oldTenantProfile) throws EchoiotException {
         TenantProfile savedTenantProfile = checkNotNull(tenantProfileService.saveTenantProfile(tenantId, tenantProfile));
         if (oldTenantProfile != null && savedTenantProfile.isIsolatedTbRuleEngine()) {
             List<TenantId> tenantIds = tenantService.findTenantIdsByTenantProfileId(savedTenantProfile.getId());
@@ -43,7 +50,7 @@ public class DefaultTbTenantProfileService extends AbstractTbEntityService imple
     }
 
     @Override
-    public void delete(TenantId tenantId, TenantProfile tenantProfile) throws EchoiotException {
+    public void delete(TenantId tenantId, @NotNull TenantProfile tenantProfile) throws EchoiotException {
         tenantProfileService.deleteTenantProfile(tenantId, tenantProfile.getId());
         tbClusterService.onTenantProfileDelete(tenantProfile, null);
     }

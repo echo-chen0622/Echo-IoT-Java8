@@ -16,6 +16,8 @@ import org.echoiot.server.common.data.SearchTextBasedWithAdditionalInfo;
 import org.echoiot.server.common.data.id.RuleChainId;
 import org.echoiot.server.common.data.id.RuleNodeId;
 import org.echoiot.server.common.data.id.TenantId;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @ApiModel
 @Data
@@ -55,7 +57,7 @@ public class RuleChain extends SearchTextBasedWithAdditionalInfo<RuleChainId> im
         super(id);
     }
 
-    public RuleChain(RuleChain ruleChain) {
+    public RuleChain(@NotNull RuleChain ruleChain) {
         super(ruleChain);
         this.tenantId = ruleChain.getTenantId();
         this.name = ruleChain.getName();
@@ -91,6 +93,7 @@ public class RuleChain extends SearchTextBasedWithAdditionalInfo<RuleChainId> im
         return super.getCreatedTime();
     }
 
+    @Nullable
     public JsonNode getConfiguration() {
         return SearchTextBasedWithAdditionalInfo.getJson(() -> configuration, () -> configurationBytes);
     }

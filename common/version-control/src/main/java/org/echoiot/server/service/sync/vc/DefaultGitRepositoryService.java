@@ -13,6 +13,8 @@ import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.common.data.sync.vc.*;
 import org.echoiot.server.service.sync.vc.GitRepository.Diff;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
@@ -47,13 +49,14 @@ public class DefaultGitRepositoryService implements GitRepositoryService {
         }
     }
 
+    @NotNull
     @Override
     public Set<TenantId> getActiveRepositoryTenants() {
         return new HashSet<>(repositories.keySet());
     }
 
     @Override
-    public void prepareCommit(PendingCommit commit) {
+    public void prepareCommit(@NotNull PendingCommit commit) {
         GitRepository repository = checkRepository(commit.getTenantId());
         String branch = commit.getBranch();
         try {
@@ -72,31 +75,32 @@ public class DefaultGitRepositoryService implements GitRepositoryService {
     }
 
     @Override
-    public void deleteFolderContent(PendingCommit commit, String relativePath) throws IOException {
+    public void deleteFolderContent(@NotNull PendingCommit commit, String relativePath) throws IOException {
         GitRepository repository = checkRepository(commit.getTenantId());
         FileUtils.deleteDirectory(Path.of(repository.getDirectory(), relativePath).toFile());
     }
 
     @Override
-    public void add(PendingCommit commit, String relativePath, String entityDataJson) throws IOException {
+    public void add(@NotNull PendingCommit commit, String relativePath, String entityDataJson) throws IOException {
         GitRepository repository = checkRepository(commit.getTenantId());
         FileUtils.write(Path.of(repository.getDirectory(), relativePath).toFile(), entityDataJson, StandardCharsets.UTF_8);
     }
 
+    @NotNull
     @Override
-    public VersionCreationResult push(PendingCommit commit) {
+    public VersionCreationResult push(@NotNull PendingCommit commit) {
         GitRepository repository = checkRepository(commit.getTenantId());
         try {
             repository.add(".");
 
-            VersionCreationResult result = new VersionCreationResult();
-            GitRepository.Status status = repository.status();
+            @NotNull VersionCreationResult result = new VersionCreationResult();
+            @NotNull GitRepository.Status status = repository.status();
             result.setAdded(status.getAdded().size());
             result.setModified(status.getModified().size());
             result.setRemoved(status.getRemoved().size());
 
             if (result.getAdded() > 0 || result.getModified() > 0 || result.getRemoved() > 0) {
-                GitRepository.Commit gitCommit = repository.commit(commit.getVersionName(), commit.getAuthorName(), commit.getAuthorEmail());
+                @NotNull GitRepository.Commit gitCommit = repository.commit(commit.getVersionName(), commit.getAuthorName(), commit.getAuthorEmail());
                 repository.push(commit.getWorkingBranch(), commit.getBranch());
                 result.setVersion(toVersion(gitCommit));
             }
@@ -111,7 +115,7 @@ public class DefaultGitRepositoryService implements GitRepositoryService {
 
     @SneakyThrows
     @Override
-    public void cleanUp(PendingCommit commit) {
+    public void cleanUp(@NotNull PendingCommit commit) {
         log.debug("[{}] Cleanup tenant repository started.", commit.getTenantId());
         GitRepository repository = checkRepository(commit.getTenantId());
         try {
@@ -127,7 +131,7 @@ public class DefaultGitRepositoryService implements GitRepositoryService {
     }
 
     @Override
-    public void abort(PendingCommit commit) {
+    public void abort(@NotNull PendingCommit commit) {
         cleanUp(commit);
     }
 
@@ -142,19 +146,19 @@ public class DefaultGitRepositoryService implements GitRepositoryService {
     }
 
     @Override
-    public String getFileContentAtCommit(TenantId tenantId, String relativePath, String versionId) throws IOException {
+    public String getFileContentAtCommit(TenantId tenantId, @NotNull String relativePath, String versionId) throws IOException {
         GitRepository repository = checkRepository(tenantId);
         return repository.getFileContentAtCommit(relativePath, versionId);
     }
 
     @Override
-    public List<Diff> getVersionsDiffList(TenantId tenantId, String path, String versionId1, String versionId2) throws IOException {
+    public List<Diff> getVersionsDiffList(TenantId tenantId, @NotNull String path, String versionId1, String versionId2) throws IOException {
         GitRepository repository = checkRepository(tenantId);
         return repository.getDiffList(versionId1, versionId2, path);
     }
 
     @Override
-    public String getContentsDiff(TenantId tenantId, String content1, String content2) throws IOException {
+    public String getContentsDiff(TenantId tenantId, @NotNull String content1, @NotNull String content2) throws IOException {
         GitRepository repository = checkRepository(tenantId);
         return repository.getContentsDiff(content1, content2);
     }
@@ -176,18 +180,19 @@ public class DefaultGitRepositoryService implements GitRepositoryService {
     }
 
     @Override
-    public PageData<EntityVersion> listVersions(TenantId tenantId, String branch, String path, PageLink pageLink) throws Exception {
+    public PageData<EntityVersion> listVersions(TenantId tenantId, String branch, String path, @NotNull PageLink pageLink) throws Exception {
         GitRepository repository = checkRepository(tenantId);
         return repository.listCommits(branch, path, pageLink).mapData(this::toVersion);
     }
 
+    @NotNull
     @Override
-    public List<VersionedEntityInfo> listEntitiesAtVersion(TenantId tenantId, String versionId, String path) throws Exception {
+    public List<VersionedEntityInfo> listEntitiesAtVersion(TenantId tenantId, String versionId, @NotNull String path) throws Exception {
         GitRepository repository = checkRepository(tenantId);
         return repository.listFilesAtCommit(versionId, path).stream()
                 .map(filePath -> {
                     EntityId entityId = fromRelativePath(filePath);
-                    VersionedEntityInfo info = new VersionedEntityInfo();
+                    @NotNull VersionedEntityInfo info = new VersionedEntityInfo();
                     info.setExternalId(entityId);
                     return info;
                 })
@@ -195,18 +200,18 @@ public class DefaultGitRepositoryService implements GitRepositoryService {
     }
 
     @Override
-    public void testRepository(TenantId tenantId, RepositorySettings settings) throws Exception {
-        Path testDirectory = Path.of(repositoriesFolder, "repo-test-" + UUID.randomUUID());
+    public void testRepository(TenantId tenantId, @NotNull RepositorySettings settings) throws Exception {
+        @NotNull Path testDirectory = Path.of(repositoriesFolder, "repo-test-" + UUID.randomUUID());
         GitRepository.test(settings, testDirectory.toFile());
     }
 
     @Override
-    public void initRepository(TenantId tenantId, RepositorySettings settings) throws Exception {
+    public void initRepository(@NotNull TenantId tenantId, @NotNull RepositorySettings settings) throws Exception {
         testRepository(tenantId, settings);
 
         clearRepository(tenantId);
         log.debug("[{}] Init tenant repository started.", tenantId);
-        Path repositoryDirectory = Path.of(repositoriesFolder, tenantId.getId().toString());
+        @NotNull Path repositoryDirectory = Path.of(repositoriesFolder, tenantId.getId().toString());
         GitRepository repository;
         if (Files.exists(repositoryDirectory)) {
             FileUtils.forceDelete(repositoryDirectory.toFile());
@@ -218,6 +223,7 @@ public class DefaultGitRepositoryService implements GitRepositoryService {
         log.debug("[{}] Init tenant repository completed.", tenantId);
     }
 
+    @Nullable
     @Override
     public RepositorySettings getRepositorySettings(TenantId tenantId) throws Exception {
         var gitRepository = repositories.get(tenantId);
@@ -235,11 +241,12 @@ public class DefaultGitRepositoryService implements GitRepositoryService {
         }
     }
 
-    private EntityVersion toVersion(GitRepository.Commit commit) {
+    @NotNull
+    private EntityVersion toVersion(@NotNull GitRepository.Commit commit) {
         return new EntityVersion(commit.getTimestamp(), commit.getId(), commit.getMessage(), this.getAuthor(commit));
     }
 
-    private String getAuthor(GitRepository.Commit commit) {
+    private String getAuthor(@NotNull GitRepository.Commit commit) {
         String author = String.format("<%s>", commit.getAuthorEmail());
         if (StringUtils.isNotBlank(commit.getAuthorName())) {
             author = String.format("%s %s", commit.getAuthorName(), author);
@@ -247,8 +254,8 @@ public class DefaultGitRepositoryService implements GitRepositoryService {
         return author;
     }
 
-    public static EntityId fromRelativePath(String path) {
-        EntityType entityType = EntityType.valueOf(StringUtils.substringBefore(path, "/").toUpperCase());
+    public static EntityId fromRelativePath(@NotNull String path) {
+        @NotNull EntityType entityType = EntityType.valueOf(StringUtils.substringBefore(path, "/").toUpperCase());
         String entityId = StringUtils.substringBetween(path, "/", ".json");
         return EntityIdFactory.getByTypeAndUuid(entityType, entityId);
     }

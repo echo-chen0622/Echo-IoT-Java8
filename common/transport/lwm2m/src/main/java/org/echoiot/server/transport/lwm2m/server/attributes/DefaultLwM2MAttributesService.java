@@ -29,6 +29,8 @@ import org.eclipse.leshan.core.node.LwM2mResourceInstance;
 import org.eclipse.leshan.core.request.WriteRequest;
 import org.eclipse.leshan.core.response.WriteResponse;
 import org.eclipse.leshan.server.model.LwM2mModelProvider;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -47,21 +49,32 @@ public class DefaultLwM2MAttributesService implements LwM2MAttributesService {
 
     //TODO: add timeout logic
     private final AtomicInteger reqIdSeq = new AtomicInteger();
+    @NotNull
     private final Map<Integer, SettableFuture<List<TransportProtos.TsKvProto>>> futures;
 
+    @NotNull
     private final TransportService transportService;
+    @NotNull
     private final LwM2mTransportServerHelper helper;
+    @NotNull
     private final LwM2mClientContext clientContext;
+    @NotNull
     private final LwM2MTransportServerConfig config;
+    @NotNull
     private final LwM2mUplinkMsgHandler uplinkHandler;
+    @NotNull
     private final LwM2mDownlinkMsgHandler downlinkHandler;
+    @NotNull
     private final LwM2MTelemetryLogService logService;
+    @NotNull
     private final LwM2MOtaUpdateService otaUpdateService;
+    @NotNull
     private final LwM2mModelProvider modelProvider;
 
+    @NotNull
     @Override
-    public ListenableFuture<List<TransportProtos.TsKvProto>> getSharedAttributes(LwM2mClient client, Collection<String> keys) {
-        SettableFuture<List<TransportProtos.TsKvProto>> future = SettableFuture.create();
+    public ListenableFuture<List<TransportProtos.TsKvProto>> getSharedAttributes(@NotNull LwM2mClient client, Collection<String> keys) {
+        @NotNull SettableFuture<List<TransportProtos.TsKvProto>> future = SettableFuture.create();
         int requestId = reqIdSeq.incrementAndGet();
         futures.put(requestId, future);
         transportService.process(client.getSession(), TransportProtos.GetAttributeRequestMsg.newBuilder().setRequestId(requestId).
@@ -72,7 +85,7 @@ public class DefaultLwM2MAttributesService implements LwM2MAttributesService {
             }
 
             @Override
-            public void onError(Throwable e) {
+            public void onError(@NotNull Throwable e) {
                 SettableFuture<List<TransportProtos.TsKvProto>> callback = futures.remove(requestId);
                 if (callback != null) {
                     callback.setException(e);
@@ -83,7 +96,7 @@ public class DefaultLwM2MAttributesService implements LwM2MAttributesService {
     }
 
     @Override
-    public void onGetAttributesResponse(GetAttributeResponseMsg getAttributesResponse, TransportProtos.SessionInfoProto sessionInfo) {
+    public void onGetAttributesResponse(@NotNull GetAttributeResponseMsg getAttributesResponse, TransportProtos.SessionInfoProto sessionInfo) {
         var callback = futures.remove(getAttributesResponse.getRequestId());
         if (callback != null) {
             callback.set(getAttributesResponse.getSharedAttributeListList());
@@ -102,19 +115,19 @@ public class DefaultLwM2MAttributesService implements LwM2MAttributesService {
      * @param msg -
      */
     @Override
-    public void onAttributesUpdate(TransportProtos.AttributeUpdateNotificationMsg msg, TransportProtos.SessionInfoProto sessionInfo) {
+    public void onAttributesUpdate(@NotNull TransportProtos.AttributeUpdateNotificationMsg msg, TransportProtos.SessionInfoProto sessionInfo) {
         LwM2mClient lwM2MClient = clientContext.getClientBySessionInfo(sessionInfo);
         if (msg.getSharedUpdatedCount() > 0 && lwM2MClient != null) {
-            String newFirmwareTitle = null;
-            String newFirmwareVersion = null;
-            String newFirmwareTag = null;
-            String newFirmwareUrl = null;
-            String newSoftwareTitle = null;
-            String newSoftwareVersion = null;
-            String newSoftwareTag = null;
-            String newSoftwareUrl = null;
-            List<TransportProtos.TsKvProto> otherAttributes = new ArrayList<>();
-            for (TransportProtos.TsKvProto tsKvProto : msg.getSharedUpdatedList()) {
+            @Nullable String newFirmwareTitle = null;
+            @Nullable String newFirmwareVersion = null;
+            @Nullable String newFirmwareTag = null;
+            @Nullable String newFirmwareUrl = null;
+            @Nullable String newSoftwareTitle = null;
+            @Nullable String newSoftwareVersion = null;
+            @Nullable String newSoftwareTag = null;
+            @Nullable String newSoftwareUrl = null;
+            @NotNull List<TransportProtos.TsKvProto> otherAttributes = new ArrayList<>();
+            for (@NotNull TransportProtos.TsKvProto tsKvProto : msg.getSharedUpdatedList()) {
                 String attrName = tsKvProto.getKv().getKey();
                 if (compareAttNameKeyOta(attrName)) {
                     if (FIRMWARE_TITLE.equals(attrName)) {
@@ -160,9 +173,9 @@ public class DefaultLwM2MAttributesService implements LwM2MAttributesService {
      * #2.1 if there is not a difference in values between the current resource values and the shared attribute values
      */
     @Override
-    public void onAttributesUpdate(LwM2mClient lwM2MClient, List<TransportProtos.TsKvProto> tsKvProtos, boolean logFailedUpdateOfNonChangedValue) {
+    public void onAttributesUpdate(@NotNull LwM2mClient lwM2MClient, @NotNull List<TransportProtos.TsKvProto> tsKvProtos, boolean logFailedUpdateOfNonChangedValue) {
         log.trace("[{}] onAttributesUpdate [{}]", lwM2MClient.getEndpoint(), tsKvProtos);
-        Map<String, TransportProtos.TsKvProto> attributesUpdate = new ConcurrentHashMap<>();
+        @NotNull Map<String, TransportProtos.TsKvProto> attributesUpdate = new ConcurrentHashMap<>();
         tsKvProtos.forEach(tsKvProto -> {
             try {
                 String pathIdVer = clientContext.getObjectIdByKeyNameFromProfile(lwM2MClient, tsKvProto.getKv().getKey());
@@ -186,9 +199,9 @@ public class DefaultLwM2MAttributesService implements LwM2MAttributesService {
         clientContext.update(lwM2MClient);
         // #2.1
         attributesUpdate.forEach((pathIdVer, tsKvProto) -> {
-            ResourceModel resourceModel = lwM2MClient.getResourceModel(pathIdVer, modelProvider);
-            Object newValProto = getValueFromKvProto(tsKvProto.getKv());
-            Object oldResourceValue = this.getResourceValueFormatKv(lwM2MClient, pathIdVer);
+            @Nullable ResourceModel resourceModel = lwM2MClient.getResourceModel(pathIdVer, modelProvider);
+            @Nullable Object newValProto = getValueFromKvProto(tsKvProto.getKv());
+            @Nullable Object oldResourceValue = this.getResourceValueFormatKv(lwM2MClient, pathIdVer);
             if (!resourceModel.multiple || !(newValProto instanceof JsonElement)) {
                 this.pushUpdateToClientIfNeeded(lwM2MClient, oldResourceValue, newValProto, pathIdVer, tsKvProto, logFailedUpdateOfNonChangedValue);
             } else {
@@ -205,7 +218,7 @@ public class DefaultLwM2MAttributesService implements LwM2MAttributesService {
         });
     }
 
-    private void pushUpdateToClientIfNeeded(LwM2mClient lwM2MClient, Object oldValue, Object newValue,
+    private void pushUpdateToClientIfNeeded(LwM2mClient lwM2MClient, @Nullable Object oldValue, @Nullable Object newValue,
                                             String versionedId, TransportProtos.TsKvProto tsKvProto, boolean logFailedUpdateOfNonChangedValue) {
         if (newValue == null) {
             String logMsg = String.format("%s: Failed update resource versionedId - %s value - %s. New value is  bad",
@@ -216,7 +229,7 @@ public class DefaultLwM2MAttributesService implements LwM2MAttributesService {
             TbLwM2MWriteReplaceRequest request = TbLwM2MWriteReplaceRequest.builder().versionedId(versionedId).value(newValue).timeout(clientContext.getRequestTimeout(lwM2MClient)).build();
             downlinkHandler.sendWriteReplaceRequest(lwM2MClient, request, new TbLwM2MWriteResponseCallback(uplinkHandler, logService, lwM2MClient, versionedId) {
                 @Override
-                public void onSuccess(WriteRequest request, WriteResponse response) {
+                public void onSuccess(@NotNull WriteRequest request, @NotNull WriteResponse response) {
                     client.getSharedAttributes().put(versionedId, tsKvProto);
                     super.onSuccess(request, response);
                 }
@@ -229,10 +242,10 @@ public class DefaultLwM2MAttributesService implements LwM2MAttributesService {
         }
     }
 
-    private void pushUpdateMultiToClientIfNeeded(LwM2mClient client, ResourceModel resourceModel, JsonElement newValProto,
-                                                 Map<Integer, LwM2mResourceInstance> valueOld, String versionedId,
+    private void pushUpdateMultiToClientIfNeeded(LwM2mClient client, @NotNull ResourceModel resourceModel, @NotNull JsonElement newValProto,
+                                                 @Nullable Map<Integer, LwM2mResourceInstance> valueOld, String versionedId,
                                                  TransportProtos.TsKvProto tsKvProto, boolean logFailedUpdateOfNonChangedValue) {
-        Map<Integer, Object> newValues = convertMultiResourceValuesFromJson(newValProto, resourceModel.type, versionedId);
+        @NotNull Map<Integer, Object> newValues = convertMultiResourceValuesFromJson(newValProto, resourceModel.type, versionedId);
         if (newValues.size() > 0 && valueOld != null && valueOld.size() > 0) {
             valueOld.values().forEach((v) -> {
                 if (newValues.containsKey(v.getId())) {
@@ -247,7 +260,7 @@ public class DefaultLwM2MAttributesService implements LwM2MAttributesService {
             TbLwM2MWriteReplaceRequest request = TbLwM2MWriteReplaceRequest.builder().versionedId(versionedId).value(newValues).timeout(this.config.getTimeout()).build();
             downlinkHandler.sendWriteReplaceRequest(client, request, new TbLwM2MWriteResponseCallback(uplinkHandler, logService, client, versionedId) {
                 @Override
-                public void onSuccess(WriteRequest request, WriteResponse response) {
+                public void onSuccess(@NotNull WriteRequest request, @NotNull WriteResponse response) {
                     client.getSharedAttributes().put(versionedId, tsKvProto);
                     super.onSuccess(request, response);
                 }
@@ -264,11 +277,12 @@ public class DefaultLwM2MAttributesService implements LwM2MAttributesService {
      * @param pathIdVer - path resource
      * @return - value of Resource into format KvProto or null
      */
-    private Object getResourceValueFormatKv(LwM2mClient lwM2MClient, String pathIdVer) {
-        LwM2mResource resourceValue = LwM2MTransportUtil.getResourceValueFromLwM2MClient(lwM2MClient, pathIdVer);
+    @Nullable
+    private Object getResourceValueFormatKv(@NotNull LwM2mClient lwM2MClient, String pathIdVer) {
+        @Nullable LwM2mResource resourceValue = LwM2MTransportUtil.getResourceValueFromLwM2MClient(lwM2MClient, pathIdVer);
         if (resourceValue != null) {
             ResourceModel.Type currentType = resourceValue.getType();
-            ResourceModel.Type expectedType = helper.getResourceModelTypeEqualsKvProtoValueType(currentType, pathIdVer);
+            ResourceModel.Type expectedType = LwM2mTransportServerHelper.getResourceModelTypeEqualsKvProtoValueType(currentType, pathIdVer);
             if (!resourceValue.isMultiInstances()) {
                 return LwM2mValueConverterImpl.getInstance().convertValue(resourceValue.getValue(), currentType, expectedType,
                         new LwM2mPath(fromVersionedIdToObjectId(pathIdVer)));
@@ -282,7 +296,7 @@ public class DefaultLwM2MAttributesService implements LwM2MAttributesService {
         }
     }
 
-    private String getStrValue(TransportProtos.TsKvProto tsKvProto) {
+    private String getStrValue(@NotNull TransportProtos.TsKvProto tsKvProto) {
         return tsKvProto.getKv().getStringV();
     }
 }

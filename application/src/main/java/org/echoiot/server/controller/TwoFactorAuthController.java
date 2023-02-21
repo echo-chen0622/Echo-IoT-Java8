@@ -22,6 +22,8 @@ import org.echoiot.server.service.security.auth.rest.RestAuthenticationDetails;
 import org.echoiot.server.service.security.model.SecurityUser;
 import org.echoiot.server.service.security.model.token.JwtTokenFactory;
 import org.echoiot.server.service.security.system.SystemSecurityService;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,10 +45,15 @@ import static org.echoiot.server.controller.ControllerConstants.NEW_LINE;
 @RequiredArgsConstructor
 public class TwoFactorAuthController extends BaseController {
 
+    @NotNull
     private final TwoFactorAuthService twoFactorAuthService;
+    @NotNull
     private final TwoFaConfigManager twoFaConfigManager;
+    @NotNull
     private final JwtTokenFactory tokenFactory;
+    @NotNull
     private final SystemSecurityService systemSecurityService;
+    @NotNull
     private final UserService userService;
 
 
@@ -73,7 +80,7 @@ public class TwoFactorAuthController extends BaseController {
     @PostMapping("/verification/check")
     @PreAuthorize("hasAuthority('PRE_VERIFICATION_TOKEN')")
     public JwtPair checkTwoFaVerificationCode(@RequestParam TwoFaProviderType providerType,
-                                              @RequestParam String verificationCode, HttpServletRequest servletRequest) throws Exception {
+                                              @RequestParam String verificationCode, @NotNull HttpServletRequest servletRequest) throws Exception {
         SecurityUser user = getCurrentUser();
         boolean verificationSuccess = twoFactorAuthService.checkVerificationCode(user, providerType, verificationCode, true);
         if (verificationSuccess) {
@@ -81,13 +88,14 @@ public class TwoFactorAuthController extends BaseController {
             user = new SecurityUser(userService.findUserById(user.getTenantId(), user.getId()), true, user.getUserPrincipal());
             return tokenFactory.createTokenPair(user);
         } else {
-            EchoiotException error = new EchoiotException("Verification code is incorrect", EchoiotErrorCode.BAD_REQUEST_PARAMS);
+            @NotNull EchoiotException error = new EchoiotException("Verification code is incorrect", EchoiotErrorCode.BAD_REQUEST_PARAMS);
             systemSecurityService.logLoginAction(user, new RestAuthenticationDetails(servletRequest), ActionType.LOGIN, error);
             throw error;
         }
     }
 
 
+    @NotNull
     @ApiOperation(value = "Get available 2FA providers (getAvailableTwoFaProviders)", notes =
             "Get the list of 2FA provider infos available for user to use. Example:\n" +
                     "```\n[\n" +
@@ -103,7 +111,7 @@ public class TwoFactorAuthController extends BaseController {
         return twoFaConfigManager.getAccountTwoFaSettings(user.getTenantId(), user.getId())
                 .map(settings -> settings.getConfigs().values()).orElse(Collections.emptyList())
                 .stream().map(config -> {
-                    String contact = null;
+                    @Nullable String contact = null;
                     switch (config.getProviderType()) {
                         case SMS:
                             String phoneNumber = ((SmsTwoFaAccountConfig) config).getPhoneNumber();

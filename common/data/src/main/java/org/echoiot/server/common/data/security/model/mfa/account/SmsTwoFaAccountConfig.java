@@ -3,6 +3,7 @@ package org.echoiot.server.common.data.security.model.mfa.account;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.echoiot.server.common.data.security.model.mfa.provider.TwoFaProviderType;
+import org.jetbrains.annotations.NotNull;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -15,6 +16,7 @@ public class SmsTwoFaAccountConfig extends OtpBasedTwoFaAccountConfig {
     @Pattern(regexp = "^\\+[1-9]\\d{1,14}$", message = "phone number is not of E.164 format")
     private String phoneNumber;
 
+    @NotNull
     @Override
     public TwoFaProviderType getProviderType() {
         return TwoFaProviderType.SMS;

@@ -12,6 +12,7 @@ import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.id.DashboardId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.dao.dashboard.DashboardService;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -54,15 +55,15 @@ public class DatabaseHelper {
 
     public static final ObjectMapper objectMapper = new ObjectMapper();
 
-    public static void upgradeTo40_assignDashboards(Path dashboardsDump, DashboardService dashboardService, boolean sql) throws Exception {
+    public static void upgradeTo40_assignDashboards(@NotNull Path dashboardsDump, @NotNull DashboardService dashboardService, boolean sql) throws Exception {
         JavaType assignedCustomersType =
                 objectMapper.getTypeFactory().constructCollectionType(HashSet.class, ShortCustomerInfo.class);
-        try (CSVParser csvParser = new CSVParser(Files.newBufferedReader(dashboardsDump), CSV_DUMP_FORMAT.withFirstRecordAsHeader())) {
+        try (@NotNull CSVParser csvParser = new CSVParser(Files.newBufferedReader(dashboardsDump), CSV_DUMP_FORMAT.withFirstRecordAsHeader())) {
             csvParser.forEach(record -> {
                 String customerIdString = record.get(CUSTOMER_ID);
                 String assignedCustomersString = record.get(ASSIGNED_CUSTOMERS);
-                DashboardId dashboardId = new DashboardId(toUUID(record.get(ID), sql));
-                List<CustomerId> customerIds = new ArrayList<>();
+                @NotNull DashboardId dashboardId = new DashboardId(toUUID(record.get(ID), sql));
+                @NotNull List<CustomerId> customerIds = new ArrayList<>();
                 if (!StringUtils.isEmpty(assignedCustomersString)) {
                     try {
                         Set<ShortCustomerInfo> assignedCustomers = objectMapper.readValue(assignedCustomersString, assignedCustomersType);
@@ -77,7 +78,7 @@ public class DatabaseHelper {
                     }
                 }
                 if (!StringUtils.isEmpty(customerIdString)) {
-                    CustomerId customerId = new CustomerId(toUUID(customerIdString, sql));
+                    @NotNull CustomerId customerId = new CustomerId(toUUID(customerIdString, sql));
                     if (!customerId.isNullUid()) {
                         customerIds.add(customerId);
                     }
@@ -89,7 +90,8 @@ public class DatabaseHelper {
         }
     }
 
-    private static UUID toUUID(String src, boolean sql) {
+    @NotNull
+    private static UUID toUUID(@NotNull String src, boolean sql) {
         if (sql) {
             return UUIDConverter.fromString(src);
         } else {

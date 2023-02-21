@@ -12,6 +12,8 @@ import org.echoiot.server.common.msg.queue.ServiceType;
 import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
 import org.echoiot.server.queue.discovery.TbApplicationEventListener;
 import org.echoiot.server.queue.discovery.event.PartitionChangeEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.*;
@@ -42,6 +44,7 @@ public abstract class AbstractPartitionBasedService<T extends EntityId> extends 
         scheduledExecutor = MoreExecutors.listeningDecorator(Executors.newSingleThreadScheduledExecutor(EchoiotThreadFactory.forName(getSchedulerExecutorName())));
     }
 
+    @NotNull
     protected ServiceType getServiceType() {
         return ServiceType.TB_CORE;
     }
@@ -60,7 +63,7 @@ public abstract class AbstractPartitionBasedService<T extends EntityId> extends 
      * Any locks or delays in this module will affect DiscoveryService and entire system
      */
     @Override
-    protected void onTbApplicationEvent(PartitionChangeEvent partitionChangeEvent) {
+    protected void onTbApplicationEvent(@NotNull PartitionChangeEvent partitionChangeEvent) {
         if (getServiceType().equals(partitionChangeEvent.getServiceType())) {
             log.debug("onTbApplicationEvent, processing event: {}", partitionChangeEvent);
             subscribeQueue.add(partitionChangeEvent.getPartitions());
@@ -69,7 +72,7 @@ public abstract class AbstractPartitionBasedService<T extends EntityId> extends 
     }
 
     protected void pollInitStateFromDB() {
-        final Set<TopicPartitionInfo> partitions = getLatestPartitions();
+        @Nullable final Set<TopicPartitionInfo> partitions = getLatestPartitions();
         if (partitions == null) {
             log.debug("Nothing to do. Partitions are empty.");
             return;
@@ -77,17 +80,17 @@ public abstract class AbstractPartitionBasedService<T extends EntityId> extends 
         initStateFromDB(partitions);
     }
 
-    private void initStateFromDB(Set<TopicPartitionInfo> partitions) {
+    private void initStateFromDB(@NotNull Set<TopicPartitionInfo> partitions) {
         try {
             log.info("[{}] CURRENT PARTITIONS: {}", getServiceName(), partitionedEntities.keySet());
             log.info("[{}] NEW PARTITIONS: {}", getServiceName(), partitions);
 
-            Set<TopicPartitionInfo> addedPartitions = new HashSet<>(partitions);
+            @NotNull Set<TopicPartitionInfo> addedPartitions = new HashSet<>(partitions);
             addedPartitions.removeAll(partitionedEntities.keySet());
 
             log.info("[{}] ADDED PARTITIONS: {}", getServiceName(), addedPartitions);
 
-            Set<TopicPartitionInfo> removedPartitions = new HashSet<>(partitionedEntities.keySet());
+            @NotNull Set<TopicPartitionInfo> removedPartitions = new HashSet<>(partitionedEntities.keySet());
             removedPartitions.removeAll(partitions);
 
             log.info("[{}] REMOVED PARTITIONS: {}", getServiceName(), removedPartitions);
@@ -119,7 +122,7 @@ public abstract class AbstractPartitionBasedService<T extends EntityId> extends 
             }
 
             if (partitionListChanged) {
-                List<ListenableFuture<?>> partitionFetchFutures = new ArrayList<>();
+                @NotNull List<ListenableFuture<?>> partitionFetchFutures = new ArrayList<>();
                 partitionedFetchTasks.values().forEach(partitionFetchFutures::addAll);
                 DonAsynchron.withCallback(Futures.allAsList(partitionFetchFutures), t -> logPartitions(), this::logFailure);
             }
@@ -148,9 +151,10 @@ public abstract class AbstractPartitionBasedService<T extends EntityId> extends 
     protected void onRepartitionEvent() {
     }
 
+    @Nullable
     private Set<TopicPartitionInfo> getLatestPartitions() {
         log.debug("getLatestPartitionsFromQueue, queue size {}", subscribeQueue.size());
-        Set<TopicPartitionInfo> partitions = null;
+        @Nullable Set<TopicPartitionInfo> partitions = null;
         while (!subscribeQueue.isEmpty()) {
             partitions = subscribeQueue.poll();
             log.debug("polled from the queue partitions {}", partitions);

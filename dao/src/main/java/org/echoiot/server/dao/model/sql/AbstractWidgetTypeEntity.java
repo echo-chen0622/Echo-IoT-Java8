@@ -8,6 +8,7 @@ import org.echoiot.server.common.data.widget.BaseWidgetType;
 import org.echoiot.server.dao.model.BaseEntity;
 import org.echoiot.server.dao.model.BaseSqlEntity;
 import org.echoiot.server.dao.model.ModelConstants;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
@@ -34,7 +35,7 @@ public abstract class AbstractWidgetTypeEntity<T extends BaseWidgetType> extends
         super();
     }
 
-    public AbstractWidgetTypeEntity(BaseWidgetType widgetType) {
+    public AbstractWidgetTypeEntity(@NotNull BaseWidgetType widgetType) {
         if (widgetType.getId() != null) {
             this.setUuid(widgetType.getId().getId());
         }
@@ -47,7 +48,7 @@ public abstract class AbstractWidgetTypeEntity<T extends BaseWidgetType> extends
         this.name = widgetType.getName();
     }
 
-    public AbstractWidgetTypeEntity(AbstractWidgetTypeEntity widgetTypeEntity) {
+    public AbstractWidgetTypeEntity(@NotNull AbstractWidgetTypeEntity widgetTypeEntity) {
         this.setId(widgetTypeEntity.getId());
         this.setCreatedTime(widgetTypeEntity.getCreatedTime());
         this.tenantId = widgetTypeEntity.getTenantId();
@@ -56,8 +57,9 @@ public abstract class AbstractWidgetTypeEntity<T extends BaseWidgetType> extends
         this.name = widgetTypeEntity.getName();
     }
 
+    @NotNull
     protected BaseWidgetType toBaseWidgetType() {
-        BaseWidgetType widgetType = new BaseWidgetType(new WidgetTypeId(getUuid()));
+        @NotNull BaseWidgetType widgetType = new BaseWidgetType(new WidgetTypeId(getUuid()));
         widgetType.setCreatedTime(createdTime);
         if (tenantId != null) {
             widgetType.setTenantId(TenantId.fromUUID(tenantId));

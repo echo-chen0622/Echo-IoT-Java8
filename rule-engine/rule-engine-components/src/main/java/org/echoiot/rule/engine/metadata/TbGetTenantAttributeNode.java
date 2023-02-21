@@ -8,6 +8,7 @@ import org.echoiot.rule.engine.api.TbContext;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.plugin.ComponentType;
+import org.jetbrains.annotations.NotNull;
 
 @Slf4j
 @RuleNode(
@@ -23,8 +24,9 @@ import org.echoiot.server.common.data.plugin.ComponentType;
         configDirective = "tbEnrichmentNodeTenantAttributesConfig")
 public class TbGetTenantAttributeNode extends TbEntityGetAttrNode<TenantId> {
 
+    @NotNull
     @Override
-    protected ListenableFuture<TenantId> findEntityAsync(TbContext ctx, EntityId originator) {
+    protected ListenableFuture<TenantId> findEntityAsync(@NotNull TbContext ctx, EntityId originator) {
         return Futures.immediateFuture(ctx.getTenantId());
     }
 

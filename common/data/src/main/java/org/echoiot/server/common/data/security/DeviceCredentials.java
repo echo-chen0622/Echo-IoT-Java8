@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import org.echoiot.server.common.data.BaseData;
 import org.echoiot.server.common.data.id.DeviceCredentialsId;
 import org.echoiot.server.common.data.id.DeviceId;
+import org.jetbrains.annotations.NotNull;
 
 @ApiModel
 @EqualsAndHashCode(callSuper = true)
@@ -25,7 +26,7 @@ public class DeviceCredentials extends BaseData<DeviceCredentialsId> implements 
         super(id);
     }
 
-    public DeviceCredentials(DeviceCredentials deviceCredentials) {
+    public DeviceCredentials(@NotNull DeviceCredentials deviceCredentials) {
         super(deviceCredentials);
         this.deviceId = deviceCredentials.getDeviceId();
         this.credentialsType = deviceCredentials.getCredentialsType();
@@ -91,6 +92,7 @@ public class DeviceCredentials extends BaseData<DeviceCredentialsId> implements 
         this.credentialsValue = credentialsValue;
     }
 
+    @NotNull
     @Override
     public String toString() {
         return "DeviceCredentials [deviceId=" + deviceId + ", credentialsType=" + credentialsType + ", credentialsId="

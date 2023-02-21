@@ -8,6 +8,7 @@ import org.echoiot.server.common.data.id.AlarmId;
 import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.dao.alarm.AlarmDao;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,19 +28,19 @@ import static org.junit.Assert.assertNotNull;
 @Slf4j
 public class JpaAlarmDaoTest extends AbstractJpaDaoTest {
 
-    @Autowired
+    @Resource
     private AlarmDao alarmDao;
 
 
     @Test
     public void testFindLatestByOriginatorAndType() throws ExecutionException, InterruptedException, TimeoutException {
         log.info("Current system time in millis = {}", System.currentTimeMillis());
-        UUID tenantId = UUID.fromString("d4b68f40-3e96-11e7-a884-898080180d6b");
-        UUID originator1Id = UUID.fromString("d4b68f41-3e96-11e7-a884-898080180d6b");
-        UUID originator2Id = UUID.fromString("d4b68f42-3e96-11e7-a884-898080180d6b");
-        UUID alarm1Id = UUID.fromString("d4b68f43-3e96-11e7-a884-898080180d6b");
-        UUID alarm2Id = UUID.fromString("d4b68f44-3e96-11e7-a884-898080180d6b");
-        UUID alarm3Id = UUID.fromString("d4b68f45-3e96-11e7-a884-898080180d6b");
+        @NotNull UUID tenantId = UUID.fromString("d4b68f40-3e96-11e7-a884-898080180d6b");
+        @NotNull UUID originator1Id = UUID.fromString("d4b68f41-3e96-11e7-a884-898080180d6b");
+        @NotNull UUID originator2Id = UUID.fromString("d4b68f42-3e96-11e7-a884-898080180d6b");
+        @NotNull UUID alarm1Id = UUID.fromString("d4b68f43-3e96-11e7-a884-898080180d6b");
+        @NotNull UUID alarm2Id = UUID.fromString("d4b68f44-3e96-11e7-a884-898080180d6b");
+        @NotNull UUID alarm3Id = UUID.fromString("d4b68f45-3e96-11e7-a884-898080180d6b");
         int alarmCountBeforeSave = alarmDao.find(TenantId.fromUUID(tenantId)).size();
         saveAlarm(alarm1Id, tenantId, originator1Id, "TEST_ALARM");
         //The timestamp of the startTime should be different in order for test to always work
@@ -56,7 +57,7 @@ public class JpaAlarmDaoTest extends AbstractJpaDaoTest {
     }
 
     private void saveAlarm(UUID id, UUID tenantId, UUID deviceId, String type) {
-        Alarm alarm = new Alarm();
+        @NotNull Alarm alarm = new Alarm();
         alarm.setId(new AlarmId(id));
         alarm.setTenantId(TenantId.fromUUID(tenantId));
         alarm.setOriginator(new DeviceId(deviceId));

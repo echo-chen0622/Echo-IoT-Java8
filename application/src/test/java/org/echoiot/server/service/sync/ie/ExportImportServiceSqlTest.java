@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.collect.Streams;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,7 +69,7 @@ import static org.mockito.Mockito.verify;
 @DaoSqlTest
 public class ExportImportServiceSqlTest extends BaseExportImportServiceTest {
 
-    @Autowired
+    @Resource
     private DeviceCredentialsService deviceCredentialsService;
     @SpyBean
     private EntityActionService entityActionService;
@@ -240,21 +242,21 @@ public class ExportImportServiceSqlTest extends BaseExportImportServiceTest {
         Asset asset2 = createAsset(tenantId1, null, assetProfile.getId(), "Asset 2");
         Dashboard dashboard = createDashboard(tenantId1, null, "Dashboard 1");
 
-        String entityAliases = "{\n" +
-                "\t\"23c4185d-1497-9457-30b2-6d91e69a5b2c\": {\n" +
-                "\t\t\"alias\": \"assets\",\n" +
-                "\t\t\"filter\": {\n" +
-                "\t\t\t\"entityList\": [\n" +
-                "\t\t\t\t\"" + asset1.getId().toString() + "\",\n" +
-                "\t\t\t\t\"" + asset2.getId().toString() + "\"\n" +
-                "\t\t\t],\n" +
-                "\t\t\t\"entityType\": \"ASSET\",\n" +
-                "\t\t\t\"resolveMultiple\": true,\n" +
-                "\t\t\t\"type\": \"entityList\"\n" +
-                "\t\t},\n" +
-                "\t\t\"id\": \"23c4185d-1497-9457-30b2-6d91e69a5b2c\"\n" +
-                "\t}\n" +
-                "}";
+        @NotNull String entityAliases = "{\n" +
+                                        "\t\"23c4185d-1497-9457-30b2-6d91e69a5b2c\": {\n" +
+                                        "\t\t\"alias\": \"assets\",\n" +
+                                        "\t\t\"filter\": {\n" +
+                                        "\t\t\t\"entityList\": [\n" +
+                                        "\t\t\t\t\"" + asset1.getId().toString() + "\",\n" +
+                                        "\t\t\t\t\"" + asset2.getId().toString() + "\"\n" +
+                                        "\t\t\t],\n" +
+                                        "\t\t\t\"entityType\": \"ASSET\",\n" +
+                                        "\t\t\t\"resolveMultiple\": true,\n" +
+                                        "\t\t\t\"type\": \"entityList\"\n" +
+                                        "\t\t},\n" +
+                                        "\t\t\"id\": \"23c4185d-1497-9457-30b2-6d91e69a5b2c\"\n" +
+                                        "\t}\n" +
+                                        "}";
         ObjectNode dashboardConfiguration = JacksonUtil.newObjectNode();
         dashboardConfiguration.set("entityAliases", JacksonUtil.toJsonNode(entityAliases));
         dashboardConfiguration.set("description", new TextNode("hallo"));
@@ -272,9 +274,9 @@ public class ExportImportServiceSqlTest extends BaseExportImportServiceTest {
         Asset importedAsset2 = importEntity(tenantAdmin2, asset2ExportData).getSavedEntity();
         Dashboard importedDashboard = importEntity(tenantAdmin2, dashboardExportData).getSavedEntity();
 
-        Set<String> entityAliasEntitiesIds = Streams.stream(importedDashboard.getConfiguration()
-                .get("entityAliases").elements().next().get("filter").get("entityList").elements())
-                .map(JsonNode::asText).collect(Collectors.toSet());
+        @NotNull Set<String> entityAliasEntitiesIds = Streams.stream(importedDashboard.getConfiguration()
+                                                                                      .get("entityAliases").elements().next().get("filter").get("entityList").elements())
+                                                             .map(JsonNode::asText).collect(Collectors.toSet());
         assertThat(entityAliasEntitiesIds).doesNotContain(asset1.getId().toString(), asset2.getId().toString());
         assertThat(entityAliasEntitiesIds).contains(importedAsset1.getId().toString(), importedAsset2.getId().toString());
     }
@@ -283,12 +285,12 @@ public class ExportImportServiceSqlTest extends BaseExportImportServiceTest {
     @Test
     public void testExportImportRuleChain_betweenTenants() throws Exception {
         RuleChain ruleChain = createRuleChain(tenantId1, "Rule chain of tenant 1");
-        RuleChainMetaData metaData = ruleChainService.loadRuleChainMetaData(tenantId1, ruleChain.getId());
+        @Nullable RuleChainMetaData metaData = ruleChainService.loadRuleChainMetaData(tenantId1, ruleChain.getId());
         EntityExportData<RuleChain> exportData = exportEntity(tenantAdmin1, ruleChain.getId());
 
         EntityImportResult<RuleChain> importResult = importEntity(tenantAdmin2, exportData);
         RuleChain importedRuleChain = importResult.getSavedEntity();
-        RuleChainMetaData importedMetaData = ruleChainService.loadRuleChainMetaData(tenantId2, importedRuleChain.getId());
+        @Nullable RuleChainMetaData importedMetaData = ruleChainService.loadRuleChainMetaData(tenantId2, importedRuleChain.getId());
 
         checkImportedEntity(tenantId1, ruleChain, tenantId2, importResult.getSavedEntity());
         checkImportedRuleChainData(ruleChain, metaData, importedRuleChain, importedMetaData);
@@ -297,12 +299,12 @@ public class ExportImportServiceSqlTest extends BaseExportImportServiceTest {
     @Test
     public void testExportImportRuleChain_sameTenant() throws Exception {
         RuleChain ruleChain = createRuleChain(tenantId1, "Rule chain v1.0");
-        RuleChainMetaData metaData = ruleChainService.loadRuleChainMetaData(tenantId1, ruleChain.getId());
+        @Nullable RuleChainMetaData metaData = ruleChainService.loadRuleChainMetaData(tenantId1, ruleChain.getId());
         EntityExportData<RuleChain> exportData = exportEntity(tenantAdmin1, ruleChain.getId());
 
         EntityImportResult<RuleChain> importResult = importEntity(tenantAdmin1, exportData);
         RuleChain importedRuleChain = importResult.getSavedEntity();
-        RuleChainMetaData importedMetaData = ruleChainService.loadRuleChainMetaData(tenantId1, importedRuleChain.getId());
+        @Nullable RuleChainMetaData importedMetaData = ruleChainService.loadRuleChainMetaData(tenantId1, importedRuleChain.getId());
 
         checkImportedEntity(tenantId1, ruleChain, tenantId1, importResult.getSavedEntity());
         checkImportedRuleChainData(ruleChain, metaData, importedRuleChain, importedMetaData);
@@ -325,8 +327,8 @@ public class ExportImportServiceSqlTest extends BaseExportImportServiceTest {
         assertThat(deviceExportData.getRelations().get(0)).matches(entityRelation -> {
             return entityRelation.getFrom().equals(asset.getId()) && entityRelation.getTo().equals(device.getId());
         });
-        ((Asset) assetExportData.getEntity()).setAssetProfileId(null);
-        ((Device) deviceExportData.getEntity()).setDeviceProfileId(null);
+        assetExportData.getEntity().setAssetProfileId(null);
+        deviceExportData.getEntity().setDeviceProfileId(null);
 
         Asset importedAsset = importEntity(tenantAdmin2, assetExportData).getSavedEntity();
         Device importedDevice = importEntity(tenantAdmin2, deviceExportData, EntityImportSettings.builder()
@@ -438,7 +440,7 @@ public class ExportImportServiceSqlTest extends BaseExportImportServiceTest {
 
 
     @SuppressWarnings("rawTypes")
-    private static EntityExportData getAndClone(Map<EntityType, EntityExportData> map, EntityType entityType) {
+    private static EntityExportData getAndClone(@NotNull Map<EntityType, EntityExportData> map, EntityType entityType) {
         return JacksonUtil.clone(map.get(entityType));
     }
 
@@ -453,9 +455,9 @@ public class ExportImportServiceSqlTest extends BaseExportImportServiceTest {
         DeviceProfile deviceProfile = createDeviceProfile(tenantId1, ruleChain.getId(), dashboard.getId(), "Device profile 1");
         Device device = createDevice(tenantId1, null, deviceProfile.getId(), "Device 1");
 
-        Map<EntityType, EntityExportData> entitiesExportData = Stream.of(customer.getId(), asset.getId(), device.getId(),
-                ruleChain.getId(), dashboard.getId(), assetProfile.getId(), deviceProfile.getId())
-                .map(entityId -> {
+        @NotNull Map<EntityType, EntityExportData> entitiesExportData = Stream.of(customer.getId(), asset.getId(), device.getId(),
+                                                                                  ruleChain.getId(), dashboard.getId(), assetProfile.getId(), deviceProfile.getId())
+                                                                              .map(entityId -> {
                     try {
                         return exportEntity(tenantAdmin1, entityId, EntityExportSettings.builder()
                                 .exportCredentials(false)
@@ -464,7 +466,7 @@ public class ExportImportServiceSqlTest extends BaseExportImportServiceTest {
                         throw new RuntimeException(e);
                     }
                 })
-                .collect(Collectors.toMap(EntityExportData::getEntityType, d -> d));
+                                                                              .collect(Collectors.toMap(EntityExportData::getEntityType, d -> d));
 
         Mockito.reset(entityActionService);
         Customer importedCustomer = (Customer) importEntity(tenantAdmin2, getAndClone(entitiesExportData, EntityType.CUSTOMER)).getSavedEntity();
@@ -552,7 +554,7 @@ public class ExportImportServiceSqlTest extends BaseExportImportServiceTest {
         Device device = createDevice(tenantId1, customer.getId(), deviceProfile.getId(), "Device 1");
         EntityView entityView = createEntityView(tenantId1, customer.getId(), device.getId(), "Entity view 1");
 
-        Map<EntityId, EntityId> ids = new HashMap<>();
+        @NotNull Map<EntityId, EntityId> ids = new HashMap<>();
         for (EntityId entityId : List.of(customer.getId(), ruleChain.getId(), dashboard.getId(), assetProfile.getId(), asset.getId(),
                 deviceProfile.getId(), device.getId(), entityView.getId(), ruleChain.getId(), dashboard.getId())) {
             EntityExportData exportData = exportEntity(getSecurityUser(tenantAdmin1), entityId);

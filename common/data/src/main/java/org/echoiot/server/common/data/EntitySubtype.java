@@ -1,6 +1,10 @@
 package org.echoiot.server.common.data;
 
 import org.echoiot.server.common.data.id.TenantId;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 public class EntitySubtype {
 
@@ -46,15 +50,15 @@ public class EntitySubtype {
 
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        EntitySubtype that = (EntitySubtype) o;
+        @NotNull EntitySubtype that = (EntitySubtype) o;
 
-        if (tenantId != null ? !tenantId.equals(that.tenantId) : that.tenantId != null) return false;
+        if (!Objects.equals(tenantId, that.tenantId)) return false;
         if (entityType != that.entityType) return false;
-        return type != null ? type.equals(that.type) : that.type == null;
+        return Objects.equals(type, that.type);
 
     }
 
@@ -66,14 +70,11 @@ public class EntitySubtype {
         return result;
     }
 
+    @NotNull
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("EntitySubtype{");
-        sb.append("tenantId=").append(tenantId);
-        sb.append(", entityType=").append(entityType);
-        sb.append(", type='").append(type).append('\'');
-        sb.append('}');
-        return sb.toString();
+        String sb = "EntitySubtype{" + "tenantId=" + tenantId + ", entityType=" + entityType + ", type='" + type + '\'' + '}';
+        return sb;
     }
 
 }

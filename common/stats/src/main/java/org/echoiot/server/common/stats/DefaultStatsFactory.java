@@ -1,6 +1,8 @@
 package org.echoiot.server.common.stats;
 
 import io.micrometer.core.instrument.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -19,7 +21,7 @@ public class DefaultStatsFactory implements StatsFactory {
 
     private static final Counter STUB_COUNTER = new StubCounter();
 
-    @Autowired
+    @Resource
     private MeterRegistry meterRegistry;
 
     @Value("${metrics.enabled:false}")
@@ -33,7 +35,7 @@ public class DefaultStatsFactory implements StatsFactory {
     @PostConstruct
     public void init() {
         if (!StringUtils.isEmpty(timerPercentilesStr)) {
-            String[] split = timerPercentilesStr.split(",");
+            @NotNull String[] split = timerPercentilesStr.split(",");
             timerPercentiles = new double[split.length];
             for (int i = 0; i < split.length; i++) {
                 timerPercentiles[i] = Double.parseDouble(split[i]);
@@ -42,8 +44,9 @@ public class DefaultStatsFactory implements StatsFactory {
     }
 
 
+    @NotNull
     @Override
-    public StatsCounter createStatsCounter(String key, String statsName) {
+    public StatsCounter createStatsCounter(@NotNull String key, String statsName) {
         return new StatsCounter(
                 new AtomicInteger(0),
                 metricsEnabled ?
@@ -53,8 +56,9 @@ public class DefaultStatsFactory implements StatsFactory {
         );
     }
 
+    @NotNull
     @Override
-    public DefaultCounter createDefaultCounter(String key, String... tags) {
+    public DefaultCounter createDefaultCounter(@NotNull String key, String... tags) {
         return new DefaultCounter(
                 new AtomicInteger(0),
                 metricsEnabled ?
@@ -63,24 +67,27 @@ public class DefaultStatsFactory implements StatsFactory {
         );
     }
 
+    @Nullable
     @Override
-    public <T extends Number> T createGauge(String key, T number, String... tags) {
+    public <T extends Number> T createGauge(@NotNull String key, @NotNull T number, String... tags) {
         return meterRegistry.gauge(key, Tags.of(tags), number);
     }
 
+    @NotNull
     @Override
-    public MessagesStats createMessagesStats(String key) {
-        StatsCounter totalCounter = createStatsCounter(key, TOTAL_MSGS);
-        StatsCounter successfulCounter = createStatsCounter(key, SUCCESSFUL_MSGS);
-        StatsCounter failedCounter = createStatsCounter(key, FAILED_MSGS);
+    public MessagesStats createMessagesStats(@NotNull String key) {
+        @NotNull StatsCounter totalCounter = createStatsCounter(key, TOTAL_MSGS);
+        @NotNull StatsCounter successfulCounter = createStatsCounter(key, SUCCESSFUL_MSGS);
+        @NotNull StatsCounter failedCounter = createStatsCounter(key, FAILED_MSGS);
         return new DefaultMessagesStats(totalCounter, successfulCounter, failedCounter);
     }
 
+    @NotNull
     @Override
-    public Timer createTimer(String key, String... tags) {
-        Timer.Builder timerBuilder = Timer.builder(key)
-                .tags(tags)
-                .publishPercentiles();
+    public Timer createTimer(@NotNull String key, String... tags) {
+        @NotNull Timer.Builder timerBuilder = Timer.builder(key)
+                                                   .tags(tags)
+                                                   .publishPercentiles();
         if (timerPercentiles != null && timerPercentiles.length > 0) {
             timerBuilder.publishPercentiles(timerPercentiles);
         }
@@ -97,6 +104,7 @@ public class DefaultStatsFactory implements StatsFactory {
             return 0;
         }
 
+        @Nullable
         @Override
         public Id getId() {
             return null;

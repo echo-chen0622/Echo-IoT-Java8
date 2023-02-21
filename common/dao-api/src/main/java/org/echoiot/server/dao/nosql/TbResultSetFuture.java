@@ -2,6 +2,7 @@ package org.echoiot.server.dao.nosql;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.SettableFuture;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
@@ -23,7 +24,7 @@ public class TbResultSetFuture implements ListenableFuture<TbResultSet> {
         return getSafe();
     }
 
-    public TbResultSet getUninterruptibly(long timeout, TimeUnit unit) throws TimeoutException {
+    public TbResultSet getUninterruptibly(long timeout, @NotNull TimeUnit unit) throws TimeoutException {
         return getSafe(timeout, unit);
     }
 
@@ -48,7 +49,7 @@ public class TbResultSetFuture implements ListenableFuture<TbResultSet> {
     }
 
     @Override
-    public TbResultSet get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+    public TbResultSet get(long timeout, @NotNull TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
         return mainFuture.get(timeout, unit);
     }
 
@@ -65,7 +66,7 @@ public class TbResultSetFuture implements ListenableFuture<TbResultSet> {
         }
     }
 
-    private TbResultSet getSafe(long timeout, TimeUnit unit) throws TimeoutException {
+    private TbResultSet getSafe(long timeout, @NotNull TimeUnit unit) throws TimeoutException {
         try {
             return mainFuture.get(timeout, unit);
         } catch (InterruptedException | ExecutionException e) {

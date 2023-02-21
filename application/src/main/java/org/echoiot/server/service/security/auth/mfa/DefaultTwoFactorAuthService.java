@@ -18,6 +18,8 @@ import org.echoiot.server.service.security.auth.mfa.config.TwoFaConfigManager;
 import org.echoiot.server.service.security.auth.mfa.provider.TwoFaProvider;
 import org.echoiot.server.service.security.model.SecurityUser;
 import org.echoiot.server.service.security.system.SystemSecurityService;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.stereotype.Service;
@@ -34,8 +36,11 @@ import java.util.concurrent.ConcurrentMap;
 @TbCoreComponent
 public class DefaultTwoFactorAuthService implements TwoFactorAuthService {
 
+    @NotNull
     private final TwoFaConfigManager configManager;
+    @NotNull
     private final SystemSecurityService systemSecurityService;
+    @NotNull
     private final UserService userService;
     private final Map<TwoFaProviderType, TwoFaProvider<TwoFaProviderConfig, TwoFaAccountConfig>> providers = new EnumMap<>(TwoFaProviderType.class);
 
@@ -60,19 +65,19 @@ public class DefaultTwoFactorAuthService implements TwoFactorAuthService {
 
 
     @Override
-    public void prepareVerificationCode(SecurityUser user, TwoFaProviderType providerType, boolean checkLimits) throws Exception {
+    public void prepareVerificationCode(@NotNull SecurityUser user, TwoFaProviderType providerType, boolean checkLimits) throws Exception {
         TwoFaAccountConfig accountConfig = configManager.getTwoFaAccountConfig(user.getTenantId(), user.getId(), providerType)
                 .orElseThrow(() -> ACCOUNT_NOT_CONFIGURED_ERROR);
         prepareVerificationCode(user, accountConfig, checkLimits);
     }
 
     @Override
-    public void prepareVerificationCode(SecurityUser user, TwoFaAccountConfig accountConfig, boolean checkLimits) throws EchoiotException {
+    public void prepareVerificationCode(@NotNull SecurityUser user, @NotNull TwoFaAccountConfig accountConfig, boolean checkLimits) throws EchoiotException {
         PlatformTwoFaSettings twoFaSettings = configManager.getPlatformTwoFaSettings(user.getTenantId(), true)
                                                            .orElseThrow(() -> PROVIDER_NOT_CONFIGURED_ERROR);
         if (checkLimits) {
             Integer minVerificationCodeSendPeriod = twoFaSettings.getMinVerificationCodeSendPeriod();
-            String rateLimit = null;
+            @Nullable String rateLimit = null;
             if (minVerificationCodeSendPeriod != null && minVerificationCodeSendPeriod > 4) {
                 rateLimit = "1:" + minVerificationCodeSendPeriod;
             }
@@ -86,14 +91,14 @@ public class DefaultTwoFactorAuthService implements TwoFactorAuthService {
 
 
     @Override
-    public boolean checkVerificationCode(SecurityUser user, TwoFaProviderType providerType, String verificationCode, boolean checkLimits) throws EchoiotException {
+    public boolean checkVerificationCode(@NotNull SecurityUser user, TwoFaProviderType providerType, String verificationCode, boolean checkLimits) throws EchoiotException {
         TwoFaAccountConfig accountConfig = configManager.getTwoFaAccountConfig(user.getTenantId(), user.getId(), providerType)
                 .orElseThrow(() -> ACCOUNT_NOT_CONFIGURED_ERROR);
         return checkVerificationCode(user, verificationCode, accountConfig, checkLimits);
     }
 
     @Override
-    public boolean checkVerificationCode(SecurityUser user, String verificationCode, TwoFaAccountConfig accountConfig, boolean checkLimits) throws EchoiotException {
+    public boolean checkVerificationCode(@NotNull SecurityUser user, String verificationCode, @NotNull TwoFaAccountConfig accountConfig, boolean checkLimits) throws EchoiotException {
         if (!userService.findUserCredentialsByUserId(user.getTenantId(), user.getId()).isEnabled()) {
             throw new EchoiotException("User is disabled", EchoiotErrorCode.AUTHENTICATION);
         }
@@ -128,10 +133,10 @@ public class DefaultTwoFactorAuthService implements TwoFactorAuthService {
         return verificationSuccess;
     }
 
-    private void checkRateLimits(UserId userId, TwoFaProviderType providerType, String rateLimitConfig,
-                                 ConcurrentMap<UserId, ConcurrentMap<TwoFaProviderType, TbRateLimits>> rateLimits) throws EchoiotException {
+    private void checkRateLimits(UserId userId, TwoFaProviderType providerType, @NotNull String rateLimitConfig,
+                                 @NotNull ConcurrentMap<UserId, ConcurrentMap<TwoFaProviderType, TbRateLimits>> rateLimits) throws EchoiotException {
         if (StringUtils.isNotEmpty(rateLimitConfig)) {
-            ConcurrentMap<TwoFaProviderType, TbRateLimits> providersRateLimits = rateLimits.computeIfAbsent(userId, i -> new ConcurrentHashMap<>());
+            @NotNull ConcurrentMap<TwoFaProviderType, TbRateLimits> providersRateLimits = rateLimits.computeIfAbsent(userId, i -> new ConcurrentHashMap<>());
 
             TbRateLimits rateLimit = providersRateLimits.get(providerType);
             if (rateLimit == null || !rateLimit.getConfiguration().equals(rateLimitConfig)) {
@@ -148,7 +153,7 @@ public class DefaultTwoFactorAuthService implements TwoFactorAuthService {
 
 
     @Override
-    public TwoFaAccountConfig generateNewAccountConfig(User user, TwoFaProviderType providerType) throws EchoiotException {
+    public TwoFaAccountConfig generateNewAccountConfig(@NotNull User user, TwoFaProviderType providerType) throws EchoiotException {
         TwoFaProviderConfig providerConfig = getTwoFaProviderConfig(user.getTenantId(), providerType);
         return getTwoFaProvider(providerType).generateNewAccountConfig(user, providerConfig);
     }
@@ -165,8 +170,8 @@ public class DefaultTwoFactorAuthService implements TwoFactorAuthService {
                 .orElseThrow(() -> PROVIDER_NOT_AVAILABLE_ERROR);
     }
 
-    @Autowired
-    private void setProviders(Collection<TwoFaProvider> providers) {
+    @Resource
+    private void setProviders(@NotNull Collection<TwoFaProvider> providers) {
         providers.forEach(provider -> {
             this.providers.put(provider.getType(), provider);
         });

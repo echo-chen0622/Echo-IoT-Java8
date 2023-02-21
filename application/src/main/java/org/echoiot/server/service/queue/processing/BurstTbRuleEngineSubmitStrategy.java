@@ -3,6 +3,7 @@ package org.echoiot.server.service.queue.processing;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.queue.common.TbProtoQueueMsg;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 import java.util.function.BiConsumer;
@@ -15,7 +16,7 @@ public class BurstTbRuleEngineSubmitStrategy extends AbstractTbRuleEngineSubmitS
     }
 
     @Override
-    public void submitAttempt(BiConsumer<UUID, TbProtoQueueMsg<TransportProtos.ToRuleEngineMsg>> msgConsumer) {
+    public void submitAttempt(@NotNull BiConsumer<UUID, TbProtoQueueMsg<TransportProtos.ToRuleEngineMsg>> msgConsumer) {
         if (log.isDebugEnabled()) {
             log.debug("[{}] submitting [{}] messages to rule engine", queueName, orderedMsgList.size());
         }

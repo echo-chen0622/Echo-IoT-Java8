@@ -32,6 +32,7 @@ import org.echoiot.server.queue.discovery.PartitionService;
 import org.echoiot.server.service.executors.DbCallbackExecutorService;
 import org.echoiot.server.service.partition.AbstractPartitionBasedService;
 import org.echoiot.server.service.telemetry.InternalTelemetryService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
@@ -69,7 +70,7 @@ public class DefaultTbApiUsageStateService extends AbstractPartitionBasedService
     private final DbCallbackExecutorService dbExecutor;
 
     @Lazy
-    @Autowired
+    @Resource
     private InternalTelemetryService tsWsService;
 
     // Entities that should be processed on this server
@@ -87,6 +88,7 @@ public class DefaultTbApiUsageStateService extends AbstractPartitionBasedService
 
     private final Lock updateLock = new ReentrantLock();
 
+    @NotNull
     private final ExecutorService mailExecutor;
 
     public DefaultTbApiUsageStateService(TbClusterService clusterService,
@@ -118,21 +120,23 @@ public class DefaultTbApiUsageStateService extends AbstractPartitionBasedService
         }
     }
 
+    @NotNull
     @Override
     protected String getServiceName() {
         return "API Usage";
     }
 
+    @NotNull
     @Override
     protected String getSchedulerExecutorName() {
         return "api-usage-scheduled";
     }
 
     @Override
-    public void process(TbProtoQueueMsg<ToUsageStatsServiceMsg> msg, TbCallback callback) {
+    public void process(@NotNull TbProtoQueueMsg<ToUsageStatsServiceMsg> msg, @NotNull TbCallback callback) {
         ToUsageStatsServiceMsg statsMsg = msg.getValue();
 
-        TenantId tenantId = TenantId.fromUUID(new UUID(statsMsg.getTenantIdMSB(), statsMsg.getTenantIdLSB()));
+        @NotNull TenantId tenantId = TenantId.fromUUID(new UUID(statsMsg.getTenantIdMSB(), statsMsg.getTenantIdLSB()));
         EntityId entityId;
         if (statsMsg.getCustomerIdMSB() != 0 && statsMsg.getCustomerIdLSB() != 0) {
             entityId = new CustomerId(new UUID(statsMsg.getCustomerIdMSB(), statsMsg.getCustomerIdLSB()));
@@ -144,7 +148,7 @@ public class DefaultTbApiUsageStateService extends AbstractPartitionBasedService
         callback.onSuccess();
     }
 
-    private void processEntityUsageStats(TenantId tenantId, EntityId entityId, List<UsageStatsKVProto> values) {
+    private void processEntityUsageStats(TenantId tenantId, EntityId entityId, @NotNull List<UsageStatsKVProto> values) {
         if (deletedEntities.contains(entityId)) return;
 
         BaseApiUsageState usageState;
@@ -161,9 +165,9 @@ public class DefaultTbApiUsageStateService extends AbstractPartitionBasedService
                 usageState.setHour(newHourTs);
             }
             updatedEntries = new ArrayList<>(ApiUsageRecordKey.values().length);
-            Set<ApiFeature> apiFeatures = new HashSet<>();
-            for (UsageStatsKVProto kvProto : values) {
-                ApiUsageRecordKey recordKey = ApiUsageRecordKey.valueOf(kvProto.getKey());
+            @NotNull Set<ApiFeature> apiFeatures = new HashSet<>();
+            for (@NotNull UsageStatsKVProto kvProto : values) {
+                @NotNull ApiUsageRecordKey recordKey = ApiUsageRecordKey.valueOf(kvProto.getKey());
                 long newValue = usageState.add(recordKey, kvProto.getValue());
                 updatedEntries.add(new BasicTsKvEntry(ts, new LongDataEntry(recordKey.getApiCountKey(), newValue)));
                 long newHourlyValue = usageState.addToHourly(recordKey, kvProto.getValue());
@@ -184,6 +188,7 @@ public class DefaultTbApiUsageStateService extends AbstractPartitionBasedService
         }
     }
 
+    @org.jetbrains.annotations.Nullable
     @Override
     public ApiUsageState getApiUsageState(TenantId tenantId) {
         TenantApiUsageState tenantState = (TenantApiUsageState) myUsageStates.get(tenantId);
@@ -218,7 +223,7 @@ public class DefaultTbApiUsageStateService extends AbstractPartitionBasedService
     @Override
     public void onTenantProfileUpdate(TenantProfileId tenantProfileId) {
         log.info("[{}] On Tenant Profile Update", tenantProfileId);
-        TenantProfile tenantProfile = tenantProfileCache.get(tenantProfileId);
+        @org.jetbrains.annotations.Nullable TenantProfile tenantProfile = tenantProfileCache.get(tenantProfileId);
         updateLock.lock();
         try {
             myUsageStates.values().stream()
@@ -237,7 +242,7 @@ public class DefaultTbApiUsageStateService extends AbstractPartitionBasedService
     @Override
     public void onTenantUpdate(TenantId tenantId) {
         log.info("[{}] On Tenant Update.", tenantId);
-        TenantProfile tenantProfile = tenantProfileCache.get(tenantId);
+        @org.jetbrains.annotations.Nullable TenantProfile tenantProfile = tenantProfileCache.get(tenantId);
         updateLock.lock();
         try {
             TenantApiUsageState state = (TenantApiUsageState) myUsageStates.get(tenantId);
@@ -249,7 +254,7 @@ public class DefaultTbApiUsageStateService extends AbstractPartitionBasedService
         }
     }
 
-    private void updateTenantState(TenantApiUsageState state, TenantProfile profile) {
+    private void updateTenantState(@NotNull TenantApiUsageState state, @NotNull TenantProfile profile) {
         TenantProfileData oldProfileData = state.getTenantProfileData();
         state.setTenantProfileId(profile.getId());
         state.setTenantProfileData(profile.getProfileData());
@@ -261,7 +266,7 @@ public class DefaultTbApiUsageStateService extends AbstractPartitionBasedService
                 oldProfileData.getConfiguration(), profile.getProfileData().getConfiguration());
     }
 
-    private void addEntityState(TopicPartitionInfo tpi, BaseApiUsageState state) {
+    private void addEntityState(@NotNull TopicPartitionInfo tpi, @NotNull BaseApiUsageState state) {
         EntityId entityId = state.getEntityId();
         Set<EntityId> entityIds = partitionedEntities.get(tpi);
         if (entityIds != null) {
@@ -274,10 +279,10 @@ public class DefaultTbApiUsageStateService extends AbstractPartitionBasedService
     }
 
     private void updateProfileThresholds(TenantId tenantId, ApiUsageStateId id,
-                                         TenantProfileConfiguration oldData, TenantProfileConfiguration newData) {
+                                         @org.jetbrains.annotations.Nullable TenantProfileConfiguration oldData, @NotNull TenantProfileConfiguration newData) {
         long ts = System.currentTimeMillis();
-        List<TsKvEntry> profileThresholds = new ArrayList<>();
-        for (ApiUsageRecordKey key : ApiUsageRecordKey.values()) {
+        @NotNull List<TsKvEntry> profileThresholds = new ArrayList<>();
+        for (@NotNull ApiUsageRecordKey key : ApiUsageRecordKey.values()) {
             long newProfileThreshold = newData.getProfileThreshold(key);
             if (oldData == null || oldData.getProfileThreshold(key) != newProfileThreshold) {
                 log.info("[{}] Updating profile threshold [{}]:[{}]", tenantId, key, newProfileThreshold);
@@ -306,12 +311,12 @@ public class DefaultTbApiUsageStateService extends AbstractPartitionBasedService
         myUsageStates.remove(entityId);
     }
 
-    private void persistAndNotify(BaseApiUsageState state, Map<ApiFeature, ApiUsageStateValue> result) {
+    private void persistAndNotify(@NotNull BaseApiUsageState state, @NotNull Map<ApiFeature, ApiUsageStateValue> result) {
         log.info("[{}] Detected update of the API state for {}: {}", state.getEntityId(), state.getEntityType(), result);
         apiUsageStateService.update(state.getApiUsageState());
         clusterService.onApiStateChange(state.getApiUsageState(), null);
         long ts = System.currentTimeMillis();
-        List<TsKvEntry> stateTelemetry = new ArrayList<>();
+        @NotNull List<TsKvEntry> stateTelemetry = new ArrayList<>();
         result.forEach((apiFeature, aState) -> stateTelemetry.add(new BasicTsKvEntry(ts, new StringDataEntry(apiFeature.getApiStateKey(), aState.name()))));
         tsWsService.saveAndNotifyInternal(state.getTenantId(), state.getApiUsageState().getId(), stateTelemetry, VOID_CALLBACK);
 
@@ -333,8 +338,9 @@ public class DefaultTbApiUsageStateService extends AbstractPartitionBasedService
         }
     }
 
-    private ApiUsageStateMailMessage createStateMailMessage(TenantApiUsageState state, ApiFeature apiFeature, ApiUsageStateValue stateValue) {
-        StateChecker checker = getStateChecker(stateValue);
+    @org.jetbrains.annotations.Nullable
+    private ApiUsageStateMailMessage createStateMailMessage(@NotNull TenantApiUsageState state, @NotNull ApiFeature apiFeature, ApiUsageStateValue stateValue) {
+        @NotNull StateChecker checker = getStateChecker(stateValue);
         for (ApiUsageRecordKey apiUsageRecordKey : ApiUsageRecordKey.getKeys(apiFeature)) {
             long threshold = state.getProfileThreshold(apiUsageRecordKey);
             long warnThreshold = state.getProfileWarnThreshold(apiUsageRecordKey);
@@ -346,6 +352,7 @@ public class DefaultTbApiUsageStateService extends AbstractPartitionBasedService
         return null;
     }
 
+    @NotNull
     private StateChecker getStateChecker(ApiUsageStateValue stateValue) {
         if (ApiUsageStateValue.ENABLED.equals(stateValue)) {
             return (t, wt, v) -> true;
@@ -384,15 +391,16 @@ public class DefaultTbApiUsageStateService extends AbstractPartitionBasedService
         }
     }
 
-    private void saveNewCounts(BaseApiUsageState state, List<ApiUsageRecordKey> keys) {
-        List<TsKvEntry> counts = keys.stream()
-                .map(key -> new BasicTsKvEntry(state.getCurrentCycleTs(), new LongDataEntry(key.getApiCountKey(), 0L)))
-                .collect(Collectors.toList());
+    private void saveNewCounts(@NotNull BaseApiUsageState state, @NotNull List<ApiUsageRecordKey> keys) {
+        @NotNull List<TsKvEntry> counts = keys.stream()
+                                              .map(key -> new BasicTsKvEntry(state.getCurrentCycleTs(), new LongDataEntry(key.getApiCountKey(), 0L)))
+                                              .collect(Collectors.toList());
 
         tsWsService.saveAndNotifyInternal(state.getTenantId(), state.getApiUsageState().getId(), counts, VOID_CALLBACK);
     }
 
-    BaseApiUsageState getOrFetchState(TenantId tenantId, EntityId entityId) {
+    @NotNull
+    BaseApiUsageState getOrFetchState(TenantId tenantId, @org.jetbrains.annotations.Nullable EntityId entityId) {
         if (entityId == null || entityId.isNullUid()) {
             entityId = tenantId;
         }
@@ -419,13 +427,13 @@ public class DefaultTbApiUsageStateService extends AbstractPartitionBasedService
             state = new CustomerApiUsageState(storedState);
         }
 
-        List<ApiUsageRecordKey> newCounts = new ArrayList<>();
+        @NotNull List<ApiUsageRecordKey> newCounts = new ArrayList<>();
         try {
             List<TsKvEntry> dbValues = tsService.findAllLatest(tenantId, storedState.getId()).get();
-            for (ApiUsageRecordKey key : ApiUsageRecordKey.values()) {
+            for (@NotNull ApiUsageRecordKey key : ApiUsageRecordKey.values()) {
                 boolean cycleEntryFound = false;
                 boolean hourlyEntryFound = false;
-                for (TsKvEntry tsKvEntry : dbValues) {
+                for (@NotNull TsKvEntry tsKvEntry : dbValues) {
                     if (tsKvEntry.getKey().equals(key.getApiCountKey())) {
                         cycleEntryFound = true;
 
@@ -465,15 +473,16 @@ public class DefaultTbApiUsageStateService extends AbstractPartitionBasedService
                 partitionService.resolve(ServiceType.TB_CORE, entry.getValue().getTenantId(), entry.getKey()).isMyPartition());
     }
 
+    @NotNull
     @Override
-    protected Map<TopicPartitionInfo, List<ListenableFuture<?>>> onAddedPartitions(Set<TopicPartitionInfo> addedPartitions) {
-        var result = new HashMap<TopicPartitionInfo, List<ListenableFuture<?>>>();
+    protected Map<TopicPartitionInfo, List<ListenableFuture<?>>> onAddedPartitions(@NotNull Set<TopicPartitionInfo> addedPartitions) {
+        @NotNull var result = new HashMap<TopicPartitionInfo, List<ListenableFuture<?>>>();
         try {
             log.info("Initializing tenant states.");
             updateLock.lock();
             try {
-                PageDataIterable<Tenant> tenantIterator = new PageDataIterable<>(tenantService::findTenants, 1024);
-                for (Tenant tenant : tenantIterator) {
+                @NotNull PageDataIterable<Tenant> tenantIterator = new PageDataIterable<>(tenantService::findTenants, 1024);
+                for (@NotNull Tenant tenant : tenantIterator) {
                     TopicPartitionInfo tpi = partitionService.resolve(ServiceType.TB_CORE, tenant.getId(), tenant.getId());
                     if (addedPartitions.contains(tpi)) {
                         if (!myUsageStates.containsKey(tenant.getId()) && tpi.isMyPartition()) {

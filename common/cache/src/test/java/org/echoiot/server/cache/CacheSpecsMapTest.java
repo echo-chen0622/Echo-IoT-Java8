@@ -26,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Slf4j
 public class CacheSpecsMapTest {
 
-    @Autowired
+    @Resource
     CacheManager cacheManager;
 
     @Test

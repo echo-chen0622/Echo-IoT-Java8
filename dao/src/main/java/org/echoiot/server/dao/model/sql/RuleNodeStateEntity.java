@@ -11,6 +11,7 @@ import org.echoiot.server.dao.DaoUtil;
 import org.echoiot.server.dao.model.BaseSqlEntity;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.util.mapping.JsonStringType;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -39,7 +40,7 @@ public class RuleNodeStateEntity extends BaseSqlEntity<RuleNodeState> {
     public RuleNodeStateEntity() {
     }
 
-    public RuleNodeStateEntity(RuleNodeState ruleNodeState) {
+    public RuleNodeStateEntity(@NotNull RuleNodeState ruleNodeState) {
         if (ruleNodeState.getId() != null) {
             this.setUuid(ruleNodeState.getUuidId());
         }
@@ -50,9 +51,10 @@ public class RuleNodeStateEntity extends BaseSqlEntity<RuleNodeState> {
         this.stateData = ruleNodeState.getStateData();
     }
 
+    @NotNull
     @Override
     public RuleNodeState toData() {
-        RuleNodeState ruleNode = new RuleNodeState(new RuleNodeStateId(this.getUuid()));
+        @NotNull RuleNodeState ruleNode = new RuleNodeState(new RuleNodeStateId(this.getUuid()));
         ruleNode.setCreatedTime(createdTime);
         ruleNode.setRuleNodeId(new RuleNodeId(ruleNodeId));
         ruleNode.setEntityId(EntityIdFactory.getByTypeAndUuid(entityType, entityId));

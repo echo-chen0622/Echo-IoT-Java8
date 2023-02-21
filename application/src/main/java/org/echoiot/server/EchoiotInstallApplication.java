@@ -2,49 +2,47 @@ package org.echoiot.server;
 
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.install.EchoiotInstallService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.SpringBootConfiguration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 
-import java.util.Arrays;
+import static org.echoiot.common.util.ApplicationUtil.SPRING_CONFIG_NAME_KEY;
+import static org.echoiot.common.util.ApplicationUtil.updateArguments;
 
+/**
+ * 初始化类，用来进行初始化操作，主要是创建数据库，以及初始化数据 demo。
+ * 如果需要加载 demo，需要在程序实参里添加：--install.load_demo=true
+ *
+ * @author Echo
+ */
 @Slf4j
-@SpringBootConfiguration
+@SpringBootApplication
 @ComponentScan({"org.echoiot.server.install",
-        "org.echoiot.server.service.component",
-        "org.echoiot.server.service.install",
-        "org.echoiot.server.service.security.auth.jwt.settings",
-        "org.echoiot.server.dao",
-        "org.echoiot.server.common.stats",
-        "org.echoiot.server.common.transport.config.ssl",
-        "org.echoiot.server.cache",
-        "org.echoiot.server.springfox"
-})
+                "org.echoiot.server.service.component",
+                "org.echoiot.server.service.install",
+                "org.echoiot.server.service.security.auth.jwt.settings",
+                "org.echoiot.server.dao",
+                "org.echoiot.server.common.stats",
+                "org.echoiot.server.common.transport.config.ssl",
+                "org.echoiot.server.cache",
+                "org.echoiot.server.springfox"})
 public class EchoiotInstallApplication {
 
-    private static final String SPRING_CONFIG_NAME_KEY = "--spring.config.name";
+    /**
+     * 默认的配置文件名称
+     */
     private static final String DEFAULT_SPRING_CONFIG_PARAM = SPRING_CONFIG_NAME_KEY + "=" + "echoiot";
 
-    public static void main(String[] args) {
-        try {
-            SpringApplication application = new SpringApplication(EchoiotInstallApplication.class);
-            application.setAdditionalProfiles("install");
-            ConfigurableApplicationContext context = application.run(updateArguments(args));
-            context.getBean(EchoiotInstallService.class).performInstall();
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            System.exit(1);
-        }
+    public static void main(@NotNull String[] args) throws Exception {
+        @NotNull SpringApplication application = new SpringApplication(EchoiotInstallApplication.class);
+        // 设置启动参数，设置配置文件名称
+        application.setAdditionalProfiles("install");
+        // 启动应用
+        ConfigurableApplicationContext context = application.run(updateArguments(args, DEFAULT_SPRING_CONFIG_PARAM));
+        // 获取初始化类，并执行安装
+        context.getBean(EchoiotInstallService.class).performInstall();
     }
 
-    private static String[] updateArguments(String[] args) {
-        if (Arrays.stream(args).noneMatch(arg -> arg.startsWith(SPRING_CONFIG_NAME_KEY))) {
-            String[] modifiedArgs = new String[args.length + 1];
-            System.arraycopy(args, 0, modifiedArgs, 0, args.length);
-            modifiedArgs[args.length] = DEFAULT_SPRING_CONFIG_PARAM;
-            return modifiedArgs;
-        }
-        return args;
-    }
 }

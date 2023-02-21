@@ -7,6 +7,7 @@ import io.netty.handler.codec.haproxy.HAProxyMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.transport.mqtt.MqttTransportContext;
 import org.echoiot.server.transport.mqtt.MqttTransportService;
+import org.jetbrains.annotations.NotNull;
 
 import java.net.InetSocketAddress;
 
@@ -14,19 +15,19 @@ import java.net.InetSocketAddress;
 public class ProxyIpFilter extends ChannelInboundHandlerAdapter {
 
 
-    private MqttTransportContext context;
+    private final MqttTransportContext context;
 
     public ProxyIpFilter(MqttTransportContext context) {
         this.context = context;
     }
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+    public void channelRead(@NotNull ChannelHandlerContext ctx, Object msg) throws Exception {
         log.trace("[{}] Received msg: {}", ctx.channel().id(), msg);
         if (msg instanceof HAProxyMessage) {
-            HAProxyMessage proxyMsg = (HAProxyMessage) msg;
+            @NotNull HAProxyMessage proxyMsg = (HAProxyMessage) msg;
             if (proxyMsg.sourceAddress() != null && proxyMsg.sourcePort() > 0) {
-                InetSocketAddress address = new InetSocketAddress(proxyMsg.sourceAddress(), proxyMsg.sourcePort());
+                @NotNull InetSocketAddress address = new InetSocketAddress(proxyMsg.sourceAddress(), proxyMsg.sourcePort());
                 if (!context.checkAddress(address)) {
                     closeChannel(ctx);
                 } else {
@@ -42,7 +43,7 @@ public class ProxyIpFilter extends ChannelInboundHandlerAdapter {
         }
     }
 
-    private void closeChannel(ChannelHandlerContext ctx) {
+    private void closeChannel(@NotNull ChannelHandlerContext ctx) {
         while (ctx.pipeline().last() != this) {
             ChannelHandler handler = ctx.pipeline().removeLast();
             if (handler instanceof ChannelInboundHandlerAdapter) {

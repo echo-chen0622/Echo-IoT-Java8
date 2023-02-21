@@ -14,6 +14,7 @@ import org.echoiot.server.dao.model.BaseSqlEntity;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.model.SearchTextEntity;
 import org.echoiot.server.dao.util.mapping.JsonStringType;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -61,7 +62,7 @@ public class UserEntity extends BaseSqlEntity<User> implements SearchTextEntity<
     public UserEntity() {
     }
 
-    public UserEntity(User user) {
+    public UserEntity(@NotNull User user) {
         if (user.getId() != null) {
             this.setUuid(user.getId().getId());
         }
@@ -89,9 +90,10 @@ public class UserEntity extends BaseSqlEntity<User> implements SearchTextEntity<
         this.searchText = searchText;
     }
 
+    @NotNull
     @Override
     public User toData() {
-        User user = new User(new UserId(this.getUuid()));
+        @NotNull User user = new User(new UserId(this.getUuid()));
         user.setCreatedTime(createdTime);
         user.setAuthority(authority);
         if (tenantId != null) {

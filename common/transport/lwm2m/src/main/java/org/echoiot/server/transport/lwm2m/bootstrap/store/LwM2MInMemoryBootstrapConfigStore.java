@@ -7,6 +7,7 @@ import org.eclipse.leshan.server.bootstrap.BootstrapSession;
 import org.eclipse.leshan.server.bootstrap.ConfigurationChecker;
 import org.eclipse.leshan.server.bootstrap.InMemoryBootstrapConfigStore;
 import org.eclipse.leshan.server.bootstrap.InvalidConfigurationException;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import org.echoiot.server.queue.util.TbLwM2mBootstrapTransportComponent;
 
@@ -40,7 +41,7 @@ public class LwM2MInMemoryBootstrapConfigStore extends InMemoryBootstrapConfigSt
     }
 
     @Override
-    public void add(String endpoint, BootstrapConfig config) throws InvalidConfigurationException {
+    public void add(String endpoint, @NotNull BootstrapConfig config) throws InvalidConfigurationException {
         writeLock.lock();
         try {
             addToStore(endpoint, config);
@@ -59,7 +60,7 @@ public class LwM2MInMemoryBootstrapConfigStore extends InMemoryBootstrapConfigSt
         }
     }
 
-    public void addToStore(String endpoint, BootstrapConfig config) throws InvalidConfigurationException {
+    public void addToStore(String endpoint, @NotNull BootstrapConfig config) throws InvalidConfigurationException {
         configChecker.verify(config);
         // Check PSK identity uniqueness for bootstrap server:
         PskByServer pskToAdd = getBootstrapPskIdentity(config);

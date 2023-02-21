@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.echoiot.server.common.data.ota.OtaPackageType;
 import org.echoiot.server.transport.lwm2m.server.ota.LwM2MClientOtaInfo;
+import org.jetbrains.annotations.NotNull;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -20,13 +21,14 @@ public class LwM2MClientFwOtaInfo extends LwM2MClientOtaInfo<LwM2MFirmwareUpdate
         super(endpoint, baseUrl, strategy);
     }
 
+    @NotNull
     @JsonIgnore
     @Override
     public OtaPackageType getType() {
         return OtaPackageType.FIRMWARE;
     }
 
-    public void update(FirmwareUpdateResult result) {
+    public void update(@NotNull FirmwareUpdateResult result) {
         this.result = result;
         switch (result) {
             case INITIAL:

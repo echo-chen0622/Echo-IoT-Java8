@@ -9,6 +9,7 @@ import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.common.data.query.EntityDataPageLink;
 import org.echoiot.server.common.data.query.EntityKey;
 import org.echoiot.server.common.data.query.EntityKeyType;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.UUID;
@@ -25,7 +26,7 @@ public class Validator {
      * @param entityId          the entityId
      * @param errorMessage the error message for exception
      */
-    public static void validateEntityId(EntityId entityId, String errorMessage) {
+    public static void validateEntityId(@NotNull EntityId entityId, String errorMessage) {
         if (entityId == null || entityId.getId() == null) {
             throw new IncorrectParameterException(errorMessage);
         }
@@ -38,7 +39,7 @@ public class Validator {
      * @param val          the val
      * @param errorMessage the error message for exception
      */
-    public static void validateString(String val, String errorMessage) {
+    public static void validateString(@NotNull String val, String errorMessage) {
         if (val == null || val.isEmpty()) {
             throw new IncorrectParameterException(errorMessage);
         }
@@ -65,7 +66,7 @@ public class Validator {
      * @param id           the id
      * @param errorMessage the error message for exception
      */
-    public static void validateId(UUID id, String errorMessage) {
+    public static void validateId(@NotNull UUID id, String errorMessage) {
         if (id == null) {
             throw new IncorrectParameterException(errorMessage);
         }
@@ -79,7 +80,7 @@ public class Validator {
      * @param id           the id
      * @param errorMessage the error message for exception
      */
-    public static void validateId(UUIDBased id, String errorMessage) {
+    public static void validateId(@NotNull UUIDBased id, String errorMessage) {
         if (id == null || id.getId() == null) {
             throw new IncorrectParameterException(errorMessage);
         }
@@ -92,11 +93,11 @@ public class Validator {
      * @param ids          the list of ids
      * @param errorMessage the error message for exception
      */
-    public static void validateIds(List<? extends UUIDBased> ids, String errorMessage) {
+    public static void validateIds(@NotNull List<? extends UUIDBased> ids, String errorMessage) {
         if (ids == null || ids.isEmpty()) {
             throw new IncorrectParameterException(errorMessage);
         } else {
-            for (UUIDBased id : ids) {
+            for (@NotNull UUIDBased id : ids) {
                 validateId(id, errorMessage);
             }
         }
@@ -108,7 +109,7 @@ public class Validator {
      *
      * @param pageLink     the page link
      */
-    public static void validatePageLink(PageLink pageLink) {
+    public static void validatePageLink(@NotNull PageLink pageLink) {
         if (pageLink == null) {
             throw new IncorrectParameterException("Page link must be specified.");
         } else if (pageLink.getPageSize() < 1) {
@@ -122,7 +123,7 @@ public class Validator {
         }
     }
 
-    public static void validateEntityDataPageLink(EntityDataPageLink pageLink) {
+    public static void validateEntityDataPageLink(@NotNull EntityDataPageLink pageLink) {
         if (pageLink == null) {
             throw new IncorrectParameterException("Entity Data Page link must be specified.");
         } else if (pageLink.getPageSize() < 1) {
@@ -130,7 +131,7 @@ public class Validator {
         } else if (pageLink.getPage() < 0) {
             throw new IncorrectParameterException("Incorrect entity data page link page '" + pageLink.getPage() + "'. Page must be positive integer.");
         } else if (pageLink.getSortOrder() != null && pageLink.getSortOrder().getKey() != null) {
-            EntityKey sortKey = pageLink.getSortOrder().getKey();
+            @NotNull EntityKey sortKey = pageLink.getSortOrder().getKey();
             if ((sortKey.getType() == EntityKeyType.ENTITY_FIELD || sortKey.getType() == EntityKeyType.ALARM_FIELD)
                     && !isValidProperty(sortKey.getKey())) {
                 throw new IncorrectParameterException("Invalid entity data page link sort property");

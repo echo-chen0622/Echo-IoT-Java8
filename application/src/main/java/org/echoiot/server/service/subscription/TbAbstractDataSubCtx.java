@@ -17,6 +17,7 @@ import org.echoiot.server.common.data.query.EntityKeyType;
 import org.echoiot.server.common.data.query.TsValue;
 import org.echoiot.server.service.telemetry.TelemetryWebSocketService;
 import org.echoiot.server.service.telemetry.TelemetryWebSocketSessionRef;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,6 +32,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public abstract class TbAbstractDataSubCtx<T extends AbstractDataQuery<? extends EntityDataPageLink>> extends TbAbstractSubCtx<T> {
 
+    @NotNull
     protected final Map<Integer, EntityId> subToEntityIdMap;
     @Getter
     protected PageData<EntityData> data;
@@ -72,7 +74,7 @@ public abstract class TbAbstractDataSubCtx<T extends AbstractDataQuery<? extends
         } else {
             oldDataMap = Collections.emptyMap();
         }
-        Map<EntityId, EntityData> newDataMap = newData.getData().stream().collect(Collectors.toMap(EntityData::getEntityId, Function.identity(), (a, b) -> a));
+        @NotNull Map<EntityId, EntityData> newDataMap = newData.getData().stream().collect(Collectors.toMap(EntityData::getEntityId, Function.identity(), (a, b) -> a));
         if (oldDataMap.size() == newDataMap.size() && oldDataMap.keySet().equals(newDataMap.keySet())) {
             log.trace("[{}][{}] No updates to entity data found", sessionRef.getSessionId(), cmdId);
         } else {
@@ -104,15 +106,15 @@ public abstract class TbAbstractDataSubCtx<T extends AbstractDataQuery<? extends
         }
     }
 
-    public void createLatestValuesSubscriptions(List<EntityKey> keys) {
+    public void createLatestValuesSubscriptions(@NotNull List<EntityKey> keys) {
         createSubscriptions(keys, true, 0, 0);
     }
 
-    public void createTimeSeriesSubscriptions(Map<EntityData, Map<String, Long>> entityKeyStates, long startTs, long endTs) {
+    public void createTimeSeriesSubscriptions(@NotNull Map<EntityData, Map<String, Long>> entityKeyStates, long startTs, long endTs) {
         createTimeSeriesSubscriptions(entityKeyStates, startTs, endTs, false);
     }
 
-    public void createTimeSeriesSubscriptions(Map<EntityData, Map<String, Long>> entityKeyStates, long startTs, long endTs, boolean resultToLatestValues) {
+    public void createTimeSeriesSubscriptions(@NotNull Map<EntityData, Map<String, Long>> entityKeyStates, long startTs, long endTs, boolean resultToLatestValues) {
         entityKeyStates.forEach((entityData, keyStates) -> {
             int subIdx = sessionRef.getSessionSubIdSeq().incrementAndGet();
             subToEntityIdMap.put(subIdx, entityData.getEntityId());
@@ -121,22 +123,24 @@ public abstract class TbAbstractDataSubCtx<T extends AbstractDataQuery<? extends
         });
     }
 
-    private void createSubscriptions(List<EntityKey> keys, boolean latestValues, long startTs, long endTs) {
-        Map<EntityKeyType, List<EntityKey>> keysByType = getEntityKeyByTypeMap(keys);
-        for (EntityData entityData : data.getData()) {
-            List<TbSubscription> entitySubscriptions = addSubscriptions(entityData, keysByType, latestValues, startTs, endTs);
+    private void createSubscriptions(@NotNull List<EntityKey> keys, boolean latestValues, long startTs, long endTs) {
+        @NotNull Map<EntityKeyType, List<EntityKey>> keysByType = getEntityKeyByTypeMap(keys);
+        for (@NotNull EntityData entityData : data.getData()) {
+            @NotNull List<TbSubscription> entitySubscriptions = addSubscriptions(entityData, keysByType, latestValues, startTs, endTs);
             entitySubscriptions.forEach(localSubscriptionService::addSubscription);
         }
     }
 
-    protected Map<EntityKeyType, List<EntityKey>> getEntityKeyByTypeMap(List<EntityKey> keys) {
-        Map<EntityKeyType, List<EntityKey>> keysByType = new HashMap<>();
+    @NotNull
+    protected Map<EntityKeyType, List<EntityKey>> getEntityKeyByTypeMap(@NotNull List<EntityKey> keys) {
+        @NotNull Map<EntityKeyType, List<EntityKey>> keysByType = new HashMap<>();
         keys.forEach(key -> keysByType.computeIfAbsent(key.getType(), k -> new ArrayList<>()).add(key));
         return keysByType;
     }
 
-    protected List<TbSubscription> addSubscriptions(EntityData entityData, Map<EntityKeyType, List<EntityKey>> keysByType, boolean latestValues, long startTs, long endTs) {
-        List<TbSubscription> subscriptionList = new ArrayList<>();
+    @NotNull
+    protected List<TbSubscription> addSubscriptions(@NotNull EntityData entityData, @NotNull Map<EntityKeyType, List<EntityKey>> keysByType, boolean latestValues, long startTs, long endTs) {
+        @NotNull List<TbSubscription> subscriptionList = new ArrayList<>();
         keysByType.forEach((keysType, keysList) -> {
             int subIdx = sessionRef.getSessionSubIdSeq().incrementAndGet();
             subToEntityIdMap.put(subIdx, entityData.getEntityId());
@@ -161,8 +165,8 @@ public abstract class TbAbstractDataSubCtx<T extends AbstractDataQuery<? extends
         return subscriptionList;
     }
 
-    private TbSubscription createAttrSub(EntityData entityData, int subIdx, EntityKeyType keysType, TbAttributeSubscriptionScope scope, List<EntityKey> subKeys) {
-        Map<String, Long> keyStates = buildKeyStats(entityData, keysType, subKeys, true);
+    private TbSubscription createAttrSub(@NotNull EntityData entityData, int subIdx, EntityKeyType keysType, TbAttributeSubscriptionScope scope, @NotNull List<EntityKey> subKeys) {
+        @NotNull Map<String, Long> keyStates = buildKeyStats(entityData, keysType, subKeys, true);
         log.trace("[{}][{}][{}] Creating attributes subscription for [{}] with keys: {}", serviceId, cmdId, subIdx, entityData.getEntityId(), keyStates);
         return TbAttributeSubscription.builder()
                 .serviceId(serviceId)
@@ -177,8 +181,8 @@ public abstract class TbAbstractDataSubCtx<T extends AbstractDataQuery<? extends
                 .build();
     }
 
-    private TbSubscription createTsSub(EntityData entityData, int subIdx, List<EntityKey> subKeys, boolean latestValues, long startTs, long endTs) {
-        Map<String, Long> keyStates = buildKeyStats(entityData, EntityKeyType.TIME_SERIES, subKeys, latestValues);
+    private TbSubscription createTsSub(@NotNull EntityData entityData, int subIdx, @NotNull List<EntityKey> subKeys, boolean latestValues, long startTs, long endTs) {
+        @NotNull Map<String, Long> keyStates = buildKeyStats(entityData, EntityKeyType.TIME_SERIES, subKeys, latestValues);
         if (!latestValues && entityData.getTimeseries() != null) {
             entityData.getTimeseries().forEach((k, v) -> {
                 long ts = Arrays.stream(v).map(TsValue::getTs).max(Long::compareTo).orElse(0L);
@@ -192,11 +196,11 @@ public abstract class TbAbstractDataSubCtx<T extends AbstractDataQuery<? extends
         return createTsSub(entityData, subIdx, latestValues, startTs, endTs, keyStates);
     }
 
-    private TbTimeseriesSubscription createTsSub(EntityData entityData, int subIdx, boolean latestValues, long startTs, long endTs, Map<String, Long> keyStates) {
+    private TbTimeseriesSubscription createTsSub(@NotNull EntityData entityData, int subIdx, boolean latestValues, long startTs, long endTs, Map<String, Long> keyStates) {
         return createTsSub(entityData, subIdx, latestValues, startTs, endTs, keyStates, latestValues);
     }
 
-    private TbTimeseriesSubscription createTsSub(EntityData entityData, int subIdx, boolean latestValues, long startTs, long endTs, Map<String, Long> keyStates, boolean resultToLatestValues) {
+    private TbTimeseriesSubscription createTsSub(@NotNull EntityData entityData, int subIdx, boolean latestValues, long startTs, long endTs, Map<String, Long> keyStates, boolean resultToLatestValues) {
         log.trace("[{}][{}][{}] Creating time-series subscription for [{}] with keys: {}", serviceId, cmdId, subIdx, entityData.getEntityId(), keyStates);
         return TbTimeseriesSubscription.builder()
                 .serviceId(serviceId)
@@ -217,8 +221,9 @@ public abstract class TbAbstractDataSubCtx<T extends AbstractDataQuery<? extends
         sendWsMsg(sessionId, subscriptionUpdate, keyType, true);
     }
 
-    private Map<String, Long> buildKeyStats(EntityData entityData, EntityKeyType keysType, List<EntityKey> subKeys, boolean latestValues) {
-        Map<String, Long> keyStates = new HashMap<>();
+    @NotNull
+    private Map<String, Long> buildKeyStats(@NotNull EntityData entityData, EntityKeyType keysType, @NotNull List<EntityKey> subKeys, boolean latestValues) {
+        @NotNull Map<String, Long> keyStates = new HashMap<>();
         subKeys.forEach(key -> keyStates.put(key.getKey(), 0L));
         if (latestValues && entityData.getLatest() != null) {
             Map<String, TsValue> currentValues = entityData.getLatest().get(keysType);

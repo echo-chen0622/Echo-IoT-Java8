@@ -15,6 +15,7 @@ import org.echoiot.server.queue.rabbitmq.TbRabbitMqSettings;
 import org.echoiot.server.queue.sqs.TbAwsSqsAdmin;
 import org.echoiot.server.queue.sqs.TbAwsSqsQueueAttributes;
 import org.echoiot.server.queue.sqs.TbAwsSqsSettings;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.Bean;
@@ -48,36 +49,42 @@ public class RuleEngineTbQueueAdminFactory {
     @Autowired(required = false)
     private TbServiceBusSettings serviceBusSettings;
 
+    @NotNull
     @ConditionalOnExpression("'${queue.type:null}'=='kafka'")
     @Bean
     public TbQueueAdmin createKafkaAdmin() {
         return new TbKafkaAdmin(kafkaSettings, kafkaTopicConfigs.getRuleEngineConfigs());
     }
 
+    @NotNull
     @ConditionalOnExpression("'${queue.type:null}'=='aws-sqs'")
     @Bean
     public TbQueueAdmin createAwsSqsAdmin() {
         return new TbAwsSqsAdmin(awsSqsSettings, awsSqsQueueAttributes.getRuleEngineAttributes());
     }
 
+    @NotNull
     @ConditionalOnExpression("'${queue.type:null}'=='pubsub'")
     @Bean
     public TbQueueAdmin createPubSubAdmin() {
         return new TbPubSubAdmin(pubSubSettings, pubSubSubscriptionSettings.getRuleEngineSettings());
     }
 
+    @NotNull
     @ConditionalOnExpression("'${queue.type:null}'=='rabbitmq'")
     @Bean
     public TbQueueAdmin createRabbitMqAdmin() {
         return new TbRabbitMqAdmin(rabbitMqSettings, rabbitMqQueueArguments.getRuleEngineArgs());
     }
 
+    @NotNull
     @ConditionalOnExpression("'${queue.type:null}'=='service-bus'")
     @Bean
     public TbQueueAdmin createServiceBusAdmin() {
         return new TbServiceBusAdmin(serviceBusSettings, serviceBusQueueConfigs.getRuleEngineConfigs());
     }
 
+    @NotNull
     @ConditionalOnExpression("'${queue.type:null}'=='in-memory'")
     @Bean
     public TbQueueAdmin createInMemoryAdmin() {

@@ -1,5 +1,7 @@
 package org.echoiot.server.transport.lwm2m.server.ota.firmware;
 
+import org.jetbrains.annotations.NotNull;
+
 public enum LwM2MFirmwareUpdateStrategy {
     OBJ_5_BINARY(1, "ObjectId 5, Binary"),
     OBJ_5_TEMP_URL(2, "ObjectId 5, URI"),
@@ -13,8 +15,9 @@ public enum LwM2MFirmwareUpdateStrategy {
         this.type = type;
     }
 
+    @NotNull
     public static LwM2MFirmwareUpdateStrategy fromStrategyFwByType(String type) {
-        for (LwM2MFirmwareUpdateStrategy to : LwM2MFirmwareUpdateStrategy.values()) {
+        for (@NotNull LwM2MFirmwareUpdateStrategy to : LwM2MFirmwareUpdateStrategy.values()) {
             if (to.type.equals(type)) {
                 return to;
             }
@@ -22,8 +25,9 @@ public enum LwM2MFirmwareUpdateStrategy {
         throw new IllegalArgumentException(String.format("Unsupported FW State type  : %s", type));
     }
 
+    @NotNull
     public static LwM2MFirmwareUpdateStrategy fromStrategyFwByCode(int code) {
-        for (LwM2MFirmwareUpdateStrategy to : LwM2MFirmwareUpdateStrategy.values()) {
+        for (@NotNull LwM2MFirmwareUpdateStrategy to : LwM2MFirmwareUpdateStrategy.values()) {
             if (to.code == code) {
                 return to;
             }

@@ -4,6 +4,7 @@ import com.google.protobuf.ByteString;
 import org.echoiot.server.common.data.OtaPackage;
 import org.echoiot.server.common.data.id.OtaPackageId;
 import org.echoiot.server.queue.util.TbCoreComponent;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.gen.edge.v1.OtaPackageUpdateMsg;
@@ -13,7 +14,8 @@ import org.echoiot.server.gen.edge.v1.UpdateMsgType;
 @TbCoreComponent
 public class OtaPackageMsgConstructor {
 
-    public OtaPackageUpdateMsg constructOtaPackageUpdatedMsg(UpdateMsgType msgType, OtaPackage otaPackage) {
+    @NotNull
+    public OtaPackageUpdateMsg constructOtaPackageUpdatedMsg(UpdateMsgType msgType, @NotNull OtaPackage otaPackage) {
         OtaPackageUpdateMsg.Builder builder = OtaPackageUpdateMsg.newBuilder()
                 .setMsgType(msgType)
                 .setIdMSB(otaPackage.getId().getId().getMostSignificantBits())
@@ -55,7 +57,8 @@ public class OtaPackageMsgConstructor {
         return builder.build();
     }
 
-    public OtaPackageUpdateMsg constructOtaPackageDeleteMsg(OtaPackageId otaPackageId) {
+    @NotNull
+    public OtaPackageUpdateMsg constructOtaPackageDeleteMsg(@NotNull OtaPackageId otaPackageId) {
         return OtaPackageUpdateMsg.newBuilder()
                 .setMsgType(UpdateMsgType.ENTITY_DELETED_RPC_MESSAGE)
                 .setIdMSB(otaPackageId.getId().getMostSignificantBits())

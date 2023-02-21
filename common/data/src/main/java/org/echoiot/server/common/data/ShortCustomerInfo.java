@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.validation.NoXss;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by igor on 2/27/18.
@@ -30,11 +32,11 @@ public class ShortCustomerInfo {
     private boolean isPublic;
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ShortCustomerInfo that = (ShortCustomerInfo) o;
+        @NotNull ShortCustomerInfo that = (ShortCustomerInfo) o;
 
         return customerId.equals(that.customerId);
 

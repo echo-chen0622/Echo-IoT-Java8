@@ -2,6 +2,7 @@ package org.echoiot.common.util;
 
 import lombok.NonNull;
 import lombok.ToString;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinWorkerThread;
@@ -9,6 +10,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @ToString
 public class EchoiotForkJoinWorkerThreadFactory implements ForkJoinPool.ForkJoinWorkerThreadFactory {
+    @NotNull
     private final String namePrefix;
     private final AtomicLong threadNumber = new AtomicLong(1);
 
@@ -16,6 +18,7 @@ public class EchoiotForkJoinWorkerThreadFactory implements ForkJoinPool.ForkJoin
         this.namePrefix = namePrefix;
     }
 
+    @NotNull
     @Override
     public final ForkJoinWorkerThread newThread(ForkJoinPool pool) {
         ForkJoinWorkerThread thread = ForkJoinPool.defaultForkJoinWorkerThreadFactory.newThread(pool);

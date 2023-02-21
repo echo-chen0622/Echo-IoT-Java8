@@ -23,7 +23,7 @@ public class DefaultEntityQueryRepositoryTest {
     @MockBean
     DefaultQueryLogComponent queryLog;
 
-    @Autowired
+    @Resource
     DefaultEntityQueryRepository repo;
 
     /*

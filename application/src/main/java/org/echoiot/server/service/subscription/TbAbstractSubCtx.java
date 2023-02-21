@@ -19,6 +19,8 @@ import org.echoiot.server.service.telemetry.TelemetryWebSocketService;
 import org.echoiot.server.service.telemetry.TelemetryWebSocketSessionRef;
 import org.echoiot.server.service.telemetry.cmd.v2.CmdUpdate;
 import org.echoiot.server.service.telemetry.sub.TelemetrySubscriptionUpdate;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -41,7 +43,9 @@ public abstract class TbAbstractSubCtx<T extends EntityCountQuery> {
     protected final AttributesService attributesService;
     protected final TelemetryWebSocketSessionRef sessionRef;
     protected final int cmdId;
+    @NotNull
     protected final Set<Integer> subToDynamicValueKeySet;
+    @NotNull
     @Getter
     protected final Map<DynamicValueKey, List<DynamicValue>> dynamicValues;
     @Getter
@@ -67,20 +71,20 @@ public abstract class TbAbstractSubCtx<T extends EntityCountQuery> {
         this.dynamicValues = new ConcurrentHashMap<>();
     }
 
-    public void setAndResolveQuery(T query) {
+    public void setAndResolveQuery(@Nullable T query) {
         dynamicValues.clear();
         this.query = query;
         if (query != null && query.getKeyFilters() != null) {
-            for (KeyFilter filter : query.getKeyFilters()) {
+            for (@NotNull KeyFilter filter : query.getKeyFilters()) {
                 registerDynamicValues(filter.getPredicate());
             }
         }
         resolve(getTenantId(), getCustomerId(), getUserId());
     }
 
-    public void resolve(TenantId tenantId, CustomerId customerId, UserId userId) {
-        List<ListenableFuture<DynamicValueKeySub>> futures = new ArrayList<>();
-        for (DynamicValueKey key : dynamicValues.keySet()) {
+    public void resolve(TenantId tenantId, @Nullable CustomerId customerId, @Nullable UserId userId) {
+        @NotNull List<ListenableFuture<DynamicValueKeySub>> futures = new ArrayList<>();
+        for (@NotNull DynamicValueKey key : dynamicValues.keySet()) {
             switch (key.getSourceType()) {
                 case CURRENT_TENANT:
                     futures.add(resolveEntityValue(tenantId, tenantId, key));
@@ -98,12 +102,12 @@ public abstract class TbAbstractSubCtx<T extends EntityCountQuery> {
             }
         }
         try {
-            Map<EntityId, Map<String, DynamicValueKeySub>> tmpSubMap = new HashMap<>();
-            for (DynamicValueKeySub sub : Futures.successfulAsList(futures).get()) {
+            @NotNull Map<EntityId, Map<String, DynamicValueKeySub>> tmpSubMap = new HashMap<>();
+            for (@NotNull DynamicValueKeySub sub : Futures.successfulAsList(futures).get()) {
                 tmpSubMap.computeIfAbsent(sub.getEntityId(), tmp -> new HashMap<>()).put(sub.getKey().getSourceAttribute(), sub);
             }
             for (EntityId entityId : tmpSubMap.keySet()) {
-                Map<String, Long> keyStates = new HashMap<>();
+                @NotNull Map<String, Long> keyStates = new HashMap<>();
                 Map<String, DynamicValueKeySub> dynamicValueKeySubMap = tmpSubMap.get(entityId);
                 dynamicValueKeySubMap.forEach((k, v) -> keyStates.put(k, v.getLastUpdateTs()));
                 int subIdx = sessionRef.getSessionSubIdSeq().incrementAndGet();
@@ -127,16 +131,16 @@ public abstract class TbAbstractSubCtx<T extends EntityCountQuery> {
 
     }
 
-    private void dynamicValueSubUpdate(String sessionId, TelemetrySubscriptionUpdate subscriptionUpdate,
-                                       Map<String, DynamicValueKeySub> dynamicValueKeySubMap) {
-        Map<String, TsValue> latestUpdate = new HashMap<>();
+    private void dynamicValueSubUpdate(String sessionId, @NotNull TelemetrySubscriptionUpdate subscriptionUpdate,
+                                       @NotNull Map<String, DynamicValueKeySub> dynamicValueKeySubMap) {
+        @NotNull Map<String, TsValue> latestUpdate = new HashMap<>();
         subscriptionUpdate.getData().forEach((k, v) -> {
             Object[] data = (Object[]) v.get(0);
             latestUpdate.put(k, new TsValue((Long) data[0], (String) data[1]));
         });
 
         boolean invalidateFilter = false;
-        for (Map.Entry<String, TsValue> entry : latestUpdate.entrySet()) {
+        for (@NotNull Map.Entry<String, TsValue> entry : latestUpdate.entrySet()) {
             String k = entry.getKey();
             TsValue tsValue = entry.getValue();
             DynamicValueKeySub sub = dynamicValueKeySubMap.get(k);
@@ -169,12 +173,14 @@ public abstract class TbAbstractSubCtx<T extends EntityCountQuery> {
 
     @Data
     private static class DynamicValueKeySub {
+        @NotNull
         private final DynamicValueKey key;
+        @NotNull
         private final EntityId entityId;
         private long lastUpdateTs;
         private String lastUpdateValue;
 
-        boolean updateValue(TsValue value) {
+        boolean updateValue(@NotNull TsValue value) {
             if (value.getTs() > lastUpdateTs && (lastUpdateValue == null || !lastUpdateValue.equals(value.getValue()))) {
                 this.lastUpdateTs = value.getTs();
                 this.lastUpdateValue = value.getValue();
@@ -185,13 +191,14 @@ public abstract class TbAbstractSubCtx<T extends EntityCountQuery> {
         }
     }
 
-    private ListenableFuture<DynamicValueKeySub> resolveEntityValue(TenantId tenantId, EntityId entityId, DynamicValueKey key) {
+    @NotNull
+    private ListenableFuture<DynamicValueKeySub> resolveEntityValue(TenantId tenantId, EntityId entityId, @NotNull DynamicValueKey key) {
         ListenableFuture<Optional<AttributeKvEntry>> entry = attributesService.find(tenantId, entityId,
                                                                                     TbAttributeSubscriptionScope.SERVER_SCOPE.name(), key.getSourceAttribute());
         return Futures.transform(entry, attributeOpt -> {
-            DynamicValueKeySub sub = new DynamicValueKeySub(key, entityId);
+            @NotNull DynamicValueKeySub sub = new DynamicValueKeySub(key, entityId);
             if (attributeOpt.isPresent()) {
-                AttributeKvEntry attribute = attributeOpt.get();
+                @NotNull AttributeKvEntry attribute = attributeOpt.get();
                 sub.setLastUpdateTs(attribute.getLastUpdateTs());
                 sub.setLastUpdateValue(attribute.getValueAsString());
                 updateDynamicValuesByKey(sub, new TsValue(attribute.getLastUpdateTs(), attribute.getValueAsString()));
@@ -201,7 +208,7 @@ public abstract class TbAbstractSubCtx<T extends EntityCountQuery> {
     }
 
     @SuppressWarnings("unchecked")
-    protected void updateDynamicValuesByKey(DynamicValueKeySub sub, TsValue tsValue) {
+    protected void updateDynamicValuesByKey(@NotNull DynamicValueKeySub sub, @NotNull TsValue tsValue) {
         DynamicValueKey dvk = sub.getKey();
         switch (dvk.getPredicateType()) {
             case STRING:
@@ -209,29 +216,29 @@ public abstract class TbAbstractSubCtx<T extends EntityCountQuery> {
                 break;
             case NUMERIC:
                 try {
-                    Double dValue = Double.parseDouble(tsValue.getValue());
+                    @NotNull Double dValue = Double.parseDouble(tsValue.getValue());
                     dynamicValues.get(dvk).forEach(dynamicValue -> dynamicValue.setResolvedValue(dValue));
                 } catch (NumberFormatException e) {
                     dynamicValues.get(dvk).forEach(dynamicValue -> dynamicValue.setResolvedValue(null));
                 }
                 break;
             case BOOLEAN:
-                Boolean bValue = Boolean.parseBoolean(tsValue.getValue());
+                @NotNull Boolean bValue = Boolean.parseBoolean(tsValue.getValue());
                 dynamicValues.get(dvk).forEach(dynamicValue -> dynamicValue.setResolvedValue(bValue));
                 break;
         }
     }
 
     @SuppressWarnings("unchecked")
-    private void registerDynamicValues(KeyFilterPredicate predicate) {
+    private void registerDynamicValues(@NotNull KeyFilterPredicate predicate) {
         switch (predicate.getType()) {
             case STRING:
             case NUMERIC:
             case BOOLEAN:
-                Optional<DynamicValue> value = getDynamicValueFromSimplePredicate((SimpleKeyFilterPredicate) predicate);
+                @NotNull Optional<DynamicValue> value = getDynamicValueFromSimplePredicate((SimpleKeyFilterPredicate) predicate);
                 if (value.isPresent()) {
-                    DynamicValue dynamicValue = value.get();
-                    DynamicValueKey key = new DynamicValueKey(
+                    @NotNull DynamicValue dynamicValue = value.get();
+                    @NotNull DynamicValueKey key = new DynamicValueKey(
                             predicate.getType(),
                             dynamicValue.getSourceType(),
                             dynamicValue.getSourceAttribute());
@@ -243,7 +250,8 @@ public abstract class TbAbstractSubCtx<T extends EntityCountQuery> {
         }
     }
 
-    private Optional<DynamicValue<T>> getDynamicValueFromSimplePredicate(SimpleKeyFilterPredicate<T> predicate) {
+    @NotNull
+    private Optional<DynamicValue<T>> getDynamicValueFromSimplePredicate(@NotNull SimpleKeyFilterPredicate<T> predicate) {
         if (predicate.getValue().getUserValue() == null) {
             return Optional.ofNullable(predicate.getValue().getDynamicValue());
         } else {
@@ -276,7 +284,7 @@ public abstract class TbAbstractSubCtx<T extends EntityCountQuery> {
         }
     }
 
-    public void setRefreshTask(ScheduledFuture<?> task) {
+    public void setRefreshTask(@NotNull ScheduledFuture<?> task) {
         if (!stopped) {
             this.refreshTask = task;
         } else {
@@ -293,10 +301,13 @@ public abstract class TbAbstractSubCtx<T extends EntityCountQuery> {
 
     @Data
     public static class DynamicValueKey {
+        @NotNull
         @Getter
         private final FilterPredicateType predicateType;
+        @NotNull
         @Getter
         private final DynamicValueSourceType sourceType;
+        @NotNull
         @Getter
         private final String sourceAttribute;
     }

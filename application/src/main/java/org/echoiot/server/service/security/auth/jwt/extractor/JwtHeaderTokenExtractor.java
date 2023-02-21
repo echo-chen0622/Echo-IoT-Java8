@@ -2,6 +2,7 @@ package org.echoiot.server.service.security.auth.jwt.extractor;
 
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.config.EchoiotSecurityConfiguration;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.stereotype.Component;
 
@@ -11,8 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 public class JwtHeaderTokenExtractor implements TokenExtractor {
     public static final String HEADER_PREFIX = "Bearer ";
 
+    @NotNull
     @Override
-    public String extract(HttpServletRequest request) {
+    public String extract(@NotNull HttpServletRequest request) {
         String header = request.getHeader(EchoiotSecurityConfiguration.JWT_TOKEN_HEADER_PARAM);
         if (StringUtils.isBlank(header)) {
             header = request.getHeader(EchoiotSecurityConfiguration.JWT_TOKEN_HEADER_PARAM_V2);
@@ -25,6 +27,6 @@ public class JwtHeaderTokenExtractor implements TokenExtractor {
             throw new AuthenticationServiceException("Invalid authorization header size.");
         }
 
-        return header.substring(HEADER_PREFIX.length(), header.length());
+        return header.substring(HEADER_PREFIX.length());
     }
 }

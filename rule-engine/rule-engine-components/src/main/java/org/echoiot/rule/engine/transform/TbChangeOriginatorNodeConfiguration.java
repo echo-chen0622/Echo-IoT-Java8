@@ -6,6 +6,7 @@ import org.echoiot.rule.engine.data.RelationsQuery;
 import org.echoiot.server.common.data.relation.EntityRelation;
 import org.echoiot.server.common.data.relation.EntitySearchDirection;
 import org.echoiot.server.common.data.relation.RelationEntityTypeFilter;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 
@@ -18,15 +19,16 @@ public class TbChangeOriginatorNodeConfiguration extends TbTransformNodeConfigur
     private String entityType;
     private String entityNamePattern;
 
+    @NotNull
     @Override
     public TbChangeOriginatorNodeConfiguration defaultConfiguration() {
-        TbChangeOriginatorNodeConfiguration configuration = new TbChangeOriginatorNodeConfiguration();
+        @NotNull TbChangeOriginatorNodeConfiguration configuration = new TbChangeOriginatorNodeConfiguration();
         configuration.setOriginatorSource(TbChangeOriginatorNode.CUSTOMER_SOURCE);
 
-        RelationsQuery relationsQuery = new RelationsQuery();
+        @NotNull RelationsQuery relationsQuery = new RelationsQuery();
         relationsQuery.setDirection(EntitySearchDirection.FROM);
         relationsQuery.setMaxLevel(1);
-        RelationEntityTypeFilter relationEntityTypeFilter = new RelationEntityTypeFilter(EntityRelation.CONTAINS_TYPE, Collections.emptyList());
+        @NotNull RelationEntityTypeFilter relationEntityTypeFilter = new RelationEntityTypeFilter(EntityRelation.CONTAINS_TYPE, Collections.emptyList());
         relationsQuery.setFilters(Collections.singletonList(relationEntityTypeFilter));
         configuration.setRelationsQuery(relationsQuery);
 

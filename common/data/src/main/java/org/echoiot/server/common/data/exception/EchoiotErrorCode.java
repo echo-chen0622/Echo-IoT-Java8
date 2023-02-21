@@ -16,7 +16,7 @@ public enum EchoiotErrorCode {
     TOO_MANY_UPDATES(34),
     SUBSCRIPTION_VIOLATION(40);
 
-    private int errorCode;
+    private final int errorCode;
 
     EchoiotErrorCode(int errorCode) {
         this.errorCode = errorCode;

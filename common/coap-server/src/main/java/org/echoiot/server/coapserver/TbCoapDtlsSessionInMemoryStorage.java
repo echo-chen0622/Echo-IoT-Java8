@@ -2,6 +2,7 @@ package org.echoiot.server.coapserver;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.ConcurrentHashMap;
@@ -21,7 +22,7 @@ public class TbCoapDtlsSessionInMemoryStorage {
         this.dtlsSessionReportTimeout = dtlsSessionReportTimeout;
     }
 
-    public void put(InetSocketAddress remotePeer, TbCoapDtlsSessionInfo dtlsSessionInfo) {
+    public void put(@NotNull InetSocketAddress remotePeer, @NotNull TbCoapDtlsSessionInfo dtlsSessionInfo) {
         log.trace("DTLS session added to in-memory store: [{}] timestamp: [{}]", remotePeer, dtlsSessionInfo.getLastActivityTime());
         dtlsSessionsMap.putIfAbsent(remotePeer, dtlsSessionInfo);
     }

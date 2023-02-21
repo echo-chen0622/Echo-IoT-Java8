@@ -11,6 +11,7 @@ import org.echoiot.server.dao.service.AbstractServiceTest;
 import org.echoiot.server.dao.service.BaseTenantProfileServiceTest;
 import org.echoiot.server.dao.tenant.TenantDao;
 import org.echoiot.server.dao.tenant.TenantProfileDao;
+import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -30,12 +31,13 @@ import static org.junit.Assert.assertEquals;
  */
 public class JpaTenantDaoTest extends AbstractJpaDaoTest {
 
-    @Autowired
+    @Resource
     private TenantDao tenantDao;
 
-    @Autowired
+    @Resource
     private TenantProfileDao tenantProfileDao;
 
+    @NotNull
     List<Tenant> createdTenants = new ArrayList<>();
     TenantProfile tenantProfile;
 
@@ -79,7 +81,7 @@ public class JpaTenantDaoTest extends AbstractJpaDaoTest {
     }
 
     void createTenant(String title, int index) {
-        Tenant tenant = new Tenant();
+        @NotNull Tenant tenant = new Tenant();
         tenant.setId(TenantId.fromUUID(Uuids.timeBased()));
         tenant.setTitle(title + "_" + index);
         tenant.setTenantProfileId(tenantProfile.getId());
@@ -89,11 +91,11 @@ public class JpaTenantDaoTest extends AbstractJpaDaoTest {
     @Test
     //@DatabaseSetup("classpath:dbunit/empty_dataset.xml")
     public void testIsExistsTenantById() {
-        final UUID uuid = Uuids.timeBased();
-        final TenantId tenantId = new TenantId(uuid);
+        @NotNull final UUID uuid = Uuids.timeBased();
+        @NotNull final TenantId tenantId = new TenantId(uuid);
         Assertions.assertThat(tenantDao.existsById(tenantId, uuid)).as("Is tenant exists before save").isFalse();
 
-        final Tenant tenant = new Tenant();
+        @NotNull final Tenant tenant = new Tenant();
         tenant.setId(tenantId);
         tenant.setTitle("Tenant " + uuid);
         tenant.setTenantProfileId(tenantProfile.getId());

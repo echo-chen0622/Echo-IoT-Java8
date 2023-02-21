@@ -1,6 +1,8 @@
 package org.echoiot.server.dao.sql.query;
 
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -104,17 +106,18 @@ public class DefaultAlarmQueryRepository implements AlarmQueryRepository {
         this.queryLog = queryLog;
     }
 
+    @Nullable
     @Override
-    public PageData<AlarmData> findAlarmDataByQueryForEntities(TenantId tenantId, AlarmDataQuery query, Collection<EntityId> orderedEntityIds) {
+    public PageData<AlarmData> findAlarmDataByQueryForEntities(@NotNull TenantId tenantId, @NotNull AlarmDataQuery query, @NotNull Collection<EntityId> orderedEntityIds) {
         return transactionTemplate.execute(status -> {
             AlarmDataPageLink pageLink = query.getPageLink();
-            QueryContext ctx = new QueryContext(new QuerySecurityContext(tenantId, null, EntityType.ALARM));
+            @NotNull QueryContext ctx = new QueryContext(new QuerySecurityContext(tenantId, null, EntityType.ALARM));
             ctx.addUuidListParameter("entity_ids", orderedEntityIds.stream().map(EntityId::getId).collect(Collectors.toList()));
-            StringBuilder selectPart = new StringBuilder(FIELDS_SELECTION);
-            StringBuilder fromPart = new StringBuilder(" from alarm a ");
-            StringBuilder wherePart = new StringBuilder(" where ");
-            StringBuilder sortPart = new StringBuilder(" order by ");
-            StringBuilder joinPart = new StringBuilder();
+            @NotNull StringBuilder selectPart = new StringBuilder(FIELDS_SELECTION);
+            @NotNull StringBuilder fromPart = new StringBuilder(" from alarm a ");
+            @NotNull StringBuilder wherePart = new StringBuilder(" where ");
+            @NotNull StringBuilder sortPart = new StringBuilder(" order by ");
+            @NotNull StringBuilder joinPart = new StringBuilder();
             boolean addAnd = false;
             if (pageLink.isSearchPropagatedAlarms()) {
                 selectPart.append(" ea.entity_id as entity_id ");
@@ -141,7 +144,7 @@ public class DefaultAlarmQueryRepository implements AlarmQueryRepository {
                 joinPart.append(" inner join (select * from (VALUES");
                 int entityIdIdx = 0;
                 int lastEntityIdIdx = orderedEntityIds.size() - 1;
-                for (EntityId entityId : orderedEntityIds) {
+                for (@NotNull EntityId entityId : orderedEntityIds) {
                     joinPart.append("(uuid('").append(entityId.getId().toString()).append("'), ").append(entityIdIdx).append(")");
                     if (entityIdIdx != lastEntityIdIdx) {
                         joinPart.append(",");
@@ -211,7 +214,7 @@ public class DefaultAlarmQueryRepository implements AlarmQueryRepository {
             }
 
             if (pageLink.getStatusList() != null && !pageLink.getStatusList().isEmpty()) {
-                Set<AlarmStatus> statusSet = toStatusSet(pageLink.getStatusList());
+                @NotNull Set<AlarmStatus> statusSet = toStatusSet(pageLink.getStatusList());
                 if (!statusSet.isEmpty()) {
                     addAndIfNeeded(wherePart, addAnd);
                     addAnd = true;
@@ -255,14 +258,14 @@ public class DefaultAlarmQueryRepository implements AlarmQueryRepository {
         });
     }
 
-    private String buildTextSearchQuery(QueryContext ctx, List<EntityKey> selectionMapping, String searchText) {
+    private String buildTextSearchQuery(@NotNull QueryContext ctx, @Nullable List<EntityKey> selectionMapping, @NotNull String searchText) {
         if (!StringUtils.isEmpty(searchText) && selectionMapping != null && !selectionMapping.isEmpty()) {
-            String lowerSearchText = searchText.toLowerCase() + "%";
-            List<String> searchPredicates = selectionMapping.stream()
-                    .map(mapping -> alarmFieldColumnMap.get(mapping.getKey()))
-                    .filter(Objects::nonNull)
-                    .map(mapping -> {
-                                String paramName = mapping + "_lowerSearchText";
+            @NotNull String lowerSearchText = searchText.toLowerCase() + "%";
+            @NotNull List<String> searchPredicates = selectionMapping.stream()
+                                                                     .map(mapping -> alarmFieldColumnMap.get(mapping.getKey()))
+                                                                     .filter(Objects::nonNull)
+                                                                     .map(mapping -> {
+                                @NotNull String paramName = mapping + "_lowerSearchText";
                                 ctx.addStringParameter(paramName, lowerSearchText);
                                 return String.format("LOWER(cast(%s as varchar)) LIKE concat('%%', :%s, '%%')", mapping, paramName);
                             }
@@ -273,16 +276,18 @@ public class DefaultAlarmQueryRepository implements AlarmQueryRepository {
         }
     }
 
-    private String buildPermissionsQuery(TenantId tenantId, QueryContext ctx) {
-        StringBuilder permissionsQuery = new StringBuilder();
+    @NotNull
+    private String buildPermissionsQuery(@NotNull TenantId tenantId, @NotNull QueryContext ctx) {
+        @NotNull StringBuilder permissionsQuery = new StringBuilder();
         ctx.addUuidParameter("permissions_tenant_id", tenantId.getId());
         permissionsQuery.append(" a.tenant_id = :permissions_tenant_id and ea.tenant_id = :permissions_tenant_id ");
         return permissionsQuery.toString();
     }
 
-    private Set<AlarmStatus> toStatusSet(List<AlarmSearchStatus> statusList) {
-        Set<AlarmStatus> result = new HashSet<>();
-        for (AlarmSearchStatus searchStatus : statusList) {
+    @NotNull
+    private Set<AlarmStatus> toStatusSet(@NotNull List<AlarmSearchStatus> statusList) {
+        @NotNull Set<AlarmStatus> result = new HashSet<>();
+        for (@NotNull AlarmSearchStatus searchStatus : statusList) {
             switch (searchStatus) {
                 case ACK:
                     result.add(AlarmStatus.ACTIVE_ACK);
@@ -311,7 +316,7 @@ public class DefaultAlarmQueryRepository implements AlarmQueryRepository {
         return result;
     }
 
-    private void addAndIfNeeded(StringBuilder wherePart, boolean addAnd) {
+    private void addAndIfNeeded(@NotNull StringBuilder wherePart, boolean addAnd) {
         if (addAnd) {
             wherePart.append(" and ");
         }

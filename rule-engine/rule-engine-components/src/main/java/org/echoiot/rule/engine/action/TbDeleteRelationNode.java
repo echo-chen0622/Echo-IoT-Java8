@@ -13,6 +13,7 @@ import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.data.relation.EntityRelation;
 import org.echoiot.server.common.data.relation.RelationTypeGroup;
 import org.echoiot.server.common.msg.TbMsg;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,7 @@ import java.util.List;
 public class TbDeleteRelationNode extends TbAbstractRelationActionNode<TbDeleteRelationNodeConfiguration> {
 
     @Override
-    protected TbDeleteRelationNodeConfiguration loadEntityNodeActionConfig(TbNodeConfiguration configuration) throws TbNodeException {
+    protected TbDeleteRelationNodeConfiguration loadEntityNodeActionConfig(@NotNull TbNodeConfiguration configuration) throws TbNodeException {
         return TbNodeUtils.convert(configuration, TbDeleteRelationNodeConfiguration.class);
     }
 
@@ -43,16 +44,18 @@ public class TbDeleteRelationNode extends TbAbstractRelationActionNode<TbDeleteR
     }
 
     @Override
-    protected ListenableFuture<RelationContainer> processEntityRelationAction(TbContext ctx, TbMsg msg, String relationType) {
+    protected ListenableFuture<RelationContainer> processEntityRelationAction(@NotNull TbContext ctx, TbMsg msg, String relationType) {
         return getRelationContainerListenableFuture(ctx, msg, relationType);
     }
 
+    @NotNull
     @Override
-    protected ListenableFuture<RelationContainer> doProcessEntityRelationAction(TbContext ctx, TbMsg msg, EntityContainer entityContainer, String relationType) {
+    protected ListenableFuture<RelationContainer> doProcessEntityRelationAction(@NotNull TbContext ctx, TbMsg msg, EntityContainer entityContainer, String relationType) {
         return Futures.transform(processSingle(ctx, msg, entityContainer, relationType), result -> new RelationContainer(msg, result), ctx.getDbCallbackExecutor());
     }
 
-    private ListenableFuture<RelationContainer> getRelationContainerListenableFuture(TbContext ctx, TbMsg msg, String relationType) {
+    @NotNull
+    private ListenableFuture<RelationContainer> getRelationContainerListenableFuture(@NotNull TbContext ctx, TbMsg msg, String relationType) {
         if (config.isDeleteForSingleEntity()) {
             return Futures.transformAsync(getEntity(ctx, msg), entityContainer -> doProcessEntityRelationAction(ctx, msg, entityContainer, relationType), ctx.getDbCallbackExecutor());
         } else {
@@ -60,12 +63,13 @@ public class TbDeleteRelationNode extends TbAbstractRelationActionNode<TbDeleteR
         }
     }
 
-    private ListenableFuture<Boolean> processList(TbContext ctx, TbMsg msg) {
+    @NotNull
+    private ListenableFuture<Boolean> processList(@NotNull TbContext ctx, TbMsg msg) {
         return Futures.transformAsync(processListSearchDirection(ctx, msg), entityRelations -> {
             if (entityRelations.isEmpty()) {
                 return Futures.immediateFuture(true);
             } else {
-                List<ListenableFuture<Boolean>> listenableFutureList = new ArrayList<>();
+                @NotNull List<ListenableFuture<Boolean>> listenableFutureList = new ArrayList<>();
                 for (EntityRelation entityRelation : entityRelations) {
                     listenableFutureList.add(ctx.getRelationService().deleteRelationAsync(ctx.getTenantId(), entityRelation));
                 }
@@ -81,7 +85,8 @@ public class TbDeleteRelationNode extends TbAbstractRelationActionNode<TbDeleteR
         }, ctx.getDbCallbackExecutor());
     }
 
-    private ListenableFuture<Boolean> processSingle(TbContext ctx, TbMsg msg, EntityContainer entityContainer, String relationType) {
+    @NotNull
+    private ListenableFuture<Boolean> processSingle(@NotNull TbContext ctx, TbMsg msg, EntityContainer entityContainer, String relationType) {
         SearchDirectionIds sdId = processSingleSearchDirection(msg, entityContainer);
         return Futures.transformAsync(ctx.getRelationService().checkRelationAsync(ctx.getTenantId(), sdId.getFromId(), sdId.getToId(), relationType, RelationTypeGroup.COMMON),
                 result -> {
@@ -92,7 +97,7 @@ public class TbDeleteRelationNode extends TbAbstractRelationActionNode<TbDeleteR
                 }, ctx.getDbCallbackExecutor());
     }
 
-    private ListenableFuture<Boolean> processSingleDeleteRelation(TbContext ctx, SearchDirectionIds sdId, String relationType) {
+    private ListenableFuture<Boolean> processSingleDeleteRelation(@NotNull TbContext ctx, @NotNull SearchDirectionIds sdId, String relationType) {
         return ctx.getRelationService().deleteRelationAsync(ctx.getTenantId(), sdId.getFromId(), sdId.getToId(), relationType, RelationTypeGroup.COMMON);
     }
 

@@ -21,6 +21,8 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.dao.model.BaseSqlEntity;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.model.SearchTextEntity;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -75,6 +77,7 @@ public final class DeviceProfileEntity extends BaseSqlEntity<DeviceProfile> impl
     @Column(name = ModelConstants.DEVICE_PROFILE_DEFAULT_QUEUE_NAME_PROPERTY)
     private String defaultQueueName;
 
+    @Nullable
     @Type(type = "jsonb")
     @Column(name = ModelConstants.DEVICE_PROFILE_PROFILE_DATA_PROPERTY, columnDefinition = "jsonb")
     private JsonNode profileData;
@@ -95,7 +98,7 @@ public final class DeviceProfileEntity extends BaseSqlEntity<DeviceProfile> impl
         super();
     }
 
-    public DeviceProfileEntity(DeviceProfile deviceProfile) {
+    public DeviceProfileEntity(@NotNull DeviceProfile deviceProfile) {
         if (deviceProfile.getId() != null) {
             this.setUuid(deviceProfile.getId().getId());
         }
@@ -144,9 +147,10 @@ public final class DeviceProfileEntity extends BaseSqlEntity<DeviceProfile> impl
         return searchText;
     }
 
+    @NotNull
     @Override
     public DeviceProfile toData() {
-        DeviceProfile deviceProfile = new DeviceProfile(new DeviceProfileId(this.getUuid()));
+        @NotNull DeviceProfile deviceProfile = new DeviceProfile(new DeviceProfileId(this.getUuid()));
         deviceProfile.setCreatedTime(createdTime);
         if (tenantId != null) {
             deviceProfile.setTenantId(TenantId.fromUUID(tenantId));

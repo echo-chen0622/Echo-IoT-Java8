@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import org.apache.commons.codec.binary.Base64;
+import org.jetbrains.annotations.NotNull;
 
 @Getter
 @Setter
@@ -16,7 +17,7 @@ public abstract class AbstractLwM2MBootstrapServerCredential extends LwM2MServer
     }
 
     @SneakyThrows
-    private static byte[] getDecoded(String key) {
+    private static byte[] getDecoded(@NotNull String key) {
         return Base64.decodeBase64(key.getBytes());
     }
 }

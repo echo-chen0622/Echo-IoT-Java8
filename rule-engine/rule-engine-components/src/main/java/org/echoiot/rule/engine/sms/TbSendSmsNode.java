@@ -10,6 +10,7 @@ import org.echoiot.rule.engine.api.sms.SmsSender;
 import org.echoiot.rule.engine.api.util.TbNodeUtils;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.msg.TbMsg;
+import org.jetbrains.annotations.NotNull;
 
 import static org.echoiot.common.util.DonAsynchron.withCallback;
 
@@ -30,7 +31,7 @@ public class TbSendSmsNode implements TbNode {
     private SmsSender smsSender;
 
     @Override
-    public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
+    public void init(@NotNull TbContext ctx, @NotNull TbNodeConfiguration configuration) throws TbNodeException {
         try {
             this.config = TbNodeUtils.convert(configuration, TbSendSmsNodeConfiguration.class);
             if (!this.config.isUseSystemSmsSettings()) {
@@ -42,7 +43,7 @@ public class TbSendSmsNode implements TbNode {
     }
 
     @Override
-    public void onMsg(TbContext ctx, TbMsg msg) {
+    public void onMsg(@NotNull TbContext ctx, @NotNull TbMsg msg) {
         try {
             withCallback(ctx.getSmsExecutor().executeAsync(() -> {
                         sendSms(ctx, msg);
@@ -55,10 +56,10 @@ public class TbSendSmsNode implements TbNode {
         }
     }
 
-    private void sendSms(TbContext ctx, TbMsg msg) throws Exception {
+    private void sendSms(@NotNull TbContext ctx, @NotNull TbMsg msg) throws Exception {
         String numbersTo = TbNodeUtils.processPattern(this.config.getNumbersToTemplate(), msg);
         String message = TbNodeUtils.processPattern(this.config.getSmsMessageTemplate(), msg);
-        String[] numbersToList = numbersTo.split(",");
+        @NotNull String[] numbersToList = numbersTo.split(",");
         if (this.config.isUseSystemSmsSettings()) {
             ctx.getSmsService().sendSms(ctx.getTenantId(), msg.getCustomerId(), numbersToList, message);
         } else {
@@ -75,7 +76,7 @@ public class TbSendSmsNode implements TbNode {
         }
     }
 
-    private SmsSender createSmsSender(TbContext ctx) {
+    private SmsSender createSmsSender(@NotNull TbContext ctx) {
         return ctx.getSmsSenderFactory().createSmsSender(this.config.getSmsProviderConfiguration());
     }
 

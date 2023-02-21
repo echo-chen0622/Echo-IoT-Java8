@@ -12,11 +12,13 @@ import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.common.data.queue.Queue;
 import org.echoiot.server.dao.queue.QueueService;
+import org.jetbrains.annotations.NotNull;
 
 @AllArgsConstructor
 @Slf4j
 public class QueuesEdgeEventFetcher extends BasePageableEdgeEventFetcher<Queue> {
 
+    @NotNull
     private final QueueService queueService;
 
     @Override
@@ -24,8 +26,9 @@ public class QueuesEdgeEventFetcher extends BasePageableEdgeEventFetcher<Queue> 
         return queueService.findQueuesByTenantId(tenantId, pageLink);
     }
 
+    @NotNull
     @Override
-    EdgeEvent constructEdgeEvent(TenantId tenantId, Edge edge, Queue queue) {
+    EdgeEvent constructEdgeEvent(TenantId tenantId, @NotNull Edge edge, @NotNull Queue queue) {
         return EdgeUtils.constructEdgeEvent(tenantId, edge.getId(), EdgeEventType.QUEUE,
                                             EdgeEventActionType.ADDED, queue.getId(), null);
     }

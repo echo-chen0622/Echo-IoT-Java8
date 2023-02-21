@@ -1,5 +1,8 @@
 package org.echoiot.server.cache;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
@@ -32,7 +35,8 @@ public interface TbTransactionalCache<K extends Serializable, V extends Serializ
      */
     TbCacheTransaction<K, V> newTransactionForKeys(List<K> keys);
 
-    default V getAndPutInTransaction(K key, Supplier<V> dbCall, boolean cacheNullValue) {
+    @Nullable
+    default V getAndPutInTransaction(K key, @NotNull Supplier<V> dbCall, boolean cacheNullValue) {
         TbCacheValueWrapper<V> cacheValueWrapper = get(key);
         if (cacheValueWrapper != null) {
             return cacheValueWrapper.get();
@@ -54,7 +58,8 @@ public interface TbTransactionalCache<K extends Serializable, V extends Serializ
         }
     }
 
-    default <R> R getAndPutInTransaction(K key, Supplier<R> dbCall, Function<V, R> cacheValueToResult, Function<R, V> dbValueToCacheValue, boolean cacheNullValue) {
+    @Nullable
+    default <R> R getAndPutInTransaction(K key, @NotNull Supplier<R> dbCall, @NotNull Function<V, R> cacheValueToResult, @NotNull Function<R, V> dbValueToCacheValue, boolean cacheNullValue) {
         TbCacheValueWrapper<V> cacheValueWrapper = get(key);
         if (cacheValueWrapper != null) {
             var cacheValue = cacheValueWrapper.get();

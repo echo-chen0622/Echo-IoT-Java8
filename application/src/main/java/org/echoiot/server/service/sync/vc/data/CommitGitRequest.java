@@ -4,11 +4,13 @@ import lombok.Getter;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.sync.vc.VersionCreationResult;
 import org.echoiot.server.common.data.sync.vc.request.create.VersionCreateRequest;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
 public class CommitGitRequest extends PendingGitRequest<VersionCreationResult> {
 
+    @NotNull
     @Getter
     private final UUID txId;
     private final VersionCreateRequest request;

@@ -7,6 +7,8 @@ import org.eclipse.californium.elements.DtlsEndpointContext;
 import org.eclipse.californium.elements.EndpointContext;
 import org.eclipse.californium.elements.exception.ConnectorException;
 import org.echoiot.common.util.EchoiotThreadFactory;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.net.URI;
@@ -17,11 +19,11 @@ import java.util.concurrent.Executors;
 
 public class NoSecClient {
 
-    private ExecutorService executor = Executors.newFixedThreadPool(1, EchoiotThreadFactory.forName(getClass().getSimpleName()));
-    private CoapClient coapClient;
+    private final ExecutorService executor = Executors.newFixedThreadPool(1, EchoiotThreadFactory.forName(getClass().getSimpleName()));
+    private final CoapClient coapClient;
 
     public NoSecClient(String host, int port, String accessToken, String clientKeys, String sharedKeys) throws URISyntaxException {
-        URI uri = new URI(getFutureUrl(host, port, accessToken, clientKeys, sharedKeys));
+        @NotNull URI uri = new URI(getFutureUrl(host, port, accessToken, clientKeys, sharedKeys));
         this.coapClient = new CoapClient(uri);
     }
 
@@ -29,7 +31,7 @@ public class NoSecClient {
         executor.submit(() -> {
             try {
                 while (!Thread.interrupted()) {
-                    CoapResponse response = null;
+                    @Nullable CoapResponse response = null;
                     try {
                         response = coapClient.get();
                     } catch (ConnectorException | IOException e) {
@@ -63,11 +65,12 @@ public class NoSecClient {
         });
     }
 
+    @NotNull
     private String getFutureUrl(String host, Integer port, String accessToken, String clientKeys, String sharedKeys) {
         return "coap://" + host + ":" + port + "/api/v1/" + accessToken + "/attributes?clientKeys=" + clientKeys + "&sharedKeys=" + sharedKeys;
     }
 
-    public static void main(String[] args) throws URISyntaxException {
+    public static void main(@NotNull String[] args) throws URISyntaxException {
         System.out.println("Usage: java -cp ... client.coap.transport.org.echoiot.server.NoSecClient " +
                 "host port accessToken clientKeys sharedKeys");
 
@@ -77,7 +80,7 @@ public class NoSecClient {
         String clientKeys = args[3];
         String sharedKeys = args[4];
 
-        NoSecClient client = new NoSecClient(host, port, accessToken, clientKeys, sharedKeys);
+        @NotNull NoSecClient client = new NoSecClient(host, port, accessToken, clientKeys, sharedKeys);
         client.test();
     }
 }

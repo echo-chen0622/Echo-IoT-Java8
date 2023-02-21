@@ -6,6 +6,7 @@ import org.echoiot.server.common.data.id.AssetProfileId;
 import org.echoiot.server.gen.edge.v1.AssetProfileUpdateMsg;
 import org.echoiot.server.gen.edge.v1.UpdateMsgType;
 import org.echoiot.server.queue.util.TbCoreComponent;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
@@ -14,13 +15,14 @@ import java.nio.charset.StandardCharsets;
 @TbCoreComponent
 public class AssetProfileMsgConstructor {
 
-    public AssetProfileUpdateMsg constructAssetProfileUpdatedMsg(UpdateMsgType msgType, AssetProfile assetProfile) {
-        AssetProfileUpdateMsg.Builder builder = AssetProfileUpdateMsg.newBuilder()
-                .setMsgType(msgType)
-                .setIdMSB(assetProfile.getId().getId().getMostSignificantBits())
-                .setIdLSB(assetProfile.getId().getId().getLeastSignificantBits())
-                .setName(assetProfile.getName())
-                .setDefault(assetProfile.isDefault());
+    @NotNull
+    public AssetProfileUpdateMsg constructAssetProfileUpdatedMsg(UpdateMsgType msgType, @NotNull AssetProfile assetProfile) {
+        @NotNull AssetProfileUpdateMsg.Builder builder = AssetProfileUpdateMsg.newBuilder()
+                                                                              .setMsgType(msgType)
+                                                                              .setIdMSB(assetProfile.getId().getId().getMostSignificantBits())
+                                                                              .setIdLSB(assetProfile.getId().getId().getLeastSignificantBits())
+                                                                              .setName(assetProfile.getName())
+                                                                              .setDefault(assetProfile.isDefault());
         if (assetProfile.getDefaultDashboardId() != null) {
             builder.setDefaultDashboardIdMSB(assetProfile.getDefaultDashboardId().getId().getMostSignificantBits())
                     .setDefaultDashboardIdLSB(assetProfile.getDefaultDashboardId().getId().getLeastSignificantBits());
@@ -37,7 +39,8 @@ public class AssetProfileMsgConstructor {
         return builder.build();
     }
 
-    public AssetProfileUpdateMsg constructAssetProfileDeleteMsg(AssetProfileId assetProfileId) {
+    @NotNull
+    public AssetProfileUpdateMsg constructAssetProfileDeleteMsg(@NotNull AssetProfileId assetProfileId) {
         return AssetProfileUpdateMsg.newBuilder()
                 .setMsgType(UpdateMsgType.ENTITY_DELETED_RPC_MESSAGE)
                 .setIdMSB(assetProfileId.getId().getMostSignificantBits())

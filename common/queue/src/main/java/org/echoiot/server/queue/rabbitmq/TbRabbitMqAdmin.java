@@ -4,6 +4,7 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.queue.TbQueueAdmin;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.Map;
@@ -16,7 +17,7 @@ public class TbRabbitMqAdmin implements TbQueueAdmin {
     private final Connection connection;
     private final Map<String, Object> arguments;
 
-    public TbRabbitMqAdmin(TbRabbitMqSettings rabbitMqSettings, Map<String, Object> arguments) {
+    public TbRabbitMqAdmin(@NotNull TbRabbitMqSettings rabbitMqSettings, Map<String, Object> arguments) {
         this.arguments = arguments;
 
         try {

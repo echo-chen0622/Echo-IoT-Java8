@@ -25,6 +25,8 @@ import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.entitiy.AbstractTbEntityService;
 import org.echoiot.server.service.install.InstallScripts;
 import org.echoiot.server.service.sync.vc.EntitiesVersionControlService;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -36,17 +38,22 @@ import java.util.stream.Collectors;
 @Slf4j
 public class DefaultTbRuleChainService extends AbstractTbEntityService implements TbRuleChainService {
 
+    @NotNull
     private final RuleChainService ruleChainService;
+    @NotNull
     private final RelationService relationService;
+    @NotNull
     private final InstallScripts installScripts;
 
+    @NotNull
     private final EntitiesVersionControlService vcService;
 
+    @NotNull
     @Override
     public Set<String> getRuleChainOutputLabels(TenantId tenantId, RuleChainId ruleChainId) {
-        RuleChainMetaData metaData = ruleChainService.loadRuleChainMetaData(tenantId, ruleChainId);
-        Set<String> outputLabels = new TreeSet<>();
-        for (RuleNode ruleNode : metaData.getNodes()) {
+        @Nullable RuleChainMetaData metaData = ruleChainService.loadRuleChainMetaData(tenantId, ruleChainId);
+        @NotNull Set<String> outputLabels = new TreeSet<>();
+        for (@NotNull RuleNode ruleNode : metaData.getNodes()) {
             if (isOutputRuleNode(ruleNode)) {
                 outputLabels.add(ruleNode.getName());
             }
@@ -54,12 +61,13 @@ public class DefaultTbRuleChainService extends AbstractTbEntityService implement
         return outputLabels;
     }
 
+    @NotNull
     @Override
-    public List<RuleChainOutputLabelsUsage> getOutputLabelUsage(TenantId tenantId, RuleChainId ruleChainId) {
+    public List<RuleChainOutputLabelsUsage> getOutputLabelUsage(TenantId tenantId, @NotNull RuleChainId ruleChainId) {
         List<RuleNode> ruleNodes = ruleChainService.findRuleNodesByTenantIdAndType(tenantId, TbRuleChainInputNode.class.getName(), ruleChainId.getId().toString());
-        Map<RuleChainId, String> ruleChainNamesCache = new HashMap<>();
+        @NotNull Map<RuleChainId, String> ruleChainNamesCache = new HashMap<>();
         // Additional filter, "just in case" the structure of the JSON configuration will change.
-        var filteredRuleNodes = ruleNodes.stream().filter(node -> {
+        @NotNull var filteredRuleNodes = ruleNodes.stream().filter(node -> {
             try {
                 TbRuleChainInputNodeConfiguration configuration = JacksonUtil.treeToValue(node.getConfiguration(), TbRuleChainInputNodeConfiguration.class);
                 return ruleChainId.getId().toString().equals(configuration.getRuleChainId());
@@ -72,7 +80,7 @@ public class DefaultTbRuleChainService extends AbstractTbEntityService implement
 
         return filteredRuleNodes.stream()
                 .map(ruleNode -> {
-                    RuleChainOutputLabelsUsage usage = new RuleChainOutputLabelsUsage();
+                    @NotNull RuleChainOutputLabelsUsage usage = new RuleChainOutputLabelsUsage();
                     usage.setRuleNodeId(ruleNode.getId());
                     usage.setRuleNodeName(ruleNode.getName());
                     usage.setRuleChainId(ruleNode.getRuleChainId());
@@ -94,19 +102,20 @@ public class DefaultTbRuleChainService extends AbstractTbEntityService implement
                 .collect(Collectors.toList());
     }
 
+    @NotNull
     @Override
-    public List<RuleChain> updateRelatedRuleChains(TenantId tenantId, RuleChainId ruleChainId, RuleChainUpdateResult result) {
-        Set<RuleChainId> ruleChainIds = new HashSet<>();
+    public List<RuleChain> updateRelatedRuleChains(TenantId tenantId, @NotNull RuleChainId ruleChainId, @NotNull RuleChainUpdateResult result) {
+        @NotNull Set<RuleChainId> ruleChainIds = new HashSet<>();
         log.debug("[{}][{}] Going to update links in related rule chains", tenantId, ruleChainId);
         if (result.getUpdatedRuleNodes() == null || result.getUpdatedRuleNodes().isEmpty()) {
             return Collections.emptyList();
         }
 
-        Set<String> oldLabels = new HashSet<>();
-        Set<String> newLabels = new HashSet<>();
-        Set<String> confusedLabels = new HashSet<>();
-        Map<String, String> updatedLabels = new HashMap<>();
-        for (RuleNodeUpdateResult update : result.getUpdatedRuleNodes()) {
+        @NotNull Set<String> oldLabels = new HashSet<>();
+        @NotNull Set<String> newLabels = new HashSet<>();
+        @NotNull Set<String> confusedLabels = new HashSet<>();
+        @NotNull Map<String, String> updatedLabels = new HashMap<>();
+        for (@NotNull RuleNodeUpdateResult update : result.getUpdatedRuleNodes()) {
             var oldNode = update.getOldRuleNode();
             var newNode = update.getNewRuleNode();
             if (isOutputRuleNode(newNode)) {
@@ -139,10 +148,11 @@ public class DefaultTbRuleChainService extends AbstractTbEntityService implement
         return ruleChainIds.stream().map(id -> ruleChainService.findRuleChainById(tenantId, id)).collect(Collectors.toList());
     }
 
+    @NotNull
     @Override
-    public RuleChain save(RuleChain ruleChain, User user) throws Exception {
+    public RuleChain save(@NotNull RuleChain ruleChain, User user) throws Exception {
         TenantId tenantId = ruleChain.getTenantId();
-        ActionType actionType = ruleChain.getId() == null ? ActionType.ADDED : ActionType.UPDATED;
+        @NotNull ActionType actionType = ruleChain.getId() == null ? ActionType.ADDED : ActionType.UPDATED;
         try {
             RuleChain savedRuleChain = checkNotNull(ruleChainService.saveRuleChain(ruleChain));
             autoCommit(user, savedRuleChain.getId());
@@ -162,15 +172,15 @@ public class DefaultTbRuleChainService extends AbstractTbEntityService implement
     }
 
     @Override
-    public void delete(RuleChain ruleChain, User user) {
+    public void delete(@NotNull RuleChain ruleChain, User user) {
         TenantId tenantId = ruleChain.getTenantId();
         RuleChainId ruleChainId = ruleChain.getId();
         try {
             List<RuleNode> referencingRuleNodes = ruleChainService.getReferencingRuleChainNodes(tenantId, ruleChainId);
 
-            Set<RuleChainId> referencingRuleChainIds = referencingRuleNodes.stream().map(RuleNode::getRuleChainId).collect(Collectors.toSet());
+            @NotNull Set<RuleChainId> referencingRuleChainIds = referencingRuleNodes.stream().map(RuleNode::getRuleChainId).collect(Collectors.toSet());
 
-            List<EdgeId> relatedEdgeIds = null;
+            @Nullable List<EdgeId> relatedEdgeIds = null;
             if (RuleChainType.EDGE.equals(ruleChain.getType())) {
                 relatedEdgeIds = edgeService.findAllRelatedEdgeIds(tenantId, ruleChainId);
             }
@@ -194,8 +204,9 @@ public class DefaultTbRuleChainService extends AbstractTbEntityService implement
         }
     }
 
+    @NotNull
     @Override
-    public RuleChain saveDefaultByName(TenantId tenantId, DefaultRuleChainCreateRequest request, User user) throws Exception {
+    public RuleChain saveDefaultByName(TenantId tenantId, @NotNull DefaultRuleChainCreateRequest request, User user) throws Exception {
         try {
             RuleChain savedRuleChain = installScripts.createDefaultRuleChain(tenantId, request.getName());
             autoCommit(user, savedRuleChain.getId());
@@ -203,7 +214,7 @@ public class DefaultTbRuleChainService extends AbstractTbEntityService implement
             notificationEntityService.logEntityAction(tenantId, savedRuleChain.getId(), savedRuleChain, ActionType.ADDED, user);
             return savedRuleChain;
         } catch (Exception e) {
-            RuleChain ruleChain = new RuleChain();
+            @NotNull RuleChain ruleChain = new RuleChain();
             ruleChain.setName(request.getName());
             notificationEntityService.logEntityAction(tenantId, emptyId(EntityType.RULE_CHAIN), ruleChain,
                     ActionType.ADDED, user, e);
@@ -212,7 +223,7 @@ public class DefaultTbRuleChainService extends AbstractTbEntityService implement
     }
 
     @Override
-    public RuleChain setRootRuleChain(TenantId tenantId, RuleChain ruleChain, User user) throws EchoiotException {
+    public RuleChain setRootRuleChain(TenantId tenantId, @NotNull RuleChain ruleChain, User user) throws EchoiotException {
         RuleChainId ruleChainId = ruleChain.getId();
         try {
             RuleChain previousRootRuleChain = ruleChainService.getRootTenantRuleChain(tenantId);
@@ -241,7 +252,7 @@ public class DefaultTbRuleChainService extends AbstractTbEntityService implement
     }
 
     @Override
-    public RuleChainMetaData saveRuleChainMetaData(TenantId tenantId, RuleChain ruleChain, RuleChainMetaData ruleChainMetaData,
+    public RuleChainMetaData saveRuleChainMetaData(TenantId tenantId, @NotNull RuleChain ruleChain, @NotNull RuleChainMetaData ruleChainMetaData,
                                                    boolean updateRelated, User user) throws Exception {
         RuleChainId ruleChainId = ruleChain.getId();
         RuleChainId ruleChainMetaDataId = ruleChainMetaData.getRuleChainId();
@@ -259,7 +270,7 @@ public class DefaultTbRuleChainService extends AbstractTbEntityService implement
             if (updatedRuleChains.isEmpty()) {
                 autoCommit(user, ruleChainMetaData.getRuleChainId());
             } else {
-                List<UUID> uuids = new ArrayList<>(updatedRuleChains.size() + 1);
+                @NotNull List<UUID> uuids = new ArrayList<>(updatedRuleChains.size() + 1);
                 uuids.add(ruleChainMetaData.getRuleChainId().getId());
                 updatedRuleChains.forEach(rc -> uuids.add(rc.getId().getId()));
                 autoCommit(user, EntityType.RULE_CHAIN, uuids);
@@ -280,7 +291,7 @@ public class DefaultTbRuleChainService extends AbstractTbEntityService implement
                 notificationEntityService.notifySendMsgToEdgeService(tenantId, ruleChain.getId(), EdgeEventActionType.UPDATED);
             }
 
-            for (RuleChain updatedRuleChain : updatedRuleChains) {
+            for (@NotNull RuleChain updatedRuleChain : updatedRuleChains) {
                 if (RuleChainType.EDGE.equals(ruleChain.getType())) {
                     notificationEntityService.notifySendMsgToEdgeService(tenantId, updatedRuleChain.getId(), EdgeEventActionType.UPDATED);
                 } else {
@@ -298,7 +309,7 @@ public class DefaultTbRuleChainService extends AbstractTbEntityService implement
     }
 
     @Override
-    public RuleChain assignRuleChainToEdge(TenantId tenantId, RuleChain ruleChain, Edge edge, User user) throws EchoiotException {
+    public RuleChain assignRuleChainToEdge(TenantId tenantId, @NotNull RuleChain ruleChain, @NotNull Edge edge, User user) throws EchoiotException {
         RuleChainId ruleChainId = ruleChain.getId();
         EdgeId edgeId = edge.getId();
         try {
@@ -315,7 +326,7 @@ public class DefaultTbRuleChainService extends AbstractTbEntityService implement
     }
 
     @Override
-    public RuleChain unassignRuleChainFromEdge(TenantId tenantId, RuleChain ruleChain, Edge edge, User user) throws EchoiotException {
+    public RuleChain unassignRuleChainFromEdge(TenantId tenantId, @NotNull RuleChain ruleChain, @NotNull Edge edge, User user) throws EchoiotException {
         RuleChainId ruleChainId = ruleChain.getId();
         EdgeId edgeId = edge.getId();
         try {
@@ -331,8 +342,9 @@ public class DefaultTbRuleChainService extends AbstractTbEntityService implement
         }
     }
 
+    @NotNull
     @Override
-    public RuleChain setEdgeTemplateRootRuleChain(TenantId tenantId, RuleChain ruleChain, User user) throws EchoiotException {
+    public RuleChain setEdgeTemplateRootRuleChain(TenantId tenantId, @NotNull RuleChain ruleChain, User user) throws EchoiotException {
         RuleChainId ruleChainId = ruleChain.getId();
         try {
             ruleChainService.setEdgeTemplateRootRuleChain(tenantId, ruleChainId);
@@ -345,8 +357,9 @@ public class DefaultTbRuleChainService extends AbstractTbEntityService implement
         }
     }
 
+    @NotNull
     @Override
-    public RuleChain setAutoAssignToEdgeRuleChain(TenantId tenantId, RuleChain ruleChain, User user) throws EchoiotException {
+    public RuleChain setAutoAssignToEdgeRuleChain(TenantId tenantId, @NotNull RuleChain ruleChain, User user) throws EchoiotException {
         RuleChainId ruleChainId = ruleChain.getId();
         try {
             ruleChainService.setAutoAssignToEdgeRuleChain(tenantId, ruleChainId);
@@ -359,8 +372,9 @@ public class DefaultTbRuleChainService extends AbstractTbEntityService implement
         }
     }
 
+    @NotNull
     @Override
-    public RuleChain unsetAutoAssignToEdgeRuleChain(TenantId tenantId, RuleChain ruleChain, User user) throws EchoiotException {
+    public RuleChain unsetAutoAssignToEdgeRuleChain(TenantId tenantId, @NotNull RuleChain ruleChain, User user) throws EchoiotException {
         RuleChainId ruleChainId = ruleChain.getId();
         try {
             ruleChainService.unsetAutoAssignToEdgeRuleChain(tenantId, ruleChainId);
@@ -373,10 +387,11 @@ public class DefaultTbRuleChainService extends AbstractTbEntityService implement
         }
     }
 
-    private Set<RuleChainId> updateRelatedRuleChains(TenantId tenantId, RuleChainId ruleChainId, Map<String, String> labelsMap) {
-        Set<RuleChainId> updatedRuleChains = new HashSet<>();
-        List<RuleChainOutputLabelsUsage> usageList = getOutputLabelUsage(tenantId, ruleChainId);
-        for (RuleChainOutputLabelsUsage usage : usageList) {
+    @NotNull
+    private Set<RuleChainId> updateRelatedRuleChains(TenantId tenantId, @NotNull RuleChainId ruleChainId, @NotNull Map<String, String> labelsMap) {
+        @NotNull Set<RuleChainId> updatedRuleChains = new HashSet<>();
+        @NotNull List<RuleChainOutputLabelsUsage> usageList = getOutputLabelUsage(tenantId, ruleChainId);
+        for (@NotNull RuleChainOutputLabelsUsage usage : usageList) {
             labelsMap.forEach((oldLabel, newLabel) -> {
                 if (usage.getLabels().contains(oldLabel)) {
                     updatedRuleChains.add(usage.getRuleChainId());
@@ -389,7 +404,7 @@ public class DefaultTbRuleChainService extends AbstractTbEntityService implement
 
     private void renameOutgoingLinks(TenantId tenantId, RuleNodeId ruleNodeId, String oldLabel, String newLabel) {
         List<EntityRelation> relations = ruleChainService.getRuleNodeRelations(tenantId, ruleNodeId);
-        for (EntityRelation relation : relations) {
+        for (@NotNull EntityRelation relation : relations) {
             if (relation.getType().equals(oldLabel)) {
                 relationService.deleteRelation(tenantId, relation);
                 relation.setType(newLabel);
@@ -406,7 +421,7 @@ public class DefaultTbRuleChainService extends AbstractTbEntityService implement
         return isRuleNode(ruleNode, TbRuleChainInputNode.class);
     }
 
-    private boolean isRuleNode(RuleNode ruleNode, Class<?> clazz) {
+    private boolean isRuleNode(@Nullable RuleNode ruleNode, @NotNull Class<?> clazz) {
         return ruleNode != null && ruleNode.getType().equals(clazz.getName());
     }
 

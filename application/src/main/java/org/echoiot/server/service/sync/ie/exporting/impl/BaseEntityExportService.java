@@ -8,14 +8,15 @@ import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.sync.ie.EntityExportData;
 import org.echoiot.server.service.sync.vc.data.EntitiesExportCtx;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
 public abstract class BaseEntityExportService<I extends EntityId, E extends ExportableEntity<I>, D extends EntityExportData<E>> extends DefaultEntityExportService<I, E, D> {
 
     @Override
-    protected void setAdditionalExportData(EntitiesExportCtx<?> ctx, E entity, D exportData) throws EchoiotException {
-        setRelatedEntities(ctx, entity, (D) exportData);
+    protected void setAdditionalExportData(@NotNull EntitiesExportCtx<?> ctx, E entity, D exportData) throws EchoiotException {
+        setRelatedEntities(ctx, entity, exportData);
         super.setAdditionalExportData(ctx, entity, exportData);
     }
 
@@ -28,7 +29,7 @@ public abstract class BaseEntityExportService<I extends EntityId, E extends Expo
 
     public abstract Set<EntityType> getSupportedEntityTypes();
 
-    protected void replaceUuidsRecursively(EntitiesExportCtx<?> ctx, JsonNode node, Set<String> skipFieldsSet) {
+    protected void replaceUuidsRecursively(EntitiesExportCtx<?> ctx, JsonNode node, @NotNull Set<String> skipFieldsSet) {
         JacksonUtil.replaceUuidsRecursively(node, skipFieldsSet, uuid -> getExternalIdOrElseInternalByUuid(ctx, uuid));
     }
 

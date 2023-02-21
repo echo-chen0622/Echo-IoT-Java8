@@ -10,6 +10,7 @@ import org.echoiot.server.common.data.device.profile.lwm2m.bootstrap.LwM2MServer
 import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.security.DeviceCredentials;
 import org.echoiot.server.service.lwm2m.LwM2MService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,10 +27,10 @@ import static org.echoiot.server.controller.ControllerConstants.TENANT_OR_CUSTOM
 @RequestMapping("/api")
 public class Lwm2mController extends BaseController {
 
-    @Autowired
+    @Resource
     private DeviceController deviceController;
 
-    @Autowired
+    @Resource
     private LwM2MService lwM2MService;
 
     public static final String IS_BOOTSTRAP_SERVER = "isBootstrapServer";
@@ -55,8 +56,8 @@ public class Lwm2mController extends BaseController {
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/lwm2m/device-credentials", method = RequestMethod.POST)
     @ResponseBody
-    public Device saveDeviceWithCredentials(@RequestBody Map<Class<?>, Object> deviceWithDeviceCredentials) throws EchoiotException {
-        ObjectMapper mapper = new ObjectMapper();
+    public Device saveDeviceWithCredentials(@NotNull @RequestBody Map<Class<?>, Object> deviceWithDeviceCredentials) throws EchoiotException {
+        @NotNull ObjectMapper mapper = new ObjectMapper();
         Device device = checkNotNull(mapper.convertValue(deviceWithDeviceCredentials.get(Device.class), Device.class));
         DeviceCredentials credentials = checkNotNull(mapper.convertValue(deviceWithDeviceCredentials.get(DeviceCredentials.class), DeviceCredentials.class));
         return deviceController.saveDeviceWithCredentials(new SaveDeviceWithCredentialsRequest(device, credentials));

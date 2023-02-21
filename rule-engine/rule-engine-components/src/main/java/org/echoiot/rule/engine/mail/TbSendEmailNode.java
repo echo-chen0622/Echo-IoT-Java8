@@ -3,6 +3,7 @@ package org.echoiot.rule.engine.mail;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.echoiot.rule.engine.api.RuleNode;
 import org.echoiot.rule.engine.api.TbContext;
@@ -42,7 +43,7 @@ public class TbSendEmailNode implements TbNode {
     private JavaMailSenderImpl mailSender;
 
     @Override
-    public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
+    public void init(TbContext ctx, @NotNull TbNodeConfiguration configuration) throws TbNodeException {
         try {
             this.config = TbNodeUtils.convert(configuration, TbSendEmailNodeConfiguration.class);
             if (!this.config.isUseSystemSmtpSettings()) {
@@ -54,10 +55,10 @@ public class TbSendEmailNode implements TbNode {
     }
 
     @Override
-    public void onMsg(TbContext ctx, TbMsg msg) {
+    public void onMsg(@NotNull TbContext ctx, @NotNull TbMsg msg) {
         try {
             validateType(msg.getType());
-            TbEmail email = getEmail(msg);
+            @NotNull TbEmail email = getEmail(msg);
             withCallback(ctx.getMailExecutor().executeAsync(() -> {
                         sendEmail(ctx, msg, email);
                         return null;
@@ -69,7 +70,7 @@ public class TbSendEmailNode implements TbNode {
         }
     }
 
-    private void sendEmail(TbContext ctx, TbMsg msg, TbEmail email) throws Exception {
+    private void sendEmail(@NotNull TbContext ctx, @NotNull TbMsg msg, TbEmail email) throws Exception {
         if (this.config.isUseSystemSmtpSettings()) {
             ctx.getMailService(true).send(ctx.getTenantId(), msg.getCustomerId(), email);
         } else {
@@ -77,7 +78,8 @@ public class TbSendEmailNode implements TbNode {
         }
     }
 
-    private TbEmail getEmail(TbMsg msg) throws IOException {
+    @NotNull
+    private TbEmail getEmail(@NotNull TbMsg msg) throws IOException {
         TbEmail email = MAPPER.readValue(msg.getData(), TbEmail.class);
         if (StringUtils.isBlank(email.getTo())) {
             throw new IllegalStateException("Email destination can not be blank [" + email.getTo() + "]");
@@ -92,8 +94,9 @@ public class TbSendEmailNode implements TbNode {
         }
     }
 
+    @NotNull
     private JavaMailSenderImpl createMailSender() {
-        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+        @NotNull JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost(this.config.getSmtpHost());
         mailSender.setPort(this.config.getSmtpPort());
         mailSender.setUsername(this.config.getUsername());
@@ -102,8 +105,9 @@ public class TbSendEmailNode implements TbNode {
         return mailSender;
     }
 
+    @NotNull
     private Properties createJavaMailProperties() {
-        Properties javaMailProperties = new Properties();
+        @NotNull Properties javaMailProperties = new Properties();
         String protocol = this.config.getSmtpProtocol();
         javaMailProperties.put("mail.transport.protocol", protocol);
         javaMailProperties.put(MAIL_PROP + protocol + ".host", this.config.getSmtpHost());

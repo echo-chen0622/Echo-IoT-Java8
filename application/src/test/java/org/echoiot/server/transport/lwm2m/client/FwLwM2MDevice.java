@@ -9,6 +9,8 @@ import org.eclipse.leshan.core.node.LwM2mResource;
 import org.eclipse.leshan.core.response.ExecuteResponse;
 import org.eclipse.leshan.core.response.ReadResponse;
 import org.eclipse.leshan.core.response.WriteResponse;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.security.auth.Destroyable;
 import java.util.Arrays;
@@ -30,7 +32,7 @@ public class FwLwM2MDevice extends BaseInstanceEnabler implements Destroyable {
     private final AtomicInteger updateResult = new AtomicInteger(0);
 
     @Override
-    public ReadResponse read(ServerIdentity identity, int resourceId) {
+    public ReadResponse read(@NotNull ServerIdentity identity, int resourceId) {
         if (!identity.isSystem())
             log.info("Read on Device resource /{}/{}/{}", getModel().id, getId(), resourceId);
         switch (resourceId) {
@@ -50,20 +52,18 @@ public class FwLwM2MDevice extends BaseInstanceEnabler implements Destroyable {
     }
 
     @Override
-    public ExecuteResponse execute(ServerIdentity identity, int resourceId, String params) {
-        String withParams = null;
+    public ExecuteResponse execute(ServerIdentity identity, int resourceId, @Nullable String params) {
+        @Nullable String withParams = null;
         if (params != null && params.length() != 0) {
             withParams = " with params " + params;
         }
         log.info("Execute on Device resource /{}/{}/{} {}", getModel().id, getId(), resourceId, withParams != null ? withParams : "");
 
-        switch (resourceId) {
-            case 2:
-                startUpdating();
-                return ExecuteResponse.success();
-            default:
-                return super.execute(identity, resourceId, params);
+        if (resourceId == 2) {
+            startUpdating();
+            return ExecuteResponse.success();
         }
+        return super.execute(identity, resourceId, params);
     }
 
     @Override
@@ -90,10 +90,12 @@ public class FwLwM2MDevice extends BaseInstanceEnabler implements Destroyable {
         return updateResult.get();
     }
 
+    @NotNull
     private String getPkgName() {
         return "firmware";
     }
 
+    @NotNull
     private String getPkgVersion() {
         return "1.0.0";
     }

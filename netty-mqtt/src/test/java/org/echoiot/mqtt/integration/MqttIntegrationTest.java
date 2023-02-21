@@ -9,6 +9,7 @@ import io.netty.handler.codec.mqtt.MqttMessageType;
 import io.netty.handler.codec.mqtt.MqttQoS;
 import io.netty.util.concurrent.Future;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -63,7 +64,7 @@ public class MqttIntegrationTest {
         this.mqttClient = initClient();
 
         log.warn("Sending publish messages...");
-        CountDownLatch latch = new CountDownLatch(3);
+        @NotNull CountDownLatch latch = new CountDownLatch(3);
         for (int i = 0; i < 3; i++) {
             Future<Void> pubFuture = publishMsg();
             pubFuture.addListener(future -> latch.countDown());
@@ -74,7 +75,7 @@ public class MqttIntegrationTest {
         Assert.assertTrue(awaitResult);
 
         //when
-        CountDownLatch keepAliveLatch = new CountDownLatch(1);
+        @NotNull CountDownLatch keepAliveLatch = new CountDownLatch(1);
 
         log.warn("Starting idle period...");
         boolean keepaliveAwaitResult = keepAliveLatch.await(5, TimeUnit.SECONDS);
@@ -98,14 +99,15 @@ public class MqttIntegrationTest {
                 MqttQoS.AT_LEAST_ONCE);
     }
 
+    @NotNull
     private MqttClient initClient() throws Exception {
-        MqttClientConfig config = new MqttClientConfig();
+        @NotNull MqttClientConfig config = new MqttClientConfig();
         config.setTimeoutSeconds(KEEPALIVE_TIMEOUT_SECONDS);
-        MqttClient client = MqttClient.create(config, null);
+        @NotNull MqttClient client = MqttClient.create(config, null);
         client.setEventLoop(this.eventLoopGroup);
         Future<MqttConnectResult> connectFuture = client.connect(MQTT_HOST, this.mqttServer.getMqttPort());
 
-        String hostPort = MQTT_HOST + ":" + this.mqttServer.getMqttPort();
+        @NotNull String hostPort = MQTT_HOST + ":" + this.mqttServer.getMqttPort();
         MqttConnectResult result;
         try {
             result = connectFuture.get(10, TimeUnit.SECONDS);

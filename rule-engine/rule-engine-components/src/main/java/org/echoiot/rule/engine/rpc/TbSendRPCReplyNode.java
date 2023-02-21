@@ -23,6 +23,7 @@ import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.data.id.EdgeId;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.msg.TbMsg;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
@@ -42,12 +43,12 @@ public class TbSendRPCReplyNode implements TbNode {
     private TbSendRpcReplyNodeConfiguration config;
 
     @Override
-    public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
+    public void init(TbContext ctx, @NotNull TbNodeConfiguration configuration) throws TbNodeException {
         this.config = TbNodeUtils.convert(configuration, TbSendRpcReplyNodeConfiguration.class);
     }
 
     @Override
-    public void onMsg(TbContext ctx, TbMsg msg) {
+    public void onMsg(@NotNull TbContext ctx, @NotNull TbMsg msg) {
         String serviceIdStr = msg.getMetaData().getValue(config.getServiceIdMetaDataAttribute());
         String sessionIdStr = msg.getMetaData().getValue(config.getSessionIdMetaDataAttribute());
         String requestIdStr = msg.getMetaData().getValue(config.getRequestIdMetaDataAttribute());
@@ -71,7 +72,7 @@ public class TbSendRPCReplyNode implements TbNode {
         }
     }
 
-    private void saveRpcResponseToEdgeQueue(TbContext ctx, TbMsg msg, String serviceIdStr, String sessionIdStr, String requestIdStr) {
+    private void saveRpcResponseToEdgeQueue(@NotNull TbContext ctx, @NotNull TbMsg msg, String serviceIdStr, String sessionIdStr, String requestIdStr) {
         EdgeId edgeId;
         DeviceId deviceId;
         try {
@@ -88,8 +89,8 @@ public class TbSendRPCReplyNode implements TbNode {
         body.put("sessionId", sessionIdStr);
         body.put("requestId", requestIdStr);
         body.put("response", msg.getData());
-        EdgeEvent edgeEvent = EdgeUtils.constructEdgeEvent(ctx.getTenantId(), edgeId, EdgeEventType.DEVICE,
-                        EdgeEventActionType.RPC_CALL, deviceId, JacksonUtil.OBJECT_MAPPER.valueToTree(body));
+        @NotNull EdgeEvent edgeEvent = EdgeUtils.constructEdgeEvent(ctx.getTenantId(), edgeId, EdgeEventType.DEVICE,
+                                                                    EdgeEventActionType.RPC_CALL, deviceId, JacksonUtil.OBJECT_MAPPER.valueToTree(body));
         ListenableFuture<Void> future = ctx.getEdgeEventService().saveAsync(edgeEvent);
         Futures.addCallback(future, new FutureCallback<>() {
             @Override

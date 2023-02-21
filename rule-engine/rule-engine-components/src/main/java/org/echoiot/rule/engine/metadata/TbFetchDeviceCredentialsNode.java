@@ -18,6 +18,8 @@ import org.echoiot.server.common.data.security.DeviceCredentials;
 import org.echoiot.server.common.data.security.DeviceCredentialsType;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.TbMsgMetaData;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.ExecutionException;
 
@@ -42,19 +44,19 @@ public class TbFetchDeviceCredentialsNode implements TbNode {
     boolean fetchToMetadata;
 
     @Override
-    public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
+    public void init(TbContext ctx, @NotNull TbNodeConfiguration configuration) throws TbNodeException {
         this.config = TbNodeUtils.convert(configuration, TbFetchDeviceCredentialsNodeConfiguration.class);
         this.fetchToMetadata = config.isFetchToMetadata();
     }
 
     @Override
-    public void onMsg(TbContext ctx, TbMsg msg) throws ExecutionException, InterruptedException, TbNodeException {
+    public void onMsg(@NotNull TbContext ctx, @NotNull TbMsg msg) throws ExecutionException, InterruptedException, TbNodeException {
         EntityId originator = msg.getOriginator();
         if (!EntityType.DEVICE.equals(originator.getEntityType())) {
             ctx.tellFailure(msg, new RuntimeException("Unsupported originator type: " + originator.getEntityType() + "!"));
             return;
         }
-        DeviceId deviceId = new DeviceId(msg.getOriginator().getId());
+        @NotNull DeviceId deviceId = new DeviceId(msg.getOriginator().getId());
         DeviceCredentials deviceCredentials = ctx.getDeviceCredentialsService().findDeviceCredentialsByDeviceId(ctx.getTenantId(), deviceId);
         if (deviceCredentials == null) {
             ctx.tellFailure(msg, new RuntimeException("Failed to get Device Credentials for device: " + deviceId + "!"));
@@ -63,7 +65,7 @@ public class TbFetchDeviceCredentialsNode implements TbNode {
 
         TbMsg transformedMsg;
         DeviceCredentialsType credentialsType = deviceCredentials.getCredentialsType();
-        JsonNode credentialsInfo = ctx.getDeviceCredentialsService().toCredentialsInfo(deviceCredentials);
+        @Nullable JsonNode credentialsInfo = ctx.getDeviceCredentialsService().toCredentialsInfo(deviceCredentials);
         if (fetchToMetadata) {
             TbMsgMetaData metaData = msg.getMetaData();
             metaData.putValue(CREDENTIALS_TYPE, credentialsType.name());

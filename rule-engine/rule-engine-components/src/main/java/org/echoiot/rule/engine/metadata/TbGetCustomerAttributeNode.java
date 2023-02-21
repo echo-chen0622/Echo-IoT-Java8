@@ -7,6 +7,7 @@ import org.echoiot.rule.engine.api.TbContext;
 import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.plugin.ComponentType;
+import org.jetbrains.annotations.NotNull;
 
 @RuleNode(
         type = ComponentType.ENRICHMENT,
@@ -22,7 +23,7 @@ import org.echoiot.server.common.data.plugin.ComponentType;
 public class TbGetCustomerAttributeNode extends TbEntityGetAttrNode<CustomerId> {
 
     @Override
-    protected ListenableFuture<CustomerId> findEntityAsync(TbContext ctx, EntityId originator) {
+    protected ListenableFuture<CustomerId> findEntityAsync(@NotNull TbContext ctx, @NotNull EntityId originator) {
         return EntitiesCustomerIdAsyncLoader.findEntityIdAsync(ctx, originator);
     }
 

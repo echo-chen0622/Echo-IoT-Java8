@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.echoiot.server.common.data.event.RuleChainDebugEvent;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.dao.model.BaseEntity;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,7 +28,7 @@ public class RuleChainDebugEventEntity extends EventEntity<RuleChainDebugEvent> 
     @Column(name = EVENT_ERROR_COLUMN_NAME)
     private String error;
 
-    public RuleChainDebugEventEntity(RuleChainDebugEvent event) {
+    public RuleChainDebugEventEntity(@NotNull RuleChainDebugEvent event) {
         super(event);
         this.message = event.getMessage();
         this.error = event.getError();

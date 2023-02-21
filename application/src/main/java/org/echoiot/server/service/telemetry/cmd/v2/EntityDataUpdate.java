@@ -7,6 +7,7 @@ import lombok.ToString;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.query.EntityData;
 import org.echoiot.server.service.telemetry.sub.SubscriptionErrorCode;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class EntityDataUpdate extends DataUpdate<EntityData> {
         super(cmdId, null, null, errorCode, errorMsg);
     }
 
+    @NotNull
     @Override
     public CmdUpdateType getCmdUpdateType() {
         return CmdUpdateType.ENTITY_DATA;

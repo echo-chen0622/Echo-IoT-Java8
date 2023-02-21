@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.echoiot.server.common.data.EntityType;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
@@ -16,10 +17,12 @@ public class ApiUsageStateId extends UUIDBased implements EntityId {
         super(id);
     }
 
-    public static ApiUsageStateId fromString(String userId) {
+    @NotNull
+    public static ApiUsageStateId fromString(@NotNull String userId) {
         return new ApiUsageStateId(UUID.fromString(userId));
     }
 
+    @NotNull
     @ApiModelProperty(position = 2, required = true, value = "string", example = "API_USAGE_STATE", allowableValues = "API_USAGE_STATE")
     @Override
     public EntityType getEntityType() {

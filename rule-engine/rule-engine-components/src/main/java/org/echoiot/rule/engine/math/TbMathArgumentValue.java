@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.Getter;
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.msg.TbMsgMetaData;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -17,24 +19,27 @@ public class TbMathArgumentValue {
         this.value = value;
     }
 
-    public static TbMathArgumentValue constant(TbMathArgument arg) {
+    @NotNull
+    public static TbMathArgumentValue constant(@NotNull TbMathArgument arg) {
         return fromString(arg.getKey());
     }
 
-    private static TbMathArgumentValue defaultOrThrow(Double defaultValue, String error) {
+    @NotNull
+    private static TbMathArgumentValue defaultOrThrow(@Nullable Double defaultValue, String error) {
         if (defaultValue != null) {
             return new TbMathArgumentValue(defaultValue);
         }
         throw new RuntimeException(error);
     }
 
-    public static TbMathArgumentValue fromMessageBody(TbMathArgument arg, Optional<ObjectNode> jsonNodeOpt) {
+    @NotNull
+    public static TbMathArgumentValue fromMessageBody(@NotNull TbMathArgument arg, @NotNull Optional<ObjectNode> jsonNodeOpt) {
         String key = arg.getKey();
         Double defaultValue = arg.getDefaultValue();
         if (jsonNodeOpt.isEmpty()) {
             return defaultOrThrow(defaultValue, "Message body is empty!");
         }
-        var json = jsonNodeOpt.get();
+        @NotNull var json = jsonNodeOpt.get();
         if (!json.has(key)) {
             return defaultOrThrow(defaultValue, "Message body has no '" + key + "'!");
         }
@@ -57,12 +62,13 @@ public class TbMathArgumentValue {
                 return defaultOrThrow(defaultValue, "Message value is empty for '" + key + "'!");
             }
         } else {
-            throw new RuntimeException("Can't convert value '" + valueNode.toString() + "' to double!");
+            throw new RuntimeException("Can't convert value '" + valueNode + "' to double!");
         }
         return new TbMathArgumentValue(value);
     }
 
-    public static TbMathArgumentValue fromMessageMetadata(TbMathArgument arg, TbMsgMetaData metaData) {
+    @NotNull
+    public static TbMathArgumentValue fromMessageMetadata(@NotNull TbMathArgument arg, @Nullable TbMsgMetaData metaData) {
         String key = arg.getKey();
         Double defaultValue = arg.getDefaultValue();
         if (metaData == null) {
@@ -75,15 +81,18 @@ public class TbMathArgumentValue {
         return fromString(value);
     }
 
+    @NotNull
     public static TbMathArgumentValue fromLong(long value) {
         return new TbMathArgumentValue(value);
     }
 
+    @NotNull
     public static TbMathArgumentValue fromDouble(double value) {
         return new TbMathArgumentValue(value);
     }
 
-    public static TbMathArgumentValue fromString(String value) {
+    @NotNull
+    public static TbMathArgumentValue fromString(@NotNull String value) {
         try {
             return new TbMathArgumentValue(Double.parseDouble(value));
         } catch (NumberFormatException ne) {

@@ -2,6 +2,7 @@ package org.echoiot.server.transport.lwm2m.security.sql;
 
 import org.eclipse.leshan.client.object.Security;
 import org.eclipse.leshan.core.util.Hex;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import org.springframework.test.web.servlet.MvcResult;
 import org.echoiot.server.common.data.device.credentials.lwm2m.LwM2MDeviceCredentials;
@@ -26,17 +27,17 @@ public class PskLwm2mIntegrationTest extends AbstractSecurityLwM2MIntegrationTes
     //Lwm2m only
     @Test
     public void testWithPskConnectLwm2mSuccess() throws Exception {
-        String clientEndpoint = CLIENT_ENDPOINT_PSK;
-        String identity = CLIENT_PSK_IDENTITY;
-        String keyPsk = CLIENT_PSK_KEY;
-        PSKClientCredential clientCredentials = new PSKClientCredential();
+        @NotNull String clientEndpoint = CLIENT_ENDPOINT_PSK;
+        @NotNull String identity = CLIENT_PSK_IDENTITY;
+        @NotNull String keyPsk = CLIENT_PSK_KEY;
+        @NotNull PSKClientCredential clientCredentials = new PSKClientCredential();
         clientCredentials.setEndpoint(clientEndpoint);
         clientCredentials.setIdentity(identity);
         clientCredentials.setKey(keyPsk);
-        Security security = psk(SECURE_URI,
-                shortServerId,
-                identity.getBytes(StandardCharsets.UTF_8),
-                Hex.decodeHex(keyPsk.toCharArray()));
+        @NotNull Security security = psk(SECURE_URI,
+                                         shortServerId,
+                                         identity.getBytes(StandardCharsets.UTF_8),
+                                         Hex.decodeHex(keyPsk.toCharArray()));
         Lwm2mDeviceProfileTransportConfiguration transportConfiguration = getTransportConfiguration(OBSERVE_ATTRIBUTES_WITHOUT_PARAMS, getBootstrapServerCredentialsSecure(PSK, NONE));
         LwM2MDeviceCredentials deviceCredentials = getDeviceCredentialsSecure(clientCredentials, null, null, PSK, false);
         this.basicTestConnection(security,
@@ -53,10 +54,10 @@ public class PskLwm2mIntegrationTest extends AbstractSecurityLwM2MIntegrationTes
 
     @Test
     public void testWithPskConnectLwm2mBadPskKeyByLength_BAD_REQUEST() throws Exception {
-        String clientEndpoint = CLIENT_ENDPOINT_PSK;
-        String identity = CLIENT_PSK_IDENTITY + "_BadLength";
-        String keyPsk = CLIENT_PSK_KEY + "05AC";
-        PSKClientCredential clientCredentials = new PSKClientCredential();
+        @NotNull String clientEndpoint = CLIENT_ENDPOINT_PSK;
+        @NotNull String identity = CLIENT_PSK_IDENTITY + "_BadLength";
+        @NotNull String keyPsk = CLIENT_PSK_KEY + "05AC";
+        @NotNull PSKClientCredential clientCredentials = new PSKClientCredential();
         clientCredentials.setEndpoint(clientEndpoint);
         clientCredentials.setIdentity(identity);
         clientCredentials.setKey(keyPsk);
@@ -65,7 +66,7 @@ public class PskLwm2mIntegrationTest extends AbstractSecurityLwM2MIntegrationTes
         LwM2MDeviceCredentials deviceCredentials = getDeviceCredentialsSecure(clientCredentials, null, null, PSK, false);
         MvcResult result = createDeviceWithMvcResult(deviceCredentials, clientEndpoint);
         assertEquals(HttpServletResponse.SC_BAD_REQUEST, result.getResponse().getStatus());
-        String msgExpected = "Key must be HexDec format: 32, 64, 128 characters!";
+        @NotNull String msgExpected = "Key must be HexDec format: 32, 64, 128 characters!";
         assertTrue(result.getResponse().getContentAsString().contains(msgExpected));
     }
 
@@ -73,16 +74,16 @@ public class PskLwm2mIntegrationTest extends AbstractSecurityLwM2MIntegrationTes
     // Bootstrap + Lwm2m
     @Test
     public void testWithPskConnectBsSuccess_UpdateTwoSectionsBootstrapAndLm2m_ConnectLwm2mSuccess() throws Exception {
-        String clientEndpoint = CLIENT_ENDPOINT_PSK_BS;
-        String identity = CLIENT_PSK_IDENTITY_BS;
-        String keyPsk = CLIENT_PSK_KEY;
-        PSKClientCredential clientCredentials = new PSKClientCredential();
+        @NotNull String clientEndpoint = CLIENT_ENDPOINT_PSK_BS;
+        @NotNull String identity = CLIENT_PSK_IDENTITY_BS;
+        @NotNull String keyPsk = CLIENT_PSK_KEY;
+        @NotNull PSKClientCredential clientCredentials = new PSKClientCredential();
         clientCredentials.setEndpoint(clientEndpoint);
         clientCredentials.setIdentity(identity);
         clientCredentials.setKey(keyPsk);
-        Security securityBs = pskBootstrap(SECURE_URI_BS,
-                identity.getBytes(StandardCharsets.UTF_8),
-                Hex.decodeHex(keyPsk.toCharArray()));
+        @NotNull Security securityBs = pskBootstrap(SECURE_URI_BS,
+                                                    identity.getBytes(StandardCharsets.UTF_8),
+                                                    Hex.decodeHex(keyPsk.toCharArray()));
         Lwm2mDeviceProfileTransportConfiguration transportConfiguration = getTransportConfiguration(OBSERVE_ATTRIBUTES_WITHOUT_PARAMS, getBootstrapServerCredentialsSecure(PSK, BOTH));
         LwM2MDeviceCredentials deviceCredentials = getDeviceCredentialsSecure(clientCredentials, null, null, PSK, false);
         this.basicTestConnection(securityBs,

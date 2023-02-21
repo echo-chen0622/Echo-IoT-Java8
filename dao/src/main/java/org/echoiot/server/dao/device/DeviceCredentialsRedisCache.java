@@ -1,5 +1,6 @@
 package org.echoiot.server.dao.device;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ import org.echoiot.server.cache.RedisTbTransactionalCache;
 @Service("DeviceCredentialsCache")
 public class DeviceCredentialsRedisCache extends RedisTbTransactionalCache<String, DeviceCredentials> {
 
-    public DeviceCredentialsRedisCache(TBRedisCacheConfiguration configuration, CacheSpecsMap cacheSpecsMap, RedisConnectionFactory connectionFactory) {
+    public DeviceCredentialsRedisCache(@NotNull TBRedisCacheConfiguration configuration, CacheSpecsMap cacheSpecsMap, RedisConnectionFactory connectionFactory) {
         super(CacheConstants.DEVICE_CREDENTIALS_CACHE, cacheSpecsMap, connectionFactory, configuration, new TbFSTRedisSerializer<>());
     }
 }

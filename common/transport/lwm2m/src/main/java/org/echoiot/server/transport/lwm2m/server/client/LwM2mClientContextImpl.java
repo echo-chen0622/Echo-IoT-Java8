@@ -26,6 +26,8 @@ import org.echoiot.server.transport.lwm2m.utils.LwM2MTransportUtil;
 import org.eclipse.leshan.core.SecurityMode;
 import org.eclipse.leshan.core.node.LwM2mPath;
 import org.eclipse.leshan.server.registration.Registration;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -45,18 +47,25 @@ import static org.eclipse.leshan.core.SecurityMode.NO_SEC;
 @RequiredArgsConstructor
 public class LwM2mClientContextImpl implements LwM2mClientContext {
 
+    @NotNull
     private final LwM2mTransportContext context;
+    @NotNull
     private final LwM2MTransportServerConfig config;
+    @NotNull
     private final TbMainSecurityStore securityStore;
+    @NotNull
     private final TbLwM2MClientStore clientStore;
+    @NotNull
     private final LwM2MSessionManager sessionManager;
+    @NotNull
     private final TransportDeviceProfileCache deviceProfileCache;
+    @NotNull
     private final LwM2MModelConfigService modelConfigService;
 
-    @Autowired
+    @Resource
     @Lazy
     private DefaultLwM2mUplinkMsgHandler defaultLwM2MUplinkMsgHandler;
-    @Autowired
+    @Resource
     @Lazy
     private LwM2MOtaUpdateService otaUpdateService;
 
@@ -80,6 +89,7 @@ public class LwM2mClientContextImpl implements LwM2mClientContext {
         });
     }
 
+    @NotNull
     @Override
     public LwM2mClient getClientByEndpoint(String endpoint) {
         return lwM2mClientsByEndpoint.computeIfAbsent(endpoint, ep -> {
@@ -96,7 +106,7 @@ public class LwM2mClientContextImpl implements LwM2mClientContext {
         });
     }
 
-    private void updateFetchedClient(String nodeId, LwM2mClient client) {
+    private void updateFetchedClient(String nodeId, @NotNull LwM2mClient client) {
         boolean updated = false;
         if (client.getRegistration() != null) {
             lwM2mClientsByRegistrationId.put(client.getRegistration().getId(), client);
@@ -111,8 +121,9 @@ public class LwM2mClientContextImpl implements LwM2mClientContext {
         }
     }
 
+    @NotNull
     @Override
-    public Optional<TransportProtos.SessionInfoProto> register(LwM2mClient client, Registration registration) throws LwM2MClientStateException {
+    public Optional<TransportProtos.SessionInfoProto> register(@NotNull LwM2mClient client, @NotNull Registration registration) throws LwM2MClientStateException {
         TransportProtos.SessionInfoProto oldSession;
         client.lock();
         try {
@@ -154,7 +165,7 @@ public class LwM2mClientContextImpl implements LwM2mClientContext {
     }
 
     @Override
-    public boolean asleep(LwM2mClient client) {
+    public boolean asleep(@NotNull LwM2mClient client) {
         boolean changed = compareAndSetSleepFlag(client, true);
         if (changed) {
             log.debug("[{}] client is sleeping", client.getEndpoint());
@@ -164,7 +175,7 @@ public class LwM2mClientContextImpl implements LwM2mClientContext {
     }
 
     @Override
-    public boolean awake(LwM2mClient client) {
+    public boolean awake(@NotNull LwM2mClient client) {
         onUplink(client);
         boolean changed = compareAndSetSleepFlag(client, false);
         if (changed) {
@@ -175,7 +186,7 @@ public class LwM2mClientContextImpl implements LwM2mClientContext {
         return changed;
     }
 
-    private boolean compareAndSetSleepFlag(LwM2mClient client, boolean sleeping) {
+    private boolean compareAndSetSleepFlag(@NotNull LwM2mClient client, boolean sleeping) {
         if (sleeping == client.isAsleep()) {
             log.trace("[{}] Client is already at sleeping: {}, ignoring event: {}", client.getEndpoint(), client.isAsleep(), sleeping);
             return false;
@@ -202,7 +213,7 @@ public class LwM2mClientContextImpl implements LwM2mClientContext {
     }
 
     @Override
-    public void updateRegistration(LwM2mClient client, Registration registration) throws LwM2MClientStateException {
+    public void updateRegistration(@NotNull LwM2mClient client, @NotNull Registration registration) throws LwM2MClientStateException {
         client.lock();
         try {
             if (!LwM2MClientState.REGISTERED.equals(client.getState())) {
@@ -218,7 +229,7 @@ public class LwM2mClientContextImpl implements LwM2mClientContext {
     }
 
     @Override
-    public void unregister(LwM2mClient client, Registration registration) throws LwM2MClientStateException {
+    public void unregister(@NotNull LwM2mClient client, @NotNull Registration registration) throws LwM2MClientStateException {
         client.lock();
         try {
             if (!LwM2MClientState.REGISTERED.equals(client.getState())) {
@@ -235,7 +246,7 @@ public class LwM2mClientContextImpl implements LwM2mClientContext {
                 modelConfigService.removeUpdates(client.getEndpoint());
                 UUID profileId = client.getProfileId();
                 if (profileId != null) {
-                    Optional<LwM2mClient> otherClients = lwM2mClientsByRegistrationId.values().stream().filter(e -> e.getProfileId().equals(profileId)).findFirst();
+                    @NotNull Optional<LwM2mClient> otherClients = lwM2mClientsByRegistrationId.values().stream().filter(e -> e.getProfileId().equals(profileId)).findFirst();
                     if (otherClients.isEmpty()) {
                         profiles.remove(profileId);
                     }
@@ -248,11 +259,12 @@ public class LwM2mClientContextImpl implements LwM2mClientContext {
         }
     }
 
+    @Nullable
     @Override
-    public LwM2mClient getClientBySessionInfo(TransportProtos.SessionInfoProto sessionInfo) {
-        LwM2mClient lwM2mClient = null;
-        UUID sessionId = new UUID(sessionInfo.getSessionIdMSB(), sessionInfo.getSessionIdLSB());
-        Predicate<LwM2mClient> isClientFilter =
+    public LwM2mClient getClientBySessionInfo(@NotNull TransportProtos.SessionInfoProto sessionInfo) {
+        @Nullable LwM2mClient lwM2mClient = null;
+        @NotNull UUID sessionId = new UUID(sessionInfo.getSessionIdMSB(), sessionInfo.getSessionIdLSB());
+        @NotNull Predicate<LwM2mClient> isClientFilter =
                 c -> c.getSession() != null && sessionId.equals((new UUID(c.getSession().getSessionIdMSB(), c.getSession().getSessionIdLSB())));
         if (this.lwM2mClientsByEndpoint.size() > 0) {
             lwM2mClient = this.lwM2mClientsByEndpoint.values().stream().filter(isClientFilter).findAny().orElse(null);
@@ -267,9 +279,9 @@ public class LwM2mClientContextImpl implements LwM2mClientContext {
     }
 
     @Override
-    public String getObjectIdByKeyNameFromProfile(LwM2mClient client, String keyName) {
+    public String getObjectIdByKeyNameFromProfile(@NotNull LwM2mClient client, String keyName) {
         Lwm2mDeviceProfileTransportConfiguration profile = getProfile(client.getProfileId());
-        for (Map.Entry<String, String> entry : profile.getObserveAttr().getKeyName().entrySet()) {
+        for (@NotNull Map.Entry<String, String> entry : profile.getObserveAttr().getKeyName().entrySet()) {
             String k = entry.getKey();
             String v = entry.getValue();
             if (v.equals(keyName) && client.isValidObjectVersion(k).isEmpty()) {
@@ -284,15 +296,15 @@ public class LwM2mClientContextImpl implements LwM2mClientContext {
     }
 
     @Override
-    public void registerClient(Registration registration, ValidateDeviceCredentialsResponse credentials) {
-        LwM2mClient client = getClientByEndpoint(registration.getEndpoint());
+    public void registerClient(@NotNull Registration registration, @NotNull ValidateDeviceCredentialsResponse credentials) {
+        @NotNull LwM2mClient client = getClientByEndpoint(registration.getEndpoint());
         client.init(credentials, UUID.randomUUID());
         lwM2mClientsByRegistrationId.put(registration.getId(), client);
         profileUpdate(credentials.getDeviceProfile());
     }
 
     @Override
-    public void update(LwM2mClient client) {
+    public void update(@NotNull LwM2mClient client) {
         client.lock();
         try {
             if (client.getState().equals(LwM2MClientState.REGISTERED)) {
@@ -306,7 +318,7 @@ public class LwM2mClientContextImpl implements LwM2mClientContext {
     }
 
     @Override
-    public void sendMsgsAfterSleeping(LwM2mClient lwM2MClient) {
+    public void sendMsgsAfterSleeping(@NotNull LwM2mClient lwM2MClient) {
         if (LwM2MClientState.REGISTERED.equals(lwM2MClient.getState())) {
             PowerMode powerMode = getPowerMode(lwM2MClient);
             if (PowerMode.PSM.equals(powerMode) || PowerMode.E_DRX.equals(powerMode)) {
@@ -323,7 +335,7 @@ public class LwM2mClientContextImpl implements LwM2mClientContext {
         }
     }
 
-    private PowerMode getPowerMode(LwM2mClient lwM2MClient) {
+    private PowerMode getPowerMode(@NotNull LwM2mClient lwM2MClient) {
         PowerMode powerMode = lwM2MClient.getPowerMode();
         if (powerMode == null) {
             Lwm2mDeviceProfileTransportConfiguration deviceProfile = getProfile(lwM2MClient.getProfileId());
@@ -332,6 +344,7 @@ public class LwM2mClientContextImpl implements LwM2mClientContext {
         return powerMode;
     }
 
+    @NotNull
     @Override
     public Collection<LwM2mClient> getLwM2mClients() {
         return lwM2mClientsByEndpoint.values();
@@ -343,11 +356,12 @@ public class LwM2mClientContextImpl implements LwM2mClientContext {
     }
 
     @Override
-    public Lwm2mDeviceProfileTransportConfiguration getProfile(Registration registration) {
+    public Lwm2mDeviceProfileTransportConfiguration getProfile(@NotNull Registration registration) {
         UUID profileId = getClientByEndpoint(registration.getEndpoint()).getProfileId();
         return doGetAndCache(profileId);
     }
 
+    @Nullable
     private Lwm2mDeviceProfileTransportConfiguration doGetAndCache(UUID profileId) {
 
         Lwm2mDeviceProfileTransportConfiguration result = profiles.get(profileId);
@@ -363,18 +377,20 @@ public class LwM2mClientContextImpl implements LwM2mClientContext {
         return result;
     }
 
+    @NotNull
     @Override
-    public Lwm2mDeviceProfileTransportConfiguration profileUpdate(DeviceProfile deviceProfile) {
-        Lwm2mDeviceProfileTransportConfiguration clientProfile = LwM2MTransportUtil.toLwM2MClientProfile(deviceProfile);
+    public Lwm2mDeviceProfileTransportConfiguration profileUpdate(@NotNull DeviceProfile deviceProfile) {
+        @NotNull Lwm2mDeviceProfileTransportConfiguration clientProfile = LwM2MTransportUtil.toLwM2MClientProfile(deviceProfile);
         profiles.put(deviceProfile.getUuidId(), clientProfile);
         return clientProfile;
     }
 
+    @Nullable
     @Override
-    public Set<String> getSupportedIdVerInClient(LwM2mClient client) {
-        Set<String> clientObjects = ConcurrentHashMap.newKeySet();
+    public Set<String> getSupportedIdVerInClient(@NotNull LwM2mClient client) {
+        @NotNull Set<String> clientObjects = ConcurrentHashMap.newKeySet();
         Arrays.stream(client.getRegistration().getObjectLinks()).forEach(link -> {
-            LwM2mPath pathIds = new LwM2mPath(link.getUriReference());
+            @NotNull LwM2mPath pathIds = new LwM2mPath(link.getUriReference());
             if (!pathIds.isRoot()) {
                 clientObjects.add(convertObjectIdToVersionedId(link.getUriReference(), client.getRegistration()));
             }
@@ -382,15 +398,16 @@ public class LwM2mClientContextImpl implements LwM2mClientContext {
         return (clientObjects.size() > 0) ? clientObjects : null;
     }
 
+    @Nullable
     @Override
-    public LwM2mClient getClientByDeviceId(UUID deviceId) {
+    public LwM2mClient getClientByDeviceId(@NotNull UUID deviceId) {
         return lwM2mClientsByRegistrationId.values().stream().filter(e -> deviceId.equals(e.getDeviceId())).findFirst().orElse(null);
     }
 
     @Override
-    public boolean isDownlinkAllowed(LwM2mClient client) {
+    public boolean isDownlinkAllowed(@NotNull LwM2mClient client) {
         PowerMode powerMode = client.getPowerMode();
-        OtherConfiguration profileSettings = null;
+        @Nullable OtherConfiguration profileSettings = null;
         if (powerMode == null) {
             var clientProfile = getProfile(client.getProfileId());
             profileSettings = clientProfile.getClientLwM2mSettings();
@@ -437,9 +454,9 @@ public class LwM2mClientContextImpl implements LwM2mClientContext {
     }
 
     @Override
-    public void onUplink(LwM2mClient client) {
+    public void onUplink(@NotNull LwM2mClient client) {
         PowerMode powerMode = client.getPowerMode();
-        OtherConfiguration profileSettings = null;
+        @Nullable OtherConfiguration profileSettings = null;
         if (powerMode == null) {
             var clientProfile = getProfile(client.getProfileId());
             profileSettings = clientProfile.getClientLwM2mSettings();
@@ -495,8 +512,8 @@ public class LwM2mClientContextImpl implements LwM2mClientContext {
     }
 
     @Override
-    public Long getRequestTimeout(LwM2mClient client) {
-        Long timeout = null;
+    public Long getRequestTimeout(@NotNull LwM2mClient client) {
+        @Nullable Long timeout = null;
         if (PowerMode.E_DRX.equals(client.getPowerMode()) && client.getEdrxCycle() != null) {
             timeout = client.getEdrxCycle();
         } else {

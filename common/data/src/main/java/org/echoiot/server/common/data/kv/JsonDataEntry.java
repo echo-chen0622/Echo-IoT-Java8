@@ -1,5 +1,7 @@
 package org.echoiot.server.common.data.kv;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Objects;
 import java.util.Optional;
 
@@ -11,11 +13,13 @@ public class JsonDataEntry extends BasicKvEntry {
         this.value = value;
     }
 
+    @NotNull
     @Override
     public DataType getDataType() {
         return DataType.JSON;
     }
 
+    @NotNull
     @Override
     public Optional<String> getJsonValue() {
         return Optional.ofNullable(value);
@@ -26,7 +30,7 @@ public class JsonDataEntry extends BasicKvEntry {
         if (this == o) return true;
         if (!(o instanceof JsonDataEntry)) return false;
         if (!super.equals(o)) return false;
-        JsonDataEntry that = (JsonDataEntry) o;
+        @NotNull JsonDataEntry that = (JsonDataEntry) o;
         return Objects.equals(value, that.value);
     }
 
@@ -40,6 +44,7 @@ public class JsonDataEntry extends BasicKvEntry {
         return Objects.hash(super.hashCode(), value);
     }
 
+    @NotNull
     @Override
     public String toString() {
         return "JsonDataEntry{" +

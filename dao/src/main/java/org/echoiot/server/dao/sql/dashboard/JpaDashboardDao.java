@@ -1,6 +1,8 @@
 package org.echoiot.server.dao.sql.dashboard;
 
 import org.echoiot.server.dao.model.sql.DashboardEntity;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
@@ -26,9 +28,10 @@ import java.util.UUID;
 @SqlDao
 public class JpaDashboardDao extends JpaAbstractSearchTextDao<DashboardEntity, Dashboard> implements DashboardDao {
 
-    @Autowired
+    @Resource
     DashboardRepository dashboardRepository;
 
+    @NotNull
     @Override
     protected Class<DashboardEntity> getEntityClass() {
         return DashboardEntity.class;
@@ -40,7 +43,7 @@ public class JpaDashboardDao extends JpaAbstractSearchTextDao<DashboardEntity, D
     }
 
     @Override
-    public Long countByTenantId(TenantId tenantId) {
+    public Long countByTenantId(@NotNull TenantId tenantId) {
         return dashboardRepository.countByTenantId(tenantId.getId());
     }
 
@@ -49,13 +52,15 @@ public class JpaDashboardDao extends JpaAbstractSearchTextDao<DashboardEntity, D
         return DaoUtil.getData(dashboardRepository.findByTenantIdAndExternalId(tenantId, externalId));
     }
 
+    @NotNull
     @Override
     public PageData<Dashboard> findByTenantId(UUID tenantId, PageLink pageLink) {
         return DaoUtil.toPageData(dashboardRepository.findByTenantId(tenantId, DaoUtil.toPageable(pageLink)));
     }
 
+    @Nullable
     @Override
-    public DashboardId getExternalIdByInternal(DashboardId internalId) {
+    public DashboardId getExternalIdByInternal(@NotNull DashboardId internalId) {
         return Optional.ofNullable(dashboardRepository.getExternalIdById(internalId.getId()))
                 .map(DashboardId::new).orElse(null);
     }
@@ -65,6 +70,7 @@ public class JpaDashboardDao extends JpaAbstractSearchTextDao<DashboardEntity, D
         return DaoUtil.convertDataList(dashboardRepository.findByTenantIdAndTitle(tenantId, title));
     }
 
+    @NotNull
     @Override
     public EntityType getEntityType() {
         return EntityType.DASHBOARD;

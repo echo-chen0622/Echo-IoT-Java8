@@ -12,6 +12,7 @@ import org.echoiot.server.dao.model.BaseSqlEntity;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.model.SearchTextEntity;
 import org.echoiot.server.dao.util.mapping.JsonStringType;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -69,7 +70,7 @@ public final class CustomerEntity extends BaseSqlEntity<Customer> implements Sea
         super();
     }
 
-    public CustomerEntity(Customer customer) {
+    public CustomerEntity(@NotNull Customer customer) {
         if (customer.getId() != null) {
             this.setUuid(customer.getId().getId());
         }
@@ -100,9 +101,10 @@ public final class CustomerEntity extends BaseSqlEntity<Customer> implements Sea
         this.searchText = searchText;
     }
 
+    @NotNull
     @Override
     public Customer toData() {
-        Customer customer = new Customer(new CustomerId(this.getUuid()));
+        @NotNull Customer customer = new Customer(new CustomerId(this.getUuid()));
         customer.setCreatedTime(createdTime);
         customer.setTenantId(TenantId.fromUUID(tenantId));
         customer.setTitle(title);

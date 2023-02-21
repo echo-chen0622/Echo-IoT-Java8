@@ -7,6 +7,8 @@ import com.google.common.util.concurrent.MoreExecutors;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.dao.model.sql.AttributeKvCompositeKey;
 import org.echoiot.server.dao.model.sql.AttributeKvEntity;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -39,16 +41,16 @@ import java.util.stream.Collectors;
 @SqlDao
 public class JpaAttributeDao extends JpaAbstractDaoListeningExecutorService implements AttributesDao {
 
-    @Autowired
+    @Resource
     ScheduledLogExecutorComponent logExecutor;
 
-    @Autowired
+    @Resource
     private AttributeKvRepository attributeKvRepository;
 
-    @Autowired
+    @Resource
     private AttributeKvInsertRepository attributeKvInsertRepository;
 
-    @Autowired
+    @Resource
     private StatsFactory statsFactory;
 
     @Value("${sql.attributes.batch_size:1000}")
@@ -79,7 +81,7 @@ public class JpaAttributeDao extends JpaAbstractDaoListeningExecutorService impl
                 .batchSortEnabled(batchSortEnabled)
                 .build();
 
-        Function<AttributeKvEntity, Integer> hashcodeFunction = entity -> entity.getId().getEntityId().hashCode();
+        @NotNull Function<AttributeKvEntity, Integer> hashcodeFunction = entity -> entity.getId().getEntityId().hashCode();
         queue = new TbSqlBlockingQueueWrapper<>(params, hashcodeFunction, batchThreads, statsFactory);
         queue.init(logExecutor, v -> attributeKvInsertRepository.saveOrUpdate(v),
                 Comparator.comparing((AttributeKvEntity attributeKvEntity) -> attributeKvEntity.getId().getEntityId())
@@ -96,16 +98,17 @@ public class JpaAttributeDao extends JpaAbstractDaoListeningExecutorService impl
         }
     }
 
+    @NotNull
     @Override
-    public Optional<AttributeKvEntry> find(TenantId tenantId, EntityId entityId, String attributeType, String attributeKey) {
-        AttributeKvCompositeKey compositeKey =
+    public Optional<AttributeKvEntry> find(TenantId tenantId, @NotNull EntityId entityId, String attributeType, String attributeKey) {
+        @NotNull AttributeKvCompositeKey compositeKey =
                 getAttributeKvCompositeKey(entityId, attributeType, attributeKey);
         return Optional.ofNullable(DaoUtil.getData(attributeKvRepository.findById(compositeKey)));
     }
 
     @Override
-    public List<AttributeKvEntry> find(TenantId tenantId, EntityId entityId, String attributeType, Collection<String> attributeKeys) {
-        List<AttributeKvCompositeKey> compositeKeys =
+    public List<AttributeKvEntry> find(TenantId tenantId, @NotNull EntityId entityId, String attributeType, @NotNull Collection<String> attributeKeys) {
+        @NotNull List<AttributeKvCompositeKey> compositeKeys =
                 attributeKeys
                         .stream()
                         .map(attributeKey ->
@@ -115,7 +118,7 @@ public class JpaAttributeDao extends JpaAbstractDaoListeningExecutorService impl
     }
 
     @Override
-    public List<AttributeKvEntry> findAll(TenantId tenantId, EntityId entityId, String attributeType) {
+    public List<AttributeKvEntry> findAll(TenantId tenantId, @NotNull EntityId entityId, String attributeType) {
         return DaoUtil.convertDataList(Lists.newArrayList(
                         attributeKvRepository.findAllByEntityTypeAndEntityIdAndAttributeType(
                                 entityId.getEntityType(),
@@ -124,7 +127,7 @@ public class JpaAttributeDao extends JpaAbstractDaoListeningExecutorService impl
     }
 
     @Override
-    public List<String> findAllKeysByDeviceProfileId(TenantId tenantId, DeviceProfileId deviceProfileId) {
+    public List<String> findAllKeysByDeviceProfileId(@NotNull TenantId tenantId, @Nullable DeviceProfileId deviceProfileId) {
         if (deviceProfileId != null) {
             return attributeKvRepository.findAllKeysByDeviceProfileId(tenantId.getId(), deviceProfileId.getId());
         } else {
@@ -133,14 +136,15 @@ public class JpaAttributeDao extends JpaAbstractDaoListeningExecutorService impl
     }
 
     @Override
-    public List<String> findAllKeysByEntityIds(TenantId tenantId, EntityType entityType, List<EntityId> entityIds) {
+    public List<String> findAllKeysByEntityIds(TenantId tenantId, @NotNull EntityType entityType, @NotNull List<EntityId> entityIds) {
         return attributeKvRepository
                 .findAllKeysByEntityIds(entityType.name(), entityIds.stream().map(EntityId::getId).collect(Collectors.toList()));
     }
 
+    @NotNull
     @Override
-    public ListenableFuture<String> save(TenantId tenantId, EntityId entityId, String attributeType, AttributeKvEntry attribute) {
-        AttributeKvEntity entity = new AttributeKvEntity();
+    public ListenableFuture<String> save(TenantId tenantId, @NotNull EntityId entityId, String attributeType, @NotNull AttributeKvEntry attribute) {
+        @NotNull AttributeKvEntity entity = new AttributeKvEntity();
         entity.setId(new AttributeKvCompositeKey(entityId.getEntityType(), entityId.getId(), attributeType, attribute.getKey()));
         entity.setLastUpdateTs(attribute.getLastUpdateTs());
         entity.setStrValue(attribute.getStrValue().orElse(null));
@@ -151,13 +155,15 @@ public class JpaAttributeDao extends JpaAbstractDaoListeningExecutorService impl
         return addToQueue(entity);
     }
 
-    private ListenableFuture<String> addToQueue(AttributeKvEntity entity) {
+    @NotNull
+    private ListenableFuture<String> addToQueue(@NotNull AttributeKvEntity entity) {
         return Futures.transform(queue.add(entity), v -> entity.getId().getAttributeKey(), MoreExecutors.directExecutor());
     }
 
+    @NotNull
     @Override
-    public List<ListenableFuture<String>> removeAll(TenantId tenantId, EntityId entityId, String attributeType, List<String> keys) {
-        List<ListenableFuture<String>> futuresList = new ArrayList<>(keys.size());
+    public List<ListenableFuture<String>> removeAll(TenantId tenantId, @NotNull EntityId entityId, String attributeType, @NotNull List<String> keys) {
+        @NotNull List<ListenableFuture<String>> futuresList = new ArrayList<>(keys.size());
         for (String key : keys) {
             futuresList.add(service.submit(() -> {
                 attributeKvRepository.delete(entityId.getEntityType(), entityId.getId(), attributeType, key);
@@ -167,7 +173,8 @@ public class JpaAttributeDao extends JpaAbstractDaoListeningExecutorService impl
         return futuresList;
     }
 
-    private AttributeKvCompositeKey getAttributeKvCompositeKey(EntityId entityId, String attributeType, String attributeKey) {
+    @NotNull
+    private AttributeKvCompositeKey getAttributeKvCompositeKey(@NotNull EntityId entityId, String attributeType, String attributeKey) {
         return new AttributeKvCompositeKey(
                 entityId.getEntityType(),
                 entityId.getId(),

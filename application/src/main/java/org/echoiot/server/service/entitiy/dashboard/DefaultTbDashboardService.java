@@ -12,6 +12,8 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.dao.dashboard.DashboardService;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.entitiy.AbstractTbEntityService;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -23,11 +25,13 @@ import java.util.Set;
 @AllArgsConstructor
 public class DefaultTbDashboardService extends AbstractTbEntityService implements TbDashboardService {
 
+    @NotNull
     private final DashboardService dashboardService;
 
+    @NotNull
     @Override
-    public Dashboard save(Dashboard dashboard, User user) throws Exception {
-        ActionType actionType = dashboard.getId() == null ? ActionType.ADDED : ActionType.UPDATED;
+    public Dashboard save(@NotNull Dashboard dashboard, User user) throws Exception {
+        @NotNull ActionType actionType = dashboard.getId() == null ? ActionType.ADDED : ActionType.UPDATED;
         TenantId tenantId = dashboard.getTenantId();
         try {
             Dashboard savedDashboard = checkNotNull(dashboardService.saveDashboard(dashboard));
@@ -42,11 +46,11 @@ public class DefaultTbDashboardService extends AbstractTbEntityService implement
     }
 
     @Override
-    public void delete(Dashboard dashboard, User user) {
+    public void delete(@NotNull Dashboard dashboard, User user) {
         DashboardId dashboardId = dashboard.getId();
         TenantId tenantId = dashboard.getTenantId();
         try {
-            List<EdgeId> relatedEdgeIds = edgeService.findAllRelatedEdgeIds(tenantId, dashboardId);
+            @Nullable List<EdgeId> relatedEdgeIds = edgeService.findAllRelatedEdgeIds(tenantId, dashboardId);
             dashboardService.deleteDashboard(tenantId, dashboardId);
             notificationEntityService.notifyDeleteEntity(tenantId, dashboardId, dashboard, null,
                     ActionType.DELETED, relatedEdgeIds, user, dashboardId.toString());
@@ -57,8 +61,8 @@ public class DefaultTbDashboardService extends AbstractTbEntityService implement
     }
 
     @Override
-    public Dashboard assignDashboardToCustomer(Dashboard dashboard, Customer customer, User user) throws EchoiotException {
-        ActionType actionType = ActionType.ASSIGNED_TO_CUSTOMER;
+    public Dashboard assignDashboardToCustomer(@NotNull Dashboard dashboard, @NotNull Customer customer, User user) throws EchoiotException {
+        @NotNull ActionType actionType = ActionType.ASSIGNED_TO_CUSTOMER;
         TenantId tenantId = dashboard.getTenantId();
         CustomerId customerId = customer.getId();
         DashboardId dashboardId = dashboard.getId();
@@ -75,8 +79,8 @@ public class DefaultTbDashboardService extends AbstractTbEntityService implement
     }
 
     @Override
-    public Dashboard assignDashboardToPublicCustomer(Dashboard dashboard, User user) throws EchoiotException {
-        ActionType actionType = ActionType.ASSIGNED_TO_CUSTOMER;
+    public Dashboard assignDashboardToPublicCustomer(@NotNull Dashboard dashboard, User user) throws EchoiotException {
+        @NotNull ActionType actionType = ActionType.ASSIGNED_TO_CUSTOMER;
         TenantId tenantId = dashboard.getTenantId();
         DashboardId dashboardId = dashboard.getId();
         try {
@@ -93,8 +97,8 @@ public class DefaultTbDashboardService extends AbstractTbEntityService implement
     }
 
     @Override
-    public Dashboard unassignDashboardFromPublicCustomer(Dashboard dashboard, User user) throws EchoiotException {
-        ActionType actionType = ActionType.UNASSIGNED_FROM_CUSTOMER;
+    public Dashboard unassignDashboardFromPublicCustomer(@NotNull Dashboard dashboard, User user) throws EchoiotException {
+        @NotNull ActionType actionType = ActionType.UNASSIGNED_FROM_CUSTOMER;
         TenantId tenantId = dashboard.getTenantId();
         DashboardId dashboardId = dashboard.getId();
         try {
@@ -110,14 +114,15 @@ public class DefaultTbDashboardService extends AbstractTbEntityService implement
         }
     }
 
+    @NotNull
     @Override
-    public Dashboard updateDashboardCustomers(Dashboard dashboard, Set<CustomerId> customerIds, User user) throws EchoiotException {
-        ActionType actionType = ActionType.ASSIGNED_TO_CUSTOMER;
+    public Dashboard updateDashboardCustomers(@NotNull Dashboard dashboard, @NotNull Set<CustomerId> customerIds, User user) throws EchoiotException {
+        @NotNull ActionType actionType = ActionType.ASSIGNED_TO_CUSTOMER;
         TenantId tenantId = dashboard.getTenantId();
         DashboardId dashboardId = dashboard.getId();
         try {
-            Set<CustomerId> addedCustomerIds = new HashSet<>();
-            Set<CustomerId> removedCustomerIds = new HashSet<>();
+            @NotNull Set<CustomerId> addedCustomerIds = new HashSet<>();
+            @NotNull Set<CustomerId> removedCustomerIds = new HashSet<>();
             for (CustomerId customerId : customerIds) {
                 if (!dashboard.isAssignedToCustomer(customerId)) {
                     addedCustomerIds.add(customerId);
@@ -126,7 +131,7 @@ public class DefaultTbDashboardService extends AbstractTbEntityService implement
 
             Set<ShortCustomerInfo> assignedCustomers = dashboard.getAssignedCustomers();
             if (assignedCustomers != null) {
-                for (ShortCustomerInfo customerInfo : assignedCustomers) {
+                for (@NotNull ShortCustomerInfo customerInfo : assignedCustomers) {
                     if (!customerIds.contains(customerInfo.getCustomerId())) {
                         removedCustomerIds.add(customerInfo.getCustomerId());
                     }
@@ -136,16 +141,16 @@ public class DefaultTbDashboardService extends AbstractTbEntityService implement
             if (addedCustomerIds.isEmpty() && removedCustomerIds.isEmpty()) {
                 return dashboard;
             } else {
-                Dashboard savedDashboard = null;
-                for (CustomerId customerId : addedCustomerIds) {
+                @Nullable Dashboard savedDashboard = null;
+                for (@NotNull CustomerId customerId : addedCustomerIds) {
                     savedDashboard = checkNotNull(dashboardService.assignDashboardToCustomer(tenantId, dashboardId, customerId));
-                    ShortCustomerInfo customerInfo = savedDashboard.getAssignedCustomerInfo(customerId);
+                    @Nullable ShortCustomerInfo customerInfo = savedDashboard.getAssignedCustomerInfo(customerId);
                     notificationEntityService.notifyAssignOrUnassignEntityToCustomer(tenantId, savedDashboard.getId(), customerId, savedDashboard,
                             actionType, user, true, dashboardId.toString(), customerId.toString(), customerInfo.getTitle());
                 }
                 actionType = ActionType.UNASSIGNED_FROM_CUSTOMER;
-                for (CustomerId customerId : removedCustomerIds) {
-                    ShortCustomerInfo customerInfo = dashboard.getAssignedCustomerInfo(customerId);
+                for (@NotNull CustomerId customerId : removedCustomerIds) {
+                    @Nullable ShortCustomerInfo customerInfo = dashboard.getAssignedCustomerInfo(customerId);
                     savedDashboard = checkNotNull(dashboardService.unassignDashboardFromCustomer(tenantId, dashboardId, customerId));
                     notificationEntityService.notifyAssignOrUnassignEntityToCustomer(tenantId, savedDashboard.getId(), customerId, savedDashboard,
                             ActionType.UNASSIGNED_FROM_CUSTOMER, user, true, dashboardId.toString(), customerId.toString(), customerInfo.getTitle());
@@ -158,13 +163,14 @@ public class DefaultTbDashboardService extends AbstractTbEntityService implement
         }
     }
 
+    @NotNull
     @Override
-    public Dashboard addDashboardCustomers(Dashboard dashboard, Set<CustomerId> customerIds, User user) throws EchoiotException {
-        ActionType actionType = ActionType.ASSIGNED_TO_CUSTOMER;
+    public Dashboard addDashboardCustomers(@NotNull Dashboard dashboard, @NotNull Set<CustomerId> customerIds, User user) throws EchoiotException {
+        @NotNull ActionType actionType = ActionType.ASSIGNED_TO_CUSTOMER;
         TenantId tenantId = dashboard.getTenantId();
         DashboardId dashboardId = dashboard.getId();
         try {
-            Set<CustomerId> addedCustomerIds = new HashSet<>();
+            @NotNull Set<CustomerId> addedCustomerIds = new HashSet<>();
             for (CustomerId customerId : customerIds) {
                 if (!dashboard.isAssignedToCustomer(customerId)) {
                     addedCustomerIds.add(customerId);
@@ -173,10 +179,10 @@ public class DefaultTbDashboardService extends AbstractTbEntityService implement
             if (addedCustomerIds.isEmpty()) {
                 return dashboard;
             } else {
-                Dashboard savedDashboard = null;
-                for (CustomerId customerId : addedCustomerIds) {
+                @Nullable Dashboard savedDashboard = null;
+                for (@NotNull CustomerId customerId : addedCustomerIds) {
                     savedDashboard = checkNotNull(dashboardService.assignDashboardToCustomer(tenantId, dashboardId, customerId));
-                    ShortCustomerInfo customerInfo = savedDashboard.getAssignedCustomerInfo(customerId);
+                    @Nullable ShortCustomerInfo customerInfo = savedDashboard.getAssignedCustomerInfo(customerId);
                     notificationEntityService.notifyAssignOrUnassignEntityToCustomer(tenantId, dashboardId, customerId, savedDashboard,
                             actionType, user, true, dashboardId.toString(), customerId.toString(), customerInfo.getTitle());
                 }
@@ -189,12 +195,12 @@ public class DefaultTbDashboardService extends AbstractTbEntityService implement
     }
 
     @Override
-    public Dashboard removeDashboardCustomers(Dashboard dashboard, Set<CustomerId> customerIds, User user) throws EchoiotException {
-        ActionType actionType = ActionType.UNASSIGNED_FROM_CUSTOMER;
+    public Dashboard removeDashboardCustomers(@NotNull Dashboard dashboard, @NotNull Set<CustomerId> customerIds, User user) throws EchoiotException {
+        @NotNull ActionType actionType = ActionType.UNASSIGNED_FROM_CUSTOMER;
         TenantId tenantId = dashboard.getTenantId();
         DashboardId dashboardId = dashboard.getId();
         try {
-            Set<CustomerId> removedCustomerIds = new HashSet<>();
+            @NotNull Set<CustomerId> removedCustomerIds = new HashSet<>();
             for (CustomerId customerId : customerIds) {
                 if (dashboard.isAssignedToCustomer(customerId)) {
                     removedCustomerIds.add(customerId);
@@ -203,9 +209,9 @@ public class DefaultTbDashboardService extends AbstractTbEntityService implement
             if (removedCustomerIds.isEmpty()) {
                 return dashboard;
             } else {
-                Dashboard savedDashboard = null;
-                for (CustomerId customerId : removedCustomerIds) {
-                    ShortCustomerInfo customerInfo = dashboard.getAssignedCustomerInfo(customerId);
+                @Nullable Dashboard savedDashboard = null;
+                for (@NotNull CustomerId customerId : removedCustomerIds) {
+                    @Nullable ShortCustomerInfo customerInfo = dashboard.getAssignedCustomerInfo(customerId);
                     savedDashboard = checkNotNull(dashboardService.unassignDashboardFromCustomer(tenantId, dashboardId, customerId));
                     notificationEntityService.notifyAssignOrUnassignEntityToCustomer(tenantId, dashboardId, customerId, savedDashboard,
                             actionType, user, true, dashboardId.toString(), customerId.toString(), customerInfo.getTitle());
@@ -219,8 +225,8 @@ public class DefaultTbDashboardService extends AbstractTbEntityService implement
     }
 
     @Override
-    public Dashboard asignDashboardToEdge(TenantId tenantId, DashboardId dashboardId, Edge edge, User user) throws EchoiotException {
-        ActionType actionType = ActionType.ASSIGNED_TO_EDGE;
+    public Dashboard asignDashboardToEdge(TenantId tenantId, @NotNull DashboardId dashboardId, @NotNull Edge edge, User user) throws EchoiotException {
+        @NotNull ActionType actionType = ActionType.ASSIGNED_TO_EDGE;
         EdgeId edgeId = edge.getId();
         try {
             Dashboard savedDashboard = checkNotNull(dashboardService.assignDashboardToEdge(tenantId, dashboardId, edgeId));
@@ -236,8 +242,8 @@ public class DefaultTbDashboardService extends AbstractTbEntityService implement
     }
 
     @Override
-    public Dashboard unassignDashboardFromEdge(Dashboard dashboard, Edge edge, User user) throws EchoiotException {
-        ActionType actionType = ActionType.UNASSIGNED_FROM_EDGE;
+    public Dashboard unassignDashboardFromEdge(@NotNull Dashboard dashboard, @NotNull Edge edge, User user) throws EchoiotException {
+        @NotNull ActionType actionType = ActionType.UNASSIGNED_FROM_EDGE;
         TenantId tenantId = dashboard.getTenantId();
         DashboardId dashboardId = dashboard.getId();
         EdgeId edgeId = edge.getId();
@@ -256,8 +262,8 @@ public class DefaultTbDashboardService extends AbstractTbEntityService implement
     }
 
     @Override
-    public Dashboard unassignDashboardFromCustomer(Dashboard dashboard, Customer customer, User user) throws EchoiotException {
-        ActionType actionType = ActionType.UNASSIGNED_FROM_CUSTOMER;
+    public Dashboard unassignDashboardFromCustomer(@NotNull Dashboard dashboard, @NotNull Customer customer, User user) throws EchoiotException {
+        @NotNull ActionType actionType = ActionType.UNASSIGNED_FROM_CUSTOMER;
         TenantId tenantId = dashboard.getTenantId();
         DashboardId dashboardId = dashboard.getId();
         try {

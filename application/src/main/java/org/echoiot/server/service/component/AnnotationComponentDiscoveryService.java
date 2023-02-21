@@ -13,6 +13,8 @@ import org.echoiot.server.common.data.plugin.ComponentDescriptor;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.data.rule.RuleChainType;
 import org.echoiot.server.dao.component.ComponentDescriptorService;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -34,19 +36,19 @@ public class AnnotationComponentDiscoveryService implements ComponentDiscoverySe
     @Value("${plugins.scan_packages}")
     private String[] scanPackages;
 
-    @Autowired
+    @Resource
     private Environment environment;
 
-    @Autowired
+    @Resource
     private ComponentDescriptorService componentDescriptorService;
 
-    private Map<String, ComponentDescriptor> components = new HashMap<>();
+    private final Map<String, ComponentDescriptor> components = new HashMap<>();
 
-    private Map<ComponentType, List<ComponentDescriptor>> coreComponentsMap = new HashMap<>();
+    private final Map<ComponentType, List<ComponentDescriptor>> coreComponentsMap = new HashMap<>();
 
-    private Map<ComponentType, List<ComponentDescriptor>> edgeComponentsMap = new HashMap<>();
+    private final Map<ComponentType, List<ComponentDescriptor>> edgeComponentsMap = new HashMap<>();
 
-    private ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper mapper = new ObjectMapper();
 
     private boolean isInstall() {
         return environment.acceptsProfiles(Profiles.of("install"));
@@ -60,14 +62,14 @@ public class AnnotationComponentDiscoveryService implements ComponentDiscoverySe
     }
 
     private void registerRuleNodeComponents() {
-        Set<BeanDefinition> ruleNodeBeanDefinitions = getBeanDefinitions(RuleNode.class);
-        for (BeanDefinition def : ruleNodeBeanDefinitions) {
+        @NotNull Set<BeanDefinition> ruleNodeBeanDefinitions = getBeanDefinitions(RuleNode.class);
+        for (@NotNull BeanDefinition def : ruleNodeBeanDefinitions) {
             int retryCount = 0;
-            Exception cause = null;
+            @Nullable Exception cause = null;
             while (retryCount < MAX_OPTIMISITC_RETRIES) {
                 try {
-                    String clazzName = def.getBeanClassName();
-                    Class<?> clazz = Class.forName(clazzName);
+                    @Nullable String clazzName = def.getBeanClassName();
+                    @NotNull Class<?> clazz = Class.forName(clazzName);
                     RuleNode ruleNodeAnnotation = clazz.getAnnotation(RuleNode.class);
                     ComponentType type = ruleNodeAnnotation.type();
                     ComponentDescriptor component = scanAndPersistComponent(def, type);
@@ -92,7 +94,7 @@ public class AnnotationComponentDiscoveryService implements ComponentDiscoverySe
         }
     }
 
-    private void putComponentIntoMaps(ComponentType type, RuleNode ruleNodeAnnotation, ComponentDescriptor component) {
+    private void putComponentIntoMaps(ComponentType type, @NotNull RuleNode ruleNodeAnnotation, ComponentDescriptor component) {
         boolean ruleChainTypesMethodAvailable;
         try {
             ruleNodeAnnotation.getClass().getMethod("ruleChainTypes");
@@ -114,7 +116,7 @@ public class AnnotationComponentDiscoveryService implements ComponentDiscoverySe
         }
     }
 
-    private boolean ruleChainTypeContainsArray(RuleChainType ruleChainType, RuleChainType[] array) {
+    private boolean ruleChainTypeContainsArray(@NotNull RuleChainType ruleChainType, @NotNull RuleChainType[] array) {
         for (RuleChainType tmp : array) {
             if (ruleChainType.equals(tmp)) {
                 return true;
@@ -123,16 +125,16 @@ public class AnnotationComponentDiscoveryService implements ComponentDiscoverySe
         return false;
     }
 
-    private ComponentDescriptor scanAndPersistComponent(BeanDefinition def, ComponentType type) {
+    private ComponentDescriptor scanAndPersistComponent(@NotNull BeanDefinition def, ComponentType type) {
         ComponentDescriptor scannedComponent = new ComponentDescriptor();
-        String clazzName = def.getBeanClassName();
+        @Nullable String clazzName = def.getBeanClassName();
         try {
             scannedComponent.setType(type);
-            Class<?> clazz = Class.forName(clazzName);
+            @NotNull Class<?> clazz = Class.forName(clazzName);
             RuleNode ruleNodeAnnotation = clazz.getAnnotation(RuleNode.class);
             scannedComponent.setName(ruleNodeAnnotation.name());
             scannedComponent.setScope(ruleNodeAnnotation.scope());
-            NodeDefinition nodeDefinition = prepareNodeDefinition(ruleNodeAnnotation);
+            @NotNull NodeDefinition nodeDefinition = prepareNodeDefinition(ruleNodeAnnotation);
             ObjectNode configurationDescriptor = mapper.createObjectNode();
             JsonNode node = mapper.valueToTree(nodeDefinition);
             configurationDescriptor.set("nodeDefinition", node);
@@ -159,8 +161,9 @@ public class AnnotationComponentDiscoveryService implements ComponentDiscoverySe
         return scannedComponent;
     }
 
-    private NodeDefinition prepareNodeDefinition(RuleNode nodeAnnotation) throws Exception {
-        NodeDefinition nodeDefinition = new NodeDefinition();
+    @NotNull
+    private NodeDefinition prepareNodeDefinition(@NotNull RuleNode nodeAnnotation) throws Exception {
+        @NotNull NodeDefinition nodeDefinition = new NodeDefinition();
         nodeDefinition.setDetails(nodeAnnotation.nodeDetails());
         nodeDefinition.setDescription(nodeAnnotation.nodeDescription());
         nodeDefinition.setInEnabled(nodeAnnotation.inEnabled());
@@ -169,7 +172,7 @@ public class AnnotationComponentDiscoveryService implements ComponentDiscoverySe
         nodeDefinition.setCustomRelations(nodeAnnotation.customRelations());
         nodeDefinition.setRuleChainNode(nodeAnnotation.ruleChainNode());
         Class<? extends NodeConfiguration> configClazz = nodeAnnotation.configClazz();
-        NodeConfiguration config = configClazz.getDeclaredConstructor().newInstance();
+        @NotNull NodeConfiguration config = configClazz.getDeclaredConstructor().newInstance();
         NodeConfiguration defaultConfiguration = config.defaultConfiguration();
         nodeDefinition.setDefaultConfiguration(mapper.valueToTree(defaultConfiguration));
         nodeDefinition.setUiResources(nodeAnnotation.uiResources());
@@ -180,19 +183,21 @@ public class AnnotationComponentDiscoveryService implements ComponentDiscoverySe
         return nodeDefinition;
     }
 
-    private String[] getRelationTypesWithFailureRelation(RuleNode nodeAnnotation) {
-        List<String> relationTypes = new ArrayList<>(Arrays.asList(nodeAnnotation.relationTypes()));
+    @NotNull
+    private String[] getRelationTypesWithFailureRelation(@NotNull RuleNode nodeAnnotation) {
+        @NotNull List<String> relationTypes = new ArrayList<>(Arrays.asList(nodeAnnotation.relationTypes()));
         if (!relationTypes.contains(TbRelationTypes.FAILURE)) {
             relationTypes.add(TbRelationTypes.FAILURE);
         }
         return relationTypes.toArray(new String[relationTypes.size()]);
     }
 
-    private Set<BeanDefinition> getBeanDefinitions(Class<? extends Annotation> componentType) {
-        ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false);
+    @NotNull
+    private Set<BeanDefinition> getBeanDefinitions(@NotNull Class<? extends Annotation> componentType) {
+        @NotNull ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false);
         scanner.addIncludeFilter(new AnnotationTypeFilter(componentType));
-        Set<BeanDefinition> defs = new HashSet<>();
-        for (String scanPackage : scanPackages) {
+        @NotNull Set<BeanDefinition> defs = new HashSet<>();
+        for (@NotNull String scanPackage : scanPackages) {
             defs.addAll(scanner.findCandidateComponents(scanPackage));
         }
         return defs;
@@ -204,6 +209,7 @@ public class AnnotationComponentDiscoveryService implements ComponentDiscoverySe
         log.debug("Found following definitions: {}", components.values());
     }
 
+    @NotNull
     @Override
     public List<ComponentDescriptor> getComponents(ComponentType type, RuleChainType ruleChainType) {
         if (RuleChainType.CORE.equals(ruleChainType)) {
@@ -224,8 +230,9 @@ public class AnnotationComponentDiscoveryService implements ComponentDiscoverySe
         }
     }
 
+    @NotNull
     @Override
-    public List<ComponentDescriptor> getComponents(Set<ComponentType> types, RuleChainType ruleChainType) {
+    public List<ComponentDescriptor> getComponents(@NotNull Set<ComponentType> types, RuleChainType ruleChainType) {
         if (RuleChainType.CORE.equals(ruleChainType)) {
             return getComponents(types, coreComponentsMap);
         } else if (RuleChainType.EDGE.equals(ruleChainType)) {
@@ -236,13 +243,15 @@ public class AnnotationComponentDiscoveryService implements ComponentDiscoverySe
         }
     }
 
+    @NotNull
     @Override
     public Optional<ComponentDescriptor> getComponent(String clazz) {
         return Optional.ofNullable(components.get(clazz));
     }
 
-    private List<ComponentDescriptor> getComponents(Set<ComponentType> types, Map<ComponentType, List<ComponentDescriptor>> componentsMap) {
-        List<ComponentDescriptor> result = new ArrayList<>();
+    @NotNull
+    private List<ComponentDescriptor> getComponents(@NotNull Set<ComponentType> types, @NotNull Map<ComponentType, List<ComponentDescriptor>> componentsMap) {
+        @NotNull List<ComponentDescriptor> result = new ArrayList<>();
         types.stream().filter(componentsMap::containsKey).forEach(type -> {
             result.addAll(componentsMap.get(type));
         });

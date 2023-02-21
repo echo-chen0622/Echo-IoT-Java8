@@ -18,6 +18,8 @@ import org.eclipse.californium.core.network.Exchange;
 import org.eclipse.californium.core.server.resources.CoapExchange;
 import org.eclipse.californium.core.server.resources.Resource;
 import org.echoiot.server.gen.transport.TransportProtos;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,9 +29,10 @@ import java.util.UUID;
 public class OtaPackageTransportResource extends AbstractCoapTransportResource {
     private static final int ACCESS_TOKEN_POSITION = 2;
 
+    @NotNull
     private final OtaPackageType otaPackageType;
 
-    public OtaPackageTransportResource(CoapTransportContext ctx, OtaPackageType otaPackageType) {
+    public OtaPackageTransportResource(@NotNull CoapTransportContext ctx, @NotNull OtaPackageType otaPackageType) {
         super(ctx, otaPackageType.getKeyPrefix());
         this.otaPackageType = otaPackageType;
 
@@ -37,7 +40,7 @@ public class OtaPackageTransportResource extends AbstractCoapTransportResource {
     }
 
     @Override
-    protected void processHandleGet(CoapExchange exchange) {
+    protected void processHandleGet(@NotNull CoapExchange exchange) {
         log.trace("Processing {}", exchange.advanced().getRequest());
         exchange.accept();
         Exchange advanced = exchange.advanced();
@@ -46,12 +49,12 @@ public class OtaPackageTransportResource extends AbstractCoapTransportResource {
     }
 
     @Override
-    protected void processHandlePost(CoapExchange exchange) {
+    protected void processHandlePost(@NotNull CoapExchange exchange) {
         exchange.respond(CoAP.ResponseCode.METHOD_NOT_ALLOWED);
     }
 
-    private void processAccessTokenRequest(CoapExchange exchange, Request request) {
-        Optional<DeviceTokenCredentials> credentials = decodeCredentials(request);
+    private void processAccessTokenRequest(@NotNull CoapExchange exchange, @NotNull Request request) {
+        @NotNull Optional<DeviceTokenCredentials> credentials = decodeCredentials(request);
         if (credentials.isEmpty()) {
             exchange.respond(CoAP.ResponseCode.UNAUTHORIZED);
             return;
@@ -62,7 +65,7 @@ public class OtaPackageTransportResource extends AbstractCoapTransportResource {
                 }));
     }
 
-    private void getOtaPackageCallback(ValidateDeviceCredentialsResponse msg, CoapExchange exchange, OtaPackageType firmwareType) {
+    private void getOtaPackageCallback(@NotNull ValidateDeviceCredentialsResponse msg, CoapExchange exchange, @NotNull OtaPackageType firmwareType) {
         TenantId tenantId = msg.getDeviceInfo().getTenantId();
         DeviceId deviceId = msg.getDeviceInfo().getDeviceId();
         TransportProtos.GetOtaPackageRequestMsg requestMsg = TransportProtos.GetOtaPackageRequestMsg.newBuilder()
@@ -74,7 +77,8 @@ public class OtaPackageTransportResource extends AbstractCoapTransportResource {
         transportContext.getTransportService().process(SessionInfoCreator.create(msg, transportContext, UUID.randomUUID()), requestMsg, new OtaPackageCallback(exchange));
     }
 
-    private Optional<DeviceTokenCredentials> decodeCredentials(Request request) {
+    @NotNull
+    private Optional<DeviceTokenCredentials> decodeCredentials(@NotNull Request request) {
         List<String> uriPath = request.getOptions().getUriPath();
         if (uriPath.size() == ACCESS_TOKEN_POSITION) {
             return Optional.of(new DeviceTokenCredentials(uriPath.get(ACCESS_TOKEN_POSITION - 1)));
@@ -83,6 +87,7 @@ public class OtaPackageTransportResource extends AbstractCoapTransportResource {
         }
     }
 
+    @NotNull
     @Override
     public Resource getChild(String name) {
         return this;
@@ -96,7 +101,7 @@ public class OtaPackageTransportResource extends AbstractCoapTransportResource {
         }
 
         @Override
-        public void onSuccess(TransportProtos.GetOtaPackageResponseMsg msg) {
+        public void onSuccess(@NotNull TransportProtos.GetOtaPackageResponseMsg msg) {
             String title = exchange.getQueryParameter("title");
             String version = exchange.getQueryParameter("version");
             if (msg.getResponseStatus().equals(TransportProtos.ResponseStatus.SUCCESS)) {
@@ -122,8 +127,8 @@ public class OtaPackageTransportResource extends AbstractCoapTransportResource {
         }
     }
 
-    private void respondOtaPackage(CoapExchange exchange, byte[] data) {
-        Response response = new Response(CoAP.ResponseCode.CONTENT);
+    private void respondOtaPackage(@NotNull CoapExchange exchange, @Nullable byte[] data) {
+        @NotNull Response response = new Response(CoAP.ResponseCode.CONTENT);
         if (data != null && data.length > 0) {
             response.setPayload(data);
             if (exchange.getRequestOptions().getBlock2() != null) {

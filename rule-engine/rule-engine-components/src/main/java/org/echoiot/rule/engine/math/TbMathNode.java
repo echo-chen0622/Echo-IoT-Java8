@@ -7,6 +7,8 @@ import com.google.common.util.concurrent.MoreExecutors;
 import lombok.extern.slf4j.Slf4j;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.util.ConcurrentReferenceHashMap;
 import org.echoiot.common.util.DonAsynchron;
 import org.echoiot.common.util.JacksonUtil;
@@ -71,7 +73,7 @@ public class TbMathNode implements TbNode {
     private boolean msgBodyToJsonConversionRequired;
 
     @Override
-    public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
+    public void init(TbContext ctx, @NotNull TbNodeConfiguration configuration) throws TbNodeException {
         this.config = TbNodeUtils.convert(configuration, TbMathNodeConfiguration.class);
         var operation = config.getOperation();
         var argsCount = config.getArguments().size();
@@ -90,9 +92,9 @@ public class TbMathNode implements TbNode {
     }
 
     @Override
-    public void onMsg(TbContext ctx, TbMsg msg) {
+    public void onMsg(@NotNull TbContext ctx, @NotNull TbMsg msg) {
         var originator = msg.getOriginator();
-        var originatorSemaphore = semaphores.computeIfAbsent(originator, tmp -> new Semaphore(1, true));
+        @NotNull var originatorSemaphore = semaphores.computeIfAbsent(originator, tmp -> new Semaphore(1, true));
         boolean acquired = tryAcquire(originator, originatorSemaphore);
 
         if (!acquired) {
@@ -102,10 +104,10 @@ public class TbMathNode implements TbNode {
 
         try {
             var arguments = config.getArguments();
-            Optional<ObjectNode> msgBodyOpt = convertMsgBodyIfRequired(msg);
-            var argumentValues = Futures.allAsList(arguments.stream()
-                    .map(arg -> resolveArguments(ctx, msg, msgBodyOpt, arg)).collect(Collectors.toList()));
-            ListenableFuture<TbMsg> resultMsgFuture = Futures.transformAsync(argumentValues, args ->
+            @NotNull Optional<ObjectNode> msgBodyOpt = convertMsgBodyIfRequired(msg);
+            @NotNull var argumentValues = Futures.allAsList(arguments.stream()
+                                                                     .map(arg -> resolveArguments(ctx, msg, msgBodyOpt, arg)).collect(Collectors.toList()));
+            @NotNull ListenableFuture<TbMsg> resultMsgFuture = Futures.transformAsync(argumentValues, args ->
                     updateMsgAndDb(ctx, msg, msgBodyOpt, calculateResult(ctx, msg, args)), ctx.getDbCallbackExecutor());
             DonAsynchron.withCallback(resultMsgFuture, resultMsg -> {
                 try {
@@ -127,7 +129,7 @@ public class TbMathNode implements TbNode {
         }
     }
 
-    private boolean tryAcquire(EntityId originator, Semaphore originatorSemaphore) {
+    private boolean tryAcquire(EntityId originator, @NotNull Semaphore originatorSemaphore) {
         boolean acquired;
         try {
             acquired = originatorSemaphore.tryAcquire(20, TimeUnit.SECONDS);
@@ -138,7 +140,8 @@ public class TbMathNode implements TbNode {
         return acquired;
     }
 
-    private ListenableFuture<TbMsg> updateMsgAndDb(TbContext ctx, TbMsg msg, Optional<ObjectNode> msgBodyOpt, double result) {
+    @NotNull
+    private ListenableFuture<TbMsg> updateMsgAndDb(@NotNull TbContext ctx, @NotNull TbMsg msg, @NotNull Optional<ObjectNode> msgBodyOpt, double result) {
         TbMathResult mathResultDef = config.getResult();
         switch (mathResultDef.getType()) {
             case MESSAGE_BODY:
@@ -156,14 +159,14 @@ public class TbMathNode implements TbNode {
         }
     }
 
-    private ListenableFuture<Void> saveTimeSeries(TbContext ctx, TbMsg msg, double result, TbMathResult mathResultDef) {
+    private ListenableFuture<Void> saveTimeSeries(@NotNull TbContext ctx, @NotNull TbMsg msg, double result, @NotNull TbMathResult mathResultDef) {
 
         return ctx.getTelemetryService().saveAndNotify(ctx.getTenantId(), msg.getOriginator(),
                 new BasicTsKvEntry(System.currentTimeMillis(), new DoubleDataEntry(mathResultDef.getKey(), result)));
     }
 
-    private ListenableFuture<Void> saveAttribute(TbContext ctx, TbMsg msg, double result, TbMathResult mathResultDef) {
-        String attributeScope = getAttributeScope(mathResultDef.getAttributeScope());
+    private ListenableFuture<Void> saveAttribute(@NotNull TbContext ctx, @NotNull TbMsg msg, double result, @NotNull TbMathResult mathResultDef) {
+        @NotNull String attributeScope = getAttributeScope(mathResultDef.getAttributeScope());
         if (isIntegerResult(mathResultDef, config.getOperation())) {
             var value = toIntValue(mathResultDef, result);
             return ctx.getTelemetryService().saveAttrAndNotify(
@@ -175,7 +178,7 @@ public class TbMathNode implements TbNode {
         }
     }
 
-    private boolean isIntegerResult(TbMathResult mathResultDef, TbRuleNodeMathFunctionType function) {
+    private boolean isIntegerResult(@NotNull TbMathResult mathResultDef, @NotNull TbRuleNodeMathFunctionType function) {
         return function.isIntegerResult() || mathResultDef.getResultValuePrecision() == 0;
     }
 
@@ -183,11 +186,12 @@ public class TbMathNode implements TbNode {
         return (long) value;
     }
 
-    private double toDoubleValue(TbMathResult mathResultDef, double value) {
+    private double toDoubleValue(@NotNull TbMathResult mathResultDef, double value) {
         return BigDecimal.valueOf(value).setScale(mathResultDef.getResultValuePrecision(), RoundingMode.HALF_UP).doubleValue();
     }
 
-    private Optional<ObjectNode> convertMsgBodyIfRequired(TbMsg msg) {
+    @NotNull
+    private Optional<ObjectNode> convertMsgBodyIfRequired(@NotNull TbMsg msg) {
         Optional<ObjectNode> msgBodyOpt;
         if (msgBodyToJsonConversionRequired) {
             var jsonNode = JacksonUtil.toJsonNode(msg.getData());
@@ -202,7 +206,7 @@ public class TbMathNode implements TbNode {
         return msgBodyOpt;
     }
 
-    private TbMsg addToBodyAndMeta(TbMsg msg, Optional<ObjectNode> msgBodyOpt, double result, TbMathResult mathResultDef) {
+    private TbMsg addToBodyAndMeta(TbMsg msg, @NotNull Optional<ObjectNode> msgBodyOpt, double result, @NotNull TbMathResult mathResultDef) {
         TbMsg tmpMsg = msg;
         if (mathResultDef.isAddToBody()) {
             tmpMsg = addToBody(tmpMsg, mathResultDef, msgBodyOpt, result);
@@ -213,8 +217,9 @@ public class TbMathNode implements TbNode {
         return tmpMsg;
     }
 
-    private TbMsg addToBody(TbMsg msg, TbMathResult mathResultDef, Optional<ObjectNode> msgBodyOpt, double result) {
-        ObjectNode body = msgBodyOpt.get();
+    @NotNull
+    private TbMsg addToBody(@NotNull TbMsg msg, @NotNull TbMathResult mathResultDef, @NotNull Optional<ObjectNode> msgBodyOpt, double result) {
+        @NotNull ObjectNode body = msgBodyOpt.get();
         if (isIntegerResult(mathResultDef, config.getOperation())) {
             body.put(mathResultDef.getKey(), toIntValue(mathResultDef, result));
         } else {
@@ -223,7 +228,8 @@ public class TbMathNode implements TbNode {
         return TbMsg.transformMsgData(msg, JacksonUtil.toString(body));
     }
 
-    private TbMsg addToMeta(TbMsg msg, TbMathResult mathResultDef, double result) {
+    @NotNull
+    private TbMsg addToMeta(@NotNull TbMsg msg, @NotNull TbMathResult mathResultDef, double result) {
         var md = msg.getMetaData();
         if (isIntegerResult(mathResultDef, config.getOperation())) {
             md.putValue(mathResultDef.getKey(), Long.toString(toIntValue(mathResultDef, result)));
@@ -233,7 +239,7 @@ public class TbMathNode implements TbNode {
         return TbMsg.transformMsg(msg, md);
     }
 
-    private double calculateResult(TbContext ctx, TbMsg msg, List<TbMathArgumentValue> args) {
+    private double calculateResult(TbContext ctx, TbMsg msg, @NotNull List<TbMathArgumentValue> args) {
         switch (config.getOperation()) {
             case ADD:
                 return apply(args.get(0), args.get(1), Double::sum);
@@ -321,15 +327,16 @@ public class TbMathNode implements TbNode {
         }
     }
 
-    private double apply(TbMathArgumentValue arg, Function<Double, Double> function) {
+    private double apply(@NotNull TbMathArgumentValue arg, @NotNull Function<Double, Double> function) {
         return function.apply(arg.getValue());
     }
 
-    private double apply(TbMathArgumentValue arg1, TbMathArgumentValue arg2, BiFunction<Double, Double, Double> function) {
+    private double apply(@NotNull TbMathArgumentValue arg1, @NotNull TbMathArgumentValue arg2, @NotNull BiFunction<Double, Double, Double> function) {
         return function.apply(arg1.getValue(), arg2.getValue());
     }
 
-    private ListenableFuture<TbMathArgumentValue> resolveArguments(TbContext ctx, TbMsg msg, Optional<ObjectNode> msgBodyOpt, TbMathArgument arg) {
+    @NotNull
+    private ListenableFuture<TbMathArgumentValue> resolveArguments(@NotNull TbContext ctx, @NotNull TbMsg msg, @NotNull Optional<ObjectNode> msgBodyOpt, @NotNull TbMathArgument arg) {
         switch (arg.getType()) {
             case CONSTANT:
                 return Futures.immediateFuture(TbMathArgumentValue.constant(arg));
@@ -338,7 +345,7 @@ public class TbMathNode implements TbNode {
             case MESSAGE_METADATA:
                 return Futures.immediateFuture(TbMathArgumentValue.fromMessageMetadata(arg, msg.getMetaData()));
             case ATTRIBUTE:
-                String scope = getAttributeScope(arg.getAttributeScope());
+                @NotNull String scope = getAttributeScope(arg.getAttributeScope());
                 return Futures.transform(ctx.getAttributesService().find(ctx.getTenantId(), msg.getOriginator(), scope, arg.getKey()),
                         opt -> getTbMathArgumentValue(arg, opt, "Attribute: " + arg.getKey() + " with scope: " + scope + " not found for entity: " + msg.getOriginator())
                         , MoreExecutors.directExecutor());
@@ -352,13 +359,15 @@ public class TbMathNode implements TbNode {
 
     }
 
-    private String getAttributeScope(String attrScope) {
+    @NotNull
+    private String getAttributeScope(@NotNull String attrScope) {
         return StringUtils.isEmpty(attrScope) ? DataConstants.SERVER_SCOPE : attrScope;
     }
 
-    private TbMathArgumentValue getTbMathArgumentValue(TbMathArgument arg, Optional<? extends KvEntry> kvOpt, String error) {
+    @NotNull
+    private TbMathArgumentValue getTbMathArgumentValue(@NotNull TbMathArgument arg, @Nullable Optional<? extends KvEntry> kvOpt, String error) {
         if (kvOpt != null && kvOpt.isPresent()) {
-            var kv = kvOpt.get();
+            @NotNull var kv = kvOpt.get();
             switch (kv.getDataType()) {
                 case LONG:
                     return TbMathArgumentValue.fromLong(kv.getLongValue().get());

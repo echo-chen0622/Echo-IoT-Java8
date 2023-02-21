@@ -13,6 +13,8 @@ import org.echoiot.server.dao.queue.QueueService;
 import org.echoiot.server.queue.TbQueueAdmin;
 import org.echoiot.server.queue.scheduler.SchedulerComponent;
 import org.echoiot.server.queue.util.TbCoreComponent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
 import org.echoiot.server.service.entitiy.AbstractTbEntityService;
@@ -31,15 +33,20 @@ import java.util.stream.Collectors;
 public class DefaultTbQueueService extends AbstractTbEntityService implements TbQueueService {
     private static final long DELETE_DELAY = 30;
 
+    @NotNull
     private final QueueService queueService;
+    @NotNull
     private final TbClusterService tbClusterService;
+    @NotNull
     private final TbQueueAdmin tbQueueAdmin;
+    @NotNull
     private final SchedulerComponent scheduler;
 
+    @NotNull
     @Override
-    public Queue saveQueue(Queue queue) {
+    public Queue saveQueue(@NotNull Queue queue) {
         boolean create = queue.getId() == null;
-        Queue oldQueue;
+        @Nullable Queue oldQueue;
 
         if (create) {
             oldQueue = null;
@@ -75,7 +82,7 @@ public class DefaultTbQueueService extends AbstractTbEntityService implements Tb
         onQueueDeleted(queue);
     }
 
-    private void onQueueCreated(Queue queue) {
+    private void onQueueCreated(@NotNull Queue queue) {
         for (int i = 0; i < queue.getPartitions(); i++) {
             tbQueueAdmin.createTopicIfNotExists(
                     new TopicPartitionInfo(queue.getTopic(), queue.getTenantId(), i, false).getFullTopicName());
@@ -84,7 +91,7 @@ public class DefaultTbQueueService extends AbstractTbEntityService implements Tb
         tbClusterService.onQueueChange(queue);
     }
 
-    private void onQueueUpdated(Queue queue, Queue oldQueue) {
+    private void onQueueUpdated(@NotNull Queue queue, @NotNull Queue oldQueue) {
         int oldPartitions = oldQueue.getPartitions();
         int currentPartitions = queue.getPartitions();
 
@@ -114,7 +121,7 @@ public class DefaultTbQueueService extends AbstractTbEntityService implements Tb
         }
     }
 
-    private void onQueueDeleted(Queue queue) {
+    private void onQueueDeleted(@NotNull Queue queue) {
         tbClusterService.onQueueDelete(queue);
 
 //        queueStatsService.deleteQueueStatsByQueueId(tenantId, queueId);
@@ -135,7 +142,7 @@ public class DefaultTbQueueService extends AbstractTbEntityService implements Tb
     }
 
     @Override
-    public void updateQueuesByTenants(List<TenantId> tenantIds, TenantProfile newTenantProfile, TenantProfile
+    public void updateQueuesByTenants(@NotNull List<TenantId> tenantIds, @NotNull TenantProfile newTenantProfile, @Nullable TenantProfile
             oldTenantProfile) {
         boolean oldIsolated = oldTenantProfile != null && oldTenantProfile.isIsolatedTbRuleEngine();
         boolean newIsolated = newTenantProfile.isIsolatedTbRuleEngine();
@@ -165,9 +172,9 @@ public class DefaultTbQueueService extends AbstractTbEntityService implements Tb
             newQueues = Collections.emptyMap();
         }
 
-        List<String> toRemove = new ArrayList<>();
-        List<String> toCreate = new ArrayList<>();
-        List<String> toUpdate = new ArrayList<>();
+        @NotNull List<String> toRemove = new ArrayList<>();
+        @NotNull List<String> toCreate = new ArrayList<>();
+        @NotNull List<String> toUpdate = new ArrayList<>();
 
         for (String oldQueue : oldQueues.keySet()) {
             if (!newQueues.containsKey(oldQueue)) {
@@ -187,7 +194,7 @@ public class DefaultTbQueueService extends AbstractTbEntityService implements Tb
             toCreate.forEach(key -> saveQueue(new Queue(tenantId, newQueues.get(key))));
 
             toUpdate.forEach(key -> {
-                Queue queueToUpdate = new Queue(tenantId, newQueues.get(key));
+                @NotNull Queue queueToUpdate = new Queue(tenantId, newQueues.get(key));
                 Queue foundQueue = queueService.findQueueByTenantIdAndName(tenantId, key);
                 queueToUpdate.setId(foundQueue.getId());
                 queueToUpdate.setCreatedTime(foundQueue.getCreatedTime());

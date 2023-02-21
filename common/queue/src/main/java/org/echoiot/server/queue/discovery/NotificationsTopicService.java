@@ -1,5 +1,6 @@
 package org.echoiot.server.queue.discovery;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.echoiot.server.common.msg.queue.ServiceType;
 import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
@@ -10,8 +11,8 @@ import java.util.Map;
 @Service
 public class NotificationsTopicService {
 
-    private Map<String, TopicPartitionInfo> tbCoreNotificationTopics = new HashMap<>();
-    private Map<String, TopicPartitionInfo> tbRuleEngineNotificationTopics = new HashMap<>();
+    private final Map<String, TopicPartitionInfo> tbCoreNotificationTopics = new HashMap<>();
+    private final Map<String, TopicPartitionInfo> tbRuleEngineNotificationTopics = new HashMap<>();
 
     /**
      * Each Service should start a consumer for messages that target individual service instance based on serviceId.
@@ -20,7 +21,8 @@ public class NotificationsTopicService {
      * @param serviceId
      * @return
      */
-    public TopicPartitionInfo getNotificationsTopic(ServiceType serviceType, String serviceId) {
+    @NotNull
+    public TopicPartitionInfo getNotificationsTopic(@NotNull ServiceType serviceType, String serviceId) {
         switch (serviceType) {
             case TB_CORE:
                 return tbCoreNotificationTopics.computeIfAbsent(serviceId,
@@ -33,7 +35,8 @@ public class NotificationsTopicService {
         }
     }
 
-    private TopicPartitionInfo buildNotificationsTopicPartitionInfo(ServiceType serviceType, String serviceId) {
+    @NotNull
+    private TopicPartitionInfo buildNotificationsTopicPartitionInfo(@NotNull ServiceType serviceType, String serviceId) {
         return new TopicPartitionInfo(serviceType.name().toLowerCase() + ".notifications." + serviceId, null, null, false);
     }
 }

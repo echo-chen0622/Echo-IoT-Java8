@@ -12,11 +12,13 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.dao.user.UserService;
+import org.jetbrains.annotations.NotNull;
 
 @Slf4j
 @AllArgsConstructor
 public abstract class BaseUsersEdgeEventFetcher extends BasePageableEdgeEventFetcher<User> {
 
+    @NotNull
     protected final UserService userService;
 
     @Override
@@ -24,8 +26,9 @@ public abstract class BaseUsersEdgeEventFetcher extends BasePageableEdgeEventFet
         return findUsers(tenantId, pageLink);
     }
 
+    @NotNull
     @Override
-    EdgeEvent constructEdgeEvent(TenantId tenantId, Edge edge, User user) {
+    EdgeEvent constructEdgeEvent(TenantId tenantId, @NotNull Edge edge, @NotNull User user) {
         return EdgeUtils.constructEdgeEvent(tenantId, edge.getId(), EdgeEventType.USER,
                                             EdgeEventActionType.ADDED, user.getId(), null);
     }

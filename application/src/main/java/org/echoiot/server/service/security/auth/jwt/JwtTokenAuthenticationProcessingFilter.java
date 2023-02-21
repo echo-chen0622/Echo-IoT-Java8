@@ -2,6 +2,7 @@ package org.echoiot.server.service.security.auth.jwt;
 
 import org.echoiot.server.service.security.auth.jwt.extractor.TokenExtractor;
 import org.echoiot.server.service.security.model.token.RawAccessJwtToken;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -22,9 +23,9 @@ public class JwtTokenAuthenticationProcessingFilter extends AbstractAuthenticati
     private final AuthenticationFailureHandler failureHandler;
     private final TokenExtractor tokenExtractor;
 
-    @Autowired
+    @Resource
     public JwtTokenAuthenticationProcessingFilter(AuthenticationFailureHandler failureHandler,
-                                                  TokenExtractor tokenExtractor, RequestMatcher matcher) {
+                                                  TokenExtractor tokenExtractor, @NotNull RequestMatcher matcher) {
         super(matcher);
         this.failureHandler = failureHandler;
         this.tokenExtractor = tokenExtractor;
@@ -33,12 +34,12 @@ public class JwtTokenAuthenticationProcessingFilter extends AbstractAuthenticati
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException, IOException, ServletException {
-        RawAccessJwtToken token = new RawAccessJwtToken(tokenExtractor.extract(request));
+        @NotNull RawAccessJwtToken token = new RawAccessJwtToken(tokenExtractor.extract(request));
         return getAuthenticationManager().authenticate(new JwtAuthenticationToken(token));
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, @NotNull FilterChain chain,
                                             Authentication authResult) throws IOException, ServletException {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authResult);

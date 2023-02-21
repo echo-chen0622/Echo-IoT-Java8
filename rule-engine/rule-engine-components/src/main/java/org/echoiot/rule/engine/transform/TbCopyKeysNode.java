@@ -13,6 +13,8 @@ import org.echoiot.rule.engine.api.util.TbNodeUtils;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.TbMsgMetaData;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -40,7 +42,7 @@ public class TbCopyKeysNode implements TbNode {
     private boolean fromMetadata;
 
     @Override
-    public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
+    public void init(TbContext ctx, @NotNull TbNodeConfiguration configuration) throws TbNodeException {
         this.config = TbNodeUtils.convert(configuration, TbCopyKeysNodeConfiguration.class);
         this.fromMetadata = config.isFromMetadata();
         this.patternKeys = new ArrayList<>();
@@ -50,16 +52,16 @@ public class TbCopyKeysNode implements TbNode {
     }
 
     @Override
-    public void onMsg(TbContext ctx, TbMsg msg) throws ExecutionException, InterruptedException, TbNodeException {
+    public void onMsg(@NotNull TbContext ctx, @NotNull TbMsg msg) throws ExecutionException, InterruptedException, TbNodeException {
         TbMsgMetaData metaData = msg.getMetaData();
-        String msgData = msg.getData();
+        @Nullable String msgData = msg.getData();
         boolean msgChanged = false;
         JsonNode dataNode = JacksonUtil.toJsonNode(msgData);
         if (dataNode.isObject()) {
             if (fromMetadata) {
-                ObjectNode msgDataNode = (ObjectNode) dataNode;
+                @NotNull ObjectNode msgDataNode = (ObjectNode) dataNode;
                 Map<String, String> metaDataMap = metaData.getData();
-                for (Map.Entry<String, String> entry : metaDataMap.entrySet()) {
+                for (@NotNull Map.Entry<String, String> entry : metaDataMap.entrySet()) {
                     String keyData = entry.getKey();
                     if (checkKey(keyData)) {
                         msgChanged = true;
@@ -86,7 +88,7 @@ public class TbCopyKeysNode implements TbNode {
         }
     }
 
-    boolean checkKey(String key) {
+    boolean checkKey(@NotNull String key) {
         return patternKeys.stream().anyMatch(pattern -> pattern.matcher(key).matches());
     }
 }

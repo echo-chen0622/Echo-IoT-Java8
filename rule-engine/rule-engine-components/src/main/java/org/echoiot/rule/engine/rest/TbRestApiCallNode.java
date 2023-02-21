@@ -9,6 +9,7 @@ import org.echoiot.rule.engine.api.TbNodeException;
 import org.echoiot.rule.engine.api.util.TbNodeUtils;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.msg.TbMsg;
+import org.jetbrains.annotations.NotNull;
 
 @Slf4j
 @RuleNode(
@@ -34,7 +35,7 @@ public class TbRestApiCallNode implements TbNode {
     protected TbHttpClient httpClient;
 
     @Override
-    public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
+    public void init(@NotNull TbContext ctx, @NotNull TbNodeConfiguration configuration) throws TbNodeException {
         TbRestApiCallNodeConfiguration config = TbNodeUtils.convert(configuration, TbRestApiCallNodeConfiguration.class);
         httpClient = new TbHttpClient(config, ctx.getSharedEventLoop());
         useRedisQueueForMsgPersistence = config.isUseRedisQueueForMsgPersistence();
@@ -44,7 +45,7 @@ public class TbRestApiCallNode implements TbNode {
     }
 
     @Override
-    public void onMsg(TbContext ctx, TbMsg msg) {
+    public void onMsg(@NotNull TbContext ctx, @NotNull TbMsg msg) {
         httpClient.processMessage(ctx, msg);
     }
 

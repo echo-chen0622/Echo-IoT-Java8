@@ -5,6 +5,7 @@ import org.echoiot.server.common.transport.profile.TenantProfileUpdateResult;
 import org.echoiot.server.common.data.TenantProfile;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.id.TenantProfileId;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
@@ -16,6 +17,7 @@ public interface TransportTenantProfileCache {
 
     boolean put(TenantId tenantId, TenantProfileId profileId);
 
+    @Nullable
     Set<TenantId> remove(TenantProfileId profileId);
 
 }

@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.californium.core.CoapResponse;
 import org.eclipse.californium.core.coap.CoAP;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,26 +50,26 @@ public abstract class AbstractCoapTimeseriesIntegrationTest extends AbstractCoap
 
     @Test
     public void testPushTelemetryWithTs() throws Exception {
-        String payloadStr = "{\"ts\": 10000, \"values\": " + PAYLOAD_VALUES_STR + "}";
+        @NotNull String payloadStr = "{\"ts\": 10000, \"values\": " + PAYLOAD_VALUES_STR + "}";
         processJsonPayloadTelemetryTest(payloadStr.getBytes(), true);
     }
 
     protected void processJsonPayloadTelemetryTest(byte[] payloadBytes, boolean withTs) throws Exception {
-        List<String> expectedKeys = Arrays.asList("key1", "key2", "key3", "key4", "key5");
+        @NotNull List<String> expectedKeys = Arrays.asList("key1", "key2", "key3", "key4", "key5");
         processTestPostTelemetry(payloadBytes, expectedKeys, withTs, false);
     }
 
-    protected void processTestPostTelemetry(byte[] payloadBytes, List<String> expectedKeys, boolean withTs, boolean presenceFieldsTest) throws Exception {
+    protected void processTestPostTelemetry(byte[] payloadBytes, @NotNull List<String> expectedKeys, boolean withTs, boolean presenceFieldsTest) throws Exception {
         client = new CoapTestClient(accessToken, FeatureType.TELEMETRY);
         CoapResponse coapResponse = client.postMethod(payloadBytes);
         assertEquals(CoAP.ResponseCode.CREATED, coapResponse.getCode());
 
         DeviceId deviceId = savedDevice.getId();
-        List<String> actualKeys = getActualKeysList(deviceId, expectedKeys);
+        @Nullable List<String> actualKeys = getActualKeysList(deviceId, expectedKeys);
         assertNotNull(actualKeys);
 
-        Set<String> actualKeySet = new HashSet<>(actualKeys);
-        Set<String> expectedKeySet = new HashSet<>(expectedKeys);
+        @NotNull Set<String> actualKeySet = new HashSet<>(actualKeys);
+        @NotNull Set<String> expectedKeySet = new HashSet<>(expectedKeys);
         assertEquals(expectedKeySet, actualKeySet);
 
         String getTelemetryValuesUrl;
@@ -78,7 +80,7 @@ public abstract class AbstractCoapTimeseriesIntegrationTest extends AbstractCoap
         }
         long start = System.currentTimeMillis();
         long end = System.currentTimeMillis() + 5000;
-        Map<String, List<Map<String, Object>>> values = null;
+        @Nullable Map<String, List<Map<String, Object>>> values = null;
         while (start <= end) {
             values = doGetAsyncTyped(getTelemetryValuesUrl, new TypeReference<>() {});
             boolean valid = values.size() == expectedKeys.size();
@@ -115,7 +117,7 @@ public abstract class AbstractCoapTimeseriesIntegrationTest extends AbstractCoap
         }
     }
 
-    private void assertTs(Map<String, List<Map<String, Object>>> deviceValues, List<String> expectedKeys, int ts, int arrayIndex) {
+    private void assertTs(@NotNull Map<String, List<Map<String, Object>>> deviceValues, @NotNull List<String> expectedKeys, int ts, int arrayIndex) {
         assertEquals(ts, deviceValues.get(expectedKeys.get(0)).get(arrayIndex).get("ts"));
         assertEquals(ts, deviceValues.get(expectedKeys.get(1)).get(arrayIndex).get("ts"));
         assertEquals(ts, deviceValues.get(expectedKeys.get(2)).get(arrayIndex).get("ts"));
@@ -123,8 +125,8 @@ public abstract class AbstractCoapTimeseriesIntegrationTest extends AbstractCoap
         assertEquals(ts, deviceValues.get(expectedKeys.get(4)).get(arrayIndex).get("ts"));
     }
 
-    private void assertValues(Map<String, List<Map<String, Object>>> deviceValues, int arrayIndex) {
-        for (Map.Entry<String, List<Map<String, Object>>> entry : deviceValues.entrySet()) {
+    private void assertValues(@NotNull Map<String, List<Map<String, Object>>> deviceValues, int arrayIndex) {
+        for (@NotNull Map.Entry<String, List<Map<String, Object>>> entry : deviceValues.entrySet()) {
             String key = entry.getKey();
             List<Map<String, Object>> tsKv = entry.getValue();
             String value = (String) tsKv.get(arrayIndex).get("value");
@@ -148,8 +150,8 @@ public abstract class AbstractCoapTimeseriesIntegrationTest extends AbstractCoap
         }
     }
 
-    private void assertExplicitProtoFieldValues(Map<String, List<Map<String, Object>>> deviceValues) {
-        for (Map.Entry<String, List<Map<String, Object>>> entry : deviceValues.entrySet()) {
+    private void assertExplicitProtoFieldValues(@NotNull Map<String, List<Map<String, Object>>> deviceValues) {
+        for (@NotNull Map.Entry<String, List<Map<String, Object>>> entry : deviceValues.entrySet()) {
             String key = entry.getKey();
             List<Map<String, Object>> tsKv = entry.getValue();
             String value = (String) tsKv.get(0).get("value");
@@ -173,11 +175,12 @@ public abstract class AbstractCoapTimeseriesIntegrationTest extends AbstractCoap
         }
     }
 
-    private List<String> getActualKeysList(DeviceId deviceId, List<String> expectedKeys) throws Exception {
+    @Nullable
+    private List<String> getActualKeysList(DeviceId deviceId, @NotNull List<String> expectedKeys) throws Exception {
         long start = System.currentTimeMillis();
         long end = System.currentTimeMillis() + 5000;
 
-        List<String> actualKeys = null;
+        @Nullable List<String> actualKeys = null;
         while (start <= end) {
             actualKeys = doGetAsyncTyped("/api/plugins/telemetry/DEVICE/" + deviceId + "/keys/timeseries", new TypeReference<>() {});
             if (actualKeys.size() == expectedKeys.size()) {

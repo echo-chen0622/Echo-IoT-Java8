@@ -14,6 +14,8 @@ import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.bouncycastle.openssl.jcajce.JcePEMDecryptorProviderBuilder;
 import org.bouncycastle.util.encoders.Hex;
 import org.echoiot.server.common.data.StringUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.crypto.Cipher;
 import javax.crypto.EncryptedPrivateKeyInfo;
@@ -58,16 +60,18 @@ public class CertPemCredentials implements ClientCredentials {
 
     static final Pattern OPENSSL_ENCRYPTED_RSA_PRIVATEKEY_PATTERN = Pattern.compile(OPENSSL_ENCRYPTED_RSA_PRIVATEKEY_REGEX);
 
+    @NotNull
     @Override
     public CredentialsType getType() {
         return CredentialsType.CERT_PEM;
     }
 
+    @NotNull
     @Override
     public SslContext initSslContext() {
         try {
             Security.addProvider(new BouncyCastleProvider());
-            SslContextBuilder builder = SslContextBuilder.forClient();
+            @NotNull SslContextBuilder builder = SslContextBuilder.forClient();
             if (StringUtils.hasLength(caCert)) {
                 builder.trustManager(createAndInitTrustManagerFactory());
             }
@@ -81,10 +85,11 @@ public class CertPemCredentials implements ClientCredentials {
         }
     }
 
+    @NotNull
     private KeyManagerFactory createAndInitKeyManagerFactory() throws Exception {
-        X509Certificate certHolder = readCertFile(cert);
-        Object keyObject = readPrivateKeyFile(privateKey);
-        char[] passwordCharArray = "".toCharArray();
+        @Nullable X509Certificate certHolder = readCertFile(cert);
+        @Nullable Object keyObject = readPrivateKeyFile(privateKey);
+        @NotNull char[] passwordCharArray = "".toCharArray();
         if (!StringUtils.isEmpty(password)) {
             passwordCharArray = password.toCharArray();
         }
@@ -105,7 +110,7 @@ public class CertPemCredentials implements ClientCredentials {
             throw new RuntimeException("Unable to get private key from object: " + keyObject.getClass());
         }
 
-        KeyStore clientKeyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+        @NotNull KeyStore clientKeyStore = KeyStore.getInstance(KeyStore.getDefaultType());
         clientKeyStore.load(null, null);
         clientKeyStore.setCertificateEntry("cert", certHolder);
         clientKeyStore.setKeyEntry("private-key",
@@ -113,61 +118,64 @@ public class CertPemCredentials implements ClientCredentials {
                 passwordCharArray,
                 new Certificate[]{certHolder});
 
-        KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+        @NotNull KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
         keyManagerFactory.init(clientKeyStore, passwordCharArray);
         return keyManagerFactory;
     }
 
+    @NotNull
     protected TrustManagerFactory createAndInitTrustManagerFactory() throws Exception {
-        X509Certificate caCertHolder;
+        @Nullable X509Certificate caCertHolder;
         caCertHolder = readCertFile(caCert);
 
-        KeyStore caKeyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+        @NotNull KeyStore caKeyStore = KeyStore.getInstance(KeyStore.getDefaultType());
         caKeyStore.load(null, null);
         caKeyStore.setCertificateEntry("caCert-cert", caCertHolder);
 
-        TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+        @NotNull TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
         trustManagerFactory.init(caKeyStore);
         return trustManagerFactory;
     }
 
-    private X509Certificate readCertFile(String fileContent) throws Exception {
-        X509Certificate certificate = null;
+    @Nullable
+    private X509Certificate readCertFile(@Nullable String fileContent) throws Exception {
+        @Nullable X509Certificate certificate = null;
         if (fileContent != null && !fileContent.trim().isEmpty()) {
             fileContent = fileContent.replace("-----BEGIN CERTIFICATE-----", "")
                     .replace("-----END CERTIFICATE-----", "")
                     .replaceAll("\\s", "");
             byte[] decoded = Base64.decodeBase64(fileContent);
-            CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
-            try (InputStream inStream = new ByteArrayInputStream(decoded)) {
+            @NotNull CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
+            try (@NotNull InputStream inStream = new ByteArrayInputStream(decoded)) {
                 certificate = (X509Certificate) certFactory.generateCertificate(inStream);
             }
         }
         return certificate;
     }
 
-    private PrivateKey readPrivateKeyFile(String fileContent) throws Exception {
-        PrivateKey privateKey = null;
+    @Nullable
+    private PrivateKey readPrivateKeyFile(@Nullable String fileContent) throws Exception {
+        @Nullable PrivateKey privateKey = null;
         if (fileContent != null && !fileContent.isEmpty()) {
-            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            @NotNull KeyFactory keyFactory = KeyFactory.getInstance("RSA");
             KeySpec keySpec = getKeySpec(fileContent);
             privateKey = keyFactory.generatePrivate(keySpec);
         }
         return privateKey;
     }
 
-    private KeySpec getKeySpec(String encodedKey) throws Exception {
-        KeySpec keySpec = null;
-        Matcher matcher = OPENSSL_ENCRYPTED_RSA_PRIVATEKEY_PATTERN.matcher(encodedKey);
+    private KeySpec getKeySpec(@NotNull String encodedKey) throws Exception {
+        @Nullable KeySpec keySpec = null;
+        @NotNull Matcher matcher = OPENSSL_ENCRYPTED_RSA_PRIVATEKEY_PATTERN.matcher(encodedKey);
         if (matcher.matches()) {
-            String encryptionDetails = matcher.group(1).trim();
-            String encryptedKey = matcher.group(2).replaceAll("\\s", "");
+            @NotNull String encryptionDetails = matcher.group(1).trim();
+            @NotNull String encryptedKey = matcher.group(2).replaceAll("\\s", "");
             byte[] encryptedBinaryKey = java.util.Base64.getDecoder().decode(encryptedKey);
-            String[] encryptionDetailsParts = encryptionDetails.split(",");
+            @NotNull String[] encryptionDetailsParts = encryptionDetails.split(",");
             if (encryptionDetailsParts.length == 2) {
                 String encryptionAlgorithm = encryptionDetailsParts[0];
                 String encryptedAlgorithmParams = encryptionDetailsParts[1];
-                byte[] pw = password.getBytes();
+                @NotNull byte[] pw = password.getBytes();
                 byte[] iv = Hex.decode(encryptedAlgorithmParams);
 
                 MessageDigest digest = MessageDigest.getInstance("MD5");
@@ -180,9 +188,9 @@ public class CertPemCredentials implements ClientCredentials {
                 digest.update(iv, 0, 8);
 
                 byte[] round2Digest = digest.digest();
-                Cipher cipher = null;
-                SecretKey secretKey = null;
-                byte[] key = null;
+                @Nullable Cipher cipher = null;
+                @Nullable SecretKey secretKey = null;
+                @Nullable byte[] key = null;
 
                 switch(encryptionAlgorithm) {
                     case "AES-256-CBC":
@@ -237,12 +245,12 @@ public class CertPemCredentials implements ClientCredentials {
             if (password == null || password.isEmpty()) {
                 keySpec = new PKCS8EncodedKeySpec(decoded);
             } else {
-                PBEKeySpec pbeKeySpec = new PBEKeySpec(password.toCharArray());
+                @NotNull PBEKeySpec pbeKeySpec = new PBEKeySpec(password.toCharArray());
 
-                EncryptedPrivateKeyInfo privateKeyInfo = new EncryptedPrivateKeyInfo(decoded);
+                @NotNull EncryptedPrivateKeyInfo privateKeyInfo = new EncryptedPrivateKeyInfo(decoded);
                 String algorithmName = privateKeyInfo.getAlgName();
-                Cipher cipher = Cipher.getInstance(algorithmName);
-                SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance(algorithmName);
+                @NotNull Cipher cipher = Cipher.getInstance(algorithmName);
+                @NotNull SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance(algorithmName);
 
                 Key pbeKey = secretKeyFactory.generateSecret(pbeKeySpec);
                 AlgorithmParameters algParams = privateKeyInfo.getAlgParameters();
@@ -253,14 +261,15 @@ public class CertPemCredentials implements ClientCredentials {
         return keySpec;
     }
 
-    private static BigInteger derint(ByteBuffer input) {
+    @NotNull
+    private static BigInteger derint(@NotNull ByteBuffer input) {
         int len = der(input, 0x02);
-        byte[] value = new byte[len];
+        @NotNull byte[] value = new byte[len];
         input.get(value);
         return new BigInteger(+1, value);
     }
 
-    private static int der(ByteBuffer input, int exp) {
+    private static int der(@NotNull ByteBuffer input, int exp) {
         int tag = input.get() & 0xFF;
         if (tag != exp) throw new IllegalArgumentException("Unexpected tag");
         int n = input.get() & 0xFF;
@@ -275,18 +284,19 @@ public class CertPemCredentials implements ClientCredentials {
         return len;
     }
 
-    static RSAPrivateCrtKeySpec decodeRSAPrivatePKCS1(byte[] encoded) {
-        ByteBuffer input = ByteBuffer.wrap(encoded);
+    @NotNull
+    static RSAPrivateCrtKeySpec decodeRSAPrivatePKCS1(@NotNull byte[] encoded) {
+        @NotNull ByteBuffer input = ByteBuffer.wrap(encoded);
         if (der(input, 0x30) != input.remaining()) throw new IllegalArgumentException("Excess data");
         if (!BigInteger.ZERO.equals(derint(input))) throw new IllegalArgumentException("Unsupported version");
-        BigInteger n = derint(input);
-        BigInteger e = derint(input);
-        BigInteger d = derint(input);
-        BigInteger p = derint(input);
-        BigInteger q = derint(input);
-        BigInteger ep = derint(input);
-        BigInteger eq = derint(input);
-        BigInteger c = derint(input);
+        @NotNull BigInteger n = derint(input);
+        @NotNull BigInteger e = derint(input);
+        @NotNull BigInteger d = derint(input);
+        @NotNull BigInteger p = derint(input);
+        @NotNull BigInteger q = derint(input);
+        @NotNull BigInteger ep = derint(input);
+        @NotNull BigInteger eq = derint(input);
+        @NotNull BigInteger c = derint(input);
         return new RSAPrivateCrtKeySpec(n, e, d, p, q, ep, eq, c);
     }
 }

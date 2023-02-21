@@ -3,6 +3,8 @@ package org.echoiot.server.service.script;
 import com.google.common.util.concurrent.Futures;
 import org.apache.commons.lang3.StringUtils;
 import org.echoiot.server.queue.TbQueueRequestTemplate;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -63,11 +65,11 @@ class RemoteJsInvokeServiceTest {
     @Test
     public void whenInvokingFunction_thenDoNotSendScriptBody() throws Exception {
         mockJsEvalResponse();
-        String scriptBody = "return { a: 'b'};";
+        @NotNull String scriptBody = "return { a: 'b'};";
         UUID scriptId = remoteJsInvokeService.eval(TenantId.SYS_TENANT_ID, ScriptType.RULE_NODE_SCRIPT, scriptBody).get();
         reset(jsRequestTemplate);
 
-        String expectedInvocationResult = "scriptInvocationResult";
+        @NotNull String expectedInvocationResult = "scriptInvocationResult";
         doReturn(Futures.immediateFuture(new TbProtoJsQueueMsg<>(UUID.randomUUID(), RemoteJsResponse.newBuilder()
                 .setInvokeResponse(JsInvokeProtos.JsInvokeResponse.newBuilder()
                         .setSuccess(true)
@@ -76,11 +78,11 @@ class RemoteJsInvokeServiceTest {
                 .build())))
                 .when(jsRequestTemplate).send(any());
 
-        ArgumentCaptor<TbProtoJsQueueMsg<RemoteJsRequest>> jsRequestCaptor = ArgumentCaptor.forClass(TbProtoJsQueueMsg.class);
+        @NotNull ArgumentCaptor<TbProtoJsQueueMsg<RemoteJsRequest>> jsRequestCaptor = ArgumentCaptor.forClass(TbProtoJsQueueMsg.class);
         Object invocationResult = remoteJsInvokeService.invokeScript(TenantId.SYS_TENANT_ID, null, scriptId, "{}").get();
         verify(jsRequestTemplate).send(jsRequestCaptor.capture());
 
-        JsInvokeProtos.JsInvokeRequest jsInvokeRequestMade = jsRequestCaptor.getValue().getValue().getInvokeRequest();
+        @NotNull JsInvokeProtos.JsInvokeRequest jsInvokeRequestMade = jsRequestCaptor.getValue().getValue().getInvokeRequest();
         assertThat(jsInvokeRequestMade.getScriptBody()).isNullOrEmpty();
         assertThat(jsInvokeRequestMade.getScriptHash()).isEqualTo(getScriptHash(scriptId));
         assertThat(invocationResult).isEqualTo(expectedInvocationResult);
@@ -89,7 +91,7 @@ class RemoteJsInvokeServiceTest {
     @Test
     public void whenInvokingFunctionAndRemoteJsExecutorRemovedScript_thenHandleNotFoundErrorAndMakeInvokeRequestWithScriptBody() throws Exception {
         mockJsEvalResponse();
-        String scriptBody = "return { a: 'b'};";
+        @NotNull String scriptBody = "return { a: 'b'};";
         UUID scriptId = remoteJsInvokeService.eval(TenantId.SYS_TENANT_ID, ScriptType.RULE_NODE_SCRIPT, scriptBody).get();
         reset(jsRequestTemplate);
 
@@ -103,7 +105,7 @@ class RemoteJsInvokeServiceTest {
                     return StringUtils.isEmpty(jsQueueMsg.getValue().getInvokeRequest().getScriptBody());
                 }));
 
-        String expectedInvocationResult = "invocationResult";
+        @NotNull String expectedInvocationResult = "invocationResult";
         doReturn(Futures.immediateFuture(new TbProtoJsQueueMsg<>(UUID.randomUUID(), RemoteJsResponse.newBuilder()
                 .setInvokeResponse(JsInvokeProtos.JsInvokeResponse.newBuilder()
                         .setSuccess(true)
@@ -114,16 +116,16 @@ class RemoteJsInvokeServiceTest {
                     return StringUtils.isNotEmpty(jsQueueMsg.getValue().getInvokeRequest().getScriptBody());
                 }));
 
-        ArgumentCaptor<TbProtoJsQueueMsg<RemoteJsRequest>> jsRequestsCaptor = ArgumentCaptor.forClass(TbProtoJsQueueMsg.class);
+        @NotNull ArgumentCaptor<TbProtoJsQueueMsg<RemoteJsRequest>> jsRequestsCaptor = ArgumentCaptor.forClass(TbProtoJsQueueMsg.class);
         Object invocationResult = remoteJsInvokeService.invokeScript(TenantId.SYS_TENANT_ID, null, scriptId, "{}").get();
         verify(jsRequestTemplate, times(2)).send(jsRequestsCaptor.capture());
 
         List<TbProtoJsQueueMsg<RemoteJsRequest>> jsInvokeRequestsMade = jsRequestsCaptor.getAllValues();
 
-        JsInvokeProtos.JsInvokeRequest firstRequestMade = jsInvokeRequestsMade.get(0).getValue().getInvokeRequest();
+        @NotNull JsInvokeProtos.JsInvokeRequest firstRequestMade = jsInvokeRequestsMade.get(0).getValue().getInvokeRequest();
         assertThat(firstRequestMade.getScriptBody()).isNullOrEmpty();
 
-        JsInvokeProtos.JsInvokeRequest secondRequestMade = jsInvokeRequestsMade.get(1).getValue().getInvokeRequest();
+        @NotNull JsInvokeProtos.JsInvokeRequest secondRequestMade = jsInvokeRequestsMade.get(1).getValue().getInvokeRequest();
         assertThat(secondRequestMade.getScriptBody()).contains(scriptBody);
 
         assertThat(jsInvokeRequestsMade.stream().map(TbProtoQueueMsg::getKey).distinct().count()).as("partition keys are same")
@@ -136,15 +138,15 @@ class RemoteJsInvokeServiceTest {
     public void whenDoingEval_thenSaveScriptByHashOfTenantIdAndScriptBody() throws Exception {
         mockJsEvalResponse();
 
-        TenantId tenantId1 = TenantId.fromUUID(UUID.randomUUID());
-        String scriptBody1 = "var msg = { temp: 42, humidity: 77 };\n" +
-                "var metadata = { data: 40 };\n" +
-                "var msgType = \"POST_TELEMETRY_REQUEST\";\n" +
-                "\n" +
-                "return { msg: msg, metadata: metadata, msgType: msgType };";
+        @NotNull TenantId tenantId1 = TenantId.fromUUID(UUID.randomUUID());
+        @NotNull String scriptBody1 = "var msg = { temp: 42, humidity: 77 };\n" +
+                                      "var metadata = { data: 40 };\n" +
+                                      "var msgType = \"POST_TELEMETRY_REQUEST\";\n" +
+                                      "\n" +
+                                      "return { msg: msg, metadata: metadata, msgType: msgType };";
 
-        Set<String> scriptHashes = new HashSet<>();
-        String tenant1Script1Hash = null;
+        @NotNull Set<String> scriptHashes = new HashSet<>();
+        @Nullable String tenant1Script1Hash = null;
         for (int i = 0; i < 3; i++) {
             UUID scriptUuid = remoteJsInvokeService.eval(tenantId1, ScriptType.RULE_NODE_SCRIPT, scriptBody1).get();
             tenant1Script1Hash = getScriptHash(scriptUuid);
@@ -152,12 +154,12 @@ class RemoteJsInvokeServiceTest {
         }
         assertThat(scriptHashes).as("Unique scripts ids").size().isOne();
 
-        TenantId tenantId2 = TenantId.fromUUID(UUID.randomUUID());
+        @NotNull TenantId tenantId2 = TenantId.fromUUID(UUID.randomUUID());
         UUID scriptUuid = remoteJsInvokeService.eval(tenantId2, ScriptType.RULE_NODE_SCRIPT, scriptBody1).get();
         String tenant2Script1Id = getScriptHash(scriptUuid);
         assertThat(tenant2Script1Id).isNotEqualTo(tenant1Script1Hash);
 
-        String scriptBody2 = scriptBody1 + ";;";
+        @NotNull String scriptBody2 = scriptBody1 + ";;";
         scriptUuid = remoteJsInvokeService.eval(tenantId2, ScriptType.RULE_NODE_SCRIPT, scriptBody2).get();
         String tenant2Script2Id = getScriptHash(scriptUuid);
         assertThat(tenant2Script2Id).isNotEqualTo(tenant2Script1Id);
@@ -166,7 +168,7 @@ class RemoteJsInvokeServiceTest {
     @Test
     public void whenReleasingScript_thenCheckForHashUsages() throws Exception {
         mockJsEvalResponse();
-        String scriptBody = "return { a: 'b'};";
+        @NotNull String scriptBody = "return { a: 'b'};";
         UUID scriptId1 = remoteJsInvokeService.eval(TenantId.SYS_TENANT_ID, ScriptType.RULE_NODE_SCRIPT, scriptBody).get();
         UUID scriptId2 = remoteJsInvokeService.eval(TenantId.SYS_TENANT_ID, ScriptType.RULE_NODE_SCRIPT, scriptBody).get();
         String scriptHash = getScriptHash(scriptId1);

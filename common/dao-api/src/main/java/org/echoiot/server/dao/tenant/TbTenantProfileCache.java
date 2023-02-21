@@ -4,13 +4,16 @@ import org.echoiot.server.common.data.TenantProfile;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.id.TenantProfileId;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
 public interface TbTenantProfileCache {
 
+    @Nullable
     TenantProfile get(TenantId tenantId);
 
+    @Nullable
     TenantProfile get(TenantProfileId tenantProfileId);
 
     void put(TenantProfile profile);

@@ -14,6 +14,7 @@ import org.echoiot.rule.engine.api.TbNodeException;
 import org.echoiot.rule.engine.api.util.TbNodeUtils;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.msg.TbMsg;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.ExecutionException;
 
@@ -39,7 +40,7 @@ public class TbJsonPathNode implements TbNode {
     private String jsonPathValue;
 
     @Override
-    public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
+    public void init(TbContext ctx, @NotNull TbNodeConfiguration configuration) throws TbNodeException {
         this.config = TbNodeUtils.convert(configuration, TbJsonPathNodeConfiguration.class);
         this.jsonPathValue = config.getJsonPath();
         if (!TbJsonPathNodeConfiguration.DEFAULT_JSON_PATH.equals(this.jsonPathValue)) {
@@ -51,7 +52,7 @@ public class TbJsonPathNode implements TbNode {
     }
 
     @Override
-    public void onMsg(TbContext ctx, TbMsg msg) throws ExecutionException, InterruptedException, TbNodeException {
+    public void onMsg(@NotNull TbContext ctx, @NotNull TbMsg msg) throws ExecutionException, InterruptedException, TbNodeException {
         if (!TbJsonPathNodeConfiguration.DEFAULT_JSON_PATH.equals(this.jsonPathValue)) {
             try {
                 Object jsonPathData = jsonPath.read(msg.getData(), this.configurationJsonPath);

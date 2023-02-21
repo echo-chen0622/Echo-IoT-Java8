@@ -3,6 +3,7 @@ package org.echoiot.server.common.data.device.profile;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import org.echoiot.server.common.data.query.FilterPredicateValue;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.TimeUnit;
 
@@ -13,6 +14,7 @@ public class DurationAlarmConditionSpec implements AlarmConditionSpec {
     private TimeUnit unit;
     private FilterPredicateValue<Long> predicate;
 
+    @NotNull
     @Override
     public AlarmConditionSpecType getType() {
         return AlarmConditionSpecType.DURATION;

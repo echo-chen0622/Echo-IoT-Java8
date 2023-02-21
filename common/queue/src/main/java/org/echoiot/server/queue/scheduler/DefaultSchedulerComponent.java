@@ -1,6 +1,7 @@
 package org.echoiot.server.queue.scheduler;
 
 import org.echoiot.common.util.EchoiotThreadFactory;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -24,19 +25,23 @@ public class DefaultSchedulerComponent implements SchedulerComponent{
         }
     }
 
-    public ScheduledFuture<?> schedule(Runnable command, long delay, TimeUnit unit) {
+    @NotNull
+    public ScheduledFuture<?> schedule(@NotNull Runnable command, long delay, @NotNull TimeUnit unit) {
         return schedulerExecutor.schedule(command, delay, unit);
     }
 
-    public <V> ScheduledFuture<V> schedule(Callable<V> callable, long delay, TimeUnit unit) {
+    @NotNull
+    public <V> ScheduledFuture<V> schedule(@NotNull Callable<V> callable, long delay, @NotNull TimeUnit unit) {
         return schedulerExecutor.schedule(callable, delay, unit);
     }
 
-    public ScheduledFuture<?> scheduleAtFixedRate(Runnable command, long initialDelay, long period, TimeUnit unit) {
+    @NotNull
+    public ScheduledFuture<?> scheduleAtFixedRate(@NotNull Runnable command, long initialDelay, long period, @NotNull TimeUnit unit) {
         return schedulerExecutor.scheduleAtFixedRate(command, initialDelay, period, unit);
     }
 
-    public ScheduledFuture<?> scheduleWithFixedDelay(Runnable command, long initialDelay, long delay, TimeUnit unit) {
+    @NotNull
+    public ScheduledFuture<?> scheduleWithFixedDelay(@NotNull Runnable command, long initialDelay, long delay, @NotNull TimeUnit unit) {
         return schedulerExecutor.scheduleWithFixedDelay(command, initialDelay, delay, unit);
     }
 }

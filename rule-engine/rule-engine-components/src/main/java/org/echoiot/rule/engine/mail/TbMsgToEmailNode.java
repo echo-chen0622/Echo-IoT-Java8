@@ -14,6 +14,8 @@ import org.echoiot.rule.engine.api.TbNodeException;
 import org.echoiot.rule.engine.api.util.TbNodeUtils;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.msg.TbMsg;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -43,13 +45,13 @@ public class TbMsgToEmailNode implements TbNode {
     private boolean isDynamicHtmlTemplate;
 
     @Override
-    public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
+    public void init(TbContext ctx, @NotNull TbNodeConfiguration configuration) throws TbNodeException {
         this.config = TbNodeUtils.convert(configuration, TbMsgToEmailNodeConfiguration.class);
         this.isDynamicHtmlTemplate = DYNAMIC.equals(this.config.getMailBodyType());
      }
 
     @Override
-    public void onMsg(TbContext ctx, TbMsg msg) {
+    public void onMsg(@NotNull TbContext ctx, @NotNull TbMsg msg) {
         try {
             TbEmail email = convert(msg);
             TbMsg emailMsg = buildEmailMsg(ctx, msg, email);
@@ -60,12 +62,12 @@ public class TbMsgToEmailNode implements TbNode {
         }
     }
 
-    private TbMsg buildEmailMsg(TbContext ctx, TbMsg msg, TbEmail email) throws JsonProcessingException {
+    private TbMsg buildEmailMsg(@NotNull TbContext ctx, @NotNull TbMsg msg, TbEmail email) throws JsonProcessingException {
         String emailJson = MAPPER.writeValueAsString(email);
         return ctx.transformMsg(msg, TbSendEmailNode.SEND_EMAIL_TYPE, msg.getOriginator(), msg.getMetaData().copy(), emailJson);
     }
 
-    private TbEmail convert(TbMsg msg) throws IOException {
+    private TbEmail convert(@NotNull TbMsg msg) throws IOException {
         TbEmail.TbEmailBuilder builder = TbEmail.builder();
         builder.from(fromTemplate(this.config.getFromTemplate(), msg));
         builder.to(fromTemplate(this.config.getToTemplate(), msg));
@@ -86,7 +88,8 @@ public class TbMsgToEmailNode implements TbNode {
         return builder.build();
     }
 
-    private String fromTemplate(String template, TbMsg msg) {
+    @Nullable
+    private String fromTemplate(String template, @NotNull TbMsg msg) {
         if (!StringUtils.isEmpty(template)) {
             return TbNodeUtils.processPattern(template, msg);
         } else {

@@ -4,6 +4,7 @@ import lombok.EqualsAndHashCode;
 import org.echoiot.server.common.data.id.UUIDBased;
 import org.echoiot.server.common.data.validation.Length;
 import org.echoiot.server.common.data.validation.NoXss;
+import org.jetbrains.annotations.NotNull;
 
 @EqualsAndHashCode(callSuper = true)
 public abstract class ContactBased<I extends UUIDBased> extends SearchTextBasedWithAdditionalInfo<I> implements HasName {
@@ -41,7 +42,7 @@ public abstract class ContactBased<I extends UUIDBased> extends SearchTextBasedW
         super(id);
     }
 
-    public ContactBased(ContactBased<I> contact) {
+    public ContactBased(@NotNull ContactBased<I> contact) {
         super(contact);
         this.country = contact.getCountry();
         this.state = contact.getState();

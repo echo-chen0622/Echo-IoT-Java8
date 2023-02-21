@@ -11,6 +11,8 @@ import org.echoiot.server.common.data.kv.LongDataEntry;
 import org.echoiot.server.common.data.kv.StringDataEntry;
 import org.echoiot.server.common.data.kv.TsKvEntry;
 import org.echoiot.server.dao.model.ToData;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
@@ -80,8 +82,8 @@ public abstract class AbstractTsKvEntity implements ToData<TsKvEntry> {
 
     public abstract boolean isNotEmpty();
 
-    protected static boolean isAllNull(Object... args) {
-        for (Object arg : args) {
+    protected static boolean isAllNull(@NotNull Object... args) {
+        for (@Nullable Object arg : args) {
             if (arg != null) {
                 return false;
             }
@@ -89,9 +91,10 @@ public abstract class AbstractTsKvEntity implements ToData<TsKvEntry> {
         return true;
     }
 
+    @NotNull
     @Override
     public TsKvEntry toData() {
-        KvEntry kvEntry = null;
+        @Nullable KvEntry kvEntry = null;
         if (strValue != null) {
             kvEntry = new StringDataEntry(strKey, strValue);
         } else if (longValue != null) {

@@ -9,6 +9,8 @@ import org.eclipse.californium.core.server.resources.Resource;
 import org.eclipse.californium.elements.config.Configuration;
 import org.eclipse.californium.scandium.DTLSConnector;
 import org.eclipse.californium.scandium.config.DtlsConnectorConfig;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -30,7 +32,7 @@ import static org.eclipse.californium.core.config.CoapConfig.DEFAULT_BLOCKWISE_S
 @TbCoapServerComponent
 public class DefaultCoapServerService implements CoapServerService {
 
-    @Autowired
+    @Resource
     private CoapServerContext coapServerContext;
 
     private CoapServer server;
@@ -63,6 +65,7 @@ public class DefaultCoapServerService implements CoapServerService {
         }
     }
 
+    @Nullable
     @Override
     public ConcurrentMap<InetSocketAddress, TbCoapDtlsSessionInfo> getDtlsSessionsMap() {
         return tbDtlsCertificateVerifier != null ? tbDtlsCertificateVerifier.getTbCoapDtlsSessionsMap() : null;
@@ -79,7 +82,7 @@ public class DefaultCoapServerService implements CoapServerService {
     }
 
     private CoapServer createCoapServer() throws UnknownHostException {
-        Configuration networkConfig = new Configuration();
+        @NotNull Configuration networkConfig = new Configuration();
         networkConfig.set(CoapConfig.BLOCKWISE_STRICT_BLOCK2_OPTION, true);
         networkConfig.set(CoapConfig.BLOCKWISE_ENTITY_TOO_LARGE_AUTO_FAILOVER, true);
         networkConfig.set(CoapConfig.BLOCKWISE_STATUS_LIFETIME, DEFAULT_BLOCKWISE_STATUS_LIFETIME_IN_SECONDS, TimeUnit.SECONDS);
@@ -91,21 +94,21 @@ public class DefaultCoapServerService implements CoapServerService {
         networkConfig.set(CoapConfig.COAP_PORT, coapServerContext.getPort());
         server = new CoapServer(networkConfig);
 
-        CoapEndpoint.Builder noSecCoapEndpointBuilder = new CoapEndpoint.Builder();
+        @NotNull CoapEndpoint.Builder noSecCoapEndpointBuilder = new CoapEndpoint.Builder();
         InetAddress addr = InetAddress.getByName(coapServerContext.getHost());
-        InetSocketAddress sockAddr = new InetSocketAddress(addr, coapServerContext.getPort());
+        @NotNull InetSocketAddress sockAddr = new InetSocketAddress(addr, coapServerContext.getPort());
         noSecCoapEndpointBuilder.setInetSocketAddress(sockAddr);
 
         noSecCoapEndpointBuilder.setConfiguration(networkConfig);
         CoapEndpoint noSecCoapEndpoint = noSecCoapEndpointBuilder.build();
         server.addEndpoint(noSecCoapEndpoint);
         if (isDtlsEnabled()) {
-            CoapEndpoint.Builder dtlsCoapEndpointBuilder = new CoapEndpoint.Builder();
+            @NotNull CoapEndpoint.Builder dtlsCoapEndpointBuilder = new CoapEndpoint.Builder();
             TbCoapDtlsSettings dtlsSettings = coapServerContext.getDtlsSettings();
             DtlsConnectorConfig dtlsConnectorConfig = dtlsSettings.dtlsConnectorConfig(networkConfig);
             networkConfig.set(CoapConfig.COAP_SECURE_PORT, dtlsConnectorConfig.getAddress().getPort());
             dtlsCoapEndpointBuilder.setConfiguration(networkConfig);
-            DTLSConnector connector = new DTLSConnector(dtlsConnectorConfig);
+            @NotNull DTLSConnector connector = new DTLSConnector(dtlsConnectorConfig);
             dtlsCoapEndpointBuilder.setConnector(connector);
             CoapEndpoint dtlsCoapEndpoint = dtlsCoapEndpointBuilder.build();
             server.addEndpoint(dtlsCoapEndpoint);
@@ -114,7 +117,7 @@ public class DefaultCoapServerService implements CoapServerService {
             dtlsSessionsExecutor.scheduleAtFixedRate(this::evictTimeoutSessions, new Random().nextInt((int) getDtlsSessionReportTimeout()), getDtlsSessionReportTimeout(), TimeUnit.MILLISECONDS);
         }
         Resource root = server.getRoot();
-        TbCoapServerMessageDeliverer messageDeliverer = new TbCoapServerMessageDeliverer(root);
+        @NotNull TbCoapServerMessageDeliverer messageDeliverer = new TbCoapServerMessageDeliverer(root);
         server.setMessageDeliverer(messageDeliverer);
 
         server.start();

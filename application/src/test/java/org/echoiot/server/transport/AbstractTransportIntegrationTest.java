@@ -5,6 +5,8 @@ import org.echoiot.server.common.data.Device;
 import org.echoiot.server.common.data.DeviceProfile;
 import org.echoiot.server.controller.AbstractControllerTest;
 import org.echoiot.server.gen.transport.TransportProtos;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,8 +85,9 @@ public abstract class AbstractTransportIntegrationTest extends AbstractControlle
 
     protected DeviceProfile deviceProfile;
 
-    protected List<TransportProtos.KeyValueProto> getKvProtos(List<String> expectedKeys) {
-        List<TransportProtos.KeyValueProto> keyValueProtos = new ArrayList<>();
+    @NotNull
+    protected List<TransportProtos.KeyValueProto> getKvProtos(@NotNull List<String> expectedKeys) {
+        @NotNull List<TransportProtos.KeyValueProto> keyValueProtos = new ArrayList<>();
         TransportProtos.KeyValueProto strKeyValueProto = getKeyValueProto(expectedKeys.get(0), "value1", TransportProtos.KeyValueType.STRING_V);
         TransportProtos.KeyValueProto boolKeyValueProto = getKeyValueProto(expectedKeys.get(1), "true", TransportProtos.KeyValueType.BOOLEAN_V);
         TransportProtos.KeyValueProto dblKeyValueProto = getKeyValueProto(expectedKeys.get(2), "3.0", TransportProtos.KeyValueType.DOUBLE_V);
@@ -98,7 +101,7 @@ public abstract class AbstractTransportIntegrationTest extends AbstractControlle
         return keyValueProtos;
     }
 
-    protected TransportProtos.KeyValueProto getKeyValueProto(String key, String strValue, TransportProtos.KeyValueType type) {
+    protected TransportProtos.KeyValueProto getKeyValueProto(String key, @NotNull String strValue, @NotNull TransportProtos.KeyValueType type) {
         TransportProtos.KeyValueProto.Builder keyValueProtoBuilder = TransportProtos.KeyValueProto.newBuilder();
         keyValueProtoBuilder.setKey(key);
         keyValueProtoBuilder.setType(type);
@@ -122,10 +125,11 @@ public abstract class AbstractTransportIntegrationTest extends AbstractControlle
         return keyValueProtoBuilder.build();
     }
 
-    protected <T> T doExecuteWithRetriesAndInterval(SupplierWithThrowable<T> supplier, int retries, int intervalMs) throws Exception {
+    @Nullable
+    protected <T> T doExecuteWithRetriesAndInterval(@NotNull SupplierWithThrowable<T> supplier, int retries, int intervalMs) throws Exception {
         int count = 0;
-        T result = null;
-        Throwable lastException = null;
+        @Nullable T result = null;
+        @Nullable Throwable lastException = null;
         while (count < retries) {
             try {
                 result = supplier.get();

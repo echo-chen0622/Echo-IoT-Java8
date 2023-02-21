@@ -8,6 +8,8 @@ import org.echoiot.server.common.data.id.DashboardId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.validation.Length;
 import org.echoiot.server.common.data.validation.NoXss;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.validation.Valid;
 import java.util.HashSet;
@@ -36,7 +38,7 @@ public class DashboardInfo extends SearchTextBased<DashboardId> implements HasNa
         super(id);
     }
 
-    public DashboardInfo(DashboardInfo dashboardInfo) {
+    public DashboardInfo(@NotNull DashboardInfo dashboardInfo) {
         super(dashboardInfo);
         this.tenantId = dashboardInfo.getTenantId();
         this.title = dashboardInfo.getTitle();
@@ -119,9 +121,10 @@ public class DashboardInfo extends SearchTextBased<DashboardId> implements HasNa
         return this.assignedCustomers != null && this.assignedCustomers.contains(new ShortCustomerInfo(customerId, null, false));
     }
 
+    @Nullable
     public ShortCustomerInfo getAssignedCustomerInfo(CustomerId customerId) {
         if (this.assignedCustomers != null) {
-            for (ShortCustomerInfo customerInfo : this.assignedCustomers) {
+            for (@NotNull ShortCustomerInfo customerInfo : this.assignedCustomers) {
                 if (customerInfo.getCustomerId().equals(customerId)) {
                     return customerInfo;
                 }
@@ -130,8 +133,8 @@ public class DashboardInfo extends SearchTextBased<DashboardId> implements HasNa
         return null;
     }
 
-    public boolean addAssignedCustomer(Customer customer) {
-        ShortCustomerInfo customerInfo = customer.toShortCustomerInfo();
+    public boolean addAssignedCustomer(@NotNull Customer customer) {
+        @NotNull ShortCustomerInfo customerInfo = customer.toShortCustomerInfo();
         if (this.assignedCustomers != null && this.assignedCustomers.contains(customerInfo)) {
             return false;
         } else {
@@ -143,8 +146,8 @@ public class DashboardInfo extends SearchTextBased<DashboardId> implements HasNa
         }
     }
 
-    public boolean updateAssignedCustomer(Customer customer) {
-        ShortCustomerInfo customerInfo = customer.toShortCustomerInfo();
+    public boolean updateAssignedCustomer(@NotNull Customer customer) {
+        @NotNull ShortCustomerInfo customerInfo = customer.toShortCustomerInfo();
         if (this.assignedCustomers != null && this.assignedCustomers.contains(customerInfo)) {
             this.assignedCustomers.remove(customerInfo);
             this.assignedCustomers.add(customerInfo);
@@ -154,8 +157,8 @@ public class DashboardInfo extends SearchTextBased<DashboardId> implements HasNa
         }
     }
 
-    public boolean removeAssignedCustomer(Customer customer) {
-        ShortCustomerInfo customerInfo = customer.toShortCustomerInfo();
+    public boolean removeAssignedCustomer(@NotNull Customer customer) {
+        @NotNull ShortCustomerInfo customerInfo = customer.toShortCustomerInfo();
         if (this.assignedCustomers != null && this.assignedCustomers.contains(customerInfo)) {
             this.assignedCustomers.remove(customerInfo);
             return true;
@@ -186,11 +189,11 @@ public class DashboardInfo extends SearchTextBased<DashboardId> implements HasNa
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-        DashboardInfo that = (DashboardInfo) o;
+        @NotNull DashboardInfo that = (DashboardInfo) o;
         return mobileHide == that.mobileHide
                 && Objects.equals(tenantId, that.tenantId)
                 && Objects.equals(title, that.title)
@@ -201,13 +204,8 @@ public class DashboardInfo extends SearchTextBased<DashboardId> implements HasNa
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("DashboardInfo [tenantId=");
-        builder.append(tenantId);
-        builder.append(", title=");
-        builder.append(title);
-        builder.append("]");
-        return builder.toString();
+        String builder = "DashboardInfo [tenantId=" + tenantId + ", title=" + title + "]";
+        return builder;
     }
 
 }

@@ -2,6 +2,7 @@ package org.echoiot.rule.engine.aws.sqs;
 
 import lombok.Data;
 import org.echoiot.rule.engine.api.NodeConfiguration;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.Map;
@@ -17,9 +18,10 @@ public class TbSqsNodeConfiguration implements NodeConfiguration<TbSqsNodeConfig
     private String secretAccessKey;
     private String region;
 
+    @NotNull
     @Override
     public TbSqsNodeConfiguration defaultConfiguration() {
-        TbSqsNodeConfiguration configuration = new TbSqsNodeConfiguration();
+        @NotNull TbSqsNodeConfiguration configuration = new TbSqsNodeConfiguration();
         configuration.setQueueType(QueueType.STANDARD);
         configuration.setQueueUrlPattern("https://sqs.us-east-1.amazonaws.com/123456789012/my-queue-name");
         configuration.setDelaySeconds(0);

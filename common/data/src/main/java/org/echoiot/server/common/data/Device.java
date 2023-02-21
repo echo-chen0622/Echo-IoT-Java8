@@ -17,6 +17,8 @@ import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.data.id.DeviceProfileId;
 import org.echoiot.server.common.data.id.OtaPackageId;
 import org.echoiot.server.common.data.id.TenantId;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -59,7 +61,7 @@ public class Device extends SearchTextBasedWithAdditionalInfo<DeviceId> implemen
         super(id);
     }
 
-    public Device(Device device) {
+    public Device(@NotNull Device device) {
         super(device);
         this.tenantId = device.getTenantId();
         this.customerId = device.getCustomerId();
@@ -73,7 +75,8 @@ public class Device extends SearchTextBasedWithAdditionalInfo<DeviceId> implemen
         this.externalId = device.getExternalId();
     }
 
-    public Device updateDevice(Device device) {
+    @NotNull
+    public Device updateDevice(@NotNull Device device) {
         this.tenantId = device.getTenantId();
         this.customerId = device.getCustomerId();
         this.name = device.getName();
@@ -158,6 +161,7 @@ public class Device extends SearchTextBasedWithAdditionalInfo<DeviceId> implemen
         this.deviceProfileId = deviceProfileId;
     }
 
+    @Nullable
     @ApiModelProperty(position = 9, value = "JSON object with content specific to type of transport in the device profile.")
     public DeviceData getDeviceData() {
         if (deviceData != null) {
@@ -177,7 +181,7 @@ public class Device extends SearchTextBasedWithAdditionalInfo<DeviceId> implemen
         }
     }
 
-    public void setDeviceData(DeviceData data) {
+    public void setDeviceData(@Nullable DeviceData data) {
         this.deviceData = data;
         try {
             this.deviceDataBytes = data != null ? mapper.writeValueAsBytes(data) : null;
@@ -217,31 +221,30 @@ public class Device extends SearchTextBasedWithAdditionalInfo<DeviceId> implemen
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Device [tenantId=");
-        builder.append(tenantId);
-        builder.append(", customerId=");
-        builder.append(customerId);
-        builder.append(", name=");
-        builder.append(name);
-        builder.append(", type=");
-        builder.append(type);
-        builder.append(", label=");
-        builder.append(label);
-        builder.append(", deviceProfileId=");
-        builder.append(deviceProfileId);
-        builder.append(", deviceData=");
-        builder.append(firmwareId);
-        builder.append(", firmwareId=");
-        builder.append(deviceData);
-        builder.append(", additionalInfo=");
-        builder.append(getAdditionalInfo());
-        builder.append(", createdTime=");
-        builder.append(createdTime);
-        builder.append(", id=");
-        builder.append(id);
-        builder.append("]");
-        return builder.toString();
+        String builder = "Device [tenantId=" +
+                         tenantId +
+                         ", customerId=" +
+                         customerId +
+                         ", name=" +
+                         name +
+                         ", type=" +
+                         type +
+                         ", label=" +
+                         label +
+                         ", deviceProfileId=" +
+                         deviceProfileId +
+                         ", deviceData=" +
+                         firmwareId +
+                         ", firmwareId=" +
+                         deviceData +
+                         ", additionalInfo=" +
+                         getAdditionalInfo() +
+                         ", createdTime=" +
+                         createdTime +
+                         ", id=" +
+                         id +
+                         "]";
+        return builder;
     }
 
 }

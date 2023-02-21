@@ -2,6 +2,7 @@ package org.echoiot.rule.engine.transform;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -59,17 +60,17 @@ public class TbCopyKeysNodeTest {
 
     @Test
     void givenDefaultConfig_whenVerify_thenOK() {
-        TbCopyKeysNodeConfiguration defaultConfig = new TbCopyKeysNodeConfiguration().defaultConfiguration();
+        @NotNull TbCopyKeysNodeConfiguration defaultConfig = new TbCopyKeysNodeConfiguration().defaultConfiguration();
         assertThat(defaultConfig.getKeys()).isEqualTo(Collections.emptySet());
         assertThat(defaultConfig.isFromMetadata()).isEqualTo(false);
     }
 
     @Test
     void givenMsgFromMetadata_whenOnMsg_thenVerifyOutput() throws Exception {
-        String data = "{}";
+        @NotNull String data = "{}";
         node.onMsg(ctx, getTbMsg(deviceId, data));
 
-        ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        @NotNull ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
         verify(ctx, times(1)).tellSuccess(newMsgCaptor.capture());
         verify(ctx, never()).tellFailure(any(), any());
 
@@ -87,10 +88,10 @@ public class TbCopyKeysNodeTest {
         nodeConfiguration = new TbNodeConfiguration(mapper.valueToTree(config));
         node.init(ctx, nodeConfiguration);
 
-        String data = "{\"DigitData\":22.5,\"TempDataValue\":10.5}";
+        @NotNull String data = "{\"DigitData\":22.5,\"TempDataValue\":10.5}";
         node.onMsg(ctx, getTbMsg(deviceId, data));
 
-        ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        @NotNull ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
         verify(ctx, times(1)).tellSuccess(newMsgCaptor.capture());
         verify(ctx, never()).tellFailure(any(), any());
 
@@ -104,15 +105,15 @@ public class TbCopyKeysNodeTest {
 
     @Test
     void givenEmptyKeys_whenOnMsg_thenVerifyOutput() throws Exception {
-        TbCopyKeysNodeConfiguration defaultConfig = new TbCopyKeysNodeConfiguration().defaultConfiguration();
+        @NotNull TbCopyKeysNodeConfiguration defaultConfig = new TbCopyKeysNodeConfiguration().defaultConfiguration();
         nodeConfiguration = new TbNodeConfiguration(mapper.valueToTree(defaultConfig));
         node.init(ctx, nodeConfiguration);
 
-        String data = "{\"DigitData\":22.5,\"TempDataValue\":10.5}";
-        TbMsg msg = getTbMsg(deviceId, data);
+        @NotNull String data = "{\"DigitData\":22.5,\"TempDataValue\":10.5}";
+        @NotNull TbMsg msg = getTbMsg(deviceId, data);
         node.onMsg(ctx, msg);
 
-        ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        @NotNull ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
         verify(ctx, times(1)).tellSuccess(newMsgCaptor.capture());
         verify(ctx, never()).tellFailure(any(), any());
 
@@ -124,11 +125,11 @@ public class TbCopyKeysNodeTest {
 
     @Test
     void givenMsgDataNotJSONObject_whenOnMsg_thenTVerifyOutput() throws Exception {
-        String data = "[]";
-        TbMsg msg = getTbMsg(deviceId, data);
+        @NotNull String data = "[]";
+        @NotNull TbMsg msg = getTbMsg(deviceId, data);
         node.onMsg(ctx, msg);
 
-        ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        @NotNull ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
         verify(ctx, times(1)).tellSuccess(newMsgCaptor.capture());
         verify(ctx, never()).tellFailure(any(), any());
 
@@ -138,13 +139,14 @@ public class TbCopyKeysNodeTest {
         assertThat(newMsg).isSameAs(msg);
     }
 
+    @NotNull
     private TbMsg getTbMsg(EntityId entityId, String data) {
-        final Map<String, String> mdMap = Map.of(
+        @NotNull final Map<String, String> mdMap = Map.of(
                 "TestKey_1", "Test",
                 "country", "US",
                 "voltageDataValue", "220",
                 "city", "NY"
-        );
+                                                         );
         return TbMsg.newMsg("POST_ATTRIBUTES_REQUEST", entityId, new TbMsgMetaData(mdMap), data, callback);
     }
 

@@ -2,6 +2,7 @@ package org.echoiot.server.dao.sql;
 
 import org.echoiot.server.dao.model.BaseEntity;
 import org.echoiot.server.dao.model.SearchTextEntity;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by Valerii Sosliuk on 5/6/2017.
@@ -9,7 +10,7 @@ import org.echoiot.server.dao.model.SearchTextEntity;
 public abstract class JpaAbstractSearchTextDao <E extends BaseEntity<D>, D> extends JpaAbstractDao<E, D> {
 
     @Override
-    protected void setSearchText(E entity) {
+    protected void setSearchText(@NotNull E entity) {
         ((SearchTextEntity) entity).setSearchText(((SearchTextEntity) entity).getSearchTextSource().toLowerCase());
     }
 }

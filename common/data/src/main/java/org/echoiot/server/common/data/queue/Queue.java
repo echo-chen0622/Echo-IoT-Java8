@@ -9,6 +9,7 @@ import org.echoiot.server.common.data.HasTenantId;
 import org.echoiot.server.common.data.SearchTextBasedWithAdditionalInfo;
 import org.echoiot.server.common.data.id.QueueId;
 import org.echoiot.server.common.data.id.TenantId;
+import org.jetbrains.annotations.NotNull;
 
 @Data
 public class Queue extends SearchTextBasedWithAdditionalInfo<QueueId> implements HasName, HasTenantId {
@@ -33,7 +34,7 @@ public class Queue extends SearchTextBasedWithAdditionalInfo<QueueId> implements
         super(id);
     }
 
-    public Queue(TenantId tenantId, TenantProfileQueueConfiguration queueConfiguration) {
+    public Queue(TenantId tenantId, @NotNull TenantProfileQueueConfiguration queueConfiguration) {
         this.tenantId = tenantId;
         this.name = queueConfiguration.getName();
         this.topic = queueConfiguration.getTopic();

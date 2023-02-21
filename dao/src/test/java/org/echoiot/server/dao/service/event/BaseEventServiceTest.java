@@ -8,6 +8,7 @@ import org.echoiot.server.common.data.event.RuleNodeDebugEvent;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.SortOrder;
 import org.echoiot.server.common.data.page.TimePageLink;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,8 +42,8 @@ public abstract class BaseEventServiceTest extends AbstractServiceTest {
 
     @Test
     public void saveEvent() throws Exception {
-        TenantId tenantId = new TenantId(Uuids.timeBased());
-        DeviceId devId = new DeviceId(Uuids.timeBased());
+        @NotNull TenantId tenantId = new TenantId(Uuids.timeBased());
+        @NotNull DeviceId devId = new DeviceId(Uuids.timeBased());
         RuleNodeDebugEvent event = generateEvent(tenantId, devId);
         eventService.saveAsync(event).get();
         List<EventInfo> loaded = eventService.findLatestEvents(event.getTenantId(), devId, event.getType(), 1);
@@ -53,15 +54,15 @@ public abstract class BaseEventServiceTest extends AbstractServiceTest {
 
     @Test
     public void findEventsByTypeAndTimeAscOrder() throws Exception {
-        CustomerId customerId = new CustomerId(Uuids.timeBased());
+        @NotNull CustomerId customerId = new CustomerId(Uuids.timeBased());
         TenantId tenantId = TenantId.fromUUID(Uuids.timeBased());
         saveEventWithProvidedTime(timeBeforeStartTime, customerId, tenantId);
-        Event savedEvent = saveEventWithProvidedTime(eventTime, customerId, tenantId);
-        Event savedEvent2 = saveEventWithProvidedTime(eventTime + 1, customerId, tenantId);
-        Event savedEvent3 = saveEventWithProvidedTime(eventTime + 2, customerId, tenantId);
+        @NotNull Event savedEvent = saveEventWithProvidedTime(eventTime, customerId, tenantId);
+        @NotNull Event savedEvent2 = saveEventWithProvidedTime(eventTime + 1, customerId, tenantId);
+        @NotNull Event savedEvent3 = saveEventWithProvidedTime(eventTime + 2, customerId, tenantId);
         saveEventWithProvidedTime(timeAfterEndTime, customerId, tenantId);
 
-        TimePageLink timePageLink = new TimePageLink(2, 0, "", new SortOrder("ts"), startTime, endTime);
+        @NotNull TimePageLink timePageLink = new TimePageLink(2, 0, "", new SortOrder("ts"), startTime, endTime);
 
         PageData<EventInfo> events = eventService.findEvents(tenantId, customerId, EventType.DEBUG_RULE_NODE, timePageLink);
 
@@ -83,15 +84,15 @@ public abstract class BaseEventServiceTest extends AbstractServiceTest {
 
     @Test
     public void findEventsByTypeAndTimeDescOrder() throws Exception {
-        CustomerId customerId = new CustomerId(Uuids.timeBased());
+        @NotNull CustomerId customerId = new CustomerId(Uuids.timeBased());
         TenantId tenantId = TenantId.fromUUID(Uuids.timeBased());
         saveEventWithProvidedTime(timeBeforeStartTime, customerId, tenantId);
-        Event savedEvent = saveEventWithProvidedTime(eventTime, customerId, tenantId);
-        Event savedEvent2 = saveEventWithProvidedTime(eventTime + 1, customerId, tenantId);
-        Event savedEvent3 = saveEventWithProvidedTime(eventTime + 2, customerId, tenantId);
+        @NotNull Event savedEvent = saveEventWithProvidedTime(eventTime, customerId, tenantId);
+        @NotNull Event savedEvent2 = saveEventWithProvidedTime(eventTime + 1, customerId, tenantId);
+        @NotNull Event savedEvent3 = saveEventWithProvidedTime(eventTime + 2, customerId, tenantId);
         saveEventWithProvidedTime(timeAfterEndTime, customerId, tenantId);
 
-        TimePageLink timePageLink = new TimePageLink(2, 0, "", new SortOrder("ts", SortOrder.Direction.DESC), startTime, endTime);
+        @NotNull TimePageLink timePageLink = new TimePageLink(2, 0, "", new SortOrder("ts", SortOrder.Direction.DESC), startTime, endTime);
 
         PageData<EventInfo> events = eventService.findEvents(tenantId, customerId, EventType.DEBUG_RULE_NODE, timePageLink);
 
@@ -111,6 +112,7 @@ public abstract class BaseEventServiceTest extends AbstractServiceTest {
         eventService.cleanupEvents(timeBeforeStartTime - 1, timeAfterEndTime + 1, true);
     }
 
+    @NotNull
     private Event saveEventWithProvidedTime(long time, EntityId entityId, TenantId tenantId) throws Exception {
         RuleNodeDebugEvent event = generateEvent(tenantId, entityId);
         event.setId(new EventId(Uuids.timeBased()));

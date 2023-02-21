@@ -3,6 +3,7 @@ package org.echoiot.common.util;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -27,17 +28,19 @@ public abstract class AbstractListeningExecutor implements ListeningExecutor {
         }
     }
 
+    @NotNull
     @Override
-    public <T> ListenableFuture<T> executeAsync(Callable<T> task) {
+    public <T> ListenableFuture<T> executeAsync(@NotNull Callable<T> task) {
         return service.submit(task);
     }
 
-    public ListenableFuture<?> executeAsync(Runnable task) {
+    @NotNull
+    public ListenableFuture<?> executeAsync(@NotNull Runnable task) {
         return service.submit(task);
     }
 
     @Override
-    public void execute(Runnable command) {
+    public void execute(@NotNull Runnable command) {
         service.execute(command);
     }
 

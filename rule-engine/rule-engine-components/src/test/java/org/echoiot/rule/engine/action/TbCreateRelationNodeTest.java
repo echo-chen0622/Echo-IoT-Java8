@@ -4,6 +4,7 @@ import com.datastax.oss.driver.api.core.uuid.Uuids;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -56,16 +57,17 @@ public class TbCreateRelationNodeTest {
 
     private TbMsg msg;
 
-    private RuleChainId ruleChainId = new RuleChainId(Uuids.timeBased());
-    private RuleNodeId ruleNodeId = new RuleNodeId(Uuids.timeBased());
+    private final RuleChainId ruleChainId = new RuleChainId(Uuids.timeBased());
+    private final RuleNodeId ruleNodeId = new RuleNodeId(Uuids.timeBased());
 
     private ListeningExecutor dbExecutor;
 
     @Before
     public void before() {
         dbExecutor = new ListeningExecutor() {
+            @NotNull
             @Override
-            public <T> ListenableFuture<T> executeAsync(Callable<T> task) {
+            public <T> ListenableFuture<T> executeAsync(@NotNull Callable<T> task) {
                 try {
                     return Futures.immediateFuture(task.call());
                 } catch (Exception e) {
@@ -74,7 +76,7 @@ public class TbCreateRelationNodeTest {
             }
 
             @Override
-            public void execute(Runnable command) {
+            public void execute(@NotNull Runnable command) {
                 command.run();
             }
         };
@@ -84,16 +86,16 @@ public class TbCreateRelationNodeTest {
     public void testCreateNewRelation() throws TbNodeException {
         init(createRelationNodeConfig());
 
-        DeviceId deviceId = new DeviceId(Uuids.timeBased());
+        @NotNull DeviceId deviceId = new DeviceId(Uuids.timeBased());
 
-        AssetId assetId = new AssetId(Uuids.timeBased());
-        Asset asset = new Asset();
+        @NotNull AssetId assetId = new AssetId(Uuids.timeBased());
+        @NotNull Asset asset = new Asset();
         asset.setId(assetId);
 
         when(assetService.findAssetByTenantIdAndName(any(), eq("AssetName"))).thenReturn(asset);
         when(assetService.findAssetByIdAsync(any(), eq(assetId))).thenReturn(Futures.immediateFuture(asset));
 
-        TbMsgMetaData metaData = new TbMsgMetaData();
+        @NotNull TbMsgMetaData metaData = new TbMsgMetaData();
         metaData.putValue("name", "AssetName");
         metaData.putValue("type", "AssetType");
         msg = TbMsg.newMsg(DataConstants.ENTITY_CREATED, deviceId, metaData, TbMsgDataType.JSON, "{}", ruleChainId, ruleNodeId);
@@ -111,21 +113,21 @@ public class TbCreateRelationNodeTest {
     public void testDeleteCurrentRelationsCreateNewRelation() throws TbNodeException {
         init(createRelationNodeConfigWithRemoveCurrentRelations());
 
-        DeviceId deviceId = new DeviceId(Uuids.timeBased());
+        @NotNull DeviceId deviceId = new DeviceId(Uuids.timeBased());
 
-        AssetId assetId = new AssetId(Uuids.timeBased());
-        Asset asset = new Asset();
+        @NotNull AssetId assetId = new AssetId(Uuids.timeBased());
+        @NotNull Asset asset = new Asset();
         asset.setId(assetId);
 
         when(assetService.findAssetByTenantIdAndName(any(), eq("AssetName"))).thenReturn(asset);
         when(assetService.findAssetByIdAsync(any(), eq(assetId))).thenReturn(Futures.immediateFuture(asset));
 
-        TbMsgMetaData metaData = new TbMsgMetaData();
+        @NotNull TbMsgMetaData metaData = new TbMsgMetaData();
         metaData.putValue("name", "AssetName");
         metaData.putValue("type", "AssetType");
         msg = TbMsg.newMsg(DataConstants.ENTITY_CREATED, deviceId, metaData, TbMsgDataType.JSON, "{}", ruleChainId, ruleNodeId);
 
-        EntityRelation relation = new EntityRelation();
+        @NotNull EntityRelation relation = new EntityRelation();
         when(ctx.getRelationService().findByToAndTypeAsync(any(), eq(msg.getOriginator()), eq(RELATION_TYPE_CONTAINS), eq(RelationTypeGroup.COMMON)))
                 .thenReturn(Futures.immediateFuture(Collections.singletonList(relation)));
         when(ctx.getRelationService().deleteRelationAsync(any(), eq(relation))).thenReturn(Futures.immediateFuture(true));
@@ -142,16 +144,16 @@ public class TbCreateRelationNodeTest {
     public void testCreateNewRelationAndChangeOriginator() throws TbNodeException {
         init(createRelationNodeConfigWithChangeOriginator());
 
-        DeviceId deviceId = new DeviceId(Uuids.timeBased());
+        @NotNull DeviceId deviceId = new DeviceId(Uuids.timeBased());
 
-        AssetId assetId = new AssetId(Uuids.timeBased());
-        Asset asset = new Asset();
+        @NotNull AssetId assetId = new AssetId(Uuids.timeBased());
+        @NotNull Asset asset = new Asset();
         asset.setId(assetId);
 
         when(assetService.findAssetByTenantIdAndName(any(), eq("AssetName"))).thenReturn(asset);
         when(assetService.findAssetByIdAsync(any(), eq(assetId))).thenReturn(Futures.immediateFuture(asset));
 
-        TbMsgMetaData metaData = new TbMsgMetaData();
+        @NotNull TbMsgMetaData metaData = new TbMsgMetaData();
         metaData.putValue("name", "AssetName");
         metaData.putValue("type", "AssetType");
         msg = TbMsg.newMsg(DataConstants.ENTITY_CREATED, deviceId, metaData, TbMsgDataType.JSON, "{}", ruleChainId, ruleNodeId);
@@ -162,19 +164,19 @@ public class TbCreateRelationNodeTest {
                 .thenReturn(Futures.immediateFuture(true));
 
         node.onMsg(ctx, msg);
-        ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
-        ArgumentCaptor<String> typeCaptor = ArgumentCaptor.forClass(String.class);
-        ArgumentCaptor<EntityId> originatorCaptor = ArgumentCaptor.forClass(EntityId.class);
-        ArgumentCaptor<TbMsgMetaData> metadataCaptor = ArgumentCaptor.forClass(TbMsgMetaData.class);
-        ArgumentCaptor<String> dataCaptor = ArgumentCaptor.forClass(String.class);
+        @NotNull ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        @NotNull ArgumentCaptor<String> typeCaptor = ArgumentCaptor.forClass(String.class);
+        @NotNull ArgumentCaptor<EntityId> originatorCaptor = ArgumentCaptor.forClass(EntityId.class);
+        @NotNull ArgumentCaptor<TbMsgMetaData> metadataCaptor = ArgumentCaptor.forClass(TbMsgMetaData.class);
+        @NotNull ArgumentCaptor<String> dataCaptor = ArgumentCaptor.forClass(String.class);
         verify(ctx).transformMsg(msgCaptor.capture(), typeCaptor.capture(), originatorCaptor.capture(), metadataCaptor.capture(), dataCaptor.capture());
 
         assertEquals(assetId, originatorCaptor.getValue());
     }
 
     public void init(TbCreateRelationNodeConfiguration configuration) throws TbNodeException {
-        ObjectMapper mapper = new ObjectMapper();
-        TbNodeConfiguration nodeConfiguration = new TbNodeConfiguration(mapper.valueToTree(configuration));
+        @NotNull ObjectMapper mapper = new ObjectMapper();
+        @NotNull TbNodeConfiguration nodeConfiguration = new TbNodeConfiguration(mapper.valueToTree(configuration));
 
         when(ctx.getDbCallbackExecutor()).thenReturn(dbExecutor);
         when(ctx.getRelationService()).thenReturn(relationService);
@@ -184,8 +186,9 @@ public class TbCreateRelationNodeTest {
         node.init(ctx, nodeConfiguration);
     }
 
+    @NotNull
     private TbCreateRelationNodeConfiguration createRelationNodeConfig() {
-        TbCreateRelationNodeConfiguration configuration = new TbCreateRelationNodeConfiguration();
+        @NotNull TbCreateRelationNodeConfiguration configuration = new TbCreateRelationNodeConfiguration();
         configuration.setDirection(EntitySearchDirection.FROM.name());
         configuration.setRelationType(RELATION_TYPE_CONTAINS);
         configuration.setEntityCacheExpiration(300);
@@ -198,14 +201,16 @@ public class TbCreateRelationNodeTest {
         return configuration;
     }
 
+    @NotNull
     private TbCreateRelationNodeConfiguration createRelationNodeConfigWithRemoveCurrentRelations() {
-        TbCreateRelationNodeConfiguration configuration = createRelationNodeConfig();
+        @NotNull TbCreateRelationNodeConfiguration configuration = createRelationNodeConfig();
         configuration.setRemoveCurrentRelations(true);
         return configuration;
     }
 
+    @NotNull
     private TbCreateRelationNodeConfiguration createRelationNodeConfigWithChangeOriginator() {
-        TbCreateRelationNodeConfiguration configuration = createRelationNodeConfig();
+        @NotNull TbCreateRelationNodeConfiguration configuration = createRelationNodeConfig();
         configuration.setChangeOriginatorToRelatedEntity(true);
         return configuration;
     }

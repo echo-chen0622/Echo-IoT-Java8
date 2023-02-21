@@ -1,6 +1,7 @@
 package org.echoiot.server.transport.coap;
 
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.test.context.TestPropertySource;
 import org.echoiot.server.common.data.CoapDeviceType;
 import org.echoiot.server.common.data.Device;
@@ -44,7 +45,7 @@ public abstract class AbstractCoapIntegrationTest extends AbstractTransportInteg
         }
     }
 
-    protected void processBeforeTest(CoapTestConfigProperties config) throws Exception {
+    protected void processBeforeTest(@NotNull CoapTestConfigProperties config) throws Exception {
         loginTenantAdmin();
         deviceProfile = createCoapDeviceProfile(config);
         assertNotNull(deviceProfile);
@@ -57,31 +58,31 @@ public abstract class AbstractCoapIntegrationTest extends AbstractTransportInteg
         assertNotNull(accessToken);
     }
 
-    protected DeviceProfile createCoapDeviceProfile(CoapTestConfigProperties config) throws Exception {
+    protected DeviceProfile createCoapDeviceProfile(@NotNull CoapTestConfigProperties config) throws Exception {
         CoapDeviceType coapDeviceType = config.getCoapDeviceType();
         if (coapDeviceType == null) {
             DeviceProfileInfo defaultDeviceProfileInfo = doGet("/api/deviceProfileInfo/default", DeviceProfileInfo.class);
             return doGet("/api/deviceProfile/" + defaultDeviceProfileInfo.getId().getId(), DeviceProfile.class);
         } else {
             TransportPayloadType transportPayloadType = config.getTransportPayloadType();
-            DeviceProfile deviceProfile = new DeviceProfile();
+            @NotNull DeviceProfile deviceProfile = new DeviceProfile();
             deviceProfile.setName(transportPayloadType.name());
             deviceProfile.setType(DeviceProfileType.DEFAULT);
-            DeviceProfileProvisionType provisionType = config.getProvisionType() != null ?
+            @NotNull DeviceProfileProvisionType provisionType = config.getProvisionType() != null ?
                     config.getProvisionType() : DeviceProfileProvisionType.DISABLED;
             deviceProfile.setProvisionType(provisionType);
             deviceProfile.setProvisionDeviceKey(config.getProvisionKey());
             deviceProfile.setDescription(transportPayloadType.name() + " Test");
-            DeviceProfileData deviceProfileData = new DeviceProfileData();
-            DefaultDeviceProfileConfiguration configuration = new DefaultDeviceProfileConfiguration();
+            @NotNull DeviceProfileData deviceProfileData = new DeviceProfileData();
+            @NotNull DefaultDeviceProfileConfiguration configuration = new DefaultDeviceProfileConfiguration();
             deviceProfile.setTransportType(DeviceTransportType.COAP);
-            CoapDeviceProfileTransportConfiguration coapDeviceProfileTransportConfiguration = new CoapDeviceProfileTransportConfiguration();
+            @NotNull CoapDeviceProfileTransportConfiguration coapDeviceProfileTransportConfiguration = new CoapDeviceProfileTransportConfiguration();
             CoapDeviceTypeConfiguration coapDeviceTypeConfiguration;
             if (CoapDeviceType.DEFAULT.equals(coapDeviceType)) {
-                DefaultCoapDeviceTypeConfiguration defaultCoapDeviceTypeConfiguration = new DefaultCoapDeviceTypeConfiguration();
+                @NotNull DefaultCoapDeviceTypeConfiguration defaultCoapDeviceTypeConfiguration = new DefaultCoapDeviceTypeConfiguration();
                 TransportPayloadTypeConfiguration transportPayloadTypeConfiguration;
                 if (TransportPayloadType.PROTOBUF.equals(transportPayloadType)) {
-                    ProtoTransportPayloadConfiguration protoTransportPayloadConfiguration = new ProtoTransportPayloadConfiguration();
+                    @NotNull ProtoTransportPayloadConfiguration protoTransportPayloadConfiguration = new ProtoTransportPayloadConfiguration();
                     String telemetryProtoSchema = config.getTelemetryProtoSchema();
                     String attributesProtoSchema = config.getAttributesProtoSchema();
                     String rpcResponseProtoSchema = config.getRpcResponseProtoSchema();
@@ -132,7 +133,7 @@ public abstract class AbstractCoapIntegrationTest extends AbstractTransportInteg
     }
 
     protected Device createDevice(String name, String type) throws Exception {
-        Device device = new Device();
+        @NotNull Device device = new Device();
         device.setName(name);
         device.setType(type);
         return doPost("/api/device", device, Device.class);

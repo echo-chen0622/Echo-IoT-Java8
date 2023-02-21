@@ -13,6 +13,7 @@ import org.echoiot.server.common.data.ota.OtaPackageType;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.dao.exception.DataValidationException;
+import org.jetbrains.annotations.NotNull;
 import org.junit.*;
 
 import java.nio.ByteBuffer;
@@ -27,14 +28,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public abstract class BaseDeviceProfileServiceTest extends AbstractServiceTest {
 
-    private IdComparator<DeviceProfile> idComparator = new IdComparator<>();
-    private IdComparator<DeviceProfileInfo> deviceProfileInfoIdComparator = new IdComparator<>();
+    private final IdComparator<DeviceProfile> idComparator = new IdComparator<>();
+    private final IdComparator<DeviceProfileInfo> deviceProfileInfoIdComparator = new IdComparator<>();
 
     private TenantId tenantId;
 
     @Before
     public void before() {
-        Tenant tenant = new Tenant();
+        @NotNull Tenant tenant = new Tenant();
         tenant.setTitle("My tenant");
         Tenant savedTenant = tenantService.saveTenant(tenant);
         Assert.assertNotNull(savedTenant);
@@ -48,7 +49,7 @@ public abstract class BaseDeviceProfileServiceTest extends AbstractServiceTest {
 
     @Test
     public void testSaveDeviceProfile() {
-        DeviceProfile deviceProfile = this.createDeviceProfile(tenantId, "Device Profile");
+        @NotNull DeviceProfile deviceProfile = this.createDeviceProfile(tenantId, "Device Profile");
         DeviceProfile savedDeviceProfile = deviceProfileService.saveDeviceProfile(deviceProfile);
         Assert.assertNotNull(savedDeviceProfile);
         Assert.assertNotNull(savedDeviceProfile.getId());
@@ -66,7 +67,7 @@ public abstract class BaseDeviceProfileServiceTest extends AbstractServiceTest {
 
     @Test
     public void testSaveDeviceProfileWithFirmware() {
-        DeviceProfile deviceProfile = this.createDeviceProfile(tenantId, "Device Profile");
+        @NotNull DeviceProfile deviceProfile = this.createDeviceProfile(tenantId, "Device Profile");
         DeviceProfile savedDeviceProfile = deviceProfileService.saveDeviceProfile(deviceProfile);
         Assert.assertNotNull(savedDeviceProfile);
         Assert.assertNotNull(savedDeviceProfile.getId());
@@ -77,7 +78,7 @@ public abstract class BaseDeviceProfileServiceTest extends AbstractServiceTest {
         Assert.assertEquals(deviceProfile.isDefault(), savedDeviceProfile.isDefault());
         Assert.assertEquals(deviceProfile.getDefaultRuleChainId(), savedDeviceProfile.getDefaultRuleChainId());
 
-        OtaPackage firmware = new OtaPackage();
+        @NotNull OtaPackage firmware = new OtaPackage();
         firmware.setTenantId(tenantId);
         firmware.setDeviceProfileId(savedDeviceProfile.getId());
         firmware.setType(OtaPackageType.FIRMWARE);
@@ -100,7 +101,7 @@ public abstract class BaseDeviceProfileServiceTest extends AbstractServiceTest {
 
     @Test
     public void testFindDeviceProfileById() {
-        DeviceProfile deviceProfile = this.createDeviceProfile(tenantId, "Device Profile");
+        @NotNull DeviceProfile deviceProfile = this.createDeviceProfile(tenantId, "Device Profile");
         DeviceProfile savedDeviceProfile = deviceProfileService.saveDeviceProfile(deviceProfile);
         DeviceProfile foundDeviceProfile = deviceProfileService.findDeviceProfileById(tenantId, savedDeviceProfile.getId());
         Assert.assertNotNull(foundDeviceProfile);
@@ -109,7 +110,7 @@ public abstract class BaseDeviceProfileServiceTest extends AbstractServiceTest {
 
     @Test
     public void testFindDeviceProfileInfoById() {
-        DeviceProfile deviceProfile = this.createDeviceProfile(tenantId, "Device Profile");
+        @NotNull DeviceProfile deviceProfile = this.createDeviceProfile(tenantId, "Device Profile");
         DeviceProfile savedDeviceProfile = deviceProfileService.saveDeviceProfile(deviceProfile);
         DeviceProfileInfo foundDeviceProfileInfo = deviceProfileService.findDeviceProfileInfoById(tenantId, savedDeviceProfile.getId());
         Assert.assertNotNull(foundDeviceProfileInfo);
@@ -137,9 +138,9 @@ public abstract class BaseDeviceProfileServiceTest extends AbstractServiceTest {
 
     @Test
     public void testFindOrCreateDeviceProfile() throws ExecutionException, InterruptedException {
-        ListeningExecutorService testExecutor = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(100, EchoiotThreadFactory.forName(getClass().getSimpleName() + "-test-scope")));
+        @NotNull ListeningExecutorService testExecutor = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(100, EchoiotThreadFactory.forName(getClass().getSimpleName() + "-test-scope")));
         try {
-            List<ListenableFuture<DeviceProfile>> futures = new ArrayList<>();
+            @NotNull List<ListenableFuture<DeviceProfile>> futures = new ArrayList<>();
             for (int i = 0; i < 50; i++) {
                 futures.add(testExecutor.submit(() -> deviceProfileService.findOrCreateDeviceProfile(tenantId, "Device Profile 1")));
                 futures.add(testExecutor.submit(() -> deviceProfileService.findOrCreateDeviceProfile(tenantId, "Device Profile 2")));
@@ -154,8 +155,8 @@ public abstract class BaseDeviceProfileServiceTest extends AbstractServiceTest {
 
     @Test
     public void testSetDefaultDeviceProfile() {
-        DeviceProfile deviceProfile1 = this.createDeviceProfile(tenantId, "Device Profile 1");
-        DeviceProfile deviceProfile2 = this.createDeviceProfile(tenantId, "Device Profile 2");
+        @NotNull DeviceProfile deviceProfile1 = this.createDeviceProfile(tenantId, "Device Profile 1");
+        @NotNull DeviceProfile deviceProfile2 = this.createDeviceProfile(tenantId, "Device Profile 2");
 
         DeviceProfile savedDeviceProfile1 = deviceProfileService.saveDeviceProfile(deviceProfile1);
         DeviceProfile savedDeviceProfile2 = deviceProfileService.saveDeviceProfile(deviceProfile2);
@@ -174,25 +175,25 @@ public abstract class BaseDeviceProfileServiceTest extends AbstractServiceTest {
 
     @Test(expected = DataValidationException.class)
     public void testSaveDeviceProfileWithEmptyName() {
-        DeviceProfile deviceProfile = new DeviceProfile();
+        @NotNull DeviceProfile deviceProfile = new DeviceProfile();
         deviceProfile.setTenantId(tenantId);
         deviceProfileService.saveDeviceProfile(deviceProfile);
     }
 
     @Test(expected = DataValidationException.class)
     public void testSaveDeviceProfileWithSameName() {
-        DeviceProfile deviceProfile = this.createDeviceProfile(tenantId, "Device Profile");
+        @NotNull DeviceProfile deviceProfile = this.createDeviceProfile(tenantId, "Device Profile");
         deviceProfileService.saveDeviceProfile(deviceProfile);
-        DeviceProfile deviceProfile2 = this.createDeviceProfile(tenantId, "Device Profile");
+        @NotNull DeviceProfile deviceProfile2 = this.createDeviceProfile(tenantId, "Device Profile");
         deviceProfileService.saveDeviceProfile(deviceProfile2);
     }
 
     @Ignore
     @Test(expected = DataValidationException.class)
     public void testChangeDeviceProfileTypeWithExistingDevices() {
-        DeviceProfile deviceProfile = this.createDeviceProfile(tenantId, "Device Profile");
+        @NotNull DeviceProfile deviceProfile = this.createDeviceProfile(tenantId, "Device Profile");
         DeviceProfile savedDeviceProfile = deviceProfileService.saveDeviceProfile(deviceProfile);
-        Device device = new Device();
+        @NotNull Device device = new Device();
         device.setTenantId(tenantId);
         device.setName("Test device");
         device.setType("default");
@@ -205,9 +206,9 @@ public abstract class BaseDeviceProfileServiceTest extends AbstractServiceTest {
 
     @Test(expected = DataValidationException.class)
     public void testChangeDeviceProfileTransportTypeWithExistingDevices() {
-        DeviceProfile deviceProfile = this.createDeviceProfile(tenantId, "Device Profile");
+        @NotNull DeviceProfile deviceProfile = this.createDeviceProfile(tenantId, "Device Profile");
         DeviceProfile savedDeviceProfile = deviceProfileService.saveDeviceProfile(deviceProfile);
-        Device device = new Device();
+        @NotNull Device device = new Device();
         device.setTenantId(tenantId);
         device.setName("Test device");
         device.setType("default");
@@ -219,9 +220,9 @@ public abstract class BaseDeviceProfileServiceTest extends AbstractServiceTest {
 
     @Test(expected = DataValidationException.class)
     public void testDeleteDeviceProfileWithExistingDevice() {
-        DeviceProfile deviceProfile = this.createDeviceProfile(tenantId, "Device Profile");
+        @NotNull DeviceProfile deviceProfile = this.createDeviceProfile(tenantId, "Device Profile");
         DeviceProfile savedDeviceProfile = deviceProfileService.saveDeviceProfile(deviceProfile);
-        Device device = new Device();
+        @NotNull Device device = new Device();
         device.setTenantId(tenantId);
         device.setName("Test device");
         device.setType("default");
@@ -248,7 +249,7 @@ public abstract class BaseDeviceProfileServiceTest extends AbstractServiceTest {
 
     @Test
     public void testDeleteDeviceProfile() {
-        DeviceProfile deviceProfile = this.createDeviceProfile(tenantId, "Device Profile");
+        @NotNull DeviceProfile deviceProfile = this.createDeviceProfile(tenantId, "Device Profile");
         DeviceProfile savedDeviceProfile = deviceProfileService.saveDeviceProfile(deviceProfile);
         deviceProfileService.deleteDeviceProfile(tenantId, savedDeviceProfile.getId());
         DeviceProfile foundDeviceProfile = deviceProfileService.findDeviceProfileById(tenantId, savedDeviceProfile.getId());
@@ -258,7 +259,7 @@ public abstract class BaseDeviceProfileServiceTest extends AbstractServiceTest {
     @Test
     public void testFindDeviceProfiles() {
 
-        List<DeviceProfile> deviceProfiles = new ArrayList<>();
+        @NotNull List<DeviceProfile> deviceProfiles = new ArrayList<>();
         PageLink pageLink = new PageLink(17);
         PageData<DeviceProfile> pageData = deviceProfileService.findDeviceProfiles(tenantId, pageLink);
         Assert.assertFalse(pageData.hasNext());
@@ -266,11 +267,11 @@ public abstract class BaseDeviceProfileServiceTest extends AbstractServiceTest {
         deviceProfiles.addAll(pageData.getData());
 
         for (int i = 0; i < 28; i++) {
-            DeviceProfile deviceProfile = this.createDeviceProfile(tenantId, "Device Profile" + i);
+            @NotNull DeviceProfile deviceProfile = this.createDeviceProfile(tenantId, "Device Profile" + i);
             deviceProfiles.add(deviceProfileService.saveDeviceProfile(deviceProfile));
         }
 
-        List<DeviceProfile> loadedDeviceProfiles = new ArrayList<>();
+        @NotNull List<DeviceProfile> loadedDeviceProfiles = new ArrayList<>();
         pageLink = new PageLink(17);
         do {
             pageData = deviceProfileService.findDeviceProfiles(tenantId, pageLink);
@@ -285,7 +286,7 @@ public abstract class BaseDeviceProfileServiceTest extends AbstractServiceTest {
 
         Assert.assertEquals(deviceProfiles, loadedDeviceProfiles);
 
-        for (DeviceProfile deviceProfile : loadedDeviceProfiles) {
+        for (@NotNull DeviceProfile deviceProfile : loadedDeviceProfiles) {
             if (!deviceProfile.isDefault()) {
                 deviceProfileService.deleteDeviceProfile(tenantId, deviceProfile.getId());
             }
@@ -300,7 +301,7 @@ public abstract class BaseDeviceProfileServiceTest extends AbstractServiceTest {
     @Test
     public void testFindDeviceProfileInfos() {
 
-        List<DeviceProfile> deviceProfiles = new ArrayList<>();
+        @NotNull List<DeviceProfile> deviceProfiles = new ArrayList<>();
         PageLink pageLink = new PageLink(17);
         PageData<DeviceProfile> deviceProfilePageData = deviceProfileService.findDeviceProfiles(tenantId, pageLink);
         Assert.assertFalse(deviceProfilePageData.hasNext());
@@ -308,11 +309,11 @@ public abstract class BaseDeviceProfileServiceTest extends AbstractServiceTest {
         deviceProfiles.addAll(deviceProfilePageData.getData());
 
         for (int i = 0; i < 28; i++) {
-            DeviceProfile deviceProfile = this.createDeviceProfile(tenantId, "Device Profile" + i);
+            @NotNull DeviceProfile deviceProfile = this.createDeviceProfile(tenantId, "Device Profile" + i);
             deviceProfiles.add(deviceProfileService.saveDeviceProfile(deviceProfile));
         }
 
-        List<DeviceProfileInfo> loadedDeviceProfileInfos = new ArrayList<>();
+        @NotNull List<DeviceProfileInfo> loadedDeviceProfileInfos = new ArrayList<>();
         pageLink = new PageLink(17);
         PageData<DeviceProfileInfo> pageData;
         do {
@@ -327,14 +328,14 @@ public abstract class BaseDeviceProfileServiceTest extends AbstractServiceTest {
         Collections.sort(deviceProfiles, idComparator);
         Collections.sort(loadedDeviceProfileInfos, deviceProfileInfoIdComparator);
 
-        List<DeviceProfileInfo> deviceProfileInfos = deviceProfiles.stream()
-                .map(deviceProfile -> new DeviceProfileInfo(deviceProfile.getId(),
+        @NotNull List<DeviceProfileInfo> deviceProfileInfos = deviceProfiles.stream()
+                                                                            .map(deviceProfile -> new DeviceProfileInfo(deviceProfile.getId(),
                         deviceProfile.getName(), deviceProfile.getImage(), deviceProfile.getDefaultDashboardId(),
                         deviceProfile.getType(), deviceProfile.getTransportType())).collect(Collectors.toList());
 
         Assert.assertEquals(deviceProfileInfos, loadedDeviceProfileInfos);
 
-        for (DeviceProfile deviceProfile : deviceProfiles) {
+        for (@NotNull DeviceProfile deviceProfile : deviceProfiles) {
             if (!deviceProfile.isDefault()) {
                 deviceProfileService.deleteDeviceProfile(tenantId, deviceProfile.getId());
             }

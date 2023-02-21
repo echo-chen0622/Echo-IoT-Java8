@@ -15,6 +15,7 @@ import org.echoiot.server.gen.transport.TransportProtos.*;
 import org.echoiot.server.transport.lwm2m.server.attributes.LwM2MAttributesService;
 import org.echoiot.server.transport.lwm2m.server.rpc.LwM2MRpcRequestHandler;
 import org.echoiot.server.transport.lwm2m.server.uplink.LwM2mUplinkMsgHandler;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -22,10 +23,15 @@ import java.util.UUID;
 @Slf4j
 @RequiredArgsConstructor
 public class LwM2mSessionMsgListener implements GenericFutureListener<Future<? super Void>>, SessionMsgListener {
+    @NotNull
     private final LwM2mUplinkMsgHandler handler;
+    @NotNull
     private final LwM2MAttributesService attributesService;
+    @NotNull
     private final LwM2MRpcRequestHandler rpcHandler;
+    @NotNull
     private final TransportProtos.SessionInfoProto sessionInfo;
+    @NotNull
     private final TransportService transportService;
 
     @Override
@@ -40,7 +46,7 @@ public class LwM2mSessionMsgListener implements GenericFutureListener<Future<? s
     }
 
     @Override
-    public void onRemoteSessionCloseCommand(UUID sessionId, SessionCloseNotificationProto sessionCloseNotification) {
+    public void onRemoteSessionCloseCommand(UUID sessionId, @NotNull SessionCloseNotificationProto sessionCloseNotification) {
         log.trace("[{}] Received the remote command to close the session: {}", sessionId, sessionCloseNotification.getMessage());
     }
 
@@ -76,14 +82,14 @@ public class LwM2mSessionMsgListener implements GenericFutureListener<Future<? s
     }
 
     @Override
-    public void onResourceUpdate(TransportProtos.ResourceUpdateMsg resourceUpdateMsgOpt) {
+    public void onResourceUpdate(@NotNull TransportProtos.ResourceUpdateMsg resourceUpdateMsgOpt) {
         if (ResourceType.LWM2M_MODEL.name().equals(resourceUpdateMsgOpt.getResourceType())) {
             this.handler.onResourceUpdate(resourceUpdateMsgOpt);
         }
     }
 
     @Override
-    public void onResourceDelete(TransportProtos.ResourceDeleteMsg resourceDeleteMsgOpt) {
+    public void onResourceDelete(@NotNull TransportProtos.ResourceDeleteMsg resourceDeleteMsgOpt) {
         if (ResourceType.LWM2M_MODEL.name().equals(resourceDeleteMsgOpt.getResourceType())) {
             this.handler.onResourceDelete(resourceDeleteMsgOpt);
         }

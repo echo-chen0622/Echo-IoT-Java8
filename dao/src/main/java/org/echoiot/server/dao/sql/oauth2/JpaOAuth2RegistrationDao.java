@@ -2,6 +2,8 @@ package org.echoiot.server.dao.sql.oauth2;
 
 import lombok.RequiredArgsConstructor;
 import org.echoiot.server.dao.model.sql.OAuth2RegistrationEntity;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 import org.echoiot.server.common.data.oauth2.OAuth2Registration;
@@ -20,8 +22,10 @@ import java.util.UUID;
 @SqlDao
 public class JpaOAuth2RegistrationDao extends JpaAbstractDao<OAuth2RegistrationEntity, OAuth2Registration> implements OAuth2RegistrationDao {
 
+    @NotNull
     private final OAuth2RegistrationRepository repository;
 
+    @NotNull
     @Override
     protected Class<OAuth2RegistrationEntity> getEntityClass() {
         return OAuth2RegistrationEntity.class;
@@ -33,7 +37,7 @@ public class JpaOAuth2RegistrationDao extends JpaAbstractDao<OAuth2RegistrationE
     }
 
     @Override
-    public List<OAuth2Registration> findEnabledByDomainSchemesDomainNameAndPkgNameAndPlatformType(List<SchemeType> domainSchemes, String domainName, String pkgName, PlatformType platformType) {
+    public List<OAuth2Registration> findEnabledByDomainSchemesDomainNameAndPkgNameAndPlatformType(List<SchemeType> domainSchemes, String domainName, String pkgName, @Nullable PlatformType platformType) {
         return DaoUtil.convertDataList(repository.findEnabledByDomainSchemesDomainNameAndPkgNameAndPlatformType(domainSchemes, domainName, pkgName,
                 platformType != null ? "%" + platformType.name() + "%" : null));
     }

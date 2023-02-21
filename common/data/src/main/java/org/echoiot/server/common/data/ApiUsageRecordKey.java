@@ -1,6 +1,7 @@
 package org.echoiot.server.common.data;
 
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 
 public enum ApiUsageRecordKey {
 
@@ -34,7 +35,7 @@ public enum ApiUsageRecordKey {
         this.apiLimitKey = apiLimitKey;
     }
 
-    public static ApiUsageRecordKey[] getKeys(ApiFeature feature) {
+    public static ApiUsageRecordKey[] getKeys(@NotNull ApiFeature feature) {
         switch (feature) {
             case TRANSPORT:
                 return TRANSPORT_RECORD_KEYS;

@@ -16,6 +16,8 @@ import org.echoiot.server.common.data.id.DeviceProfileId;
 import org.echoiot.server.common.data.id.OtaPackageId;
 import org.echoiot.server.common.data.id.RuleChainId;
 import org.echoiot.server.common.data.id.TenantId;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.validation.Valid;
 import java.io.ByteArrayInputStream;
@@ -84,7 +86,7 @@ public class DeviceProfile extends SearchTextBased<DeviceProfileId> implements H
         super(deviceProfileId);
     }
 
-    public DeviceProfile(DeviceProfile deviceProfile) {
+    public DeviceProfile(@NotNull DeviceProfile deviceProfile) {
         super(deviceProfile);
         this.tenantId = deviceProfile.getTenantId();
         this.name = deviceProfile.getName();
@@ -126,6 +128,7 @@ public class DeviceProfile extends SearchTextBased<DeviceProfileId> implements H
         return isDefault;
     }
 
+    @Nullable
     @ApiModelProperty(position = 16, value = "Complex JSON object that includes addition device profile configuration (transport, alarm rules, etc).")
     public DeviceProfileData getProfileData() {
         if (profileData != null) {
@@ -145,7 +148,7 @@ public class DeviceProfile extends SearchTextBased<DeviceProfileId> implements H
         }
     }
 
-    public void setProfileData(DeviceProfileData data) {
+    public void setProfileData(@Nullable DeviceProfileData data) {
         this.profileData = data;
         try {
             this.profileDataBytes = data != null ? SearchTextBasedWithAdditionalInfo.mapper.writeValueAsBytes(data) : null;

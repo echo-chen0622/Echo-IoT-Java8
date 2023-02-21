@@ -3,6 +3,8 @@ package org.echoiot.server.dao.model.sqlts.ts;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.echoiot.server.dao.model.sql.AbstractTsKvEntity;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.persistence.Entity;
 import javax.persistence.IdClass;
@@ -23,7 +25,7 @@ public final class TsKvEntity extends AbstractTsKvEntity {
         this.strValue = strValue;
     }
 
-    public TsKvEntity(Long longValue, Double doubleValue, Long longCountValue, Long doubleCountValue, String aggType, Long aggValuesLastTs) {
+    public TsKvEntity(@Nullable Long longValue, @Nullable Double doubleValue, Long longCountValue, Long doubleCountValue, @NotNull String aggType, Long aggValuesLastTs) {
         super(aggValuesLastTs);
         if (!isAllNull(longValue, doubleValue, longCountValue, doubleCountValue)) {
             switch (aggType) {

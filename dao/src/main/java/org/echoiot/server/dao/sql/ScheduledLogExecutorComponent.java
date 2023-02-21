@@ -1,5 +1,6 @@
 package org.echoiot.server.dao.sql;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import org.echoiot.common.util.EchoiotThreadFactory;
 
@@ -26,7 +27,7 @@ public class ScheduledLogExecutorComponent {
         }
     }
 
-    public void scheduleAtFixedRate(Runnable command, long initialDelay, long period, TimeUnit unit) {
+    public void scheduleAtFixedRate(@NotNull Runnable command, long initialDelay, long period, @NotNull TimeUnit unit) {
         schedulerLogExecutor.scheduleAtFixedRate(command, initialDelay, period, unit);
     }
 }

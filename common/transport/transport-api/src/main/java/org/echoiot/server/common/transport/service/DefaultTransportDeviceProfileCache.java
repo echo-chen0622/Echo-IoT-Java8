@@ -10,6 +10,8 @@ import org.echoiot.server.common.transport.TransportService;
 import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.queue.util.DataDecodingEncodingService;
 import org.echoiot.server.queue.util.TbTransportComponent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -32,7 +34,7 @@ public class DefaultTransportDeviceProfileCache implements TransportDeviceProfil
     private TransportService transportService;
 
     @Lazy
-    @Autowired
+    @Resource
     public void setTransportService(TransportService transportService) {
         this.transportService = transportService;
     }
@@ -41,8 +43,9 @@ public class DefaultTransportDeviceProfileCache implements TransportDeviceProfil
         this.dataDecodingEncodingService = dataDecodingEncodingService;
     }
 
+    @Nullable
     @Override
-    public DeviceProfile getOrCreate(DeviceProfileId id, ByteString profileBody) {
+    public DeviceProfile getOrCreate(DeviceProfileId id, @NotNull ByteString profileBody) {
         DeviceProfile profile = deviceProfiles.get(id);
         if (profile == null) {
             Optional<DeviceProfile> deviceProfile = dataDecodingEncodingService.decode(profileBody.toByteArray());
@@ -55,17 +58,18 @@ public class DefaultTransportDeviceProfileCache implements TransportDeviceProfil
     }
 
     @Override
-    public DeviceProfile get(DeviceProfileId id) {
+    public DeviceProfile get(@NotNull DeviceProfileId id) {
         return this.getDeviceProfile(id);
     }
 
     @Override
-    public void put(DeviceProfile profile) {
+    public void put(@NotNull DeviceProfile profile) {
         deviceProfiles.put(profile.getId(), profile);
     }
 
+    @Nullable
     @Override
-    public DeviceProfile put(ByteString profileBody) {
+    public DeviceProfile put(@NotNull ByteString profileBody) {
         Optional<DeviceProfile> deviceProfile = dataDecodingEncodingService.decode(profileBody.toByteArray());
         if (deviceProfile.isPresent()) {
             put(deviceProfile.get());
@@ -81,7 +85,8 @@ public class DefaultTransportDeviceProfileCache implements TransportDeviceProfil
     }
 
 
-    private DeviceProfile getDeviceProfile(DeviceProfileId id) {
+    @NotNull
+    private DeviceProfile getDeviceProfile(@NotNull DeviceProfileId id) {
         DeviceProfile profile = deviceProfiles.get(id);
         if (profile == null) {
             deviceProfileFetchLock.lock();

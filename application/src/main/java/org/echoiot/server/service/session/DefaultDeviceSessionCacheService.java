@@ -18,7 +18,7 @@ import java.util.Collections;
 @Slf4j
 public class DefaultDeviceSessionCacheService implements DeviceSessionCacheService {
 
-    @Autowired
+    @Resource
     protected TbTransactionalCache<DeviceId, DeviceSessionsCacheEntry> cache;
 
     @Override

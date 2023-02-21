@@ -9,6 +9,8 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.sync.ie.EntityExportSettings;
 import org.echoiot.server.common.data.sync.vc.request.create.VersionCreateConfig;
 import org.echoiot.server.common.data.sync.vc.request.create.VersionCreateRequest;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,7 +35,7 @@ public abstract class EntitiesExportCtx<R extends VersionCreateRequest> {
         this.externalIdMap = new HashMap<>();
     }
 
-    protected <T extends R> EntitiesExportCtx(EntitiesExportCtx<T> other) {
+    protected <T extends R> EntitiesExportCtx(@NotNull EntitiesExportCtx<T> other) {
         this.user = other.getUser();
         this.commit = other.getCommit();
         this.request = other.getRequest();
@@ -49,7 +51,7 @@ public abstract class EntitiesExportCtx<R extends VersionCreateRequest> {
         return user.getTenantId();
     }
 
-    protected static EntityExportSettings buildExportSettings(VersionCreateConfig config) {
+    protected static EntityExportSettings buildExportSettings(@NotNull VersionCreateConfig config) {
         return EntityExportSettings.builder()
                 .exportRelations(config.isSaveRelations())
                 .exportAttributes(config.isSaveAttributes())
@@ -59,14 +61,15 @@ public abstract class EntitiesExportCtx<R extends VersionCreateRequest> {
 
     public abstract EntityExportSettings getSettings();
 
+    @Nullable
     @SuppressWarnings("unchecked")
-    public <ID extends EntityId> ID getExternalId(ID internalId) {
+    public <ID extends EntityId> ID getExternalId(@NotNull ID internalId) {
         var result = externalIdMap.get(internalId);
         log.debug("[{}][{}] Local cache {} for id", internalId.getEntityType(), internalId.getId(), result != null ? "hit" : "miss");
         return (ID) result;
     }
 
-    public void putExternalId(EntityId internalId, EntityId externalId) {
+    public void putExternalId(@NotNull EntityId internalId, @Nullable EntityId externalId) {
         log.debug("[{}][{}] Local cache put: {}", internalId.getEntityType(), internalId.getId(), externalId);
         externalIdMap.put(internalId, externalId != null ? externalId : internalId);
     }

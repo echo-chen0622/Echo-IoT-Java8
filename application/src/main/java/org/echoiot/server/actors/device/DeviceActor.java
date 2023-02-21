@@ -16,10 +16,12 @@ import org.echoiot.server.service.rpc.FromDeviceRpcResponseActorMsg;
 import org.echoiot.server.service.rpc.RemoveRpcActorMsg;
 import org.echoiot.server.service.rpc.ToDeviceRpcRequestActorMsg;
 import org.echoiot.server.service.transport.msg.TransportToDeviceActorMsgWrapper;
+import org.jetbrains.annotations.NotNull;
 
 @Slf4j
 public class DeviceActor extends ContextAwareActor {
 
+    @NotNull
     private final DeviceActorMessageProcessor processor;
 
     DeviceActor(ActorSystemContext systemContext, TenantId tenantId, DeviceId deviceId) {
@@ -41,7 +43,7 @@ public class DeviceActor extends ContextAwareActor {
     }
 
     @Override
-    protected boolean doProcess(TbActorMsg msg) {
+    protected boolean doProcess(@NotNull TbActorMsg msg) {
         switch (msg.getMsgType()) {
             case TRANSPORT_TO_DEVICE_ACTOR_MSG:
                 processor.process(ctx, (TransportToDeviceActorMsgWrapper) msg);

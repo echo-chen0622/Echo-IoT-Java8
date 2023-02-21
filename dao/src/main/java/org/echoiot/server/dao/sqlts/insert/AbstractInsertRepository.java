@@ -1,5 +1,6 @@
 package org.echoiot.server.dao.sqlts.insert;
 
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -17,13 +18,14 @@ public abstract class AbstractInsertRepository {
     @Value("${sql.remove_null_chars:true}")
     private boolean removeNullChars;
 
-    @Autowired
+    @Resource
     protected JdbcTemplate jdbcTemplate;
 
-    @Autowired
+    @Resource
     protected TransactionTemplate transactionTemplate;
 
-    protected String replaceNullChars(String strValue) {
+    @Nullable
+    protected String replaceNullChars(@Nullable String strValue) {
         if (removeNullChars && strValue != null) {
             return PATTERN_THREAD_LOCAL.get().matcher(strValue).replaceAll(EMPTY_STR);
         }

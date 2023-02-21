@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import org.echoiot.server.common.data.widget.BaseWidgetType;
 import org.echoiot.server.common.data.widget.WidgetTypeDetails;
 import org.echoiot.server.common.data.widget.WidgetsBundle;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Comparator;
 import java.util.List;
@@ -17,6 +18,7 @@ public class WidgetsBundleExportData extends EntityExportData<WidgetsBundle> {
     @JsonProperty(index = 3)
     private List<WidgetTypeDetails> widgets;
 
+    @NotNull
     @Override
     public EntityExportData<WidgetsBundle> sort() {
         super.sort();

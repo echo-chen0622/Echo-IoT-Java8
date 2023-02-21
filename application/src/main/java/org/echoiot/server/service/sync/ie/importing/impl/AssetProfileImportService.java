@@ -13,6 +13,8 @@ import org.echoiot.server.common.data.sync.ie.EntityExportData;
 import org.echoiot.server.dao.asset.AssetProfileService;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.sync.vc.data.EntitiesImportCtx;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,15 +22,17 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AssetProfileImportService extends BaseEntityImportService<AssetProfileId, AssetProfile, EntityExportData<AssetProfile>> {
 
+    @NotNull
     private final AssetProfileService assetProfileService;
 
     @Override
-    protected void setOwner(TenantId tenantId, AssetProfile assetProfile, IdProvider idProvider) {
+    protected void setOwner(TenantId tenantId, @NotNull AssetProfile assetProfile, IdProvider idProvider) {
         assetProfile.setTenantId(tenantId);
     }
 
+    @NotNull
     @Override
-    protected AssetProfile prepare(EntitiesImportCtx ctx, AssetProfile assetProfile, AssetProfile old, EntityExportData<AssetProfile> exportData, IdProvider idProvider) {
+    protected AssetProfile prepare(EntitiesImportCtx ctx, @NotNull AssetProfile assetProfile, AssetProfile old, EntityExportData<AssetProfile> exportData, @NotNull IdProvider idProvider) {
         assetProfile.setDefaultRuleChainId(idProvider.getInternalId(assetProfile.getDefaultRuleChainId()));
         assetProfile.setDefaultDashboardId(idProvider.getInternalId(assetProfile.getDefaultDashboardId()));
         return assetProfile;
@@ -40,23 +44,25 @@ public class AssetProfileImportService extends BaseEntityImportService<AssetProf
     }
 
     @Override
-    protected void onEntitySaved(User user, AssetProfile savedAssetProfile, AssetProfile oldAssetProfile) throws EchoiotException {
+    protected void onEntitySaved(@NotNull User user, @NotNull AssetProfile savedAssetProfile, @Nullable AssetProfile oldAssetProfile) throws EchoiotException {
         clusterService.broadcastEntityStateChangeEvent(user.getTenantId(), savedAssetProfile.getId(),
                 oldAssetProfile == null ? ComponentLifecycleEvent.CREATED : ComponentLifecycleEvent.UPDATED);
         entityNotificationService.notifyCreateOrUpdateOrDelete(savedAssetProfile.getTenantId(), null,
                                                                savedAssetProfile.getId(), savedAssetProfile, user, oldAssetProfile == null ? ActionType.ADDED : ActionType.UPDATED, true, null);
     }
 
+    @NotNull
     @Override
-    protected AssetProfile deepCopy(AssetProfile assetProfile) {
+    protected AssetProfile deepCopy(@NotNull AssetProfile assetProfile) {
         return new AssetProfile(assetProfile);
     }
 
     @Override
-    protected void cleanupForComparison(AssetProfile assetProfile) {
+    protected void cleanupForComparison(@NotNull AssetProfile assetProfile) {
         super.cleanupForComparison(assetProfile);
     }
 
+    @NotNull
     @Override
     public EntityType getEntityType() {
         return EntityType.ASSET_PROFILE;

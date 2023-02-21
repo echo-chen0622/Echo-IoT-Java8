@@ -17,6 +17,8 @@ import org.eclipse.leshan.server.bootstrap.BootstrapConfigStore;
 import org.eclipse.leshan.server.bootstrap.BootstrapSession;
 import org.eclipse.leshan.server.bootstrap.BootstrapUtil;
 import org.eclipse.leshan.server.bootstrap.InvalidConfigurationException;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -40,10 +42,12 @@ import static org.echoiot.server.transport.lwm2m.utils.LwM2MTransportUtil.BOOTST
 @Slf4j
 public class LwM2MBootstrapConfigStoreTaskProvider implements LwM2MBootstrapTaskProvider {
 
+    @NotNull
     protected final ReadWriteLock readWriteLock;
+    @NotNull
     protected final Lock writeLock;
 
-    private BootstrapConfigStore store;
+    private final BootstrapConfigStore store;
 
     private Map<Integer, String> supportedObjects;
 
@@ -59,20 +63,21 @@ public class LwM2MBootstrapConfigStoreTaskProvider implements LwM2MBootstrapTask
         writeLock = readWriteLock.writeLock();
     }
 
+    @Nullable
     @Override
-    public Tasks getTasks(BootstrapSession session, List<LwM2mResponse> previousResponse) {
+    public Tasks getTasks(@NotNull BootstrapSession session, @Nullable List<LwM2mResponse> previousResponse) {
         BootstrapConfig config = store.get(session.getEndpoint(), session.getIdentity(), session);
         if (config == null) {
             return null;
         }
         if (previousResponse == null && shouldStartWithDiscover(config)) {
-            Tasks tasks = new Tasks();
+            @NotNull Tasks tasks = new Tasks();
             tasks.requestsToSend = new ArrayList<>(1);
             tasks.requestsToSend.add(new BootstrapDiscoverRequest());
             tasks.last = false;
             return tasks;
         } else {
-            Tasks tasks = new Tasks();
+            @NotNull Tasks tasks = new Tasks();
             if (this.supportedObjects == null) {
                 initSupportedObjectsDefault();
             }
@@ -102,7 +107,7 @@ public class LwM2MBootstrapConfigStoreTaskProvider implements LwM2MBootstrapTask
                     return tasks;
                 }
                 BootstrapReadResponse readResponse = (BootstrapReadResponse) previousResponse.get(0);
-                Integer bootstrapServerIdOld = null;
+                @Nullable Integer bootstrapServerIdOld = null;
                 if (readResponse.isSuccess()) {
                     findServerInstanceId(readResponse, session.getEndpoint());
                     if (this.lwM2MBootstrapSessionClients.get(session.getEndpoint()).getSecurityInstances().size() > 0 && this.lwM2MBootstrapSessionClients.get(session.getEndpoint()).getServerInstances().size() > 0) {
@@ -126,7 +131,7 @@ public class LwM2MBootstrapConfigStoreTaskProvider implements LwM2MBootstrapTask
         }
     }
 
-    protected boolean shouldStartWithDiscover(BootstrapConfig config) {
+    protected boolean shouldStartWithDiscover(@NotNull BootstrapConfig config) {
         return config.autoIdForSecurityObject;
     }
 
@@ -137,12 +142,12 @@ public class LwM2MBootstrapConfigStoreTaskProvider implements LwM2MBootstrapTask
      * - Link Instance (lwm2m Server) hase linkParams with key = "ssid" value = "shortId" (ver lvm2m = 1.1).
      * - Link Instance (bootstrap Server) hase not linkParams with key = "ssid" (ver lvm2m = 1.1).
      */
-    protected void findSecurityInstanceId(Link[] objectLinks, String endpoint) {
+    protected void findSecurityInstanceId(@NotNull Link[] objectLinks, String endpoint) {
         log.info("Object after discover: [{}]", objectLinks);
-        for (Link link : objectLinks) {
+        for (@NotNull Link link : objectLinks) {
             if (link.getUriReference().startsWith("/0/")) {
                 try {
-                    LwM2mPath path = new LwM2mPath(link.getUriReference());
+                    @NotNull LwM2mPath path = new LwM2mPath(link.getUriReference());
                     if (path.isObjectInstance()) {
                         if (link.getLinkParams().containsKey("ssid")) {
                             int serverId = Integer.parseInt(link.getLinkParams().get("ssid").getUnquoted());
@@ -168,7 +173,7 @@ public class LwM2MBootstrapConfigStoreTaskProvider implements LwM2MBootstrapTask
         }
     }
 
-    protected void findServerInstanceId(BootstrapReadResponse readResponse, String endpoint) {
+    protected void findServerInstanceId(@NotNull BootstrapReadResponse readResponse, String endpoint) {
         try {
             ((LwM2mObject) readResponse.getContent()).getInstances().values().forEach(instance -> {
                 var shId = OPAQUE.equals(instance.getResource(0).getType()) ? new BigInteger((byte[]) instance.getResource(0).getValue()).intValue() : instance.getResource(0).getValue();
@@ -185,11 +190,12 @@ public class LwM2MBootstrapConfigStoreTaskProvider implements LwM2MBootstrapTask
         }
     }
 
+    @Nullable
     protected Integer findBootstrapServerId(String endpoint) {
-        Integer bootstrapServerIdOld = null;
-        Map<Integer, Integer> filteredMap = this.lwM2MBootstrapSessionClients.get(endpoint).getServerInstances().entrySet()
-                .stream().filter(x -> !this.lwM2MBootstrapSessionClients.get(endpoint).getSecurityInstances().containsKey(x.getKey()))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        @Nullable Integer bootstrapServerIdOld = null;
+        @NotNull Map<Integer, Integer> filteredMap = this.lwM2MBootstrapSessionClients.get(endpoint).getServerInstances().entrySet()
+                                                                                      .stream().filter(x -> !this.lwM2MBootstrapSessionClients.get(endpoint).getSecurityInstances().containsKey(x.getKey()))
+                                                                                      .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         if (filteredMap.size() > 0) {
             bootstrapServerIdOld = filteredMap.keySet().stream().findFirst().get();
         }
@@ -200,10 +206,10 @@ public class LwM2MBootstrapConfigStoreTaskProvider implements LwM2MBootstrapTask
         return this.store;
     }
 
-    private void initAfterBootstrapDiscover(BootstrapDiscoverResponse response) {
+    private void initAfterBootstrapDiscover(@NotNull BootstrapDiscoverResponse response) {
         Link[] links = response.getObjectLinks();
         Arrays.stream(links).forEach(link -> {
-            LwM2mPath path = new LwM2mPath(link.getUriReference());
+            @NotNull LwM2mPath path = new LwM2mPath(link.getUriReference());
             if (!path.isRoot() && path.getObjectId() < 3) {
                 if (path.isObject()) {
                     String ver = link.getLinkParams().get("ver") != null ? link.getLinkParams().get("ver").getUnquoted() : "1.0";
@@ -214,22 +220,23 @@ public class LwM2MBootstrapConfigStoreTaskProvider implements LwM2MBootstrapTask
     }
 
 
-    public List<BootstrapDownlinkRequest<? extends LwM2mResponse>> toRequests(BootstrapConfig bootstrapConfig,
+    @NotNull
+    public List<BootstrapDownlinkRequest<? extends LwM2mResponse>> toRequests(@NotNull BootstrapConfig bootstrapConfig,
                                                                               ContentFormat contentFormat,
                                                                               Integer bootstrapServerIdOld,
                                                                               String endpoint) {
-        List<BootstrapDownlinkRequest<? extends LwM2mResponse>> requests = new ArrayList<>();
-        Set<String> pathsDelete = new HashSet<>();
-        List<BootstrapDownlinkRequest<? extends LwM2mResponse>> requestsWrite = new ArrayList<>();
+        @NotNull List<BootstrapDownlinkRequest<? extends LwM2mResponse>> requests = new ArrayList<>();
+        @NotNull Set<String> pathsDelete = new HashSet<>();
+        @NotNull List<BootstrapDownlinkRequest<? extends LwM2mResponse>> requestsWrite = new ArrayList<>();
         boolean isBsServer = false;
         boolean isLwServer = false;
         /** Map<serverId ("Short Server ID"), InstanceId> */
-        Map<Integer, Integer> instances = new HashMap<>();
-        Integer bootstrapServerIdNew = null;
+        @NotNull Map<Integer, Integer> instances = new HashMap<>();
+        @Nullable Integer bootstrapServerIdNew = null;
         // handle security
         int lwm2mSecurityInstanceId = 0;
         int bootstrapSecurityInstanceId = this.lwM2MBootstrapSessionClients.get(endpoint).getSecurityInstances().get(BOOTSTRAP_DEFAULT_SHORT_ID);
-        for (BootstrapConfig.ServerSecurity security : new TreeMap<>(bootstrapConfig.security).values()) {
+        for (@NotNull BootstrapConfig.ServerSecurity security : new TreeMap<>(bootstrapConfig.security).values()) {
             if (security.bootstrapServer) {
                 requestsWrite.add(toWriteRequest(bootstrapSecurityInstanceId, security, contentFormat));
                 isBsServer = true;
@@ -250,8 +257,8 @@ public class LwM2MBootstrapConfigStoreTaskProvider implements LwM2MBootstrapTask
                  * If there is an instance in the serverInstances with serverId which we replace in the securityInstances
                  */
                 // find serverId in securityInstances by id (instance)
-                Integer serverIdOld = null;
-                for (Map.Entry<Integer, Integer> entry : this.lwM2MBootstrapSessionClients.get(endpoint).getSecurityInstances().entrySet()) {
+                @Nullable Integer serverIdOld = null;
+                for (@NotNull Map.Entry<Integer, Integer> entry : this.lwM2MBootstrapSessionClients.get(endpoint).getSecurityInstances().entrySet()) {
                     if (entry.getValue().equals(lwm2mSecurityInstanceId)) {
                         serverIdOld = entry.getKey();
                     }
@@ -263,7 +270,7 @@ public class LwM2MBootstrapConfigStoreTaskProvider implements LwM2MBootstrapTask
             }
         }
         // handle server
-        for (Map.Entry<Integer, BootstrapConfig.ServerConfig> server : bootstrapConfig.servers.entrySet()) {
+        for (@NotNull Map.Entry<Integer, BootstrapConfig.ServerConfig> server : bootstrapConfig.servers.entrySet()) {
             int securityInstanceId = instances.get(server.getValue().shortId);
             requestsWrite.add(toWriteRequest(securityInstanceId, server.getValue(), contentFormat));
             if (!isBsServer) {
@@ -279,7 +286,7 @@ public class LwM2MBootstrapConfigStoreTaskProvider implements LwM2MBootstrapTask
             }
         }
         // handle acl
-        for (Map.Entry<Integer, BootstrapConfig.ACLConfig> acl : bootstrapConfig.acls.entrySet()) {
+        for (@NotNull Map.Entry<Integer, BootstrapConfig.ACLConfig> acl : bootstrapConfig.acls.entrySet()) {
             requestsWrite.add(toWriteRequest(acl.getKey(), acl.getValue(), contentFormat));
         }
         // handle delete

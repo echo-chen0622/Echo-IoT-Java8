@@ -14,6 +14,8 @@ import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.entitiy.tenant.profile.TbTenantProfileService;
 import org.echoiot.server.service.security.permission.Operation;
 import org.echoiot.server.service.security.permission.Resource;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,6 +51,7 @@ public class TenantProfileController extends BaseController {
 
     private static final String TENANT_PROFILE_INFO_DESCRIPTION = "Tenant Profile Info is a lightweight object that contains only id and name of the profile. ";
 
+    @NotNull
     private final TbTenantProfileService tbTenantProfileService;
 
     @ApiOperation(value = "Get Tenant Profile (getTenantProfileById)",
@@ -57,11 +60,11 @@ public class TenantProfileController extends BaseController {
     @RequestMapping(value = "/tenantProfile/{tenantProfileId}", method = RequestMethod.GET)
     @ResponseBody
     public TenantProfile getTenantProfileById(
-            @ApiParam(value = TENANT_PROFILE_ID_PARAM_DESCRIPTION)
+            @NotNull @ApiParam(value = TENANT_PROFILE_ID_PARAM_DESCRIPTION)
             @PathVariable("tenantProfileId") String strTenantProfileId) throws EchoiotException {
         checkParameter("tenantProfileId", strTenantProfileId);
         try {
-            TenantProfileId tenantProfileId = new TenantProfileId(toUUID(strTenantProfileId));
+            @NotNull TenantProfileId tenantProfileId = new TenantProfileId(toUUID(strTenantProfileId));
             return checkTenantProfileId(tenantProfileId, Operation.READ);
         } catch (Exception e) {
             throw handleException(e);
@@ -74,11 +77,11 @@ public class TenantProfileController extends BaseController {
     @RequestMapping(value = "/tenantProfileInfo/{tenantProfileId}", method = RequestMethod.GET)
     @ResponseBody
     public EntityInfo getTenantProfileInfoById(
-            @ApiParam(value = TENANT_PROFILE_ID_PARAM_DESCRIPTION)
+            @NotNull @ApiParam(value = TENANT_PROFILE_ID_PARAM_DESCRIPTION)
             @PathVariable("tenantProfileId") String strTenantProfileId) throws EchoiotException {
         checkParameter("tenantProfileId", strTenantProfileId);
         try {
-            TenantProfileId tenantProfileId = new TenantProfileId(toUUID(strTenantProfileId));
+            @NotNull TenantProfileId tenantProfileId = new TenantProfileId(toUUID(strTenantProfileId));
             return checkNotNull(tenantProfileService.findTenantProfileInfoById(getTenantId(), tenantProfileId));
         } catch (Exception e) {
             throw handleException(e);
@@ -154,10 +157,10 @@ public class TenantProfileController extends BaseController {
     @PreAuthorize("hasAuthority('SYS_ADMIN')")
     @RequestMapping(value = "/tenantProfile", method = RequestMethod.POST)
     @ResponseBody
-    public TenantProfile saveTenantProfile(@ApiParam(value = "A JSON value representing the tenant profile.")
+    public TenantProfile saveTenantProfile(@NotNull @ApiParam(value = "A JSON value representing the tenant profile.")
                                            @RequestBody TenantProfile tenantProfile) throws EchoiotException {
         try {
-            TenantProfile oldProfile;
+            @Nullable TenantProfile oldProfile;
             if (tenantProfile.getId() == null) {
                 accessControlService.checkPermission(getCurrentUser(), Resource.TENANT_PROFILE, Operation.CREATE);
                 oldProfile = null;
@@ -176,11 +179,11 @@ public class TenantProfileController extends BaseController {
     @PreAuthorize("hasAuthority('SYS_ADMIN')")
     @RequestMapping(value = "/tenantProfile/{tenantProfileId}", method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.OK)
-    public void deleteTenantProfile(@ApiParam(value = TENANT_PROFILE_ID_PARAM_DESCRIPTION)
+    public void deleteTenantProfile(@NotNull @ApiParam(value = TENANT_PROFILE_ID_PARAM_DESCRIPTION)
                                     @PathVariable("tenantProfileId") String strTenantProfileId) throws EchoiotException {
         try {
             checkParameter("tenantProfileId", strTenantProfileId);
-            TenantProfileId tenantProfileId = new TenantProfileId(toUUID(strTenantProfileId));
+            @NotNull TenantProfileId tenantProfileId = new TenantProfileId(toUUID(strTenantProfileId));
             TenantProfile profile = checkTenantProfileId(tenantProfileId, Operation.DELETE);
             tbTenantProfileService.delete(getTenantId(), profile);
         } catch (Exception e) {
@@ -194,11 +197,11 @@ public class TenantProfileController extends BaseController {
     @RequestMapping(value = "/tenantProfile/{tenantProfileId}/default", method = RequestMethod.POST)
     @ResponseBody
     public TenantProfile setDefaultTenantProfile(
-            @ApiParam(value = TENANT_PROFILE_ID_PARAM_DESCRIPTION)
+            @NotNull @ApiParam(value = TENANT_PROFILE_ID_PARAM_DESCRIPTION)
             @PathVariable("tenantProfileId") String strTenantProfileId) throws EchoiotException {
         checkParameter("tenantProfileId", strTenantProfileId);
         try {
-            TenantProfileId tenantProfileId = new TenantProfileId(toUUID(strTenantProfileId));
+            @NotNull TenantProfileId tenantProfileId = new TenantProfileId(toUUID(strTenantProfileId));
             TenantProfile tenantProfile = checkTenantProfileId(tenantProfileId, Operation.WRITE);
             tenantProfileService.setDefaultTenantProfile(getTenantId(), tenantProfileId);
             return tenantProfile;
@@ -220,10 +223,10 @@ public class TenantProfileController extends BaseController {
             @RequestParam(required = false) String textSearch,
             @ApiParam(value = SORT_PROPERTY_DESCRIPTION, allowableValues = TENANT_PROFILE_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
-            @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
+            @NotNull @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortOrder) throws EchoiotException {
         try {
-            PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
+            @NotNull PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
             return checkNotNull(tenantProfileService.findTenantProfiles(getTenantId(), pageLink));
         } catch (Exception e) {
             throw handleException(e);
@@ -244,10 +247,10 @@ public class TenantProfileController extends BaseController {
             @RequestParam(required = false) String textSearch,
             @ApiParam(value = SORT_PROPERTY_DESCRIPTION, allowableValues = TENANT_PROFILE_INFO_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
-            @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
+            @NotNull @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortOrder) throws EchoiotException {
         try {
-            PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
+            @NotNull PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
             return checkNotNull(tenantProfileService.findTenantProfileInfos(getTenantId(), pageLink));
         } catch (Exception e) {
             throw handleException(e);

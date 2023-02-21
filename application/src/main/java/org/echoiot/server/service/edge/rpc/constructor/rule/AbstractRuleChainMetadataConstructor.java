@@ -11,6 +11,8 @@ import org.echoiot.server.common.data.rule.RuleChainConnectionInfo;
 import org.echoiot.server.common.data.rule.RuleChainMetaData;
 import org.echoiot.server.common.data.rule.RuleNode;
 import org.echoiot.server.gen.edge.v1.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,10 +22,11 @@ import java.util.NavigableSet;
 @AllArgsConstructor
 public abstract class AbstractRuleChainMetadataConstructor implements RuleChainMetadataConstructor {
 
+    @Nullable
     @Override
     public RuleChainMetadataUpdateMsg constructRuleChainMetadataUpdatedMsg(TenantId tenantId,
                                                                            UpdateMsgType msgType,
-                                                                           RuleChainMetaData ruleChainMetaData) {
+                                                                           @NotNull RuleChainMetaData ruleChainMetaData) {
         try {
             RuleChainMetadataUpdateMsg.Builder builder = RuleChainMetadataUpdateMsg.newBuilder();
             builder.setRuleChainIdMSB(ruleChainMetaData.getRuleChainId().getId().getMostSignificantBits())
@@ -41,17 +44,19 @@ public abstract class AbstractRuleChainMetadataConstructor implements RuleChainM
                                                                  RuleChainMetadataUpdateMsg.Builder builder,
                                                                  RuleChainMetaData ruleChainMetaData) throws JsonProcessingException;
 
-    protected List<NodeConnectionInfoProto> constructConnections(List<NodeConnectionInfo> connections) {
-        List<NodeConnectionInfoProto> result = new ArrayList<>();
+    @NotNull
+    protected List<NodeConnectionInfoProto> constructConnections(@Nullable List<NodeConnectionInfo> connections) {
+        @NotNull List<NodeConnectionInfoProto> result = new ArrayList<>();
         if (connections != null && !connections.isEmpty()) {
-            for (NodeConnectionInfo connection : connections) {
+            for (@NotNull NodeConnectionInfo connection : connections) {
                 result.add(constructConnection(connection));
             }
         }
         return result;
     }
 
-    private NodeConnectionInfoProto constructConnection(NodeConnectionInfo connection) {
+    @NotNull
+    private NodeConnectionInfoProto constructConnection(@NotNull NodeConnectionInfo connection) {
         return NodeConnectionInfoProto.newBuilder()
                 .setFromIndex(connection.getFromIndex())
                 .setToIndex(connection.getToIndex())
@@ -59,17 +64,19 @@ public abstract class AbstractRuleChainMetadataConstructor implements RuleChainM
                 .build();
     }
 
-    protected List<RuleNodeProto> constructNodes(List<RuleNode> nodes) throws JsonProcessingException {
-        List<RuleNodeProto> result = new ArrayList<>();
+    @NotNull
+    protected List<RuleNodeProto> constructNodes(@Nullable List<RuleNode> nodes) throws JsonProcessingException {
+        @NotNull List<RuleNodeProto> result = new ArrayList<>();
         if (nodes != null && !nodes.isEmpty()) {
-            for (RuleNode node : nodes) {
+            for (@NotNull RuleNode node : nodes) {
                 result.add(constructNode(node));
             }
         }
         return result;
     }
 
-    private RuleNodeProto constructNode(RuleNode node) throws JsonProcessingException {
+    @NotNull
+    private RuleNodeProto constructNode(@NotNull RuleNode node) throws JsonProcessingException {
         return RuleNodeProto.newBuilder()
                 .setIdMSB(node.getId().getId().getMostSignificantBits())
                 .setIdLSB(node.getId().getId().getLeastSignificantBits())
@@ -81,11 +88,12 @@ public abstract class AbstractRuleChainMetadataConstructor implements RuleChainM
                 .build();
     }
 
-    protected List<RuleChainConnectionInfoProto> constructRuleChainConnections(List<RuleChainConnectionInfo> ruleChainConnections,
-                                                                               NavigableSet<Integer> removedNodeIndexes) throws JsonProcessingException {
-        List<RuleChainConnectionInfoProto> result = new ArrayList<>();
+    @NotNull
+    protected List<RuleChainConnectionInfoProto> constructRuleChainConnections(@Nullable List<RuleChainConnectionInfo> ruleChainConnections,
+                                                                               @NotNull NavigableSet<Integer> removedNodeIndexes) throws JsonProcessingException {
+        @NotNull List<RuleChainConnectionInfoProto> result = new ArrayList<>();
         if (ruleChainConnections != null && !ruleChainConnections.isEmpty()) {
-            for (RuleChainConnectionInfo ruleChainConnectionInfo : ruleChainConnections) {
+            for (@NotNull RuleChainConnectionInfo ruleChainConnectionInfo : ruleChainConnections) {
                 if (!removedNodeIndexes.isEmpty()) { // 3_3_0 only
                     int fromIndex = ruleChainConnectionInfo.getFromIndex();
                     // decrease index because of removed nodes
@@ -106,7 +114,8 @@ public abstract class AbstractRuleChainMetadataConstructor implements RuleChainM
         return result;
     }
 
-    private RuleChainConnectionInfoProto constructRuleChainConnection(RuleChainConnectionInfo ruleChainConnectionInfo) throws JsonProcessingException {
+    @NotNull
+    private RuleChainConnectionInfoProto constructRuleChainConnection(@NotNull RuleChainConnectionInfo ruleChainConnectionInfo) throws JsonProcessingException {
         return RuleChainConnectionInfoProto.newBuilder()
                 .setFromIndex(ruleChainConnectionInfo.getFromIndex())
                 .setTargetRuleChainIdMSB(ruleChainConnectionInfo.getTargetRuleChainId().getId().getMostSignificantBits())

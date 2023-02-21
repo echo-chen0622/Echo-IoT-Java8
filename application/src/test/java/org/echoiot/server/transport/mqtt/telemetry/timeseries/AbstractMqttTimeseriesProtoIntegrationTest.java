@@ -17,6 +17,7 @@ import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.transport.mqtt.MqttTestCallback;
 import org.echoiot.server.transport.mqtt.MqttTestClient;
 import org.echoiot.server.transport.mqtt.MqttTestConfigProperties;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -47,7 +48,7 @@ public abstract class AbstractMqttTimeseriesProtoIntegrationTest extends Abstrac
                 .telemetryTopicFilter(POST_DATA_TELEMETRY_TOPIC)
                 .build();
         processBeforeTest(configProperties);
-        DynamicMessage postTelemetryMsg = getDefaultDynamicMessage();
+        @NotNull DynamicMessage postTelemetryMsg = getDefaultDynamicMessage();
         processTelemetryTest(POST_DATA_TELEMETRY_TOPIC, Arrays.asList("key1", "key2", "key3", "key4", "key5"), postTelemetryMsg.toByteArray(), false, false);
     }
 
@@ -65,31 +66,31 @@ public abstract class AbstractMqttTimeseriesProtoIntegrationTest extends Abstrac
 
     @Test
     public void testPushTelemetryWithTs() throws Exception {
-        String schemaStr = "syntax =\"proto3\";\n" +
-                "\n" +
-                "package test;\n" +
-                "\n" +
-                "message PostTelemetry {\n" +
-                "  optional int64 ts = 1;\n" +
-                "  Values values = 2;\n" +
-                "  \n" +
-                "  message Values {\n" +
-                "    optional string key1 = 3;\n" +
-                "    optional bool key2 = 4;\n" +
-                "    optional double key3 = 5;\n" +
-                "    optional int32 key4 = 6;\n" +
-                "    JsonObject key5 = 7;\n" +
-                "  }\n" +
-                "  \n" +
-                "  message JsonObject {\n" +
-                "    optional int32 someNumber = 8;\n" +
-                "    repeated int32 someArray = 9;\n" +
-                "    NestedJsonObject someNestedObject = 10;\n" +
-                "    message NestedJsonObject {\n" +
-                "       optional string key = 11;\n" +
-                "    }\n" +
-                "  }\n" +
-                "}";
+        @NotNull String schemaStr = "syntax =\"proto3\";\n" +
+                                    "\n" +
+                                    "package test;\n" +
+                                    "\n" +
+                                    "message PostTelemetry {\n" +
+                                    "  optional int64 ts = 1;\n" +
+                                    "  Values values = 2;\n" +
+                                    "  \n" +
+                                    "  message Values {\n" +
+                                    "    optional string key1 = 3;\n" +
+                                    "    optional bool key2 = 4;\n" +
+                                    "    optional double key3 = 5;\n" +
+                                    "    optional int32 key4 = 6;\n" +
+                                    "    JsonObject key5 = 7;\n" +
+                                    "  }\n" +
+                                    "  \n" +
+                                    "  message JsonObject {\n" +
+                                    "    optional int32 someNumber = 8;\n" +
+                                    "    repeated int32 someArray = 9;\n" +
+                                    "    NestedJsonObject someNestedObject = 10;\n" +
+                                    "    message NestedJsonObject {\n" +
+                                    "       optional string key = 11;\n" +
+                                    "    }\n" +
+                                    "  }\n" +
+                                    "}";
         MqttTestConfigProperties configProperties = MqttTestConfigProperties.builder()
                 .deviceName("Test Post Telemetry device proto payload")
                 .transportPayloadType(TransportPayloadType.PROTOBUF)
@@ -102,12 +103,12 @@ public abstract class AbstractMqttTimeseriesProtoIntegrationTest extends Abstrac
         DynamicMessage.Builder nestedJsonObjectBuilder = telemetrySchema.newMessageBuilder("PostTelemetry.JsonObject.NestedJsonObject");
         Descriptors.Descriptor nestedJsonObjectBuilderDescriptor = nestedJsonObjectBuilder.getDescriptorForType();
         assertNotNull(nestedJsonObjectBuilderDescriptor);
-        DynamicMessage nestedJsonObject = nestedJsonObjectBuilder.setField(nestedJsonObjectBuilderDescriptor.findFieldByName("key"), "value").build();
+        @NotNull DynamicMessage nestedJsonObject = nestedJsonObjectBuilder.setField(nestedJsonObjectBuilderDescriptor.findFieldByName("key"), "value").build();
 
         DynamicMessage.Builder jsonObjectBuilder = telemetrySchema.newMessageBuilder("PostTelemetry.JsonObject");
         Descriptors.Descriptor jsonObjectBuilderDescriptor = jsonObjectBuilder.getDescriptorForType();
         assertNotNull(jsonObjectBuilderDescriptor);
-        DynamicMessage jsonObject = jsonObjectBuilder
+        @NotNull DynamicMessage jsonObject = jsonObjectBuilder
                 .setField(jsonObjectBuilderDescriptor.findFieldByName("someNumber"), 42)
                 .addRepeatedField(jsonObjectBuilderDescriptor.findFieldByName("someArray"), 1)
                 .addRepeatedField(jsonObjectBuilderDescriptor.findFieldByName("someArray"), 2)
@@ -120,7 +121,7 @@ public abstract class AbstractMqttTimeseriesProtoIntegrationTest extends Abstrac
         Descriptors.Descriptor valuesDescriptor = valuesBuilder.getDescriptorForType();
         assertNotNull(valuesDescriptor);
 
-        DynamicMessage valuesMsg = valuesBuilder
+        @NotNull DynamicMessage valuesMsg = valuesBuilder
                 .setField(valuesDescriptor.findFieldByName("key1"), "value1")
                 .setField(valuesDescriptor.findFieldByName("key2"), true)
                 .setField(valuesDescriptor.findFieldByName("key3"), 3.0)
@@ -131,7 +132,7 @@ public abstract class AbstractMqttTimeseriesProtoIntegrationTest extends Abstrac
         DynamicMessage.Builder postTelemetryBuilder = telemetrySchema.newMessageBuilder("PostTelemetry");
         Descriptors.Descriptor postTelemetryMsgDescriptor = postTelemetryBuilder.getDescriptorForType();
         assertNotNull(postTelemetryMsgDescriptor);
-        DynamicMessage postTelemetryMsg = postTelemetryBuilder
+        @NotNull DynamicMessage postTelemetryMsg = postTelemetryBuilder
                 .setField(postTelemetryMsgDescriptor.findFieldByName("ts"), 10000L)
                 .setField(postTelemetryMsgDescriptor.findFieldByName("values"), valuesMsg)
                 .build();
@@ -152,12 +153,12 @@ public abstract class AbstractMqttTimeseriesProtoIntegrationTest extends Abstrac
         DynamicMessage.Builder nestedJsonObjectBuilder = telemetrySchema.newMessageBuilder("PostTelemetry.JsonObject.NestedJsonObject");
         Descriptors.Descriptor nestedJsonObjectBuilderDescriptor = nestedJsonObjectBuilder.getDescriptorForType();
         assertNotNull(nestedJsonObjectBuilderDescriptor);
-        DynamicMessage nestedJsonObject = nestedJsonObjectBuilder.setField(nestedJsonObjectBuilderDescriptor.findFieldByName("key"), "value").build();
+        @NotNull DynamicMessage nestedJsonObject = nestedJsonObjectBuilder.setField(nestedJsonObjectBuilderDescriptor.findFieldByName("key"), "value").build();
 
         DynamicMessage.Builder jsonObjectBuilder = telemetrySchema.newMessageBuilder("PostTelemetry.JsonObject");
         Descriptors.Descriptor jsonObjectBuilderDescriptor = jsonObjectBuilder.getDescriptorForType();
         assertNotNull(jsonObjectBuilderDescriptor);
-        DynamicMessage jsonObject = jsonObjectBuilder
+        @NotNull DynamicMessage jsonObject = jsonObjectBuilder
                 .addRepeatedField(jsonObjectBuilderDescriptor.findFieldByName("someArray"), 1)
                 .addRepeatedField(jsonObjectBuilderDescriptor.findFieldByName("someArray"), 2)
                 .addRepeatedField(jsonObjectBuilderDescriptor.findFieldByName("someArray"), 3)
@@ -167,7 +168,7 @@ public abstract class AbstractMqttTimeseriesProtoIntegrationTest extends Abstrac
         DynamicMessage.Builder postTelemetryBuilder = telemetrySchema.newMessageBuilder("PostTelemetry");
         Descriptors.Descriptor postTelemetryMsgDescriptor = postTelemetryBuilder.getDescriptorForType();
         assertNotNull(postTelemetryMsgDescriptor);
-        DynamicMessage postTelemetryMsg = postTelemetryBuilder
+        @NotNull DynamicMessage postTelemetryMsg = postTelemetryBuilder
                 .setField(postTelemetryMsgDescriptor.findFieldByName("key1"), "")
                 .setField(postTelemetryMsgDescriptor.findFieldByName("key2"), false)
                 .setField(postTelemetryMsgDescriptor.findFieldByName("key3"), 0.0)
@@ -178,31 +179,31 @@ public abstract class AbstractMqttTimeseriesProtoIntegrationTest extends Abstrac
 
     @Test
     public void testPushTelemetryWithTsAndNoPresenceFields() throws Exception {
-        String schemaStr = "syntax =\"proto3\";\n" +
-                "\n" +
-                "package test;\n" +
-                "\n" +
-                "message PostTelemetry {\n" +
-                "  optional int64 ts = 1;\n" +
-                "  Values values = 2;\n" +
-                "  \n" +
-                "  message Values {\n" +
-                "    string key1 = 3;\n" +
-                "    bool key2 = 4;\n" +
-                "    double key3 = 5;\n" +
-                "    int32 key4 = 6;\n" +
-                "    JsonObject key5 = 7;\n" +
-                "  }\n" +
-                "  \n" +
-                "  message JsonObject {\n" +
-                "    optional int32 someNumber = 8;\n" +
-                "    repeated int32 someArray = 9;\n" +
-                "    NestedJsonObject someNestedObject = 10;\n" +
-                "    message NestedJsonObject {\n" +
-                "       optional string key = 11;\n" +
-                "    }\n" +
-                "  }\n" +
-                "}";
+        @NotNull String schemaStr = "syntax =\"proto3\";\n" +
+                                    "\n" +
+                                    "package test;\n" +
+                                    "\n" +
+                                    "message PostTelemetry {\n" +
+                                    "  optional int64 ts = 1;\n" +
+                                    "  Values values = 2;\n" +
+                                    "  \n" +
+                                    "  message Values {\n" +
+                                    "    string key1 = 3;\n" +
+                                    "    bool key2 = 4;\n" +
+                                    "    double key3 = 5;\n" +
+                                    "    int32 key4 = 6;\n" +
+                                    "    JsonObject key5 = 7;\n" +
+                                    "  }\n" +
+                                    "  \n" +
+                                    "  message JsonObject {\n" +
+                                    "    optional int32 someNumber = 8;\n" +
+                                    "    repeated int32 someArray = 9;\n" +
+                                    "    NestedJsonObject someNestedObject = 10;\n" +
+                                    "    message NestedJsonObject {\n" +
+                                    "       optional string key = 11;\n" +
+                                    "    }\n" +
+                                    "  }\n" +
+                                    "}";
         MqttTestConfigProperties configProperties = MqttTestConfigProperties.builder()
                 .deviceName("Test Post Telemetry device proto payload")
                 .transportPayloadType(TransportPayloadType.PROTOBUF)
@@ -215,12 +216,12 @@ public abstract class AbstractMqttTimeseriesProtoIntegrationTest extends Abstrac
         DynamicMessage.Builder nestedJsonObjectBuilder = telemetrySchema.newMessageBuilder("PostTelemetry.JsonObject.NestedJsonObject");
         Descriptors.Descriptor nestedJsonObjectBuilderDescriptor = nestedJsonObjectBuilder.getDescriptorForType();
         assertNotNull(nestedJsonObjectBuilderDescriptor);
-        DynamicMessage nestedJsonObject = nestedJsonObjectBuilder.setField(nestedJsonObjectBuilderDescriptor.findFieldByName("key"), "value").build();
+        @NotNull DynamicMessage nestedJsonObject = nestedJsonObjectBuilder.setField(nestedJsonObjectBuilderDescriptor.findFieldByName("key"), "value").build();
 
         DynamicMessage.Builder jsonObjectBuilder = telemetrySchema.newMessageBuilder("PostTelemetry.JsonObject");
         Descriptors.Descriptor jsonObjectBuilderDescriptor = jsonObjectBuilder.getDescriptorForType();
         assertNotNull(jsonObjectBuilderDescriptor);
-        DynamicMessage jsonObject = jsonObjectBuilder
+        @NotNull DynamicMessage jsonObject = jsonObjectBuilder
                 .addRepeatedField(jsonObjectBuilderDescriptor.findFieldByName("someArray"), 1)
                 .addRepeatedField(jsonObjectBuilderDescriptor.findFieldByName("someArray"), 2)
                 .addRepeatedField(jsonObjectBuilderDescriptor.findFieldByName("someArray"), 3)
@@ -232,14 +233,14 @@ public abstract class AbstractMqttTimeseriesProtoIntegrationTest extends Abstrac
         Descriptors.Descriptor valuesDescriptor = valuesBuilder.getDescriptorForType();
         assertNotNull(valuesDescriptor);
 
-        DynamicMessage valuesMsg = valuesBuilder
+        @NotNull DynamicMessage valuesMsg = valuesBuilder
                 .setField(valuesDescriptor.findFieldByName("key5"), jsonObject)
                 .build();
 
         DynamicMessage.Builder postTelemetryBuilder = telemetrySchema.newMessageBuilder("PostTelemetry");
         Descriptors.Descriptor postTelemetryMsgDescriptor = postTelemetryBuilder.getDescriptorForType();
         assertNotNull(postTelemetryMsgDescriptor);
-        DynamicMessage postTelemetryMsg = postTelemetryBuilder
+        @NotNull DynamicMessage postTelemetryMsg = postTelemetryBuilder
                 .setField(postTelemetryMsgDescriptor.findFieldByName("ts"), 10000L)
                 .setField(postTelemetryMsgDescriptor.findFieldByName("values"), valuesMsg)
                 .build();
@@ -255,7 +256,7 @@ public abstract class AbstractMqttTimeseriesProtoIntegrationTest extends Abstrac
                 .telemetryTopicFilter(POST_DATA_TELEMETRY_TOPIC)
                 .build();
         processBeforeTest(configProperties);
-        DynamicMessage postTelemetryMsg = getDefaultDynamicMessage();
+        @NotNull DynamicMessage postTelemetryMsg = getDefaultDynamicMessage();
         processTelemetryTest(DEVICE_TELEMETRY_SHORT_TOPIC, Arrays.asList("key1", "key2", "key3", "key4", "key5"), postTelemetryMsg.toByteArray(), false, false);
     }
 
@@ -278,7 +279,7 @@ public abstract class AbstractMqttTimeseriesProtoIntegrationTest extends Abstrac
                 .telemetryTopicFilter(POST_DATA_TELEMETRY_TOPIC)
                 .build();
         processBeforeTest(configProperties);
-        DynamicMessage postTelemetryMsg = getDefaultDynamicMessage();
+        @NotNull DynamicMessage postTelemetryMsg = getDefaultDynamicMessage();
         processTelemetryTest(DEVICE_TELEMETRY_SHORT_PROTO_TOPIC, Arrays.asList("key1", "key2", "key3", "key4", "key5"), postTelemetryMsg.toByteArray(), false, false);
     }
 
@@ -292,13 +293,13 @@ public abstract class AbstractMqttTimeseriesProtoIntegrationTest extends Abstrac
                 .build();
         processBeforeTest(configProperties);
         TransportApiProtos.GatewayTelemetryMsg.Builder gatewayTelemetryMsgProtoBuilder = TransportApiProtos.GatewayTelemetryMsg.newBuilder();
-        List<String> expectedKeys = Arrays.asList("key1", "key2", "key3", "key4", "key5");
-        String deviceName1 = "Device A";
-        String deviceName2 = "Device B";
-        TransportApiProtos.TelemetryMsg deviceATelemetryMsgProto = getDeviceTelemetryMsgProto(deviceName1, expectedKeys, 10000, 20000);
-        TransportApiProtos.TelemetryMsg deviceBTelemetryMsgProto = getDeviceTelemetryMsgProto(deviceName2, expectedKeys, 10000, 20000);
+        @NotNull List<String> expectedKeys = Arrays.asList("key1", "key2", "key3", "key4", "key5");
+        @NotNull String deviceName1 = "Device A";
+        @NotNull String deviceName2 = "Device B";
+        @NotNull TransportApiProtos.TelemetryMsg deviceATelemetryMsgProto = getDeviceTelemetryMsgProto(deviceName1, expectedKeys, 10000, 20000);
+        @NotNull TransportApiProtos.TelemetryMsg deviceBTelemetryMsgProto = getDeviceTelemetryMsgProto(deviceName2, expectedKeys, 10000, 20000);
         gatewayTelemetryMsgProtoBuilder.addAllMsg(Arrays.asList(deviceATelemetryMsgProto, deviceBTelemetryMsgProto));
-        TransportApiProtos.GatewayTelemetryMsg gatewayTelemetryMsg = gatewayTelemetryMsgProtoBuilder.build();
+        @NotNull TransportApiProtos.GatewayTelemetryMsg gatewayTelemetryMsg = gatewayTelemetryMsgProtoBuilder.build();
         processGatewayTelemetryTest(GATEWAY_TELEMETRY_TOPIC, expectedKeys, gatewayTelemetryMsg.toByteArray(), deviceName1, deviceName2);
     }
 
@@ -311,9 +312,9 @@ public abstract class AbstractMqttTimeseriesProtoIntegrationTest extends Abstrac
                 .telemetryTopicFilter(POST_DATA_TELEMETRY_TOPIC)
                 .build();
         processBeforeTest(configProperties);
-        String deviceName = "Device A";
-        TransportApiProtos.ConnectMsg connectMsgProto = getConnectProto(deviceName);
-        MqttTestClient client = new MqttTestClient();
+        @NotNull String deviceName = "Device A";
+        @NotNull TransportApiProtos.ConnectMsg connectMsgProto = getConnectProto(deviceName);
+        @NotNull MqttTestClient client = new MqttTestClient();
         client.connectAndWait(gatewayAccessToken);
         client.publish(GATEWAY_CONNECT_TOPIC, connectMsgProto.toByteArray());
 
@@ -335,9 +336,9 @@ public abstract class AbstractMqttTimeseriesProtoIntegrationTest extends Abstrac
                 .sendAckOnValidationException(true)
                 .build();
         processBeforeTest(configProperties);
-        MqttTestClient client = new MqttTestClient();
+        @NotNull MqttTestClient client = new MqttTestClient();
         client.connectAndWait(accessToken);
-        MqttTestCallback callback = new MqttTestCallback();
+        @NotNull MqttTestCallback callback = new MqttTestCallback();
         client.setCallback(callback);
         client.publish(POST_DATA_TELEMETRY_TOPIC, MALFORMED_PROTO_PAYLOAD.getBytes());
         callback.getDeliveryLatch().await(DEFAULT_WAIT_TIMEOUT_SECONDS, TimeUnit.SECONDS);
@@ -353,9 +354,9 @@ public abstract class AbstractMqttTimeseriesProtoIntegrationTest extends Abstrac
                 .telemetryTopicFilter(POST_DATA_TELEMETRY_TOPIC)
                 .build();
         processBeforeTest(configProperties);
-        MqttTestClient client = new MqttTestClient();
+        @NotNull MqttTestClient client = new MqttTestClient();
         client.connectAndWait(accessToken);
-        MqttTestCallback callback = new MqttTestCallback();
+        @NotNull MqttTestCallback callback = new MqttTestCallback();
         client.setCallback(callback);
         client.publish(POST_DATA_TELEMETRY_TOPIC, MALFORMED_PROTO_PAYLOAD.getBytes());
         callback.getDeliveryLatch().await(DEFAULT_WAIT_TIMEOUT_SECONDS, TimeUnit.SECONDS);
@@ -372,9 +373,9 @@ public abstract class AbstractMqttTimeseriesProtoIntegrationTest extends Abstrac
                 .sendAckOnValidationException(true)
                 .build();
         processBeforeTest(configProperties);
-        MqttTestClient client = new MqttTestClient();
+        @NotNull MqttTestClient client = new MqttTestClient();
         client.connectAndWait(accessToken);
-        MqttTestCallback callback = new MqttTestCallback();
+        @NotNull MqttTestCallback callback = new MqttTestCallback();
         client.setCallback(callback);
         client.publish(POST_DATA_TELEMETRY_TOPIC, MALFORMED_JSON_PAYLOAD.getBytes());
         callback.getDeliveryLatch().await(DEFAULT_WAIT_TIMEOUT_SECONDS, TimeUnit.SECONDS);
@@ -391,9 +392,9 @@ public abstract class AbstractMqttTimeseriesProtoIntegrationTest extends Abstrac
                 .enableCompatibilityWithJsonPayloadFormat(true)
                 .build();
         processBeforeTest(configProperties);
-        MqttTestClient client = new MqttTestClient();
+        @NotNull MqttTestClient client = new MqttTestClient();
         client.connectAndWait(accessToken);
-        MqttTestCallback callback = new MqttTestCallback();
+        @NotNull MqttTestCallback callback = new MqttTestCallback();
         client.setCallback(callback);
         client.publish(POST_DATA_TELEMETRY_TOPIC, MALFORMED_JSON_PAYLOAD.getBytes());
         callback.getDeliveryLatch().await(DEFAULT_WAIT_TIMEOUT_SECONDS, TimeUnit.SECONDS);
@@ -410,9 +411,9 @@ public abstract class AbstractMqttTimeseriesProtoIntegrationTest extends Abstrac
                 .sendAckOnValidationException(true)
                 .build();
         processBeforeTest(configProperties);
-        MqttTestClient client = new MqttTestClient();
+        @NotNull MqttTestClient client = new MqttTestClient();
         client.connectAndWait(gatewayAccessToken);
-        MqttTestCallback callback = new MqttTestCallback();
+        @NotNull MqttTestCallback callback = new MqttTestCallback();
         client.setCallback(callback);
         client.publish(POST_DATA_TELEMETRY_TOPIC, MALFORMED_PROTO_PAYLOAD.getBytes());
         callback.getDeliveryLatch().await(DEFAULT_WAIT_TIMEOUT_SECONDS, TimeUnit.SECONDS);
@@ -429,9 +430,9 @@ public abstract class AbstractMqttTimeseriesProtoIntegrationTest extends Abstrac
                 .telemetryTopicFilter(POST_DATA_TELEMETRY_TOPIC)
                 .build();
         processBeforeTest(configProperties);
-        MqttTestClient client = new MqttTestClient();
+        @NotNull MqttTestClient client = new MqttTestClient();
         client.connectAndWait(gatewayAccessToken);
-        MqttTestCallback callback = new MqttTestCallback();
+        @NotNull MqttTestCallback callback = new MqttTestCallback();
         client.setCallback(callback);
         client.publish(POST_DATA_TELEMETRY_TOPIC, MALFORMED_PROTO_PAYLOAD.getBytes());
         callback.getDeliveryLatch().await(DEFAULT_WAIT_TIMEOUT_SECONDS, TimeUnit.SECONDS);
@@ -441,27 +442,28 @@ public abstract class AbstractMqttTimeseriesProtoIntegrationTest extends Abstrac
     private DynamicSchema getDynamicSchema() {
         DeviceProfileTransportConfiguration transportConfiguration = deviceProfile.getProfileData().getTransportConfiguration();
         assertTrue(transportConfiguration instanceof MqttDeviceProfileTransportConfiguration);
-        MqttDeviceProfileTransportConfiguration mqttTransportConfiguration = (MqttDeviceProfileTransportConfiguration) transportConfiguration;
-        TransportPayloadTypeConfiguration transportPayloadTypeConfiguration = mqttTransportConfiguration.getTransportPayloadTypeConfiguration();
+        @NotNull MqttDeviceProfileTransportConfiguration mqttTransportConfiguration = (MqttDeviceProfileTransportConfiguration) transportConfiguration;
+        @NotNull TransportPayloadTypeConfiguration transportPayloadTypeConfiguration = mqttTransportConfiguration.getTransportPayloadTypeConfiguration();
         assertTrue(transportPayloadTypeConfiguration instanceof ProtoTransportPayloadConfiguration);
-        ProtoTransportPayloadConfiguration protoTransportPayloadConfiguration = (ProtoTransportPayloadConfiguration) transportPayloadTypeConfiguration;
+        @NotNull ProtoTransportPayloadConfiguration protoTransportPayloadConfiguration = (ProtoTransportPayloadConfiguration) transportPayloadTypeConfiguration;
         String deviceTelemetryProtoSchema = protoTransportPayloadConfiguration.getDeviceTelemetryProtoSchema();
-        ProtoFileElement protoFileElement = DynamicProtoUtils.getProtoFileElement(deviceTelemetryProtoSchema);
+        @NotNull ProtoFileElement protoFileElement = DynamicProtoUtils.getProtoFileElement(deviceTelemetryProtoSchema);
         return DynamicProtoUtils.getDynamicSchema(protoFileElement, ProtoTransportPayloadConfiguration.TELEMETRY_PROTO_SCHEMA);
     }
 
+    @NotNull
     private DynamicMessage getDefaultDynamicMessage() {
         DynamicSchema telemetrySchema = getDynamicSchema();
 
         DynamicMessage.Builder nestedJsonObjectBuilder = telemetrySchema.newMessageBuilder("PostTelemetry.JsonObject.NestedJsonObject");
         Descriptors.Descriptor nestedJsonObjectBuilderDescriptor = nestedJsonObjectBuilder.getDescriptorForType();
         assertNotNull(nestedJsonObjectBuilderDescriptor);
-        DynamicMessage nestedJsonObject = nestedJsonObjectBuilder.setField(nestedJsonObjectBuilderDescriptor.findFieldByName("key"), "value").build();
+        @NotNull DynamicMessage nestedJsonObject = nestedJsonObjectBuilder.setField(nestedJsonObjectBuilderDescriptor.findFieldByName("key"), "value").build();
 
         DynamicMessage.Builder jsonObjectBuilder = telemetrySchema.newMessageBuilder("PostTelemetry.JsonObject");
         Descriptors.Descriptor jsonObjectBuilderDescriptor = jsonObjectBuilder.getDescriptorForType();
         assertNotNull(jsonObjectBuilderDescriptor);
-        DynamicMessage jsonObject = jsonObjectBuilder
+        @NotNull DynamicMessage jsonObject = jsonObjectBuilder
                 .setField(jsonObjectBuilderDescriptor.findFieldByName("someNumber"), 42)
                 .addRepeatedField(jsonObjectBuilderDescriptor.findFieldByName("someArray"), 1)
                 .addRepeatedField(jsonObjectBuilderDescriptor.findFieldByName("someArray"), 2)
@@ -481,6 +483,7 @@ public abstract class AbstractMqttTimeseriesProtoIntegrationTest extends Abstrac
                 .build();
     }
 
+    @NotNull
     private TransportApiProtos.ConnectMsg getConnectProto(String deviceName) {
         TransportApiProtos.ConnectMsg.Builder builder = TransportApiProtos.ConnectMsg.newBuilder();
         builder.setDeviceName(deviceName);
@@ -488,7 +491,8 @@ public abstract class AbstractMqttTimeseriesProtoIntegrationTest extends Abstrac
         return builder.build();
     }
 
-    private TransportApiProtos.TelemetryMsg getDeviceTelemetryMsgProto(String deviceName, List<String> expectedKeys, long firstTs, long secondTs) {
+    @NotNull
+    private TransportApiProtos.TelemetryMsg getDeviceTelemetryMsgProto(String deviceName, @NotNull List<String> expectedKeys, long firstTs, long secondTs) {
         TransportApiProtos.TelemetryMsg.Builder deviceTelemetryMsgBuilder = TransportApiProtos.TelemetryMsg.newBuilder();
         TransportProtos.TsKvListProto tsKvListProto1 = getTsKvListProto(expectedKeys, firstTs);
         TransportProtos.TsKvListProto tsKvListProto2 = getTsKvListProto(expectedKeys, secondTs);
@@ -499,7 +503,7 @@ public abstract class AbstractMqttTimeseriesProtoIntegrationTest extends Abstrac
         return deviceTelemetryMsgBuilder.build();
     }
 
-    private TransportProtos.TsKvListProto getTsKvListProto(List<String> expectedKeys, long ts) {
+    private TransportProtos.TsKvListProto getTsKvListProto(@NotNull List<String> expectedKeys, long ts) {
         List<TransportProtos.KeyValueProto> kvProtos = getKvProtos(expectedKeys);
         TransportProtos.TsKvListProto.Builder builder = TransportProtos.TsKvListProto.newBuilder();
         builder.addAllKv(kvProtos);

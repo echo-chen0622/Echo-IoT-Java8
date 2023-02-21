@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.util.ConcurrentReferenceHashMap;
 import org.springframework.util.ConcurrentReferenceHashMap.ReferenceType;
 import org.echoiot.server.common.data.EntityType;
@@ -22,16 +23,19 @@ public class EdgeId extends UUIDBased implements EntityId {
         super(id);
     }
 
-    public static EdgeId fromString(String edgeId) {
+    @NotNull
+    public static EdgeId fromString(@NotNull String edgeId) {
         return new EdgeId(UUID.fromString(edgeId));
     }
 
+    @NotNull
     @ApiModelProperty(position = 2, required = true, value = "string", example = "EDGE", allowableValues = "EDGE")
     @Override
     public EntityType getEntityType() {
         return EntityType.EDGE;
     }
 
+    @NotNull
     @JsonCreator
     public static EdgeId fromUUID(@JsonProperty("id") UUID id) {
         return edges.computeIfAbsent(id, EdgeId::new);

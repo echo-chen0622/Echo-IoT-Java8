@@ -9,6 +9,7 @@ import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.common.data.security.Authority;
 import org.echoiot.server.dao.exception.DataValidationException;
+import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -29,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public abstract class BaseOtaPackageControllerTest extends AbstractControllerTest {
 
-    private IdComparator<OtaPackageInfo> idComparator = new IdComparator<>();
+    private final IdComparator<OtaPackageInfo> idComparator = new IdComparator<>();
 
     public static final String TITLE = "My firmware";
     private static final String FILE_NAME = "filename.txt";
@@ -47,7 +48,7 @@ public abstract class BaseOtaPackageControllerTest extends AbstractControllerTes
     public void beforeTest() throws Exception {
         loginSysAdmin();
 
-        Tenant tenant = new Tenant();
+        @NotNull Tenant tenant = new Tenant();
         tenant.setTitle("My tenant");
         savedTenant = doPost("/api/tenant", tenant, Tenant.class);
         Assert.assertNotNull(savedTenant);
@@ -77,7 +78,7 @@ public abstract class BaseOtaPackageControllerTest extends AbstractControllerTes
 
     @Test
     public void testSaveFirmware() throws Exception {
-        SaveOtaPackageInfoRequest firmwareInfo = new SaveOtaPackageInfoRequest();
+        @NotNull SaveOtaPackageInfoRequest firmwareInfo = new SaveOtaPackageInfoRequest();
         firmwareInfo.setDeviceProfileId(deviceProfileId);
         firmwareInfo.setType(FIRMWARE);
         firmwareInfo.setTitle(TITLE);
@@ -113,13 +114,13 @@ public abstract class BaseOtaPackageControllerTest extends AbstractControllerTes
 
     @Test
     public void saveOtaPackageInfoWithViolationOfLengthValidation() throws Exception {
-        SaveOtaPackageInfoRequest firmwareInfo = new SaveOtaPackageInfoRequest();
+        @NotNull SaveOtaPackageInfoRequest firmwareInfo = new SaveOtaPackageInfoRequest();
         firmwareInfo.setDeviceProfileId(deviceProfileId);
         firmwareInfo.setType(FIRMWARE);
         firmwareInfo.setTitle(StringUtils.randomAlphabetic(300));
         firmwareInfo.setVersion(VERSION);
         firmwareInfo.setUsesUrl(false);
-        String msgError = msgErrorFieldLength("title");
+        @NotNull String msgError = msgErrorFieldLength("title");
 
         Mockito.reset(tbClusterService, auditLogService);
 
@@ -159,7 +160,7 @@ public abstract class BaseOtaPackageControllerTest extends AbstractControllerTes
 
     @Test
     public void testSaveFirmwareData() throws Exception {
-        SaveOtaPackageInfoRequest firmwareInfo = new SaveOtaPackageInfoRequest();
+        @NotNull SaveOtaPackageInfoRequest firmwareInfo = new SaveOtaPackageInfoRequest();
         firmwareInfo.setDeviceProfileId(deviceProfileId);
         firmwareInfo.setType(FIRMWARE);
         firmwareInfo.setTitle(TITLE);
@@ -182,7 +183,7 @@ public abstract class BaseOtaPackageControllerTest extends AbstractControllerTes
         OtaPackageInfo foundFirmwareInfo = doGet("/api/otaPackage/info/" + savedFirmwareInfo.getId().getId().toString(), OtaPackageInfo.class);
         Assert.assertEquals(foundFirmwareInfo.getTitle(), savedFirmwareInfo.getTitle());
 
-        MockMultipartFile testData = new MockMultipartFile("file", FILE_NAME, CONTENT_TYPE, DATA.array());
+        @NotNull MockMultipartFile testData = new MockMultipartFile("file", FILE_NAME, CONTENT_TYPE, DATA.array());
 
         Mockito.reset(tbClusterService, auditLogService);
 
@@ -201,7 +202,7 @@ public abstract class BaseOtaPackageControllerTest extends AbstractControllerTes
 
     @Test
     public void testUpdateFirmwareFromDifferentTenant() throws Exception {
-        SaveOtaPackageInfoRequest firmwareInfo = new SaveOtaPackageInfoRequest();
+        @NotNull SaveOtaPackageInfoRequest firmwareInfo = new SaveOtaPackageInfoRequest();
         firmwareInfo.setDeviceProfileId(deviceProfileId);
         firmwareInfo.setType(FIRMWARE);
         firmwareInfo.setTitle(TITLE);
@@ -226,7 +227,7 @@ public abstract class BaseOtaPackageControllerTest extends AbstractControllerTes
 
     @Test
     public void testFindFirmwareInfoById() throws Exception {
-        SaveOtaPackageInfoRequest firmwareInfo = new SaveOtaPackageInfoRequest();
+        @NotNull SaveOtaPackageInfoRequest firmwareInfo = new SaveOtaPackageInfoRequest();
         firmwareInfo.setDeviceProfileId(deviceProfileId);
         firmwareInfo.setType(FIRMWARE);
         firmwareInfo.setTitle(TITLE);
@@ -242,7 +243,7 @@ public abstract class BaseOtaPackageControllerTest extends AbstractControllerTes
 
     @Test
     public void testFindFirmwareById() throws Exception {
-        SaveOtaPackageInfoRequest firmwareInfo = new SaveOtaPackageInfoRequest();
+        @NotNull SaveOtaPackageInfoRequest firmwareInfo = new SaveOtaPackageInfoRequest();
         firmwareInfo.setDeviceProfileId(deviceProfileId);
         firmwareInfo.setType(FIRMWARE);
         firmwareInfo.setTitle(TITLE);
@@ -251,7 +252,7 @@ public abstract class BaseOtaPackageControllerTest extends AbstractControllerTes
 
         OtaPackageInfo savedFirmwareInfo = save(firmwareInfo);
 
-        MockMultipartFile testData = new MockMultipartFile("file", FILE_NAME, CONTENT_TYPE, DATA.array());
+        @NotNull MockMultipartFile testData = new MockMultipartFile("file", FILE_NAME, CONTENT_TYPE, DATA.array());
 
         OtaPackageInfo savedFirmware = savaData("/api/otaPackage/" + savedFirmwareInfo.getId().getId().toString()
                 + "?checksum={checksum}&checksumAlgorithm={checksumAlgorithm}", testData, CHECKSUM, CHECKSUM_ALGORITHM);
@@ -264,7 +265,7 @@ public abstract class BaseOtaPackageControllerTest extends AbstractControllerTes
 
     @Test
     public void testDeleteFirmware() throws Exception {
-        SaveOtaPackageInfoRequest firmwareInfo = new SaveOtaPackageInfoRequest();
+        @NotNull SaveOtaPackageInfoRequest firmwareInfo = new SaveOtaPackageInfoRequest();
         firmwareInfo.setDeviceProfileId(deviceProfileId);
         firmwareInfo.setType(FIRMWARE);
         firmwareInfo.setTitle(TITLE);
@@ -292,11 +293,11 @@ public abstract class BaseOtaPackageControllerTest extends AbstractControllerTes
 
         Mockito.reset(tbClusterService, auditLogService);
 
-        List<OtaPackageInfo> otaPackages = new ArrayList<>();
+        @NotNull List<OtaPackageInfo> otaPackages = new ArrayList<>();
         int cntEntity = 165;
         int startIndexSaveData = 101;
         for (int i = 0; i < cntEntity; i++) {
-            SaveOtaPackageInfoRequest firmwareInfo = new SaveOtaPackageInfoRequest();
+            @NotNull SaveOtaPackageInfoRequest firmwareInfo = new SaveOtaPackageInfoRequest();
             firmwareInfo.setDeviceProfileId(deviceProfileId);
             firmwareInfo.setType(FIRMWARE);
             firmwareInfo.setTitle(TITLE);
@@ -306,7 +307,7 @@ public abstract class BaseOtaPackageControllerTest extends AbstractControllerTes
             OtaPackageInfo savedFirmwareInfo = save(firmwareInfo);
 
             if (i >= startIndexSaveData) {
-                MockMultipartFile testData = new MockMultipartFile("file", FILE_NAME, CONTENT_TYPE, DATA.array());
+                @NotNull MockMultipartFile testData = new MockMultipartFile("file", FILE_NAME, CONTENT_TYPE, DATA.array());
 
                 OtaPackage savedFirmware = savaData("/api/otaPackage/" + savedFirmwareInfo.getId().getId().toString() + "?checksum={checksum}&checksumAlgorithm={checksumAlgorithm}", testData, CHECKSUM, CHECKSUM_ALGORITHM);
                 savedFirmwareInfo = new OtaPackageInfo(savedFirmware);
@@ -318,7 +319,7 @@ public abstract class BaseOtaPackageControllerTest extends AbstractControllerTes
                 savedTenant.getId(), tenantAdmin.getCustomerId(), tenantAdmin.getId(), tenantAdmin.getEmail(),
                 ActionType.ADDED, ActionType.ADDED, cntEntity, 0, (cntEntity*2 - startIndexSaveData));
 
-        List<OtaPackageInfo> loadedFirmwares = new ArrayList<>();
+        @NotNull List<OtaPackageInfo> loadedFirmwares = new ArrayList<>();
         PageLink pageLink = new PageLink(24);
         PageData<OtaPackageInfo> pageData;
         do {
@@ -339,11 +340,11 @@ public abstract class BaseOtaPackageControllerTest extends AbstractControllerTes
 
     @Test
     public void testFindTenantFirmwaresByHasData() throws Exception {
-        List<OtaPackageInfo> otaPackagesWithData = new ArrayList<>();
-        List<OtaPackageInfo> allOtaPackages = new ArrayList<>();
+        @NotNull List<OtaPackageInfo> otaPackagesWithData = new ArrayList<>();
+        @NotNull List<OtaPackageInfo> allOtaPackages = new ArrayList<>();
 
         for (int i = 0; i < 165; i++) {
-            SaveOtaPackageInfoRequest firmwareInfo = new SaveOtaPackageInfoRequest();
+            @NotNull SaveOtaPackageInfoRequest firmwareInfo = new SaveOtaPackageInfoRequest();
             firmwareInfo.setDeviceProfileId(deviceProfileId);
             firmwareInfo.setType(FIRMWARE);
             firmwareInfo.setTitle(TITLE);
@@ -353,7 +354,7 @@ public abstract class BaseOtaPackageControllerTest extends AbstractControllerTes
             OtaPackageInfo savedFirmwareInfo = save(firmwareInfo);
 
             if (i > 100) {
-                MockMultipartFile testData = new MockMultipartFile("file", FILE_NAME, CONTENT_TYPE, DATA.array());
+                @NotNull MockMultipartFile testData = new MockMultipartFile("file", FILE_NAME, CONTENT_TYPE, DATA.array());
 
                 OtaPackage savedFirmware = savaData("/api/otaPackage/" + savedFirmwareInfo.getId().getId().toString() + "?checksum={checksum}&checksumAlgorithm={checksumAlgorithm}", testData, CHECKSUM, CHECKSUM_ALGORITHM);
                 savedFirmwareInfo = new OtaPackageInfo(savedFirmware);
@@ -363,7 +364,7 @@ public abstract class BaseOtaPackageControllerTest extends AbstractControllerTes
             allOtaPackages.add(savedFirmwareInfo);
         }
 
-        List<OtaPackageInfo> loadedOtaPackagesWithData = new ArrayList<>();
+        @NotNull List<OtaPackageInfo> loadedOtaPackagesWithData = new ArrayList<>();
         PageLink pageLink = new PageLink(24);
         PageData<OtaPackageInfo> pageData;
         do {
@@ -376,7 +377,7 @@ public abstract class BaseOtaPackageControllerTest extends AbstractControllerTes
             }
         } while (pageData.hasNext());
 
-        List<OtaPackageInfo> allLoadedOtaPackages = new ArrayList<>();
+        @NotNull List<OtaPackageInfo> allLoadedOtaPackages = new ArrayList<>();
         pageLink = new PageLink(24);
         do {
             pageData = doGetTypedWithPageLink("/api/otaPackages?",
@@ -401,8 +402,8 @@ public abstract class BaseOtaPackageControllerTest extends AbstractControllerTes
         return doPost("/api/otaPackage", firmwareInfo, OtaPackageInfo.class);
     }
 
-    protected OtaPackage savaData(String urlTemplate, MockMultipartFile content, String... params) throws Exception {
-        MockMultipartHttpServletRequestBuilder postRequest = MockMvcRequestBuilders.multipart(urlTemplate, params);
+    protected OtaPackage savaData(@NotNull String urlTemplate, @NotNull MockMultipartFile content, String... params) throws Exception {
+        @NotNull MockMultipartHttpServletRequestBuilder postRequest = MockMvcRequestBuilders.multipart(urlTemplate, params);
         postRequest.file(content);
         setJwtToken(postRequest);
         return readResponse(mockMvc.perform(postRequest).andExpect(status().isOk()), OtaPackage.class);

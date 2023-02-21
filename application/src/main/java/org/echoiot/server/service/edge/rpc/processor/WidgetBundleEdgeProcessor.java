@@ -8,6 +8,8 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.id.WidgetsBundleId;
 import org.echoiot.server.common.data.widget.WidgetsBundle;
 import org.echoiot.server.queue.util.TbCoreComponent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Component;
 import org.echoiot.server.gen.edge.v1.DownlinkMsg;
 import org.echoiot.server.gen.edge.v1.UpdateMsgType;
@@ -19,15 +21,16 @@ import org.echoiot.server.gen.transport.TransportProtos;
 @TbCoreComponent
 public class WidgetBundleEdgeProcessor extends BaseEdgeProcessor {
 
-    public DownlinkMsg convertWidgetsBundleEventToDownlink(EdgeEvent edgeEvent) {
-        WidgetsBundleId widgetsBundleId = new WidgetsBundleId(edgeEvent.getEntityId());
-        DownlinkMsg downlinkMsg = null;
+    @Nullable
+    public DownlinkMsg convertWidgetsBundleEventToDownlink(@NotNull EdgeEvent edgeEvent) {
+        @NotNull WidgetsBundleId widgetsBundleId = new WidgetsBundleId(edgeEvent.getEntityId());
+        @Nullable DownlinkMsg downlinkMsg = null;
         switch (edgeEvent.getAction()) {
             case ADDED:
             case UPDATED:
                 WidgetsBundle widgetsBundle = widgetsBundleService.findWidgetsBundleById(edgeEvent.getTenantId(), widgetsBundleId);
                 if (widgetsBundle != null) {
-                    UpdateMsgType msgType = getUpdateMsgType(edgeEvent.getAction());
+                    @NotNull UpdateMsgType msgType = getUpdateMsgType(edgeEvent.getAction());
                     WidgetsBundleUpdateMsg widgetsBundleUpdateMsg =
                             widgetsBundleMsgConstructor.constructWidgetsBundleUpdateMsg(msgType, widgetsBundle);
                     downlinkMsg = DownlinkMsg.newBuilder()
@@ -48,7 +51,7 @@ public class WidgetBundleEdgeProcessor extends BaseEdgeProcessor {
         return downlinkMsg;
     }
 
-    public ListenableFuture<Void> processWidgetsBundleNotification(TenantId tenantId, TransportProtos.EdgeNotificationMsgProto edgeNotificationMsg) {
+    public ListenableFuture<Void> processWidgetsBundleNotification(TenantId tenantId, @NotNull TransportProtos.EdgeNotificationMsgProto edgeNotificationMsg) {
         return processEntityNotificationForAllEdges(tenantId, edgeNotificationMsg);
     }
 }

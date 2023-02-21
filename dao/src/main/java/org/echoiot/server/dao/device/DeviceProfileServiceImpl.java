@@ -7,6 +7,8 @@ import org.echoiot.server.dao.service.DataValidator;
 import org.echoiot.server.dao.service.PaginatedRemover;
 import org.echoiot.server.dao.service.Validator;
 import org.hibernate.exception.ConstraintViolationException;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -44,26 +46,26 @@ public class DeviceProfileServiceImpl extends AbstractCachedEntityService<Device
     private static final String INCORRECT_DEVICE_PROFILE_NAME = "Incorrect deviceProfileName ";
     private static final String DEVICE_PROFILE_WITH_SUCH_NAME_ALREADY_EXISTS = "Device profile with such name already exists!";
 
-    @Autowired
+    @Resource
     private DeviceProfileDao deviceProfileDao;
 
-    @Autowired
+    @Resource
     private DeviceDao deviceDao;
 
-    @Autowired
+    @Resource
     private DeviceService deviceService;
 
-    @Autowired
+    @Resource
     private DataValidator<DeviceProfile> deviceProfileValidator;
 
     @Lazy
-    @Autowired
+    @Resource
     private QueueService queueService;
 
     @TransactionalEventListener(classes = DeviceProfileEvictEvent.class)
     @Override
-    public void handleEvictEvent(DeviceProfileEvictEvent event) {
-        List<DeviceProfileCacheKey> keys = new ArrayList<>(2);
+    public void handleEvictEvent(@NotNull DeviceProfileEvictEvent event) {
+        @NotNull List<DeviceProfileCacheKey> keys = new ArrayList<>(2);
         keys.add(DeviceProfileCacheKey.fromName(event.getTenantId(), event.getNewName()));
         if (event.getDeviceProfileId() != null) {
             keys.add(DeviceProfileCacheKey.fromId(event.getDeviceProfileId()));
@@ -78,7 +80,7 @@ public class DeviceProfileServiceImpl extends AbstractCachedEntityService<Device
     }
 
     @Override
-    public DeviceProfile findDeviceProfileById(TenantId tenantId, DeviceProfileId deviceProfileId) {
+    public DeviceProfile findDeviceProfileById(TenantId tenantId, @NotNull DeviceProfileId deviceProfileId) {
         log.trace("Executing findDeviceProfileById [{}]", deviceProfileId);
         Validator.validateId(deviceProfileId, INCORRECT_DEVICE_PROFILE_ID + deviceProfileId);
         return cache.getAndPutInTransaction(DeviceProfileCacheKey.fromId(deviceProfileId),
@@ -93,15 +95,17 @@ public class DeviceProfileServiceImpl extends AbstractCachedEntityService<Device
                 () -> deviceProfileDao.findByName(tenantId, profileName), true);
     }
 
+    @Nullable
     @Override
-    public DeviceProfileInfo findDeviceProfileInfoById(TenantId tenantId, DeviceProfileId deviceProfileId) {
+    public DeviceProfileInfo findDeviceProfileInfoById(TenantId tenantId, @NotNull DeviceProfileId deviceProfileId) {
         log.trace("Executing findDeviceProfileById [{}]", deviceProfileId);
         Validator.validateId(deviceProfileId, INCORRECT_DEVICE_PROFILE_ID + deviceProfileId);
         return toDeviceProfileInfo(findDeviceProfileById(tenantId, deviceProfileId));
     }
 
+    @NotNull
     @Override
-    public DeviceProfile saveDeviceProfile(DeviceProfile deviceProfile) {
+    public DeviceProfile saveDeviceProfile(@NotNull DeviceProfile deviceProfile) {
         log.trace("Executing saveDeviceProfile [{}]", deviceProfile);
         DeviceProfile oldDeviceProfile = deviceProfileValidator.validate(deviceProfile, DeviceProfile::getTenantId);
         DeviceProfile savedDeviceProfile;
@@ -123,7 +127,7 @@ public class DeviceProfileServiceImpl extends AbstractCachedEntityService<Device
             PageData<Device> pageData;
             do {
                 pageData = deviceDao.findDevicesByTenantIdAndProfileId(deviceProfile.getTenantId().getId(), deviceProfile.getUuidId(), pageLink);
-                for (Device device : pageData.getData()) {
+                for (@NotNull Device device : pageData.getData()) {
                     device.setType(deviceProfile.getName());
                     deviceService.saveDevice(device);
                 }
@@ -135,7 +139,7 @@ public class DeviceProfileServiceImpl extends AbstractCachedEntityService<Device
 
     @Override
     @Transactional
-    public void deleteDeviceProfile(TenantId tenantId, DeviceProfileId deviceProfileId) {
+    public void deleteDeviceProfile(TenantId tenantId, @NotNull DeviceProfileId deviceProfileId) {
         log.trace("Executing deleteDeviceProfile [{}]", deviceProfileId);
         Validator.validateId(deviceProfileId, INCORRECT_DEVICE_PROFILE_ID + deviceProfileId);
         DeviceProfile deviceProfile = deviceProfileDao.findById(tenantId, deviceProfileId.getId());
@@ -145,7 +149,7 @@ public class DeviceProfileServiceImpl extends AbstractCachedEntityService<Device
         this.removeDeviceProfile(tenantId, deviceProfile);
     }
 
-    private void removeDeviceProfile(TenantId tenantId, DeviceProfile deviceProfile) {
+    private void removeDeviceProfile(TenantId tenantId, @NotNull DeviceProfile deviceProfile) {
         DeviceProfileId deviceProfileId = deviceProfile.getId();
         try {
             deleteEntityRelations(tenantId, deviceProfileId);
@@ -153,7 +157,7 @@ public class DeviceProfileServiceImpl extends AbstractCachedEntityService<Device
             publishEvictEvent(new DeviceProfileEvictEvent(deviceProfile.getTenantId(), deviceProfile.getName(),
                     null, deviceProfile.getId(), deviceProfile.isDefault()));
         } catch (Exception t) {
-            ConstraintViolationException e = extractConstraintViolationException(t).orElse(null);
+            @Nullable ConstraintViolationException e = extractConstraintViolationException(t).orElse(null);
             if (e != null && e.getConstraintName() != null && e.getConstraintName().equalsIgnoreCase("fk_device_profile")) {
                 throw new DataValidationException("The device profile referenced by the devices cannot be deleted!");
             } else {
@@ -179,7 +183,7 @@ public class DeviceProfileServiceImpl extends AbstractCachedEntityService<Device
     }
 
     @Override
-    public DeviceProfile findOrCreateDeviceProfile(TenantId tenantId, String name) {
+    public DeviceProfile findOrCreateDeviceProfile(TenantId tenantId, @NotNull String name) {
         log.trace("Executing findOrCreateDefaultDeviceProfile");
         DeviceProfile deviceProfile = findDeviceProfileByName(tenantId, name);
         if (deviceProfile == null) {
@@ -204,7 +208,7 @@ public class DeviceProfileServiceImpl extends AbstractCachedEntityService<Device
 
     private DeviceProfile doCreateDefaultDeviceProfile(TenantId tenantId, String profileName, boolean defaultProfile) {
         validateId(tenantId, INCORRECT_TENANT_ID + tenantId);
-        DeviceProfile deviceProfile = new DeviceProfile();
+        @NotNull DeviceProfile deviceProfile = new DeviceProfile();
         deviceProfile.setTenantId(tenantId);
         deviceProfile.setDefault(defaultProfile);
         deviceProfile.setName(profileName);
@@ -212,10 +216,10 @@ public class DeviceProfileServiceImpl extends AbstractCachedEntityService<Device
         deviceProfile.setTransportType(DeviceTransportType.DEFAULT);
         deviceProfile.setProvisionType(DeviceProfileProvisionType.DISABLED);
         deviceProfile.setDescription("Default device profile");
-        DeviceProfileData deviceProfileData = new DeviceProfileData();
-        DefaultDeviceProfileConfiguration configuration = new DefaultDeviceProfileConfiguration();
-        DefaultDeviceProfileTransportConfiguration transportConfiguration = new DefaultDeviceProfileTransportConfiguration();
-        DisabledDeviceProfileProvisionConfiguration provisionConfiguration = new DisabledDeviceProfileProvisionConfiguration(null);
+        @NotNull DeviceProfileData deviceProfileData = new DeviceProfileData();
+        @NotNull DefaultDeviceProfileConfiguration configuration = new DefaultDeviceProfileConfiguration();
+        @NotNull DefaultDeviceProfileTransportConfiguration transportConfiguration = new DefaultDeviceProfileTransportConfiguration();
+        @NotNull DisabledDeviceProfileProvisionConfiguration provisionConfiguration = new DisabledDeviceProfileProvisionConfiguration(null);
         deviceProfileData.setConfiguration(configuration);
         deviceProfileData.setTransportConfiguration(transportConfiguration);
         deviceProfileData.setProvisionConfiguration(provisionConfiguration);
@@ -231,6 +235,7 @@ public class DeviceProfileServiceImpl extends AbstractCachedEntityService<Device
                 () -> deviceProfileDao.findDefaultDeviceProfile(tenantId), true);
     }
 
+    @Nullable
     @Override
     public DeviceProfileInfo findDefaultDeviceProfileInfo(TenantId tenantId) {
         log.trace("Executing findDefaultDeviceProfileInfo tenantId [{}]", tenantId);
@@ -239,7 +244,7 @@ public class DeviceProfileServiceImpl extends AbstractCachedEntityService<Device
     }
 
     @Override
-    public boolean setDefaultDeviceProfile(TenantId tenantId, DeviceProfileId deviceProfileId) {
+    public boolean setDefaultDeviceProfile(TenantId tenantId, @NotNull DeviceProfileId deviceProfileId) {
         log.trace("Executing setDefaultDeviceProfile [{}]", deviceProfileId);
         Validator.validateId(deviceProfileId, INCORRECT_DEVICE_PROFILE_ID + deviceProfileId);
         DeviceProfile deviceProfile = deviceProfileDao.findById(tenantId, deviceProfileId.getId());
@@ -271,7 +276,7 @@ public class DeviceProfileServiceImpl extends AbstractCachedEntityService<Device
         tenantDeviceProfilesRemover.removeEntities(tenantId, tenantId);
     }
 
-    private PaginatedRemover<TenantId, DeviceProfile> tenantDeviceProfilesRemover =
+    private final PaginatedRemover<TenantId, DeviceProfile> tenantDeviceProfilesRemover =
             new PaginatedRemover<>() {
 
                 @Override
@@ -280,12 +285,12 @@ public class DeviceProfileServiceImpl extends AbstractCachedEntityService<Device
                 }
 
                 @Override
-                protected void removeEntity(TenantId tenantId, DeviceProfile entity) {
+                protected void removeEntity(TenantId tenantId, @NotNull DeviceProfile entity) {
                     removeDeviceProfile(tenantId, entity);
                 }
             };
 
-    private DeviceProfileInfo toDeviceProfileInfo(DeviceProfile profile) {
+    private DeviceProfileInfo toDeviceProfileInfo(@Nullable DeviceProfile profile) {
         return profile == null ? null : new DeviceProfileInfo(profile.getId(), profile.getName(), profile.getImage(),
                 profile.getDefaultDashboardId(), profile.getType(), profile.getTransportType());
     }

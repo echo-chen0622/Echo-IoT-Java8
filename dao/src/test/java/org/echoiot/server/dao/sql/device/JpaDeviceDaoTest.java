@@ -17,6 +17,7 @@ import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.dao.AbstractJpaDaoTest;
 import org.echoiot.server.dao.device.DeviceDao;
 import org.echoiot.server.dao.device.DeviceProfileDao;
+import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,10 +46,10 @@ public class JpaDeviceDaoTest extends AbstractJpaDaoTest {
     UUID tenantId2;
     UUID customerId1;
     UUID customerId2;
-    @Autowired
+    @Resource
     private DeviceDao deviceDao;
 
-    @Autowired
+    @Resource
     private DeviceProfileDao deviceProfileDao;
 
     private DeviceProfile savedDeviceProfile;
@@ -68,7 +69,7 @@ public class JpaDeviceDaoTest extends AbstractJpaDaoTest {
     }
 
     private void createDeviceProfile() {
-        DeviceProfile deviceProfile = new DeviceProfile();
+        @NotNull DeviceProfile deviceProfile = new DeviceProfile();
         deviceProfile.setName("TEST");
         deviceProfile.setTenantId(TenantId.SYS_TENANT_ID);
         deviceProfile.setType(DeviceProfileType.DEFAULT);
@@ -100,10 +101,10 @@ public class JpaDeviceDaoTest extends AbstractJpaDaoTest {
 
     @Test
     public void testFindAsync() throws ExecutionException, InterruptedException, TimeoutException {
-        UUID tenantId = Uuids.timeBased();
-        UUID customerId = Uuids.timeBased();
+        @NotNull UUID tenantId = Uuids.timeBased();
+        @NotNull UUID customerId = Uuids.timeBased();
         // send to method getDevice() number = 40, because make random name is bad and name "SEARCH_TEXT_40" don't used
-        Device device = getDevice(tenantId, customerId, 40);
+        @NotNull Device device = getDevice(tenantId, customerId, 40);
         deviceIds.add(deviceDao.save(TenantId.fromUUID(tenantId), device).getUuidId());
 
         UUID uuid = device.getId().getId();
@@ -112,7 +113,7 @@ public class JpaDeviceDaoTest extends AbstractJpaDaoTest {
         assertEquals(uuid, entity.getId().getId());
 
         executor = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(10, EchoiotThreadFactory.forName(getClass().getSimpleName() + "-test-scope")));
-        ListenableFuture<Device> future = executor.submit(() -> deviceDao.findById(TenantId.fromUUID(tenantId), uuid));
+        @NotNull ListenableFuture<Device> future = executor.submit(() -> deviceDao.findById(TenantId.fromUUID(tenantId), uuid));
         Device asyncDevice = future.get(30, TimeUnit.SECONDS);
         assertNotNull("Async device expected to be not null", asyncDevice);
     }
@@ -131,8 +132,9 @@ public class JpaDeviceDaoTest extends AbstractJpaDaoTest {
         assertEquals(20, devices.size());
     }
 
+    @NotNull
     private List<UUID> createDevices(UUID tenantId1, UUID tenantId2, UUID customerId1, UUID customerId2, int count) {
-        List<UUID> savedDevicesUUID = new ArrayList<>();
+        @NotNull List<UUID> savedDevicesUUID = new ArrayList<>();
         for (int i = 0; i < count / 2; i++) {
             savedDevicesUUID.add(deviceDao.save(TenantId.fromUUID(tenantId1), getDevice(tenantId1, customerId1, i)).getUuidId());
             savedDevicesUUID.add(deviceDao.save(TenantId.fromUUID(tenantId2), getDevice(tenantId2, customerId2, i + count / 2)).getUuidId());
@@ -140,12 +142,14 @@ public class JpaDeviceDaoTest extends AbstractJpaDaoTest {
         return savedDevicesUUID;
     }
 
+    @NotNull
     private Device getDevice(UUID tenantId, UUID customerID, int number) {
         return getDevice(tenantId, customerID, Uuids.timeBased(), number);
     }
 
+    @NotNull
     private Device getDevice(UUID tenantId, UUID customerID, UUID deviceId, int number) {
-        Device device = new Device();
+        @NotNull Device device = new Device();
         device.setId(new DeviceId(deviceId));
         device.setTenantId(TenantId.fromUUID(tenantId));
         device.setCustomerId(new CustomerId(customerID));

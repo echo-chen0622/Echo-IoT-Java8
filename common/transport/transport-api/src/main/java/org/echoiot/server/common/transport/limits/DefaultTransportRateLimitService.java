@@ -2,6 +2,8 @@ package org.echoiot.server.common.transport.limits;
 
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.transport.profile.TenantProfileUpdateResult;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.echoiot.server.common.data.StringUtils;
@@ -49,6 +51,7 @@ public class DefaultTransportRateLimitService implements TransportRateLimitServi
         this.tenantProfileCache = tenantProfileCache;
     }
 
+    @Nullable
     @Override
     public EntityType checkLimits(TenantId tenantId, DeviceId deviceId, int dataPoints) {
         if (!tenantAllowed.getOrDefault(tenantId, Boolean.TRUE)) {
@@ -63,7 +66,7 @@ public class DefaultTransportRateLimitService implements TransportRateLimitServi
         return null;
     }
 
-    private boolean checkEntityRateLimit(int dataPoints, EntityTransportRateLimits tenantLimits) {
+    private boolean checkEntityRateLimit(int dataPoints, @NotNull EntityTransportRateLimits tenantLimits) {
         if (dataPoints > 0) {
             return tenantLimits.getTelemetryMsgRateLimit().tryConsume() && tenantLimits.getTelemetryDataPointsRateLimit().tryConsume(dataPoints);
         } else {
@@ -72,11 +75,11 @@ public class DefaultTransportRateLimitService implements TransportRateLimitServi
     }
 
     @Override
-    public void update(TenantProfileUpdateResult update) {
+    public void update(@NotNull TenantProfileUpdateResult update) {
         log.info("Received tenant profile update: {}", update.getProfile());
-        EntityTransportRateLimits tenantRateLimitPrototype = createRateLimits(update.getProfile(), true);
-        EntityTransportRateLimits deviceRateLimitPrototype = createRateLimits(update.getProfile(), false);
-        for (TenantId tenantId : update.getAffectedTenants()) {
+        @NotNull EntityTransportRateLimits tenantRateLimitPrototype = createRateLimits(update.getProfile(), true);
+        @NotNull EntityTransportRateLimits deviceRateLimitPrototype = createRateLimits(update.getProfile(), false);
+        for (@NotNull TenantId tenantId : update.getAffectedTenants()) {
             mergeLimits(tenantId, tenantRateLimitPrototype, perTenantLimits::get, perTenantLimits::put);
             tenantDevices.get(tenantId).forEach(deviceId -> {
                 mergeLimits(deviceId, deviceRateLimitPrototype, perDeviceLimits::get, perDeviceLimits::put);
@@ -85,9 +88,9 @@ public class DefaultTransportRateLimitService implements TransportRateLimitServi
     }
 
     @Override
-    public void update(TenantId tenantId) {
-        EntityTransportRateLimits tenantRateLimitPrototype = createRateLimits(tenantProfileCache.get(tenantId), true);
-        EntityTransportRateLimits deviceRateLimitPrototype = createRateLimits(tenantProfileCache.get(tenantId), false);
+    public void update(@NotNull TenantId tenantId) {
+        @NotNull EntityTransportRateLimits tenantRateLimitPrototype = createRateLimits(tenantProfileCache.get(tenantId), true);
+        @NotNull EntityTransportRateLimits deviceRateLimitPrototype = createRateLimits(tenantProfileCache.get(tenantId), false);
         mergeLimits(tenantId, tenantRateLimitPrototype, perTenantLimits::get, perTenantLimits::put);
         tenantDevices.get(tenantId).forEach(deviceId -> {
             mergeLimits(deviceId, deviceRateLimitPrototype, perDeviceLimits::get, perDeviceLimits::put);
@@ -112,21 +115,21 @@ public class DefaultTransportRateLimitService implements TransportRateLimitServi
     }
 
     @Override
-    public boolean checkAddress(InetSocketAddress address) {
+    public boolean checkAddress(@NotNull InetSocketAddress address) {
         if (!ipRateLimitsEnabled) {
             return true;
         }
-        var stats = ipMap.computeIfAbsent(address.getAddress(), a -> new InetAddressRateLimitStats());
+        @NotNull var stats = ipMap.computeIfAbsent(address.getAddress(), a -> new InetAddressRateLimitStats());
         return !stats.isBlocked() || (stats.getLastActivityTs() + ipBlockTimeout < System.currentTimeMillis());
     }
 
     @Override
-    public void onAuthSuccess(InetSocketAddress address) {
+    public void onAuthSuccess(@NotNull InetSocketAddress address) {
         if (!ipRateLimitsEnabled) {
             return;
         }
 
-        var stats = ipMap.computeIfAbsent(address.getAddress(), a -> new InetAddressRateLimitStats());
+        @NotNull var stats = ipMap.computeIfAbsent(address.getAddress(), a -> new InetAddressRateLimitStats());
         stats.getLock().lock();
         try {
             stats.setLastActivityTs(System.currentTimeMillis());
@@ -141,12 +144,12 @@ public class DefaultTransportRateLimitService implements TransportRateLimitServi
     }
 
     @Override
-    public void onAuthFailure(InetSocketAddress address) {
+    public void onAuthFailure(@NotNull InetSocketAddress address) {
         if (!ipRateLimitsEnabled) {
             return;
         }
 
-        var stats = ipMap.computeIfAbsent(address.getAddress(), a -> new InetAddressRateLimitStats());
+        @NotNull var stats = ipMap.computeIfAbsent(address.getAddress(), a -> new InetAddressRateLimitStats());
         stats.getLock().lock();
         try {
             stats.setLastActivityTs(System.currentTimeMillis());
@@ -168,7 +171,7 @@ public class DefaultTransportRateLimitService implements TransportRateLimitServi
         }
         long currentTime = System.currentTimeMillis();
         long expTime = currentTime - Math.max(sessionInactivityTimeout, ipBlockTimeout);
-        for (var entry : ipMap.entrySet()) {
+        for (@NotNull var entry : ipMap.entrySet()) {
             var stats = entry.getValue();
             if (stats.getLastActivityTs() < expTime) {
                 log.debug("[{}] IP address removed due to session inactivity timeout.", entry.getKey());
@@ -180,9 +183,9 @@ public class DefaultTransportRateLimitService implements TransportRateLimitServi
         }
     }
 
-    private <T extends EntityId> void mergeLimits(T entityId, EntityTransportRateLimits newRateLimits,
-                                                  Function<T, EntityTransportRateLimits> getFunction,
-                                                  BiConsumer<T, EntityTransportRateLimits> putFunction) {
+    private <T extends EntityId> void mergeLimits(@NotNull T entityId, @NotNull EntityTransportRateLimits newRateLimits,
+                                                  @NotNull Function<T, EntityTransportRateLimits> getFunction,
+                                                  @NotNull BiConsumer<T, EntityTransportRateLimits> putFunction) {
         EntityTransportRateLimits oldRateLimits = getFunction.apply(entityId);
         if (oldRateLimits == null) {
             if (EntityType.TENANT.equals(entityId.getEntityType())) {
@@ -192,7 +195,7 @@ public class DefaultTransportRateLimitService implements TransportRateLimitServi
             }
             putFunction.accept(entityId, newRateLimits);
         } else {
-            EntityTransportRateLimits updated = merge(oldRateLimits, newRateLimits);
+            @Nullable EntityTransportRateLimits updated = merge(oldRateLimits, newRateLimits);
             if (updated != null) {
                 if (EntityType.TENANT.equals(entityId.getEntityType())) {
                     log.info("[{}] Updated rate limits: {}", entityId, updated);
@@ -204,7 +207,8 @@ public class DefaultTransportRateLimitService implements TransportRateLimitServi
         }
     }
 
-    private EntityTransportRateLimits merge(EntityTransportRateLimits oldRateLimits, EntityTransportRateLimits newRateLimits) {
+    @Nullable
+    private EntityTransportRateLimits merge(@NotNull EntityTransportRateLimits oldRateLimits, @NotNull EntityTransportRateLimits newRateLimits) {
         boolean regularUpdate = !oldRateLimits.getRegularMsgRateLimit().getConfiguration().equals(newRateLimits.getRegularMsgRateLimit().getConfiguration());
         boolean telemetryMsgRateUpdate = !oldRateLimits.getTelemetryMsgRateLimit().getConfiguration().equals(newRateLimits.getTelemetryMsgRateLimit().getConfiguration());
         boolean telemetryDataPointUpdate = !oldRateLimits.getTelemetryDataPointsRateLimit().getConfiguration().equals(newRateLimits.getTelemetryDataPointsRateLimit().getConfiguration());
@@ -218,23 +222,26 @@ public class DefaultTransportRateLimitService implements TransportRateLimitServi
         }
     }
 
-    private EntityTransportRateLimits createRateLimits(TenantProfile tenantProfile, boolean tenant) {
+    @NotNull
+    private EntityTransportRateLimits createRateLimits(@NotNull TenantProfile tenantProfile, boolean tenant) {
         TenantProfileData profileData = tenantProfile.getProfileData();
         DefaultTenantProfileConfiguration profile = (DefaultTenantProfileConfiguration) profileData.getConfiguration();
         if (profile == null) {
             return new EntityTransportRateLimits(ALLOW, ALLOW, ALLOW);
         } else {
-            TransportRateLimit regularMsgRateLimit = newLimit(tenant ? profile.getTransportTenantMsgRateLimit() : profile.getTransportDeviceMsgRateLimit());
-            TransportRateLimit telemetryMsgRateLimit = newLimit(tenant ? profile.getTransportTenantTelemetryMsgRateLimit() : profile.getTransportDeviceTelemetryMsgRateLimit());
-            TransportRateLimit telemetryDpRateLimit = newLimit(tenant ? profile.getTransportTenantTelemetryDataPointsRateLimit() : profile.getTransportTenantTelemetryDataPointsRateLimit());
+            @NotNull TransportRateLimit regularMsgRateLimit = newLimit(tenant ? profile.getTransportTenantMsgRateLimit() : profile.getTransportDeviceMsgRateLimit());
+            @NotNull TransportRateLimit telemetryMsgRateLimit = newLimit(tenant ? profile.getTransportTenantTelemetryMsgRateLimit() : profile.getTransportDeviceTelemetryMsgRateLimit());
+            @NotNull TransportRateLimit telemetryDpRateLimit = newLimit(profile.getTransportTenantTelemetryDataPointsRateLimit());
             return new EntityTransportRateLimits(regularMsgRateLimit, telemetryMsgRateLimit, telemetryDpRateLimit);
         }
     }
 
-    private static TransportRateLimit newLimit(String config) {
+    @NotNull
+    private static TransportRateLimit newLimit(@NotNull String config) {
         return StringUtils.isEmpty(config) ? ALLOW : new SimpleTransportRateLimit(config);
     }
 
+    @NotNull
     private EntityTransportRateLimits getTenantRateLimits(TenantId tenantId) {
         EntityTransportRateLimits limits = perTenantLimits.get(tenantId);
         if (limits == null) {
@@ -244,6 +251,7 @@ public class DefaultTransportRateLimitService implements TransportRateLimitServi
         return limits;
     }
 
+    @NotNull
     private EntityTransportRateLimits getDeviceRateLimits(TenantId tenantId, DeviceId deviceId) {
         EntityTransportRateLimits limits = perDeviceLimits.get(deviceId);
         if (limits == null) {

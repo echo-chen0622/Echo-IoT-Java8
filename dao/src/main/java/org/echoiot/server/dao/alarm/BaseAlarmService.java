@@ -25,6 +25,7 @@ import org.echoiot.server.dao.entity.AbstractEntityService;
 import org.echoiot.server.dao.entity.EntityService;
 import org.echoiot.server.dao.service.DataValidator;
 import org.echoiot.server.dao.service.Validator;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,13 +50,13 @@ public class BaseAlarmService extends AbstractEntityService implements AlarmServ
     public static final String INCORRECT_TENANT_ID = "Incorrect tenantId ";
     public static final String INCORRECT_CUSTOMER_ID = "Incorrect customerId ";
 
-    @Autowired
+    @Resource
     private AlarmDao alarmDao;
 
-    @Autowired
+    @Resource
     private EntityService entityService;
 
-    @Autowired
+    @Resource
     private DataValidator<Alarm> alarmDataValidator;
 
     protected ExecutorService readResultsProcessingExecutor;
@@ -73,12 +74,12 @@ public class BaseAlarmService extends AbstractEntityService implements AlarmServ
     }
 
     @Override
-    public AlarmOperationResult createOrUpdateAlarm(Alarm alarm) {
+    public AlarmOperationResult createOrUpdateAlarm(@NotNull Alarm alarm) {
         return createOrUpdateAlarm(alarm, true);
     }
 
     @Override
-    public AlarmOperationResult createOrUpdateAlarm(Alarm alarm, boolean alarmCreationEnabled) {
+    public AlarmOperationResult createOrUpdateAlarm(@NotNull Alarm alarm, boolean alarmCreationEnabled) {
         alarmDataValidator.validate(alarm, Alarm::getTenantId);
         try {
             if (alarm.getStartTs() == 0L) {
@@ -89,7 +90,7 @@ public class BaseAlarmService extends AbstractEntityService implements AlarmServ
             }
             alarm.setCustomerId(entityService.fetchEntityCustomerId(alarm.getTenantId(), alarm.getOriginator()));
             if (alarm.getId() == null) {
-                Alarm existing = alarmDao.findLatestByOriginatorAndType(alarm.getTenantId(), alarm.getOriginator(), alarm.getType());
+                @org.jetbrains.annotations.Nullable Alarm existing = alarmDao.findLatestByOriginatorAndType(alarm.getTenantId(), alarm.getOriginator(), alarm.getType());
                 if (existing == null || existing.getStatus().isCleared()) {
                     if (!alarmCreationEnabled) {
                         throw new ApiUsageLimitsExceededException("Alarms creation is disabled");
@@ -112,35 +113,38 @@ public class BaseAlarmService extends AbstractEntityService implements AlarmServ
 
     @Override
     public PageData<AlarmData> findAlarmDataByQueryForEntities(TenantId tenantId,
-                                                               AlarmDataQuery query, Collection<EntityId> orderedEntityIds) {
+                                                               @NotNull AlarmDataQuery query, Collection<EntityId> orderedEntityIds) {
         validateId(tenantId, INCORRECT_TENANT_ID + tenantId);
         Validator.validateEntityDataPageLink(query.getPageLink());
         return alarmDao.findAlarmDataByQueryForEntities(tenantId, query, orderedEntityIds);
     }
 
+    @NotNull
     @Override
     @Transactional
-    public AlarmOperationResult deleteAlarm(TenantId tenantId, AlarmId alarmId) {
+    public AlarmOperationResult deleteAlarm(TenantId tenantId, @NotNull AlarmId alarmId) {
         log.debug("Deleting Alarm Id: {}", alarmId);
         Alarm alarm = alarmDao.findAlarmById(tenantId, alarmId.getId());
         if (alarm == null) {
             return new AlarmOperationResult(alarm, false);
         }
-        AlarmOperationResult result = new AlarmOperationResult(alarm, true, new ArrayList<>(getPropagationEntityIds(alarm)));
+        @NotNull AlarmOperationResult result = new AlarmOperationResult(alarm, true, new ArrayList<>(getPropagationEntityIds(alarm)));
         deleteEntityRelations(tenantId, alarm.getId());
         alarmDao.removeById(tenantId, alarm.getUuidId());
         return result;
     }
 
-    private AlarmOperationResult createAlarm(Alarm alarm) throws InterruptedException, ExecutionException {
+    @NotNull
+    private AlarmOperationResult createAlarm(@NotNull Alarm alarm) throws InterruptedException, ExecutionException {
         log.debug("New Alarm : {}", alarm);
         Alarm saved = alarmDao.save(alarm.getTenantId(), alarm);
-        List<EntityId> propagatedEntitiesList = createEntityAlarmRecords(saved);
+        @NotNull List<EntityId> propagatedEntitiesList = createEntityAlarmRecords(saved);
         return new AlarmOperationResult(saved, true, true, propagatedEntitiesList);
     }
 
-    private List<EntityId> createEntityAlarmRecords(Alarm alarm) throws InterruptedException, ExecutionException {
-        Set<EntityId> propagatedEntitiesSet = new LinkedHashSet<>();
+    @NotNull
+    private List<EntityId> createEntityAlarmRecords(@NotNull Alarm alarm) throws InterruptedException, ExecutionException {
+        @NotNull Set<EntityId> propagatedEntitiesSet = new LinkedHashSet<>();
         propagatedEntitiesSet.add(alarm.getOriginator());
         if (alarm.isPropagate()) {
             propagatedEntitiesSet.addAll(getRelatedEntities(alarm));
@@ -157,9 +161,10 @@ public class BaseAlarmService extends AbstractEntityService implements AlarmServ
         return new ArrayList<>(propagatedEntitiesSet);
     }
 
-    private Set<EntityId> getRelatedEntities(Alarm alarm) throws InterruptedException, ExecutionException {
-        EntityRelationsQuery query = new EntityRelationsQuery();
-        RelationsSearchParameters parameters = new RelationsSearchParameters(alarm.getOriginator(), EntitySearchDirection.TO, Integer.MAX_VALUE, false);
+    @NotNull
+    private Set<EntityId> getRelatedEntities(@NotNull Alarm alarm) throws InterruptedException, ExecutionException {
+        @NotNull EntityRelationsQuery query = new EntityRelationsQuery();
+        @NotNull RelationsSearchParameters parameters = new RelationsSearchParameters(alarm.getOriginator(), EntitySearchDirection.TO, Integer.MAX_VALUE, false);
         query.setParameters(parameters);
         List<String> propagateRelationTypes = alarm.getPropagateRelationTypes();
         Stream<EntityRelation> relations = relationService.findByQuery(alarm.getTenantId(), query).get().stream();
@@ -169,13 +174,14 @@ public class BaseAlarmService extends AbstractEntityService implements AlarmServ
         return relations.map(EntityRelation::getFrom).collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
-    private AlarmOperationResult updateAlarm(Alarm update) {
+    private AlarmOperationResult updateAlarm(@NotNull Alarm update) {
         alarmDataValidator.validate(update, Alarm::getTenantId);
         return getAndUpdate(update.getTenantId(), update.getId(),
                 (alarm) -> alarm == null ? null : updateAlarm(alarm, update));
     }
 
-    private AlarmOperationResult updateAlarm(Alarm oldAlarm, Alarm newAlarm) {
+    @NotNull
+    private AlarmOperationResult updateAlarm(@NotNull Alarm oldAlarm, @NotNull Alarm newAlarm) {
         boolean propagationEnabled = !oldAlarm.isPropagate() && newAlarm.isPropagate();
         boolean propagationToOwnerEnabled = !oldAlarm.isPropagateToOwner() && newAlarm.isPropagateToOwner();
         boolean propagationToTenantEnabled = !oldAlarm.isPropagateToTenant() && newAlarm.isPropagateToTenant();
@@ -194,8 +200,9 @@ public class BaseAlarmService extends AbstractEntityService implements AlarmServ
         return new AlarmOperationResult(result, true, propagatedEntitiesList);
     }
 
+    @NotNull
     @Override
-    public ListenableFuture<AlarmOperationResult> ackAlarm(TenantId tenantId, AlarmId alarmId, long ackTime) {
+    public ListenableFuture<AlarmOperationResult> ackAlarm(TenantId tenantId, @NotNull AlarmId alarmId, long ackTime) {
         return getAndUpdateAsync(tenantId, alarmId, new Function<Alarm, AlarmOperationResult>() {
             @Nullable
             @Override
@@ -203,8 +210,8 @@ public class BaseAlarmService extends AbstractEntityService implements AlarmServ
                 if (alarm == null || alarm.getStatus().isAck()) {
                     return new AlarmOperationResult(alarm, false);
                 } else {
-                    AlarmStatus oldStatus = alarm.getStatus();
-                    AlarmStatus newStatus = oldStatus.isCleared() ? AlarmStatus.CLEARED_ACK : AlarmStatus.ACTIVE_ACK;
+                    @NotNull AlarmStatus oldStatus = alarm.getStatus();
+                    @NotNull AlarmStatus newStatus = oldStatus.isCleared() ? AlarmStatus.CLEARED_ACK : AlarmStatus.ACTIVE_ACK;
                     alarm.setStatus(newStatus);
                     alarm.setAckTs(ackTime);
                     alarm = alarmDao.save(alarm.getTenantId(), alarm);
@@ -214,8 +221,9 @@ public class BaseAlarmService extends AbstractEntityService implements AlarmServ
         });
     }
 
+    @NotNull
     @Override
-    public ListenableFuture<AlarmOperationResult> clearAlarm(TenantId tenantId, AlarmId alarmId, JsonNode details, long clearTime) {
+    public ListenableFuture<AlarmOperationResult> clearAlarm(TenantId tenantId, @NotNull AlarmId alarmId, @org.jetbrains.annotations.Nullable JsonNode details, long clearTime) {
         return getAndUpdateAsync(tenantId, alarmId, new Function<Alarm, AlarmOperationResult>() {
             @Nullable
             @Override
@@ -223,8 +231,8 @@ public class BaseAlarmService extends AbstractEntityService implements AlarmServ
                 if (alarm == null || alarm.getStatus().isCleared()) {
                     return new AlarmOperationResult(alarm, false);
                 } else {
-                    AlarmStatus oldStatus = alarm.getStatus();
-                    AlarmStatus newStatus = oldStatus.isAck() ? AlarmStatus.CLEARED_ACK : AlarmStatus.CLEARED_UNACK;
+                    @NotNull AlarmStatus oldStatus = alarm.getStatus();
+                    @NotNull AlarmStatus newStatus = oldStatus.isAck() ? AlarmStatus.CLEARED_ACK : AlarmStatus.CLEARED_UNACK;
                     alarm.setStatus(newStatus);
                     alarm.setClearTs(clearTime);
                     if (details != null) {
@@ -238,26 +246,27 @@ public class BaseAlarmService extends AbstractEntityService implements AlarmServ
     }
 
     @Override
-    public Alarm findAlarmById(TenantId tenantId, AlarmId alarmId) {
+    public Alarm findAlarmById(TenantId tenantId, @NotNull AlarmId alarmId) {
         log.trace("Executing findAlarmById [{}]", alarmId);
         validateId(alarmId, "Incorrect alarmId " + alarmId);
         return alarmDao.findAlarmById(tenantId, alarmId.getId());
     }
 
     @Override
-    public ListenableFuture<Alarm> findAlarmByIdAsync(TenantId tenantId, AlarmId alarmId) {
+    public ListenableFuture<Alarm> findAlarmByIdAsync(TenantId tenantId, @NotNull AlarmId alarmId) {
         log.trace("Executing findAlarmByIdAsync [{}]", alarmId);
         validateId(alarmId, "Incorrect alarmId " + alarmId);
         return alarmDao.findAlarmByIdAsync(tenantId, alarmId.getId());
     }
 
+    @NotNull
     @Override
-    public ListenableFuture<AlarmInfo> findAlarmInfoByIdAsync(TenantId tenantId, AlarmId alarmId) {
+    public ListenableFuture<AlarmInfo> findAlarmInfoByIdAsync(TenantId tenantId, @NotNull AlarmId alarmId) {
         log.trace("Executing findAlarmInfoByIdAsync [{}]", alarmId);
         validateId(alarmId, "Incorrect alarmId " + alarmId);
         return Futures.transformAsync(alarmDao.findAlarmByIdAsync(tenantId, alarmId.getId()),
                 a -> {
-                    AlarmInfo alarmInfo = new AlarmInfo(a);
+                    @NotNull AlarmInfo alarmInfo = new AlarmInfo(a);
                     return Futures.transform(
                             entityService.fetchEntityNameAsync(tenantId, alarmInfo.getOriginator()), originatorName -> {
                                 alarmInfo.setOriginatorName(originatorName);
@@ -266,8 +275,9 @@ public class BaseAlarmService extends AbstractEntityService implements AlarmServ
                 }, MoreExecutors.directExecutor());
     }
 
+    @NotNull
     @Override
-    public ListenableFuture<PageData<AlarmInfo>> findAlarms(TenantId tenantId, AlarmQuery query) {
+    public ListenableFuture<PageData<AlarmInfo>> findAlarms(TenantId tenantId, @NotNull AlarmQuery query) {
         PageData<AlarmInfo> alarms = alarmDao.findAlarms(tenantId, query);
         if (query.getFetchOriginator() != null && query.getFetchOriginator().booleanValue()) {
             return fetchAlarmsOriginators(tenantId, alarms);
@@ -275,8 +285,9 @@ public class BaseAlarmService extends AbstractEntityService implements AlarmServ
         return Futures.immediateFuture(alarms);
     }
 
+    @NotNull
     @Override
-    public ListenableFuture<PageData<AlarmInfo>> findCustomerAlarms(TenantId tenantId, CustomerId customerId, AlarmQuery query) {
+    public ListenableFuture<PageData<AlarmInfo>> findCustomerAlarms(TenantId tenantId, CustomerId customerId, @NotNull AlarmQuery query) {
         PageData<AlarmInfo> alarms = alarmDao.findCustomerAlarms(tenantId, customerId, query);
         if (query.getFetchOriginator() != null && query.getFetchOriginator().booleanValue()) {
             return fetchAlarmsOriginators(tenantId, alarms);
@@ -284,9 +295,10 @@ public class BaseAlarmService extends AbstractEntityService implements AlarmServ
         return Futures.immediateFuture(alarms);
     }
 
-    private ListenableFuture<PageData<AlarmInfo>> fetchAlarmsOriginators(TenantId tenantId, PageData<AlarmInfo> alarms) {
-        List<ListenableFuture<AlarmInfo>> alarmFutures = new ArrayList<>(alarms.getData().size());
-        for (AlarmInfo alarmInfo : alarms.getData()) {
+    @NotNull
+    private ListenableFuture<PageData<AlarmInfo>> fetchAlarmsOriginators(TenantId tenantId, @NotNull PageData<AlarmInfo> alarms) {
+        @NotNull List<ListenableFuture<AlarmInfo>> alarmFutures = new ArrayList<>(alarms.getData().size());
+        for (@NotNull AlarmInfo alarmInfo : alarms.getData()) {
             alarmFutures.add(Futures.transform(
                     entityService.fetchEntityNameAsync(tenantId, alarmInfo.getOriginator()), originatorName -> {
                         if (originatorName == null) {
@@ -302,10 +314,11 @@ public class BaseAlarmService extends AbstractEntityService implements AlarmServ
                         alarms.hasNext()), MoreExecutors.directExecutor());
     }
 
+    @org.jetbrains.annotations.Nullable
     @Override
-    public AlarmSeverity findHighestAlarmSeverity(TenantId tenantId, EntityId entityId, AlarmSearchStatus alarmSearchStatus,
-                                                  AlarmStatus alarmStatus) {
-        Set<AlarmStatus> statusList = null;
+    public AlarmSeverity findHighestAlarmSeverity(TenantId tenantId, EntityId entityId, @org.jetbrains.annotations.Nullable AlarmSearchStatus alarmSearchStatus,
+                                                  @org.jetbrains.annotations.Nullable AlarmStatus alarmStatus) {
+        @org.jetbrains.annotations.Nullable Set<AlarmStatus> statusList = null;
         if (alarmSearchStatus != null) {
             statusList = alarmSearchStatus.getStatuses();
         } else if (alarmStatus != null) {
@@ -322,7 +335,8 @@ public class BaseAlarmService extends AbstractEntityService implements AlarmServ
         alarmDao.deleteEntityAlarmRecords(tenantId, entityId);
     }
 
-    private Alarm merge(Alarm existing, Alarm alarm) {
+    @NotNull
+    private Alarm merge(@NotNull Alarm existing, @NotNull Alarm alarm) {
         if (alarm.getStartTs() > existing.getEndTs()) {
             existing.setEndTs(alarm.getStartTs());
         }
@@ -356,7 +370,8 @@ public class BaseAlarmService extends AbstractEntityService implements AlarmServ
         return existing;
     }
 
-    private Set<EntityId> getPropagationEntityIds(Alarm alarm) {
+    @NotNull
+    private Set<EntityId> getPropagationEntityIds(@NotNull Alarm alarm) {
         if (alarm.isPropagate() || alarm.isPropagateToOwner() || alarm.isPropagateToTenant()) {
             List<EntityAlarm> entityAlarms = alarmDao.findEntityAlarmRecords(alarm.getTenantId(), alarm.getId());
             return entityAlarms.stream().map(EntityAlarm::getEntityId).collect(Collectors.toSet());
@@ -365,8 +380,8 @@ public class BaseAlarmService extends AbstractEntityService implements AlarmServ
         }
     }
 
-    private void createEntityAlarmRecord(TenantId tenantId, EntityId entityId, Alarm alarm) {
-        EntityAlarm entityAlarm = new EntityAlarm(tenantId, entityId, alarm.getCreatedTime(), alarm.getType(), alarm.getCustomerId(), alarm.getId());
+    private void createEntityAlarmRecord(TenantId tenantId, EntityId entityId, @NotNull Alarm alarm) {
+        @NotNull EntityAlarm entityAlarm = new EntityAlarm(tenantId, entityId, alarm.getCreatedTime(), alarm.getType(), alarm.getCustomerId(), alarm.getId());
         try {
             alarmDao.createEntityAlarmRecord(entityAlarm);
         } catch (Exception e) {
@@ -374,13 +389,14 @@ public class BaseAlarmService extends AbstractEntityService implements AlarmServ
         }
     }
 
-    private <T> ListenableFuture<T> getAndUpdateAsync(TenantId tenantId, AlarmId alarmId, Function<Alarm, T> function) {
+    @NotNull
+    private <T> ListenableFuture<T> getAndUpdateAsync(TenantId tenantId, @NotNull AlarmId alarmId, @NotNull Function<Alarm, T> function) {
         validateId(alarmId, "Alarm id should be specified!");
         ListenableFuture<Alarm> entity = alarmDao.findAlarmByIdAsync(tenantId, alarmId.getId());
         return Futures.transform(entity, function, readResultsProcessingExecutor);
     }
 
-    private <T> T getAndUpdate(TenantId tenantId, AlarmId alarmId, Function<Alarm, T> function) {
+    private <T> T getAndUpdate(TenantId tenantId, @NotNull AlarmId alarmId, @NotNull Function<Alarm, T> function) {
         validateId(alarmId, "Alarm id should be specified!");
         Alarm entity = alarmDao.findAlarmById(tenantId, alarmId.getId());
         return function.apply(entity);

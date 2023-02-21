@@ -19,6 +19,8 @@ import com.squareup.wire.schema.internal.parser.ProtoFileElement;
 import com.squareup.wire.schema.internal.parser.ProtoParser;
 import com.squareup.wire.schema.internal.parser.TypeElement;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,7 +33,8 @@ public class DynamicProtoUtils {
     public static final Location LOCATION = new Location("", "", -1, -1);
     public static final String PROTO_3_SYNTAX = "proto3";
 
-    public static Descriptors.Descriptor getDescriptor(String protoSchema, String schemaName) {
+    @Nullable
+    public static Descriptors.Descriptor getDescriptor(@NotNull String protoSchema, @NotNull String schemaName) {
         try {
             DynamicMessage.Builder builder = getDynamicMessageBuilder(protoSchema, schemaName);
             return builder.getDescriptorForType();
@@ -41,32 +44,32 @@ public class DynamicProtoUtils {
         }
     }
 
-    public static DynamicMessage.Builder getDynamicMessageBuilder(String protoSchema, String schemaName) {
-        ProtoFileElement protoFileElement = getProtoFileElement(protoSchema);
+    public static DynamicMessage.Builder getDynamicMessageBuilder(@NotNull String protoSchema, @NotNull String schemaName) {
+        @NotNull ProtoFileElement protoFileElement = getProtoFileElement(protoSchema);
         DynamicSchema dynamicSchema = getDynamicSchema(protoFileElement, schemaName);
-        String lastMsgName = getMessageTypes(protoFileElement.getTypes()).stream()
-                .map(MessageElement::getName).reduce((previous, last) -> last).get();
+        @NotNull String lastMsgName = getMessageTypes(protoFileElement.getTypes()).stream()
+                                                                                  .map(MessageElement::getName).reduce((previous, last) -> last).get();
         return dynamicSchema.newMessageBuilder(lastMsgName);
     }
 
-    public static DynamicSchema getDynamicSchema(ProtoFileElement protoFileElement, String schemaName) {
-        DynamicSchema.Builder schemaBuilder = DynamicSchema.newBuilder();
+    public static DynamicSchema getDynamicSchema(@NotNull ProtoFileElement protoFileElement, @NotNull String schemaName) {
+        @NotNull DynamicSchema.Builder schemaBuilder = DynamicSchema.newBuilder();
         schemaBuilder.setName(schemaName);
         schemaBuilder.setSyntax(PROTO_3_SYNTAX);
         schemaBuilder.setPackage(StringUtils.isNotEmpty(protoFileElement.getPackageName()) ?
                 protoFileElement.getPackageName() : schemaName.toLowerCase());
-        List<TypeElement> types = protoFileElement.getTypes();
-        List<MessageElement> messageTypes = getMessageTypes(types);
+        @NotNull List<TypeElement> types = protoFileElement.getTypes();
+        @NotNull List<MessageElement> messageTypes = getMessageTypes(types);
 
         if (!messageTypes.isEmpty()) {
-            List<EnumElement> enumTypes = getEnumElements(types);
+            @NotNull List<EnumElement> enumTypes = getEnumElements(types);
             if (!enumTypes.isEmpty()) {
                 enumTypes.forEach(enumElement -> {
                     EnumDefinition enumDefinition = getEnumDefinition(enumElement);
                     schemaBuilder.addEnumDefinition(enumDefinition);
                 });
             }
-            List<MessageDefinition> messageDefinitions = getMessageDefinitions(messageTypes);
+            @NotNull List<MessageDefinition> messageDefinitions = getMessageDefinitions(messageTypes);
             messageDefinitions.forEach(schemaBuilder::addMessageDefinition);
             try {
                 return schemaBuilder.build();
@@ -78,57 +81,62 @@ public class DynamicProtoUtils {
         }
     }
 
-    public static ProtoFileElement getProtoFileElement(String protoSchema) {
+    @NotNull
+    public static ProtoFileElement getProtoFileElement(@NotNull String protoSchema) {
         return new ProtoParser(LOCATION, protoSchema.toCharArray()).readProtoFile();
     }
 
-    public static String dynamicMsgToJson(Descriptors.Descriptor descriptor, byte[] payload) throws InvalidProtocolBufferException {
-        DynamicMessage dynamicMessage = DynamicMessage.parseFrom(descriptor, payload);
+    public static String dynamicMsgToJson(@NotNull Descriptors.Descriptor descriptor, byte[] payload) throws InvalidProtocolBufferException {
+        @NotNull DynamicMessage dynamicMessage = DynamicMessage.parseFrom(descriptor, payload);
         return JsonFormat.printer().includingDefaultValueFields().print(dynamicMessage);
     }
 
-    public static DynamicMessage jsonToDynamicMessage(DynamicMessage.Builder builder, String payload) throws InvalidProtocolBufferException {
+    @NotNull
+    public static DynamicMessage jsonToDynamicMessage(@NotNull DynamicMessage.Builder builder, String payload) throws InvalidProtocolBufferException {
         JsonFormat.parser().ignoringUnknownFields().merge(payload, builder);
         return builder.build();
     }
 
-    private static List<MessageElement> getMessageTypes(List<TypeElement> types) {
+    @NotNull
+    private static List<MessageElement> getMessageTypes(@NotNull List<TypeElement> types) {
         return types.stream()
                 .filter(typeElement -> typeElement instanceof MessageElement)
                 .map(typeElement -> (MessageElement) typeElement)
                 .collect(Collectors.toList());
     }
 
-    private static List<EnumElement> getEnumElements(List<TypeElement> types) {
+    @NotNull
+    private static List<EnumElement> getEnumElements(@NotNull List<TypeElement> types) {
         return types.stream()
                 .filter(typeElement -> typeElement instanceof EnumElement)
                 .map(typeElement -> (EnumElement) typeElement)
                 .collect(Collectors.toList());
     }
 
-    private static List<MessageDefinition> getMessageDefinitions(List<MessageElement> messageElementsList) {
+    @NotNull
+    private static List<MessageDefinition> getMessageDefinitions(@NotNull List<MessageElement> messageElementsList) {
         if (!messageElementsList.isEmpty()) {
-            List<MessageDefinition> messageDefinitions = new ArrayList<>();
+            @NotNull List<MessageDefinition> messageDefinitions = new ArrayList<>();
             messageElementsList.forEach(messageElement -> {
-                MessageDefinition.Builder messageDefinitionBuilder = MessageDefinition.newBuilder(messageElement.getName());
+                @NotNull MessageDefinition.Builder messageDefinitionBuilder = MessageDefinition.newBuilder(messageElement.getName());
 
-                List<TypeElement> nestedTypes = messageElement.getNestedTypes();
+                @NotNull List<TypeElement> nestedTypes = messageElement.getNestedTypes();
                 if (!nestedTypes.isEmpty()) {
-                    List<EnumElement> nestedEnumTypes = getEnumElements(nestedTypes);
+                    @NotNull List<EnumElement> nestedEnumTypes = getEnumElements(nestedTypes);
                     if (!nestedEnumTypes.isEmpty()) {
                         nestedEnumTypes.forEach(enumElement -> {
                             EnumDefinition nestedEnumDefinition = getEnumDefinition(enumElement);
                             messageDefinitionBuilder.addEnumDefinition(nestedEnumDefinition);
                         });
                     }
-                    List<MessageElement> nestedMessageTypes = getMessageTypes(nestedTypes);
-                    List<MessageDefinition> nestedMessageDefinitions = getMessageDefinitions(nestedMessageTypes);
+                    @NotNull List<MessageElement> nestedMessageTypes = getMessageTypes(nestedTypes);
+                    @NotNull List<MessageDefinition> nestedMessageDefinitions = getMessageDefinitions(nestedMessageTypes);
                     nestedMessageDefinitions.forEach(messageDefinitionBuilder::addMessageDefinition);
                 }
-                List<FieldElement> messageElementFields = messageElement.getFields();
-                List<OneOfElement> oneOfs = messageElement.getOneOfs();
+                @NotNull List<FieldElement> messageElementFields = messageElement.getFields();
+                @NotNull List<OneOfElement> oneOfs = messageElement.getOneOfs();
                 if (!oneOfs.isEmpty()) {
-                    for (OneOfElement oneOfelement : oneOfs) {
+                    for (@NotNull OneOfElement oneOfelement : oneOfs) {
                         MessageDefinition.OneofBuilder oneofBuilder = messageDefinitionBuilder.addOneof(oneOfelement.getName());
                         addMessageFieldsToTheOneOfDefinition(oneOfelement.getFields(), oneofBuilder);
                     }
@@ -144,9 +152,9 @@ public class DynamicProtoUtils {
         }
     }
 
-    private static EnumDefinition getEnumDefinition(EnumElement enumElement) {
-        List<EnumConstantElement> enumElementTypeConstants = enumElement.getConstants();
-        EnumDefinition.Builder enumDefinitionBuilder = EnumDefinition.newBuilder(enumElement.getName());
+    private static EnumDefinition getEnumDefinition(@NotNull EnumElement enumElement) {
+        @NotNull List<EnumConstantElement> enumElementTypeConstants = enumElement.getConstants();
+        @NotNull EnumDefinition.Builder enumDefinitionBuilder = EnumDefinition.newBuilder(enumElement.getName());
         if (!enumElementTypeConstants.isEmpty()) {
             enumElementTypeConstants.forEach(constantElement -> enumDefinitionBuilder.addValue(constantElement.getName(), constantElement.getTag()));
         }
@@ -154,9 +162,9 @@ public class DynamicProtoUtils {
     }
 
 
-    private static void addMessageFieldsToTheMessageDefinition(List<FieldElement> messageElementFields, MessageDefinition.Builder messageDefinitionBuilder) {
+    private static void addMessageFieldsToTheMessageDefinition(@NotNull List<FieldElement> messageElementFields, @NotNull MessageDefinition.Builder messageDefinitionBuilder) {
         messageElementFields.forEach(fieldElement -> {
-            String labelStr = null;
+            @Nullable String labelStr = null;
             if (fieldElement.getLabel() != null) {
                 labelStr = fieldElement.getLabel().name().toLowerCase();
             }
@@ -168,7 +176,7 @@ public class DynamicProtoUtils {
         });
     }
 
-    private static void addMessageFieldsToTheOneOfDefinition(List<FieldElement> oneOfsElementFields, MessageDefinition.OneofBuilder oneofBuilder) {
+    private static void addMessageFieldsToTheOneOfDefinition(@NotNull List<FieldElement> oneOfsElementFields, @NotNull MessageDefinition.OneofBuilder oneofBuilder) {
         oneOfsElementFields.forEach(fieldElement -> oneofBuilder.addField(
                 fieldElement.getType(),
                 fieldElement.getName(),
@@ -178,8 +186,8 @@ public class DynamicProtoUtils {
 
     // validation
 
-    public static void validateProtoSchema(String schema, String schemaName, String exceptionPrefix) throws IllegalArgumentException {
-        ProtoParser schemaParser = new ProtoParser(LOCATION, schema.toCharArray());
+    public static void validateProtoSchema(@NotNull String schema, String schemaName, String exceptionPrefix) throws IllegalArgumentException {
+        @NotNull ProtoParser schemaParser = new ProtoParser(LOCATION, schema.toCharArray());
         ProtoFileElement protoFileElement;
         try {
             protoFileElement = schemaParser.readProtoFile();
@@ -194,7 +202,7 @@ public class DynamicProtoUtils {
         checkTypeElements(schemaName, protoFileElement, exceptionPrefix);
     }
 
-    private static void checkProtoFileSyntax(String schemaName, ProtoFileElement protoFileElement) {
+    private static void checkProtoFileSyntax(String schemaName, @NotNull ProtoFileElement protoFileElement) {
         if (protoFileElement.getSyntax() == null || !protoFileElement.getSyntax().equals(Syntax.PROTO_3)) {
             throw new IllegalArgumentException("[Transport Configuration] invalid schema syntax: " + protoFileElement.getSyntax() +
                     " for " + schemaName + " provided! Only " + Syntax.PROTO_3 + " allowed!");
@@ -207,8 +215,8 @@ public class DynamicProtoUtils {
         }
     }
 
-    private static void checkTypeElements(String schemaName, ProtoFileElement protoFileElement, String exceptionPrefix) {
-        List<TypeElement> types = protoFileElement.getTypes();
+    private static void checkTypeElements(String schemaName, @NotNull ProtoFileElement protoFileElement, String exceptionPrefix) {
+        @NotNull List<TypeElement> types = protoFileElement.getTypes();
         if (!types.isEmpty()) {
             if (types.stream().noneMatch(typeElement -> typeElement instanceof MessageElement)) {
                 throw new IllegalArgumentException(invalidSchemaProvidedMessage(schemaName, exceptionPrefix) + " At least one Message definition should exists!");
@@ -221,10 +229,10 @@ public class DynamicProtoUtils {
         }
     }
 
-    private static void checkFieldElements(String schemaName, List<FieldElement> fieldElements, String exceptionPrefix) {
+    private static void checkFieldElements(String schemaName, @NotNull List<FieldElement> fieldElements, String exceptionPrefix) {
         if (!fieldElements.isEmpty()) {
             boolean hasRequiredLabel = fieldElements.stream().anyMatch(fieldElement -> {
-                Field.Label label = fieldElement.getLabel();
+                @Nullable Field.Label label = fieldElement.getLabel();
                 return label != null && label.equals(Field.Label.REQUIRED);
             });
             if (hasRequiredLabel) {
@@ -237,7 +245,7 @@ public class DynamicProtoUtils {
         }
     }
 
-    private static void checkEnumElements(String schemaName, List<EnumElement> enumTypes, String exceptionPrefix) {
+    private static void checkEnumElements(String schemaName, @NotNull List<EnumElement> enumTypes, String exceptionPrefix) {
         if (enumTypes.stream().anyMatch(enumElement -> !enumElement.getNestedTypes().isEmpty())) {
             throw new IllegalArgumentException(invalidSchemaProvidedMessage(schemaName, exceptionPrefix) + " Nested types in Enum definitions are not supported!");
         }
@@ -246,7 +254,7 @@ public class DynamicProtoUtils {
         }
     }
 
-    private static void checkMessageElements(String schemaName, List<MessageElement> messageElementsList, String exceptionPrefix) {
+    private static void checkMessageElements(String schemaName, @NotNull List<MessageElement> messageElementsList, String exceptionPrefix) {
         if (!messageElementsList.isEmpty()) {
             messageElementsList.forEach(messageElement -> {
                 checkProtoFileCommonSettings(schemaName, messageElement.getGroups().isEmpty(),
@@ -258,7 +266,7 @@ public class DynamicProtoUtils {
                 checkProtoFileCommonSettings(schemaName, messageElement.getReserveds().isEmpty(),
                         " Message definition reserved elements don't support!", exceptionPrefix);
                 checkFieldElements(schemaName, messageElement.getFields(), exceptionPrefix);
-                List<OneOfElement> oneOfs = messageElement.getOneOfs();
+                @NotNull List<OneOfElement> oneOfs = messageElement.getOneOfs();
                 if (!oneOfs.isEmpty()) {
                     oneOfs.forEach(oneOfElement -> {
                         checkProtoFileCommonSettings(schemaName, oneOfElement.getGroups().isEmpty(),
@@ -266,19 +274,20 @@ public class DynamicProtoUtils {
                         checkFieldElements(schemaName, oneOfElement.getFields(), exceptionPrefix);
                     });
                 }
-                List<TypeElement> nestedTypes = messageElement.getNestedTypes();
+                @NotNull List<TypeElement> nestedTypes = messageElement.getNestedTypes();
                 if (!nestedTypes.isEmpty()) {
-                    List<EnumElement> nestedEnumTypes = getEnumElements(nestedTypes);
+                    @NotNull List<EnumElement> nestedEnumTypes = getEnumElements(nestedTypes);
                     if (!nestedEnumTypes.isEmpty()) {
                         checkEnumElements(schemaName, nestedEnumTypes, exceptionPrefix);
                     }
-                    List<MessageElement> nestedMessageTypes = getMessageTypes(nestedTypes);
+                    @NotNull List<MessageElement> nestedMessageTypes = getMessageTypes(nestedTypes);
                     checkMessageElements(schemaName, nestedMessageTypes, exceptionPrefix);
                 }
             });
         }
     }
 
+    @NotNull
     public static String invalidSchemaProvidedMessage(String schemaName, String exceptionPrefix) {
         return exceptionPrefix + " invalid " + schemaName + " provided!";
     }

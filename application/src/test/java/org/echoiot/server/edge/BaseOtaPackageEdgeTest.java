@@ -9,6 +9,7 @@ import org.echoiot.server.common.data.ota.ChecksumAlgorithm;
 import org.echoiot.server.common.data.ota.OtaPackageType;
 import org.echoiot.server.gen.edge.v1.OtaPackageUpdateMsg;
 import org.echoiot.server.gen.edge.v1.UpdateMsgType;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.mock.web.MockMultipartFile;
@@ -25,7 +26,7 @@ abstract public class BaseOtaPackageEdgeTest extends AbstractEdgeTest {
     @Test
     public void testOtaPackages_usesUrl() throws Exception {
         // create ota package
-        SaveOtaPackageInfoRequest firmwareInfo = new SaveOtaPackageInfoRequest();
+        @NotNull SaveOtaPackageInfoRequest firmwareInfo = new SaveOtaPackageInfoRequest();
         firmwareInfo.setDeviceProfileId(thermostatDeviceProfile.getId());
         firmwareInfo.setType(FIRMWARE);
         firmwareInfo.setTitle("My firmware #1");
@@ -41,7 +42,7 @@ abstract public class BaseOtaPackageEdgeTest extends AbstractEdgeTest {
 
         AbstractMessage latestMessage = edgeImitator.getLatestMessage();
         Assert.assertTrue(latestMessage instanceof OtaPackageUpdateMsg);
-        OtaPackageUpdateMsg otaPackageUpdateMsg = (OtaPackageUpdateMsg) latestMessage;
+        @NotNull OtaPackageUpdateMsg otaPackageUpdateMsg = (OtaPackageUpdateMsg) latestMessage;
         Assert.assertEquals(UpdateMsgType.ENTITY_CREATED_RPC_MESSAGE, otaPackageUpdateMsg.getMsgType());
         Assert.assertEquals(savedFirmwareInfo.getUuidId().getMostSignificantBits(), otaPackageUpdateMsg.getIdMSB());
         Assert.assertEquals(savedFirmwareInfo.getUuidId().getLeastSignificantBits(), otaPackageUpdateMsg.getIdLSB());
@@ -75,7 +76,7 @@ abstract public class BaseOtaPackageEdgeTest extends AbstractEdgeTest {
     @Test
     public void testOtaPackages_hasData() throws Exception {
         // create ota package
-        SaveOtaPackageInfoRequest firmwareInfo = new SaveOtaPackageInfoRequest();
+        @NotNull SaveOtaPackageInfoRequest firmwareInfo = new SaveOtaPackageInfoRequest();
         firmwareInfo.setDeviceProfileId(thermostatDeviceProfile.getId());
         firmwareInfo.setType(FIRMWARE);
         firmwareInfo.setTitle("My firmware #2");
@@ -88,14 +89,14 @@ abstract public class BaseOtaPackageEdgeTest extends AbstractEdgeTest {
         edgeImitator.expectMessageAmount(1);
 
         OtaPackageInfo savedFirmwareInfo = doPost("/api/otaPackage", firmwareInfo, OtaPackageInfo.class);
-        MockMultipartFile testData = new MockMultipartFile("file", "firmware.bin", "image/png", ByteBuffer.wrap(new byte[]{1, 3, 5}).array());
+        @NotNull MockMultipartFile testData = new MockMultipartFile("file", "firmware.bin", "image/png", ByteBuffer.wrap(new byte[]{1, 3, 5}).array());
         savedFirmwareInfo = saveData("/api/otaPackage/" + savedFirmwareInfo.getId().getId().toString() + "?checksumAlgorithm={checksumAlgorithm}", testData, ChecksumAlgorithm.SHA256.name());
 
         Assert.assertTrue(edgeImitator.waitForMessages());
 
         AbstractMessage latestMessage = edgeImitator.getLatestMessage();
         Assert.assertTrue(latestMessage instanceof OtaPackageUpdateMsg);
-        OtaPackageUpdateMsg otaPackageUpdateMsg = (OtaPackageUpdateMsg) latestMessage;
+        @NotNull OtaPackageUpdateMsg otaPackageUpdateMsg = (OtaPackageUpdateMsg) latestMessage;
         Assert.assertEquals(UpdateMsgType.ENTITY_UPDATED_RPC_MESSAGE, otaPackageUpdateMsg.getMsgType());
         Assert.assertEquals(savedFirmwareInfo.getUuidId().getMostSignificantBits(), otaPackageUpdateMsg.getIdMSB());
         Assert.assertEquals(savedFirmwareInfo.getUuidId().getLeastSignificantBits(), otaPackageUpdateMsg.getIdLSB());
@@ -126,8 +127,8 @@ abstract public class BaseOtaPackageEdgeTest extends AbstractEdgeTest {
         Assert.assertEquals(savedFirmwareInfo.getUuidId().getLeastSignificantBits(), otaPackageUpdateMsg.getIdLSB());
     }
 
-    private OtaPackageInfo saveData(String urlTemplate, MockMultipartFile content, String... params) throws Exception {
-        MockMultipartHttpServletRequestBuilder postRequest = MockMvcRequestBuilders.multipart(urlTemplate, params);
+    private OtaPackageInfo saveData(@NotNull String urlTemplate, @NotNull MockMultipartFile content, String... params) throws Exception {
+        @NotNull MockMultipartHttpServletRequestBuilder postRequest = MockMvcRequestBuilders.multipart(urlTemplate, params);
         postRequest.file(content);
         setJwtToken(postRequest);
         return readResponse(mockMvc.perform(postRequest).andExpect(status().isOk()), OtaPackageInfo.class);

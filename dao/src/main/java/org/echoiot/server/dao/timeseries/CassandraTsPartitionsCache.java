@@ -2,12 +2,13 @@ package org.echoiot.server.dao.timeseries;
 
 import com.github.benmanes.caffeine.cache.AsyncLoadingCache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
 
 public class CassandraTsPartitionsCache {
 
-    private AsyncLoadingCache<CassandraPartitionCacheKey, Boolean> partitionsCache;
+    private final AsyncLoadingCache<CassandraPartitionCacheKey, Boolean> partitionsCache;
 
     public CassandraTsPartitionsCache(long maxCacheSize) {
         this.partitionsCache = Caffeine.newBuilder()
@@ -17,15 +18,15 @@ public class CassandraTsPartitionsCache {
                 });
     }
 
-    public boolean has(CassandraPartitionCacheKey key) {
+    public boolean has(@NotNull CassandraPartitionCacheKey key) {
         return partitionsCache.getIfPresent(key) != null;
     }
 
-    public void put(CassandraPartitionCacheKey key) {
+    public void put(@NotNull CassandraPartitionCacheKey key) {
         partitionsCache.put(key, CompletableFuture.completedFuture(true));
     }
 
-    public void invalidate(CassandraPartitionCacheKey key) {
+    public void invalidate(@NotNull CassandraPartitionCacheKey key) {
         partitionsCache.synchronous().invalidate(key);
     }
 }

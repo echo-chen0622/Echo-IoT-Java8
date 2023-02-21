@@ -8,6 +8,8 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.dao.tenant.TbTenantProfileCache;
 import org.echoiot.server.exception.EchoiotErrorResponseHandler;
 import org.echoiot.server.service.security.model.SecurityUser;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -32,10 +34,10 @@ import java.util.concurrent.ConcurrentMap;
 @Component
 public class RateLimitProcessingFilter extends OncePerRequestFilter {
 
-    @Autowired
+    @Resource
     private EchoiotErrorResponseHandler errorResponseHandler;
 
-    @Autowired
+    @Resource
     @Lazy
     private TbTenantProfileCache tenantProfileCache;
 
@@ -44,15 +46,15 @@ public class RateLimitProcessingFilter extends OncePerRequestFilter {
 
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-        SecurityUser user = getCurrentUser();
+        @Nullable SecurityUser user = getCurrentUser();
         if (user != null && !user.isSystemAdmin()) {
-            var profile = tenantProfileCache.get(user.getTenantId());
+            @Nullable var profile = tenantProfileCache.get(user.getTenantId());
             if (profile == null) {
                 log.debug("[{}] Failed to lookup tenant profile", user.getTenantId());
                 errorResponseHandler.handle(new BadCredentialsException("Failed to lookup tenant profile"), response);
                 return;
             }
-            var profileConfiguration = profile.getDefaultProfileConfiguration();
+            @Nullable var profileConfiguration = profile.getDefaultProfileConfiguration();
             if (!checkRateLimits(user.getTenantId(), profileConfiguration.getTenantServerRestLimitsConfiguration(), perTenantLimits, response)) {
                 return;
             }
@@ -75,7 +77,7 @@ public class RateLimitProcessingFilter extends OncePerRequestFilter {
         return false;
     }
 
-    private <I extends EntityId> boolean checkRateLimits(I ownerId, String rateLimitConfig, Map<I, TbRateLimits> rateLimitsMap, ServletResponse response) {
+    private <I extends EntityId> boolean checkRateLimits(@NotNull I ownerId, @NotNull String rateLimitConfig, @NotNull Map<I, TbRateLimits> rateLimitsMap, ServletResponse response) {
         if (StringUtils.isNotEmpty(rateLimitConfig)) {
             TbRateLimits rateLimits = rateLimitsMap.get(ownerId);
             if (rateLimits == null || !rateLimits.getConfiguration().equals(rateLimitConfig)) {
@@ -94,6 +96,7 @@ public class RateLimitProcessingFilter extends OncePerRequestFilter {
         return true;
     }
 
+    @Nullable
     protected SecurityUser getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof SecurityUser) {

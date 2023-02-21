@@ -10,6 +10,8 @@ import org.echoiot.server.dao.timeseries.TimeseriesService;
 import org.echoiot.server.dao.usagerecord.ApiUsageStateService;
 import org.echoiot.server.queue.discovery.PartitionService;
 import org.echoiot.server.service.executors.DbCallbackExecutorService;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,6 +47,7 @@ public class DefaultTbApiUsageStateServiceTest {
     @Mock
     DbCallbackExecutorService dbExecutor;
 
+    @NotNull
     TenantId tenantId = TenantId.fromUUID(UUID.fromString("00797a3b-7aeb-4b5b-b57a-c2a810d0f112"));
 
     DefaultTbApiUsageStateService service;
@@ -57,7 +60,7 @@ public class DefaultTbApiUsageStateServiceTest {
     @Test
     public void givenTenantIdFromEntityStatesMap_whenGetApiUsageState() {
         service.myUsageStates.put(tenantId, tenantUsageStateMock);
-        ApiUsageState tenantUsageState = service.getApiUsageState(tenantId);
+        @Nullable ApiUsageState tenantUsageState = service.getApiUsageState(tenantId);
         assertThat(tenantUsageState, is(tenantUsageStateMock.getApiUsageState()));
         Mockito.verify(service, never()).getOrFetchState(tenantId, tenantId);
     }

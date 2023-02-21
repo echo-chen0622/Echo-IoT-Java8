@@ -16,6 +16,7 @@ import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.resource.TbResourceService;
 import org.echoiot.server.service.security.permission.Operation;
 import org.echoiot.server.service.security.permission.Resource;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -56,22 +57,24 @@ import static org.echoiot.server.controller.ControllerConstants.UUID_WIKI_LINK;
 @RequiredArgsConstructor
 public class TbResourceController extends BaseController {
 
+    @NotNull
     private final TbResourceService tbResourceService;
 
     public static final String RESOURCE_ID = "resourceId";
 
+    @NotNull
     @ApiOperation(value = "Download Resource (downloadResource)", notes = "Download Resource based on the provided Resource Id." + SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
     @RequestMapping(value = "/resource/{resourceId}/download", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<org.springframework.core.io.Resource> downloadResource(@ApiParam(value = RESOURCE_ID_PARAM_DESCRIPTION)
+    public ResponseEntity<org.springframework.core.io.Resource> downloadResource(@NotNull @ApiParam(value = RESOURCE_ID_PARAM_DESCRIPTION)
                                                                                  @PathVariable(RESOURCE_ID) String strResourceId) throws EchoiotException {
         checkParameter(RESOURCE_ID, strResourceId);
         try {
-            TbResourceId resourceId = new TbResourceId(toUUID(strResourceId));
+            @NotNull TbResourceId resourceId = new TbResourceId(toUUID(strResourceId));
             TbResource tbResource = checkResourceId(resourceId, Operation.READ);
 
-            ByteArrayResource resource = new ByteArrayResource(Base64.getDecoder().decode(tbResource.getData().getBytes()));
+            @NotNull ByteArrayResource resource = new ByteArrayResource(Base64.getDecoder().decode(tbResource.getData().getBytes()));
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + tbResource.getFileName())
                     .header("x-filename", tbResource.getFileName())
@@ -90,11 +93,11 @@ public class TbResourceController extends BaseController {
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
     @RequestMapping(value = "/resource/info/{resourceId}", method = RequestMethod.GET)
     @ResponseBody
-    public TbResourceInfo getResourceInfoById(@ApiParam(value = RESOURCE_ID_PARAM_DESCRIPTION)
+    public TbResourceInfo getResourceInfoById(@NotNull @ApiParam(value = RESOURCE_ID_PARAM_DESCRIPTION)
                                               @PathVariable(RESOURCE_ID) String strResourceId) throws EchoiotException {
         checkParameter(RESOURCE_ID, strResourceId);
         try {
-            TbResourceId resourceId = new TbResourceId(toUUID(strResourceId));
+            @NotNull TbResourceId resourceId = new TbResourceId(toUUID(strResourceId));
             return checkResourceInfoId(resourceId, Operation.READ);
         } catch (Exception e) {
             throw handleException(e);
@@ -108,11 +111,11 @@ public class TbResourceController extends BaseController {
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
     @RequestMapping(value = "/resource/{resourceId}", method = RequestMethod.GET)
     @ResponseBody
-    public TbResource getResourceById(@ApiParam(value = RESOURCE_ID_PARAM_DESCRIPTION)
+    public TbResource getResourceById(@NotNull @ApiParam(value = RESOURCE_ID_PARAM_DESCRIPTION)
                                       @PathVariable(RESOURCE_ID) String strResourceId) throws EchoiotException {
         checkParameter(RESOURCE_ID, strResourceId);
         try {
-            TbResourceId resourceId = new TbResourceId(toUUID(strResourceId));
+            @NotNull TbResourceId resourceId = new TbResourceId(toUUID(strResourceId));
             return checkResourceId(resourceId, Operation.READ);
         } catch (Exception e) {
             throw handleException(e);
@@ -132,7 +135,7 @@ public class TbResourceController extends BaseController {
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
     @RequestMapping(value = "/resource", method = RequestMethod.POST)
     @ResponseBody
-    public TbResource saveResource(@ApiParam(value = "A JSON value representing the Resource.")
+    public TbResource saveResource(@NotNull @ApiParam(value = "A JSON value representing the Resource.")
                                    @RequestBody TbResource resource) throws Exception {
         resource.setTenantId(getTenantId());
         checkEntity(resource.getId(), resource, Resource.TB_RESOURCE);
@@ -154,10 +157,10 @@ public class TbResourceController extends BaseController {
                                                  @RequestParam(required = false) String textSearch,
                                                  @ApiParam(value = SORT_PROPERTY_DESCRIPTION, allowableValues = RESOURCE_SORT_PROPERTY_ALLOWABLE_VALUES)
                                                  @RequestParam(required = false) String sortProperty,
-                                                 @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
+                                                 @NotNull @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
                                                  @RequestParam(required = false) String sortOrder) throws EchoiotException {
         try {
-            PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
+            @NotNull PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
             if (Authority.SYS_ADMIN.equals(getCurrentUser().getAuthority())) {
                 return checkNotNull(resourceService.findTenantResourcesByTenantId(getTenantId(), pageLink));
             } else {
@@ -186,7 +189,7 @@ public class TbResourceController extends BaseController {
                                                      @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
                                                      @RequestParam(required = false) String sortOrder) throws EchoiotException {
         try {
-            PageLink pageLink = new PageLink(pageSize, page, textSearch);
+            @NotNull PageLink pageLink = new PageLink(pageSize, page, textSearch);
             return checkNotNull(resourceService.findLwM2mObjectPage(getTenantId(), sortProperty, sortOrder, pageLink));
         } catch (Exception e) {
             throw handleException(e);
@@ -218,10 +221,10 @@ public class TbResourceController extends BaseController {
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
     @RequestMapping(value = "/resource/{resourceId}", method = RequestMethod.DELETE)
     @ResponseBody
-    public void deleteResource(@ApiParam(value = RESOURCE_ID_PARAM_DESCRIPTION)
+    public void deleteResource(@NotNull @ApiParam(value = RESOURCE_ID_PARAM_DESCRIPTION)
                                @PathVariable("resourceId") String strResourceId) throws EchoiotException {
         checkParameter(RESOURCE_ID, strResourceId);
-        TbResourceId resourceId = new TbResourceId(toUUID(strResourceId));
+        @NotNull TbResourceId resourceId = new TbResourceId(toUUID(strResourceId));
         TbResource tbResource = checkResourceId(resourceId, Operation.DELETE);
         tbResourceService.delete(tbResource, getCurrentUser());
     }

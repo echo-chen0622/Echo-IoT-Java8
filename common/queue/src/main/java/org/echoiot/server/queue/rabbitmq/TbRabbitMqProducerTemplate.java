@@ -13,6 +13,8 @@ import org.echoiot.server.queue.TbQueueMsg;
 import org.echoiot.server.queue.TbQueueProducer;
 import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
 import org.echoiot.server.queue.common.DefaultTbQueueMsg;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.Set;
@@ -26,13 +28,14 @@ public class TbRabbitMqProducerTemplate<T extends TbQueueMsg> implements TbQueue
     private final Gson gson = new Gson();
     private final TbQueueAdmin admin;
     private final TbRabbitMqSettings rabbitMqSettings;
+    @NotNull
     private final ListeningExecutorService producerExecutor;
     private final Channel channel;
     private final Connection connection;
 
     private final Set<TopicPartitionInfo> topics = ConcurrentHashMap.newKeySet();
 
-    public TbRabbitMqProducerTemplate(TbQueueAdmin admin, TbRabbitMqSettings rabbitMqSettings, String defaultTopic) {
+    public TbRabbitMqProducerTemplate(TbQueueAdmin admin, @NotNull TbRabbitMqSettings rabbitMqSettings, String defaultTopic) {
         this.admin = admin;
         this.defaultTopic = defaultTopic;
         this.rabbitMqSettings = rabbitMqSettings;
@@ -63,9 +66,9 @@ public class TbRabbitMqProducerTemplate<T extends TbQueueMsg> implements TbQueue
     }
 
     @Override
-    public void send(TopicPartitionInfo tpi, T msg, TbQueueCallback callback) {
+    public void send(@NotNull TopicPartitionInfo tpi, @NotNull T msg, @Nullable TbQueueCallback callback) {
         createTopicIfNotExist(tpi);
-        AMQP.BasicProperties properties = new AMQP.BasicProperties();
+        @NotNull AMQP.BasicProperties properties = new AMQP.BasicProperties();
         try {
             channel.basicPublish(rabbitMqSettings.getExchangeName(), tpi.getFullTopicName(), properties, gson.toJson(new DefaultTbQueueMsg(msg)).getBytes());
             if (callback != null) {
@@ -100,7 +103,7 @@ public class TbRabbitMqProducerTemplate<T extends TbQueueMsg> implements TbQueue
         }
     }
 
-    private void createTopicIfNotExist(TopicPartitionInfo tpi) {
+    private void createTopicIfNotExist(@NotNull TopicPartitionInfo tpi) {
         if (topics.contains(tpi)) {
             return;
         }

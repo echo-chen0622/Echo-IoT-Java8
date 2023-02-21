@@ -16,6 +16,7 @@ import org.echoiot.server.transport.coap.CoapTestConfigProperties;
 import org.eclipse.californium.core.CoapResponse;
 import org.eclipse.californium.core.coap.CoAP;
 import org.eclipse.californium.elements.exception.ConnectorException;
+import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,14 +46,14 @@ public class CoapClaimDeviceTest extends AbstractCoapIntegrationTest {
     }
 
     protected void createCustomerAndUser() throws Exception {
-        Customer customer = new Customer();
+        @NotNull Customer customer = new Customer();
         customer.setTenantId(tenantId);
         customer.setTitle("Test Claiming Customer");
         savedCustomer = doPost("/api/customer", customer, Customer.class);
         assertNotNull(savedCustomer);
         assertEquals(tenantId, savedCustomer.getTenantId());
 
-        User user = new User();
+        @NotNull User user = new User();
         user.setAuthority(Authority.CUSTOMER_USER);
         user.setTenantId(tenantId);
         user.setCustomerId(savedCustomer.getId());
@@ -93,7 +94,7 @@ public class CoapClaimDeviceTest extends AbstractCoapIntegrationTest {
         validateClaimResponse(emptyPayload, client, payloadBytes, failurePayloadBytes);
     }
 
-    protected void validateClaimResponse(boolean emptyPayload, CoapTestClient client, byte[] payloadBytes, byte[] failurePayloadBytes) throws Exception {
+    protected void validateClaimResponse(boolean emptyPayload, @NotNull CoapTestClient client, byte[] payloadBytes, byte[] failurePayloadBytes) throws Exception {
         postClaimRequest(client, failurePayloadBytes);
 
         loginUser(customerAdmin.getName(), CUSTOMER_USER_PASSWORD);
@@ -129,7 +130,7 @@ public class CoapClaimDeviceTest extends AbstractCoapIntegrationTest {
         assertEquals(claimResponse, ClaimResponse.CLAIMED);
     }
 
-    private void postClaimRequest(CoapTestClient client, byte[] payload) throws IOException, ConnectorException {
+    private void postClaimRequest(@NotNull CoapTestClient client, byte[] payload) throws IOException, ConnectorException {
         CoapResponse coapResponse = client.postMethod(payload);
         assertEquals(CoAP.ResponseCode.CREATED, coapResponse.getCode());
     }

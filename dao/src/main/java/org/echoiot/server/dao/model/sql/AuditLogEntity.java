@@ -18,6 +18,7 @@ import org.echoiot.server.dao.model.BaseEntity;
 import org.echoiot.server.dao.model.BaseSqlEntity;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.util.mapping.JsonStringType;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -86,7 +87,7 @@ public class AuditLogEntity extends BaseSqlEntity<AuditLog> implements BaseEntit
         super();
     }
 
-    public AuditLogEntity(AuditLog auditLog) {
+    public AuditLogEntity(@NotNull AuditLog auditLog) {
         if (auditLog.getId() != null) {
             this.setUuid(auditLog.getId().getId());
         }
@@ -112,9 +113,10 @@ public class AuditLogEntity extends BaseSqlEntity<AuditLog> implements BaseEntit
         this.actionFailureDetails = auditLog.getActionFailureDetails();
     }
 
+    @NotNull
     @Override
     public AuditLog toData() {
-        AuditLog auditLog = new AuditLog(new AuditLogId(this.getUuid()));
+        @NotNull AuditLog auditLog = new AuditLog(new AuditLogId(this.getUuid()));
         auditLog.setCreatedTime(createdTime);
         if (tenantId != null) {
             auditLog.setTenantId(TenantId.fromUUID(tenantId));

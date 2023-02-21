@@ -25,6 +25,7 @@ import org.echoiot.server.service.sync.ie.importing.impl.MissingEntityException;
 import org.echoiot.server.service.sync.vc.LoadEntityException;
 import org.echoiot.server.service.sync.vc.data.EntitiesExportCtx;
 import org.echoiot.server.service.sync.vc.data.EntitiesImportCtx;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,8 +40,11 @@ public class DefaultEntitiesExportImportService implements EntitiesExportImportS
     private final Map<EntityType, EntityExportService<?, ?, ?>> exportServices = new HashMap<>();
     private final Map<EntityType, EntityImportService<?, ?, ?>> importServices = new HashMap<>();
 
+    @NotNull
     private final RelationService relationService;
+    @NotNull
     private final RateLimitService rateLimitService;
+    @NotNull
     private final TbNotificationEntityService entityNotificationService;
 
     protected static final List<EntityType> SUPPORTED_ENTITY_TYPES = List.of(
@@ -51,19 +55,20 @@ public class DefaultEntitiesExportImportService implements EntitiesExportImportS
 
 
     @Override
-    public <E extends ExportableEntity<I>, I extends EntityId> EntityExportData<E> exportEntity(EntitiesExportCtx<?> ctx, I entityId) throws EchoiotException {
+    public <E extends ExportableEntity<I>, I extends EntityId> EntityExportData<E> exportEntity(@NotNull EntitiesExportCtx<?> ctx, @NotNull I entityId) throws EchoiotException {
         if (!rateLimitService.checkEntityExportLimit(ctx.getTenantId())) {
             throw new EchoiotException("Rate limit for entities export is exceeded", EchoiotErrorCode.TOO_MANY_REQUESTS);
         }
 
         EntityType entityType = entityId.getEntityType();
-        EntityExportService<I, E, EntityExportData<E>> exportService = getExportService(entityType);
+        @NotNull EntityExportService<I, E, EntityExportData<E>> exportService = getExportService(entityType);
 
         return exportService.getExportData(ctx, entityId);
     }
 
+    @NotNull
     @Override
-    public <E extends ExportableEntity<I>, I extends EntityId> EntityImportResult<E> importEntity(EntitiesImportCtx ctx, EntityExportData<E> exportData) throws EchoiotException {
+    public <E extends ExportableEntity<I>, I extends EntityId> EntityImportResult<E> importEntity(@NotNull EntitiesImportCtx ctx, @NotNull EntityExportData<E> exportData) throws EchoiotException {
         if (!rateLimitService.checkEntityImportLimit(ctx.getTenantId())) {
             throw new EchoiotException("Rate limit for entities import is exceeded", EchoiotErrorCode.TOO_MANY_REQUESTS);
         }
@@ -72,7 +77,7 @@ public class DefaultEntitiesExportImportService implements EntitiesExportImportS
         }
 
         EntityType entityType = exportData.getEntityType();
-        EntityImportService<I, E, EntityExportData<E>> importService = getImportService(entityType);
+        @NotNull EntityImportService<I, E, EntityExportData<E>> importService = getImportService(entityType);
 
         EntityImportResult<E> importResult = importService.importEntity(ctx, exportData);
         ctx.putInternalId(exportData.getExternalId(), importResult.getSavedEntity().getId());
@@ -83,8 +88,8 @@ public class DefaultEntitiesExportImportService implements EntitiesExportImportS
     }
 
     @Override
-    public void saveReferencesAndRelations(EntitiesImportCtx ctx) throws EchoiotException {
-        for (Map.Entry<EntityId, ThrowingRunnable> callbackEntry : ctx.getReferenceCallbacks().entrySet()) {
+    public void saveReferencesAndRelations(@NotNull EntitiesImportCtx ctx) throws EchoiotException {
+        for (@NotNull Map.Entry<EntityId, ThrowingRunnable> callbackEntry : ctx.getReferenceCallbacks().entrySet()) {
             EntityId externalId = callbackEntry.getKey();
             ThrowingRunnable saveReferencesCallback = callbackEntry.getValue();
             try {
@@ -109,6 +114,7 @@ public class DefaultEntitiesExportImportService implements EntitiesExportImportS
     }
 
 
+    @NotNull
     @SuppressWarnings("unchecked")
     private <I extends EntityId, E extends ExportableEntity<I>, D extends EntityExportData<E>> EntityExportService<I, E, D> getExportService(EntityType entityType) {
         EntityExportService<?, ?, ?> exportService = exportServices.get(entityType);
@@ -118,6 +124,7 @@ public class DefaultEntitiesExportImportService implements EntitiesExportImportS
         return (EntityExportService<I, E, D>) exportService;
     }
 
+    @NotNull
     @SuppressWarnings("unchecked")
     private <I extends EntityId, E extends ExportableEntity<I>, D extends EntityExportData<E>> EntityImportService<I, E, D> getImportService(EntityType entityType) {
         EntityImportService<?, ?, ?> importService = importServices.get(entityType);
@@ -127,9 +134,9 @@ public class DefaultEntitiesExportImportService implements EntitiesExportImportS
         return (EntityImportService<I, E, D>) importService;
     }
 
-    @Autowired
+    @Resource
     private void setExportServices(DefaultEntityExportService<?, ?, ?> defaultExportService,
-                                   Collection<BaseEntityExportService<?, ?, ?>> exportServices) {
+                                   @NotNull Collection<BaseEntityExportService<?, ?, ?>> exportServices) {
         exportServices.stream()
                 .sorted(Comparator.comparing(exportService -> exportService.getSupportedEntityTypes().size(), Comparator.reverseOrder()))
                 .forEach(exportService -> {
@@ -142,8 +149,8 @@ public class DefaultEntitiesExportImportService implements EntitiesExportImportS
         });
     }
 
-    @Autowired
-    private void setImportServices(Collection<EntityImportService<?, ?, ?>> importServices) {
+    @Resource
+    private void setImportServices(@NotNull Collection<EntityImportService<?, ?, ?>> importServices) {
         importServices.forEach(entityImportService -> {
             this.importServices.put(entityImportService.getEntityType(), entityImportService);
         });

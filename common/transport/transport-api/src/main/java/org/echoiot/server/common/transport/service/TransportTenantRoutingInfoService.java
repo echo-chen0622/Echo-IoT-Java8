@@ -1,6 +1,7 @@
 package org.echoiot.server.common.transport.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Service;
 import org.echoiot.server.common.data.TenantProfile;
@@ -14,12 +15,13 @@ import org.echoiot.server.queue.discovery.TenantRoutingInfoService;
 @ConditionalOnExpression("'${service.type:null}'=='tb-transport'")
 public class TransportTenantRoutingInfoService implements TenantRoutingInfoService {
 
-    private TransportTenantProfileCache tenantProfileCache;
+    private final TransportTenantProfileCache tenantProfileCache;
 
     public TransportTenantRoutingInfoService(TransportTenantProfileCache tenantProfileCache) {
         this.tenantProfileCache = tenantProfileCache;
     }
 
+    @NotNull
     @Override
     public TenantRoutingInfo getRoutingInfo(TenantId tenantId) {
         TenantProfile profile = tenantProfileCache.get(tenantId);

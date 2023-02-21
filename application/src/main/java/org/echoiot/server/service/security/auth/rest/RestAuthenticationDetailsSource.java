@@ -1,5 +1,6 @@
 package org.echoiot.server.service.security.auth.rest;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.security.authentication.AuthenticationDetailsSource;
 
 import javax.servlet.http.HttpServletRequest;
@@ -7,7 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 public class RestAuthenticationDetailsSource implements
         AuthenticationDetailsSource<HttpServletRequest, RestAuthenticationDetails> {
 
-    public RestAuthenticationDetails buildDetails(HttpServletRequest context) {
+    @NotNull
+    public RestAuthenticationDetails buildDetails(@NotNull HttpServletRequest context) {
         return new RestAuthenticationDetails(context);
     }
 }

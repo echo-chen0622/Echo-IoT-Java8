@@ -10,6 +10,7 @@ import org.echoiot.server.queue.common.TbProtoQueueMsg;
 import org.echoiot.server.service.queue.processing.TbRuleEngineProcessingResult;
 import org.echoiot.server.common.msg.queue.RuleEngineException;
 import org.echoiot.server.gen.transport.TransportProtos.ToRuleEngineMsg;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -47,11 +48,11 @@ public class TbRuleEngineConsumerStats {
 
     private final String queueName;
 
-    public TbRuleEngineConsumerStats(String queueName, StatsFactory statsFactory) {
+    public TbRuleEngineConsumerStats(String queueName, @NotNull StatsFactory statsFactory) {
         this.queueName = queueName;
         this.statsFactory = statsFactory;
 
-        String statsKey = StatsType.RULE_ENGINE.getName() + "." + queueName;
+        @NotNull String statsKey = StatsType.RULE_ENGINE.getName() + "." + queueName;
         this.totalMsgCounter = statsFactory.createStatsCounter(statsKey, TOTAL_MSGS);
         this.successMsgCounter = statsFactory.createStatsCounter(statsKey, SUCCESSFUL_MSGS);
         this.timeoutMsgCounter = statsFactory.createStatsCounter(statsKey, TIMEOUT_MSGS);
@@ -72,7 +73,7 @@ public class TbRuleEngineConsumerStats {
         counters.add(failedIterationsCounter);
     }
 
-    public Timer getTimer(TenantId tenantId, String status){
+    public Timer getTimer(@NotNull TenantId tenantId, String status){
         return tenantMsgProcessTimers.computeIfAbsent(tenantId,
                 id -> statsFactory.createTimer(StatsType.RULE_ENGINE.getName() + "." + queueName,
                         "tenantId", tenantId.getId().toString(),
@@ -80,7 +81,7 @@ public class TbRuleEngineConsumerStats {
                 ));
     }
 
-    public void log(TbRuleEngineProcessingResult msg, boolean finalIterationForPack) {
+    public void log(@NotNull TbRuleEngineProcessingResult msg, boolean finalIterationForPack) {
         int success = msg.getSuccessMap().size();
         int pending = msg.getPendingMap().size();
         int failed = msg.getFailedMap().size();
@@ -115,11 +116,13 @@ public class TbRuleEngineConsumerStats {
         msg.getExceptionsMap().forEach(tenantExceptions::putIfAbsent);
     }
 
-    private TbTenantRuleEngineStats getTenantStats(TbProtoQueueMsg<ToRuleEngineMsg> m) {
+    @NotNull
+    private TbTenantRuleEngineStats getTenantStats(@NotNull TbProtoQueueMsg<ToRuleEngineMsg> m) {
         ToRuleEngineMsg reMsg = m.getValue();
         return tenantStats.computeIfAbsent(new UUID(reMsg.getTenantIdMSB(), reMsg.getTenantIdLSB()), TbTenantRuleEngineStats::new);
     }
 
+    @NotNull
     public ConcurrentMap<UUID, TbTenantRuleEngineStats> getTenantStats() {
         return tenantStats;
     }
@@ -128,6 +131,7 @@ public class TbRuleEngineConsumerStats {
         return queueName;
     }
 
+    @NotNull
     public ConcurrentMap<TenantId, RuleEngineException> getTenantExceptions() {
         return tenantExceptions;
     }
@@ -135,7 +139,7 @@ public class TbRuleEngineConsumerStats {
     public void printStats() {
         int total = totalMsgCounter.get();
         if (total > 0) {
-            StringBuilder stats = new StringBuilder();
+            @NotNull StringBuilder stats = new StringBuilder();
             counters.forEach(counter -> {
                 stats.append(counter.getName()).append(" = [").append(counter.get()).append("] ");
             });

@@ -7,6 +7,7 @@ import org.echoiot.server.common.data.relation.EntityRelationsQuery;
 import org.echoiot.server.common.data.relation.RelationEntityTypeFilter;
 import org.echoiot.server.common.data.relation.RelationsSearchParameters;
 import org.echoiot.server.common.data.EntityType;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
@@ -24,8 +25,9 @@ public class AssetSearchQuery {
     @ApiModelProperty(position = 2, value = "Array of asset types to filter the related entities (e.g. 'Building', 'Vehicle').")
     private List<String> assetTypes;
 
+    @NotNull
     public EntityRelationsQuery toEntitySearchQuery() {
-        EntityRelationsQuery query = new EntityRelationsQuery();
+        @NotNull EntityRelationsQuery query = new EntityRelationsQuery();
         query.setParameters(parameters);
         query.setFilters(
                 Collections.singletonList(new RelationEntityTypeFilter(relationType == null ? EntityRelation.CONTAINS_TYPE : relationType,

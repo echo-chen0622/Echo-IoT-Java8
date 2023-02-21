@@ -17,7 +17,7 @@ public class SortOrder {
         this.direction = direction;
     }
 
-    public static enum Direction {
+    public enum Direction {
         ASC, DESC
     }
 

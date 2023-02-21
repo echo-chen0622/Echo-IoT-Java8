@@ -6,6 +6,7 @@ import lombok.Data;
 import org.apache.commons.lang3.ClassUtils;
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.id.EntityId;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 
@@ -29,7 +30,7 @@ public class EntityLoadError implements Serializable {
         return EntityLoadError.builder().type("MISSING_REFERENCED_ENTITY").source(sourceId).target(targetId).build();
     }
 
-    public static EntityLoadError runtimeError(Throwable e) {
+    public static EntityLoadError runtimeError(@NotNull Throwable e) {
         String message = e.getMessage();
         if (StringUtils.isEmpty(message)) {
             message = "unexpected error (" + ClassUtils.getShortClassName(e.getClass()) + ")";

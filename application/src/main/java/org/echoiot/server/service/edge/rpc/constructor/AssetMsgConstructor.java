@@ -6,13 +6,15 @@ import org.echoiot.server.common.data.id.AssetId;
 import org.echoiot.server.gen.edge.v1.AssetUpdateMsg;
 import org.echoiot.server.gen.edge.v1.UpdateMsgType;
 import org.echoiot.server.queue.util.TbCoreComponent;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 @Component
 @TbCoreComponent
 public class AssetMsgConstructor {
 
-    public AssetUpdateMsg constructAssetUpdatedMsg(UpdateMsgType msgType, Asset asset) {
+    @NotNull
+    public AssetUpdateMsg constructAssetUpdatedMsg(UpdateMsgType msgType, @NotNull Asset asset) {
         AssetUpdateMsg.Builder builder = AssetUpdateMsg.newBuilder()
                 .setMsgType(msgType)
                 .setIdMSB(asset.getUuidId().getMostSignificantBits())
@@ -36,7 +38,8 @@ public class AssetMsgConstructor {
         return builder.build();
     }
 
-    public AssetUpdateMsg constructAssetDeleteMsg(AssetId assetId) {
+    @NotNull
+    public AssetUpdateMsg constructAssetDeleteMsg(@NotNull AssetId assetId) {
         return AssetUpdateMsg.newBuilder()
                 .setMsgType(UpdateMsgType.ENTITY_DELETED_RPC_MESSAGE)
                 .setIdMSB(assetId.getId().getMostSignificantBits())

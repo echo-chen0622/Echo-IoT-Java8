@@ -7,6 +7,7 @@ import org.echoiot.server.common.data.id.OAuth2ParamsId;
 import org.echoiot.server.common.data.oauth2.OAuth2Mobile;
 import org.echoiot.server.dao.model.BaseSqlEntity;
 import org.echoiot.server.dao.model.ModelConstants;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -32,7 +33,7 @@ public class OAuth2MobileEntity extends BaseSqlEntity<OAuth2Mobile> {
         super();
     }
 
-    public OAuth2MobileEntity(OAuth2Mobile mobile) {
+    public OAuth2MobileEntity(@NotNull OAuth2Mobile mobile) {
         if (mobile.getId() != null) {
             this.setUuid(mobile.getId().getId());
         }
@@ -44,9 +45,10 @@ public class OAuth2MobileEntity extends BaseSqlEntity<OAuth2Mobile> {
         this.appSecret = mobile.getAppSecret();
     }
 
+    @NotNull
     @Override
     public OAuth2Mobile toData() {
-        OAuth2Mobile mobile = new OAuth2Mobile();
+        @NotNull OAuth2Mobile mobile = new OAuth2Mobile();
         mobile.setId(new OAuth2MobileId(id));
         mobile.setCreatedTime(createdTime);
         mobile.setOauth2ParamsId(new OAuth2ParamsId(oauth2ParamsId));

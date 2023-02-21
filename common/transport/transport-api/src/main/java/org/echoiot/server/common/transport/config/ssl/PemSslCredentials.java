@@ -14,6 +14,9 @@ import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.bouncycastle.openssl.jcajce.JcePEMDecryptorProviderBuilder;
 import org.echoiot.server.common.data.ResourceUtils;
 import org.echoiot.server.common.data.StringUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -44,17 +47,18 @@ public class PemSslCredentials extends AbstractSslCredentials {
         return ResourceUtils.resourceExists(this, this.certFile);
     }
 
+    @NotNull
     @Override
     protected KeyStore loadKeyStore(boolean trustsOnly, char[] keyPasswordArray) throws IOException, GeneralSecurityException {
         if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null) {
             Security.addProvider(new BouncyCastleProvider());
         }
-        List<X509Certificate> certificates = new ArrayList<>();
-        PrivateKey privateKey = null;
-        JcaX509CertificateConverter certConverter = new JcaX509CertificateConverter();
-        JcaPEMKeyConverter keyConverter = new JcaPEMKeyConverter();
-        try (InputStream inStream = ResourceUtils.getInputStream(this, this.certFile)) {
-            try (PEMParser pemParser = new PEMParser(new InputStreamReader(inStream))) {
+        @NotNull List<X509Certificate> certificates = new ArrayList<>();
+        @Nullable PrivateKey privateKey = null;
+        @NotNull JcaX509CertificateConverter certConverter = new JcaX509CertificateConverter();
+        @NotNull JcaPEMKeyConverter keyConverter = new JcaPEMKeyConverter();
+        try (@NotNull InputStream inStream = ResourceUtils.getInputStream(this, this.certFile)) {
+            try (@NotNull PEMParser pemParser = new PEMParser(new InputStreamReader(inStream))) {
                 Object object;
                 while((object = pemParser.readObject()) != null) {
                     if (object instanceof X509CertificateHolder) {
@@ -73,8 +77,8 @@ public class PemSslCredentials extends AbstractSslCredentials {
         }
         if (privateKey == null && !StringUtils.isEmpty(this.keyFile)) {
             if (ResourceUtils.resourceExists(this, this.keyFile)) {
-                try (InputStream inStream = ResourceUtils.getInputStream(this, this.keyFile)) {
-                    try (PEMParser pemParser = new PEMParser(new InputStreamReader(inStream))) {
+                try (@NotNull InputStream inStream = ResourceUtils.getInputStream(this, this.keyFile)) {
+                    try (@NotNull PEMParser pemParser = new PEMParser(new InputStreamReader(inStream))) {
                         Object object;
                         while ((object = pemParser.readObject()) != null) {
                             if (object instanceof PEMEncryptedKeyPair) {
@@ -98,24 +102,25 @@ public class PemSslCredentials extends AbstractSslCredentials {
         if (privateKey == null && !trustsOnly) {
             throw new IllegalArgumentException("Unable to load private key neither from certFile: " + this.certFile + " nor from keyFile: " + this.keyFile);
         }
-        KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+        @NotNull KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
         keyStore.load(null);
         if (trustsOnly) {
-            List<Certificate> unique = certificates.stream().distinct().collect(Collectors.toList());
+            @NotNull List<Certificate> unique = certificates.stream().distinct().collect(Collectors.toList());
             for (int i = 0; i < unique.size(); i++) {
                 keyStore.setCertificateEntry("root-" + i, unique.get(i));
             }
         }
         if (privateKey != null) {
-            CertificateFactory factory = CertificateFactory.getInstance("X.509");
+            @NotNull CertificateFactory factory = CertificateFactory.getInstance("X.509");
             CertPath certPath = factory.generateCertPath(certificates);
             List<? extends Certificate> path = certPath.getCertificates();
-            Certificate[] x509Certificates = path.toArray(new Certificate[0]);
+            @NotNull Certificate[] x509Certificates = path.toArray(new Certificate[0]);
             keyStore.setKeyEntry(DEFAULT_KEY_ALIAS, privateKey, keyPasswordArray, x509Certificates);
         }
         return keyStore;
     }
 
+    @NotNull
     @Override
     public String getKeyAlias() {
         return DEFAULT_KEY_ALIAS;

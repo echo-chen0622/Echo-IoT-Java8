@@ -19,6 +19,7 @@ import org.echoiot.server.common.data.query.DynamicValue;
 import org.echoiot.server.common.data.query.DynamicValueSourceType;
 import org.echoiot.server.common.data.query.KeyFilterPredicate;
 import org.echoiot.server.common.data.query.SimpleKeyFilterPredicate;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -41,11 +42,11 @@ class ProfileState {
     private final Map<String, Map<AlarmSeverity, Set<AlarmConditionFilterKey>>> alarmCreateKeys = new HashMap<>();
     private final Map<String, Set<AlarmConditionFilterKey>> alarmClearKeys = new HashMap<>();
 
-    ProfileState(DeviceProfile deviceProfile) {
+    ProfileState(@NotNull DeviceProfile deviceProfile) {
         updateDeviceProfile(deviceProfile);
     }
 
-    void updateDeviceProfile(DeviceProfile deviceProfile) {
+    void updateDeviceProfile(@NotNull DeviceProfile deviceProfile) {
         this.deviceProfile = deviceProfile;
         alarmSettings.clear();
         alarmCreateKeys.clear();
@@ -53,11 +54,11 @@ class ProfileState {
         entityKeys.clear();
         if (deviceProfile.getProfileData().getAlarms() != null) {
             alarmSettings.addAll(deviceProfile.getProfileData().getAlarms());
-            for (DeviceProfileAlarm alarm : deviceProfile.getProfileData().getAlarms()) {
-                Map<AlarmSeverity, Set<AlarmConditionFilterKey>> createAlarmKeys = alarmCreateKeys.computeIfAbsent(alarm.getId(), id -> new HashMap<>());
+            for (@NotNull DeviceProfileAlarm alarm : deviceProfile.getProfileData().getAlarms()) {
+                @NotNull Map<AlarmSeverity, Set<AlarmConditionFilterKey>> createAlarmKeys = alarmCreateKeys.computeIfAbsent(alarm.getId(), id -> new HashMap<>());
                 alarm.getCreateRules().forEach(((severity, alarmRule) -> {
-                    var ruleKeys = createAlarmKeys.computeIfAbsent(severity, id -> new HashSet<>());
-                    for (var keyFilter : alarmRule.getCondition().getCondition()) {
+                    @NotNull var ruleKeys = createAlarmKeys.computeIfAbsent(severity, id -> new HashSet<>());
+                    for (@NotNull var keyFilter : alarmRule.getCondition().getCondition()) {
                         entityKeys.add(keyFilter.getKey());
                         ruleKeys.add(keyFilter.getKey());
                         addDynamicValuesRecursively(keyFilter.getPredicate(), entityKeys, ruleKeys);
@@ -69,8 +70,8 @@ class ProfileState {
                     }
                 }));
                 if (alarm.getClearRule() != null) {
-                    var clearAlarmKeys = alarmClearKeys.computeIfAbsent(alarm.getId(), id -> new HashSet<>());
-                    for (var keyFilter : alarm.getClearRule().getCondition().getCondition()) {
+                    @NotNull var clearAlarmKeys = alarmClearKeys.computeIfAbsent(alarm.getId(), id -> new HashSet<>());
+                    for (@NotNull var keyFilter : alarm.getClearRule().getCondition().getCondition()) {
                         entityKeys.add(keyFilter.getKey());
                         clearAlarmKeys.add(keyFilter.getKey());
                         addDynamicValuesRecursively(keyFilter.getPredicate(), entityKeys, clearAlarmKeys);
@@ -81,7 +82,7 @@ class ProfileState {
         }
     }
 
-    private void addScheduleDynamicValues(AlarmSchedule schedule) {
+    private void addScheduleDynamicValues(@NotNull AlarmSchedule schedule) {
         DynamicValue<String> dynamicValue = schedule.getDynamicValue();
         if (dynamicValue != null) {
             entityKeys.add(
@@ -91,7 +92,7 @@ class ProfileState {
         }
     }
 
-    private void addEntityKeysFromAlarmConditionSpec(AlarmRule alarmRule) {
+    private void addEntityKeysFromAlarmConditionSpec(@NotNull AlarmRule alarmRule) {
         AlarmConditionSpec spec = alarmRule.getCondition().getSpec();
         if (spec == null) {
             return;
@@ -99,7 +100,7 @@ class ProfileState {
         AlarmConditionSpecType specType = spec.getType();
         switch (specType) {
             case DURATION:
-                DurationAlarmConditionSpec duration = (DurationAlarmConditionSpec) spec;
+                @NotNull DurationAlarmConditionSpec duration = (DurationAlarmConditionSpec) spec;
                 if(duration.getPredicate().getDynamicValue() != null
                         && duration.getPredicate().getDynamicValue().getSourceAttribute() != null) {
                     entityKeys.add(
@@ -109,7 +110,7 @@ class ProfileState {
                 }
                 break;
             case REPEATING:
-                RepeatingAlarmConditionSpec repeating = (RepeatingAlarmConditionSpec) spec;
+                @NotNull RepeatingAlarmConditionSpec repeating = (RepeatingAlarmConditionSpec) spec;
                 if(repeating.getPredicate().getDynamicValue() != null
                         && repeating.getPredicate().getDynamicValue().getSourceAttribute() != null) {
                     entityKeys.add(
@@ -122,7 +123,7 @@ class ProfileState {
 
     }
 
-    private void addDynamicValuesRecursively(KeyFilterPredicate predicate, Set<AlarmConditionFilterKey> entityKeys, Set<AlarmConditionFilterKey> ruleKeys) {
+    private void addDynamicValuesRecursively(@NotNull KeyFilterPredicate predicate, @NotNull Set<AlarmConditionFilterKey> entityKeys, @NotNull Set<AlarmConditionFilterKey> ruleKeys) {
         switch (predicate.getType()) {
             case STRING:
             case NUMERIC:
@@ -131,13 +132,13 @@ class ProfileState {
                 if (value != null && (value.getSourceType() == DynamicValueSourceType.CURRENT_TENANT ||
                         value.getSourceType() == DynamicValueSourceType.CURRENT_CUSTOMER ||
                         value.getSourceType() == DynamicValueSourceType.CURRENT_DEVICE)) {
-                    AlarmConditionFilterKey entityKey = new AlarmConditionFilterKey(AlarmConditionKeyType.ATTRIBUTE, value.getSourceAttribute());
+                    @NotNull AlarmConditionFilterKey entityKey = new AlarmConditionFilterKey(AlarmConditionKeyType.ATTRIBUTE, value.getSourceAttribute());
                     entityKeys.add(entityKey);
                     ruleKeys.add(entityKey);
                 }
                 break;
             case COMPLEX:
-                for (KeyFilterPredicate child : ((ComplexFilterPredicate) predicate).getPredicates()) {
+                for (@NotNull KeyFilterPredicate child : ((ComplexFilterPredicate) predicate).getPredicates()) {
                     addDynamicValuesRecursively(child, entityKeys, ruleKeys);
                 }
                 break;
@@ -148,6 +149,7 @@ class ProfileState {
         return deviceProfile.getId();
     }
 
+    @NotNull
     Set<AlarmConditionFilterKey> getCreateAlarmKeys(String id, AlarmSeverity severity) {
         Map<AlarmSeverity, Set<AlarmConditionFilterKey>> sKeys = alarmCreateKeys.get(id);
         if (sKeys == null) {
@@ -162,6 +164,7 @@ class ProfileState {
         }
     }
 
+    @NotNull
     Set<AlarmConditionFilterKey> getClearAlarmKeys(String id) {
         Set<AlarmConditionFilterKey> keys = alarmClearKeys.get(id);
         if (keys == null) {

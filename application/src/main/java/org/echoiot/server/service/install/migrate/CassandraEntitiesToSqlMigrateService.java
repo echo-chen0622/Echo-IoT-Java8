@@ -5,14 +5,12 @@ import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.UUIDConverter;
 import org.echoiot.server.dao.cassandra.CassandraCluster;
 import org.echoiot.server.dao.util.NoSqlAnyDao;
-import org.echoiot.server.service.install.EntityDatabaseSchemaService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.util.Arrays;
 import java.util.List;
 
@@ -22,12 +20,9 @@ import static org.echoiot.server.service.install.migrate.CassandraToSqlColumn.*;
 @Profile("install")
 @NoSqlAnyDao
 @Slf4j
-public class CassandraEntitiesToSqlMigrateService implements EntitiesMigrateService {
+public class CassandraEntitiesToSqlMigrateService {
 
-    @Autowired
-    private EntityDatabaseSchemaService entityDatabaseSchemaService;
-
-    @Autowired
+    @Resource
     protected CassandraCluster cluster;
 
     @Value("${spring.datasource.url}")
@@ -39,23 +34,7 @@ public class CassandraEntitiesToSqlMigrateService implements EntitiesMigrateServ
     @Value("${spring.datasource.password}")
     protected String dbPassword;
 
-    @Override
-    public void migrate() throws Exception {
-        log.info("Performing migration of entities data from cassandra to SQL database ...");
-        entityDatabaseSchemaService.createDatabaseSchema(false);
-        try (Connection conn = DriverManager.getConnection(dbUrl, dbUserName, dbPassword)) {
-            conn.setAutoCommit(false);
-            for (CassandraToSqlTable table: tables) {
-                table.migrateToSql(cluster.getSession(), conn);
-            }
-        } catch (Exception e) {
-            log.error("Unexpected error during Echoiot entities data migration!", e);
-            throw e;
-        }
-        entityDatabaseSchemaService.createDatabaseIndexes();
-    }
-
-    private static List<CassandraToSqlTable> tables = Arrays.asList(
+    private static final List<CassandraToSqlTable> tables = Arrays.asList(
        new CassandraToSqlTable("admin_settings",
                 idColumn("id"),
                 stringColumn("key"),
@@ -86,7 +65,7 @@ public class CassandraEntitiesToSqlMigrateService implements EntitiesMigrateServ
                 stringColumn("additional_info")) {
             @Override
             protected boolean onConstraintViolation(List<CassandraToSqlColumnData[]> batchData,
-                                                    CassandraToSqlColumnData[] data, String constraint) {
+                                                    @NotNull CassandraToSqlColumnData[] data, @NotNull String constraint) {
                 if (constraint.equalsIgnoreCase("asset_name_unq_key")) {
                     this.handleUniqueNameViolation(data, "asset");
                     return true;
@@ -128,8 +107,8 @@ public class CassandraEntitiesToSqlMigrateService implements EntitiesMigrateServ
                 stringColumn("configuration_descriptor"),
                 stringColumn("actions")) {
             @Override
-            protected boolean onConstraintViolation(List<CassandraToSqlColumnData[]> batchData,
-                                                    CassandraToSqlColumnData[] data, String constraint) {
+            protected boolean onConstraintViolation(@NotNull List<CassandraToSqlColumnData[]> batchData,
+                                                    @NotNull CassandraToSqlColumnData[] data, @NotNull String constraint) {
                 if (constraint.equalsIgnoreCase("component_descriptor_clazz_key")) {
                     String clazz = this.getColumnData(data, "clazz").getValue();
                     log.warn("Found component_descriptor record with duplicate clazz [{}]. Record will be ignored!", clazz);
@@ -171,7 +150,7 @@ public class CassandraEntitiesToSqlMigrateService implements EntitiesMigrateServ
                 stringColumn("additional_info")) {
             @Override
             protected boolean onConstraintViolation(List<CassandraToSqlColumnData[]> batchData,
-                                                    CassandraToSqlColumnData[] data, String constraint) {
+                                                    @NotNull CassandraToSqlColumnData[] data, @NotNull String constraint) {
                 if (constraint.equalsIgnoreCase("device_name_unq_key")) {
                     this.handleUniqueNameViolation(data, "device");
                     return true;
@@ -214,7 +193,7 @@ public class CassandraEntitiesToSqlMigrateService implements EntitiesMigrateServ
                 stringColumn("additional_info")) {
             @Override
             protected boolean onConstraintViolation(List<CassandraToSqlColumnData[]> batchData,
-                                                    CassandraToSqlColumnData[] data, String constraint) {
+                                                    @NotNull CassandraToSqlColumnData[] data, @NotNull String constraint) {
                 if (constraint.equalsIgnoreCase("tb_user_email_key")) {
                     this.handleUniqueEmailViolation(data);
                     return true;
@@ -246,8 +225,8 @@ public class CassandraEntitiesToSqlMigrateService implements EntitiesMigrateServ
                 stringColumn("activate_token"),
                 stringColumn("reset_token")) {
             @Override
-            protected boolean onConstraintViolation(List<CassandraToSqlColumnData[]> batchData,
-                                                    CassandraToSqlColumnData[] data, String constraint) {
+            protected boolean onConstraintViolation(@NotNull List<CassandraToSqlColumnData[]> batchData,
+                                                    @NotNull CassandraToSqlColumnData[] data, @NotNull String constraint) {
                 if (constraint.equalsIgnoreCase("user_credentials_user_id_key")) {
                     String id = UUIDConverter.fromString(this.getColumnData(data, "id").getValue()).toString();
                     log.warn("Found user credentials record with duplicate user_id [id:[{}]]. Record will be ignored!", id);
@@ -302,5 +281,5 @@ public class CassandraEntitiesToSqlMigrateService implements EntitiesMigrateServ
                 bigintColumn("end_ts"),
                 stringColumn("search_text"),
                 stringColumn("additional_info"))
-    );
+                                                                         );
 }

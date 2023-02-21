@@ -1,10 +1,13 @@
 package org.echoiot.script.api;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class BlockedScriptInfo {
     private final long maxScriptBlockDurationMs;
+    @NotNull
     private final AtomicInteger counter;
     private long expirationTime;
 

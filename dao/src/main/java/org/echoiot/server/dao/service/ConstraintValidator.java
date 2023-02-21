@@ -8,6 +8,7 @@ import org.hibernate.validator.HibernateValidatorConfiguration;
 import org.hibernate.validator.cfg.ConstraintMapping;
 import org.echoiot.server.common.data.validation.Length;
 import org.echoiot.server.common.data.validation.NoXss;
+import org.jetbrains.annotations.NotNull;
 
 import javax.validation.Path;
 import javax.validation.Validation;
@@ -29,12 +30,13 @@ public class ConstraintValidator {
     }
 
     public static void validateFields(Object data, String errorPrefix) {
-        List<String> constraintsViolations = getConstraintsViolations(data);
+        @NotNull List<String> constraintsViolations = getConstraintsViolations(data);
         if (!constraintsViolations.isEmpty()) {
             throw new DataValidationException(errorPrefix + String.join(", ", constraintsViolations));
         }
     }
 
+    @NotNull
     public static List<String> getConstraintsViolations(Object data) {
         return fieldsValidator.validate(data).stream()
                 .map(constraintViolation -> {

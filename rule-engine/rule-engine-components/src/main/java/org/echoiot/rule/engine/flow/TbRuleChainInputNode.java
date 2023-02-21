@@ -10,6 +10,7 @@ import org.echoiot.rule.engine.api.util.TbNodeUtils;
 import org.echoiot.server.common.data.id.RuleChainId;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.msg.TbMsg;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
@@ -35,13 +36,13 @@ public class TbRuleChainInputNode implements TbNode {
     private RuleChainId ruleChainId;
 
     @Override
-    public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
+    public void init(TbContext ctx, @NotNull TbNodeConfiguration configuration) throws TbNodeException {
         this.config = TbNodeUtils.convert(configuration, TbRuleChainInputNodeConfiguration.class);
         this.ruleChainId = new RuleChainId(UUID.fromString(config.getRuleChainId()));
     }
 
     @Override
-    public void onMsg(TbContext ctx, TbMsg msg) {
+    public void onMsg(@NotNull TbContext ctx, TbMsg msg) {
         ctx.input(msg, ruleChainId);
     }
 

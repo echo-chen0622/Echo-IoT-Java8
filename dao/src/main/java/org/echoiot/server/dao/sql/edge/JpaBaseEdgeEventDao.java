@@ -5,6 +5,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.dao.model.sql.EdgeEventEntity;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -44,16 +45,22 @@ public class JpaBaseEdgeEventDao extends JpaAbstractSearchTextDao<EdgeEventEntit
 
     private final UUID systemTenantId = NULL_UUID;
 
+    @NotNull
     private final ScheduledLogExecutorComponent logExecutor;
 
+    @NotNull
     private final StatsFactory statsFactory;
 
+    @NotNull
     private final EdgeEventRepository edgeEventRepository;
 
+    @NotNull
     private final EdgeEventInsertRepository edgeEventInsertRepository;
 
+    @NotNull
     private final SqlPartitioningRepository partitioningRepository;
 
+    @NotNull
     private final JdbcTemplate jdbcTemplate;
 
     @Value("${sql.edge_events.batch_size:1000}")
@@ -75,6 +82,7 @@ public class JpaBaseEdgeEventDao extends JpaAbstractSearchTextDao<EdgeEventEntit
 
     private TbSqlBlockingQueueWrapper<EdgeEventEntity> queue;
 
+    @NotNull
     @Override
     protected Class<EdgeEventEntity> getEntityClass() {
         return EdgeEventEntity.class;
@@ -95,7 +103,7 @@ public class JpaBaseEdgeEventDao extends JpaAbstractSearchTextDao<EdgeEventEntit
                 .statsNamePrefix("edge.events")
                 .batchSortEnabled(true)
                 .build();
-        Function<EdgeEventEntity, Integer> hashcodeFunction = entity -> {
+        @NotNull Function<EdgeEventEntity, Integer> hashcodeFunction = entity -> {
             if (entity.getEntityId() != null) {
                 return entity.getEntityId().hashCode();
             } else {
@@ -116,10 +124,10 @@ public class JpaBaseEdgeEventDao extends JpaAbstractSearchTextDao<EdgeEventEntit
     }
 
     @Override
-    public ListenableFuture<Void> saveAsync(EdgeEvent edgeEvent) {
+    public ListenableFuture<Void> saveAsync(@NotNull EdgeEvent edgeEvent) {
         log.debug("Save edge event [{}] ", edgeEvent);
         if (edgeEvent.getId() == null) {
-            UUID timeBased = Uuids.timeBased();
+            @NotNull UUID timeBased = Uuids.timeBased();
             edgeEvent.setId(new EdgeEventId(timeBased));
             edgeEvent.setCreatedTime(Uuids.unixTimestamp(timeBased));
         } else if (edgeEvent.getCreatedTime() == 0L) {
@@ -137,7 +145,7 @@ public class JpaBaseEdgeEventDao extends JpaAbstractSearchTextDao<EdgeEventEntit
         return save(new EdgeEventEntity(edgeEvent));
     }
 
-    private ListenableFuture<Void> save(EdgeEventEntity entity) {
+    private ListenableFuture<Void> save(@NotNull EdgeEventEntity entity) {
         log.debug("Save edge event [{}] ", entity);
         if (entity.getTenantId() == null) {
             log.trace("Save system edge event with predefined id {}", systemTenantId);
@@ -155,8 +163,9 @@ public class JpaBaseEdgeEventDao extends JpaAbstractSearchTextDao<EdgeEventEntit
     }
 
 
+    @NotNull
     @Override
-    public PageData<EdgeEvent> findEdgeEvents(UUID tenantId, EdgeId edgeId, TimePageLink pageLink, boolean withTsUpdate) {
+    public PageData<EdgeEvent> findEdgeEvents(UUID tenantId, @NotNull EdgeId edgeId, @NotNull TimePageLink pageLink, boolean withTsUpdate) {
         if (withTsUpdate) {
             return DaoUtil.toPageData(
                     edgeEventRepository
@@ -195,9 +204,9 @@ public class JpaBaseEdgeEventDao extends JpaAbstractSearchTextDao<EdgeEventEntit
         long numberOfPartitions = (currentTime - startTime) / partitionStepInMs;
 
         if (numberOfPartitions > 1000) {
-            String error = "Please adjust your edge event partitioning configuration. Configuration with partition size " +
-                    "of " + partitionSizeInHours + " hours and corresponding TTL will use " + numberOfPartitions + " " +
-                    "(> 1000) partitions which is not recommended!";
+            @NotNull String error = "Please adjust your edge event partitioning configuration. Configuration with partition size " +
+                                    "of " + partitionSizeInHours + " hours and corresponding TTL will use " + numberOfPartitions + " " +
+                                    "(> 1000) partitions which is not recommended!";
             log.error(error);
             throw new RuntimeException(error);
         }

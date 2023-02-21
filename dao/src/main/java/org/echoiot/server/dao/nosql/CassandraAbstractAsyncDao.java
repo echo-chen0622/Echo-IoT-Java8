@@ -5,6 +5,7 @@ import com.google.common.util.concurrent.AsyncFunction;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import org.echoiot.common.util.EchoiotThreadFactory;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
@@ -31,7 +32,8 @@ public abstract class CassandraAbstractAsyncDao extends CassandraAbstractDao {
         }
     }
 
-    protected <T> ListenableFuture<T> getFuture(TbResultSetFuture future, java.util.function.Function<TbResultSet, T> transformer) {
+    @NotNull
+    protected <T> ListenableFuture<T> getFuture(@NotNull TbResultSetFuture future, @NotNull java.util.function.Function<TbResultSet, T> transformer) {
         return Futures.transform(future, new Function<TbResultSet, T>() {
             @Nullable
             @Override
@@ -41,7 +43,8 @@ public abstract class CassandraAbstractAsyncDao extends CassandraAbstractDao {
         }, readResultsProcessingExecutor);
     }
 
-    protected <T> ListenableFuture<T> getFutureAsync(TbResultSetFuture future, com.google.common.util.concurrent.AsyncFunction<TbResultSet, T> transformer) {
+    @NotNull
+    protected <T> ListenableFuture<T> getFutureAsync(@NotNull TbResultSetFuture future, @NotNull com.google.common.util.concurrent.AsyncFunction<TbResultSet, T> transformer) {
         return Futures.transformAsync(future, new AsyncFunction<TbResultSet, T>() {
             @Nullable
             @Override

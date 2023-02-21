@@ -3,6 +3,7 @@ package org.echoiot.server.service.install;
 import com.datastax.oss.driver.api.core.servererrors.InvalidQueryException;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.dao.util.NoSqlTsDao;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
@@ -13,12 +14,12 @@ import org.springframework.stereotype.Service;
 public class CassandraTsDatabaseUpgradeService extends AbstractCassandraDatabaseUpgradeService implements DatabaseTsUpgradeService {
 
     @Override
-    public void upgradeDatabase(String fromVersion) throws Exception {
+    public void upgradeDatabase(@NotNull String fromVersion) throws Exception {
         switch (fromVersion) {
             case "2.4.3":
                 log.info("Updating schema ...");
-                String updateTsKvTableStmt = "alter table ts_kv_cf add json_v text";
-                String updateTsKvLatestTableStmt = "alter table ts_kv_latest_cf add json_v text";
+                @NotNull String updateTsKvTableStmt = "alter table ts_kv_cf add json_v text";
+                @NotNull String updateTsKvLatestTableStmt = "alter table ts_kv_latest_cf add json_v text";
 
                 try {
                     log.info("Updating ts ...");

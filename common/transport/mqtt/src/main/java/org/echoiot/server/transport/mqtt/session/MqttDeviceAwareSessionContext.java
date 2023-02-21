@@ -2,6 +2,7 @@ package org.echoiot.server.transport.mqtt.session;
 
 import io.netty.handler.codec.mqtt.MqttQoS;
 import org.echoiot.server.common.transport.session.DeviceAwareSessionContext;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
@@ -25,12 +26,12 @@ public abstract class MqttDeviceAwareSessionContext extends DeviceAwareSessionCo
         return mqttQoSMap;
     }
 
-    public MqttQoS getQoSForTopic(String topic) {
-        List<Integer> qosList = mqttQoSMap.entrySet()
-                .stream()
-                .filter(entry -> entry.getKey().matches(topic))
-                .map(Map.Entry::getValue)
-                .collect(Collectors.toList());
+    public MqttQoS getQoSForTopic(@NotNull String topic) {
+        @NotNull List<Integer> qosList = mqttQoSMap.entrySet()
+                                                   .stream()
+                                                   .filter(entry -> entry.getKey().matches(topic))
+                                                   .map(Map.Entry::getValue)
+                                                   .collect(Collectors.toList());
         if (!qosList.isEmpty()) {
             return MqttQoS.valueOf(qosList.get(0));
         } else {

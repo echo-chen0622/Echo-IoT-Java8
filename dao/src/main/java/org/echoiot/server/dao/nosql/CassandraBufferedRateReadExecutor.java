@@ -3,6 +3,7 @@ package org.echoiot.server.dao.nosql;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.SettableFuture;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -35,9 +36,9 @@ public class CassandraBufferedRateReadExecutor extends AbstractBufferedRateExecu
             @Value("${cassandra.query.poll_ms:50}") long pollMs,
             @Value("${cassandra.query.tenant_rate_limits.print_tenant_names}") boolean printTenantNames,
             @Value("${cassandra.query.print_queries_freq:0}") int printQueriesFreq,
-            @Autowired StatsFactory statsFactory,
-            @Autowired EntityService entityService,
-            @Autowired TbTenantProfileCache tenantProfileCache) {
+            @NotNull @Resource StatsFactory statsFactory,
+            @Resource EntityService entityService,
+            @Resource TbTenantProfileCache tenantProfileCache) {
         super(queueLimit, concurrencyLimit, maxWaitTime, dispatcherThreads, callbackThreads, pollMs, printQueriesFreq, statsFactory,
                 entityService, tenantProfileCache, printTenantNames);
     }
@@ -53,23 +54,26 @@ public class CassandraBufferedRateReadExecutor extends AbstractBufferedRateExecu
         super.stop();
     }
 
+    @NotNull
     @Override
     public String getBufferName() {
         return BUFFER_NAME;
     }
 
+    @NotNull
     @Override
     protected SettableFuture<TbResultSet> create() {
         return SettableFuture.create();
     }
 
+    @NotNull
     @Override
     protected TbResultSetFuture wrap(CassandraStatementTask task, SettableFuture<TbResultSet> future) {
         return new TbResultSetFuture(future);
     }
 
     @Override
-    protected ListenableFuture<TbResultSet> execute(AsyncTaskContext<CassandraStatementTask, TbResultSet> taskCtx) {
+    protected ListenableFuture<TbResultSet> execute(@NotNull AsyncTaskContext<CassandraStatementTask, TbResultSet> taskCtx) {
         CassandraStatementTask task = taskCtx.getTask();
         return task.executeAsync(
                 statement ->

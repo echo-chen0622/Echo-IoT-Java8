@@ -10,6 +10,7 @@ import org.echoiot.server.common.data.HasTenantId;
 import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.data.id.RpcId;
 import org.echoiot.server.common.data.id.TenantId;
+import org.jetbrains.annotations.NotNull;
 
 @ApiModel
 @Data
@@ -39,7 +40,7 @@ public class Rpc extends BaseData<RpcId> implements HasTenantId {
         super(id);
     }
 
-    public Rpc(Rpc rpc) {
+    public Rpc(@NotNull Rpc rpc) {
         super(rpc);
         this.tenantId = rpc.getTenantId();
         this.deviceId = rpc.getDeviceId();

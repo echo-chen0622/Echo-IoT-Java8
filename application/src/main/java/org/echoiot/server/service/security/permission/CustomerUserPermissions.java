@@ -8,6 +8,7 @@ import org.echoiot.server.common.data.id.DashboardId;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.UserId;
 import org.echoiot.server.common.data.security.Authority;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import org.echoiot.server.service.security.model.SecurityUser;
 
@@ -33,7 +34,7 @@ public class CustomerUserPermissions extends AbstractPermissions {
 
     private static final PermissionChecker customerAlarmPermissionChecker = new PermissionChecker() {
         @Override
-        public boolean hasPermission(SecurityUser user, Operation operation, EntityId entityId, HasTenantId entity) {
+        public boolean hasPermission(@NotNull SecurityUser user, Operation operation, EntityId entityId, @NotNull HasTenantId entity) {
             if (!user.getTenantId().equals(entity.getTenantId())) {
                 return false;
             }
@@ -51,7 +52,7 @@ public class CustomerUserPermissions extends AbstractPermissions {
 
                 @Override
                 @SuppressWarnings("unchecked")
-                public boolean hasPermission(SecurityUser user, Operation operation, EntityId entityId, HasTenantId entity) {
+                public boolean hasPermission(@NotNull SecurityUser user, @NotNull Operation operation, EntityId entityId, @NotNull HasTenantId entity) {
 
                     if (!super.hasPermission(user, operation, entityId, entity)) {
                         return false;
@@ -71,7 +72,7 @@ public class CustomerUserPermissions extends AbstractPermissions {
 
                 @Override
                 @SuppressWarnings("unchecked")
-                public boolean hasPermission(SecurityUser user, Operation operation, EntityId entityId, HasTenantId entity) {
+                public boolean hasPermission(@NotNull SecurityUser user, Operation operation, EntityId entityId, HasTenantId entity) {
                     if (!super.hasPermission(user, operation, entityId, entity)) {
                         return false;
                     }
@@ -84,7 +85,7 @@ public class CustomerUserPermissions extends AbstractPermissions {
             new PermissionChecker.GenericPermissionChecker<DashboardId, DashboardInfo>(Operation.READ, Operation.READ_ATTRIBUTES, Operation.READ_TELEMETRY) {
 
                 @Override
-                public boolean hasPermission(SecurityUser user, Operation operation, DashboardId dashboardId, DashboardInfo dashboard) {
+                public boolean hasPermission(@NotNull SecurityUser user, Operation operation, DashboardId dashboardId, @NotNull DashboardInfo dashboard) {
 
                     if (!super.hasPermission(user, operation, dashboardId, dashboard)) {
                         return false;
@@ -100,7 +101,7 @@ public class CustomerUserPermissions extends AbstractPermissions {
     private static final PermissionChecker userPermissionChecker = new PermissionChecker<UserId, User>() {
 
         @Override
-        public boolean hasPermission(SecurityUser user, Operation operation, UserId userId, User userEntity) {
+        public boolean hasPermission(@NotNull SecurityUser user, Operation operation, UserId userId, @NotNull User userEntity) {
             if (!Authority.CUSTOMER_USER.equals(userEntity.getAuthority())) {
                 return false;
             }
@@ -113,7 +114,7 @@ public class CustomerUserPermissions extends AbstractPermissions {
 
         @Override
         @SuppressWarnings("unchecked")
-        public boolean hasPermission(SecurityUser user, Operation operation, EntityId entityId, HasTenantId entity) {
+        public boolean hasPermission(@NotNull SecurityUser user, Operation operation, EntityId entityId, @NotNull HasTenantId entity) {
             if (!super.hasPermission(user, operation, entityId, entity)) {
                 return false;
             }
@@ -129,7 +130,7 @@ public class CustomerUserPermissions extends AbstractPermissions {
 
         @Override
         @SuppressWarnings("unchecked")
-        public boolean hasPermission(SecurityUser user, Operation operation, EntityId entityId, HasTenantId entity) {
+        public boolean hasPermission(@NotNull SecurityUser user, Operation operation, EntityId entityId, @NotNull HasTenantId entity) {
             if (!super.hasPermission(user, operation, entityId, entity)) {
                 return false;
             }
@@ -144,7 +145,7 @@ public class CustomerUserPermissions extends AbstractPermissions {
 
         @Override
         @SuppressWarnings("unchecked")
-        public boolean hasPermission(SecurityUser user, Operation operation, EntityId entityId, HasTenantId entity) {
+        public boolean hasPermission(@NotNull SecurityUser user, Operation operation, EntityId entityId, @NotNull HasTenantId entity) {
             if (!super.hasPermission(user, operation, entityId, entity)) {
                 return false;
             }

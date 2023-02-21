@@ -11,6 +11,7 @@ import org.echoiot.server.queue.TbQueueRequestTemplate;
 import org.echoiot.server.queue.common.TbProtoJsQueueMsg;
 import org.echoiot.server.queue.common.TbProtoQueueMsg;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
@@ -72,11 +73,13 @@ public class RemoteJsInvokeService extends AbstractJsInvokeService {
         super(apiUsageStateClient, apiUsageClient);
     }
 
+    @NotNull
     @Override
     protected Executor getCallbackExecutor() {
         return callbackExecutor;
     }
 
+    @NotNull
     @Override
     protected String getStatsName() {
         return "Queue JS Invoke Stats";
@@ -87,7 +90,7 @@ public class RemoteJsInvokeService extends AbstractJsInvokeService {
         super.printStats();
     }
 
-    @Autowired
+    @Resource
     protected TbQueueRequestTemplate<TbProtoJsQueueMsg<JsInvokeProtos.RemoteJsRequest>, TbProtoQueueMsg<JsInvokeProtos.RemoteJsResponse>> requestTemplate;
 
     protected final Map<String, String> scriptHashToBodysMap = new ConcurrentHashMap<>();
@@ -107,21 +110,22 @@ public class RemoteJsInvokeService extends AbstractJsInvokeService {
         }
     }
 
+    @NotNull
     @Override
-    protected ListenableFuture<UUID> doEval(UUID scriptId, JsScriptInfo jsInfo, String scriptBody) {
-        JsInvokeProtos.JsCompileRequest jsRequest = JsInvokeProtos.JsCompileRequest.newBuilder()
-                .setScriptHash(jsInfo.getHash())
-                .setFunctionName(jsInfo.getFunctionName())
-                .setScriptBody(scriptBody).build();
+    protected ListenableFuture<UUID> doEval(@NotNull UUID scriptId, @NotNull JsScriptInfo jsInfo, String scriptBody) {
+        @NotNull JsInvokeProtos.JsCompileRequest jsRequest = JsInvokeProtos.JsCompileRequest.newBuilder()
+                                                                                            .setScriptHash(jsInfo.getHash())
+                                                                                            .setFunctionName(jsInfo.getFunctionName())
+                                                                                            .setScriptBody(scriptBody).build();
 
-        JsInvokeProtos.RemoteJsRequest jsRequestWrapper = JsInvokeProtos.RemoteJsRequest.newBuilder()
-                .setCompileRequest(jsRequest)
-                .build();
+        @NotNull JsInvokeProtos.RemoteJsRequest jsRequestWrapper = JsInvokeProtos.RemoteJsRequest.newBuilder()
+                                                                                                 .setCompileRequest(jsRequest)
+                                                                                                 .build();
 
         log.trace("Post compile request for scriptId [{}] (hash: {})", scriptId, jsInfo.getHash());
         ListenableFuture<TbProtoQueueMsg<JsInvokeProtos.RemoteJsResponse>> future = requestTemplate.send(new TbProtoJsQueueMsg<>(UUID.randomUUID(), jsRequestWrapper));
         return Futures.transform(future, response -> {
-            JsInvokeProtos.JsCompileResponse compilationResult = response.getValue().getCompileResponse();
+            @NotNull JsInvokeProtos.JsCompileResponse compilationResult = response.getValue().getCompileResponse();
             if (compilationResult.getSuccess()) {
                 scriptsLock.lock();
                 try {
@@ -139,17 +143,18 @@ public class RemoteJsInvokeService extends AbstractJsInvokeService {
         }, callbackExecutor);
     }
 
+    @NotNull
     @Override
-    protected ListenableFuture<Object> doInvokeFunction(UUID scriptId, JsScriptInfo jsInfo, Object[] args) {
+    protected ListenableFuture<Object> doInvokeFunction(UUID scriptId, @NotNull JsScriptInfo jsInfo, @NotNull Object[] args) {
         var scriptHash = jsInfo.getHash();
         String scriptBody = scriptHashToBodysMap.get(scriptHash);
         if (scriptBody == null) {
             return Futures.immediateFailedFuture(new RuntimeException("No script body found for script hash [" + scriptHash + "] (script id: [" + scriptId + "])"));
         }
 
-        JsInvokeProtos.RemoteJsRequest jsRequestWrapper = buildJsInvokeRequest(jsInfo, args, false, null);
+        @NotNull JsInvokeProtos.RemoteJsRequest jsRequestWrapper = buildJsInvokeRequest(jsInfo, args, false, null);
 
-        StopWatch stopWatch;
+        @Nullable StopWatch stopWatch;
         if (log.isTraceEnabled()) {
             stopWatch = new StopWatch();
             stopWatch.start();
@@ -157,14 +162,14 @@ public class RemoteJsInvokeService extends AbstractJsInvokeService {
             stopWatch = null;
         }
 
-        UUID requestKey = UUID.randomUUID();
+        @NotNull UUID requestKey = UUID.randomUUID();
         ListenableFuture<TbProtoQueueMsg<JsInvokeProtos.RemoteJsResponse>> future = requestTemplate.send(new TbProtoJsQueueMsg<>(requestKey, jsRequestWrapper));
         return Futures.transformAsync(future, response -> {
             if (log.isTraceEnabled()) {
                 stopWatch.stop();
                 log.trace("doInvokeFunction js-response took {}ms for uuid {}", stopWatch.getTotalTimeMillis(), response.getKey());
             }
-            JsInvokeProtos.JsInvokeResponse invokeResult = response.getValue().getInvokeResponse();
+            @NotNull JsInvokeProtos.JsInvokeResponse invokeResult = response.getValue().getInvokeResponse();
             if (invokeResult.getSuccess()) {
                 return Futures.immediateFuture(invokeResult.getResult());
             } else {
@@ -174,29 +179,30 @@ public class RemoteJsInvokeService extends AbstractJsInvokeService {
     }
 
     @NotNull
-    private JsInvokeProtos.RemoteJsRequest buildJsInvokeRequest(JsScriptInfo jsInfo, Object[] args, boolean includeScriptBody, String scriptBody) {
-        JsInvokeProtos.JsInvokeRequest.Builder jsRequestBuilder = JsInvokeProtos.JsInvokeRequest.newBuilder()
-                .setScriptHash(jsInfo.getHash())
-                .setFunctionName(jsInfo.getFunctionName())
-                .setTimeout((int) maxExecRequestsTimeout);
+    private JsInvokeProtos.RemoteJsRequest buildJsInvokeRequest(@NotNull JsScriptInfo jsInfo, @NotNull Object[] args, boolean includeScriptBody, String scriptBody) {
+        @NotNull JsInvokeProtos.JsInvokeRequest.Builder jsRequestBuilder = JsInvokeProtos.JsInvokeRequest.newBuilder()
+                                                                                                         .setScriptHash(jsInfo.getHash())
+                                                                                                         .setFunctionName(jsInfo.getFunctionName())
+                                                                                                         .setTimeout((int) maxExecRequestsTimeout);
         if (includeScriptBody) {
             jsRequestBuilder.setScriptBody(scriptBody);
         }
 
-        for (Object arg : args) {
+        for (@NotNull Object arg : args) {
             jsRequestBuilder.addArgs(arg.toString());
         }
 
-        JsInvokeProtos.RemoteJsRequest jsRequestWrapper = JsInvokeProtos.RemoteJsRequest.newBuilder()
-                .setInvokeRequest(jsRequestBuilder.build())
-                .build();
+        @NotNull JsInvokeProtos.RemoteJsRequest jsRequestWrapper = JsInvokeProtos.RemoteJsRequest.newBuilder()
+                                                                                                 .setInvokeRequest(jsRequestBuilder.build())
+                                                                                                 .build();
         return jsRequestWrapper;
     }
 
-    private ListenableFuture<Object> handleInvokeError(UUID requestKey, UUID scriptId, JsScriptInfo jsInfo,
-                                                       JsInvokeProtos.JsInvokeErrorCode errorCode, String errorDetails,
-                                                       String scriptBody, Object[] args) {
-        final RuntimeException e = new RuntimeException(errorDetails);
+    @NotNull
+    private ListenableFuture<Object> handleInvokeError(UUID requestKey, UUID scriptId, @NotNull JsScriptInfo jsInfo,
+                                                       @NotNull JsInvokeProtos.JsInvokeErrorCode errorCode, String errorDetails,
+                                                       @Nullable String scriptBody, @NotNull Object[] args) {
+        @NotNull final RuntimeException e = new RuntimeException(errorDetails);
         log.debug("[{}] Failed to invoke function due to [{}]: {}", scriptId, errorCode.name(), errorDetails);
         if (JsInvokeProtos.JsInvokeErrorCode.TIMEOUT_ERROR.equals(errorCode)) {
             throw new TbScriptException(scriptId, TbScriptException.ErrorCode.TIMEOUT, scriptBody, new TimeoutException());
@@ -205,11 +211,11 @@ public class RemoteJsInvokeService extends AbstractJsInvokeService {
         } else if (JsInvokeProtos.JsInvokeErrorCode.NOT_FOUND_ERROR.equals(errorCode)) {
             log.debug("[{}] Remote JS executor couldn't find the script", scriptId);
             if (scriptBody != null) {
-                JsInvokeProtos.RemoteJsRequest invokeRequestWithScriptBody = buildJsInvokeRequest(jsInfo, args, true, scriptBody);
+                @NotNull JsInvokeProtos.RemoteJsRequest invokeRequestWithScriptBody = buildJsInvokeRequest(jsInfo, args, true, scriptBody);
                 log.debug("[{}] Sending invoke request again with script body", scriptId);
                 ListenableFuture<TbProtoQueueMsg<JsInvokeProtos.RemoteJsResponse>> future = requestTemplate.send(new TbProtoJsQueueMsg<>(requestKey, invokeRequestWithScriptBody));
                 return Futures.transformAsync(future, response -> {
-                    JsInvokeProtos.JsInvokeResponse result = response.getValue().getInvokeResponse();
+                    @NotNull JsInvokeProtos.JsInvokeResponse result = response.getValue().getInvokeResponse();
                     if (result.getSuccess()) {
                         return Futures.immediateFuture(result.getResult());
                     } else {
@@ -222,19 +228,19 @@ public class RemoteJsInvokeService extends AbstractJsInvokeService {
     }
 
     @Override
-    protected void doRelease(UUID scriptId, JsScriptInfo jsInfo) throws Exception {
+    protected void doRelease(UUID scriptId, @NotNull JsScriptInfo jsInfo) throws Exception {
         String scriptHash = jsInfo.getHash();
         if (scriptInfoMap.values().stream().map(JsScriptInfo::getHash).anyMatch(hash -> hash.equals(scriptHash))) {
             return;
         }
 
-        JsInvokeProtos.JsReleaseRequest jsRequest = JsInvokeProtos.JsReleaseRequest.newBuilder()
-                .setScriptHash(scriptHash)
-                .setFunctionName(jsInfo.getFunctionName()).build();
+        @NotNull JsInvokeProtos.JsReleaseRequest jsRequest = JsInvokeProtos.JsReleaseRequest.newBuilder()
+                                                                                            .setScriptHash(scriptHash)
+                                                                                            .setFunctionName(jsInfo.getFunctionName()).build();
 
-        JsInvokeProtos.RemoteJsRequest jsRequestWrapper = JsInvokeProtos.RemoteJsRequest.newBuilder()
-                .setReleaseRequest(jsRequest)
-                .build();
+        @NotNull JsInvokeProtos.RemoteJsRequest jsRequestWrapper = JsInvokeProtos.RemoteJsRequest.newBuilder()
+                                                                                                 .setReleaseRequest(jsRequest)
+                                                                                                 .build();
 
         ListenableFuture<TbProtoQueueMsg<JsInvokeProtos.RemoteJsResponse>> future = requestTemplate.send(new TbProtoJsQueueMsg<>(UUID.randomUUID(), jsRequestWrapper));
         if (getMaxInvokeRequestsTimeout() > 0) {
@@ -242,7 +248,7 @@ public class RemoteJsInvokeService extends AbstractJsInvokeService {
         }
         JsInvokeProtos.RemoteJsResponse response = future.get().getValue();
 
-        JsInvokeProtos.JsReleaseResponse releaseResponse = response.getReleaseResponse();
+        @NotNull JsInvokeProtos.JsReleaseResponse releaseResponse = response.getReleaseResponse();
         if (releaseResponse.getSuccess()) {
             scriptsLock.lock();
             try {
@@ -257,10 +263,12 @@ public class RemoteJsInvokeService extends AbstractJsInvokeService {
         }
     }
 
+    @NotNull
     protected String constructFunctionName(UUID scriptId, String scriptHash) {
         return "invokeInternal_" + scriptHash;
     }
 
+    @Nullable
     protected String getScriptHash(UUID scriptId) {
         JsScriptInfo jsScriptInfo = scriptInfoMap.get(scriptId);
         return jsScriptInfo != null ? jsScriptInfo.getHash() : null;

@@ -2,6 +2,7 @@ package org.echoiot.server.dao.sql.oauth2;
 
 import lombok.RequiredArgsConstructor;
 import org.echoiot.server.dao.model.sql.OAuth2ParamsEntity;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 import org.echoiot.server.common.data.oauth2.OAuth2Params;
@@ -15,8 +16,10 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @SqlDao
 public class JpaOAuth2ParamsDao extends JpaAbstractDao<OAuth2ParamsEntity, OAuth2Params> implements OAuth2ParamsDao {
+    @NotNull
     private final OAuth2ParamsRepository repository;
 
+    @NotNull
     @Override
     protected Class<OAuth2ParamsEntity> getEntityClass() {
         return OAuth2ParamsEntity.class;

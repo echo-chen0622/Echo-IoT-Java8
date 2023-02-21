@@ -1,5 +1,7 @@
 package org.echoiot.server.common.data.page;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -19,6 +21,7 @@ public abstract class BasePageDataIterable<T> implements Iterable<T>, Iterator<T
         this.fetchSize = fetchSize;
     }
 
+    @NotNull
     @Override
     public Iterator<T> iterator() {
         return this;
@@ -46,7 +49,7 @@ public abstract class BasePageDataIterable<T> implements Iterable<T>, Iterator<T
         return currentItems.get(currentIdx++);
     }
 
-    private void fetch(PageLink link) {
+    private void fetch(@NotNull PageLink link) {
         PageData<T> pageData = fetchPageData(link);
         currentIdx = 0;
         currentItems = pageData.getData();

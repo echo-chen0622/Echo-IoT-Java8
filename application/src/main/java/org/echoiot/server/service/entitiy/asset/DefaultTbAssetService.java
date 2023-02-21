@@ -20,6 +20,8 @@ import org.echoiot.server.dao.asset.AssetService;
 import org.echoiot.server.dao.asset.BaseAssetService;
 import org.echoiot.server.service.entitiy.AbstractTbEntityService;
 import org.echoiot.server.service.profile.TbAssetProfileCache;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,12 +30,15 @@ import java.util.List;
 @AllArgsConstructor
 public class DefaultTbAssetService extends AbstractTbEntityService implements TbAssetService {
 
+    @NotNull
     private final AssetService assetService;
+    @NotNull
     private final TbAssetProfileCache assetProfileCache;
 
+    @NotNull
     @Override
-    public Asset save(Asset asset, User user) throws Exception {
-        ActionType actionType = asset.getId() == null ? ActionType.ADDED : ActionType.UPDATED;
+    public Asset save(@NotNull Asset asset, User user) throws Exception {
+        @NotNull ActionType actionType = asset.getId() == null ? ActionType.ADDED : ActionType.UPDATED;
         TenantId tenantId = asset.getTenantId();
         try {
             if (BaseAssetService.TB_SERVICE_QUEUE.equals(asset.getType())) {
@@ -58,11 +63,11 @@ public class DefaultTbAssetService extends AbstractTbEntityService implements Tb
     }
 
     @Override
-    public ListenableFuture<Void> delete(Asset asset, User user) {
+    public ListenableFuture<Void> delete(@NotNull Asset asset, User user) {
         TenantId tenantId = asset.getTenantId();
         AssetId assetId = asset.getId();
         try {
-            List<EdgeId> relatedEdgeIds = edgeService.findAllRelatedEdgeIds(tenantId, assetId);
+            @Nullable List<EdgeId> relatedEdgeIds = edgeService.findAllRelatedEdgeIds(tenantId, assetId);
             assetService.deleteAsset(tenantId, assetId);
             notificationEntityService.notifyDeleteEntity(tenantId, assetId, asset, asset.getCustomerId(),
                     ActionType.DELETED, relatedEdgeIds, user, assetId.toString());
@@ -76,8 +81,8 @@ public class DefaultTbAssetService extends AbstractTbEntityService implements Tb
     }
 
     @Override
-    public Asset assignAssetToCustomer(TenantId tenantId, AssetId assetId, Customer customer, User user) throws EchoiotException {
-        ActionType actionType = ActionType.ASSIGNED_TO_CUSTOMER;
+    public Asset assignAssetToCustomer(TenantId tenantId, @NotNull AssetId assetId, @NotNull Customer customer, User user) throws EchoiotException {
+        @NotNull ActionType actionType = ActionType.ASSIGNED_TO_CUSTOMER;
         CustomerId customerId = customer.getId();
         try {
             Asset savedAsset = checkNotNull(assetService.assignAssetToCustomer(tenantId, assetId, customerId));
@@ -93,8 +98,8 @@ public class DefaultTbAssetService extends AbstractTbEntityService implements Tb
     }
 
     @Override
-    public Asset unassignAssetToCustomer(TenantId tenantId, AssetId assetId, Customer customer, User user) throws EchoiotException {
-        ActionType actionType = ActionType.UNASSIGNED_FROM_CUSTOMER;
+    public Asset unassignAssetToCustomer(TenantId tenantId, @NotNull AssetId assetId, @NotNull Customer customer, User user) throws EchoiotException {
+        @NotNull ActionType actionType = ActionType.UNASSIGNED_FROM_CUSTOMER;
         try {
             Asset savedAsset = checkNotNull(assetService.unassignAssetFromCustomer(tenantId, assetId));
             CustomerId customerId = customer.getId();
@@ -108,9 +113,10 @@ public class DefaultTbAssetService extends AbstractTbEntityService implements Tb
         }
     }
 
+    @NotNull
     @Override
-    public Asset assignAssetToPublicCustomer(TenantId tenantId, AssetId assetId, User user) throws EchoiotException {
-        ActionType actionType = ActionType.ASSIGNED_TO_CUSTOMER;
+    public Asset assignAssetToPublicCustomer(TenantId tenantId, @NotNull AssetId assetId, User user) throws EchoiotException {
+        @NotNull ActionType actionType = ActionType.ASSIGNED_TO_CUSTOMER;
         try {
             Customer publicCustomer = customerService.findOrCreatePublicCustomer(tenantId);
             Asset savedAsset = checkNotNull(assetService.assignAssetToCustomer(tenantId, assetId, publicCustomer.getId()));
@@ -124,9 +130,10 @@ public class DefaultTbAssetService extends AbstractTbEntityService implements Tb
         }
     }
 
+    @NotNull
     @Override
-    public Asset assignAssetToEdge(TenantId tenantId, AssetId assetId, Edge edge, User user) throws EchoiotException {
-        ActionType actionType = ActionType.ASSIGNED_TO_EDGE;
+    public Asset assignAssetToEdge(TenantId tenantId, @NotNull AssetId assetId, @NotNull Edge edge, User user) throws EchoiotException {
+        @NotNull ActionType actionType = ActionType.ASSIGNED_TO_EDGE;
         EdgeId edgeId = edge.getId();
         try {
             Asset savedAsset = checkNotNull(assetService.assignAssetToEdge(tenantId, assetId, edgeId));
@@ -142,8 +149,8 @@ public class DefaultTbAssetService extends AbstractTbEntityService implements Tb
     }
 
     @Override
-    public Asset unassignAssetFromEdge(TenantId tenantId, Asset asset, Edge edge, User user) throws EchoiotException {
-        ActionType actionType = ActionType.UNASSIGNED_FROM_EDGE;
+    public Asset unassignAssetFromEdge(TenantId tenantId, @NotNull Asset asset, @NotNull Edge edge, User user) throws EchoiotException {
+        @NotNull ActionType actionType = ActionType.UNASSIGNED_FROM_EDGE;
         AssetId assetId = asset.getId();
         EdgeId edgeId = edge.getId();
         try {

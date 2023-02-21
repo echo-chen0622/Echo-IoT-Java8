@@ -10,8 +10,8 @@ import java.util.List;
 @Slf4j
 public class AttributesDeleteNodeCallback extends TelemetryNodeCallback {
 
-    private String scope;
-    private List<String> keys;
+    private final String scope;
+    private final List<String> keys;
 
     public AttributesDeleteNodeCallback(TbContext ctx, TbMsg msg, String scope, List<String> keys) {
         super(ctx, msg);

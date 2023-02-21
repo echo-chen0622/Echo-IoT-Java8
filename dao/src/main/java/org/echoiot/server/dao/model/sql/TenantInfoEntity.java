@@ -3,6 +3,7 @@ package org.echoiot.server.dao.model.sql;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.echoiot.server.common.data.TenantInfo;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,11 +23,12 @@ public class TenantInfoEntity extends AbstractTenantEntity<TenantInfo> {
         super();
     }
 
-    public TenantInfoEntity(TenantEntity tenantEntity, String tenantProfileName) {
+    public TenantInfoEntity(@NotNull TenantEntity tenantEntity, String tenantProfileName) {
         super(tenantEntity);
         this.tenantProfileName = tenantProfileName;
     }
 
+    @NotNull
     @Override
     public TenantInfo toData() {
         return new TenantInfo(super.toTenant(), this.tenantProfileName);

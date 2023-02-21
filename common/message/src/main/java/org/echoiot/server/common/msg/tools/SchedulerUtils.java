@@ -1,5 +1,8 @@
 package org.echoiot.server.common.msg.tools;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -17,7 +20,8 @@ public class SchedulerUtils {
 
     private static final ConcurrentMap<String, ZoneId> tzMap = new ConcurrentHashMap<>();
 
-    public static ZoneId getZoneId(String tz) {
+    @NotNull
+    public static ZoneId getZoneId(@Nullable String tz) {
         return tzMap.computeIfAbsent(tz == null || tz.isEmpty() ? "UTC" : tz, ZoneId::of);
     }
 
@@ -25,7 +29,7 @@ public class SchedulerUtils {
         return getStartOfCurrentHour(UTC);
     }
 
-    public static long getStartOfCurrentHour(ZoneId zoneId) {
+    public static long getStartOfCurrentHour(@NotNull ZoneId zoneId) {
         return LocalDateTime.now(UTC).atZone(zoneId).truncatedTo(ChronoUnit.HOURS).toInstant().toEpochMilli();
     }
 
@@ -33,7 +37,7 @@ public class SchedulerUtils {
         return getStartOfCurrentMonth(UTC);
     }
 
-    public static long getStartOfCurrentMonth(ZoneId zoneId) {
+    public static long getStartOfCurrentMonth(@NotNull ZoneId zoneId) {
         return LocalDate.now(UTC).withDayOfMonth(1).atStartOfDay(zoneId).toInstant().toEpochMilli();
     }
 
@@ -41,7 +45,7 @@ public class SchedulerUtils {
         return getStartOfNextMonth(UTC);
     }
 
-    public static long getStartOfNextMonth(ZoneId zoneId) {
+    public static long getStartOfNextMonth(@NotNull ZoneId zoneId) {
         return LocalDate.now(UTC).with(TemporalAdjusters.firstDayOfNextMonth()).atStartOfDay(zoneId).toInstant().toEpochMilli();
     }
 
@@ -49,10 +53,11 @@ public class SchedulerUtils {
         return getStartOfNextNextMonth(UTC);
     }
 
-    public static long getStartOfNextNextMonth(ZoneId zoneId) {
+    public static long getStartOfNextNextMonth(@NotNull ZoneId zoneId) {
         return LocalDate.now(UTC).with(firstDayOfNextNextMonth()).atStartOfDay(zoneId).toInstant().toEpochMilli();
     }
 
+    @NotNull
     public static TemporalAdjuster firstDayOfNextNextMonth() {
         return (temporal) -> temporal.with(DAY_OF_MONTH, 1).plus(2, MONTHS);
     }

@@ -12,7 +12,7 @@ import org.echoiot.server.cache.CaffeineTbTransactionalCache;
 @Service("UsersSessionInvalidation")
 public class UsersSessionInvalidationCaffeineCache extends CaffeineTbTransactionalCache<String, Long> {
 
-    @Autowired
+    @Resource
     public UsersSessionInvalidationCaffeineCache(CacheManager cacheManager) {
         super(cacheManager, CacheConstants.USERS_SESSION_INVALIDATION_CACHE);
     }

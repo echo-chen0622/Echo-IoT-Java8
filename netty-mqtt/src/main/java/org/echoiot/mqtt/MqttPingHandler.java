@@ -12,6 +12,8 @@ import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.util.ReferenceCountUtil;
 import io.netty.util.concurrent.ScheduledFuture;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.TimeUnit;
 
@@ -20,6 +22,7 @@ final class MqttPingHandler extends ChannelInboundHandlerAdapter {
 
     private final int keepaliveSeconds;
 
+    @Nullable
     private ScheduledFuture<?> pingRespTimeout;
 
     MqttPingHandler(int keepaliveSeconds) {
@@ -27,12 +30,12 @@ final class MqttPingHandler extends ChannelInboundHandlerAdapter {
     }
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+    public void channelRead(@NotNull ChannelHandlerContext ctx, Object msg) throws Exception {
         if (!(msg instanceof MqttMessage)) {
             ctx.fireChannelRead(msg);
             return;
         }
-        MqttMessage message = (MqttMessage) msg;
+        @NotNull MqttMessage message = (MqttMessage) msg;
         if (message.fixedHeader().messageType() == MqttMessageType.PINGREQ) {
             this.handlePingReq(ctx.channel());
         } else if (message.fixedHeader().messageType() == MqttMessageType.PINGRESP) {
@@ -43,11 +46,11 @@ final class MqttPingHandler extends ChannelInboundHandlerAdapter {
     }
 
     @Override
-    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+    public void userEventTriggered(@NotNull ChannelHandlerContext ctx, Object evt) throws Exception {
         super.userEventTriggered(ctx, evt);
 
         if (evt instanceof IdleStateEvent) {
-            IdleStateEvent event = (IdleStateEvent) evt;
+            @NotNull IdleStateEvent event = (IdleStateEvent) evt;
             switch (event.state()) {
                 case READER_IDLE:
                     log.debug("[{}] No reads were performed for specified period for channel {}", event.state(), ctx.channel().id());
@@ -61,27 +64,27 @@ final class MqttPingHandler extends ChannelInboundHandlerAdapter {
         }
     }
 
-    private void sendPingReq(Channel channel) {
+    private void sendPingReq(@NotNull Channel channel) {
         log.trace("[{}] Sending ping request", channel.id());
-        MqttFixedHeader fixedHeader = new MqttFixedHeader(MqttMessageType.PINGREQ, false, MqttQoS.AT_MOST_ONCE, false, 0);
+        @NotNull MqttFixedHeader fixedHeader = new MqttFixedHeader(MqttMessageType.PINGREQ, false, MqttQoS.AT_MOST_ONCE, false, 0);
         channel.writeAndFlush(new MqttMessage(fixedHeader));
 
         if (this.pingRespTimeout == null) {
             this.pingRespTimeout = channel.eventLoop().schedule(() -> {
-                MqttFixedHeader fixedHeader2 = new MqttFixedHeader(MqttMessageType.DISCONNECT, false, MqttQoS.AT_MOST_ONCE, false, 0);
+                @NotNull MqttFixedHeader fixedHeader2 = new MqttFixedHeader(MqttMessageType.DISCONNECT, false, MqttQoS.AT_MOST_ONCE, false, 0);
                 channel.writeAndFlush(new MqttMessage(fixedHeader2)).addListener(ChannelFutureListener.CLOSE);
                 //TODO: what do when the connection is closed ?
             }, this.keepaliveSeconds, TimeUnit.SECONDS);
         }
     }
 
-    private void handlePingReq(Channel channel) {
+    private void handlePingReq(@NotNull Channel channel) {
         log.trace("[{}] Handling ping request", channel.id());
-        MqttFixedHeader fixedHeader = new MqttFixedHeader(MqttMessageType.PINGRESP, false, MqttQoS.AT_MOST_ONCE, false, 0);
+        @NotNull MqttFixedHeader fixedHeader = new MqttFixedHeader(MqttMessageType.PINGRESP, false, MqttQoS.AT_MOST_ONCE, false, 0);
         channel.writeAndFlush(new MqttMessage(fixedHeader));
     }
 
-    private void handlePingResp(Channel channel) {
+    private void handlePingResp(@NotNull Channel channel) {
         log.trace("[{}] Handling ping response", channel.id());
         if (this.pingRespTimeout != null && !this.pingRespTimeout.isCancelled() && !this.pingRespTimeout.isDone()) {
             this.pingRespTimeout.cancel(true);

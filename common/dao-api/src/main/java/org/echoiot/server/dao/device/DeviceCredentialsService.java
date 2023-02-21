@@ -4,6 +4,7 @@ import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.security.DeviceCredentials;
 import com.fasterxml.jackson.databind.JsonNode;
+import org.jetbrains.annotations.Nullable;
 
 public interface DeviceCredentialsService {
 
@@ -17,6 +18,7 @@ public interface DeviceCredentialsService {
 
     void formatCredentials(DeviceCredentials deviceCredentials);
 
+    @Nullable
     JsonNode toCredentialsInfo(DeviceCredentials deviceCredentials);
 
     void deleteDeviceCredentials(TenantId tenantId, DeviceCredentials deviceCredentials);

@@ -7,6 +7,7 @@ import lombok.Data;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.EventId;
 import org.echoiot.server.common.data.id.TenantId;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Andrew Shvayka
@@ -34,7 +35,7 @@ public class EventInfo extends BaseData<EventId> {
         super(id);
     }
 
-    public EventInfo(EventInfo event) {
+    public EventInfo(@NotNull EventInfo event) {
         super(event);
     }
 

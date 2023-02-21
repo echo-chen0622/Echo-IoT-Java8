@@ -11,6 +11,8 @@ import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.id.DashboardId;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.EntityIdFactory;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -21,6 +23,7 @@ public class AssetProfileInfo extends EntityInfo {
 
     @ApiModelProperty(position = 3, value = "Either URL or Base64 data of the icon. Used in the mobile application to visualize set of asset profiles in the grid view. ")
     private final String image;
+    @Nullable
     @ApiModelProperty(position = 4, value = "Reference to the dashboard. Used in the mobile application to open the default dashboard when user navigates to asset details.")
     private final DashboardId defaultDashboardId;
 
@@ -34,13 +37,13 @@ public class AssetProfileInfo extends EntityInfo {
         this.defaultDashboardId = defaultDashboardId;
     }
 
-    public AssetProfileInfo(UUID uuid, String name, String image, UUID defaultDashboardId) {
+    public AssetProfileInfo(UUID uuid, String name, String image, @Nullable UUID defaultDashboardId) {
         super(EntityIdFactory.getByTypeAndUuid(EntityType.ASSET_PROFILE, uuid), name);
         this.image = image;
         this.defaultDashboardId = defaultDashboardId != null ? new DashboardId(defaultDashboardId) : null;
     }
 
-    public AssetProfileInfo(AssetProfile profile) {
+    public AssetProfileInfo(@NotNull AssetProfile profile) {
         this(profile.getId(), profile.getName(), profile.getImage(), profile.getDefaultDashboardId());
     }
 

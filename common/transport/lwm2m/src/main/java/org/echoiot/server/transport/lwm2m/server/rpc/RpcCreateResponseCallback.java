@@ -6,6 +6,7 @@ import org.eclipse.leshan.core.request.LwM2mRequest;
 import org.eclipse.leshan.core.response.CreateResponse;
 import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.transport.lwm2m.server.client.LwM2mClient;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
@@ -15,9 +16,10 @@ public class RpcCreateResponseCallback<R extends LwM2mRequest<T>, T extends Crea
         super(transportService, client, requestMsg, callback);
     }
 
+    @NotNull
     @Override
-    protected Optional<String> serializeSuccessfulResponse(T response) {
-        String value = response.getLocation() != null ? "location=" + response.getLocation() : "";
+    protected Optional<String> serializeSuccessfulResponse(@NotNull T response) {
+        @NotNull String value = response.getLocation() != null ? "location=" + response.getLocation() : "";
         return Optional.of(value);
     }
 }

@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.echoiot.server.common.data.DeviceInfo;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,9 +28,9 @@ public class DeviceInfoEntity extends AbstractDeviceEntity<DeviceInfo> {
         super();
     }
 
-    public DeviceInfoEntity(DeviceEntity deviceEntity,
+    public DeviceInfoEntity(@NotNull DeviceEntity deviceEntity,
                             String customerTitle,
-                            Object customerAdditionalInfo,
+                            @Nullable Object customerAdditionalInfo,
                             String deviceProfileName) {
         super(deviceEntity);
         this.customerTitle = customerTitle;
@@ -40,6 +42,7 @@ public class DeviceInfoEntity extends AbstractDeviceEntity<DeviceInfo> {
         this.deviceProfileName = deviceProfileName;
     }
 
+    @NotNull
     @Override
     public DeviceInfo toData() {
         return new DeviceInfo(super.toDevice(), customerTitle, customerIsPublic, deviceProfileName);

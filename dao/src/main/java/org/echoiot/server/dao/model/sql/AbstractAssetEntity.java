@@ -14,6 +14,7 @@ import org.echoiot.server.dao.model.BaseSqlEntity;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.model.SearchTextEntity;
 import org.echoiot.server.dao.util.mapping.JsonStringType;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
@@ -65,7 +66,7 @@ public abstract class AbstractAssetEntity<T extends Asset> extends BaseSqlEntity
         super();
     }
 
-    public AbstractAssetEntity(Asset asset) {
+    public AbstractAssetEntity(@NotNull Asset asset) {
         if (asset.getId() != null) {
             this.setUuid(asset.getId().getId());
         }
@@ -88,7 +89,7 @@ public abstract class AbstractAssetEntity<T extends Asset> extends BaseSqlEntity
         }
     }
 
-    public AbstractAssetEntity(AssetEntity assetEntity) {
+    public AbstractAssetEntity(@NotNull AssetEntity assetEntity) {
         this.setId(assetEntity.getId());
         this.setCreatedTime(assetEntity.getCreatedTime());
         this.tenantId = assetEntity.getTenantId();
@@ -116,8 +117,9 @@ public abstract class AbstractAssetEntity<T extends Asset> extends BaseSqlEntity
         return searchText;
     }
 
+    @NotNull
     protected Asset toAsset() {
-        Asset asset = new Asset(new AssetId(id));
+        @NotNull Asset asset = new Asset(new AssetId(id));
         asset.setCreatedTime(createdTime);
         if (tenantId != null) {
             asset.setTenantId(TenantId.fromUUID(tenantId));

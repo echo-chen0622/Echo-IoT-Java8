@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.dao.queue.QueueService;
 import org.echoiot.server.queue.discovery.QueueRoutingInfo;
 import org.echoiot.server.queue.discovery.QueueRoutingInfoService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,7 @@ public class DefaultQueueRoutingInfoService implements QueueRoutingInfoService {
         this.queueService = queueService;
     }
 
+    @NotNull
     @Override
     public List<QueueRoutingInfo> getAllQueuesRoutingInfo() {
         return queueService.findAllQueues().stream().map(QueueRoutingInfo::new).collect(Collectors.toList());
