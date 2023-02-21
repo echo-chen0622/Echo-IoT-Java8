@@ -18,7 +18,6 @@ import org.echoiot.server.dao.settings.AdminSettingsService;
 import org.echoiot.server.service.apiusage.TbApiUsageStateService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.core.NestedRuntimeException;
@@ -30,6 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.mail.internet.MimeMessage;
 import java.io.ByteArrayInputStream;
 import java.util.HashMap;

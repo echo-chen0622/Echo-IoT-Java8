@@ -1,9 +1,9 @@
 package org.echoiot.server.dao.device;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.security.DeviceCredentials;
-import com.fasterxml.jackson.databind.JsonNode;
 import org.jetbrains.annotations.Nullable;
 
 public interface DeviceCredentialsService {

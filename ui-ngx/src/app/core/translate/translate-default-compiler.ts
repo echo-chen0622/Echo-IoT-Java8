@@ -3,7 +3,7 @@ import {
   MessageFormatConfig,
   TranslateMessageFormatCompiler
 } from 'ngx-translate-messageformat-compiler';
-import { Inject, Injectable, Optional } from '@angular/core';
+import {Inject, Injectable, Optional} from '@angular/core';
 import messageFormatParser from 'messageformat-parser';
 
 @Injectable({ providedIn: 'root' })

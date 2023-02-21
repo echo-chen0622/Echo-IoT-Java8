@@ -1,12 +1,12 @@
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { User } from '@shared/models/user.model';
-import { Authority } from '@shared/models/authority.enum';
-import { select, Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { selectAuthUser, selectUserDetails } from '@core/auth/auth.selectors';
-import { map } from 'rxjs/operators';
-import { AuthService } from '@core/auth/auth.service';
-import { Router } from '@angular/router';
+import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {User} from '@shared/models/user.model';
+import {Authority} from '@shared/models/authority.enum';
+import {select, Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {selectAuthUser, selectUserDetails} from '@core/auth/auth.selectors';
+import {map} from 'rxjs/operators';
+import {AuthService} from '@core/auth/auth.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'tb-user-menu',

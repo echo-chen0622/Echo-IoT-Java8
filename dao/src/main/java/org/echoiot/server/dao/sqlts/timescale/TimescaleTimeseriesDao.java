@@ -6,6 +6,7 @@ import com.google.common.util.concurrent.MoreExecutors;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.TenantId;
+import org.echoiot.server.common.data.kv.*;
 import org.echoiot.server.common.stats.StatsFactory;
 import org.echoiot.server.dao.DaoUtil;
 import org.echoiot.server.dao.model.sql.AbstractTsKvEntity;
@@ -17,25 +18,15 @@ import org.echoiot.server.dao.sqlts.insert.InsertTsRepository;
 import org.echoiot.server.dao.timeseries.TimeseriesDao;
 import org.echoiot.server.dao.util.TimescaleDBTsDao;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
-import org.echoiot.server.common.data.kv.Aggregation;
-import org.echoiot.server.common.data.kv.DeleteTsKvQuery;
-import org.echoiot.server.common.data.kv.ReadTsKvQuery;
-import org.echoiot.server.common.data.kv.ReadTsKvQueryResult;
-import org.echoiot.server.common.data.kv.TsKvEntry;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import javax.annotation.Resource;
+import java.util.*;
 import java.util.function.Function;
 
 @Component

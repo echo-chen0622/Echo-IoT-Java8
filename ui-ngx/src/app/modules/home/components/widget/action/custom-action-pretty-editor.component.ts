@@ -2,16 +2,16 @@
 /// <reference path="../../../../../../../src/typings/split.js.typings.d.ts" />
 
 import {
-    AfterViewInit,
-    Component,
-    ElementRef,
-    forwardRef,
-    Input,
-    OnDestroy,
-    OnInit,
-    QueryList,
-    ViewChildren,
-    ViewEncapsulation
+  AfterViewInit,
+  Component,
+  ElementRef,
+  forwardRef,
+  Input,
+  OnDestroy,
+  OnInit,
+  QueryList,
+  ViewChildren,
+  ViewEncapsulation
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {PageComponent} from '@shared/components/page.component';

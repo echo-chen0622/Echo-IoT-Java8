@@ -1,8 +1,8 @@
 package org.echoiot.rule.engine.rpc;
 
 import lombok.Data;
-import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.rule.engine.api.NodeConfiguration;
+import org.echoiot.server.common.data.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 @Data

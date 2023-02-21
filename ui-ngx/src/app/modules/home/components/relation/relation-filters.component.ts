@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input, OnInit } from '@angular/core';
+import {Component, forwardRef, Input, OnInit} from '@angular/core';
 import {
   AbstractControl,
   ControlValueAccessor,
@@ -7,12 +7,12 @@ import {
   FormGroup,
   NG_VALUE_ACCESSOR
 } from '@angular/forms';
-import { AliasEntityType, EntityType } from '@shared/models/entity-type.models';
-import { RelationEntityTypeFilter } from '@shared/models/relation.models';
-import { PageComponent } from '@shared/components/page.component';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { Subscription } from 'rxjs';
+import {AliasEntityType, EntityType} from '@shared/models/entity-type.models';
+import {RelationEntityTypeFilter} from '@shared/models/relation.models';
+import {PageComponent} from '@shared/components/page.component';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'tb-relation-filters',

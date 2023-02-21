@@ -1,8 +1,8 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { ConfirmOnExitGuard } from '@core/guards/confirm-on-exit.guard';
-import { Authority } from '@shared/models/authority.enum';
-import { VersionControlComponent } from '@home/components/vc/version-control.component';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
+import {ConfirmOnExitGuard} from '@core/guards/confirm-on-exit.guard';
+import {Authority} from '@shared/models/authority.enum';
+import {VersionControlComponent} from '@home/components/vc/version-control.component';
 
 const routes: Routes = [
   {

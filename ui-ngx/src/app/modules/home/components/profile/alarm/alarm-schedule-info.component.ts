@@ -1,16 +1,16 @@
 import {ChangeDetectorRef, Component, forwardRef, Input, OnInit} from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {
-    AlarmSchedule,
-    AlarmScheduleType,
-    dayOfWeekTranslations,
-    getAlarmScheduleRangeText,
-    utcTimestampToTimeOfDay
+  AlarmSchedule,
+  AlarmScheduleType,
+  dayOfWeekTranslations,
+  getAlarmScheduleRangeText,
+  utcTimestampToTimeOfDay
 } from '@shared/models/device.models';
 import {MatDialog} from '@angular/material/dialog';
 import {
-    AlarmScheduleDialogComponent,
-    AlarmScheduleDialogData
+  AlarmScheduleDialogComponent,
+  AlarmScheduleDialogData
 } from '@home/components/profile/alarm/alarm-schedule-dialog.component';
 import {deepClone, isDefinedAndNotNull} from '@core/utils';
 import {TranslateService} from '@ngx-translate/core';

@@ -1,12 +1,16 @@
 package org.echoiot.server.service.transport;
 
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.common.util.EchoiotExecutors;
 import org.echoiot.server.common.stats.MessagesStats;
 import org.echoiot.server.common.stats.StatsFactory;
 import org.echoiot.server.common.stats.StatsType;
+import org.echoiot.server.gen.transport.TransportProtos.TransportApiRequestMsg;
+import org.echoiot.server.gen.transport.TransportProtos.TransportApiResponseMsg;
 import org.echoiot.server.queue.TbQueueConsumer;
 import org.echoiot.server.queue.TbQueueProducer;
 import org.echoiot.server.queue.TbQueueResponseTemplate;
+import org.echoiot.server.queue.common.DefaultTbQueueResponseTemplate;
 import org.echoiot.server.queue.common.TbProtoQueueMsg;
 import org.echoiot.server.queue.provider.TbCoreQueueFactory;
 import org.echoiot.server.queue.util.AfterStartUp;
@@ -14,14 +18,10 @@ import org.echoiot.server.queue.util.TbCoreComponent;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.stereotype.Service;
-import org.echoiot.common.util.EchoiotExecutors;
-import org.echoiot.server.queue.common.DefaultTbQueueResponseTemplate;
-import org.echoiot.server.gen.transport.TransportProtos.TransportApiRequestMsg;
-import org.echoiot.server.gen.transport.TransportProtos.TransportApiResponseMsg;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutorService;
 
 /**
  * Created by Echo on 05.10.18.

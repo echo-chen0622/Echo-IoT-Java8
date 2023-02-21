@@ -3,6 +3,8 @@ package org.echoiot.server.service.security.auth.rest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.StringUtils;
+import org.echoiot.server.service.security.exception.AuthMethodNotSupportedException;
+import org.echoiot.server.service.security.model.UserPrincipal;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -13,8 +15,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.echoiot.server.service.security.exception.AuthMethodNotSupportedException;
-import org.echoiot.server.service.security.model.UserPrincipal;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;

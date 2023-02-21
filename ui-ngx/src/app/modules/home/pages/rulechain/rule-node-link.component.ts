@@ -1,9 +1,9 @@
-import { Component, forwardRef, Input, OnInit } from '@angular/core';
-import { ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
-import { FcRuleEdge, LinkLabel } from '@shared/models/rule-node.models';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { TruncatePipe } from '@shared/pipe/truncate.pipe';
-import { TranslateService } from '@ngx-translate/core';
+import {Component, forwardRef, Input, OnInit} from '@angular/core';
+import {ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR, Validators} from '@angular/forms';
+import {FcRuleEdge, LinkLabel} from '@shared/models/rule-node.models';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {TruncatePipe} from '@shared/pipe/truncate.pipe';
+import {TranslateService} from '@ngx-translate/core';
 
 @Component({
   selector: 'tb-rule-node-link',

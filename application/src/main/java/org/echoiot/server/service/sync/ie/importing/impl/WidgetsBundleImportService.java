@@ -14,11 +14,11 @@ import org.echoiot.server.common.data.widget.WidgetTypeInfo;
 import org.echoiot.server.common.data.widget.WidgetsBundle;
 import org.echoiot.server.dao.widget.WidgetTypeService;
 import org.echoiot.server.dao.widget.WidgetsBundleService;
+import org.echoiot.server.queue.util.TbCoreComponent;
+import org.echoiot.server.service.sync.vc.data.EntitiesImportCtx;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
-import org.echoiot.server.queue.util.TbCoreComponent;
-import org.echoiot.server.service.sync.vc.data.EntitiesImportCtx;
 
 import java.util.Map;
 import java.util.stream.Collectors;

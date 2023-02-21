@@ -9,10 +9,10 @@ import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.id.EdgeId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.plugin.ComponentLifecycleEvent;
+import org.echoiot.server.service.entitiy.AbstractTbEntityService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
-import org.echoiot.server.service.entitiy.AbstractTbEntityService;
 
 import java.util.List;
 

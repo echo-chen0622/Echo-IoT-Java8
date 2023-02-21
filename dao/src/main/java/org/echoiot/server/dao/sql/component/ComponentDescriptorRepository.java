@@ -1,5 +1,7 @@
 package org.echoiot.server.dao.sql.component;
 
+import org.echoiot.server.common.data.plugin.ComponentScope;
+import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.dao.model.sql.ComponentDescriptorEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -8,8 +10,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
-import org.echoiot.server.common.data.plugin.ComponentScope;
-import org.echoiot.server.common.data.plugin.ComponentType;
 
 import java.util.UUID;
 

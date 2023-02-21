@@ -3,10 +3,6 @@ package org.echoiot.server.transport.mqtt.provision;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.netty.handler.codec.mqtt.MqttQoS;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
-import org.junit.Assert;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.common.data.Device;
 import org.echoiot.server.common.data.DeviceProfileProvisionType;
@@ -22,7 +18,11 @@ import org.echoiot.server.transport.mqtt.AbstractMqttIntegrationTest;
 import org.echoiot.server.transport.mqtt.MqttTestCallback;
 import org.echoiot.server.transport.mqtt.MqttTestClient;
 import org.echoiot.server.transport.mqtt.MqttTestConfigProperties;
+import org.jetbrains.annotations.NotNull;
+import org.junit.Assert;
+import org.junit.Test;
 
+import javax.annotation.Resource;
 import java.util.concurrent.TimeUnit;
 
 import static org.echoiot.server.common.data.device.profile.MqttTopics.DEVICE_PROVISION_REQUEST_TOPIC;

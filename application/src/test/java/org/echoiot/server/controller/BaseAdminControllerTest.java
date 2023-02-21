@@ -12,8 +12,8 @@ import org.echoiot.server.service.mail.DefaultMailService;
 import org.jetbrains.annotations.Nullable;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.Resource;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 

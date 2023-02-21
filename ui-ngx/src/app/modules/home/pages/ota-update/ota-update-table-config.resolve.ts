@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { Resolve, Router } from '@angular/router';
+import {Injectable} from '@angular/core';
+import {Resolve, Router} from '@angular/router';
 import {
   CellActionDescriptorType,
   DateEntityTableColumn,
@@ -12,16 +12,16 @@ import {
   OtaPackageInfo,
   OtaUpdateTypeTranslationMap
 } from '@shared/models/ota-package.models';
-import { EntityType, entityTypeResources, entityTypeTranslations } from '@shared/models/entity-type.models';
-import { TranslateService } from '@ngx-translate/core';
-import { DatePipe } from '@angular/common';
-import { OtaPackageService } from '@core/http/ota-package.service';
-import { PageLink } from '@shared/models/page/page-link';
-import { OtaUpdateComponent } from '@home/pages/ota-update/ota-update.component';
-import { EntityAction } from '@home/models/entity/entity-component.models';
-import { FileSizePipe } from '@shared/pipe/file-size.pipe';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
+import {EntityType, entityTypeResources, entityTypeTranslations} from '@shared/models/entity-type.models';
+import {TranslateService} from '@ngx-translate/core';
+import {DatePipe} from '@angular/common';
+import {OtaPackageService} from '@core/http/ota-package.service';
+import {PageLink} from '@shared/models/page/page-link';
+import {OtaUpdateComponent} from '@home/pages/ota-update/ota-update.component';
+import {EntityAction} from '@home/models/entity/entity-component.models';
+import {FileSizePipe} from '@shared/pipe/file-size.pipe';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
 
 @Injectable()
 export class OtaUpdateTableConfigResolve implements Resolve<EntityTableConfig<OtaPackage, PageLink, OtaPackageInfo>> {

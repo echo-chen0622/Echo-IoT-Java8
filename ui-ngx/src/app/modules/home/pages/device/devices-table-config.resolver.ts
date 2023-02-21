@@ -2,13 +2,13 @@ import {Injectable} from '@angular/core';
 
 import {ActivatedRouteSnapshot, Resolve, Router} from '@angular/router';
 import {
-    CellActionDescriptor,
-    checkBoxCell,
-    DateEntityTableColumn,
-    EntityTableColumn,
-    EntityTableConfig,
-    GroupActionDescriptor,
-    HeaderActionDescriptor
+  CellActionDescriptor,
+  checkBoxCell,
+  DateEntityTableColumn,
+  EntityTableColumn,
+  EntityTableConfig,
+  GroupActionDescriptor,
+  HeaderActionDescriptor
 } from '@home/models/entity/entities-table-config.models';
 import {TranslateService} from '@ngx-translate/core';
 import {DatePipe} from '@angular/common';
@@ -30,18 +30,18 @@ import {BroadcastService} from '@core/services/broadcast.service';
 import {DeviceTableHeaderComponent} from '@modules/home/pages/device/device-table-header.component';
 import {MatDialog} from '@angular/material/dialog';
 import {
-    DeviceCredentialsDialogComponent,
-    DeviceCredentialsDialogData
+  DeviceCredentialsDialogComponent,
+  DeviceCredentialsDialogData
 } from '@modules/home/pages/device/device-credentials-dialog.component';
 import {DialogService} from '@core/services/dialog.service';
 import {
-    AssignToCustomerDialogComponent,
-    AssignToCustomerDialogData
+  AssignToCustomerDialogComponent,
+  AssignToCustomerDialogData
 } from '@modules/home/dialogs/assign-to-customer-dialog.component';
 import {DeviceId} from '@app/shared/models/id/device-id';
 import {
-    AddEntitiesToCustomerDialogComponent,
-    AddEntitiesToCustomerDialogData
+  AddEntitiesToCustomerDialogComponent,
+  AddEntitiesToCustomerDialogData
 } from '../../dialogs/add-entities-to-customer-dialog.component';
 import {DeviceTabsComponent} from '@home/pages/device/device-tabs.component';
 import {HomeDialogsService} from '@home/dialogs/home-dialogs.service';
@@ -50,8 +50,8 @@ import {BaseData, HasId} from '@shared/models/base-data';
 import {isDefinedAndNotNull} from '@core/utils';
 import {EdgeService} from '@core/http/edge.service';
 import {
-    AddEntitiesToEdgeDialogComponent,
-    AddEntitiesToEdgeDialogData
+  AddEntitiesToEdgeDialogComponent,
+  AddEntitiesToEdgeDialogData
 } from '@home/dialogs/add-entities-to-edge-dialog.component';
 
 @Injectable()

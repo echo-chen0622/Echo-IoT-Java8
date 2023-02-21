@@ -107,7 +107,7 @@ LEGAL DISCLAIMER
 				<Type>Float</Type>
 				<RangeEnumeration></RangeEnumeration>
 				<Units>m</Units>
-				<Description><![CDATA[The value in this resource indicates the radius of a circular area in meters. The circular area is used to describe uncertainty about a point for coordinates in a two-dimensional coordinate reference systems (CRS). The center point of a circular area is specified by using the Latitude and the Longitude Resources.]]></Description>
+				<Description><![CDATA[The value in this perResource indicates the radius of a circular area in meters. The circular area is used to describe uncertainty about a point for coordinates in a two-dimensional coordinate reference systems (CRS). The center point of a circular area is specified by using the Latitude and the Longitude Resources.]]></Description>
 			</Item>
 			<Item ID="4">
 				<Name>Velocity</Name>

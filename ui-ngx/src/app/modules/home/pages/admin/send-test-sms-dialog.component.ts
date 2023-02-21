@@ -1,14 +1,14 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DialogComponent } from '@shared/components/dialog.component';
-import { Router } from '@angular/router';
-import { phoneNumberPattern, SmsProviderConfiguration, TestSmsRequest } from '@shared/models/settings.models';
-import { AdminService } from '@core/http/admin.service';
-import { ActionNotificationShow } from '@core/notification/notification.actions';
-import { TranslateService } from '@ngx-translate/core';
+import {Component, Inject, OnInit} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {DialogComponent} from '@shared/components/dialog.component';
+import {Router} from '@angular/router';
+import {phoneNumberPattern, SmsProviderConfiguration, TestSmsRequest} from '@shared/models/settings.models';
+import {AdminService} from '@core/http/admin.service';
+import {ActionNotificationShow} from '@core/notification/notification.actions';
+import {TranslateService} from '@ngx-translate/core';
 
 export interface SendTestSmsDialogData {
   smsProviderConfiguration: SmsProviderConfiguration;

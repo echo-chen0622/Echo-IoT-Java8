@@ -7,13 +7,13 @@ import org.echoiot.server.common.data.alarm.AlarmStatus;
 import org.echoiot.server.common.data.id.AlarmId;
 import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.data.id.TenantId;
+import org.echoiot.server.dao.AbstractJpaDaoTest;
 import org.echoiot.server.dao.alarm.AlarmDao;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.echoiot.server.dao.AbstractJpaDaoTest;
 
+import javax.annotation.Resource;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;

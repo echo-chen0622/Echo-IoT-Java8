@@ -1,8 +1,7 @@
 package org.echoiot.server.common.data;
 
-import org.echoiot.server.common.data.id.UUIDBased;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.echoiot.server.common.data.id.UUIDBased;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class SearchTextBased<I extends UUIDBased> extends BaseData<I> {

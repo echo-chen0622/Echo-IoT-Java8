@@ -6,10 +6,10 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActionNotificationShow} from '@core/notification/notification.actions';
 import {TranslateService} from '@ngx-translate/core';
 import {
-    Dashboard,
-    getDashboardAssignedCustomersText,
-    isCurrentPublicDashboardCustomer,
-    isPublicDashboard
+  Dashboard,
+  getDashboardAssignedCustomersText,
+  isCurrentPublicDashboardCustomer,
+  isPublicDashboard
 } from '@shared/models/dashboard.models';
 import {DashboardService} from '@core/http/dashboard.service';
 import {EntityTableConfig} from '@home/models/entity/entities-table-config.models';

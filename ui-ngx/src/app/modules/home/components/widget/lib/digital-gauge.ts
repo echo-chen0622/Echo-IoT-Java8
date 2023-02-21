@@ -1,11 +1,11 @@
 import * as CanvasGauges from 'canvas-gauges';
 import {WidgetContext} from '@home/models/widget-component.models';
 import {
-    attributesGaugeType,
-    AttributeSourceProperty,
-    ColorLevelSetting,
-    DigitalGaugeSettings,
-    FixedLevelColors
+  attributesGaugeType,
+  AttributeSourceProperty,
+  ColorLevelSetting,
+  DigitalGaugeSettings,
+  FixedLevelColors
 } from '@home/components/widget/lib/digital-gauge.models';
 import * as tinycolor_ from 'tinycolor2';
 import {isDefined, isDefinedAndNotNull} from '@core/utils';

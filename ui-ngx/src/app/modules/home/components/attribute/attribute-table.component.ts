@@ -1,16 +1,16 @@
 import {
-    AfterViewInit,
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    ElementRef,
-    Injector,
-    Input,
-    NgZone,
-    OnInit,
-    StaticProvider,
-    ViewChild,
-    ViewContainerRef
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  Injector,
+  Input,
+  NgZone,
+  OnInit,
+  StaticProvider,
+  ViewChild,
+  ViewContainerRef
 } from '@angular/core';
 import {PageComponent} from '@shared/components/page.component';
 import {PageLink} from '@shared/models/page/page-link';
@@ -26,28 +26,28 @@ import {fromEvent, merge} from 'rxjs';
 import {debounceTime, distinctUntilChanged, tap} from 'rxjs/operators';
 import {EntityId} from '@shared/models/id/entity-id';
 import {
-    AttributeData,
-    AttributeScope,
-    DataKeyType,
-    isClientSideTelemetryType,
-    LatestTelemetry,
-    TelemetryType,
-    telemetryTypeTranslations,
-    toTelemetryType
+  AttributeData,
+  AttributeScope,
+  DataKeyType,
+  isClientSideTelemetryType,
+  LatestTelemetry,
+  TelemetryType,
+  telemetryTypeTranslations,
+  toTelemetryType
 } from '@shared/models/telemetry/telemetry.models';
 import {AttributeDatasource} from '@home/models/datasource/attribute-datasource';
 import {AttributeService} from '@app/core/http/attribute.service';
 import {EntityType} from '@shared/models/entity-type.models';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
-    AddAttributeDialogComponent,
-    AddAttributeDialogData
+  AddAttributeDialogComponent,
+  AddAttributeDialogData
 } from '@home/components/attribute/add-attribute-dialog.component';
 import {ConnectedPosition, Overlay, OverlayConfig, OverlayRef} from '@angular/cdk/overlay';
 import {
-    EDIT_ATTRIBUTE_VALUE_PANEL_DATA,
-    EditAttributeValuePanelComponent,
-    EditAttributeValuePanelData
+  EDIT_ATTRIBUTE_VALUE_PANEL_DATA,
+  EditAttributeValuePanelComponent,
+  EditAttributeValuePanelData
 } from './edit-attribute-value-panel.component';
 import {ComponentPortal} from '@angular/cdk/portal';
 import {TelemetryWebsocketService} from '@core/ws/telemetry-websocket.service';
@@ -63,8 +63,8 @@ import {WidgetService} from '@core/http/widget.service';
 import {toWidgetInfo} from '../../models/widget-component.models';
 import {EntityService} from '@core/http/entity.service';
 import {
-    AddWidgetToDashboardDialogComponent,
-    AddWidgetToDashboardDialogData
+  AddWidgetToDashboardDialogComponent,
+  AddWidgetToDashboardDialogData
 } from '@home/components/attribute/add-widget-to-dashboard-dialog.component';
 import {deepClone} from '@core/utils';
 import {Filters} from '@shared/models/query/query.models';

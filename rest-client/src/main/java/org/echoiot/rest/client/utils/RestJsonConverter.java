@@ -1,18 +1,9 @@
 package org.echoiot.rest.client.utils;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.echoiot.server.common.data.kv.*;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.util.CollectionUtils;
-import org.echoiot.server.common.data.kv.AttributeKvEntry;
-import org.echoiot.server.common.data.kv.BaseAttributeKvEntry;
-import org.echoiot.server.common.data.kv.BasicTsKvEntry;
-import org.echoiot.server.common.data.kv.BooleanDataEntry;
-import org.echoiot.server.common.data.kv.DoubleDataEntry;
-import org.echoiot.server.common.data.kv.JsonDataEntry;
-import org.echoiot.server.common.data.kv.KvEntry;
-import org.echoiot.server.common.data.kv.LongDataEntry;
-import org.echoiot.server.common.data.kv.StringDataEntry;
-import org.echoiot.server.common.data.kv.TsKvEntry;
 
 import java.util.ArrayList;
 import java.util.Collections;

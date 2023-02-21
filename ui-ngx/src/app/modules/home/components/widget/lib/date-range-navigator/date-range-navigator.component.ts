@@ -1,15 +1,15 @@
 import {
-    Component,
-    Inject,
-    InjectionToken,
-    Injector,
-    Input,
-    OnDestroy,
-    OnInit,
-    StaticProvider,
-    ViewChild,
-    ViewContainerRef,
-    ViewEncapsulation
+  Component,
+  Inject,
+  InjectionToken,
+  Injector,
+  Input,
+  OnDestroy,
+  OnInit,
+  StaticProvider,
+  ViewChild,
+  ViewContainerRef,
+  ViewEncapsulation
 } from '@angular/core';
 import {PageComponent} from '@shared/components/page.component';
 import {WidgetContext} from '@home/models/widget-component.models';
@@ -17,12 +17,12 @@ import {UtilsService} from '@core/services/utils.service';
 import {Store} from '@ngrx/store';
 import {AppState} from '@core/core.state';
 import {
-    cloneDateRangeNavigatorModel,
-    DateIntervalEntry,
-    dateIntervalsMap,
-    DateRangeNavigatorModel,
-    DateRangeNavigatorSettings,
-    getFormattedDate
+  cloneDateRangeNavigatorModel,
+  DateIntervalEntry,
+  dateIntervalsMap,
+  DateRangeNavigatorModel,
+  DateRangeNavigatorSettings,
+  getFormattedDate
 } from '@home/components/widget/lib/date-range-navigator/date-range-navigator.models';
 import {KeyValue} from '@angular/common';
 import * as _moment from 'moment';

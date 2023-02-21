@@ -1,13 +1,6 @@
 package org.echoiot.rule.engine.edge;
 
 import com.google.common.util.concurrent.SettableFuture;
-import org.jetbrains.annotations.NotNull;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.common.util.ListeningExecutor;
 import org.echoiot.rule.engine.api.TbContext;
@@ -26,6 +19,13 @@ import org.echoiot.server.common.msg.TbMsgMetaData;
 import org.echoiot.server.common.msg.session.SessionMsgType;
 import org.echoiot.server.dao.edge.EdgeEventService;
 import org.echoiot.server.dao.edge.EdgeService;
+import org.jetbrains.annotations.NotNull;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
 import java.util.UUID;

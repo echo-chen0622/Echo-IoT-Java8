@@ -4,12 +4,12 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.MoreExecutors;
 import lombok.extern.slf4j.Slf4j;
-import org.echoiot.server.common.data.id.CustomerId;
-import org.echoiot.server.common.data.id.TenantId;
-import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.rule.engine.api.ScriptEngine;
 import org.echoiot.script.api.ScriptInvokeService;
 import org.echoiot.script.api.ScriptType;
+import org.echoiot.server.common.data.id.CustomerId;
+import org.echoiot.server.common.data.id.TenantId;
+import org.echoiot.server.common.msg.TbMsg;
 import org.jetbrains.annotations.NotNull;
 
 import javax.script.ScriptException;

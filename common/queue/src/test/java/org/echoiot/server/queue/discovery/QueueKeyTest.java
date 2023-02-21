@@ -1,11 +1,11 @@
 package org.echoiot.server.queue.discovery;
 
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.Test;
 import org.echoiot.server.common.data.DataConstants;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.msg.queue.ServiceType;
+import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
 

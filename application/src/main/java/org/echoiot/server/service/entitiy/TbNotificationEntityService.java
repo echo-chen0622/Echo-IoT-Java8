@@ -8,15 +8,11 @@ import org.echoiot.server.common.data.alarm.Alarm;
 import org.echoiot.server.common.data.audit.ActionType;
 import org.echoiot.server.common.data.edge.Edge;
 import org.echoiot.server.common.data.edge.EdgeEventActionType;
+import org.echoiot.server.common.data.id.*;
 import org.echoiot.server.common.data.plugin.ComponentLifecycleEvent;
 import org.echoiot.server.common.data.relation.EntityRelation;
 import org.echoiot.server.common.data.rule.RuleChain;
 import org.echoiot.server.common.data.security.DeviceCredentials;
-import org.echoiot.server.common.data.id.CustomerId;
-import org.echoiot.server.common.data.id.DeviceId;
-import org.echoiot.server.common.data.id.EdgeId;
-import org.echoiot.server.common.data.id.EntityId;
-import org.echoiot.server.common.data.id.TenantId;
 
 import java.util.List;
 

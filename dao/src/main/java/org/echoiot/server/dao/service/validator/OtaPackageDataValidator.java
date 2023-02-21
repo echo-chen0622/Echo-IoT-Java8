@@ -10,9 +10,10 @@ import org.echoiot.server.dao.ota.OtaPackageDao;
 import org.echoiot.server.dao.ota.OtaPackageService;
 import org.echoiot.server.dao.tenant.TbTenantProfileCache;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 
 @Component
 public class OtaPackageDataValidator extends BaseOtaPackageDataValidator<OtaPackage> {

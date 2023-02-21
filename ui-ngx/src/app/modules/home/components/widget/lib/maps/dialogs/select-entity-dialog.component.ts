@@ -1,11 +1,11 @@
-import { Component, Inject } from '@angular/core';
-import { DialogComponent } from '@shared/components/dialog.component';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { Router } from '@angular/router';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { FormattedData } from '@shared/models/widget.models';
+import {Component, Inject} from '@angular/core';
+import {DialogComponent} from '@shared/components/dialog.component';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {Router} from '@angular/router';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormattedData} from '@shared/models/widget.models';
 
 export interface SelectEntityDialogData {
   entities: FormattedData[];

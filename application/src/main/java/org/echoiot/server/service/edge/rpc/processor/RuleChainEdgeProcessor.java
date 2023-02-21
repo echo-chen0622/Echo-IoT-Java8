@@ -8,16 +8,12 @@ import org.echoiot.server.common.data.id.RuleChainId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.rule.RuleChain;
 import org.echoiot.server.common.data.rule.RuleChainMetaData;
+import org.echoiot.server.gen.edge.v1.*;
+import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Component;
-import org.echoiot.server.gen.edge.v1.DownlinkMsg;
-import org.echoiot.server.gen.edge.v1.EdgeVersion;
-import org.echoiot.server.gen.edge.v1.RuleChainMetadataUpdateMsg;
-import org.echoiot.server.gen.edge.v1.RuleChainUpdateMsg;
-import org.echoiot.server.gen.edge.v1.UpdateMsgType;
-import org.echoiot.server.gen.transport.TransportProtos;
 
 import static org.echoiot.server.service.edge.DefaultEdgeNotificationService.EDGE_IS_ROOT_BODY_KEY;
 

@@ -1,20 +1,16 @@
 package org.echoiot.server.queue.provider;
 
+import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.queue.TbQueueAdmin;
 import org.echoiot.server.queue.TbQueueConsumer;
 import org.echoiot.server.queue.TbQueueProducer;
+import org.echoiot.server.queue.common.TbProtoQueueMsg;
+import org.echoiot.server.queue.rabbitmq.*;
 import org.echoiot.server.queue.settings.TbQueueCoreSettings;
 import org.echoiot.server.queue.settings.TbQueueVersionControlSettings;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Component;
-import org.echoiot.server.gen.transport.TransportProtos;
-import org.echoiot.server.queue.common.TbProtoQueueMsg;
-import org.echoiot.server.queue.rabbitmq.TbRabbitMqAdmin;
-import org.echoiot.server.queue.rabbitmq.TbRabbitMqConsumerTemplate;
-import org.echoiot.server.queue.rabbitmq.TbRabbitMqProducerTemplate;
-import org.echoiot.server.queue.rabbitmq.TbRabbitMqQueueArguments;
-import org.echoiot.server.queue.rabbitmq.TbRabbitMqSettings;
 
 import javax.annotation.PreDestroy;
 

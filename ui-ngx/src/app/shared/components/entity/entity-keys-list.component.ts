@@ -1,18 +1,18 @@
-import { COMMA, ENTER, SEMICOLON } from '@angular/cdk/keycodes';
-import { AfterViewInit, Component, ElementRef, forwardRef, Input, OnInit, ViewChild } from '@angular/core';
-import { ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Observable, of } from 'rxjs';
-import { map, mergeMap, share } from 'rxjs/operators';
-import { Store } from '@ngrx/store';
-import { AppState } from '@app/core/core.state';
-import { TranslateService } from '@ngx-translate/core';
-import { EntityId } from '@shared/models/id/entity-id';
-import { EntityService } from '@core/http/entity.service';
-import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { MatChipInputEvent, MatChipList } from '@angular/material/chips';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { DataKeyType } from '@shared/models/telemetry/telemetry.models';
-import { isEqual } from '@core/utils';
+import {COMMA, ENTER, SEMICOLON} from '@angular/cdk/keycodes';
+import {AfterViewInit, Component, ElementRef, forwardRef, Input, OnInit, ViewChild} from '@angular/core';
+import {ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {Observable, of} from 'rxjs';
+import {map, mergeMap, share} from 'rxjs/operators';
+import {Store} from '@ngrx/store';
+import {AppState} from '@app/core/core.state';
+import {TranslateService} from '@ngx-translate/core';
+import {EntityId} from '@shared/models/id/entity-id';
+import {EntityService} from '@core/http/entity.service';
+import {MatAutocomplete, MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
+import {MatChipInputEvent, MatChipList} from '@angular/material/chips';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {DataKeyType} from '@shared/models/telemetry/telemetry.models';
+import {isEqual} from '@core/utils';
 
 @Component({
   selector: 'tb-entity-keys-list',

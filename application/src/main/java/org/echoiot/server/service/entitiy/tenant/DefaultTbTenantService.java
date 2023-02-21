@@ -9,12 +9,12 @@ import org.echoiot.server.dao.tenant.TbTenantProfileCache;
 import org.echoiot.server.dao.tenant.TenantProfileService;
 import org.echoiot.server.dao.tenant.TenantService;
 import org.echoiot.server.queue.util.TbCoreComponent;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.stereotype.Service;
 import org.echoiot.server.service.entitiy.AbstractTbEntityService;
 import org.echoiot.server.service.entitiy.queue.TbQueueService;
 import org.echoiot.server.service.install.InstallScripts;
 import org.echoiot.server.service.sync.vc.EntitiesVersionControlService;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;

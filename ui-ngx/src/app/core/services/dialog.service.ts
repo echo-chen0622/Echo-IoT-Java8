@@ -4,12 +4,12 @@ import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {TranslateService} from '@ngx-translate/core';
 import {AuthService} from '@core/auth/auth.service';
 import {
-    ColorPickerDialogComponent,
-    ColorPickerDialogData
+  ColorPickerDialogComponent,
+  ColorPickerDialogData
 } from '@shared/components/dialog/color-picker-dialog.component';
 import {
-    MaterialIconsDialogComponent,
-    MaterialIconsDialogData
+  MaterialIconsDialogComponent,
+  MaterialIconsDialogData
 } from '@shared/components/dialog/material-icons-dialog.component';
 import {ConfirmDialogComponent} from '@shared/components/dialog/confirm-dialog.component';
 import {AlertDialogComponent} from '@shared/components/dialog/alert-dialog.component';

@@ -1,10 +1,10 @@
 package org.echoiot.server.queue.memory;
 
 import lombok.Data;
+import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
 import org.echoiot.server.queue.TbQueueCallback;
 import org.echoiot.server.queue.TbQueueMsg;
 import org.echoiot.server.queue.TbQueueProducer;
-import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

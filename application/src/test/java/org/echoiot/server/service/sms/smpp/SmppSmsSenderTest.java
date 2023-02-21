@@ -1,5 +1,7 @@
 package org.echoiot.server.service.sms.smpp;
 
+import org.echoiot.server.common.data.StringUtils;
+import org.echoiot.server.common.data.sms.config.SmppSmsProviderConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
@@ -8,19 +10,13 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.smpp.Session;
 import org.smpp.pdu.SubmitSMResp;
-import org.echoiot.server.common.data.StringUtils;
-import org.echoiot.server.common.data.sms.config.SmppSmsProviderConfiguration;
 
 import java.lang.reflect.Constructor;
 
 import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SmppSmsSenderTest {

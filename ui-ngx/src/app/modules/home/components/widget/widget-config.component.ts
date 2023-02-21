@@ -1,7 +1,7 @@
-import { Component, forwardRef, Input, OnInit } from '@angular/core';
-import { PageComponent } from '@shared/components/page.component';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
+import {Component, forwardRef, Input, OnInit} from '@angular/core';
+import {PageComponent} from '@shared/components/page.component';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
 import {
   DataKey,
   Datasource,
@@ -27,8 +27,8 @@ import {
   Validator,
   Validators
 } from '@angular/forms';
-import { WidgetConfigComponentData } from '@home/models/widget-component.models';
-import { deepClone, genNextLabel, isDefined, isObject } from '@app/core/utils';
+import {WidgetConfigComponentData} from '@home/models/widget-component.models';
+import {deepClone, genNextLabel, isDefined, isObject} from '@app/core/utils';
 import {
   alarmFields,
   AlarmSearchStatus,
@@ -36,30 +36,27 @@ import {
   AlarmSeverity,
   alarmSeverityTranslations
 } from '@shared/models/alarm.models';
-import { IAliasController } from '@core/api/widget-api.models';
-import { EntityAlias } from '@shared/models/alias.models';
-import { UtilsService } from '@core/services/utils.service';
-import { DataKeyType } from '@shared/models/telemetry/telemetry.models';
-import { TranslateService } from '@ngx-translate/core';
-import { EntityType } from '@shared/models/entity-type.models';
-import { Observable, of, Subscription } from 'rxjs';
-import { WidgetConfigCallbacks } from '@home/components/widget/widget-config.component.models';
-import {
-  EntityAliasDialogComponent,
-  EntityAliasDialogData
-} from '@home/components/alias/entity-alias-dialog.component';
-import { catchError, mergeMap, tap } from 'rxjs/operators';
-import { MatDialog } from '@angular/material/dialog';
-import { EntityService } from '@core/http/entity.service';
-import { JsonFormComponentData } from '@shared/components/json-form/json-form-component.models';
-import { WidgetActionsData } from './action/manage-widget-actions.component.models';
-import { Dashboard } from '@shared/models/dashboard.models';
-import { entityFields } from '@shared/models/entity.models';
-import { Filter } from '@shared/models/query/query.models';
-import { FilterDialogComponent, FilterDialogData } from '@home/components/filter/filter-dialog.component';
-import { COMMA, ENTER, SEMICOLON } from '@angular/cdk/keycodes';
-import { MatChipInputEvent } from '@angular/material/chips';
-import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import {IAliasController} from '@core/api/widget-api.models';
+import {EntityAlias} from '@shared/models/alias.models';
+import {UtilsService} from '@core/services/utils.service';
+import {DataKeyType} from '@shared/models/telemetry/telemetry.models';
+import {TranslateService} from '@ngx-translate/core';
+import {EntityType} from '@shared/models/entity-type.models';
+import {Observable, of, Subscription} from 'rxjs';
+import {WidgetConfigCallbacks} from '@home/components/widget/widget-config.component.models';
+import {EntityAliasDialogComponent, EntityAliasDialogData} from '@home/components/alias/entity-alias-dialog.component';
+import {catchError, mergeMap, tap} from 'rxjs/operators';
+import {MatDialog} from '@angular/material/dialog';
+import {EntityService} from '@core/http/entity.service';
+import {JsonFormComponentData} from '@shared/components/json-form/json-form-component.models';
+import {WidgetActionsData} from './action/manage-widget-actions.component.models';
+import {Dashboard} from '@shared/models/dashboard.models';
+import {entityFields} from '@shared/models/entity.models';
+import {Filter} from '@shared/models/query/query.models';
+import {FilterDialogComponent, FilterDialogData} from '@home/components/filter/filter-dialog.component';
+import {COMMA, ENTER, SEMICOLON} from '@angular/cdk/keycodes';
+import {MatChipInputEvent} from '@angular/material/chips';
+import {CdkDragDrop} from '@angular/cdk/drag-drop';
 
 const emptySettingsSchema: JsonSchema = {
   type: 'object',

@@ -1,24 +1,24 @@
 import {Component, forwardRef, Inject, Input, OnInit} from '@angular/core';
 import {
-    AbstractControl,
-    ControlValueAccessor,
-    FormArray,
-    FormBuilder,
-    FormGroup,
-    NG_VALIDATORS,
-    NG_VALUE_ACCESSOR,
-    ValidationErrors,
-    Validator,
-    Validators
+  AbstractControl,
+  ControlValueAccessor,
+  FormArray,
+  FormBuilder,
+  FormGroup,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR,
+  ValidationErrors,
+  Validator,
+  Validators
 } from '@angular/forms';
 import {Observable, of, Subscription} from 'rxjs';
 import {
-    ComplexFilterPredicateInfo,
-    ComplexOperation,
-    complexOperationTranslationMap,
-    createDefaultFilterPredicateInfo,
-    EntityKeyValueType,
-    KeyFilterPredicateInfo
+  ComplexFilterPredicateInfo,
+  ComplexOperation,
+  complexOperationTranslationMap,
+  createDefaultFilterPredicateInfo,
+  EntityKeyValueType,
+  KeyFilterPredicateInfo
 } from '@shared/models/query/query.models';
 import {MatDialog} from '@angular/material/dialog';
 import {map} from 'rxjs/operators';

@@ -4,9 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.query.EntityCountQuery;
 import org.echoiot.server.dao.attributes.AttributesService;
 import org.echoiot.server.dao.entity.EntityService;
-import org.echoiot.server.service.telemetry.cmd.v2.EntityCountUpdate;
 import org.echoiot.server.service.telemetry.TelemetryWebSocketService;
 import org.echoiot.server.service.telemetry.TelemetryWebSocketSessionRef;
+import org.echoiot.server.service.telemetry.cmd.v2.EntityCountUpdate;
 
 @Slf4j
 public class TbEntityCountSubCtx extends TbAbstractSubCtx<EntityCountQuery> {

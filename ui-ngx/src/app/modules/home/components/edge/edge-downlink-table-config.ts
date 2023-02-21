@@ -1,17 +1,17 @@
 import {
-    DateEntityTableColumn,
-    EntityActionTableColumn,
-    EntityTableColumn,
-    EntityTableConfig
+  DateEntityTableColumn,
+  EntityActionTableColumn,
+  EntityTableColumn,
+  EntityTableConfig
 } from '@home/models/entity/entities-table-config.models';
 import {
-    EdgeEvent,
-    EdgeEventActionType,
-    edgeEventActionTypeTranslations,
-    EdgeEventStatus,
-    edgeEventStatusColor,
-    EdgeEventType,
-    edgeEventTypeTranslations
+  EdgeEvent,
+  EdgeEventActionType,
+  edgeEventActionTypeTranslations,
+  EdgeEventStatus,
+  edgeEventStatusColor,
+  EdgeEventType,
+  edgeEventTypeTranslations
 } from '@shared/models/edge.models';
 import {TimePageLink} from '@shared/models/page/page-link';
 import {TranslateService} from '@ngx-translate/core';
@@ -24,8 +24,8 @@ import {Direction} from '@shared/models/page/sort-order';
 import {DialogService} from '@core/services/dialog.service';
 import {ContentType} from '@shared/models/constants';
 import {
-    EventContentDialogComponent,
-    EventContentDialogData
+  EventContentDialogComponent,
+  EventContentDialogData
 } from '@home/components/event/event-content-dialog.component';
 import {AttributeService} from '@core/http/attribute.service';
 import {AttributeScope} from '@shared/models/telemetry/telemetry.models';

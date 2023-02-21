@@ -8,15 +8,15 @@ import org.echoiot.server.common.data.User;
 import org.echoiot.server.common.data.security.model.mfa.account.TotpTwoFaAccountConfig;
 import org.echoiot.server.common.data.security.model.mfa.provider.TotpTwoFaProviderConfig;
 import org.echoiot.server.common.data.security.model.mfa.provider.TwoFaProviderType;
+import org.echoiot.server.queue.util.TbCoreComponent;
+import org.echoiot.server.service.security.auth.mfa.provider.TwoFaProvider;
+import org.echoiot.server.service.security.model.SecurityUser;
 import org.jboss.aerogear.security.otp.Totp;
 import org.jboss.aerogear.security.otp.api.Base32;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.echoiot.server.queue.util.TbCoreComponent;
-import org.echoiot.server.service.security.auth.mfa.provider.TwoFaProvider;
-import org.echoiot.server.service.security.model.SecurityUser;
 
 @Service
 @RequiredArgsConstructor

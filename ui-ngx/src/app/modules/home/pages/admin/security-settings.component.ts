@@ -1,18 +1,18 @@
-import { Component } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { PageComponent } from '@shared/components/page.component';
-import { Router } from '@angular/router';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { JwtSettings, SecuritySettings } from '@shared/models/settings.models';
-import { AdminService } from '@core/http/admin.service';
-import { HasConfirmForm } from '@core/guards/confirm-on-exit.guard';
-import { mergeMap, tap } from 'rxjs/operators';
-import { randomAlphanumeric } from '@core/utils';
-import { AuthService } from '@core/auth/auth.service';
-import { DialogService } from '@core/services/dialog.service';
-import { TranslateService } from '@ngx-translate/core';
-import { Observable, of } from 'rxjs';
+import {Component} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {PageComponent} from '@shared/components/page.component';
+import {Router} from '@angular/router';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {JwtSettings, SecuritySettings} from '@shared/models/settings.models';
+import {AdminService} from '@core/http/admin.service';
+import {HasConfirmForm} from '@core/guards/confirm-on-exit.guard';
+import {mergeMap, tap} from 'rxjs/operators';
+import {randomAlphanumeric} from '@core/utils';
+import {AuthService} from '@core/auth/auth.service';
+import {DialogService} from '@core/services/dialog.service';
+import {TranslateService} from '@ngx-translate/core';
+import {Observable, of} from 'rxjs';
 
 @Component({
   selector: 'tb-security-settings',

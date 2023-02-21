@@ -1,16 +1,16 @@
 package org.echoiot.server.dao.sql.user;
 
 import lombok.RequiredArgsConstructor;
-import org.echoiot.server.dao.model.sql.UserAuthSettingsEntity;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Component;
 import org.echoiot.server.common.data.id.UserId;
 import org.echoiot.server.common.data.security.UserAuthSettings;
 import org.echoiot.server.dao.DaoUtil;
+import org.echoiot.server.dao.model.sql.UserAuthSettingsEntity;
 import org.echoiot.server.dao.sql.JpaAbstractDao;
 import org.echoiot.server.dao.user.UserAuthSettingsDao;
 import org.echoiot.server.dao.util.SqlDao;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 

@@ -15,18 +15,11 @@ import org.echoiot.server.common.data.widget.WidgetsBundle;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.security.permission.Operation;
-import org.echoiot.server.service.security.permission.Resource;
+import org.echoiot.server.service.security.permission.PerResource;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -83,7 +76,7 @@ public class WidgetTypeController extends AutoCommitController {
                 widgetTypeDetails.setTenantId(currentUser.getTenantId());
             }
 
-            checkEntity(widgetTypeDetails.getId(), widgetTypeDetails, Resource.WIDGET_TYPE);
+            checkEntity(widgetTypeDetails.getId(), widgetTypeDetails, PerResource.WIDGET_TYPE);
             WidgetTypeDetails savedWidgetTypeDetails = widgetTypeService.saveWidgetType(widgetTypeDetails);
 
             if (!Authority.SYS_ADMIN.equals(currentUser.getAuthority())) {
@@ -222,7 +215,7 @@ public class WidgetTypeController extends AutoCommitController {
             }
             WidgetType widgetType = widgetTypeService.findWidgetTypeByTenantIdBundleAliasAndAlias(tenantId, bundleAlias, alias);
             checkNotNull(widgetType);
-            accessControlService.checkPermission(getCurrentUser(), Resource.WIDGET_TYPE, Operation.READ, widgetType.getId(), widgetType);
+            accessControlService.checkPermission(getCurrentUser(), PerResource.WIDGET_TYPE, Operation.READ, widgetType.getId(), widgetType);
             return widgetType;
         } catch (Exception e) {
             throw handleException(e);

@@ -1,15 +1,15 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { PageComponent } from '@shared/components/page.component';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { FcRuleNode, RuleNodeType } from '@shared/models/rule-node.models';
-import { EntityType } from '@shared/models/entity-type.models';
-import { Subscription } from 'rxjs';
-import { RuleChainService } from '@core/http/rule-chain.service';
-import { RuleNodeConfigComponent } from './rule-node-config.component';
-import { Router } from '@angular/router';
-import { RuleChainType } from '@app/shared/models/rule-chain.models';
+import {Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {PageComponent} from '@shared/components/page.component';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FcRuleNode, RuleNodeType} from '@shared/models/rule-node.models';
+import {EntityType} from '@shared/models/entity-type.models';
+import {Subscription} from 'rxjs';
+import {RuleChainService} from '@core/http/rule-chain.service';
+import {RuleNodeConfigComponent} from './rule-node-config.component';
+import {Router} from '@angular/router';
+import {RuleChainType} from '@app/shared/models/rule-chain.models';
 
 @Component({
   selector: 'tb-rule-node',

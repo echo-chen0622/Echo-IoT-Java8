@@ -4,11 +4,11 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.id.RuleNodeId;
 import org.echoiot.server.common.data.id.TenantId;
-import org.echoiot.server.queue.common.TbProtoQueueMsg;
-import org.echoiot.server.service.queue.processing.TbRuleEngineSubmitStrategy;
 import org.echoiot.server.common.msg.queue.RuleEngineException;
 import org.echoiot.server.common.msg.queue.RuleNodeInfo;
 import org.echoiot.server.gen.transport.TransportProtos;
+import org.echoiot.server.queue.common.TbProtoQueueMsg;
+import org.echoiot.server.service.queue.processing.TbRuleEngineSubmitStrategy;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

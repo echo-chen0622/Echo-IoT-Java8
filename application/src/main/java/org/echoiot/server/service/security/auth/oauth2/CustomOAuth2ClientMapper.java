@@ -10,13 +10,13 @@ import org.echoiot.server.common.data.oauth2.OAuth2MapperConfig;
 import org.echoiot.server.common.data.oauth2.OAuth2Registration;
 import org.echoiot.server.dao.oauth2.OAuth2User;
 import org.echoiot.server.queue.util.TbCoreComponent;
+import org.echoiot.server.service.security.model.SecurityUser;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.echoiot.server.service.security.model.SecurityUser;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;

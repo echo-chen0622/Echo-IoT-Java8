@@ -1,5 +1,5 @@
-import { Component, forwardRef, Input, OnInit } from '@angular/core';
-import { ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
+import {Component, forwardRef, Input, OnInit} from '@angular/core';
+import {ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR, Validators} from '@angular/forms';
 import {
   AwsSnsSmsProviderConfiguration,
   BindTypes,
@@ -15,8 +15,8 @@ import {
   TypeOfNumber,
   typeOfNumberMap
 } from '@shared/models/settings.models';
-import { isDefinedAndNotNull } from '@core/utils';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import {isDefinedAndNotNull} from '@core/utils';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
 
 @Component({
   selector: 'tb-smpp-sms-provider-configuration',

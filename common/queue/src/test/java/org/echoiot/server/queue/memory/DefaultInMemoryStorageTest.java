@@ -3,9 +3,9 @@ package org.echoiot.server.queue.memory;
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.queue.TbQueueMsg;
+import org.echoiot.server.queue.common.DefaultTbQueueMsg;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
-import org.echoiot.server.queue.common.DefaultTbQueueMsg;
 
 import java.util.ArrayList;
 import java.util.List;

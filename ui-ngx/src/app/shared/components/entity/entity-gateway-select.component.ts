@@ -1,19 +1,19 @@
-import { Component, ElementRef, EventEmitter, forwardRef, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ENTER } from '@angular/cdk/keycodes';
-import { Observable, of } from 'rxjs';
-import { filter, map, mergeMap, reduce, share, switchMap, tap } from 'rxjs/operators';
-import { EntityService } from '@core/http/entity.service';
-import { EntityType } from '@shared/models/entity-type.models';
-import { Device } from '@shared/models/device.models';
-import { DialogService } from '@core/services/dialog.service';
-import { TranslateService } from '@ngx-translate/core';
-import { DeviceService } from '@core/http/device.service';
-import { getCurrentAuthUser } from '@core/auth/auth.selectors';
-import { Authority } from '@shared/models/authority.enum';
+import {Component, ElementRef, EventEmitter, forwardRef, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {ENTER} from '@angular/cdk/keycodes';
+import {Observable, of} from 'rxjs';
+import {map, mergeMap, share, tap} from 'rxjs/operators';
+import {EntityService} from '@core/http/entity.service';
+import {EntityType} from '@shared/models/entity-type.models';
+import {Device} from '@shared/models/device.models';
+import {DialogService} from '@core/services/dialog.service';
+import {TranslateService} from '@ngx-translate/core';
+import {DeviceService} from '@core/http/device.service';
+import {getCurrentAuthUser} from '@core/auth/auth.selectors';
+import {Authority} from '@shared/models/authority.enum';
 
 @Component({
   selector: 'tb-entity-gateway-select',

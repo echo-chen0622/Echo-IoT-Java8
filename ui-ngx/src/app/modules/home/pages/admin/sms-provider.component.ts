@@ -1,14 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { PageComponent } from '@shared/components/page.component';
-import { Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AdminSettings, SmsProviderConfiguration } from '@shared/models/settings.models';
-import { AdminService } from '@core/http/admin.service';
-import { HasConfirmForm } from '@core/guards/confirm-on-exit.guard';
-import { MatDialog } from '@angular/material/dialog';
-import { SendTestSmsDialogComponent, SendTestSmsDialogData } from '@home/pages/admin/send-test-sms-dialog.component';
+import {Component, OnInit} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {PageComponent} from '@shared/components/page.component';
+import {Router} from '@angular/router';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AdminSettings, SmsProviderConfiguration} from '@shared/models/settings.models';
+import {AdminService} from '@core/http/admin.service';
+import {HasConfirmForm} from '@core/guards/confirm-on-exit.guard';
+import {MatDialog} from '@angular/material/dialog';
+import {SendTestSmsDialogComponent, SendTestSmsDialogData} from '@home/pages/admin/send-test-sms-dialog.component';
 
 @Component({
   selector: 'tb-sms-provider',

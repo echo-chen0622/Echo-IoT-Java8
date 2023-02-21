@@ -145,7 +145,7 @@ public class DefaultDeviceStateService extends AbstractPartitionBasedService<Dev
         this.dbTypeInfoComponent = dbTypeInfoComponent;
     }
 
-    @Resource
+    @Autowired
     public void setTsSubService(TelemetrySubscriptionService tsSubService) {
         this.tsSubService = tsSubService;
     }

@@ -1,6 +1,10 @@
 package org.echoiot.server.service.security.auth.jwt;
 
 import lombok.RequiredArgsConstructor;
+import org.echoiot.server.service.security.auth.JwtAuthenticationToken;
+import org.echoiot.server.service.security.auth.TokenOutdatingService;
+import org.echoiot.server.service.security.exception.JwtExpiredTokenException;
+import org.echoiot.server.service.security.model.SecurityUser;
 import org.echoiot.server.service.security.model.token.JwtTokenFactory;
 import org.echoiot.server.service.security.model.token.RawAccessJwtToken;
 import org.jetbrains.annotations.NotNull;
@@ -8,10 +12,6 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
-import org.echoiot.server.service.security.auth.JwtAuthenticationToken;
-import org.echoiot.server.service.security.auth.TokenOutdatingService;
-import org.echoiot.server.service.security.exception.JwtExpiredTokenException;
-import org.echoiot.server.service.security.model.SecurityUser;
 
 @Component
 @RequiredArgsConstructor

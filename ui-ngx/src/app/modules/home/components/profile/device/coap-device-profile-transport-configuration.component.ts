@@ -4,17 +4,17 @@ import {Store} from '@ngrx/store';
 import {AppState} from '@app/core/core.state';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
-    CoapDeviceProfileTransportConfiguration,
-    coapDeviceTypeTranslationMap,
-    CoapTransportDeviceType,
-    defaultAttributesSchema,
-    defaultRpcRequestSchema,
-    defaultRpcResponseSchema,
-    defaultTelemetrySchema,
-    DeviceProfileTransportConfiguration,
-    DeviceTransportType,
-    TransportPayloadType,
-    transportPayloadTypeTranslationMap,
+  CoapDeviceProfileTransportConfiguration,
+  coapDeviceTypeTranslationMap,
+  CoapTransportDeviceType,
+  defaultAttributesSchema,
+  defaultRpcRequestSchema,
+  defaultRpcResponseSchema,
+  defaultTelemetrySchema,
+  DeviceProfileTransportConfiguration,
+  DeviceTransportType,
+  TransportPayloadType,
+  transportPayloadTypeTranslationMap,
 } from '@shared/models/device.models';
 import {isDefinedAndNotNull} from '@core/utils';
 import {Subject} from 'rxjs';

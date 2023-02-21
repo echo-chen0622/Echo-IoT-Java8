@@ -9,21 +9,21 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { MatFormFieldAppearance } from '@angular/material/form-field/form-field';
-import { ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { merge, Observable, of, Subject } from 'rxjs';
-import { catchError, debounceTime, map, share, switchMap, tap } from 'rxjs/operators';
-import { Store } from '@ngrx/store';
-import { AppState } from '@app/core/core.state';
-import { TranslateService } from '@ngx-translate/core';
-import { AliasEntityType, EntityType } from '@shared/models/entity-type.models';
-import { BaseData } from '@shared/models/base-data';
-import { EntityId } from '@shared/models/id/entity-id';
-import { EntityService } from '@core/http/entity.service';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { getCurrentAuthUser } from '@core/auth/auth.selectors';
-import { Authority } from '@shared/models/authority.enum';
-import { isEqual } from '@core/utils';
+import {MatFormFieldAppearance} from '@angular/material/form-field/form-field';
+import {ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {merge, Observable, of, Subject} from 'rxjs';
+import {catchError, debounceTime, map, share, switchMap, tap} from 'rxjs/operators';
+import {Store} from '@ngrx/store';
+import {AppState} from '@app/core/core.state';
+import {TranslateService} from '@ngx-translate/core';
+import {AliasEntityType, EntityType} from '@shared/models/entity-type.models';
+import {BaseData} from '@shared/models/base-data';
+import {EntityId} from '@shared/models/id/entity-id';
+import {EntityService} from '@core/http/entity.service';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {getCurrentAuthUser} from '@core/auth/auth.selectors';
+import {Authority} from '@shared/models/authority.enum';
+import {isEqual} from '@core/utils';
 
 @Component({
   selector: 'tb-entity-autocomplete',

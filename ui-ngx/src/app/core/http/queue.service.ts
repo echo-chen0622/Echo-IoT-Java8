@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { defaultHttpOptionsFromConfig, RequestConfig } from '@core/http/http-utils';
-import { Observable } from 'rxjs';
-import { QueueInfo, ServiceType } from '@shared/models/queue.models';
-import { PageLink } from '@shared/models/page/page-link';
-import { PageData } from '@shared/models/page/page-data';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {defaultHttpOptionsFromConfig, RequestConfig} from '@core/http/http-utils';
+import {Observable} from 'rxjs';
+import {QueueInfo, ServiceType} from '@shared/models/queue.models';
+import {PageLink} from '@shared/models/page/page-link';
+import {PageData} from '@shared/models/page/page-data';
 
 @Injectable({
   providedIn: 'root'

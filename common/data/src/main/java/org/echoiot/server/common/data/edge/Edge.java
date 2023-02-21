@@ -5,8 +5,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.EqualsAndHashCode;
 import lombok.Setter;
 import lombok.ToString;
-import org.echoiot.server.common.data.validation.Length;
-import org.echoiot.server.common.data.validation.NoXss;
 import org.echoiot.server.common.data.HasCustomerId;
 import org.echoiot.server.common.data.HasName;
 import org.echoiot.server.common.data.HasTenantId;
@@ -15,6 +13,8 @@ import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.id.EdgeId;
 import org.echoiot.server.common.data.id.RuleChainId;
 import org.echoiot.server.common.data.id.TenantId;
+import org.echoiot.server.common.data.validation.Length;
+import org.echoiot.server.common.data.validation.NoXss;
 import org.jetbrains.annotations.NotNull;
 
 @ApiModel

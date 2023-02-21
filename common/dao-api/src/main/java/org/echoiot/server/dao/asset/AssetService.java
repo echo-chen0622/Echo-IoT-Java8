@@ -5,13 +5,9 @@ import org.echoiot.server.common.data.EntitySubtype;
 import org.echoiot.server.common.data.asset.Asset;
 import org.echoiot.server.common.data.asset.AssetInfo;
 import org.echoiot.server.common.data.asset.AssetSearchQuery;
+import org.echoiot.server.common.data.id.*;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
-import org.echoiot.server.common.data.id.AssetId;
-import org.echoiot.server.common.data.id.AssetProfileId;
-import org.echoiot.server.common.data.id.CustomerId;
-import org.echoiot.server.common.data.id.EdgeId;
-import org.echoiot.server.common.data.id.TenantId;
 
 import java.util.List;
 

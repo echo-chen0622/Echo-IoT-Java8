@@ -1,5 +1,5 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {AbstractControl, FormArray, FormBuilder, FormGroup, ValidationErrors, Validators} from '@angular/forms';
 import {
   ClientAuthenticationMethod,
   DomainSchema,
@@ -10,25 +10,27 @@ import {
   MapperConfigType,
   OAuth2ClientRegistrationTemplate,
   OAuth2DomainInfo,
-  OAuth2Info, OAuth2MobileInfo,
+  OAuth2Info,
+  OAuth2MobileInfo,
   OAuth2ParamsInfo,
-  OAuth2RegistrationInfo, PlatformType,
+  OAuth2RegistrationInfo,
+  PlatformType,
   platformTypeTranslations,
   TenantNameStrategy
 } from '@shared/models/oauth2.models';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { PageComponent } from '@shared/components/page.component';
-import { HasConfirmForm } from '@core/guards/confirm-on-exit.guard';
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { MatChipInputEvent } from '@angular/material/chips';
-import { WINDOW } from '@core/services/window.service';
-import { forkJoin, Subscription } from 'rxjs';
-import { DialogService } from '@core/services/dialog.service';
-import { TranslateService } from '@ngx-translate/core';
-import { isDefined, isDefinedAndNotNull, randomAlphanumeric } from '@core/utils';
-import { OAuth2Service } from '@core/http/oauth2.service';
-import { ActivatedRoute } from '@angular/router';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {PageComponent} from '@shared/components/page.component';
+import {HasConfirmForm} from '@core/guards/confirm-on-exit.guard';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import {MatChipInputEvent} from '@angular/material/chips';
+import {WINDOW} from '@core/services/window.service';
+import {forkJoin, Subscription} from 'rxjs';
+import {DialogService} from '@core/services/dialog.service';
+import {TranslateService} from '@ngx-translate/core';
+import {isDefined, isDefinedAndNotNull, randomAlphanumeric} from '@core/utils';
+import {OAuth2Service} from '@core/http/oauth2.service';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'tb-oauth2-settings',

@@ -1,6 +1,6 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { RateLimits, rateLimitsArrayToHtml } from './rate-limits.models';
+import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {TranslateService} from '@ngx-translate/core';
+import {RateLimits, rateLimitsArrayToHtml} from './rate-limits.models';
 
 @Component({
   selector: 'tb-rate-limits-text',

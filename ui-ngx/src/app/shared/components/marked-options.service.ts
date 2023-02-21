@@ -1,10 +1,10 @@
-import { MarkedOptions, MarkedRenderer } from 'ngx-markdown';
-import { Inject, Injectable } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { DOCUMENT } from '@angular/common';
-import { WINDOW } from '@core/services/window.service';
-import { Tokenizer, marked } from 'marked';
-import { Clipboard } from '@angular/cdk/clipboard';
+import {MarkedOptions, MarkedRenderer} from 'ngx-markdown';
+import {Inject, Injectable} from '@angular/core';
+import {TranslateService} from '@ngx-translate/core';
+import {DOCUMENT} from '@angular/common';
+import {WINDOW} from '@core/services/window.service';
+import {marked, Tokenizer} from 'marked';
+import {Clipboard} from '@angular/cdk/clipboard';
 
 const copyCodeBlock = '{:copy-code}';
 const codeStyleRegex = '^{:code-style="(.*)"}\n';

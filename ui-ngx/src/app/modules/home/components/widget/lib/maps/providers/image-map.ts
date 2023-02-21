@@ -1,11 +1,11 @@
 import L, {LatLngBounds, LatLngLiteral, LatLngTuple} from 'leaflet';
 import LeafletMap from '../leaflet-map';
 import {
-    CircleData,
-    defaultImageMapProviderSettings,
-    MapImage,
-    PosFunction,
-    WidgetUnitedMapSettings
+  CircleData,
+  defaultImageMapProviderSettings,
+  MapImage,
+  PosFunction,
+  WidgetUnitedMapSettings
 } from '../map-models';
 import {Observable, ReplaySubject} from 'rxjs';
 import {catchError, map, mergeMap} from 'rxjs/operators';

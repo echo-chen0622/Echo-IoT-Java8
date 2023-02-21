@@ -9,14 +9,14 @@ import {
   ViewChild,
   ViewContainerRef
 } from '@angular/core';
-import { PageComponent } from '@shared/components/page.component';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { WidgetContext } from '@home/models/widget-component.models';
-import { WidgetConfig } from '@shared/models/widget.models';
-import { IWidgetSubscription } from '@core/api/widget-api.models';
-import { BehaviorSubject, merge, Observable, of, ReplaySubject, Subject, throwError } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import {PageComponent} from '@shared/components/page.component';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {WidgetContext} from '@home/models/widget-component.models';
+import {WidgetConfig} from '@shared/models/widget.models';
+import {IWidgetSubscription} from '@core/api/widget-api.models';
+import {BehaviorSubject, merge, Observable, of, ReplaySubject, Subject, throwError} from 'rxjs';
+import {catchError, map, tap} from 'rxjs/operators';
 import {
   constructTableCssString,
   noDataMessage,
@@ -24,11 +24,11 @@ import {
   TableWidgetSettings
 } from '@home/components/widget/lib/table-widget.models';
 import cssjs from '@core/css/css';
-import { UtilsService } from '@core/services/utils.service';
-import { TranslateService } from '@ngx-translate/core';
-import { hashCode, isDefined, isNumber, parseHttpErrorMessage } from '@core/utils';
-import { CollectionViewer, DataSource } from '@angular/cdk/collections';
-import { emptyPageData, PageData } from '@shared/models/page/page-data';
+import {UtilsService} from '@core/services/utils.service';
+import {TranslateService} from '@ngx-translate/core';
+import {hashCode, isDefined, isNumber, parseHttpErrorMessage} from '@core/utils';
+import {CollectionViewer, DataSource} from '@angular/cdk/collections';
+import {emptyPageData, PageData} from '@shared/models/page/page-data';
 import {
   PersistentRpc,
   PersistentRpcData,
@@ -37,29 +37,29 @@ import {
   rpcStatusColors,
   rpcStatusTranslation
 } from '@shared/models/rpc.models';
-import { PageLink } from '@shared/models/page/page-link';
-import { Direction, SortOrder, sortOrderFromString } from '@shared/models/page/sort-order';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { NULL_UUID } from '@shared/models/id/has-uuid';
-import { DialogService } from '@core/services/dialog.service';
-import { DeviceService } from '@core/http/device.service';
-import { MatDialog } from '@angular/material/dialog';
+import {PageLink} from '@shared/models/page/page-link';
+import {Direction, SortOrder, sortOrderFromString} from '@shared/models/page/sort-order';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatSort} from '@angular/material/sort';
+import {NULL_UUID} from '@shared/models/id/has-uuid';
+import {DialogService} from '@core/services/dialog.service';
+import {DeviceService} from '@core/http/device.service';
+import {MatDialog} from '@angular/material/dialog';
 import {
   PersistentDetailsDialogComponent,
   PersistentDetailsDialogData
 } from '@home/components/widget/lib/rpc/persistent-details-dialog.component';
-import { ConnectedPosition, Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
-import { ComponentPortal } from '@angular/cdk/portal';
+import {ConnectedPosition, Overlay, OverlayConfig, OverlayRef} from '@angular/cdk/overlay';
+import {ComponentPortal} from '@angular/cdk/portal';
 import {
   PERSISTENT_FILTER_PANEL_DATA,
   PersistentFilterPanelComponent,
   PersistentFilterPanelData
 } from '@home/components/widget/lib/rpc/persistent-filter-panel.component';
-import { PersistentAddDialogComponent } from '@home/components/widget/lib/rpc/persistent-add-dialog.component';
-import { ResizeObserver } from '@juggle/resize-observer';
-import { hidePageSizePixelValue } from '@shared/models/constants';
-import { HttpErrorResponse } from '@angular/common/http';
+import {PersistentAddDialogComponent} from '@home/components/widget/lib/rpc/persistent-add-dialog.component';
+import {ResizeObserver} from '@juggle/resize-observer';
+import {hidePageSizePixelValue} from '@shared/models/constants';
+import {HttpErrorResponse} from '@angular/common/http';
 
 interface PersistentTableWidgetSettings extends TableWidgetSettings {
   defaultSortOrder: string;

@@ -1,12 +1,12 @@
 import {
-    createLabelFromDatasource,
-    hashCode,
-    isDefined,
-    isDefinedAndNotNull,
-    isFunction,
-    isNumber,
-    isUndefined,
-    padValue
+  createLabelFromDatasource,
+  hashCode,
+  isDefined,
+  isDefinedAndNotNull,
+  isFunction,
+  isNumber,
+  isUndefined,
+  padValue
 } from '@core/utils';
 import {Observable, Observer, of} from 'rxjs';
 import {map} from 'rxjs/operators';

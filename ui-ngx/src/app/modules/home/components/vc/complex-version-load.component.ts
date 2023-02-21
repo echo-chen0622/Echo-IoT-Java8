@@ -2,11 +2,11 @@ import {ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/c
 import {PageComponent} from '@shared/components/page.component';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {
-    createDefaultEntityTypesVersionLoad,
-    EntityTypeLoadResult,
-    EntityTypeVersionLoadRequest,
-    VersionLoadRequestType,
-    VersionLoadResult
+  createDefaultEntityTypesVersionLoad,
+  EntityTypeLoadResult,
+  EntityTypeVersionLoadRequest,
+  VersionLoadRequestType,
+  VersionLoadResult
 } from '@shared/models/vc.models';
 import {Store} from '@ngrx/store';
 import {AppState} from '@core/core.state';

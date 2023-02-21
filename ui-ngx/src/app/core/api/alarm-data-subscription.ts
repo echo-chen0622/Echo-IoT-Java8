@@ -1,17 +1,17 @@
 import {
-    AlarmDataCmd,
-    DataKeyType,
-    TelemetryService,
-    TelemetrySubscriber
+  AlarmDataCmd,
+  DataKeyType,
+  TelemetryService,
+  TelemetrySubscriber
 } from '@shared/models/telemetry/telemetry.models';
 import {DatasourceType} from '@shared/models/widget.models';
 import {
-    AlarmData,
-    AlarmDataPageLink,
-    EntityFilter,
-    EntityKey,
-    EntityKeyType,
-    KeyFilter
+  AlarmData,
+  AlarmDataPageLink,
+  EntityFilter,
+  EntityKey,
+  EntityKeyType,
+  KeyFilter
 } from '@shared/models/query/query.models';
 import {SubscriptionTimewindow} from '@shared/models/time/time.models';
 import {AlarmDataListener} from '@core/api/alarm-data.service';

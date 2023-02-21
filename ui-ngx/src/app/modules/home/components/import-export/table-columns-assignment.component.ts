@@ -1,15 +1,15 @@
-import { Component, ElementRef, forwardRef, Input, OnInit } from '@angular/core';
-import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { EntityType } from '@shared/models/entity-type.models';
+import {Component, ElementRef, forwardRef, Input, OnInit} from '@angular/core';
+import {ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator} from '@angular/forms';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {EntityType} from '@shared/models/entity-type.models';
 import {
   CsvColumnParam,
   ImportEntityColumnType,
   importEntityColumnTypeTranslations
 } from '@home/components/import-export/import-export.models';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { CollectionViewer, DataSource } from '@angular/cdk/collections';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 
 @Component({
   selector: 'tb-table-columns-assignment',

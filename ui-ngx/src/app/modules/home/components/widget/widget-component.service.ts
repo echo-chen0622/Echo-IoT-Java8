@@ -1,7 +1,7 @@
-import { ComponentFactory, Inject, Injectable, Optional, Type } from '@angular/core';
-import { DynamicComponentFactoryService } from '@core/services/dynamic-component-factory.service';
-import { WidgetService } from '@core/http/widget.service';
-import { forkJoin, from, Observable, of, ReplaySubject, Subject, throwError } from 'rxjs';
+import {ComponentFactory, Inject, Injectable, Optional, Type} from '@angular/core';
+import {DynamicComponentFactoryService} from '@core/services/dynamic-component-factory.service';
+import {WidgetService} from '@core/http/widget.service';
+import {forkJoin, from, Observable, of, ReplaySubject, Subject, throwError} from 'rxjs';
 import {
   ErrorWidgetType,
   MissingWidgetType,
@@ -11,26 +11,26 @@ import {
   WidgetTypeInstance
 } from '@home/models/widget-component.models';
 import cssjs from '@core/css/css';
-import { UtilsService } from '@core/services/utils.service';
-import { ModulesWithFactories, ResourcesService } from '@core/services/resources.service';
-import { Widget, widgetActionSources, WidgetControllerDescriptor, WidgetType } from '@shared/models/widget.models';
-import { catchError, map, mergeMap, switchMap, tap } from 'rxjs/operators';
-import { isFunction, isUndefined } from '@core/utils';
-import { TranslateService } from '@ngx-translate/core';
-import { DynamicWidgetComponent } from '@home/components/widget/dynamic-widget.component';
-import { WidgetComponentsModule } from '@home/components/widget/widget-components.module';
-import { WINDOW } from '@core/services/window.service';
+import {UtilsService} from '@core/services/utils.service';
+import {ModulesWithFactories, ResourcesService} from '@core/services/resources.service';
+import {Widget, widgetActionSources, WidgetControllerDescriptor, WidgetType} from '@shared/models/widget.models';
+import {catchError, map, mergeMap, switchMap, tap} from 'rxjs/operators';
+import {isFunction, isUndefined} from '@core/utils';
+import {TranslateService} from '@ngx-translate/core';
+import {DynamicWidgetComponent} from '@home/components/widget/dynamic-widget.component';
+import {WidgetComponentsModule} from '@home/components/widget/widget-components.module';
+import {WINDOW} from '@core/services/window.service';
 
-import { NULL_UUID } from '@shared/models/id/has-uuid';
-import { WidgetTypeId } from '@app/shared/models/id/widget-type-id';
-import { TenantId } from '@app/shared/models/id/tenant-id';
-import { SharedModule } from '@shared/shared.module';
-import { MODULES_MAP } from '@shared/public-api';
+import {NULL_UUID} from '@shared/models/id/has-uuid';
+import {WidgetTypeId} from '@app/shared/models/id/widget-type-id';
+import {TenantId} from '@app/shared/models/id/tenant-id';
+import {SharedModule} from '@shared/shared.module';
+import {MODULES_MAP} from '@shared/public-api';
 import * as tinycolor_ from 'tinycolor2';
 import moment from 'moment';
-import { IModulesMap } from '@modules/common/modules-map.models';
-import { HOME_COMPONENTS_MODULE_TOKEN } from '@home/components/tokens';
-import { widgetSettingsComponentsMap } from '@home/components/widget/lib/settings/widget-settings.module';
+import {IModulesMap} from '@modules/common/modules-map.models';
+import {HOME_COMPONENTS_MODULE_TOKEN} from '@home/components/tokens';
+import {widgetSettingsComponentsMap} from '@home/components/widget/lib/settings/widget-settings.module';
 
 const tinycolor = tinycolor_;
 

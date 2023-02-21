@@ -1,22 +1,22 @@
 import {Component, forwardRef, Input, OnInit} from '@angular/core';
 import {
-    ControlValueAccessor,
-    FormBuilder,
-    FormControl,
-    FormGroup,
-    NG_VALIDATORS,
-    NG_VALUE_ACCESSOR,
-    Validator,
-    Validators
+  ControlValueAccessor,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR,
+  Validator,
+  Validators
 } from '@angular/forms';
 import {PageComponent} from '@shared/components/page.component';
 import {Store} from '@ngrx/store';
 import {AppState} from '@core/core.state';
 import {TranslateService} from '@ngx-translate/core';
 import {
-    GoogleMapProviderSettings,
-    GoogleMapType,
-    googleMapTypeProviderTranslationMap
+  GoogleMapProviderSettings,
+  GoogleMapType,
+  googleMapTypeProviderTranslationMap
 } from '@home/components/widget/lib/maps/map-models';
 
 @Component({

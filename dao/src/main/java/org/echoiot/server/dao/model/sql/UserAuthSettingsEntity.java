@@ -4,8 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
 import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.common.data.id.UserAuthSettingsId;
 import org.echoiot.server.common.data.id.UserId;
@@ -15,6 +13,8 @@ import org.echoiot.server.dao.model.BaseEntity;
 import org.echoiot.server.dao.model.BaseSqlEntity;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.util.mapping.JsonStringType;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Column;

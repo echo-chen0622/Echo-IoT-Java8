@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { TranslateService } from '@ngx-translate/core';
-import { Observable, of } from 'rxjs';
-import { catchError, map, mergeMap, tap } from 'rxjs/operators';
-import { helpBaseUrl as siteBaseUrl } from '@shared/models/constants';
-import { UiSettingsService } from '@core/http/ui-settings.service';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {TranslateService} from '@ngx-translate/core';
+import {Observable, of} from 'rxjs';
+import {catchError, map, mergeMap, tap} from 'rxjs/operators';
+import {helpBaseUrl as siteBaseUrl} from '@shared/models/constants';
+import {UiSettingsService} from '@core/http/ui-settings.service';
 
 const localHelpBaseUrl = '/assets';
 

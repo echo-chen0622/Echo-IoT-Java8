@@ -1,7 +1,7 @@
-import L, { FeatureGroup, LatLngBounds, LatLngTuple, Projection } from 'leaflet';
+import L, {FeatureGroup, LatLngBounds, LatLngTuple, Projection} from 'leaflet';
 import tinycolor from 'tinycolor2';
 import 'leaflet-providers';
-import { MarkerClusterGroup, MarkerClusterGroupOptions } from 'leaflet.markercluster/dist/leaflet.markercluster';
+import {MarkerClusterGroup, MarkerClusterGroupOptions} from 'leaflet.markercluster/dist/leaflet.markercluster';
 import '@geoman-io/leaflet-geoman-free';
 
 import {
@@ -15,14 +15,14 @@ import {
   WidgetPolylineSettings,
   WidgetUnitedMapSettings
 } from './map-models';
-import { Marker } from './markers';
-import { Observable, of } from 'rxjs';
-import { Polyline } from './polyline';
-import { Polygon } from './polygon';
-import { Circle } from './circle';
-import { createTooltip, isCutPolygon, isJSON } from '@home/components/widget/lib/maps/maps-utils';
-import { checkLngLat, createLoadingDiv } from '@home/components/widget/lib/maps/common-maps-utils';
-import { WidgetContext } from '@home/models/widget-component.models';
+import {Marker} from './markers';
+import {Observable, of} from 'rxjs';
+import {Polyline} from './polyline';
+import {Polygon} from './polygon';
+import {Circle} from './circle';
+import {createTooltip, isCutPolygon, isJSON} from '@home/components/widget/lib/maps/maps-utils';
+import {checkLngLat, createLoadingDiv} from '@home/components/widget/lib/maps/common-maps-utils';
+import {WidgetContext} from '@home/models/widget-component.models';
 import {
   deepClone,
   formattedDataArrayFromDatasourceData,
@@ -33,13 +33,13 @@ import {
   mergeFormattedData,
   safeExecute
 } from '@core/utils';
-import { TranslateService } from '@ngx-translate/core';
+import {TranslateService} from '@ngx-translate/core';
 import {
   SelectEntityDialogComponent,
   SelectEntityDialogData
 } from '@home/components/widget/lib/maps/dialogs/select-entity-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
-import { FormattedData, ReplaceInfo } from '@shared/models/widget.models';
+import {MatDialog} from '@angular/material/dialog';
+import {FormattedData, ReplaceInfo} from '@shared/models/widget.models';
 import ITooltipsterInstance = JQueryTooltipster.ITooltipsterInstance;
 
 export default abstract class LeafletMap {

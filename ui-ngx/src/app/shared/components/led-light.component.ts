@@ -1,6 +1,6 @@
-import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { RaphaelElement, RaphaelPaper, RaphaelSet } from 'raphael';
+import {AfterViewInit, Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {RaphaelElement, RaphaelPaper, RaphaelSet} from 'raphael';
 import * as tinycolor_ from 'tinycolor2';
 
 const tinycolor = tinycolor_;

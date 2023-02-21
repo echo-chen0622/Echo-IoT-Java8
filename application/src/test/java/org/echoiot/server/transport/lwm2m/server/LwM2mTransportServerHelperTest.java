@@ -1,9 +1,9 @@
 package org.echoiot.server.transport.lwm2m.server;
 
+import org.echoiot.server.gen.transport.TransportProtos;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.echoiot.server.gen.transport.TransportProtos;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -13,17 +13,10 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyMap;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.BDDMockito.willReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.echoiot.server.transport.lwm2m.utils.LwM2MTransportUtil.LOG_LWM2M_TELEMETRY;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.BDDMockito.willReturn;
+import static org.mockito.Mockito.*;
 
 class LwM2mTransportServerHelperTest {
 

@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 @Profile("install")
 public class SqlTsDatabaseSchemaService extends SqlAbstractDatabaseSchemaService implements TsDatabaseSchemaService {
 
+    /**
+     * 分区类型，默认按月分区
+     */
     @Value("${sql.postgres.ts_key_value_partitioning:MONTHS}")
     private String partitionType;
 

@@ -1,13 +1,13 @@
-import { AfterViewInit, Component, ElementRef, forwardRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
-import { Observable, of } from 'rxjs';
-import { map, mergeMap, tap } from 'rxjs/operators';
-import { Store } from '@ngrx/store';
-import { AppState } from '@app/core/core.state';
-import { TranslateService } from '@ngx-translate/core';
-import { BroadcastService } from '@app/core/services/broadcast.service';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { RelationTypes } from '@app/shared/models/relation.models';
+import {AfterViewInit, Component, ElementRef, forwardRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR, Validators} from '@angular/forms';
+import {Observable, of} from 'rxjs';
+import {map, mergeMap, tap} from 'rxjs/operators';
+import {Store} from '@ngrx/store';
+import {AppState} from '@app/core/core.state';
+import {TranslateService} from '@ngx-translate/core';
+import {BroadcastService} from '@app/core/services/broadcast.service';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {RelationTypes} from '@app/shared/models/relation.models';
 
 @Component({
   selector: 'tb-relation-type-autocomplete',

@@ -1,12 +1,7 @@
 package org.echoiot.server.dao.alarm;
 
 import com.google.common.util.concurrent.ListenableFuture;
-import org.echoiot.server.common.data.alarm.Alarm;
-import org.echoiot.server.common.data.alarm.AlarmInfo;
-import org.echoiot.server.common.data.alarm.AlarmQuery;
-import org.echoiot.server.common.data.alarm.AlarmSeverity;
-import org.echoiot.server.common.data.alarm.AlarmStatus;
-import org.echoiot.server.common.data.alarm.EntityAlarm;
+import org.echoiot.server.common.data.alarm.*;
 import org.echoiot.server.common.data.id.AlarmId;
 import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.id.EntityId;

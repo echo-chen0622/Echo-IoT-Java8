@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input, OnDestroy, OnInit } from '@angular/core';
+import {Component, forwardRef, Input, OnDestroy, OnInit} from '@angular/core';
 import {
   ControlValueAccessor,
   FormBuilder,
@@ -8,9 +8,9 @@ import {
   ValidatorFn,
   Validators
 } from '@angular/forms';
-import { Store } from '@ngrx/store';
-import { AppState } from '@app/core/core.state';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import {Store} from '@ngrx/store';
+import {AppState} from '@app/core/core.state';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
   defaultAttributesSchema,
   defaultRpcRequestSchema,
@@ -22,9 +22,9 @@ import {
   TransportPayloadType,
   transportPayloadTypeTranslationMap
 } from '@shared/models/device.models';
-import { isDefinedAndNotNull } from '@core/utils';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import {isDefinedAndNotNull} from '@core/utils';
+import {Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
   selector: 'tb-mqtt-device-profile-transport-configuration',

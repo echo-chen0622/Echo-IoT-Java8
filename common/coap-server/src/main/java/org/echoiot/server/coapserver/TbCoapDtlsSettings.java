@@ -1,24 +1,23 @@
 package org.echoiot.server.coapserver;
 
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.server.common.transport.TransportService;
+import org.echoiot.server.common.transport.config.ssl.SslCredentials;
+import org.echoiot.server.common.transport.config.ssl.SslCredentialsConfig;
+import org.echoiot.server.queue.discovery.TbServiceInfoProvider;
 import org.eclipse.californium.elements.config.Configuration;
 import org.eclipse.californium.elements.util.SslContextUtil;
 import org.eclipse.californium.scandium.config.DtlsConnectorConfig;
 import org.eclipse.californium.scandium.dtls.CertificateType;
 import org.eclipse.californium.scandium.dtls.x509.SingleCertificateProvider;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-import org.echoiot.server.common.transport.TransportService;
-import org.echoiot.server.common.transport.config.ssl.SslCredentials;
-import org.echoiot.server.common.transport.config.ssl.SslCredentialsConfig;
-import org.echoiot.server.queue.discovery.TbServiceInfoProvider;
 
+import javax.annotation.Resource;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
@@ -26,9 +25,7 @@ import java.util.Collections;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.eclipse.californium.elements.config.CertificateAuthenticationMode.WANTED;
-import static org.eclipse.californium.scandium.config.DtlsConfig.DTLS_CLIENT_AUTHENTICATION_MODE;
-import static org.eclipse.californium.scandium.config.DtlsConfig.DTLS_RETRANSMISSION_TIMEOUT;
-import static org.eclipse.californium.scandium.config.DtlsConfig.DTLS_ROLE;
+import static org.eclipse.californium.scandium.config.DtlsConfig.*;
 import static org.eclipse.californium.scandium.config.DtlsConfig.DtlsRole.SERVER_ONLY;
 
 @Slf4j

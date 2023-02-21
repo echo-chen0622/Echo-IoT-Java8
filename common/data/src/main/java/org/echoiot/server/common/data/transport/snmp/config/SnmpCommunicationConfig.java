@@ -5,13 +5,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import org.echoiot.server.common.data.transport.snmp.SnmpCommunicationSpec;
+import org.echoiot.server.common.data.transport.snmp.SnmpMapping;
+import org.echoiot.server.common.data.transport.snmp.SnmpMethod;
 import org.echoiot.server.common.data.transport.snmp.config.impl.ClientAttributesQueryingSnmpCommunicationConfig;
 import org.echoiot.server.common.data.transport.snmp.config.impl.SharedAttributesSettingSnmpCommunicationConfig;
 import org.echoiot.server.common.data.transport.snmp.config.impl.TelemetryQueryingSnmpCommunicationConfig;
 import org.echoiot.server.common.data.transport.snmp.config.impl.ToDeviceRpcRequestSnmpCommunicationConfig;
-import org.echoiot.server.common.data.transport.snmp.SnmpCommunicationSpec;
-import org.echoiot.server.common.data.transport.snmp.SnmpMapping;
-import org.echoiot.server.common.data.transport.snmp.SnmpMethod;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;

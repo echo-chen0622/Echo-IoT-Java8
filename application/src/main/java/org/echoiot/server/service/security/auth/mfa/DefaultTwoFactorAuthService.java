@@ -20,10 +20,10 @@ import org.echoiot.server.service.security.model.SecurityUser;
 import org.echoiot.server.service.security.system.SystemSecurityService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.Collection;
 import java.util.EnumMap;
 import java.util.Map;

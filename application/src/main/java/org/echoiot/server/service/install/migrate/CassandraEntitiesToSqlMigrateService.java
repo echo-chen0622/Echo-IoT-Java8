@@ -6,11 +6,11 @@ import org.echoiot.server.common.data.UUIDConverter;
 import org.echoiot.server.dao.cassandra.CassandraCluster;
 import org.echoiot.server.dao.util.NoSqlAnyDao;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.List;
 

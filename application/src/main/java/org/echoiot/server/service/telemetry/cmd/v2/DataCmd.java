@@ -2,7 +2,6 @@ package org.echoiot.server.service.telemetry.cmd.v2;
 
 import lombok.Data;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Data
 public class DataCmd {

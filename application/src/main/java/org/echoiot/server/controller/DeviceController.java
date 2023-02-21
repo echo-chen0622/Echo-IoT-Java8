@@ -31,7 +31,7 @@ import org.echoiot.server.service.device.DeviceBulkImportService;
 import org.echoiot.server.service.entitiy.device.TbDeviceService;
 import org.echoiot.server.service.security.model.SecurityUser;
 import org.echoiot.server.service.security.permission.Operation;
-import org.echoiot.server.service.security.permission.Resource;
+import org.echoiot.server.service.security.permission.PerResource;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -111,7 +111,7 @@ public class DeviceController extends BaseController {
         if (device.getId() != null) {
             oldDevice = checkDeviceId(device.getId(), Operation.WRITE);
         } else {
-            checkEntity(null, device, Resource.DEVICE);
+            checkEntity(null, device, PerResource.DEVICE);
         }
         return tbDeviceService.save(device, oldDevice, accessToken, getCurrentUser());
     }
@@ -131,7 +131,7 @@ public class DeviceController extends BaseController {
         Device device = checkNotNull(deviceAndCredentials.getDevice());
         DeviceCredentials credentials = checkNotNull(deviceAndCredentials.getCredentials());
         device.setTenantId(getCurrentUser().getTenantId());
-        checkEntity(device.getId(), device, Resource.DEVICE);
+        checkEntity(device.getId(), device, PerResource.DEVICE);
         return tbDeviceService.saveDeviceWithCredentials(device, credentials, getCurrentUser());
     }
 
@@ -442,7 +442,7 @@ public class DeviceController extends BaseController {
             List<Device> devices = checkNotNull(deviceService.findDevicesByQuery(getCurrentUser().getTenantId(), query).get());
             devices = devices.stream().filter(device -> {
                 try {
-                    accessControlService.checkPermission(getCurrentUser(), Resource.DEVICE, Operation.READ, device.getId(), device);
+                    accessControlService.checkPermission(getCurrentUser(), PerResource.DEVICE, Operation.READ, device.getId(), device);
                     return true;
                 } catch (EchoiotException e) {
                     return false;
@@ -494,8 +494,8 @@ public class DeviceController extends BaseController {
         CustomerId customerId = user.getCustomerId();
 
         Device device = checkNotNull(deviceService.findDeviceByTenantIdAndName(tenantId, deviceName));
-        accessControlService.checkPermission(user, Resource.DEVICE, Operation.CLAIM_DEVICES,
-                device.getId(), device);
+        accessControlService.checkPermission(user, PerResource.DEVICE, Operation.CLAIM_DEVICES,
+                                             device.getId(), device);
         @NotNull String secretKey = getSecretKey(claimRequest);
 
         ListenableFuture<ClaimResult> future = tbDeviceService.claimDevice(tenantId, device, customerId, secretKey, user);
@@ -541,8 +541,8 @@ public class DeviceController extends BaseController {
         TenantId tenantId = user.getTenantId();
 
         Device device = checkNotNull(deviceService.findDeviceByTenantIdAndName(tenantId, deviceName));
-        accessControlService.checkPermission(user, Resource.DEVICE, Operation.CLAIM_DEVICES,
-                device.getId(), device);
+        accessControlService.checkPermission(user, PerResource.DEVICE, Operation.CLAIM_DEVICES,
+                                             device.getId(), device);
 
         ListenableFuture<ReclaimResult> result = tbDeviceService.reclaimDevice(tenantId, device, user);
         Futures.addCallback(result, new FutureCallback<>() {
@@ -678,7 +678,7 @@ public class DeviceController extends BaseController {
             }
             @NotNull List<Device> filteredDevices = nonFilteredResult.getData().stream().filter(device -> {
                 try {
-                    accessControlService.checkPermission(getCurrentUser(), Resource.DEVICE, Operation.READ, device.getId(), device);
+                    accessControlService.checkPermission(getCurrentUser(), PerResource.DEVICE, Operation.READ, device.getId(), device);
                     return true;
                 } catch (EchoiotException e) {
                     return false;

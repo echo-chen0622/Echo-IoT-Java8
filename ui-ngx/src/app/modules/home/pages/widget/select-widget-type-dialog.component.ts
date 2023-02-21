@@ -1,10 +1,10 @@
-import { Component } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { DialogComponent } from '@shared/components/dialog.component';
-import { Router } from '@angular/router';
-import { widgetType, widgetTypesData } from '@shared/models/widget.models';
+import {Component} from '@angular/core';
+import {MatDialogRef} from '@angular/material/dialog';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {DialogComponent} from '@shared/components/dialog.component';
+import {Router} from '@angular/router';
+import {widgetType, widgetTypesData} from '@shared/models/widget.models';
 
 @Component({
   selector: 'tb-select-widget-type-dialog',

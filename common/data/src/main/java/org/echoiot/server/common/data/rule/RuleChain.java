@@ -7,8 +7,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
-import org.echoiot.server.common.data.validation.Length;
-import org.echoiot.server.common.data.validation.NoXss;
 import org.echoiot.server.common.data.ExportableEntity;
 import org.echoiot.server.common.data.HasName;
 import org.echoiot.server.common.data.HasTenantId;
@@ -16,6 +14,8 @@ import org.echoiot.server.common.data.SearchTextBasedWithAdditionalInfo;
 import org.echoiot.server.common.data.id.RuleChainId;
 import org.echoiot.server.common.data.id.RuleNodeId;
 import org.echoiot.server.common.data.id.TenantId;
+import org.echoiot.server.common.data.validation.Length;
+import org.echoiot.server.common.data.validation.NoXss;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

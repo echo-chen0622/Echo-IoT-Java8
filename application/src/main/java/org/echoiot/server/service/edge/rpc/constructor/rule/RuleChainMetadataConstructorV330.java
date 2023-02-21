@@ -2,25 +2,21 @@ package org.echoiot.server.service.edge.rpc.constructor.rule;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.common.util.JacksonUtil;
+import org.echoiot.rule.engine.flow.TbRuleChainInputNode;
+import org.echoiot.rule.engine.flow.TbRuleChainInputNodeConfiguration;
+import org.echoiot.rule.engine.flow.TbRuleChainOutputNode;
 import org.echoiot.server.common.data.id.RuleChainId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.rule.NodeConnectionInfo;
 import org.echoiot.server.common.data.rule.RuleChainConnectionInfo;
 import org.echoiot.server.common.data.rule.RuleChainMetaData;
 import org.echoiot.server.common.data.rule.RuleNode;
-import org.echoiot.common.util.JacksonUtil;
-import org.echoiot.rule.engine.flow.TbRuleChainInputNode;
-import org.echoiot.rule.engine.flow.TbRuleChainInputNodeConfiguration;
-import org.echoiot.rule.engine.flow.TbRuleChainOutputNode;
 import org.echoiot.server.gen.edge.v1.RuleChainMetadataUpdateMsg;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NavigableSet;
-import java.util.TreeSet;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j

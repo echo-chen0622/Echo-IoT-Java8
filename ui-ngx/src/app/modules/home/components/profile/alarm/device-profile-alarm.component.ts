@@ -1,13 +1,13 @@
 import {Component, EventEmitter, forwardRef, Input, OnInit, Output} from '@angular/core';
 import {
-    ControlValueAccessor,
-    FormBuilder,
-    FormControl,
-    FormGroup,
-    NG_VALIDATORS,
-    NG_VALUE_ACCESSOR,
-    Validator,
-    Validators
+  ControlValueAccessor,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR,
+  Validator,
+  Validators
 } from '@angular/forms';
 import {AlarmRule, DeviceProfileAlarm, deviceProfileAlarmValidator} from '@shared/models/device.models';
 import {MatDialog} from '@angular/material/dialog';

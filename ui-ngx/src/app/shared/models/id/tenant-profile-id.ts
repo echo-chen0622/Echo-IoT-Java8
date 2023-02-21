@@ -1,5 +1,5 @@
-import { EntityId } from './entity-id';
-import { EntityType } from '@shared/models/entity-type.models';
+import {EntityId} from './entity-id';
+import {EntityType} from '@shared/models/entity-type.models';
 
 export class TenantProfileId implements EntityId {
   entityType = EntityType.TENANT_PROFILE;

@@ -2,13 +2,6 @@ package org.echoiot.server.dao.sql.asset;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import lombok.extern.slf4j.Slf4j;
-import org.echoiot.server.dao.model.sql.AssetEntity;
-import org.echoiot.server.dao.model.sql.AssetInfoEntity;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Component;
 import org.echoiot.server.common.data.EntitySubtype;
 import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.asset.Asset;
@@ -18,19 +11,20 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.common.data.page.SortOrder;
+import org.echoiot.server.common.data.util.TbPair;
 import org.echoiot.server.dao.DaoUtil;
 import org.echoiot.server.dao.asset.AssetDao;
-import org.echoiot.server.common.data.util.TbPair;
+import org.echoiot.server.dao.model.sql.AssetEntity;
+import org.echoiot.server.dao.model.sql.AssetInfoEntity;
 import org.echoiot.server.dao.sql.JpaAbstractSearchTextDao;
 import org.echoiot.server.dao.util.SqlDao;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import javax.annotation.Resource;
+import java.util.*;
 
 import static org.echoiot.server.dao.asset.BaseAssetService.TB_SERVICE_QUEUE;
 

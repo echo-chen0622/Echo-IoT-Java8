@@ -5,7 +5,6 @@ import org.echoiot.server.common.data.CacheConstants;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
-import org.echoiot.server.gen.transport.TransportProtos;
 
 import java.util.UUID;
 

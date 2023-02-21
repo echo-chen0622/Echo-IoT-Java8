@@ -1,13 +1,7 @@
 package org.echoiot.server.queue.provider;
 
+import org.echoiot.server.gen.transport.TransportProtos.*;
 import org.echoiot.server.queue.TbQueueProducer;
-import org.echoiot.server.gen.transport.TransportProtos.ToCoreMsg;
-import org.echoiot.server.gen.transport.TransportProtos.ToCoreNotificationMsg;
-import org.echoiot.server.gen.transport.TransportProtos.ToRuleEngineMsg;
-import org.echoiot.server.gen.transport.TransportProtos.ToRuleEngineNotificationMsg;
-import org.echoiot.server.gen.transport.TransportProtos.ToTransportMsg;
-import org.echoiot.server.gen.transport.TransportProtos.ToUsageStatsServiceMsg;
-import org.echoiot.server.gen.transport.TransportProtos.ToVersionControlServiceMsg;
 import org.echoiot.server.queue.common.TbProtoQueueMsg;
 
 /**

@@ -10,10 +10,10 @@ import {
   ViewChildren,
   ViewContainerRef
 } from '@angular/core';
-import { PageComponent } from '@shared/components/page.component';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { WidgetAction, WidgetContext } from '@home/models/widget-component.models';
+import {PageComponent} from '@shared/components/page.component';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {WidgetAction, WidgetContext} from '@home/models/widget-component.models';
 import {
   DataKey,
   Datasource,
@@ -22,8 +22,8 @@ import {
   WidgetActionDescriptor,
   WidgetConfig
 } from '@shared/models/widget.models';
-import { UtilsService } from '@core/services/utils.service';
-import { TranslateService } from '@ngx-translate/core';
+import {UtilsService} from '@core/services/utils.service';
+import {TranslateService} from '@ngx-translate/core';
 import {
   formattedDataFormDatasourceData,
   hashCode,
@@ -34,15 +34,15 @@ import {
   isUndefined
 } from '@core/utils';
 import cssjs from '@core/css/css';
-import { PageLink } from '@shared/models/page/page-link';
-import { Direction, SortOrder, sortOrderFromString } from '@shared/models/page/sort-order';
-import { CollectionViewer, DataSource } from '@angular/cdk/collections';
-import { BehaviorSubject, fromEvent, merge, Observable, of, Subscription } from 'rxjs';
-import { emptyPageData, PageData } from '@shared/models/page/page-data';
-import { catchError, debounceTime, distinctUntilChanged, map, tap } from 'rxjs/operators';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import {PageLink} from '@shared/models/page/page-link';
+import {Direction, SortOrder, sortOrderFromString} from '@shared/models/page/sort-order';
+import {CollectionViewer, DataSource} from '@angular/cdk/collections';
+import {BehaviorSubject, fromEvent, merge, Observable, of, Subscription} from 'rxjs';
+import {emptyPageData, PageData} from '@shared/models/page/page-data';
+import {catchError, debounceTime, distinctUntilChanged, map, tap} from 'rxjs/operators';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatSort} from '@angular/material/sort';
+import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {
   CellContentInfo,
   CellStyleInfo,
@@ -59,12 +59,12 @@ import {
   TableWidgetDataKeySettings,
   TableWidgetSettings
 } from '@home/components/widget/lib/table-widget.models';
-import { Overlay } from '@angular/cdk/overlay';
-import { SubscriptionEntityInfo } from '@core/api/widget-api.models';
-import { DatePipe } from '@angular/common';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ResizeObserver } from '@juggle/resize-observer';
-import { hidePageSizePixelValue } from '@shared/models/constants';
+import {Overlay} from '@angular/cdk/overlay';
+import {SubscriptionEntityInfo} from '@core/api/widget-api.models';
+import {DatePipe} from '@angular/common';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {ResizeObserver} from '@juggle/resize-observer';
+import {hidePageSizePixelValue} from '@shared/models/constants';
 
 export interface TimeseriesTableWidgetSettings extends TableWidgetSettings {
   showTimestamp: boolean;

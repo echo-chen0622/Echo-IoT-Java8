@@ -2,9 +2,6 @@ package org.echoiot.server.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.TestPropertySource;
 import org.echoiot.server.common.data.EventInfo;
 import org.echoiot.server.common.data.event.EventType;
 import org.echoiot.server.common.data.id.EntityId;
@@ -15,7 +12,10 @@ import org.echoiot.server.common.data.page.TimePageLink;
 import org.echoiot.server.common.data.rule.RuleChain;
 import org.echoiot.server.common.data.rule.RuleChainMetaData;
 import org.echoiot.server.dao.rule.RuleChainService;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.test.context.TestPropertySource;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.function.Predicate;
 

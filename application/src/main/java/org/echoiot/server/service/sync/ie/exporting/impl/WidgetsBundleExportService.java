@@ -7,10 +7,10 @@ import org.echoiot.server.common.data.sync.ie.WidgetsBundleExportData;
 import org.echoiot.server.common.data.widget.WidgetTypeDetails;
 import org.echoiot.server.common.data.widget.WidgetsBundle;
 import org.echoiot.server.dao.widget.WidgetTypeService;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.stereotype.Service;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.sync.vc.data.EntitiesExportCtx;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Set;

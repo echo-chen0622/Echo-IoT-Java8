@@ -2,9 +2,9 @@ package org.echoiot.server.dao.sql.attributes;
 
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.dao.model.sql.AttributeKvEntity;
+import org.echoiot.server.dao.util.SqlDao;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,8 +12,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
-import org.echoiot.server.dao.util.SqlDao;
 
+import javax.annotation.Resource;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;

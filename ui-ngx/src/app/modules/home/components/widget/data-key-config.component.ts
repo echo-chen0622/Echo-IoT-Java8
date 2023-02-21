@@ -3,22 +3,22 @@ import {PageComponent} from '@shared/components/page.component';
 import {Store} from '@ngrx/store';
 import {AppState} from '@core/core.state';
 import {
-    ComparisonResultType,
-    comparisonResultTypeTranslationMap,
-    DataKey,
-    dataKeyAggregationTypeHintTranslationMap,
-    Widget,
-    widgetType
+  ComparisonResultType,
+  comparisonResultTypeTranslationMap,
+  DataKey,
+  dataKeyAggregationTypeHintTranslationMap,
+  Widget,
+  widgetType
 } from '@shared/models/widget.models';
 import {
-    ControlValueAccessor,
-    FormBuilder,
-    FormControl,
-    FormGroup,
-    NG_VALIDATORS,
-    NG_VALUE_ACCESSOR,
-    Validator,
-    Validators
+  ControlValueAccessor,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR,
+  Validator,
+  Validators
 } from '@angular/forms';
 import {UtilsService} from '@core/services/utils.service';
 import {TranslateService} from '@ngx-translate/core';

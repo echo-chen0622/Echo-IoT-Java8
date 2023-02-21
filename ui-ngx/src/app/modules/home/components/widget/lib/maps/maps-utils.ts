@@ -1,8 +1,6 @@
 import L from 'leaflet';
-import {
-  ShowTooltipAction, WidgetToolipSettings
-} from './map-models';
-import { Datasource } from '@app/shared/models/widget.models';
+import {ShowTooltipAction, WidgetToolipSettings} from './map-models';
+import {Datasource} from '@app/shared/models/widget.models';
 
 export function createTooltip(target: L.Layer,
                               settings: Partial<WidgetToolipSettings>,

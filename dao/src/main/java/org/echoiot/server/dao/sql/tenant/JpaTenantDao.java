@@ -1,11 +1,5 @@
 package org.echoiot.server.dao.sql.tenant;
 
-import org.echoiot.server.dao.model.sql.TenantEntity;
-import org.echoiot.server.dao.model.sql.TenantInfoEntity;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Component;
 import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.Tenant;
 import org.echoiot.server.common.data.TenantInfo;
@@ -14,10 +8,16 @@ import org.echoiot.server.common.data.id.TenantProfileId;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.dao.DaoUtil;
+import org.echoiot.server.dao.model.sql.TenantEntity;
+import org.echoiot.server.dao.model.sql.TenantInfoEntity;
 import org.echoiot.server.dao.sql.JpaAbstractSearchTextDao;
 import org.echoiot.server.dao.tenant.TenantDao;
 import org.echoiot.server.dao.util.SqlDao;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;

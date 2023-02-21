@@ -1,10 +1,10 @@
 package org.echoiot.server.transport.lwm2m.server.downlink;
 
-import org.eclipse.leshan.core.request.CreateRequest;
-import org.eclipse.leshan.core.response.CreateResponse;
 import org.echoiot.server.transport.lwm2m.server.client.LwM2mClient;
 import org.echoiot.server.transport.lwm2m.server.log.LwM2MTelemetryLogService;
 import org.echoiot.server.transport.lwm2m.server.uplink.LwM2mUplinkMsgHandler;
+import org.eclipse.leshan.core.request.CreateRequest;
+import org.eclipse.leshan.core.response.CreateResponse;
 import org.jetbrains.annotations.NotNull;
 
 public class TbLwM2MCreateResponseCallback extends TbLwM2MUplinkTargetedCallback<CreateRequest, CreateResponse> {

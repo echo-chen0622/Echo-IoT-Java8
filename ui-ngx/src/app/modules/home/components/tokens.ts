@@ -1,5 +1,5 @@
-import { InjectionToken, Type } from '@angular/core';
-import { ComponentType } from '@angular/cdk/portal';
+import {InjectionToken, Type} from '@angular/core';
+import {ComponentType} from '@angular/cdk/portal';
 
 export const SHARED_HOME_COMPONENTS_MODULE_TOKEN: InjectionToken<Type<any>> =
   new InjectionToken<Type<any>>('SHARED_HOME_COMPONENTS_MODULE_TOKEN');

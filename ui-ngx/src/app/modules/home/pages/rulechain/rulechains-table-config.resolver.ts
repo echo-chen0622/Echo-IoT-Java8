@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 
-import { ActivatedRouteSnapshot, Resolve, Router } from '@angular/router';
+import {ActivatedRouteSnapshot, Resolve, Router} from '@angular/router';
 import {
   CellActionDescriptor,
   checkBoxCell,
@@ -11,30 +11,30 @@ import {
   GroupActionDescriptor,
   HeaderActionDescriptor
 } from '@home/models/entity/entities-table-config.models';
-import { TranslateService } from '@ngx-translate/core';
-import { DatePipe } from '@angular/common';
-import { EntityType, entityTypeResources, entityTypeTranslations } from '@shared/models/entity-type.models';
-import { EntityAction } from '@home/models/entity/entity-component.models';
-import { RuleChain, RuleChainType } from '@shared/models/rule-chain.models';
-import { RuleChainService } from '@core/http/rule-chain.service';
-import { RuleChainComponent } from '@modules/home/pages/rulechain/rulechain.component';
-import { DialogService } from '@core/services/dialog.service';
-import { RuleChainTabsComponent } from '@home/pages/rulechain/rulechain-tabs.component';
-import { ImportExportService } from '@home/components/import-export/import-export.service';
-import { ItemBufferService } from '@core/services/item-buffer.service';
-import { EdgeService } from '@core/http/edge.service';
-import { forkJoin, Observable } from 'rxjs';
+import {TranslateService} from '@ngx-translate/core';
+import {DatePipe} from '@angular/common';
+import {EntityType, entityTypeResources, entityTypeTranslations} from '@shared/models/entity-type.models';
+import {EntityAction} from '@home/models/entity/entity-component.models';
+import {RuleChain, RuleChainType} from '@shared/models/rule-chain.models';
+import {RuleChainService} from '@core/http/rule-chain.service';
+import {RuleChainComponent} from '@modules/home/pages/rulechain/rulechain.component';
+import {DialogService} from '@core/services/dialog.service';
+import {RuleChainTabsComponent} from '@home/pages/rulechain/rulechain-tabs.component';
+import {ImportExportService} from '@home/components/import-export/import-export.service';
+import {ItemBufferService} from '@core/services/item-buffer.service';
+import {EdgeService} from '@core/http/edge.service';
+import {forkJoin, Observable} from 'rxjs';
 import {
   AddEntitiesToEdgeDialogComponent,
   AddEntitiesToEdgeDialogData
 } from '@home/dialogs/add-entities-to-edge-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
-import { isUndefined } from '@core/utils';
-import { PageLink } from '@shared/models/page/page-link';
-import { Edge } from '@shared/models/edge.models';
-import { mergeMap } from 'rxjs/operators';
-import { PageData } from '@shared/models/page/page-data';
-import { HomeDialogsService } from '@home/dialogs/home-dialogs.service';
+import {MatDialog} from '@angular/material/dialog';
+import {isUndefined} from '@core/utils';
+import {PageLink} from '@shared/models/page/page-link';
+import {Edge} from '@shared/models/edge.models';
+import {mergeMap} from 'rxjs/operators';
+import {PageData} from '@shared/models/page/page-data';
+import {HomeDialogsService} from '@home/dialogs/home-dialogs.service';
 
 @Injectable()
 export class RuleChainsTableConfigResolver implements Resolve<EntityTableConfig<RuleChain>> {

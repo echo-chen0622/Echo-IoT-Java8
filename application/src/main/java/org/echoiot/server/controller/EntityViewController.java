@@ -25,7 +25,7 @@ import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.entitiy.entityview.TbEntityViewService;
 import org.echoiot.server.service.security.model.SecurityUser;
 import org.echoiot.server.service.security.permission.Operation;
-import org.echoiot.server.service.security.permission.Resource;
+import org.echoiot.server.service.security.permission.PerResource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.http.HttpStatus;
@@ -103,7 +103,7 @@ public class EntityViewController extends BaseController {
         @Nullable EntityView existingEntityView = null;
         if (entityView.getId() == null) {
             accessControlService
-                    .checkPermission(getCurrentUser(), Resource.ENTITY_VIEW, Operation.CREATE, null, entityView);
+                    .checkPermission(getCurrentUser(), PerResource.ENTITY_VIEW, Operation.CREATE, null, entityView);
         } else {
             existingEntityView = checkEntityViewId(entityView.getId(), Operation.WRITE);
         }
@@ -342,7 +342,7 @@ public class EntityViewController extends BaseController {
             List<EntityView> entityViews = checkNotNull(entityViewService.findEntityViewsByQuery(getTenantId(), query).get());
             entityViews = entityViews.stream().filter(entityView -> {
                 try {
-                    accessControlService.checkPermission(getCurrentUser(), Resource.ENTITY_VIEW, Operation.READ, entityView.getId(), entityView);
+                    accessControlService.checkPermission(getCurrentUser(), PerResource.ENTITY_VIEW, Operation.READ, entityView.getId(), entityView);
                     return true;
                 } catch (EchoiotException e) {
                     return false;
@@ -468,7 +468,7 @@ public class EntityViewController extends BaseController {
             }
             @NotNull List<EntityView> filteredEntityViews = nonFilteredResult.getData().stream().filter(entityView -> {
                 try {
-                    accessControlService.checkPermission(getCurrentUser(), Resource.ENTITY_VIEW, Operation.READ, entityView.getId(), entityView);
+                    accessControlService.checkPermission(getCurrentUser(), PerResource.ENTITY_VIEW, Operation.READ, entityView.getId(), entityView);
                     return true;
                 } catch (EchoiotException e) {
                     return false;

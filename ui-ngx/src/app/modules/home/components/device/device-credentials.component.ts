@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input, OnDestroy, OnInit } from '@angular/core';
+import {Component, forwardRef, Input, OnDestroy, OnInit} from '@angular/core';
 import {
   ControlValueAccessor,
   FormBuilder,
@@ -16,9 +16,9 @@ import {
   DeviceCredentialsType,
   DeviceTransportType
 } from '@shared/models/device.models';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { isDefinedAndNotNull } from '@core/utils';
+import {Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
+import {isDefinedAndNotNull} from '@core/utils';
 
 @Component({
   selector: 'tb-device-credentials',

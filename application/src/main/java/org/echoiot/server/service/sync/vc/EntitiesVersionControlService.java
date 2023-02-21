@@ -8,16 +8,9 @@ import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
+import org.echoiot.server.common.data.sync.vc.*;
 import org.echoiot.server.common.data.sync.vc.request.create.VersionCreateRequest;
 import org.echoiot.server.common.data.sync.vc.request.load.VersionLoadRequest;
-import org.echoiot.server.common.data.sync.vc.BranchInfo;
-import org.echoiot.server.common.data.sync.vc.EntityDataDiff;
-import org.echoiot.server.common.data.sync.vc.EntityDataInfo;
-import org.echoiot.server.common.data.sync.vc.EntityVersion;
-import org.echoiot.server.common.data.sync.vc.RepositorySettings;
-import org.echoiot.server.common.data.sync.vc.VersionCreationResult;
-import org.echoiot.server.common.data.sync.vc.VersionLoadResult;
-import org.echoiot.server.common.data.sync.vc.VersionedEntityInfo;
 
 import java.util.List;
 import java.util.UUID;

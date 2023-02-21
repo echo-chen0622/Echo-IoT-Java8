@@ -13,10 +13,10 @@ import org.echoiot.server.dao.service.DataValidator;
 import org.echoiot.server.dao.tenant.TenantProfileDao;
 import org.echoiot.server.dao.tenant.TenantProfileService;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;

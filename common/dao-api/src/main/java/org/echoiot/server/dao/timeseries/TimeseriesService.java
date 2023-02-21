@@ -4,11 +4,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import org.echoiot.server.common.data.id.DeviceProfileId;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.TenantId;
-import org.echoiot.server.common.data.kv.DeleteTsKvQuery;
-import org.echoiot.server.common.data.kv.ReadTsKvQuery;
-import org.echoiot.server.common.data.kv.ReadTsKvQueryResult;
-import org.echoiot.server.common.data.kv.TsKvLatestRemovingResult;
-import org.echoiot.server.common.data.kv.TsKvEntry;
+import org.echoiot.server.common.data.kv.*;
 
 import java.util.Collection;
 import java.util.List;

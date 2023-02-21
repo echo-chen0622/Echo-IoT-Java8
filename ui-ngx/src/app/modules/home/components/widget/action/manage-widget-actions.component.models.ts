@@ -4,14 +4,14 @@ import {
   WidgetActionSource,
   widgetActionTypeTranslationMap
 } from '@app/shared/models/widget.models';
-import { CollectionViewer, DataSource } from '@angular/cdk/collections';
-import { BehaviorSubject, Observable, of, ReplaySubject } from 'rxjs';
-import { emptyPageData, PageData } from '@shared/models/page/page-data';
-import { TranslateService } from '@ngx-translate/core';
-import { PageLink } from '@shared/models/page/page-link';
-import { catchError, map, publishReplay, refCount } from 'rxjs/operators';
-import { UtilsService } from '@core/services/utils.service';
-import { deepClone, isDefined, isUndefined } from '@core/utils';
+import {CollectionViewer, DataSource} from '@angular/cdk/collections';
+import {BehaviorSubject, Observable, of, ReplaySubject} from 'rxjs';
+import {emptyPageData, PageData} from '@shared/models/page/page-data';
+import {TranslateService} from '@ngx-translate/core';
+import {PageLink} from '@shared/models/page/page-link';
+import {catchError, map, publishReplay, refCount} from 'rxjs/operators';
+import {UtilsService} from '@core/services/utils.service';
+import {deepClone, isDefined, isUndefined} from '@core/utils';
 
 import customSampleJs from '!raw-loader!./custom-sample-js.raw';
 import customSampleCss from '!raw-loader!./custom-sample-css.raw';

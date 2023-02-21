@@ -5,44 +5,34 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.MoreExecutors;
 import lombok.extern.slf4j.Slf4j;
-import org.echoiot.server.dao.exception.DataValidationException;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.event.TransactionalEventListener;
-import org.echoiot.server.common.data.EntitySubtype;
-import org.echoiot.server.common.data.EntityType;
-import org.echoiot.server.common.data.EntityView;
-import org.echoiot.server.common.data.EntityViewInfo;
-import org.echoiot.server.common.data.StringUtils;
+import org.echoiot.server.common.data.*;
 import org.echoiot.server.common.data.edge.Edge;
 import org.echoiot.server.common.data.entityview.EntityViewSearchQuery;
-import org.echoiot.server.common.data.id.CustomerId;
-import org.echoiot.server.common.data.id.EdgeId;
-import org.echoiot.server.common.data.id.EntityId;
-import org.echoiot.server.common.data.id.EntityViewId;
-import org.echoiot.server.common.data.id.TenantId;
+import org.echoiot.server.common.data.id.*;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.common.data.relation.EntityRelation;
 import org.echoiot.server.common.data.relation.EntitySearchDirection;
 import org.echoiot.server.common.data.relation.RelationTypeGroup;
 import org.echoiot.server.dao.entity.AbstractCachedEntityService;
+import org.echoiot.server.dao.exception.DataValidationException;
 import org.echoiot.server.dao.service.DataValidator;
 import org.echoiot.server.dao.service.PaginatedRemover;
 import org.echoiot.server.dao.sql.JpaExecutorService;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 import javax.annotation.Nullable;
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.echoiot.server.dao.service.Validator.validateId;
-import static org.echoiot.server.dao.service.Validator.validatePageLink;
-import static org.echoiot.server.dao.service.Validator.validateString;
+import static org.echoiot.server.dao.service.Validator.*;
 
 /**
  * Created by Victor Basanets on 8/28/2017.

@@ -1,15 +1,15 @@
-import { Component, forwardRef, Input, OnInit, QueryList, ViewChildren } from '@angular/core';
-import { ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
-import { Store } from '@ngrx/store';
-import { AppState } from '@app/core/core.state';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import {Component, forwardRef, Input, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR, Validators} from '@angular/forms';
+import {Store} from '@ngrx/store';
+import {AppState} from '@app/core/core.state';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
   WidgetMobileActionDescriptor,
   WidgetMobileActionType,
   widgetMobileActionTypeTranslationMap
 } from '@shared/models/widget.models';
-import { CustomActionEditorCompleter } from '@home/components/widget/action/custom-action.models';
-import { JsFuncComponent } from '@shared/components/js-func.component';
+import {CustomActionEditorCompleter} from '@home/components/widget/action/custom-action.models';
+import {JsFuncComponent} from '@shared/components/js-func.component';
 import {
   getDefaultGetLocationFunction,
   getDefaultGetPhoneNumberFunction,
@@ -20,7 +20,7 @@ import {
   getDefaultProcessLocationFunction,
   getDefaultProcessQrCodeFunction
 } from '@home/components/widget/action/mobile-action-editor.models';
-import { WidgetService } from '@core/http/widget.service';
+import {WidgetService} from '@core/http/widget.service';
 
 @Component({
   selector: 'tb-mobile-action-editor',

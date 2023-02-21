@@ -1,6 +1,6 @@
-import { TbEditorCompleter, TbEditorCompletions } from '@shared/models/ace/completion.models';
-import { widgetContextCompletions } from '@shared/models/ace/widget-completion.models';
-import { serviceCompletions } from '@shared/models/ace/service-completion.models';
+import {TbEditorCompleter, TbEditorCompletions} from '@shared/models/ace/completion.models';
+import {widgetContextCompletions} from '@shared/models/ace/widget-completion.models';
+import {serviceCompletions} from '@shared/models/ace/service-completion.models';
 
 const widgetEditorCompletions: TbEditorCompletions = {
   ... {self: {

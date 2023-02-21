@@ -5,9 +5,9 @@ import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.kv.AttributeKvEntry;
 import org.echoiot.server.common.data.kv.TsKvEntry;
+import org.echoiot.server.common.msg.queue.TbCallback;
 import org.echoiot.server.queue.discovery.event.PartitionChangeEvent;
 import org.springframework.context.ApplicationListener;
-import org.echoiot.server.common.msg.queue.TbCallback;
 
 import java.util.List;
 

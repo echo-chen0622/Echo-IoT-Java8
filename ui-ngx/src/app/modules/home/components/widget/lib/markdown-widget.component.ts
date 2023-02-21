@@ -1,23 +1,24 @@
-import { ChangeDetectorRef, Component, HostBinding, Inject, Input, OnInit, Type } from '@angular/core';
-import { PageComponent } from '@shared/components/page.component';
-import { WidgetContext } from '@home/models/widget-component.models';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { DatasourceData, FormattedData } from '@shared/models/widget.models';
-import { DataKeyType } from '@shared/models/telemetry/telemetry.models';
+import {ChangeDetectorRef, Component, HostBinding, Inject, Input, OnInit, Type} from '@angular/core';
+import {PageComponent} from '@shared/components/page.component';
+import {WidgetContext} from '@home/models/widget-component.models';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {DatasourceData, FormattedData} from '@shared/models/widget.models';
+import {DataKeyType} from '@shared/models/telemetry/telemetry.models';
 import {
   createLabelFromPattern,
   flatDataWithoutOverride,
   formattedDataFormDatasourceData,
-  hashCode, isDefinedAndNotNull,
+  hashCode,
+  isDefinedAndNotNull,
   isNotEmptyStr,
   parseFunction,
   safeExecute
 } from '@core/utils';
 import cssjs from '@core/css/css';
-import { UtilsService } from '@core/services/utils.service';
-import { HOME_COMPONENTS_MODULE_TOKEN } from '@home/components/tokens';
-import { EntityDataPageLink } from '@shared/models/query/query.models';
+import {UtilsService} from '@core/services/utils.service';
+import {HOME_COMPONENTS_MODULE_TOKEN} from '@home/components/tokens';
+import {EntityDataPageLink} from '@shared/models/query/query.models';
 
 interface MarkdownWidgetSettings {
   markdownTextPattern: string;

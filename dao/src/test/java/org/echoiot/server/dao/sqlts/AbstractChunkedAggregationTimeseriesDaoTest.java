@@ -7,23 +7,13 @@ import org.echoiot.server.common.data.kv.*;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
-import org.echoiot.server.common.data.kv.BaseReadTsKvQuery;
-import org.echoiot.server.common.data.kv.ReadTsKvQuery;
-import org.echoiot.server.common.data.kv.ReadTsKvQueryResult;
-import org.echoiot.server.common.data.kv.TsKvEntry;
 
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.willCallRealMethod;
 import static org.mockito.BDDMockito.willReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 public class AbstractChunkedAggregationTimeseriesDaoTest {
 

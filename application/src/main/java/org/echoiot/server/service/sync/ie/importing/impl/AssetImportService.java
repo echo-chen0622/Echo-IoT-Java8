@@ -7,10 +7,10 @@ import org.echoiot.server.common.data.id.AssetId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.sync.ie.EntityExportData;
 import org.echoiot.server.dao.asset.AssetService;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.stereotype.Service;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.sync.vc.data.EntitiesImportCtx;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.stereotype.Service;
 
 @Service
 @TbCoreComponent

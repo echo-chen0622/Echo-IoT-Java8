@@ -8,11 +8,11 @@ import {
   SimpleChanges,
   ViewContainerRef
 } from '@angular/core';
-import { DashboardState } from '@shared/models/dashboard.models';
-import { IDashboardController } from '@home/components/dashboard-page/dashboard-page.models';
-import { StatesControllerService } from '@home/components/dashboard-page/states/states-controller.service';
-import { IStateControllerComponent } from '@home/components/dashboard-page/states/state-controller.models';
-import { Subject } from 'rxjs';
+import {DashboardState} from '@shared/models/dashboard.models';
+import {IDashboardController} from '@home/components/dashboard-page/dashboard-page.models';
+import {StatesControllerService} from '@home/components/dashboard-page/states/states-controller.service';
+import {IStateControllerComponent} from '@home/components/dashboard-page/states/state-controller.models';
+import {Subject} from 'rxjs';
 
 @Directive({
   // tslint:disable-next-line:directive-selector

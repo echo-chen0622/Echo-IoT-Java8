@@ -2,9 +2,6 @@ package org.echoiot.server.transport.lwm2m.ota.sql;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
-import org.junit.Assert;
-import org.junit.Test;
 import org.echoiot.server.common.data.Device;
 import org.echoiot.server.common.data.device.credentials.lwm2m.LwM2MDeviceCredentials;
 import org.echoiot.server.common.data.device.profile.Lwm2mDeviceProfileTransportConfiguration;
@@ -12,26 +9,18 @@ import org.echoiot.server.common.data.kv.KvEntry;
 import org.echoiot.server.common.data.kv.TsKvEntry;
 import org.echoiot.server.common.data.ota.OtaPackageUpdateStatus;
 import org.echoiot.server.transport.lwm2m.ota.AbstractOtaLwM2MIntegrationTest;
+import org.jetbrains.annotations.NotNull;
+import org.junit.Assert;
+import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 import static org.echoiot.rest.client.utils.RestJsonConverter.toTimeseries;
-import static org.echoiot.server.common.data.ota.OtaPackageUpdateStatus.DOWNLOADED;
-import static org.echoiot.server.common.data.ota.OtaPackageUpdateStatus.DOWNLOADING;
-import static org.echoiot.server.common.data.ota.OtaPackageUpdateStatus.FAILED;
-import static org.echoiot.server.common.data.ota.OtaPackageUpdateStatus.INITIATED;
-import static org.echoiot.server.common.data.ota.OtaPackageUpdateStatus.QUEUED;
-import static org.echoiot.server.common.data.ota.OtaPackageUpdateStatus.UPDATED;
-import static org.echoiot.server.common.data.ota.OtaPackageUpdateStatus.UPDATING;
-import static org.echoiot.server.common.data.ota.OtaPackageUpdateStatus.VERIFIED;
+import static org.echoiot.server.common.data.ota.OtaPackageUpdateStatus.*;
 import static org.echoiot.server.transport.lwm2m.Lwm2mTestHelper.LwM2MProfileBootstrapConfigType.NONE;
 
 @Slf4j

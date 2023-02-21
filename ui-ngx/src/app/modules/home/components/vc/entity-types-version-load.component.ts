@@ -1,15 +1,15 @@
 import {Component, forwardRef, Input, OnInit, Renderer2, ViewContainerRef} from '@angular/core';
 import {
-    AbstractControl,
-    ControlValueAccessor,
-    FormArray,
-    FormBuilder,
-    FormControl,
-    FormGroup,
-    NG_VALIDATORS,
-    NG_VALUE_ACCESSOR,
-    Validator,
-    Validators
+  AbstractControl,
+  ControlValueAccessor,
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR,
+  Validator,
+  Validators
 } from '@angular/forms';
 import {PageComponent} from '@shared/components/page.component';
 import {EntityTypeVersionLoadConfig, exportableEntityTypes} from '@shared/models/vc.models';

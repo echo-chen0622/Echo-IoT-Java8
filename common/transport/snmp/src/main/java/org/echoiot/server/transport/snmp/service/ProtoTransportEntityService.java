@@ -1,19 +1,19 @@
 package org.echoiot.server.transport.snmp.service;
 
 import lombok.RequiredArgsConstructor;
+import org.echoiot.server.common.data.Device;
 import org.echoiot.server.common.data.device.data.DeviceData;
 import org.echoiot.server.common.data.device.data.DeviceTransportConfiguration;
-import org.echoiot.server.common.transport.TransportService;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.springframework.stereotype.Service;
-import org.echoiot.server.common.data.Device;
 import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.data.id.DeviceProfileId;
 import org.echoiot.server.common.data.security.DeviceCredentials;
-import org.echoiot.server.queue.util.DataDecodingEncodingService;
+import org.echoiot.server.common.transport.TransportService;
 import org.echoiot.server.gen.transport.TransportProtos;
+import org.echoiot.server.queue.util.DataDecodingEncodingService;
 import org.echoiot.server.queue.util.TbSnmpTransportComponent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 

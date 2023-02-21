@@ -7,13 +7,13 @@ import {FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm} from '@
 import {Router} from '@angular/router';
 import {DialogComponent} from '@app/shared/components/dialog.component';
 import {
-    BooleanOperation,
-    createDefaultFilterPredicateUserInfo,
-    EntityKeyValueType,
-    generateUserFilterValueLabel,
-    KeyFilterPredicateUserInfo,
-    NumericOperation,
-    StringOperation
+  BooleanOperation,
+  createDefaultFilterPredicateUserInfo,
+  EntityKeyValueType,
+  generateUserFilterValueLabel,
+  KeyFilterPredicateUserInfo,
+  NumericOperation,
+  StringOperation
 } from '@shared/models/query/query.models';
 import {TranslateService} from '@ngx-translate/core';
 

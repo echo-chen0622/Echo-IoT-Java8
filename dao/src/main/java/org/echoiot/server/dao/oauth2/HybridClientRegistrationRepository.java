@@ -1,15 +1,15 @@
 package org.echoiot.server.dao.oauth2;
 
+import org.echoiot.server.common.data.oauth2.OAuth2Registration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.stereotype.Component;
-import org.echoiot.server.common.data.oauth2.OAuth2Registration;
 
+import javax.annotation.Resource;
 import java.util.UUID;
 
 @Component

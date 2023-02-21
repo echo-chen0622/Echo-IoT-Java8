@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { MenuSection } from '@core/services/menu.models';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+import {MenuSection} from '@core/services/menu.models';
 
 @Component({
   selector: 'tb-menu-link',

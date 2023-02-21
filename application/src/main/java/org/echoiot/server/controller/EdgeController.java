@@ -32,7 +32,7 @@ import org.echoiot.server.service.edge.EdgeBulkImportService;
 import org.echoiot.server.service.entitiy.edge.TbEdgeService;
 import org.echoiot.server.service.security.model.SecurityUser;
 import org.echoiot.server.service.security.permission.Operation;
-import org.echoiot.server.service.security.permission.Resource;
+import org.echoiot.server.service.security.permission.PerResource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.http.HttpStatus;
@@ -135,7 +135,7 @@ public class EdgeController extends BaseController {
 
         @NotNull Operation operation = created ? Operation.CREATE : Operation.WRITE;
 
-        accessControlService.checkPermission(getCurrentUser(), Resource.EDGE, operation, edge.getId(), edge);
+        accessControlService.checkPermission(getCurrentUser(), PerResource.EDGE, operation, edge.getId(), edge);
 
         return tbEdgeService.save(edge, edgeTemplateRootRuleChain, getCurrentUser());
     }
@@ -331,7 +331,7 @@ public class EdgeController extends BaseController {
         checkRuleChain(ruleChainId, Operation.WRITE);
         @NotNull EdgeId edgeId = new EdgeId(toUUID(strEdgeId));
         Edge edge = checkEdgeId(edgeId, Operation.WRITE);
-        accessControlService.checkPermission(getCurrentUser(), Resource.EDGE, Operation.WRITE, edge.getId(), edge);
+        accessControlService.checkPermission(getCurrentUser(), PerResource.EDGE, Operation.WRITE, edge.getId(), edge);
         return tbEdgeService.setEdgeRootRuleChain(edge, ruleChainId, getCurrentUser());
     }
 
@@ -466,7 +466,7 @@ public class EdgeController extends BaseController {
             List<Edge> edges = checkNotNull(edgeService.findEdgesByQuery(tenantId, query).get());
             edges = edges.stream().filter(edge -> {
                 try {
-                    accessControlService.checkPermission(user, Resource.EDGE, Operation.READ, edge.getId(), edge);
+                    accessControlService.checkPermission(user, PerResource.EDGE, Operation.READ, edge.getId(), edge);
                     return true;
                 } catch (EchoiotException e) {
                     return false;

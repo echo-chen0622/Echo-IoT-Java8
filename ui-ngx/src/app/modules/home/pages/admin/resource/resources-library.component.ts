@@ -1,11 +1,11 @@
-import { ChangeDetectorRef, Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { Subject } from 'rxjs';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { TranslateService } from '@ngx-translate/core';
-import { EntityTableConfig } from '@home/models/entity/entities-table-config.models';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { EntityComponent } from '@home/components/entity/entity.component';
+import {ChangeDetectorRef, Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {Subject} from 'rxjs';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {TranslateService} from '@ngx-translate/core';
+import {EntityTableConfig} from '@home/models/entity/entities-table-config.models';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {EntityComponent} from '@home/components/entity/entity.component';
 import {
   Resource,
   ResourceType,
@@ -13,8 +13,8 @@ import {
   ResourceTypeMIMETypes,
   ResourceTypeTranslationMap
 } from '@shared/models/resource.models';
-import {filter, pairwise, startWith, takeUntil} from 'rxjs/operators';
-import { ActionNotificationShow } from '@core/notification/notification.actions';
+import {filter, startWith, takeUntil} from 'rxjs/operators';
+import {ActionNotificationShow} from '@core/notification/notification.actions';
 
 @Component({
   selector: 'tb-resources-library',

@@ -1,10 +1,14 @@
 package org.echoiot.server.queue.provider;
 
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.server.gen.transport.TransportProtos.*;
 import org.echoiot.server.queue.TbQueueAdmin;
 import org.echoiot.server.queue.TbQueueConsumer;
 import org.echoiot.server.queue.TbQueueProducer;
 import org.echoiot.server.queue.TbQueueRequestTemplate;
+import org.echoiot.server.queue.azure.servicebus.*;
+import org.echoiot.server.queue.common.DefaultTbQueueRequestTemplate;
+import org.echoiot.server.queue.common.TbProtoQueueMsg;
 import org.echoiot.server.queue.discovery.TbServiceInfoProvider;
 import org.echoiot.server.queue.settings.TbQueueCoreSettings;
 import org.echoiot.server.queue.settings.TbQueueRuleEngineSettings;
@@ -13,19 +17,6 @@ import org.echoiot.server.queue.settings.TbQueueTransportNotificationSettings;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Component;
-import org.echoiot.server.gen.transport.TransportProtos.ToCoreMsg;
-import org.echoiot.server.gen.transport.TransportProtos.ToRuleEngineMsg;
-import org.echoiot.server.gen.transport.TransportProtos.ToTransportMsg;
-import org.echoiot.server.gen.transport.TransportProtos.ToUsageStatsServiceMsg;
-import org.echoiot.server.gen.transport.TransportProtos.TransportApiRequestMsg;
-import org.echoiot.server.gen.transport.TransportProtos.TransportApiResponseMsg;
-import org.echoiot.server.queue.azure.servicebus.TbServiceBusAdmin;
-import org.echoiot.server.queue.azure.servicebus.TbServiceBusConsumerTemplate;
-import org.echoiot.server.queue.azure.servicebus.TbServiceBusProducerTemplate;
-import org.echoiot.server.queue.azure.servicebus.TbServiceBusQueueConfigs;
-import org.echoiot.server.queue.azure.servicebus.TbServiceBusSettings;
-import org.echoiot.server.queue.common.DefaultTbQueueRequestTemplate;
-import org.echoiot.server.queue.common.TbProtoQueueMsg;
 
 import javax.annotation.PreDestroy;
 

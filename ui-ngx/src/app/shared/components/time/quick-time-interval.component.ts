@@ -1,6 +1,6 @@
-import { Component, forwardRef, Input, OnInit } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { QuickTimeInterval, QuickTimeIntervalTranslationMap } from '@shared/models/time/time.models';
+import {Component, forwardRef, Input, OnInit} from '@angular/core';
+import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {QuickTimeInterval, QuickTimeIntervalTranslationMap} from '@shared/models/time/time.models';
 
 @Component({
   selector: 'tb-quick-time-interval',

@@ -32,10 +32,10 @@ import org.echoiot.server.service.sync.ie.importing.EntityImportService;
 import org.echoiot.server.service.sync.vc.data.EntitiesImportCtx;
 import org.echoiot.server.service.telemetry.TelemetrySubscriptionService;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;

@@ -2,27 +2,21 @@ package org.echoiot.server.dao.event;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import lombok.extern.slf4j.Slf4j;
-import org.echoiot.server.dao.service.DataValidator;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.EventInfo;
 import org.echoiot.server.common.data.StringUtils;
-import org.echoiot.server.common.data.event.ErrorEvent;
-import org.echoiot.server.common.data.event.Event;
-import org.echoiot.server.common.data.event.EventFilter;
-import org.echoiot.server.common.data.event.EventType;
-import org.echoiot.server.common.data.event.LifecycleEvent;
-import org.echoiot.server.common.data.event.RuleChainDebugEvent;
-import org.echoiot.server.common.data.event.RuleNodeDebugEvent;
+import org.echoiot.server.common.data.event.*;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.TimePageLink;
+import org.echoiot.server.dao.service.DataValidator;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -41,7 +35,7 @@ public class BaseEventService implements EventService {
     private int maxDebugEventSymbols;
 
     @Resource
-    public EventDao eventDao;
+    private EventDao eventDao;
 
     @Resource
     private DataValidator<Event> eventValidator;

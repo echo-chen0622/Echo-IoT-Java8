@@ -11,10 +11,10 @@ import org.echoiot.server.service.security.auth.mfa.config.TwoFaConfigManager;
 import org.echoiot.server.service.security.auth.mfa.provider.TwoFaProvider;
 import org.echoiot.server.service.security.model.SecurityUser;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;

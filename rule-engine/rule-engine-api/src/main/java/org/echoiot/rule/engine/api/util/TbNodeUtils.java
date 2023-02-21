@@ -3,14 +3,14 @@ package org.echoiot.rule.engine.api.util;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.springframework.util.CollectionUtils;
 import org.echoiot.rule.engine.api.TbNodeConfiguration;
 import org.echoiot.rule.engine.api.TbNodeException;
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.TbMsgMetaData;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
 import java.util.List;

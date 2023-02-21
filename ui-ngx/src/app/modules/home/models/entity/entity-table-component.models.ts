@@ -10,13 +10,13 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {EntityAction} from '@home/models/entity/entity-component.models';
 import {
-    CellActionDescriptor,
-    EntityActionTableColumn,
-    EntityColumn,
-    EntityTableColumn,
-    EntityTableConfig,
-    GroupActionDescriptor,
-    HeaderActionDescriptor
+  CellActionDescriptor,
+  EntityActionTableColumn,
+  EntityColumn,
+  EntityTableColumn,
+  EntityTableConfig,
+  GroupActionDescriptor,
+  HeaderActionDescriptor
 } from '@home/models/entity/entities-table-config.models';
 import {ActivatedRoute} from '@angular/router';
 

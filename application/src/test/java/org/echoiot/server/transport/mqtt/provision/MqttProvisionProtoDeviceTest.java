@@ -2,11 +2,6 @@ package org.echoiot.server.transport.mqtt.provision;
 
 import io.netty.handler.codec.mqtt.MqttQoS;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.junit.Assert;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.common.data.Device;
 import org.echoiot.server.common.data.DeviceProfileProvisionType;
@@ -19,19 +14,17 @@ import org.echoiot.server.dao.device.DeviceCredentialsService;
 import org.echoiot.server.dao.device.DeviceService;
 import org.echoiot.server.dao.device.provision.ProvisionResponseStatus;
 import org.echoiot.server.dao.service.DaoSqlTest;
-import org.echoiot.server.gen.transport.TransportProtos.CredentialsDataProto;
-import org.echoiot.server.gen.transport.TransportProtos.CredentialsType;
-import org.echoiot.server.gen.transport.TransportProtos.ProvisionDeviceCredentialsMsg;
-import org.echoiot.server.gen.transport.TransportProtos.ProvisionDeviceRequestMsg;
-import org.echoiot.server.gen.transport.TransportProtos.ProvisionDeviceResponseMsg;
-import org.echoiot.server.gen.transport.TransportProtos.ValidateBasicMqttCredRequestMsg;
-import org.echoiot.server.gen.transport.TransportProtos.ValidateDeviceTokenRequestMsg;
-import org.echoiot.server.gen.transport.TransportProtos.ValidateDeviceX509CertRequestMsg;
+import org.echoiot.server.gen.transport.TransportProtos.*;
 import org.echoiot.server.transport.mqtt.AbstractMqttIntegrationTest;
 import org.echoiot.server.transport.mqtt.MqttTestCallback;
 import org.echoiot.server.transport.mqtt.MqttTestClient;
 import org.echoiot.server.transport.mqtt.MqttTestConfigProperties;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.junit.Assert;
+import org.junit.Test;
 
+import javax.annotation.Resource;
 import java.util.concurrent.TimeUnit;
 
 import static org.echoiot.server.common.data.device.profile.MqttTopics.DEVICE_PROVISION_REQUEST_TOPIC;

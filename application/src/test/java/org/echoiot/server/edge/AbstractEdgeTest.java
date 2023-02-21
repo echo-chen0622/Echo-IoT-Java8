@@ -43,9 +43,9 @@ import org.jetbrains.annotations.Nullable;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.TestPropertySource;
 
+import javax.annotation.Resource;
 import java.util.*;
 
 import static org.echoiot.server.common.data.ota.OtaPackageType.FIRMWARE;

@@ -1,17 +1,17 @@
 import {
-    ChangeDetectorRef,
-    Component,
-    ElementRef,
-    forwardRef,
-    Input,
-    OnChanges,
-    OnDestroy,
-    OnInit,
-    Renderer2,
-    SimpleChanges,
-    ViewChild,
-    ViewContainerRef,
-    ViewEncapsulation
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  forwardRef,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Renderer2,
+  SimpleChanges,
+  ViewChild,
+  ViewContainerRef,
+  ViewEncapsulation
 } from '@angular/core';
 import {ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator} from '@angular/forms';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';

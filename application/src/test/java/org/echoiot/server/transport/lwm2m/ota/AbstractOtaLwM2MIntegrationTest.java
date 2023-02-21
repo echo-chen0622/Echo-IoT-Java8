@@ -1,16 +1,16 @@
 package org.echoiot.server.transport.lwm2m.ota;
 
+import org.echoiot.server.common.data.OtaPackageInfo;
+import org.echoiot.server.dao.service.DaoSqlTest;
+import org.echoiot.server.transport.lwm2m.AbstractLwM2MIntegrationTest;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.echoiot.server.common.data.OtaPackageInfo;
-import org.echoiot.server.dao.service.DaoSqlTest;
-import org.echoiot.server.transport.lwm2m.AbstractLwM2MIntegrationTest;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.echoiot.server.common.data.ota.OtaPackageType.FIRMWARE;
 import static org.echoiot.server.common.data.ota.OtaPackageType.SOFTWARE;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DaoSqlTest
 public abstract class AbstractOtaLwM2MIntegrationTest extends AbstractLwM2MIntegrationTest {

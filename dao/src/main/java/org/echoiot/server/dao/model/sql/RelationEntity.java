@@ -2,30 +2,19 @@ package org.echoiot.server.dao.model.sql;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Data;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
 import org.echoiot.server.common.data.id.EntityIdFactory;
 import org.echoiot.server.common.data.relation.EntityRelation;
 import org.echoiot.server.common.data.relation.RelationTypeGroup;
 import org.echoiot.server.dao.model.ToData;
 import org.echoiot.server.dao.util.mapping.JsonStringType;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 import org.jetbrains.annotations.NotNull;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.UUID;
 
-import static org.echoiot.server.dao.model.ModelConstants.ADDITIONAL_INFO_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.RELATION_COLUMN_FAMILY_NAME;
-import static org.echoiot.server.dao.model.ModelConstants.RELATION_FROM_ID_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.RELATION_FROM_TYPE_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.RELATION_TO_ID_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.RELATION_TO_TYPE_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.RELATION_TYPE_GROUP_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.RELATION_TYPE_PROPERTY;
+import static org.echoiot.server.dao.model.ModelConstants.*;
 
 @Data
 @Entity

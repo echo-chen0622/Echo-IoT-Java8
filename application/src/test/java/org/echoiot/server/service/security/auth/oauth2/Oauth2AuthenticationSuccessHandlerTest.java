@@ -1,17 +1,17 @@
 package org.echoiot.server.service.security.auth.oauth2;
 
+import org.echoiot.server.common.data.id.UserId;
 import org.echoiot.server.common.data.security.model.JwtPair;
 import org.echoiot.server.controller.AbstractControllerTest;
+import org.echoiot.server.dao.service.DaoSqlTest;
+import org.echoiot.server.service.security.model.SecurityUser;
+import org.echoiot.server.service.security.model.token.JwtTokenFactory;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.echoiot.server.common.data.id.UserId;
-import org.echoiot.server.dao.service.DaoSqlTest;
-import org.echoiot.server.service.security.model.SecurityUser;
-import org.echoiot.server.service.security.model.token.JwtTokenFactory;
 
+import javax.annotation.Resource;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;

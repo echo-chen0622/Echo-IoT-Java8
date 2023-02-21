@@ -22,30 +22,14 @@ import org.echoiot.server.dao.widget.WidgetsBundleService;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.edge.rpc.EdgeEventStorageSettings;
 import org.echoiot.server.service.edge.rpc.constructor.EdgeMsgConstructor;
+import org.echoiot.server.service.edge.rpc.processor.*;
 import org.echoiot.server.service.edge.rpc.sync.EdgeRequestsService;
 import org.echoiot.server.service.executors.DbCallbackExecutorService;
 import org.echoiot.server.service.executors.GrpcCallbackExecutorService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
-import org.echoiot.server.service.edge.rpc.processor.AdminSettingsEdgeProcessor;
-import org.echoiot.server.service.edge.rpc.processor.AlarmEdgeProcessor;
-import org.echoiot.server.service.edge.rpc.processor.AssetEdgeProcessor;
-import org.echoiot.server.service.edge.rpc.processor.AssetProfileEdgeProcessor;
-import org.echoiot.server.service.edge.rpc.processor.CustomerEdgeProcessor;
-import org.echoiot.server.service.edge.rpc.processor.DashboardEdgeProcessor;
-import org.echoiot.server.service.edge.rpc.processor.DeviceEdgeProcessor;
-import org.echoiot.server.service.edge.rpc.processor.DeviceProfileEdgeProcessor;
-import org.echoiot.server.service.edge.rpc.processor.EdgeProcessor;
-import org.echoiot.server.service.edge.rpc.processor.EntityViewEdgeProcessor;
-import org.echoiot.server.service.edge.rpc.processor.OtaPackageEdgeProcessor;
-import org.echoiot.server.service.edge.rpc.processor.QueueEdgeProcessor;
-import org.echoiot.server.service.edge.rpc.processor.RelationEdgeProcessor;
-import org.echoiot.server.service.edge.rpc.processor.RuleChainEdgeProcessor;
-import org.echoiot.server.service.edge.rpc.processor.TelemetryEdgeProcessor;
-import org.echoiot.server.service.edge.rpc.processor.UserEdgeProcessor;
-import org.echoiot.server.service.edge.rpc.processor.WidgetBundleEdgeProcessor;
-import org.echoiot.server.service.edge.rpc.processor.WidgetTypeEdgeProcessor;
+
+import javax.annotation.Resource;
 
 @Component
 @TbCoreComponent

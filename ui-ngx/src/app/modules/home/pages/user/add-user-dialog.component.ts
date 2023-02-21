@@ -10,8 +10,8 @@ import {CustomerId} from '@shared/models/id/customer-id';
 import {UserService} from '@core/http/user.service';
 import {Observable} from 'rxjs';
 import {
-    ActivationLinkDialogComponent,
-    ActivationLinkDialogData
+  ActivationLinkDialogComponent,
+  ActivationLinkDialogData
 } from '@modules/home/pages/user/activation-link-dialog.component';
 import {TenantId} from '@app/shared/models/id/tenant-id';
 import {DialogComponent} from '@shared/components/dialog.component';

@@ -1,5 +1,6 @@
 package org.echoiot.server.transport.lwm2m.server.store;
 
+import org.echoiot.server.transport.lwm2m.secure.TbLwM2MSecurityInfo;
 import org.eclipse.leshan.core.SecurityMode;
 import org.eclipse.leshan.server.security.NonUniqueSecurityInfoException;
 import org.eclipse.leshan.server.security.SecurityInfo;
@@ -8,7 +9,6 @@ import org.jetbrains.annotations.Nullable;
 import org.nustaq.serialization.FSTConfiguration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.integration.redis.util.RedisLockRegistry;
-import org.echoiot.server.transport.lwm2m.secure.TbLwM2MSecurityInfo;
 
 import java.util.concurrent.locks.Lock;
 

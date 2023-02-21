@@ -1,13 +1,13 @@
-import { AfterViewInit, Component, Inject, OnInit, QueryList, ViewChildren } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { Router } from '@angular/router';
-import { DialogComponent } from '@shared/components/dialog.component';
-import { UtilsService } from '@core/services/utils.service';
-import { FormControl } from '@angular/forms';
-import { merge, Observable, of } from 'rxjs';
-import { delay, map, mapTo, mergeMap, share, startWith, tap } from 'rxjs/operators';
+import {AfterViewInit, Component, Inject, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {Router} from '@angular/router';
+import {DialogComponent} from '@shared/components/dialog.component';
+import {UtilsService} from '@core/services/utils.service';
+import {FormControl} from '@angular/forms';
+import {merge, Observable, of} from 'rxjs';
+import {delay, map, mapTo, mergeMap, share, startWith, tap} from 'rxjs/operators';
 
 export interface MaterialIconsDialogData {
   icon: string;

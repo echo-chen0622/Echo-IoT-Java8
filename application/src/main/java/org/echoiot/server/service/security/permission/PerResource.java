@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public enum Resource {
+public enum PerResource {
     ADMIN_SETTINGS(),
     ALARM(EntityType.ALARM),
     DEVICE(EntityType.DEVICE),
@@ -35,11 +35,11 @@ public enum Resource {
     @Nullable
     private final EntityType entityType;
 
-    Resource() {
+    PerResource() {
         this.entityType = null;
     }
 
-    Resource(EntityType entityType) {
+    PerResource(EntityType entityType) {
         this.entityType = entityType;
     }
 
@@ -49,10 +49,10 @@ public enum Resource {
     }
 
     @NotNull
-    public static Resource of(@NotNull EntityType entityType) {
-        for (@NotNull Resource resource : Resource.values()) {
-            if (resource.getEntityType().orElse(null) == entityType) {
-                return resource;
+    public static PerResource of(@NotNull EntityType entityType) {
+        for (@NotNull PerResource perResource : PerResource.values()) {
+            if (perResource.getEntityType().orElse(null) == entityType) {
+                return perResource;
             }
         }
         throw new IllegalArgumentException("Unknown EntityType: " + entityType.name());

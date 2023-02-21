@@ -2,44 +2,22 @@ package org.echoiot.server.dao.oauth2;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
+import org.echoiot.server.common.data.BaseData;
+import org.echoiot.server.common.data.StringUtils;
+import org.echoiot.server.common.data.id.TenantId;
+import org.echoiot.server.common.data.oauth2.*;
 import org.echoiot.server.dao.entity.AbstractEntityService;
 import org.echoiot.server.dao.exception.DataValidationException;
 import org.echoiot.server.dao.exception.IncorrectParameterException;
 import org.echoiot.server.dao.service.Validator;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.echoiot.server.common.data.BaseData;
-import org.echoiot.server.common.data.StringUtils;
-import org.echoiot.server.common.data.id.TenantId;
-import org.echoiot.server.common.data.oauth2.MapperType;
-import org.echoiot.server.common.data.oauth2.OAuth2BasicMapperConfig;
-import org.echoiot.server.common.data.oauth2.OAuth2ClientInfo;
-import org.echoiot.server.common.data.oauth2.OAuth2CustomMapperConfig;
-import org.echoiot.server.common.data.oauth2.OAuth2Domain;
-import org.echoiot.server.common.data.oauth2.OAuth2DomainInfo;
-import org.echoiot.server.common.data.oauth2.OAuth2Info;
-import org.echoiot.server.common.data.oauth2.OAuth2MapperConfig;
-import org.echoiot.server.common.data.oauth2.OAuth2Mobile;
-import org.echoiot.server.common.data.oauth2.OAuth2MobileInfo;
-import org.echoiot.server.common.data.oauth2.OAuth2Params;
-import org.echoiot.server.common.data.oauth2.OAuth2ParamsInfo;
-import org.echoiot.server.common.data.oauth2.OAuth2Registration;
-import org.echoiot.server.common.data.oauth2.OAuth2RegistrationInfo;
-import org.echoiot.server.common.data.oauth2.PlatformType;
-import org.echoiot.server.common.data.oauth2.SchemeType;
-import org.echoiot.server.common.data.oauth2.TenantNameStrategyType;
 
+import javax.annotation.Resource;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-
-import static org.echoiot.server.dao.service.Validator.validateId;
 
 @Slf4j
 @Service

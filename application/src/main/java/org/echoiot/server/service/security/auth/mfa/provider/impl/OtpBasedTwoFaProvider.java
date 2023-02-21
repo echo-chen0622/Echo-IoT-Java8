@@ -7,11 +7,11 @@ import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.security.model.mfa.account.OtpBasedTwoFaAccountConfig;
 import org.echoiot.server.common.data.security.model.mfa.provider.OtpBasedTwoFaProviderConfig;
 import org.echoiot.server.service.security.auth.mfa.provider.TwoFaProvider;
+import org.echoiot.server.service.security.model.SecurityUser;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
-import org.echoiot.server.service.security.model.SecurityUser;
 
 import java.io.Serializable;
 import java.util.concurrent.TimeUnit;

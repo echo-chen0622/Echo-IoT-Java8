@@ -9,13 +9,7 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.common.data.relation.EntityRelation;
-import org.echoiot.server.common.data.rule.RuleChain;
-import org.echoiot.server.common.data.rule.RuleChainData;
-import org.echoiot.server.common.data.rule.RuleChainImportResult;
-import org.echoiot.server.common.data.rule.RuleChainMetaData;
-import org.echoiot.server.common.data.rule.RuleChainType;
-import org.echoiot.server.common.data.rule.RuleChainUpdateResult;
-import org.echoiot.server.common.data.rule.RuleNode;
+import org.echoiot.server.common.data.rule.*;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;

@@ -6,11 +6,6 @@ import com.github.fge.jsonschema.core.report.ProcessingReport;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import com.github.fge.jsonschema.main.JsonValidator;
 import lombok.extern.slf4j.Slf4j;
-import org.echoiot.server.dao.exception.DataValidationException;
-import org.echoiot.server.dao.exception.IncorrectParameterException;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.echoiot.server.common.data.id.ComponentDescriptorId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.page.PageData;
@@ -18,9 +13,14 @@ import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.common.data.plugin.ComponentDescriptor;
 import org.echoiot.server.common.data.plugin.ComponentScope;
 import org.echoiot.server.common.data.plugin.ComponentType;
+import org.echoiot.server.dao.exception.DataValidationException;
+import org.echoiot.server.dao.exception.IncorrectParameterException;
 import org.echoiot.server.dao.service.DataValidator;
 import org.echoiot.server.dao.service.Validator;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.Optional;
 
 /**

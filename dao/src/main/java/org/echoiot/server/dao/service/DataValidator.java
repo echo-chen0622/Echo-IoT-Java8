@@ -2,13 +2,13 @@ package org.echoiot.server.dao.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.extern.slf4j.Slf4j;
-import org.echoiot.server.dao.exception.DataValidationException;
 import org.echoiot.server.common.data.BaseData;
 import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.dao.TenantEntityDao;
 import org.echoiot.server.dao.TenantEntityWithDataDao;
+import org.echoiot.server.dao.exception.DataValidationException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

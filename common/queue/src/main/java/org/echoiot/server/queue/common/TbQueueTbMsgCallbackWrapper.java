@@ -1,9 +1,9 @@
 package org.echoiot.server.queue.common;
 
-import org.echoiot.server.queue.TbQueueCallback;
-import org.echoiot.server.queue.TbQueueMsgMetadata;
 import org.echoiot.server.common.msg.queue.RuleEngineException;
 import org.echoiot.server.common.msg.queue.TbMsgCallback;
+import org.echoiot.server.queue.TbQueueCallback;
+import org.echoiot.server.queue.TbQueueMsgMetadata;
 import org.jetbrains.annotations.NotNull;
 
 public class TbQueueTbMsgCallbackWrapper implements TbQueueCallback {

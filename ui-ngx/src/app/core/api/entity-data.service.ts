@@ -1,17 +1,17 @@
-import { DataKey, DataSetHolder, Datasource, DatasourceType, widgetType } from '@shared/models/widget.models';
-import { SubscriptionTimewindow } from '@shared/models/time/time.models';
-import { EntityData, EntityDataPageLink, KeyFilter } from '@shared/models/query/query.models';
-import { emptyPageData, PageData } from '@shared/models/page/page-data';
-import { Injectable } from '@angular/core';
-import { TelemetryWebsocketService } from '@core/ws/telemetry-websocket.service';
-import { UtilsService } from '@core/services/utils.service';
-import { deepClone } from '@core/utils';
+import {DataKey, DataSetHolder, Datasource, DatasourceType, widgetType} from '@shared/models/widget.models';
+import {SubscriptionTimewindow} from '@shared/models/time/time.models';
+import {EntityData, EntityDataPageLink, KeyFilter} from '@shared/models/query/query.models';
+import {emptyPageData, PageData} from '@shared/models/page/page-data';
+import {Injectable} from '@angular/core';
+import {TelemetryWebsocketService} from '@core/ws/telemetry-websocket.service';
+import {UtilsService} from '@core/services/utils.service';
+import {deepClone} from '@core/utils';
 import {
   EntityDataSubscription,
   EntityDataSubscriptionOptions,
   SubscriptionDataKey
 } from '@core/api/entity-data-subscription';
-import { Observable, of } from 'rxjs';
+import {Observable, of} from 'rxjs';
 
 export interface EntityDataListener {
   subscriptionType: widgetType;

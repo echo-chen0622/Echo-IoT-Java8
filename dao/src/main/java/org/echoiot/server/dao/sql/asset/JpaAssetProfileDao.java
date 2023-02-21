@@ -1,12 +1,5 @@
 package org.echoiot.server.dao.sql.asset;
 
-import org.echoiot.server.dao.model.sql.AssetProfileEntity;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.asset.AssetProfile;
 import org.echoiot.server.common.data.asset.AssetProfileInfo;
@@ -16,8 +9,15 @@ import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.dao.DaoUtil;
 import org.echoiot.server.dao.asset.AssetProfileDao;
+import org.echoiot.server.dao.model.sql.AssetProfileEntity;
 import org.echoiot.server.dao.sql.JpaAbstractSearchTextDao;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;

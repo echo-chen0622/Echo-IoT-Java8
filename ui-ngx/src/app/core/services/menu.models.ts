@@ -1,4 +1,4 @@
-import { HasUUID } from '@shared/models/id/has-uuid';
+import {HasUUID} from '@shared/models/id/has-uuid';
 
 export declare type MenuSectionType = 'link' | 'toggle';
 

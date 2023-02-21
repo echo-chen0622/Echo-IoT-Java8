@@ -2,9 +2,9 @@ package org.echoiot.server.transport.lwm2m.server.downlink;
 
 import lombok.Builder;
 import lombok.Getter;
+import org.echoiot.server.transport.lwm2m.server.LwM2MOperationType;
 import org.eclipse.leshan.core.request.ContentFormat;
 import org.eclipse.leshan.core.response.WriteResponse;
-import org.echoiot.server.transport.lwm2m.server.LwM2MOperationType;
 import org.jetbrains.annotations.NotNull;
 
 public class TbLwM2MWriteReplaceRequest extends AbstractTbLwM2MTargetedDownlinkRequest<WriteResponse> {

@@ -15,13 +15,13 @@ import {RuleChainPageComponent} from '@home/pages/rulechain/rulechain-page.compo
 import {ConfirmOnExitGuard} from '@core/guards/confirm-on-exit.guard';
 import {RuleChainType} from '@shared/models/rule-chain.models';
 import {
-    importRuleChainBreadcumbLabelFunction,
-    ruleChainBreadcumbLabelFunction,
-    RuleChainImportGuard,
-    RuleChainMetaDataResolver,
-    RuleChainResolver,
-    RuleNodeComponentsResolver,
-    TooltipsterResolver
+  importRuleChainBreadcumbLabelFunction,
+  ruleChainBreadcumbLabelFunction,
+  RuleChainImportGuard,
+  RuleChainMetaDataResolver,
+  RuleChainResolver,
+  RuleNodeComponentsResolver,
+  TooltipsterResolver
 } from '@home/pages/rulechain/rulechain-routing.module';
 import {EntityDetailsPageComponent} from '@home/components/entity/entity-details-page.component';
 import {entityDetailsPageBreadcrumbLabelFunction} from '@home/pages/home-pages.models';

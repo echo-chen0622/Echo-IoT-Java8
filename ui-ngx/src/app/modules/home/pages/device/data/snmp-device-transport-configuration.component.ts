@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input, OnInit } from '@angular/core';
+import {Component, forwardRef, Input, OnInit} from '@angular/core';
 import {
   ControlValueAccessor,
   FormBuilder,
@@ -9,9 +9,9 @@ import {
   Validator,
   Validators
 } from '@angular/forms';
-import { Store } from '@ngrx/store';
-import { AppState } from '@app/core/core.state';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import {Store} from '@ngrx/store';
+import {AppState} from '@app/core/core.state';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
   DeviceTransportConfiguration,
   DeviceTransportType,
@@ -22,7 +22,7 @@ import {
   SnmpPrivacyProtocol,
   SnmpPrivacyProtocolTranslationMap
 } from '@shared/models/device.models';
-import { isDefinedAndNotNull } from '@core/utils';
+import {isDefinedAndNotNull} from '@core/utils';
 
 @Component({
   selector: 'tb-snmp-device-transport-configuration',

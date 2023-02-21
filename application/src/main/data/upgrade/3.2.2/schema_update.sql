@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS edge_event (
     ts bigint NOT NULL
     );
 
-CREATE TABLE IF NOT EXISTS resource (
+CREATE TABLE IF NOT EXISTS perResource (
     id uuid NOT NULL CONSTRAINT resource_pkey PRIMARY KEY,
     created_time bigint NOT NULL,
     tenant_id uuid NOT NULL,

@@ -1,13 +1,13 @@
 import {
-    DateEntityTableColumn,
-    EntityTableColumn,
-    EntityTableConfig
+  DateEntityTableColumn,
+  EntityTableColumn,
+  EntityTableConfig
 } from '@home/models/entity/entities-table-config.models';
 import {
-    actionStatusTranslations,
-    actionTypeTranslations,
-    AuditLog,
-    AuditLogMode
+  actionStatusTranslations,
+  actionTypeTranslations,
+  AuditLog,
+  AuditLogMode
 } from '@shared/models/audit-log.models';
 import {EntityTypeResource, entityTypeTranslations} from '@shared/models/entity-type.models';
 import {AuditLogService} from '@core/http/audit-log.service';
@@ -22,8 +22,8 @@ import {EntityId} from '@shared/models/id/entity-id';
 import {UserId} from '@shared/models/id/user-id';
 import {CustomerId} from '@shared/models/id/customer-id';
 import {
-    AuditLogDetailsDialogComponent,
-    AuditLogDetailsDialogData
+  AuditLogDetailsDialogComponent,
+  AuditLogDetailsDialogData
 } from '@home/components/audit-log/audit-log-details-dialog.component';
 
 export class AuditLogTableConfig extends EntityTableConfig<AuditLog, TimePageLink> {

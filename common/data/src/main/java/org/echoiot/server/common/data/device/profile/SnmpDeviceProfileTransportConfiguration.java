@@ -2,9 +2,9 @@ package org.echoiot.server.common.data.device.profile;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import org.echoiot.server.common.data.DeviceTransportType;
 import org.echoiot.server.common.data.transport.snmp.SnmpMapping;
 import org.echoiot.server.common.data.transport.snmp.config.SnmpCommunicationConfig;
-import org.echoiot.server.common.data.DeviceTransportType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;

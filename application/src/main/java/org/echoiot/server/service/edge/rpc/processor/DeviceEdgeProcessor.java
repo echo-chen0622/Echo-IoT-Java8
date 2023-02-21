@@ -37,9 +37,9 @@ import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.rpc.FromDeviceRpcResponseActorMsg;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.locks.ReentrantLock;

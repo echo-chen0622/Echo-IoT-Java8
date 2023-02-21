@@ -1,10 +1,10 @@
-import { Component, Inject, InjectionToken, OnInit, SkipSelf } from '@angular/core';
-import { ErrorStateMatcher } from '@angular/material/core';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, Validators } from '@angular/forms';
-import { PageComponent } from '@shared/components/page.component';
-import { OverlayRef } from '@angular/cdk/overlay';
+import {Component, Inject, InjectionToken, OnInit, SkipSelf} from '@angular/core';
+import {ErrorStateMatcher} from '@angular/material/core';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, Validators} from '@angular/forms';
+import {PageComponent} from '@shared/components/page.component';
+import {OverlayRef} from '@angular/cdk/overlay';
 
 export const EDIT_ATTRIBUTE_VALUE_PANEL_DATA = new InjectionToken<any>('EditAttributeValuePanelData');
 

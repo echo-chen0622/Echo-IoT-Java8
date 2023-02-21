@@ -1,14 +1,14 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { defaultHttpOptionsFromConfig, RequestConfig } from '@core/http/http-utils';
-import { Observable } from 'rxjs';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {defaultHttpOptionsFromConfig, RequestConfig} from '@core/http/http-utils';
+import {Observable} from 'rxjs';
 import {
   AccountTwoFaSettings,
   TwoFactorAuthAccountConfig,
   TwoFactorAuthProviderType,
   TwoFactorAuthSettings
 } from '@shared/models/two-factor-auth.models';
-import { isDefinedAndNotNull } from '@core/utils';
+import {isDefinedAndNotNull} from '@core/utils';
 
 @Injectable({
   providedIn: 'root'

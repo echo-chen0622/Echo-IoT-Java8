@@ -1,9 +1,6 @@
 package org.echoiot.server.transport.mqtt.claim;
 
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
-import org.junit.Before;
-import org.junit.Test;
 import org.echoiot.server.common.data.ClaimRequest;
 import org.echoiot.server.common.data.Customer;
 import org.echoiot.server.common.data.Device;
@@ -16,12 +13,15 @@ import org.echoiot.server.gen.transport.TransportApiProtos;
 import org.echoiot.server.transport.mqtt.AbstractMqttIntegrationTest;
 import org.echoiot.server.transport.mqtt.MqttTestClient;
 import org.echoiot.server.transport.mqtt.MqttTestConfigProperties;
+import org.jetbrains.annotations.NotNull;
+import org.junit.Before;
+import org.junit.Test;
 
+import static org.echoiot.server.common.data.device.profile.MqttTopics.DEVICE_CLAIM_TOPIC;
+import static org.echoiot.server.common.data.device.profile.MqttTopics.GATEWAY_CLAIM_TOPIC;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.echoiot.server.common.data.device.profile.MqttTopics.DEVICE_CLAIM_TOPIC;
-import static org.echoiot.server.common.data.device.profile.MqttTopics.GATEWAY_CLAIM_TOPIC;
 
 @Slf4j
 @DaoSqlTest

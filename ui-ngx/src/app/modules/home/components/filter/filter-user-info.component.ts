@@ -1,16 +1,16 @@
 import {Component, forwardRef, Input, OnInit} from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {
-    BooleanOperation,
-    EntityKeyValueType,
-    KeyFilterPredicateUserInfo,
-    NumericOperation,
-    StringOperation
+  BooleanOperation,
+  EntityKeyValueType,
+  KeyFilterPredicateUserInfo,
+  NumericOperation,
+  StringOperation
 } from '@shared/models/query/query.models';
 import {MatDialog} from '@angular/material/dialog';
 import {
-    FilterUserInfoDialogComponent,
-    FilterUserInfoDialogData
+  FilterUserInfoDialogComponent,
+  FilterUserInfoDialogData
 } from '@home/components/filter/filter-user-info-dialog.component';
 import {deepClone} from '@core/utils';
 

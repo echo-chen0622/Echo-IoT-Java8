@@ -5,27 +5,27 @@ import org.echoiot.server.common.data.User;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.UserId;
 import org.echoiot.server.common.data.security.Authority;
+import org.echoiot.server.service.security.model.SecurityUser;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
-import org.echoiot.server.service.security.model.SecurityUser;
 
 @Component(value="sysAdminPermissions")
 public class SysAdminPermissions extends AbstractPermissions {
 
     public SysAdminPermissions() {
         super();
-        put(Resource.ADMIN_SETTINGS, PermissionChecker.allowAllPermissionChecker);
-        put(Resource.DASHBOARD, new PermissionChecker.GenericPermissionChecker(Operation.READ));
-        put(Resource.TENANT, PermissionChecker.allowAllPermissionChecker);
-        put(Resource.RULE_CHAIN, systemEntityPermissionChecker);
-        put(Resource.USER, userPermissionChecker);
-        put(Resource.WIDGETS_BUNDLE, systemEntityPermissionChecker);
-        put(Resource.WIDGET_TYPE, systemEntityPermissionChecker);
-        put(Resource.OAUTH2_CONFIGURATION_INFO, PermissionChecker.allowAllPermissionChecker);
-        put(Resource.OAUTH2_CONFIGURATION_TEMPLATE, PermissionChecker.allowAllPermissionChecker);
-        put(Resource.TENANT_PROFILE, PermissionChecker.allowAllPermissionChecker);
-        put(Resource.TB_RESOURCE, systemEntityPermissionChecker);
-        put(Resource.QUEUE, systemEntityPermissionChecker);
+        put(PerResource.ADMIN_SETTINGS, PermissionChecker.allowAllPermissionChecker);
+        put(PerResource.DASHBOARD, new PermissionChecker.GenericPermissionChecker(Operation.READ));
+        put(PerResource.TENANT, PermissionChecker.allowAllPermissionChecker);
+        put(PerResource.RULE_CHAIN, systemEntityPermissionChecker);
+        put(PerResource.USER, userPermissionChecker);
+        put(PerResource.WIDGETS_BUNDLE, systemEntityPermissionChecker);
+        put(PerResource.WIDGET_TYPE, systemEntityPermissionChecker);
+        put(PerResource.OAUTH2_CONFIGURATION_INFO, PermissionChecker.allowAllPermissionChecker);
+        put(PerResource.OAUTH2_CONFIGURATION_TEMPLATE, PermissionChecker.allowAllPermissionChecker);
+        put(PerResource.TENANT_PROFILE, PermissionChecker.allowAllPermissionChecker);
+        put(PerResource.TB_RESOURCE, systemEntityPermissionChecker);
+        put(PerResource.QUEUE, systemEntityPermissionChecker);
     }
 
     private static final PermissionChecker systemEntityPermissionChecker = new PermissionChecker() {

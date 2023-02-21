@@ -3,14 +3,14 @@ package org.echoiot.server.dao.edge;
 import com.google.common.util.concurrent.ListenableFuture;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.echoiot.server.dao.service.DataValidator;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.stereotype.Service;
 import org.echoiot.server.common.data.edge.EdgeEvent;
 import org.echoiot.server.common.data.id.EdgeId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.TimePageLink;
+import org.echoiot.server.dao.service.DataValidator;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j

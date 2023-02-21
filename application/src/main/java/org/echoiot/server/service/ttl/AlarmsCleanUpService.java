@@ -9,6 +9,7 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.common.data.tenant.profile.DefaultTenantProfileConfiguration;
+import org.echoiot.server.common.msg.queue.ServiceType;
 import org.echoiot.server.dao.alarm.AlarmDao;
 import org.echoiot.server.dao.alarm.AlarmService;
 import org.echoiot.server.dao.relation.RelationService;
@@ -21,7 +22,6 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.echoiot.server.common.msg.queue.ServiceType;
 
 import java.util.Date;
 import java.util.Optional;

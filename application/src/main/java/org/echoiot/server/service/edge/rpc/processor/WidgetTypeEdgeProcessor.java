@@ -7,14 +7,14 @@ import org.echoiot.server.common.data.edge.EdgeEvent;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.id.WidgetTypeId;
 import org.echoiot.server.common.data.widget.WidgetTypeDetails;
-import org.echoiot.server.queue.util.TbCoreComponent;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.springframework.stereotype.Component;
 import org.echoiot.server.gen.edge.v1.DownlinkMsg;
 import org.echoiot.server.gen.edge.v1.UpdateMsgType;
 import org.echoiot.server.gen.edge.v1.WidgetTypeUpdateMsg;
 import org.echoiot.server.gen.transport.TransportProtos;
+import org.echoiot.server.queue.util.TbCoreComponent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j

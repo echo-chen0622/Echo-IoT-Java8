@@ -1,9 +1,9 @@
 package org.echoiot.server.config;
 
+import org.echoiot.server.utils.MiscUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.echoiot.server.utils.MiscUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

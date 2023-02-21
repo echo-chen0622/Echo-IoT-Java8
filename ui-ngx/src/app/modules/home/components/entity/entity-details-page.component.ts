@@ -8,19 +8,18 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { EntityTableConfig } from '@home/models/entity/entities-table-config.models';
-import { BaseData, HasId } from '@shared/models/base-data';
-import { ActivatedRoute, Router } from '@angular/router';
-import { FormGroup } from '@angular/forms';
-import { AssetId } from '@shared/models/id/asset-id';
-import { TranslateService } from '@ngx-translate/core';
-import { deepClone } from '@core/utils';
-import { BroadcastService } from '@core/services/broadcast.service';
-import { EntityDetailsPanelComponent } from '@home/components/entity/entity-details-panel.component';
-import { DialogService } from '@core/services/dialog.service';
-import { IEntityDetailsPageComponent } from '@home/models/entity/entity-details-page-component.models';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {EntityTableConfig} from '@home/models/entity/entities-table-config.models';
+import {BaseData, HasId} from '@shared/models/base-data';
+import {ActivatedRoute, Router} from '@angular/router';
+import {FormGroup} from '@angular/forms';
+import {TranslateService} from '@ngx-translate/core';
+import {deepClone} from '@core/utils';
+import {BroadcastService} from '@core/services/broadcast.service';
+import {EntityDetailsPanelComponent} from '@home/components/entity/entity-details-panel.component';
+import {DialogService} from '@core/services/dialog.service';
+import {IEntityDetailsPageComponent} from '@home/models/entity/entity-details-page-component.models';
 
 @Component({
   selector: 'tb-entity-details-page',

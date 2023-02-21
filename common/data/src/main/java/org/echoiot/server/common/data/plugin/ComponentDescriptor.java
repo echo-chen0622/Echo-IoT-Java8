@@ -3,10 +3,12 @@ package org.echoiot.server.common.data.plugin;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
-import org.echoiot.server.common.data.validation.Length;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.echoiot.server.common.data.SearchTextBased;
 import org.echoiot.server.common.data.id.ComponentDescriptorId;
+import org.echoiot.server.common.data.validation.Length;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

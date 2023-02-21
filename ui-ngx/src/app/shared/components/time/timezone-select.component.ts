@@ -1,15 +1,15 @@
-import { AfterViewInit, Component, forwardRef, Input, NgZone, OnInit, ViewChild } from '@angular/core';
-import { ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { MatFormFieldAppearance } from '@angular/material/form-field/form-field';
-import { Observable, of } from 'rxjs';
-import { map, mergeMap, share, tap } from 'rxjs/operators';
-import { Store } from '@ngrx/store';
-import { AppState } from '@app/core/core.state';
-import { TranslateService } from '@ngx-translate/core';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
-import { getDefaultTimezoneInfo, getTimezoneInfo, getTimezones, TimezoneInfo } from '@shared/models/time/time.models';
-import { deepClone } from '@core/utils';
+import {AfterViewInit, Component, forwardRef, Input, NgZone, OnInit, ViewChild} from '@angular/core';
+import {ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {MatFormFieldAppearance} from '@angular/material/form-field/form-field';
+import {Observable, of} from 'rxjs';
+import {map, mergeMap, share, tap} from 'rxjs/operators';
+import {Store} from '@ngrx/store';
+import {AppState} from '@app/core/core.state';
+import {TranslateService} from '@ngx-translate/core';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {MatAutocompleteTrigger} from '@angular/material/autocomplete';
+import {getDefaultTimezoneInfo, getTimezoneInfo, getTimezones, TimezoneInfo} from '@shared/models/time/time.models';
+import {deepClone} from '@core/utils';
 
 @Component({
   selector: 'tb-timezone-select',

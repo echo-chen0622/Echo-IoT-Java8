@@ -1,8 +1,8 @@
 package org.echoiot.server.service.sms;
 
+import org.echoiot.common.util.AbstractListeningExecutor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.echoiot.common.util.AbstractListeningExecutor;
 
 @Component
 public class SmsExecutorService extends AbstractListeningExecutor {

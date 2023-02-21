@@ -1,9 +1,9 @@
 package org.echoiot.server.transport.lwm2m.server.downlink;
 
-import org.eclipse.leshan.core.request.WriteAttributesRequest;
-import org.eclipse.leshan.core.response.WriteAttributesResponse;
 import org.echoiot.server.transport.lwm2m.server.client.LwM2mClient;
 import org.echoiot.server.transport.lwm2m.server.log.LwM2MTelemetryLogService;
+import org.eclipse.leshan.core.request.WriteAttributesRequest;
+import org.eclipse.leshan.core.response.WriteAttributesResponse;
 
 public class TbLwM2MWriteAttributesCallback extends TbLwM2MTargetedCallback<WriteAttributesRequest, WriteAttributesResponse> {
 

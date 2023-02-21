@@ -1,8 +1,8 @@
-import { Component, Inject, InjectionToken } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { OverlayRef } from '@angular/cdk/overlay';
-import { RpcStatus, rpcStatusTranslation } from '@shared/models/rpc.models';
-import { TranslateService } from '@ngx-translate/core';
+import {Component, Inject, InjectionToken} from '@angular/core';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {OverlayRef} from '@angular/cdk/overlay';
+import {RpcStatus, rpcStatusTranslation} from '@shared/models/rpc.models';
+import {TranslateService} from '@ngx-translate/core';
 
 export const PERSISTENT_FILTER_PANEL_DATA = new InjectionToken<any>('AlarmFilterPanelData');
 

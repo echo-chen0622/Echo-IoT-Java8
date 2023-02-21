@@ -1,24 +1,24 @@
-import { Component, ElementRef, EventEmitter, forwardRef, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Observable, of } from 'rxjs';
-import { PageLink } from '@shared/models/page/page-link';
-import { Direction } from '@shared/models/page/sort-order';
-import { catchError, debounceTime, distinctUntilChanged, map, share, switchMap, tap } from 'rxjs/operators';
-import { Store } from '@ngrx/store';
-import { AppState } from '@app/core/core.state';
-import { TranslateService } from '@ngx-translate/core';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { TenantProfileId } from '@shared/models/id/tenant-profile-id';
-import { EntityInfoData } from '@shared/models/entity.models';
-import { TenantProfileService } from '@core/http/tenant-profile.service';
-import { entityIdEquals } from '@shared/models/id/entity-id';
-import { TruncatePipe } from '@shared//pipe/truncate.pipe';
-import { ENTER } from '@angular/cdk/keycodes';
-import { TenantProfile } from '@shared/models/tenant.model';
-import { MatDialog } from '@angular/material/dialog';
-import { TenantProfileDialogComponent, TenantProfileDialogData } from './tenant-profile-dialog.component';
-import { emptyPageData } from '@shared/models/page/page-data';
-import { getEntityDetailsPageURL } from '@core/utils';
+import {Component, ElementRef, EventEmitter, forwardRef, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {Observable, of} from 'rxjs';
+import {PageLink} from '@shared/models/page/page-link';
+import {Direction} from '@shared/models/page/sort-order';
+import {catchError, debounceTime, distinctUntilChanged, map, share, switchMap, tap} from 'rxjs/operators';
+import {Store} from '@ngrx/store';
+import {AppState} from '@app/core/core.state';
+import {TranslateService} from '@ngx-translate/core';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {TenantProfileId} from '@shared/models/id/tenant-profile-id';
+import {EntityInfoData} from '@shared/models/entity.models';
+import {TenantProfileService} from '@core/http/tenant-profile.service';
+import {entityIdEquals} from '@shared/models/id/entity-id';
+import {TruncatePipe} from '@shared//pipe/truncate.pipe';
+import {ENTER} from '@angular/cdk/keycodes';
+import {TenantProfile} from '@shared/models/tenant.model';
+import {MatDialog} from '@angular/material/dialog';
+import {TenantProfileDialogComponent, TenantProfileDialogData} from './tenant-profile-dialog.component';
+import {emptyPageData} from '@shared/models/page/page-data';
+import {getEntityDetailsPageURL} from '@core/utils';
 
 @Component({
   selector: 'tb-tenant-profile-autocomplete',

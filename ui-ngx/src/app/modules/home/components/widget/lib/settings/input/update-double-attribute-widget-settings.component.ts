@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
-import { WidgetSettings, WidgetSettingsComponent } from '@shared/models/widget.models';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { deepClone } from '@core/utils';
+import {Component} from '@angular/core';
+import {WidgetSettings, WidgetSettingsComponent} from '@shared/models/widget.models';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {deepClone} from '@core/utils';
 import {
   updateAttributeGeneralDefaultSettings
 } from '@home/components/widget/lib/settings/input/update-attribute-general-settings.component';

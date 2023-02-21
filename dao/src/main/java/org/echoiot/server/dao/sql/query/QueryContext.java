@@ -1,13 +1,13 @@
 package org.echoiot.server.dao.sql.query;
 
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.server.common.data.EntityType;
+import org.echoiot.server.common.data.id.CustomerId;
+import org.echoiot.server.common.data.id.TenantId;
 import org.hibernate.type.PostgresUUIDType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.echoiot.server.common.data.EntityType;
-import org.echoiot.server.common.data.id.CustomerId;
-import org.echoiot.server.common.data.id.TenantId;
 
 import java.sql.Types;
 import java.util.HashMap;

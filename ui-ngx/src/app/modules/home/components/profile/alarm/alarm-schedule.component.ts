@@ -1,25 +1,25 @@
 import {Component, forwardRef, Input, OnInit} from '@angular/core';
 import {
-    AbstractControl,
-    ControlValueAccessor,
-    FormArray,
-    FormBuilder,
-    FormControl,
-    FormGroup,
-    NG_VALIDATORS,
-    NG_VALUE_ACCESSOR,
-    ValidationErrors,
-    Validator,
-    Validators
+  AbstractControl,
+  ControlValueAccessor,
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR,
+  ValidationErrors,
+  Validator,
+  Validators
 } from '@angular/forms';
 import {
-    AlarmSchedule,
-    AlarmScheduleType,
-    AlarmScheduleTypeTranslationMap,
-    dayOfWeekTranslations,
-    getAlarmScheduleRangeText,
-    timeOfDayToUTCTimestamp,
-    utcTimestampToTimeOfDay
+  AlarmSchedule,
+  AlarmScheduleType,
+  AlarmScheduleTypeTranslationMap,
+  dayOfWeekTranslations,
+  getAlarmScheduleRangeText,
+  timeOfDayToUTCTimestamp,
+  utcTimestampToTimeOfDay
 } from '@shared/models/device.models';
 import {isDefined, isDefinedAndNotNull} from '@core/utils';
 import {MatCheckboxChange} from '@angular/material/checkbox';

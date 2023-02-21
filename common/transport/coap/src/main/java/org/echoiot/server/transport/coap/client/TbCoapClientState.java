@@ -10,9 +10,9 @@ import org.echoiot.server.common.data.device.data.PowerMode;
 import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.data.id.DeviceProfileId;
 import org.echoiot.server.common.transport.auth.ValidateDeviceCredentialsResponse;
-import org.echoiot.server.transport.coap.adaptors.CoapTransportAdaptor;
 import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.transport.coap.TransportConfigurationContainer;
+import org.echoiot.server.transport.coap.adaptors.CoapTransportAdaptor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

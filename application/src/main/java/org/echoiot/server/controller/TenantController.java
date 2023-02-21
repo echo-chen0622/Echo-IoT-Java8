@@ -15,34 +15,13 @@ import org.echoiot.server.dao.tenant.TenantService;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.entitiy.tenant.TbTenantService;
 import org.echoiot.server.service.security.permission.Operation;
-import org.echoiot.server.service.security.permission.Resource;
+import org.echoiot.server.service.security.permission.PerResource;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import static org.echoiot.server.controller.ControllerConstants.HOME_DASHBOARD;
-import static org.echoiot.server.controller.ControllerConstants.PAGE_DATA_PARAMETERS;
-import static org.echoiot.server.controller.ControllerConstants.PAGE_NUMBER_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.PAGE_SIZE_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES;
-import static org.echoiot.server.controller.ControllerConstants.SORT_ORDER_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.SORT_PROPERTY_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.SYSTEM_AUTHORITY_PARAGRAPH;
-import static org.echoiot.server.controller.ControllerConstants.SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH;
-import static org.echoiot.server.controller.ControllerConstants.TENANT_ID;
-import static org.echoiot.server.controller.ControllerConstants.TENANT_ID_PARAM_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.TENANT_INFO_SORT_PROPERTY_ALLOWABLE_VALUES;
-import static org.echoiot.server.controller.ControllerConstants.TENANT_SORT_PROPERTY_ALLOWABLE_VALUES;
-import static org.echoiot.server.controller.ControllerConstants.TENANT_TEXT_SEARCH_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.UUID_WIKI_LINK;
+import static org.echoiot.server.controller.ControllerConstants.*;
 
 @RestController
 @TbCoreComponent
@@ -111,7 +90,7 @@ public class TenantController extends BaseController {
     @ResponseBody
     public Tenant saveTenant(@NotNull @ApiParam(value = "A JSON value representing the tenant.")
                              @RequestBody Tenant tenant) throws Exception {
-        checkEntity(tenant.getId(), tenant, Resource.TENANT);
+        checkEntity(tenant.getId(), tenant, PerResource.TENANT);
         return tbTenantService.save(tenant);
     }
 

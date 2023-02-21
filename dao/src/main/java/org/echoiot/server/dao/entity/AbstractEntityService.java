@@ -1,11 +1,6 @@
 package org.echoiot.server.dao.entity;
 
 import lombok.extern.slf4j.Slf4j;
-import org.echoiot.server.dao.exception.DataValidationException;
-import org.hibernate.exception.ConstraintViolationException;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.echoiot.server.common.data.EntityView;
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.id.EdgeId;
@@ -16,8 +11,14 @@ import org.echoiot.server.common.data.relation.RelationTypeGroup;
 import org.echoiot.server.dao.alarm.AlarmService;
 import org.echoiot.server.dao.edge.EdgeService;
 import org.echoiot.server.dao.entityview.EntityViewService;
+import org.echoiot.server.dao.exception.DataValidationException;
 import org.echoiot.server.dao.relation.RelationService;
+import org.hibernate.exception.ConstraintViolationException;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 
+import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;

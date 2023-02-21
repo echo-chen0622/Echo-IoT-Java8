@@ -1,10 +1,10 @@
 package org.echoiot.server.dao.sql.oauth2;
 
+import org.echoiot.server.common.data.oauth2.SchemeType;
 import org.echoiot.server.dao.model.sql.OAuth2RegistrationEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.echoiot.server.common.data.oauth2.SchemeType;
 
 import java.util.List;
 import java.util.UUID;

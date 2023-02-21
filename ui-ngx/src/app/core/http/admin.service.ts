@@ -3,15 +3,15 @@ import {defaultHttpOptionsFromConfig, RequestConfig} from './http-utils';
 import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {
-    AdminSettings,
-    AutoCommitSettings,
-    JwtSettings,
-    MailServerSettings,
-    RepositorySettings,
-    RepositorySettingsInfo,
-    SecuritySettings,
-    TestSmsRequest,
-    UpdateMessage
+  AdminSettings,
+  AutoCommitSettings,
+  JwtSettings,
+  MailServerSettings,
+  RepositorySettings,
+  RepositorySettingsInfo,
+  SecuritySettings,
+  TestSmsRequest,
+  UpdateMessage
 } from '@shared/models/settings.models';
 import {EntitiesVersionControlService} from '@core/http/entities-version-control.service';
 import {tap} from 'rxjs/operators';

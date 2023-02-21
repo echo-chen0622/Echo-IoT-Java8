@@ -1,6 +1,6 @@
-import { BaseData } from '@shared/models/base-data';
-import { TenantId } from '@shared/models/id/tenant-id';
-import { TbResourceId } from '@shared/models/id/tb-resource-id';
+import {BaseData} from '@shared/models/base-data';
+import {TenantId} from '@shared/models/id/tenant-id';
+import {TbResourceId} from '@shared/models/id/tb-resource-id';
 
 export enum ResourceType {
   LWM2M_MODEL = 'LWM2M_MODEL',

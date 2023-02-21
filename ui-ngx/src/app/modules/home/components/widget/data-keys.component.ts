@@ -1,25 +1,25 @@
 import {COMMA, ENTER, SEMICOLON} from '@angular/cdk/keycodes';
 import {
-    AfterViewInit,
-    Component,
-    ElementRef,
-    forwardRef,
-    Input,
-    OnChanges,
-    OnInit,
-    SimpleChanges,
-    SkipSelf,
-    ViewChild
+  AfterViewInit,
+  Component,
+  ElementRef,
+  forwardRef,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+  SkipSelf,
+  ViewChild
 } from '@angular/core';
 import {
-    ControlValueAccessor,
-    FormBuilder,
-    FormControl,
-    FormGroup,
-    FormGroupDirective,
-    NG_VALUE_ACCESSOR,
-    NgForm,
-    Validators
+  ControlValueAccessor,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  FormGroupDirective,
+  NG_VALUE_ACCESSOR,
+  NgForm,
+  Validators
 } from '@angular/forms';
 import {Observable, of} from 'rxjs';
 import {filter, map, mergeMap, publishReplay, refCount, share, tap} from 'rxjs/operators';
@@ -40,8 +40,8 @@ import {TruncatePipe} from '@shared/pipe/truncate.pipe';
 import {DialogService} from '@core/services/dialog.service';
 import {MatDialog} from '@angular/material/dialog';
 import {
-    DataKeyConfigDialogComponent,
-    DataKeyConfigDialogData
+  DataKeyConfigDialogComponent,
+  DataKeyConfigDialogData
 } from '@home/components/widget/data-key-config-dialog.component';
 import {deepClone} from '@core/utils';
 import {MatChipDropEvent} from '@app/shared/components/mat-chip-draggable.directive';

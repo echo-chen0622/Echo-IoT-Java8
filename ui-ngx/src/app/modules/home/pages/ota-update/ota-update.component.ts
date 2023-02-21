@@ -1,11 +1,11 @@
-import { ChangeDetectorRef, Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { combineLatest, Subject } from 'rxjs';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { TranslateService } from '@ngx-translate/core';
-import { EntityTableConfig } from '@home/models/entity/entities-table-config.models';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { EntityComponent } from '@home/components/entity/entity.component';
+import {ChangeDetectorRef, Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {combineLatest, Subject} from 'rxjs';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {TranslateService} from '@ngx-translate/core';
+import {EntityTableConfig} from '@home/models/entity/entities-table-config.models';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {EntityComponent} from '@home/components/entity/entity.component';
 import {
   ChecksumAlgorithm,
   ChecksumAlgorithmTranslationMap,
@@ -13,9 +13,9 @@ import {
   OtaUpdateType,
   OtaUpdateTypeTranslationMap
 } from '@shared/models/ota-package.models';
-import { ActionNotificationShow } from '@core/notification/notification.actions';
-import { filter, startWith, takeUntil } from 'rxjs/operators';
-import { isNotEmptyStr } from '@core/utils';
+import {ActionNotificationShow} from '@core/notification/notification.actions';
+import {filter, startWith, takeUntil} from 'rxjs/operators';
+import {isNotEmptyStr} from '@core/utils';
 
 @Component({
   selector: 'tb-ota-update',

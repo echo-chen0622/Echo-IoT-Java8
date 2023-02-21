@@ -2,18 +2,14 @@ package org.echoiot.server.queue.common;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
 import org.echoiot.server.queue.TbQueueConsumer;
 import org.echoiot.server.queue.TbQueueMsg;
-import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Queue;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;

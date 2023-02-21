@@ -1,6 +1,6 @@
-import { AliasEntityType, EntityType } from '@shared/models/entity-type.models';
-import { HasUUID } from '@shared/models/id/has-uuid';
-import { isDefinedAndNotNull } from '@core/utils';
+import {AliasEntityType, EntityType} from '@shared/models/entity-type.models';
+import {HasUUID} from '@shared/models/id/has-uuid';
+import {isDefinedAndNotNull} from '@core/utils';
 
 export interface EntityId extends HasUUID {
   entityType: EntityType | AliasEntityType;

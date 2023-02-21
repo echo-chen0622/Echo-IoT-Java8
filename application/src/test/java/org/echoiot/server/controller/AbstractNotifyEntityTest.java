@@ -1,12 +1,6 @@
 package org.echoiot.server.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.echoiot.server.common.msg.TbMsg;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.mockito.ArgumentMatcher;
-import org.mockito.Mockito;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.echoiot.server.cluster.TbClusterService;
 import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.HasName;
@@ -15,16 +9,18 @@ import org.echoiot.server.common.data.Tenant;
 import org.echoiot.server.common.data.audit.ActionType;
 import org.echoiot.server.common.data.edge.EdgeEventActionType;
 import org.echoiot.server.common.data.edge.EdgeEventType;
-import org.echoiot.server.common.data.id.CustomerId;
-import org.echoiot.server.common.data.id.EntityId;
-import org.echoiot.server.common.data.id.EntityIdFactory;
-import org.echoiot.server.common.data.id.TenantId;
-import org.echoiot.server.common.data.id.UserId;
+import org.echoiot.server.common.data.id.*;
 import org.echoiot.server.common.data.plugin.ComponentLifecycleEvent;
 import org.echoiot.server.common.data.relation.EntityRelation;
+import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.ToDeviceActorNotificationMsg;
 import org.echoiot.server.dao.audit.AuditLogService;
 import org.echoiot.server.dao.model.ModelConstants;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.mockito.ArgumentMatcher;
+import org.mockito.Mockito;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,9 +28,9 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static org.echoiot.server.service.entitiy.DefaultTbNotificationEntityService.edgeTypeByActionType;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
-import static org.echoiot.server.service.entitiy.DefaultTbNotificationEntityService.edgeTypeByActionType;
 
 @Slf4j
 public abstract class AbstractNotifyEntityTest extends AbstractWebTest {

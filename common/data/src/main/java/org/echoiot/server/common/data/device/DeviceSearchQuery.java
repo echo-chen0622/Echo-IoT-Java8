@@ -3,11 +3,11 @@ package org.echoiot.server.common.data.device;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.relation.EntityRelation;
 import org.echoiot.server.common.data.relation.EntityRelationsQuery;
 import org.echoiot.server.common.data.relation.RelationEntityTypeFilter;
 import org.echoiot.server.common.data.relation.RelationsSearchParameters;
-import org.echoiot.server.common.data.EntityType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;

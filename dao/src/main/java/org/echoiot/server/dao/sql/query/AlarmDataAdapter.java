@@ -8,11 +8,7 @@ import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.alarm.Alarm;
 import org.echoiot.server.common.data.alarm.AlarmSeverity;
 import org.echoiot.server.common.data.alarm.AlarmStatus;
-import org.echoiot.server.common.data.id.AlarmId;
-import org.echoiot.server.common.data.id.CustomerId;
-import org.echoiot.server.common.data.id.EntityId;
-import org.echoiot.server.common.data.id.EntityIdFactory;
-import org.echoiot.server.common.data.id.TenantId;
+import org.echoiot.server.common.data.id.*;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.query.AlarmData;
 import org.echoiot.server.common.data.query.EntityDataPageLink;
@@ -20,12 +16,7 @@ import org.echoiot.server.dao.model.ModelConstants;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 

@@ -8,8 +8,8 @@ import {CommonModule} from '@angular/common';
 import {mergeMap, tap} from 'rxjs/operators';
 import {CustomDialogComponent} from './custom-dialog.component';
 import {
-    CustomDialogContainerComponent,
-    CustomDialogContainerData
+  CustomDialogContainerComponent,
+  CustomDialogContainerData
 } from '@home/components/widget/dialog/custom-dialog-container.component';
 import {SHARED_MODULE_TOKEN} from '@shared/components/tokens';
 import {HOME_COMPONENTS_MODULE_TOKEN, SHARED_HOME_COMPONENTS_MODULE_TOKEN} from '@home/components/tokens';

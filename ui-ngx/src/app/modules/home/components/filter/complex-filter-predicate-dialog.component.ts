@@ -7,10 +7,10 @@ import {FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, Validat
 import {Router} from '@angular/router';
 import {DialogComponent} from '@app/shared/components/dialog.component';
 import {
-    ComplexFilterPredicateInfo,
-    ComplexOperation,
-    complexOperationTranslationMap,
-    FilterPredicateType
+  ComplexFilterPredicateInfo,
+  ComplexOperation,
+  complexOperationTranslationMap,
+  FilterPredicateType
 } from '@shared/models/query/query.models';
 import {ComplexFilterPredicateDialogData} from '@home/components/filter/filter-component.models';
 

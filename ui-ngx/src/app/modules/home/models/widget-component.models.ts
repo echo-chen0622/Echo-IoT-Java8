@@ -1,4 +1,4 @@
-import { IDashboardComponent } from '@home/models/dashboard-component.models';
+import {IDashboardComponent} from '@home/models/dashboard-component.models';
 import {
   DataSet,
   Datasource,
@@ -16,7 +16,7 @@ import {
   WidgetTypeDetails,
   WidgetTypeParameters
 } from '@shared/models/widget.models';
-import { Timewindow, WidgetTimewindow } from '@shared/models/time/time.models';
+import {Timewindow, WidgetTimewindow} from '@shared/models/time/time.models';
 import {
   IAliasController,
   IStateController,
@@ -29,50 +29,50 @@ import {
   WidgetActionsApi,
   WidgetSubscriptionApi
 } from '@core/api/widget-api.models';
-import { ChangeDetectorRef, ComponentFactory, Injector, NgZone, Type } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { RafService } from '@core/services/raf.service';
-import { WidgetTypeId } from '@shared/models/id/widget-type-id';
-import { TenantId } from '@shared/models/id/tenant-id';
-import { WidgetLayout } from '@shared/models/dashboard.models';
-import { formatValue, isDefined } from '@core/utils';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
+import {ChangeDetectorRef, ComponentFactory, Injector, NgZone, Type} from '@angular/core';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {RafService} from '@core/services/raf.service';
+import {WidgetTypeId} from '@shared/models/id/widget-type-id';
+import {TenantId} from '@shared/models/id/tenant-id';
+import {WidgetLayout} from '@shared/models/dashboard.models';
+import {formatValue, isDefined} from '@core/utils';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
 import {
   NotificationHorizontalPosition,
   NotificationType,
   NotificationVerticalPosition
 } from '@core/notification/notification.models';
-import { ActionNotificationHide, ActionNotificationShow } from '@core/notification/notification.actions';
-import { AuthUser } from '@shared/models/user.model';
-import { getCurrentAuthUser } from '@core/auth/auth.selectors';
-import { DeviceService } from '@core/http/device.service';
-import { AssetService } from '@core/http/asset.service';
-import { EntityViewService } from '@core/http/entity-view.service';
-import { CustomerService } from '@core/http/customer.service';
-import { DashboardService } from '@core/http/dashboard.service';
-import { UserService } from '@core/http/user.service';
-import { AttributeService } from '@core/http/attribute.service';
-import { EntityRelationService } from '@core/http/entity-relation.service';
-import { EntityService } from '@core/http/entity.service';
-import { DialogService } from '@core/services/dialog.service';
-import { CustomDialogService } from '@home/components/widget/dialog/custom-dialog.service';
-import { AuthService } from '@core/auth/auth.service';
-import { ResourceService } from '@core/http/resource.service';
-import { TelemetryWebsocketService } from '@core/ws/telemetry-websocket.service';
-import { DatePipe } from '@angular/common';
-import { TranslateService } from '@ngx-translate/core';
-import { PageLink, TimePageLink } from '@shared/models/page/page-link';
-import { SortOrder } from '@shared/models/page/sort-order';
-import { DomSanitizer } from '@angular/platform-browser';
-import { Router } from '@angular/router';
-import { EdgeService } from '@core/http/edge.service';
+import {ActionNotificationHide, ActionNotificationShow} from '@core/notification/notification.actions';
+import {AuthUser} from '@shared/models/user.model';
+import {getCurrentAuthUser} from '@core/auth/auth.selectors';
+import {DeviceService} from '@core/http/device.service';
+import {AssetService} from '@core/http/asset.service';
+import {EntityViewService} from '@core/http/entity-view.service';
+import {CustomerService} from '@core/http/customer.service';
+import {DashboardService} from '@core/http/dashboard.service';
+import {UserService} from '@core/http/user.service';
+import {AttributeService} from '@core/http/attribute.service';
+import {EntityRelationService} from '@core/http/entity-relation.service';
+import {EntityService} from '@core/http/entity.service';
+import {DialogService} from '@core/services/dialog.service';
+import {CustomDialogService} from '@home/components/widget/dialog/custom-dialog.service';
+import {AuthService} from '@core/auth/auth.service';
+import {ResourceService} from '@core/http/resource.service';
+import {TelemetryWebsocketService} from '@core/ws/telemetry-websocket.service';
+import {DatePipe} from '@angular/common';
+import {TranslateService} from '@ngx-translate/core';
+import {PageLink, TimePageLink} from '@shared/models/page/page-link';
+import {SortOrder} from '@shared/models/page/sort-order';
+import {DomSanitizer} from '@angular/platform-browser';
+import {Router} from '@angular/router';
+import {EdgeService} from '@core/http/edge.service';
 import * as RxJS from 'rxjs';
 import * as RxJSOperators from 'rxjs/operators';
-import { TbPopoverComponent } from '@shared/components/popover.component';
-import { EntityId } from '@shared/models/id/entity-id';
-import { AlarmQuery, AlarmSearchStatus, AlarmStatus} from '@app/shared/models/alarm.models';
-import { MillisecondsToTimeStringPipe, TelemetrySubscriber } from '@app/shared/public-api';
+import {TbPopoverComponent} from '@shared/components/popover.component';
+import {EntityId} from '@shared/models/id/entity-id';
+import {AlarmQuery, AlarmSearchStatus, AlarmStatus} from '@app/shared/models/alarm.models';
+import {MillisecondsToTimeStringPipe, TelemetrySubscriber} from '@app/shared/public-api';
 
 export interface IWidgetAction {
   name: string;

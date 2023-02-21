@@ -1,9 +1,9 @@
 package org.echoiot.server.queue.discovery;
 
-import org.jetbrains.annotations.NotNull;
-import org.springframework.stereotype.Service;
 import org.echoiot.server.common.msg.queue.ServiceType;
 import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;

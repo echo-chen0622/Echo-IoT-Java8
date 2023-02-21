@@ -3,6 +3,7 @@ package org.echoiot.server.transport.lwm2m.utils;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.gson.JsonElement;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.common.data.DeviceProfile;
 import org.echoiot.server.common.data.DeviceTransportType;
 import org.echoiot.server.common.data.StringUtils;
@@ -14,6 +15,7 @@ import org.echoiot.server.common.data.ota.OtaPackageKey;
 import org.echoiot.server.common.transport.util.JsonUtils;
 import org.echoiot.server.transport.lwm2m.config.TbLwM2mVersion;
 import org.echoiot.server.transport.lwm2m.server.LwM2mOtaConvert;
+import org.echoiot.server.transport.lwm2m.server.client.LwM2mClient;
 import org.echoiot.server.transport.lwm2m.server.client.ResourceValue;
 import org.echoiot.server.transport.lwm2m.server.downlink.HasVersionedId;
 import org.echoiot.server.transport.lwm2m.server.ota.DefaultLwM2MOtaUpdateService;
@@ -24,11 +26,7 @@ import org.echoiot.server.transport.lwm2m.server.ota.software.SoftwareUpdateStat
 import org.echoiot.server.transport.lwm2m.server.uplink.DefaultLwM2mUplinkMsgHandler;
 import org.eclipse.leshan.core.attributes.Attribute;
 import org.eclipse.leshan.core.attributes.AttributeSet;
-import org.eclipse.leshan.core.model.LwM2mModel;
-import org.eclipse.leshan.core.model.ObjectLoader;
-import org.eclipse.leshan.core.model.ObjectModel;
-import org.eclipse.leshan.core.model.ResourceModel;
-import org.eclipse.leshan.core.model.StaticModel;
+import org.eclipse.leshan.core.model.*;
 import org.eclipse.leshan.core.node.LwM2mMultipleResource;
 import org.eclipse.leshan.core.node.LwM2mPath;
 import org.eclipse.leshan.core.node.LwM2mResource;
@@ -38,33 +36,13 @@ import org.eclipse.leshan.core.request.SimpleDownlinkRequest;
 import org.eclipse.leshan.core.request.WriteAttributesRequest;
 import org.eclipse.leshan.core.util.Hex;
 import org.eclipse.leshan.server.registration.Registration;
-import org.echoiot.common.util.JacksonUtil;
-import org.echoiot.server.transport.lwm2m.server.client.LwM2mClient;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
-import static org.eclipse.leshan.core.attributes.Attribute.DIMENSION;
-import static org.eclipse.leshan.core.attributes.Attribute.GREATER_THAN;
-import static org.eclipse.leshan.core.attributes.Attribute.LESSER_THAN;
-import static org.eclipse.leshan.core.attributes.Attribute.MAXIMUM_PERIOD;
-import static org.eclipse.leshan.core.attributes.Attribute.MINIMUM_PERIOD;
-import static org.eclipse.leshan.core.attributes.Attribute.OBJECT_VERSION;
-import static org.eclipse.leshan.core.attributes.Attribute.STEP;
-import static org.eclipse.leshan.core.model.ResourceModel.Type.BOOLEAN;
-import static org.eclipse.leshan.core.model.ResourceModel.Type.FLOAT;
-import static org.eclipse.leshan.core.model.ResourceModel.Type.INTEGER;
-import static org.eclipse.leshan.core.model.ResourceModel.Type.OBJLNK;
-import static org.eclipse.leshan.core.model.ResourceModel.Type.OPAQUE;
-import static org.eclipse.leshan.core.model.ResourceModel.Type.STRING;
-import static org.eclipse.leshan.core.model.ResourceModel.Type.TIME;
+import static org.eclipse.leshan.core.attributes.Attribute.*;
+import static org.eclipse.leshan.core.model.ResourceModel.Type.*;
 
 @Slf4j
 public class LwM2MTransportUtil {

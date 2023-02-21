@@ -3,6 +3,7 @@ package org.echoiot.server.dao.sql.user;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.id.UserId;
 import org.echoiot.server.common.data.security.UserCredentials;
+import org.echoiot.server.dao.AbstractJpaDaoTest;
 import org.echoiot.server.dao.service.AbstractServiceTest;
 import org.echoiot.server.dao.user.UserCredentialsDao;
 import org.jetbrains.annotations.NotNull;
@@ -10,9 +11,8 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.echoiot.server.dao.AbstractJpaDaoTest;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;

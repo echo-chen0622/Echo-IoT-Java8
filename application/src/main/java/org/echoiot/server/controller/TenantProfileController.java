@@ -13,34 +13,14 @@ import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.entitiy.tenant.profile.TbTenantProfileService;
 import org.echoiot.server.service.security.permission.Operation;
-import org.echoiot.server.service.security.permission.Resource;
+import org.echoiot.server.service.security.permission.PerResource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import static org.echoiot.server.controller.ControllerConstants.MARKDOWN_CODE_BLOCK_END;
-import static org.echoiot.server.controller.ControllerConstants.MARKDOWN_CODE_BLOCK_START;
-import static org.echoiot.server.controller.ControllerConstants.PAGE_DATA_PARAMETERS;
-import static org.echoiot.server.controller.ControllerConstants.PAGE_NUMBER_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.PAGE_SIZE_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES;
-import static org.echoiot.server.controller.ControllerConstants.SORT_ORDER_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.SORT_PROPERTY_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.SYSTEM_AUTHORITY_PARAGRAPH;
-import static org.echoiot.server.controller.ControllerConstants.TENANT_PROFILE_ID_PARAM_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.TENANT_PROFILE_INFO_SORT_PROPERTY_ALLOWABLE_VALUES;
-import static org.echoiot.server.controller.ControllerConstants.TENANT_PROFILE_SORT_PROPERTY_ALLOWABLE_VALUES;
-import static org.echoiot.server.controller.ControllerConstants.TENANT_PROFILE_TEXT_SEARCH_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.UUID_WIKI_LINK;
+import static org.echoiot.server.controller.ControllerConstants.*;
 
 @RestController
 @TbCoreComponent
@@ -162,7 +142,7 @@ public class TenantProfileController extends BaseController {
         try {
             @Nullable TenantProfile oldProfile;
             if (tenantProfile.getId() == null) {
-                accessControlService.checkPermission(getCurrentUser(), Resource.TENANT_PROFILE, Operation.CREATE);
+                accessControlService.checkPermission(getCurrentUser(), PerResource.TENANT_PROFILE, Operation.CREATE);
                 oldProfile = null;
             } else {
                 oldProfile = checkTenantProfileId(tenantProfile.getId(), Operation.WRITE);

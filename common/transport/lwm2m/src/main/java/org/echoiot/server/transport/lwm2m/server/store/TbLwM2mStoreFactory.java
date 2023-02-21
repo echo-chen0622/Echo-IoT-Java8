@@ -1,16 +1,16 @@
 package org.echoiot.server.transport.lwm2m.server.store;
 
 import lombok.RequiredArgsConstructor;
+import org.echoiot.server.cache.TBRedisCacheConfiguration;
+import org.echoiot.server.queue.util.TbLwM2mTransportComponent;
+import org.echoiot.server.transport.lwm2m.config.LwM2MTransportServerConfig;
+import org.echoiot.server.transport.lwm2m.secure.LwM2mCredentialsSecurityInfoValidator;
 import org.eclipse.leshan.server.californium.registration.CaliforniumRegistrationStore;
 import org.eclipse.leshan.server.californium.registration.InMemoryRegistrationStore;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.stereotype.Component;
-import org.echoiot.server.cache.TBRedisCacheConfiguration;
-import org.echoiot.server.queue.util.TbLwM2mTransportComponent;
-import org.echoiot.server.transport.lwm2m.config.LwM2MTransportServerConfig;
-import org.echoiot.server.transport.lwm2m.secure.LwM2mCredentialsSecurityInfoValidator;
 
 import java.util.Optional;
 

@@ -2,14 +2,14 @@ import {AfterViewInit, Component, ElementRef, forwardRef, Input, OnDestroy, OnIn
 import {ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR, Validators} from '@angular/forms';
 import {Observable, of, Subscription, throwError} from 'rxjs';
 import {
-    catchError,
-    debounceTime,
-    distinctUntilChanged,
-    map,
-    publishReplay,
-    refCount,
-    switchMap,
-    tap
+  catchError,
+  debounceTime,
+  distinctUntilChanged,
+  map,
+  publishReplay,
+  refCount,
+  switchMap,
+  tap
 } from 'rxjs/operators';
 import {Store} from '@ngrx/store';
 import {AppState} from '@app/core/core.state';

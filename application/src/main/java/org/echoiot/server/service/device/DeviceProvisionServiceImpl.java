@@ -41,9 +41,9 @@ import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.state.DeviceStateService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;

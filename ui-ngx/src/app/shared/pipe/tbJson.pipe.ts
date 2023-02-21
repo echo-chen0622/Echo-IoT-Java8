@@ -1,5 +1,5 @@
-import { Pipe, PipeTransform } from '@angular/core';
-import { isNumber, isObject } from '@core/utils';
+import {Pipe, PipeTransform} from '@angular/core';
+import {isNumber, isObject} from '@core/utils';
 
 @Pipe({name: 'tbJson'})
 export class TbJsonPipe implements PipeTransform {

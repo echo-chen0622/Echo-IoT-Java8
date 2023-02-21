@@ -1,13 +1,14 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {FormGroup} from '@angular/forms';
 import {
   DEFAULT_EDRX_CYCLE,
-  DEFAULT_PAGING_TRANSMISSION_WINDOW, DEFAULT_PSM_ACTIVITY_TIMER,
+  DEFAULT_PAGING_TRANSMISSION_WINDOW,
+  DEFAULT_PSM_ACTIVITY_TIMER,
   PowerMode,
   PowerModeTranslationMap
 } from '@home/components/profile/device/lwm2m/lwm2m-profile-config.models';
-import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
+import {Subject} from 'rxjs';
 
 @Component({
   selector: 'tb-power-mode-settings',

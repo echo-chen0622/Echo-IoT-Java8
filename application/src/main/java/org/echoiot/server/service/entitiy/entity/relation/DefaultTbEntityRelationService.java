@@ -12,9 +12,9 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.relation.EntityRelation;
 import org.echoiot.server.dao.relation.RelationService;
 import org.echoiot.server.queue.util.TbCoreComponent;
+import org.echoiot.server.service.entitiy.AbstractTbEntityService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
-import org.echoiot.server.service.entitiy.AbstractTbEntityService;
 
 @Service
 @TbCoreComponent

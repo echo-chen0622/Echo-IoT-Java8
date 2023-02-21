@@ -11,23 +11,19 @@ import org.echoiot.server.common.data.security.Authority;
 import org.echoiot.server.common.data.security.UserCredentials;
 import org.echoiot.server.dao.customer.CustomerService;
 import org.echoiot.server.dao.user.UserService;
+import org.echoiot.server.service.security.auth.RefreshAuthenticationToken;
+import org.echoiot.server.service.security.auth.TokenOutdatingService;
+import org.echoiot.server.service.security.model.SecurityUser;
+import org.echoiot.server.service.security.model.UserPrincipal;
 import org.echoiot.server.service.security.model.token.JwtTokenFactory;
 import org.echoiot.server.service.security.model.token.RawAccessJwtToken;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.CredentialsExpiredException;
-import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.authentication.InsufficientAuthenticationException;
+import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
-import org.echoiot.server.service.security.auth.RefreshAuthenticationToken;
-import org.echoiot.server.service.security.auth.TokenOutdatingService;
-import org.echoiot.server.service.security.model.SecurityUser;
-import org.echoiot.server.service.security.model.UserPrincipal;
 
 import java.util.UUID;
 

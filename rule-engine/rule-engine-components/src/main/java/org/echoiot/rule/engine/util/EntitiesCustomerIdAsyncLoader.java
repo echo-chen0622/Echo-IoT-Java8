@@ -6,11 +6,7 @@ import com.google.common.util.concurrent.MoreExecutors;
 import org.echoiot.rule.engine.api.TbContext;
 import org.echoiot.rule.engine.api.TbNodeException;
 import org.echoiot.server.common.data.HasCustomerId;
-import org.echoiot.server.common.data.id.AssetId;
-import org.echoiot.server.common.data.id.CustomerId;
-import org.echoiot.server.common.data.id.DeviceId;
-import org.echoiot.server.common.data.id.EntityId;
-import org.echoiot.server.common.data.id.UserId;
+import org.echoiot.server.common.data.id.*;
 import org.jetbrains.annotations.NotNull;
 
 public class EntitiesCustomerIdAsyncLoader {

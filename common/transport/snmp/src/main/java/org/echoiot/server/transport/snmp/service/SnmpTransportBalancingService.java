@@ -2,14 +2,14 @@ package org.echoiot.server.transport.snmp.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.stereotype.Service;
 import org.echoiot.server.gen.transport.TransportProtos.ServiceInfo;
 import org.echoiot.server.queue.discovery.PartitionService;
 import org.echoiot.server.queue.discovery.event.ServiceListChangedEvent;
 import org.echoiot.server.queue.util.TbSnmpTransportComponent;
 import org.echoiot.server.transport.snmp.event.SnmpTransportListChangedEvent;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;

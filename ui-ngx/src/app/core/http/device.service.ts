@@ -5,12 +5,12 @@ import {HttpClient} from '@angular/common/http';
 import {PageLink} from '@shared/models/page/page-link';
 import {PageData} from '@shared/models/page/page-data';
 import {
-    ClaimRequest,
-    ClaimResult,
-    Device,
-    DeviceCredentials,
-    DeviceInfo,
-    DeviceSearchQuery
+  ClaimRequest,
+  ClaimResult,
+  Device,
+  DeviceCredentials,
+  DeviceInfo,
+  DeviceSearchQuery
 } from '@app/shared/models/device.models';
 import {EntitySubtype} from '@app/shared/models/entity-type.models';
 import {AuthService} from '@core/auth/auth.service';

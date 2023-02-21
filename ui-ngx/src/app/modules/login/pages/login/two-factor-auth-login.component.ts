@@ -1,19 +1,19 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AuthService } from '@core/auth/auth.service';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { PageComponent } from '@shared/components/page.component';
-import { FormBuilder, Validators } from '@angular/forms';
-import { TwoFactorAuthenticationService } from '@core/http/two-factor-authentication.service';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {AuthService} from '@core/auth/auth.service';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {PageComponent} from '@shared/components/page.component';
+import {FormBuilder, Validators} from '@angular/forms';
+import {TwoFactorAuthenticationService} from '@core/http/two-factor-authentication.service';
 import {
   twoFactorAuthProvidersLoginData,
   TwoFactorAuthProviderType,
   TwoFaProviderInfo
 } from '@shared/models/two-factor-auth.models';
-import { TranslateService } from '@ngx-translate/core';
-import { interval, Subscription } from 'rxjs';
-import { isEqual } from '@core/utils';
-import { ActionNotificationShow } from '@core/notification/notification.actions';
+import {TranslateService} from '@ngx-translate/core';
+import {interval, Subscription} from 'rxjs';
+import {isEqual} from '@core/utils';
+import {ActionNotificationShow} from '@core/notification/notification.actions';
 
 @Component({
   selector: 'tb-two-factor-auth-login',

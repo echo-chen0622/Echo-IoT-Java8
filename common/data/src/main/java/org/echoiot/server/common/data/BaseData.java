@@ -1,10 +1,10 @@
 package org.echoiot.server.common.data;
 
-import java.io.Serializable;
-
 import org.echoiot.server.common.data.id.IdBased;
 import org.echoiot.server.common.data.id.UUIDBased;
 import org.jetbrains.annotations.NotNull;
+
+import java.io.Serializable;
 
 public abstract class BaseData<I extends UUIDBased> extends IdBased<I> implements Serializable {
 

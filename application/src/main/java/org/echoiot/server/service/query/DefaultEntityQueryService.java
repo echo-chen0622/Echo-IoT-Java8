@@ -26,7 +26,6 @@ import org.echoiot.server.service.security.AccessValidator;
 import org.echoiot.server.service.security.model.SecurityUser;
 import org.echoiot.server.service.subscription.TbAttributeSubscriptionScope;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +33,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.context.request.async.DeferredResult;
 
+import javax.annotation.Resource;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;

@@ -7,9 +7,9 @@ import {PageData} from '@shared/models/page/page-data';
 import {DeviceProfile, DeviceProfileInfo, DeviceTransportType} from '@shared/models/device.models';
 import {deepClone, isDefinedAndNotNull, isEmptyStr} from '@core/utils';
 import {
-    ObjectLwM2M,
-    ServerSecurityConfig,
-    ServerSecurityConfigInfo
+  ObjectLwM2M,
+  ServerSecurityConfig,
+  ServerSecurityConfigInfo
 } from '@home/components/profile/device/lwm2m/lwm2m-profile-config.models';
 import {SortOrder} from '@shared/models/page/sort-order';
 import {OtaPackageService} from '@core/http/ota-package.service';

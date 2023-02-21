@@ -37,7 +37,7 @@ import {LegendConfigComponent} from '@home/components/widget/legend-config.compo
 import {ManageWidgetActionsComponent} from '@home/components/widget/action/manage-widget-actions.component';
 import {WidgetActionDialogComponent} from '@home/components/widget/action/widget-action-dialog.component';
 import {
-    CustomActionPrettyResourcesTabsComponent
+  CustomActionPrettyResourcesTabsComponent
 } from '@home/components/widget/action/custom-action-pretty-resources-tabs.component';
 import {CustomActionPrettyEditorComponent} from '@home/components/widget/action/custom-action-pretty-editor.component';
 import {MobileActionEditorComponent} from '@home/components/widget/action/mobile-action-editor.component';
@@ -76,25 +76,25 @@ import {TenantProfileComponent} from '@home/components/profile/tenant-profile.co
 import {TenantProfileDialogComponent} from '@home/components/profile/tenant-profile-dialog.component';
 import {TenantProfileDataComponent} from '@home/components/profile/tenant-profile-data.component';
 import {
-    DefaultDeviceProfileConfigurationComponent
+  DefaultDeviceProfileConfigurationComponent
 } from '@home/components/profile/device/default-device-profile-configuration.component';
 import {
-    DeviceProfileConfigurationComponent
+  DeviceProfileConfigurationComponent
 } from '@home/components/profile/device/device-profile-configuration.component';
 import {DeviceProfileComponent} from '@home/components/profile/device-profile.component';
 import {
-    DefaultDeviceProfileTransportConfigurationComponent
+  DefaultDeviceProfileTransportConfigurationComponent
 } from '@home/components/profile/device/default-device-profile-transport-configuration.component';
 import {
-    DeviceProfileTransportConfigurationComponent
+  DeviceProfileTransportConfigurationComponent
 } from '@home/components/profile/device/device-profile-transport-configuration.component';
 import {DeviceProfileDialogComponent} from '@home/components/profile/device-profile-dialog.component';
 import {DeviceProfileAutocompleteComponent} from '@home/components/profile/device-profile-autocomplete.component';
 import {
-    MqttDeviceProfileTransportConfigurationComponent
+  MqttDeviceProfileTransportConfigurationComponent
 } from '@home/components/profile/device/mqtt-device-profile-transport-configuration.component';
 import {
-    CoapDeviceProfileTransportConfigurationComponent
+  CoapDeviceProfileTransportConfigurationComponent
 } from '@home/components/profile/device/coap-device-profile-transport-configuration.component';
 import {DeviceProfileAlarmsComponent} from '@home/components/profile/alarm/device-profile-alarms.component';
 import {DeviceProfileAlarmComponent} from '@home/components/profile/alarm/device-profile-alarm.component';
@@ -105,7 +105,7 @@ import {FilterTextComponent} from '@home/components/filter/filter-text.component
 import {AddDeviceProfileDialogComponent} from '@home/components/profile/add-device-profile-dialog.component';
 import {RuleChainAutocompleteComponent} from '@home/components/rule-chain/rule-chain-autocomplete.component';
 import {
-    DeviceProfileProvisionConfigurationComponent
+  DeviceProfileProvisionConfigurationComponent
 } from '@home/components/profile/device-profile-provision-configuration.component';
 import {AlarmScheduleComponent} from '@home/components/profile/alarm/alarm-schedule.component';
 import {DeviceWizardDialogComponent} from '@home/components/wizard/device-wizard-dialog.component';
@@ -114,16 +114,16 @@ import {AlarmScheduleDialogComponent} from '@home/components/profile/alarm/alarm
 import {EditAlarmDetailsDialogComponent} from '@home/components/profile/alarm/edit-alarm-details-dialog.component';
 import {AlarmRuleConditionDialogComponent} from '@home/components/profile/alarm/alarm-rule-condition-dialog.component';
 import {
-    DefaultTenantProfileConfigurationComponent
+  DefaultTenantProfileConfigurationComponent
 } from '@home/components/profile/tenant/default-tenant-profile-configuration.component';
 import {
-    TenantProfileConfigurationComponent
+  TenantProfileConfigurationComponent
 } from '@home/components/profile/tenant/tenant-profile-configuration.component';
 import {SmsProviderConfigurationComponent} from '@home/components/sms/sms-provider-configuration.component';
 import {AwsSnsProviderConfigurationComponent} from '@home/components/sms/aws-sns-provider-configuration.component';
 import {SmppSmsProviderConfigurationComponent} from '@home/components/sms/smpp-sms-provider-configuration.component';
 import {
-    TwilioSmsProviderConfigurationComponent
+  TwilioSmsProviderConfigurationComponent
 } from '@home/components/sms/twilio-sms-provider-configuration.component';
 import {Lwm2mProfileComponentsModule} from '@home/components/profile/device/lwm2m/lwm2m-profile-components.module';
 import {DashboardPageComponent} from '@home/components/dashboard-page/dashboard-page.component';
@@ -134,11 +134,11 @@ import {EditWidgetComponent} from '@home/components/dashboard-page/edit-widget.c
 import {DashboardWidgetSelectComponent} from '@home/components/dashboard-page/dashboard-widget-select.component';
 import {AddWidgetDialogComponent} from '@home/components/dashboard-page/add-widget-dialog.component';
 import {
-    ManageDashboardLayoutsDialogComponent
+  ManageDashboardLayoutsDialogComponent
 } from '@home/components/dashboard-page/layout/manage-dashboard-layouts-dialog.component';
 import {DashboardSettingsDialogComponent} from '@home/components/dashboard-page/dashboard-settings-dialog.component';
 import {
-    ManageDashboardStatesDialogComponent
+  ManageDashboardStatesDialogComponent
 } from '@home/components/dashboard-page/states/manage-dashboard-states-dialog.component';
 import {DashboardStateDialogComponent} from '@home/components/dashboard-page/states/dashboard-state-dialog.component';
 import {EmbedDashboardDialogComponent} from '@home/components/widget/dialog/embed-dashboard-dialog.component';
@@ -147,19 +147,19 @@ import {EdgeDownlinkTableComponent} from '@home/components/edge/edge-downlink-ta
 import {EdgeDownlinkTableHeaderComponent} from '@home/components/edge/edge-downlink-table-header.component';
 import {DisplayWidgetTypesPanelComponent} from '@home/components/dashboard-page/widget-types-panel.component';
 import {
-    AlarmDurationPredicateValueComponent
+  AlarmDurationPredicateValueComponent
 } from '@home/components/profile/alarm/alarm-duration-predicate-value.component';
 import {DashboardImageDialogComponent} from '@home/components/dashboard-page/dashboard-image-dialog.component';
 import {WidgetContainerComponent} from '@home/components/widget/widget-container.component';
 import {
-    SnmpDeviceProfileTransportModule
+  SnmpDeviceProfileTransportModule
 } from '@home/components/profile/device/snmp/snmp-device-profile-transport.module';
 import {DeviceCredentialsModule} from '@home/components/device/device-credentials.module';
 import {DeviceProfileCommonModule} from '@home/components/profile/device/common/device-profile-common.module';
 import {
-    COMPLEX_FILTER_PREDICATE_DIALOG_COMPONENT_TOKEN,
-    DASHBOARD_PAGE_COMPONENT_TOKEN,
-    HOME_COMPONENTS_MODULE_TOKEN
+  COMPLEX_FILTER_PREDICATE_DIALOG_COMPONENT_TOKEN,
+  DASHBOARD_PAGE_COMPONENT_TOKEN,
+  HOME_COMPONENTS_MODULE_TOKEN
 } from '@home/components/tokens';
 import {DashboardStateComponent} from '@home/components/dashboard-page/dashboard-state.component';
 import {AlarmDynamicValue} from '@home/components/profile/alarm/alarm-dynamic-value.component';
@@ -184,7 +184,7 @@ import {RateLimitsListComponent} from '@home/components/profile/tenant/rate-limi
 import {RateLimitsComponent} from '@home/components/profile/tenant/rate-limits/rate-limits.component';
 import {RateLimitsTextComponent} from '@home/components/profile/tenant/rate-limits/rate-limits-text.component';
 import {
-    RateLimitsDetailsDialogComponent
+  RateLimitsDetailsDialogComponent
 } from '@home/components/profile/tenant/rate-limits/rate-limits-details-dialog.component';
 import {AssetProfileComponent} from '@home/components/profile/asset-profile.component';
 import {AssetProfileDialogComponent} from '@home/components/profile/asset-profile-dialog.component';

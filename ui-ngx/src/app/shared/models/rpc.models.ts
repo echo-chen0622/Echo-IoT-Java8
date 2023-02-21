@@ -1,7 +1,7 @@
-import { TenantId } from '@shared/models/id/tenant-id';
-import { RpcId } from '@shared/models/id/rpc-id';
-import { DeviceId } from '@shared/models/id/device-id';
-import { TableCellButtonActionDescriptor } from '@home/components/widget/lib/table-widget.models';
+import {TenantId} from '@shared/models/id/tenant-id';
+import {RpcId} from '@shared/models/id/rpc-id';
+import {DeviceId} from '@shared/models/id/device-id';
+import {TableCellButtonActionDescriptor} from '@home/components/widget/lib/table-widget.models';
 
 export enum RpcStatus {
   QUEUED = 'QUEUED',

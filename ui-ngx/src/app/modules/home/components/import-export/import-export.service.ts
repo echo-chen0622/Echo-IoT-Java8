@@ -9,12 +9,12 @@ import {deepClone, isDefined, isObject, isString, isUndefined} from '@core/utils
 import {WINDOW} from '@core/services/window.service';
 import {DOCUMENT} from '@angular/common';
 import {
-    AliasesInfo,
-    AliasFilterType,
-    EntityAlias,
-    EntityAliases,
-    EntityAliasFilter,
-    EntityAliasInfo
+  AliasesInfo,
+  AliasFilterType,
+  EntityAlias,
+  EntityAliases,
+  EntityAliasFilter,
+  EntityAliasInfo
 } from '@shared/models/alias.models';
 import {MatDialog} from '@angular/material/dialog';
 import {ImportDialogComponent, ImportDialogData} from '@home/components/import-export/import-dialog.component';
@@ -24,19 +24,19 @@ import {DashboardUtilsService} from '@core/services/dashboard-utils.service';
 import {EntityService} from '@core/http/entity.service';
 import {Widget, WidgetSize, WidgetType, WidgetTypeDetails} from '@shared/models/widget.models';
 import {
-    EntityAliasesDialogComponent,
-    EntityAliasesDialogData
+  EntityAliasesDialogComponent,
+  EntityAliasesDialogData
 } from '@home/components/alias/entity-aliases-dialog.component';
 import {ItemBufferService, WidgetItem} from '@core/services/item-buffer.service';
 import {
-    BulkImportRequest,
-    BulkImportResult,
-    FileType,
-    ImportWidgetResult,
-    JSON_TYPE,
-    TEXT_TYPE,
-    WidgetsBundleItem,
-    ZIP_TYPE
+  BulkImportRequest,
+  BulkImportResult,
+  FileType,
+  ImportWidgetResult,
+  JSON_TYPE,
+  TEXT_TYPE,
+  WidgetsBundleItem,
+  ZIP_TYPE
 } from './import-export.models';
 import {EntityType} from '@shared/models/entity-type.models';
 import {UtilsService} from '@core/services/utils.service';

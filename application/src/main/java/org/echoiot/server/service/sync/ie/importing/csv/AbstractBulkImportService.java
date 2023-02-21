@@ -32,18 +32,18 @@ import org.echoiot.server.service.security.AccessValidator;
 import org.echoiot.server.service.security.model.SecurityUser;
 import org.echoiot.server.service.security.permission.AccessControlService;
 import org.echoiot.server.service.security.permission.Operation;
-import org.echoiot.server.service.security.permission.Resource;
+import org.echoiot.server.service.security.permission.PerResource;
 import org.echoiot.server.service.telemetry.TelemetrySubscriptionService;
 import org.echoiot.server.utils.CsvUtils;
 import org.echoiot.server.utils.TypeCastUtil;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.annotation.Resource;
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -129,7 +129,7 @@ public abstract class AbstractBulkImportService<E extends HasId<? extends Entity
         }
 
         setEntityFields(entity, fields);
-        accessControlService.checkPermission(user, Resource.of(getEntityType()), Operation.WRITE, entity.getId(), entity);
+        accessControlService.checkPermission(user, PerResource.of(getEntityType()), Operation.WRITE, entity.getId(), entity);
 
         E savedEntity = saveEntity(user, entity, fields);
 

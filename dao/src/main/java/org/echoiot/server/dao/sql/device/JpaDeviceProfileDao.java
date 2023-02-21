@@ -1,26 +1,22 @@
 package org.echoiot.server.dao.sql.device;
 
-import org.echoiot.server.dao.model.sql.DeviceProfileEntity;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-import org.echoiot.server.common.data.DeviceProfile;
-import org.echoiot.server.common.data.DeviceProfileInfo;
-import org.echoiot.server.common.data.DeviceTransportType;
-import org.echoiot.server.common.data.EntityType;
-import org.echoiot.server.common.data.StringUtils;
+import org.echoiot.server.common.data.*;
 import org.echoiot.server.common.data.id.DeviceProfileId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.dao.DaoUtil;
 import org.echoiot.server.dao.device.DeviceProfileDao;
+import org.echoiot.server.dao.model.sql.DeviceProfileEntity;
 import org.echoiot.server.dao.sql.JpaAbstractSearchTextDao;
 import org.echoiot.server.dao.util.SqlDao;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;

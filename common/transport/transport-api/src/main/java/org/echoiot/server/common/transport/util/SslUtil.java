@@ -1,9 +1,9 @@
 package org.echoiot.server.common.transport.util;
 
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.server.common.msg.EncryptionUtil;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.util.Base64Utils;
-import org.echoiot.server.common.msg.EncryptionUtil;
 
 import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;

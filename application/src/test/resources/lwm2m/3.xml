@@ -106,7 +106,7 @@ LEGAL DISCLAIMER
 				<Type>String</Type>
 				<RangeEnumeration></RangeEnumeration>
 				<Units></Units>
-				<Description><![CDATA[Current firmware version of the Device.The Firmware Management function could rely on this resource.]]></Description>
+				<Description><![CDATA[Current firmware version of the Device.The Firmware Management function could rely on this perResource.]]></Description>
 			</Item>
 			<Item ID="4">
 				<Name>Reboot</Name>
@@ -126,7 +126,7 @@ LEGAL DISCLAIMER
 				<Type></Type>
 				<RangeEnumeration></RangeEnumeration>
 				<Units></Units>
-				<Description><![CDATA[Perform factory reset of the LwM2M Device to make the LwM2M Device to go through initial deployment sequence where provisioning and bootstrap sequence is performed. This requires client ensuring post factory reset to have minimal information to allow it to carry out one of the bootstrap methods specified in section 5.2.3. 
+				<Description><![CDATA[Perform factory reset of the LwM2M Device to make the LwM2M Device to go through initial deployment sequence where provisioning and bootstrap sequence is performed. This requires client ensuring post factory reset to have minimal information to allow it to carry out one of the bootstrap methods specified in section 5.2.3.
 When this Resource is executed, "De-register" operation MAY be sent to the LwM2M Server(s) before factory reset of the LwM2M Device.]]></Description>
 			</Item>
 			<Item ID="6">
@@ -155,7 +155,7 @@ The same Resource Instance ID MUST be used to associate a given Power Source (Re
 				<Type>Integer</Type>
 				<RangeEnumeration></RangeEnumeration>
 				<Units></Units>
-				<Description><![CDATA[Present voltage for each Available Power Sources Resource Instance. The unit used for this resource is in mV.]]></Description>
+				<Description><![CDATA[Present voltage for each Available Power Sources Resource Instance. The unit used for this perResource is in mV.]]></Description>
 			</Item>
       <Item ID="8">
         <Name>Power Source Current</Name>
@@ -165,7 +165,7 @@ The same Resource Instance ID MUST be used to associate a given Power Source (Re
         <Type>Integer</Type>
         <RangeEnumeration></RangeEnumeration>
         <Units></Units>
-        <Description><![CDATA[Present current for each Available Power Source. The unit used for this resource is in mA.]]></Description>
+        <Description><![CDATA[Present current for each Available Power Source. The unit used for this perResource is in mA.]]></Description>
       </Item>
       <Item ID="9">
         <Name>Battery Level</Name>
@@ -261,7 +261,7 @@ The LwM2M Server is able to write this Resource to make the LwM2M Client synchro
         <RangeEnumeration></RangeEnumeration>
         <Units></Units>
         <Description><![CDATA[Indicates which bindings and modes are supported in the LwM2M Client. The possible values are those listed in the LwM2M Core Specification.]]></Description>
-     </Item>    
+     </Item>
 			<Item ID="17"><Name>Device Type</Name>
 				<Operations>R</Operations>
 				<MultipleInstances>Single</MultipleInstances>

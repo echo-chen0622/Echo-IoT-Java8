@@ -2,12 +2,12 @@ package org.echoiot.rule.engine.metadata;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import lombok.extern.slf4j.Slf4j;
-import org.echoiot.rule.engine.util.EntitiesRelatedDeviceIdAsyncLoader;
 import org.echoiot.rule.engine.api.RuleNode;
 import org.echoiot.rule.engine.api.TbContext;
 import org.echoiot.rule.engine.api.TbNodeConfiguration;
 import org.echoiot.rule.engine.api.TbNodeException;
 import org.echoiot.rule.engine.api.util.TbNodeUtils;
+import org.echoiot.rule.engine.util.EntitiesRelatedDeviceIdAsyncLoader;
 import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.msg.TbMsg;

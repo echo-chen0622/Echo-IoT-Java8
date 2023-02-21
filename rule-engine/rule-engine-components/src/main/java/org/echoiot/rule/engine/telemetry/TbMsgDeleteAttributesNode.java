@@ -1,11 +1,7 @@
 package org.echoiot.rule.engine.telemetry;
 
 import lombok.extern.slf4j.Slf4j;
-import org.echoiot.rule.engine.api.RuleNode;
-import org.echoiot.rule.engine.api.TbContext;
-import org.echoiot.rule.engine.api.TbNode;
-import org.echoiot.rule.engine.api.TbNodeConfiguration;
-import org.echoiot.rule.engine.api.TbNodeException;
+import org.echoiot.rule.engine.api.*;
 import org.echoiot.rule.engine.api.util.TbNodeUtils;
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.plugin.ComponentType;
@@ -16,9 +12,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
-import static org.echoiot.server.common.data.DataConstants.NOTIFY_DEVICE_METADATA_KEY;
-import static org.echoiot.server.common.data.DataConstants.SCOPE;
-import static org.echoiot.server.common.data.DataConstants.SHARED_SCOPE;
+import static org.echoiot.server.common.data.DataConstants.*;
 
 @Slf4j
 @RuleNode(

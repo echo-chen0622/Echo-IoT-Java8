@@ -8,7 +8,7 @@ import {Router} from '@angular/router';
 import {DialogComponent} from '@app/shared/components/dialog.component';
 import {DashboardState} from '@app/shared/models/dashboard.models';
 import {
-    DashboardStateInfo
+  DashboardStateInfo
 } from '@home/components/dashboard-page/states/manage-dashboard-states-dialog.component.models';
 import {TranslateService} from '@ngx-translate/core';
 import {DashboardUtilsService} from '@core/services/dashboard-utils.service';

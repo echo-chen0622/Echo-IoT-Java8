@@ -1,11 +1,7 @@
 package org.echoiot.server.common.data.event;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.EventInfo;
 import org.echoiot.server.common.data.id.EntityId;

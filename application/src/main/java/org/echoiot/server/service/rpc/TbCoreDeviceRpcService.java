@@ -1,8 +1,8 @@
 package org.echoiot.server.service.rpc;
 
-import org.echoiot.server.service.security.model.SecurityUser;
 import org.echoiot.server.common.msg.rpc.FromDeviceRpcResponse;
 import org.echoiot.server.common.msg.rpc.ToDeviceRpcRequest;
+import org.echoiot.server.service.security.model.SecurityUser;
 
 import java.util.function.Consumer;
 

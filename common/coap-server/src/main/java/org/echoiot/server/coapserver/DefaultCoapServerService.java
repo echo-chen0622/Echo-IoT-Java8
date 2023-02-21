@@ -5,17 +5,16 @@ import org.echoiot.common.util.EchoiotThreadFactory;
 import org.eclipse.californium.core.CoapServer;
 import org.eclipse.californium.core.config.CoapConfig;
 import org.eclipse.californium.core.network.CoapEndpoint;
-import org.eclipse.californium.core.server.resources.Resource;
 import org.eclipse.californium.elements.config.Configuration;
 import org.eclipse.californium.scandium.DTLSConnector;
 import org.eclipse.californium.scandium.config.DtlsConnectorConfig;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.annotation.Resource;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
@@ -116,7 +115,7 @@ public class DefaultCoapServerService implements CoapServerService {
             dtlsSessionsExecutor = Executors.newSingleThreadScheduledExecutor(EchoiotThreadFactory.forName(getClass().getSimpleName()));
             dtlsSessionsExecutor.scheduleAtFixedRate(this::evictTimeoutSessions, new Random().nextInt((int) getDtlsSessionReportTimeout()), getDtlsSessionReportTimeout(), TimeUnit.MILLISECONDS);
         }
-        Resource root = server.getRoot();
+        org.eclipse.californium.core.server.resources.Resource root = server.getRoot();
         @NotNull TbCoapServerMessageDeliverer messageDeliverer = new TbCoapServerMessageDeliverer(root);
         server.setMessageDeliverer(messageDeliverer);
 

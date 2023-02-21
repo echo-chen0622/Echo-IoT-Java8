@@ -1,19 +1,19 @@
-import { Component, ElementRef, forwardRef, Input, OnInit, ViewChild } from '@angular/core';
-import { ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Observable, of } from 'rxjs';
-import { catchError, debounceTime, distinctUntilChanged, map, share, switchMap, tap } from 'rxjs/operators';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { TranslateService } from '@ngx-translate/core';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { EntityId } from '@shared/models/id/entity-id';
-import { EntityType } from '@shared/models/entity-type.models';
-import { BaseData } from '@shared/models/base-data';
-import { EntityService } from '@core/http/entity.service';
-import { TruncatePipe } from '@shared/pipe/truncate.pipe';
-import { RuleChainService } from '@core/http/rule-chain.service';
-import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
-import { RuleChainType } from '@app/shared/models/rule-chain.models';
+import {Component, ElementRef, forwardRef, Input, OnInit, ViewChild} from '@angular/core';
+import {ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {Observable, of} from 'rxjs';
+import {catchError, debounceTime, distinctUntilChanged, map, share, switchMap, tap} from 'rxjs/operators';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {TranslateService} from '@ngx-translate/core';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {EntityId} from '@shared/models/id/entity-id';
+import {EntityType} from '@shared/models/entity-type.models';
+import {BaseData} from '@shared/models/base-data';
+import {EntityService} from '@core/http/entity.service';
+import {TruncatePipe} from '@shared/pipe/truncate.pipe';
+import {RuleChainService} from '@core/http/rule-chain.service';
+import {MatAutocompleteTrigger} from '@angular/material/autocomplete';
+import {RuleChainType} from '@app/shared/models/rule-chain.models';
 
 @Component({
   selector: 'tb-rule-chain-autocomplete',

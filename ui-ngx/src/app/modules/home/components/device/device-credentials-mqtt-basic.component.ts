@@ -1,14 +1,14 @@
 import {Component, forwardRef, Input, OnDestroy} from '@angular/core';
 import {
-    ControlValueAccessor,
-    FormBuilder,
-    FormGroup,
-    NG_VALIDATORS,
-    NG_VALUE_ACCESSOR,
-    ValidationErrors,
-    Validator,
-    ValidatorFn,
-    Validators
+  ControlValueAccessor,
+  FormBuilder,
+  FormGroup,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR,
+  ValidationErrors,
+  Validator,
+  ValidatorFn,
+  Validators
 } from '@angular/forms';
 import {Subject} from 'rxjs';
 import {DeviceCredentialMQTTBasic} from '@shared/models/device.models';

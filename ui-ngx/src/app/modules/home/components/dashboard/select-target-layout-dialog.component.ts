@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { Router } from '@angular/router';
-import { DialogComponent } from '@app/shared/components/dialog.component';
-import { DashboardLayoutId } from '@app/shared/models/dashboard.models';
+import {Component, OnInit} from '@angular/core';
+import {MatDialogRef} from '@angular/material/dialog';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {Router} from '@angular/router';
+import {DialogComponent} from '@app/shared/components/dialog.component';
+import {DashboardLayoutId} from '@app/shared/models/dashboard.models';
 
 @Component({
   selector: 'tb-select-target-layout-dialog',

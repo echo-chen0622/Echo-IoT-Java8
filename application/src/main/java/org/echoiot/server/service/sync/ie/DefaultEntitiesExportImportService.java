@@ -26,9 +26,9 @@ import org.echoiot.server.service.sync.vc.LoadEntityException;
 import org.echoiot.server.service.sync.vc.data.EntitiesExportCtx;
 import org.echoiot.server.service.sync.vc.data.EntitiesImportCtx;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.*;
 
 @Service

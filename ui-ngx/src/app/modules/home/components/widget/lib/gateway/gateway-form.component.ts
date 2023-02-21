@@ -6,34 +6,34 @@ import {AbstractControl, FormArray, FormBuilder, FormGroup, NgForm, Validators} 
 import {WidgetContext} from '@home/models/widget-component.models';
 import {UtilsService} from '@core/services/utils.service';
 import {
-    CONFIGURATION_ATTRIBUTE,
-    CONFIGURATION_DRAFT_ATTRIBUTE,
-    ConnectorType,
-    createFormConfig,
-    CURRENT_CONFIGURATION_ATTRIBUTE,
-    DEFAULT_CONNECTOR,
-    gatewayConfigJSON,
-    GatewayFormConnectorModel,
-    GatewayFormModels,
-    GatewayLogLevel,
-    generateConnectorConfigFiles,
-    generateLogConfigFile,
-    generateYAMLConfigFile,
-    getDraftConnectorsJSON,
-    getEntityId,
-    REMOTE_LOGGING_LEVEL_ATTRIBUTE,
-    SecurityType,
-    SecurityTypeTranslationMap,
-    StorageType,
-    StorageTypeTranslationMap,
-    ValidateJSON,
-    WidgetSetting
+  CONFIGURATION_ATTRIBUTE,
+  CONFIGURATION_DRAFT_ATTRIBUTE,
+  ConnectorType,
+  createFormConfig,
+  CURRENT_CONFIGURATION_ATTRIBUTE,
+  DEFAULT_CONNECTOR,
+  gatewayConfigJSON,
+  GatewayFormConnectorModel,
+  GatewayFormModels,
+  GatewayLogLevel,
+  generateConnectorConfigFiles,
+  generateLogConfigFile,
+  generateYAMLConfigFile,
+  getDraftConnectorsJSON,
+  getEntityId,
+  REMOTE_LOGGING_LEVEL_ATTRIBUTE,
+  SecurityType,
+  SecurityTypeTranslationMap,
+  StorageType,
+  StorageTypeTranslationMap,
+  ValidateJSON,
+  WidgetSetting
 } from './gateway-form.models';
 import {WINDOW} from '@core/services/window.service';
 import {MatDialog} from '@angular/material/dialog';
 import {
-    JsonObjectEditDialogComponent,
-    JsonObjectEditDialogData
+  JsonObjectEditDialogComponent,
+  JsonObjectEditDialogData
 } from '@shared/components/dialog/json-object-edit-dialog.component';
 import {TranslateService} from '@ngx-translate/core';
 import {DeviceService} from '@core/http/device.service';

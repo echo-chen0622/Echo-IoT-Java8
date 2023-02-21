@@ -1,20 +1,20 @@
 import {Component, forwardRef, Input, OnInit} from '@angular/core';
 import {
-    ControlValueAccessor,
-    FormBuilder,
-    FormControl,
-    FormGroup,
-    NG_VALIDATORS,
-    NG_VALUE_ACCESSOR,
-    ValidationErrors,
-    Validator,
-    Validators
+  ControlValueAccessor,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR,
+  ValidationErrors,
+  Validator,
+  Validators
 } from '@angular/forms';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
-    DeviceProvisionConfiguration,
-    DeviceProvisionType,
-    deviceProvisionTypeTranslationMap
+  DeviceProvisionConfiguration,
+  DeviceProvisionType,
+  deviceProvisionTypeTranslationMap
 } from '@shared/models/device.models';
 import {generateSecret, isDefinedAndNotNull} from '@core/utils';
 import {ActionNotificationShow} from '@core/notification/notification.actions';

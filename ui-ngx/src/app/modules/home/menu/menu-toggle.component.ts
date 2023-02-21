@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { MenuSection } from '@core/services/menu.models';
-import { Router } from '@angular/router';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+import {MenuSection} from '@core/services/menu.models';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'tb-menu-toggle',

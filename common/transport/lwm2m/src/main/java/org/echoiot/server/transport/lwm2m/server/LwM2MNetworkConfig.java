@@ -1,10 +1,10 @@
 package org.echoiot.server.transport.lwm2m.server;
 
+import org.echoiot.server.transport.lwm2m.config.LwM2MTransportServerConfig;
 import org.eclipse.californium.core.config.CoapConfig;
 import org.eclipse.californium.elements.config.Configuration;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.util.CollectionUtils;
-import org.echoiot.server.transport.lwm2m.config.LwM2MTransportServerConfig;
 
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;

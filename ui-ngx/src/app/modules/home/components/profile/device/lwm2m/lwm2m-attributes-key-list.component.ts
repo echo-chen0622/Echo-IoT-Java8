@@ -1,22 +1,22 @@
 import {Component, forwardRef, Input, OnDestroy} from '@angular/core';
 import {
-    AbstractControl,
-    ControlValueAccessor,
-    FormArray,
-    FormBuilder,
-    FormGroup,
-    NG_VALIDATORS,
-    NG_VALUE_ACCESSOR,
-    Validator,
-    Validators
+  AbstractControl,
+  ControlValueAccessor,
+  FormArray,
+  FormBuilder,
+  FormGroup,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR,
+  Validator,
+  Validators
 } from '@angular/forms';
 import {Subject, Subscription} from 'rxjs';
 import {
-    AttributeName,
-    AttributeNameTranslationMap,
-    AttributesNameValue,
-    AttributesNameValueMap,
-    valueValidatorByAttributeName
+  AttributeName,
+  AttributeNameTranslationMap,
+  AttributesNameValue,
+  AttributesNameValueMap,
+  valueValidatorByAttributeName
 } from './lwm2m-profile-config.models';
 import {isUndefinedOrNull} from '@core/utils';
 import {Store} from '@ngrx/store';

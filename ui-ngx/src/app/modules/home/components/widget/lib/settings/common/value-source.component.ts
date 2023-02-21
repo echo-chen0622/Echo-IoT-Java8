@@ -1,15 +1,15 @@
-import { Component, ElementRef, forwardRef, HostBinding, Input, OnInit, ViewChild } from '@angular/core';
-import { ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
-import { PageComponent } from '@shared/components/page.component';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { TranslateService } from '@ngx-translate/core';
-import { IAliasController } from '@core/api/widget-api.models';
-import { Observable, of } from 'rxjs';
-import { catchError, map, mergeMap, publishReplay, refCount, tap } from 'rxjs/operators';
-import { DataKey } from '@shared/models/widget.models';
-import { DataKeyType } from '@shared/models/telemetry/telemetry.models';
-import { EntityService } from '@core/http/entity.service';
+import {Component, ElementRef, forwardRef, HostBinding, Input, OnInit, ViewChild} from '@angular/core';
+import {ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {PageComponent} from '@shared/components/page.component';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {TranslateService} from '@ngx-translate/core';
+import {IAliasController} from '@core/api/widget-api.models';
+import {Observable, of} from 'rxjs';
+import {catchError, map, mergeMap, publishReplay, refCount, tap} from 'rxjs/operators';
+import {DataKey} from '@shared/models/widget.models';
+import {DataKeyType} from '@shared/models/telemetry/telemetry.models';
+import {EntityService} from '@core/http/entity.service';
 
 export declare type ValueSource = 'predefinedValue' | 'entityAttribute';
 

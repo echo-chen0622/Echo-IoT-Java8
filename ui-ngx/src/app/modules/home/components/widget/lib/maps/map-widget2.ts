@@ -1,8 +1,8 @@
-import { defaultMapSettings, MapProviders, UnitedMapSettings, WidgetUnitedMapSettings } from './map-models';
+import {defaultMapSettings, MapProviders, UnitedMapSettings, WidgetUnitedMapSettings} from './map-models';
 import LeafletMap from './leaflet-map';
-import { MapWidgetInterface, MapWidgetStaticInterface } from './map-widget.interface';
-import { WidgetContext } from '@app/modules/home/models/widget-component.models';
-import { getDefCenterPosition, parseWithTranslation } from './common-maps-utils';
+import {MapWidgetInterface, MapWidgetStaticInterface} from './map-widget.interface';
+import {WidgetContext} from '@app/modules/home/models/widget-component.models';
+import {getDefCenterPosition, parseWithTranslation} from './common-maps-utils';
 import {
   Datasource,
   DatasourceData,
@@ -10,16 +10,16 @@ import {
   JsonSettingsSchema,
   WidgetActionDescriptor
 } from '@shared/models/widget.models';
-import { TranslateService } from '@ngx-translate/core';
-import { UtilsService } from '@core/services/utils.service';
-import { EntityDataPageLink } from '@shared/models/query/query.models';
-import { providerClass } from '@home/components/widget/lib/maps/providers';
-import { isDefined, isDefinedAndNotNull, parseFunction } from '@core/utils';
+import {TranslateService} from '@ngx-translate/core';
+import {UtilsService} from '@core/services/utils.service';
+import {EntityDataPageLink} from '@shared/models/query/query.models';
+import {providerClass} from '@home/components/widget/lib/maps/providers';
+import {isDefined, isDefinedAndNotNull, parseFunction} from '@core/utils';
 import L from 'leaflet';
-import { forkJoin, Observable, of } from 'rxjs';
-import { AttributeService } from '@core/http/attribute.service';
-import { EntityId } from '@shared/models/id/entity-id';
-import { AttributeScope, DataKeyType, LatestTelemetry } from '@shared/models/telemetry/telemetry.models';
+import {forkJoin, Observable, of} from 'rxjs';
+import {AttributeService} from '@core/http/attribute.service';
+import {EntityId} from '@shared/models/id/entity-id';
+import {AttributeScope, DataKeyType, LatestTelemetry} from '@shared/models/telemetry/telemetry.models';
 
 // @dynamic
 export class MapWidgetController implements MapWidgetInterface {

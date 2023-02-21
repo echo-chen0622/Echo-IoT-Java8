@@ -3,10 +3,10 @@ package org.echoiot.server.service.queue;
 import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.echoiot.server.queue.TbQueueConsumer;
-import org.echoiot.server.queue.common.TbProtoQueueMsg;
 import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
 import org.echoiot.server.gen.transport.TransportProtos;
+import org.echoiot.server.queue.TbQueueConsumer;
+import org.echoiot.server.queue.common.TbProtoQueueMsg;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;

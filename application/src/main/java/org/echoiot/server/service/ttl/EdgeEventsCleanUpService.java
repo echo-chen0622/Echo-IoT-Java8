@@ -3,13 +3,13 @@ package org.echoiot.server.service.ttl;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.dao.edge.EdgeEventService;
 import org.echoiot.server.dao.model.ModelConstants;
+import org.echoiot.server.dao.sqlts.insert.sql.SqlPartitioningRepository;
 import org.echoiot.server.queue.discovery.PartitionService;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.echoiot.server.dao.sqlts.insert.sql.SqlPartitioningRepository;
 
 import java.util.concurrent.TimeUnit;
 

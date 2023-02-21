@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Optional;
 
-public abstract class AbstractPermissions extends HashMap<Resource, PermissionChecker> implements Permissions {
+public abstract class AbstractPermissions extends HashMap<PerResource, PermissionChecker> implements Permissions {
 
     public AbstractPermissions() {
         super();
@@ -13,8 +13,8 @@ public abstract class AbstractPermissions extends HashMap<Resource, PermissionCh
 
     @NotNull
     @Override
-    public Optional<PermissionChecker> getPermissionChecker(Resource resource) {
-        PermissionChecker permissionChecker = this.get(resource);
+    public Optional<PermissionChecker> getPermissionChecker(PerResource perResource) {
+        PermissionChecker permissionChecker = this.get(perResource);
         return Optional.ofNullable(permissionChecker);
     }
 }

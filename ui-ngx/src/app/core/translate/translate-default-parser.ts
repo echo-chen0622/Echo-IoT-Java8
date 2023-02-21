@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
-import { TranslateParser } from '@ngx-translate/core';
-import { isDefinedAndNotNull } from '@core/utils';
+import {Injectable} from '@angular/core';
+import {TranslateParser} from '@ngx-translate/core';
+import {isDefinedAndNotNull} from '@core/utils';
 
 @Injectable({ providedIn: 'root' })
 export class TranslateDefaultParser extends TranslateParser {

@@ -20,7 +20,7 @@ import {
   LegendKeyData,
   widgetType
 } from '@app/shared/models/widget.models';
-import { HttpErrorResponse } from '@angular/common/http';
+import {HttpErrorResponse} from '@angular/common/http';
 import {
   calculateIntervalStartEndTime,
   calculateTsOffset,
@@ -34,9 +34,9 @@ import {
   toHistoryTimewindow,
   WidgetTimewindow
 } from '@app/shared/models/time/time.models';
-import { forkJoin, Observable, of, ReplaySubject, Subject, throwError, timer } from 'rxjs';
-import { CancelAnimationFrame } from '@core/services/raf.service';
-import { EntityType } from '@shared/models/entity-type.models';
+import {forkJoin, Observable, of, ReplaySubject, Subject, throwError, timer} from 'rxjs';
+import {CancelAnimationFrame} from '@core/services/raf.service';
+import {EntityType} from '@shared/models/entity-type.models';
 import {
   createLabelFromPattern,
   deepClone,
@@ -47,10 +47,10 @@ import {
   isEqual,
   parseHttpErrorMessage
 } from '@core/utils';
-import { EntityId } from '@app/shared/models/id/entity-id';
+import {EntityId} from '@app/shared/models/id/entity-id';
 import * as moment_ from 'moment';
-import { emptyPageData, PageData } from '@shared/models/page/page-data';
-import { EntityDataListener } from '@core/api/entity-data.service';
+import {emptyPageData, PageData} from '@shared/models/page/page-data';
+import {EntityDataListener} from '@core/api/entity-data.service';
 import {
   AlarmData,
   AlarmDataPageLink,
@@ -61,9 +61,9 @@ import {
   KeyFilter,
   updateDatasourceFromEntityInfo
 } from '@shared/models/query/query.models';
-import { distinct, filter, map, switchMap, takeUntil } from 'rxjs/operators';
-import { AlarmDataListener } from '@core/api/alarm-data.service';
-import { RpcStatus } from '@shared/models/rpc.models';
+import {distinct, filter, map, switchMap, takeUntil} from 'rxjs/operators';
+import {AlarmDataListener} from '@core/api/alarm-data.service';
+import {RpcStatus} from '@shared/models/rpc.models';
 
 const moment = moment_;
 

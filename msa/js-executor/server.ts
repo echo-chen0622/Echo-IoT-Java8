@@ -1,12 +1,12 @@
 import config from 'config';
-import { _logger } from './config/logger';
-import { HttpServer } from './api/httpServer';
-import { IQueue } from './queue/queue.models';
-import { KafkaTemplate } from './queue/kafkaTemplate';
-import { PubSubTemplate } from './queue/pubSubTemplate';
-import { AwsSqsTemplate } from './queue/awsSqsTemplate';
-import { RabbitMqTemplate } from './queue/rabbitmqTemplate';
-import { ServiceBusTemplate } from './queue/serviceBusTemplate';
+import {_logger} from './config/logger';
+import {HttpServer} from './api/httpServer';
+import {IQueue} from './queue/queue.models';
+import {KafkaTemplate} from './queue/kafkaTemplate';
+import {PubSubTemplate} from './queue/pubSubTemplate';
+import {AwsSqsTemplate} from './queue/awsSqsTemplate';
+import {RabbitMqTemplate} from './queue/rabbitmqTemplate';
+import {ServiceBusTemplate} from './queue/serviceBusTemplate';
 
 const logger = _logger('main');
 

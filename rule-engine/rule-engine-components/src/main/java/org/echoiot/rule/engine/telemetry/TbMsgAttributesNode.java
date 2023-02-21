@@ -2,13 +2,9 @@ package org.echoiot.rule.engine.telemetry;
 
 import com.google.gson.JsonParser;
 import lombok.extern.slf4j.Slf4j;
-import org.echoiot.server.common.data.StringUtils;
-import org.echoiot.rule.engine.api.RuleNode;
-import org.echoiot.rule.engine.api.TbContext;
-import org.echoiot.rule.engine.api.TbNode;
-import org.echoiot.rule.engine.api.TbNodeConfiguration;
-import org.echoiot.rule.engine.api.TbNodeException;
+import org.echoiot.rule.engine.api.*;
 import org.echoiot.rule.engine.api.util.TbNodeUtils;
+import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.kv.AttributeKvEntry;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.msg.TbMsg;
@@ -19,9 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.echoiot.server.common.data.DataConstants.CLIENT_SCOPE;
-import static org.echoiot.server.common.data.DataConstants.NOTIFY_DEVICE_METADATA_KEY;
-import static org.echoiot.server.common.data.DataConstants.SCOPE;
+import static org.echoiot.server.common.data.DataConstants.*;
 
 @Slf4j
 @RuleNode(

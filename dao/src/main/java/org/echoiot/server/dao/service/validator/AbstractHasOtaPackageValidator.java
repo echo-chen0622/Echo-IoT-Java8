@@ -10,8 +10,9 @@ import org.echoiot.server.dao.exception.DataValidationException;
 import org.echoiot.server.dao.ota.OtaPackageService;
 import org.echoiot.server.dao.service.DataValidator;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+
+import javax.annotation.Resource;
 
 public abstract class AbstractHasOtaPackageValidator<D extends BaseData<?>> extends DataValidator<D> {
 

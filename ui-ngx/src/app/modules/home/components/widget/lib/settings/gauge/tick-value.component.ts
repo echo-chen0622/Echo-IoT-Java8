@@ -1,12 +1,12 @@
-import { ValueSourceProperty } from '@home/components/widget/lib/settings/common/value-source.component';
-import { Component, EventEmitter, forwardRef, Input, OnInit, Output } from '@angular/core';
-import { ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { PageComponent } from '@shared/components/page.component';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { TranslateService } from '@ngx-translate/core';
-import { isNumber } from '@core/utils';
-import { IAliasController } from '@core/api/widget-api.models';
+import {ValueSourceProperty} from '@home/components/widget/lib/settings/common/value-source.component';
+import {Component, EventEmitter, forwardRef, Input, OnInit, Output} from '@angular/core';
+import {ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {PageComponent} from '@shared/components/page.component';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {TranslateService} from '@ngx-translate/core';
+import {isNumber} from '@core/utils';
+import {IAliasController} from '@core/api/widget-api.models';
 
 @Component({
   selector: 'tb-tick-value',

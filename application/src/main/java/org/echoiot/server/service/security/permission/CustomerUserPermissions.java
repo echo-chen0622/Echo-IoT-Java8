@@ -8,28 +8,28 @@ import org.echoiot.server.common.data.id.DashboardId;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.UserId;
 import org.echoiot.server.common.data.security.Authority;
+import org.echoiot.server.service.security.model.SecurityUser;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
-import org.echoiot.server.service.security.model.SecurityUser;
 
 @Component(value = "customerUserPermissions")
 public class CustomerUserPermissions extends AbstractPermissions {
 
     public CustomerUserPermissions() {
         super();
-        put(Resource.ALARM, customerAlarmPermissionChecker);
-        put(Resource.ASSET, customerEntityPermissionChecker);
-        put(Resource.DEVICE, customerEntityPermissionChecker);
-        put(Resource.CUSTOMER, customerPermissionChecker);
-        put(Resource.DASHBOARD, customerDashboardPermissionChecker);
-        put(Resource.ENTITY_VIEW, customerEntityPermissionChecker);
-        put(Resource.USER, userPermissionChecker);
-        put(Resource.WIDGETS_BUNDLE, widgetsPermissionChecker);
-        put(Resource.WIDGET_TYPE, widgetsPermissionChecker);
-        put(Resource.EDGE, customerEntityPermissionChecker);
-        put(Resource.RPC, rpcPermissionChecker);
-        put(Resource.DEVICE_PROFILE, profilePermissionChecker);
-        put(Resource.ASSET_PROFILE, profilePermissionChecker);
+        put(PerResource.ALARM, customerAlarmPermissionChecker);
+        put(PerResource.ASSET, customerEntityPermissionChecker);
+        put(PerResource.DEVICE, customerEntityPermissionChecker);
+        put(PerResource.CUSTOMER, customerPermissionChecker);
+        put(PerResource.DASHBOARD, customerDashboardPermissionChecker);
+        put(PerResource.ENTITY_VIEW, customerEntityPermissionChecker);
+        put(PerResource.USER, userPermissionChecker);
+        put(PerResource.WIDGETS_BUNDLE, widgetsPermissionChecker);
+        put(PerResource.WIDGET_TYPE, widgetsPermissionChecker);
+        put(PerResource.EDGE, customerEntityPermissionChecker);
+        put(PerResource.RPC, rpcPermissionChecker);
+        put(PerResource.DEVICE_PROFILE, profilePermissionChecker);
+        put(PerResource.ASSET_PROFILE, profilePermissionChecker);
     }
 
     private static final PermissionChecker customerAlarmPermissionChecker = new PermissionChecker() {

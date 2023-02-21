@@ -1,12 +1,5 @@
 package org.echoiot.server.actors.ruleChain;
 
-import org.echoiot.server.common.data.ApiUsageRecordKey;
-import org.echoiot.server.common.data.id.RuleNodeId;
-import org.echoiot.server.common.data.id.TenantId;
-import org.echoiot.server.common.data.plugin.ComponentLifecycleState;
-import org.echoiot.server.common.data.rule.RuleNode;
-import org.echoiot.server.common.msg.TbMsg;
-import org.echoiot.server.common.stats.TbApiUsageReportClient;
 import org.echoiot.rule.engine.api.TbNode;
 import org.echoiot.rule.engine.api.TbNodeConfiguration;
 import org.echoiot.server.actors.ActorSystemContext;
@@ -14,9 +7,16 @@ import org.echoiot.server.actors.TbActorCtx;
 import org.echoiot.server.actors.TbActorRef;
 import org.echoiot.server.actors.TbRuleNodeUpdateException;
 import org.echoiot.server.actors.shared.ComponentMsgProcessor;
+import org.echoiot.server.common.data.ApiUsageRecordKey;
+import org.echoiot.server.common.data.id.RuleNodeId;
+import org.echoiot.server.common.data.id.TenantId;
+import org.echoiot.server.common.data.plugin.ComponentLifecycleState;
+import org.echoiot.server.common.data.rule.RuleNode;
+import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.queue.PartitionChangeMsg;
 import org.echoiot.server.common.msg.queue.RuleNodeException;
 import org.echoiot.server.common.msg.queue.RuleNodeInfo;
+import org.echoiot.server.common.stats.TbApiUsageReportClient;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

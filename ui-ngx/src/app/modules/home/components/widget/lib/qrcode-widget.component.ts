@@ -1,10 +1,10 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import { PageComponent } from '@shared/components/page.component';
-import { WidgetContext } from '@home/models/widget-component.models';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { DatasourceData, FormattedData } from '@shared/models/widget.models';
-import { DataKeyType } from '@shared/models/telemetry/telemetry.models';
+import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import {PageComponent} from '@shared/components/page.component';
+import {WidgetContext} from '@home/models/widget-component.models';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {DatasourceData, FormattedData} from '@shared/models/widget.models';
+import {DataKeyType} from '@shared/models/telemetry/telemetry.models';
 import {
   createLabelFromPattern,
   flatDataWithoutOverride,

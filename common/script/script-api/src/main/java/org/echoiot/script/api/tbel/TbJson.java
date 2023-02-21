@@ -1,10 +1,10 @@
 package org.echoiot.script.api.tbel;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.echoiot.common.util.JacksonUtil;
 import org.jetbrains.annotations.Nullable;
 import org.mvel2.ExecutionContext;
 import org.mvel2.util.ArgsRepackUtil;
-import org.echoiot.common.util.JacksonUtil;
 
 import java.io.IOException;
 import java.util.List;

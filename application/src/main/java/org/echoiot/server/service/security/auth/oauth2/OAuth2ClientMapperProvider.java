@@ -4,9 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.oauth2.MapperType;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 
 @Component
 @Slf4j

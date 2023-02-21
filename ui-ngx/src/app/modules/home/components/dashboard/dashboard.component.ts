@@ -1,18 +1,18 @@
 import {
-    AfterViewInit,
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    DoCheck,
-    Input,
-    IterableDiffers,
-    KeyValueDiffers,
-    NgZone,
-    OnChanges,
-    OnDestroy,
-    OnInit,
-    SimpleChanges,
-    ViewChild
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  DoCheck,
+  Input,
+  IterableDiffers,
+  KeyValueDiffers,
+  NgZone,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  SimpleChanges,
+  ViewChild
 } from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppState} from '@core/core.state';
@@ -23,10 +23,10 @@ import {Timewindow, toHistoryTimewindow} from '@shared/models/time/time.models';
 import {TimeService} from '@core/services/time.service';
 import {GridsterComponent, GridsterConfig, GridType} from 'angular-gridster2';
 import {
-    DashboardCallbacks,
-    DashboardWidget,
-    DashboardWidgets,
-    IDashboardComponent
+  DashboardCallbacks,
+  DashboardWidget,
+  DashboardWidgets,
+  IDashboardComponent
 } from '../../models/dashboard-component.models';
 import {ReplaySubject, Subject, Subscription} from 'rxjs';
 import {WidgetLayout, WidgetLayouts} from '@shared/models/dashboard.models';

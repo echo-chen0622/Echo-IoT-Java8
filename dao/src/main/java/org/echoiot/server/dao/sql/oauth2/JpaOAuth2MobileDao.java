@@ -1,15 +1,15 @@
 package org.echoiot.server.dao.sql.oauth2;
 
 import lombok.RequiredArgsConstructor;
-import org.echoiot.server.dao.model.sql.OAuth2MobileEntity;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Component;
 import org.echoiot.server.common.data.oauth2.OAuth2Mobile;
 import org.echoiot.server.dao.DaoUtil;
+import org.echoiot.server.dao.model.sql.OAuth2MobileEntity;
 import org.echoiot.server.dao.oauth2.OAuth2MobileDao;
 import org.echoiot.server.dao.sql.JpaAbstractDao;
 import org.echoiot.server.dao.util.SqlDao;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.UUID;

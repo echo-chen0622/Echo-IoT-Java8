@@ -1,5 +1,6 @@
 package org.echoiot.server.service.security.auth.jwt;
 
+import org.echoiot.server.service.security.auth.JwtAuthenticationToken;
 import org.echoiot.server.service.security.auth.jwt.extractor.TokenExtractor;
 import org.echoiot.server.service.security.model.token.RawAccessJwtToken;
 import org.jetbrains.annotations.NotNull;
@@ -11,7 +12,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.util.matcher.RequestMatcher;
-import org.echoiot.server.service.security.auth.JwtAuthenticationToken;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -23,7 +23,7 @@ public class JwtTokenAuthenticationProcessingFilter extends AbstractAuthenticati
     private final AuthenticationFailureHandler failureHandler;
     private final TokenExtractor tokenExtractor;
 
-    @Resource
+    @Autowired
     public JwtTokenAuthenticationProcessingFilter(AuthenticationFailureHandler failureHandler,
                                                   TokenExtractor tokenExtractor, @NotNull RequestMatcher matcher) {
         super(matcher);

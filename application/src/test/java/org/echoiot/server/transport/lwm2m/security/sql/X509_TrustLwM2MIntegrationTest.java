@@ -1,22 +1,22 @@
 package org.echoiot.server.transport.lwm2m.security.sql;
 
-import org.eclipse.leshan.client.object.Security;
-import org.jetbrains.annotations.NotNull;
-import org.junit.Test;
 import org.echoiot.server.common.data.device.credentials.lwm2m.LwM2MDeviceCredentials;
 import org.echoiot.server.common.data.device.credentials.lwm2m.X509ClientCredential;
 import org.echoiot.server.common.data.device.profile.Lwm2mDeviceProfileTransportConfiguration;
 import org.echoiot.server.transport.lwm2m.security.AbstractSecurityLwM2MIntegrationTest;
+import org.eclipse.leshan.client.object.Security;
+import org.jetbrains.annotations.NotNull;
+import org.junit.Test;
 
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
 
-import static org.eclipse.leshan.client.object.Security.x509;
-import static org.eclipse.leshan.client.object.Security.x509Bootstrap;
 import static org.echoiot.server.common.data.device.credentials.lwm2m.LwM2MSecurityMode.X509;
 import static org.echoiot.server.transport.lwm2m.Lwm2mTestHelper.LwM2MClientState.ON_REGISTRATION_SUCCESS;
 import static org.echoiot.server.transport.lwm2m.Lwm2mTestHelper.LwM2MProfileBootstrapConfigType.BOTH;
 import static org.echoiot.server.transport.lwm2m.Lwm2mTestHelper.LwM2MProfileBootstrapConfigType.NONE;
+import static org.eclipse.leshan.client.object.Security.x509;
+import static org.eclipse.leshan.client.object.Security.x509Bootstrap;
 
 public class X509_TrustLwM2MIntegrationTest extends AbstractSecurityLwM2MIntegrationTest {
 

@@ -1,15 +1,15 @@
-import { BaseData } from '@shared/models/base-data';
-import { RuleChainId } from '@shared/models/id/rule-chain-id';
-import { RuleNodeId } from '@shared/models/id/rule-node-id';
-import { ComponentDescriptor } from '@shared/models/component-descriptor.models';
-import { FcEdge, FcNode } from 'ngx-flowchart';
-import { Observable } from 'rxjs';
-import { PageComponent } from '@shared/components/page.component';
-import { AfterViewInit, EventEmitter, Inject, OnInit, Directive } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { AbstractControl, FormGroup } from '@angular/forms';
-import { RuleChainType } from '@shared/models/rule-chain.models';
+import {BaseData} from '@shared/models/base-data';
+import {RuleChainId} from '@shared/models/id/rule-chain-id';
+import {RuleNodeId} from '@shared/models/id/rule-node-id';
+import {ComponentDescriptor} from '@shared/models/component-descriptor.models';
+import {FcEdge, FcNode} from 'ngx-flowchart';
+import {Observable} from 'rxjs';
+import {PageComponent} from '@shared/components/page.component';
+import {AfterViewInit, Directive, EventEmitter, Inject, OnInit} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {AbstractControl, FormGroup} from '@angular/forms';
+import {RuleChainType} from '@shared/models/rule-chain.models';
 
 export interface RuleNodeConfiguration {
   [key: string]: any;

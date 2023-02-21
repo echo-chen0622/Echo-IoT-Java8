@@ -8,12 +8,12 @@ import org.echoiot.server.common.msg.queue.ServiceType;
 import org.echoiot.server.gen.transport.TransportProtos.ServiceInfo;
 import org.echoiot.server.queue.util.AfterContextReady;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Arrays;

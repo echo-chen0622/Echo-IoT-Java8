@@ -1,31 +1,12 @@
 package org.echoiot.server.transport.coap;
 
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.test.context.TestPropertySource;
-import org.echoiot.server.common.data.CoapDeviceType;
-import org.echoiot.server.common.data.Device;
-import org.echoiot.server.common.data.DeviceProfile;
-import org.echoiot.server.common.data.DeviceProfileInfo;
-import org.echoiot.server.common.data.DeviceProfileProvisionType;
-import org.echoiot.server.common.data.DeviceProfileType;
-import org.echoiot.server.common.data.DeviceTransportType;
-import org.echoiot.server.common.data.TransportPayloadType;
-import org.echoiot.server.common.data.device.profile.AllowCreateNewDevicesDeviceProfileProvisionConfiguration;
-import org.echoiot.server.common.data.device.profile.CheckPreProvisionedDevicesDeviceProfileProvisionConfiguration;
-import org.echoiot.server.common.data.device.profile.CoapDeviceProfileTransportConfiguration;
-import org.echoiot.server.common.data.device.profile.CoapDeviceTypeConfiguration;
-import org.echoiot.server.common.data.device.profile.DefaultCoapDeviceTypeConfiguration;
-import org.echoiot.server.common.data.device.profile.DefaultDeviceProfileConfiguration;
-import org.echoiot.server.common.data.device.profile.DeviceProfileData;
-import org.echoiot.server.common.data.device.profile.DeviceProfileProvisionConfiguration;
-import org.echoiot.server.common.data.device.profile.DisabledDeviceProfileProvisionConfiguration;
-import org.echoiot.server.common.data.device.profile.EfentoCoapDeviceTypeConfiguration;
-import org.echoiot.server.common.data.device.profile.JsonTransportPayloadConfiguration;
-import org.echoiot.server.common.data.device.profile.ProtoTransportPayloadConfiguration;
-import org.echoiot.server.common.data.device.profile.TransportPayloadTypeConfiguration;
+import org.echoiot.server.common.data.*;
+import org.echoiot.server.common.data.device.profile.*;
 import org.echoiot.server.common.data.security.DeviceCredentials;
 import org.echoiot.server.transport.AbstractTransportIntegrationTest;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.test.context.TestPropertySource;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

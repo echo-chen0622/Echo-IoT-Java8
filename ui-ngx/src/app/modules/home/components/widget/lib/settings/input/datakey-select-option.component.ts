@@ -1,11 +1,11 @@
 import {Component, EventEmitter, forwardRef, Input, OnInit, Output} from '@angular/core';
 import {
-    AbstractControl,
-    ControlValueAccessor,
-    FormBuilder,
-    FormGroup,
-    NG_VALUE_ACCESSOR,
-    Validators
+  AbstractControl,
+  ControlValueAccessor,
+  FormBuilder,
+  FormGroup,
+  NG_VALUE_ACCESSOR,
+  Validators
 } from '@angular/forms';
 import {PageComponent} from '@shared/components/page.component';
 import {Store} from '@ngrx/store';

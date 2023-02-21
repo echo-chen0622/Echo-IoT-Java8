@@ -22,11 +22,11 @@
 package org.apache.kafka.common.network;
 
 import org.apache.kafka.common.memory.MemoryPool;
+import org.echoiot.server.common.data.exception.EchoiotKafkaClientError;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.echoiot.server.common.data.exception.EchoiotKafkaClientError;
 
 import java.io.EOFException;
 import java.io.IOException;

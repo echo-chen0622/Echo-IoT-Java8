@@ -1,5 +1,11 @@
 package org.echoiot.server.transport.lwm2m.server.uplink;
 
+import org.echoiot.server.common.data.Device;
+import org.echoiot.server.common.data.DeviceProfile;
+import org.echoiot.server.common.data.id.DeviceId;
+import org.echoiot.server.gen.transport.TransportProtos;
+import org.echoiot.server.transport.lwm2m.config.LwM2MTransportServerConfig;
+import org.echoiot.server.transport.lwm2m.server.client.LwM2mClient;
 import org.eclipse.leshan.core.observation.Observation;
 import org.eclipse.leshan.core.request.CreateRequest;
 import org.eclipse.leshan.core.request.SendRequest;
@@ -8,12 +14,6 @@ import org.eclipse.leshan.core.request.WriteRequest;
 import org.eclipse.leshan.core.response.ReadCompositeResponse;
 import org.eclipse.leshan.core.response.ReadResponse;
 import org.eclipse.leshan.server.registration.Registration;
-import org.echoiot.server.common.data.Device;
-import org.echoiot.server.common.data.DeviceProfile;
-import org.echoiot.server.common.data.id.DeviceId;
-import org.echoiot.server.gen.transport.TransportProtos;
-import org.echoiot.server.transport.lwm2m.config.LwM2MTransportServerConfig;
-import org.echoiot.server.transport.lwm2m.server.client.LwM2mClient;
 
 import java.util.Collection;
 import java.util.Optional;

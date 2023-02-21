@@ -1,32 +1,19 @@
 package org.echoiot.server.transport.lwm2m.rpc.sql;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.echoiot.common.util.JacksonUtil;
+import org.echoiot.server.transport.lwm2m.rpc.AbstractRpcLwM2MIntegrationTest;
 import org.eclipse.leshan.core.ResponseCode;
 import org.eclipse.leshan.core.node.LwM2mPath;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.junit.Test;
-import org.echoiot.common.util.JacksonUtil;
-import org.echoiot.server.transport.lwm2m.rpc.AbstractRpcLwM2MIntegrationTest;
 
+import static org.echoiot.server.transport.lwm2m.Lwm2mTestHelper.*;
 import static org.eclipse.leshan.core.LwM2mId.SERVER;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.echoiot.server.transport.lwm2m.Lwm2mTestHelper.BINARY_APP_DATA_CONTAINER;
-import static org.echoiot.server.transport.lwm2m.Lwm2mTestHelper.OBJECT_INSTANCE_ID_0;
-import static org.echoiot.server.transport.lwm2m.Lwm2mTestHelper.OBJECT_INSTANCE_ID_1;
-import static org.echoiot.server.transport.lwm2m.Lwm2mTestHelper.RESOURCE_ID_NAME_19_0_0;
-import static org.echoiot.server.transport.lwm2m.Lwm2mTestHelper.RESOURCE_ID_NAME_19_0_3;
-import static org.echoiot.server.transport.lwm2m.Lwm2mTestHelper.RESOURCE_ID_NAME_19_1_0;
-import static org.echoiot.server.transport.lwm2m.Lwm2mTestHelper.RESOURCE_ID_NAME_3_14;
-import static org.echoiot.server.transport.lwm2m.Lwm2mTestHelper.RESOURCE_ID_NAME_3_9;
-import static org.echoiot.server.transport.lwm2m.Lwm2mTestHelper.RESOURCE_ID_0;
-import static org.echoiot.server.transport.lwm2m.Lwm2mTestHelper.RESOURCE_ID_1;
-import static org.echoiot.server.transport.lwm2m.Lwm2mTestHelper.RESOURCE_ID_11;
-import static org.echoiot.server.transport.lwm2m.Lwm2mTestHelper.RESOURCE_ID_14;
-import static org.echoiot.server.transport.lwm2m.Lwm2mTestHelper.RESOURCE_ID_2;
-import static org.echoiot.server.transport.lwm2m.Lwm2mTestHelper.RESOURCE_ID_9;
 
 
 public class RpcLwm2mIntegrationReadTest extends AbstractRpcLwM2MIntegrationTest {

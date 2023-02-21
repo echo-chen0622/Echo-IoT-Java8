@@ -6,8 +6,8 @@ import {AppState} from '@core/core.state';
 import {Router} from '@angular/router';
 import {MatDialogRef} from '@angular/material/dialog';
 import {
-    ServerConfigType,
-    ServerConfigTypeTranslationMap
+  ServerConfigType,
+  ServerConfigTypeTranslationMap
 } from '@home/components/profile/device/lwm2m/lwm2m-profile-config.models';
 
 @Component({

@@ -1,9 +1,9 @@
 // tslint:disable-next-line:no-reference
 /// <reference path="../../../../src/typings/rawloader.typings.d.ts" />
 
-import { Inject, Injectable, NgZone } from '@angular/core';
-import { WINDOW } from '@core/services/window.service';
-import { ExceptionData } from '@app/shared/models/error.models';
+import {Inject, Injectable, NgZone} from '@angular/core';
+import {WINDOW} from '@core/services/window.service';
+import {ExceptionData} from '@app/shared/models/error.models';
 import {
   baseUrl,
   createLabelFromDatasource,
@@ -15,27 +15,27 @@ import {
   isString,
   isUndefined
 } from '@core/utils';
-import { WindowMessage } from '@shared/models/window-message.model';
-import { TranslateService } from '@ngx-translate/core';
-import { customTranslationsPrefix, i18nPrefix } from '@app/shared/models/constants';
-import { DataKey, Datasource, DatasourceType, KeyInfo } from '@shared/models/widget.models';
-import { EntityType } from '@shared/models/entity-type.models';
-import { DataKeyType } from '@app/shared/models/telemetry/telemetry.models';
-import { alarmFields } from '@shared/models/alarm.models';
-import { materialColors } from '@app/shared/models/material.models';
-import { WidgetInfo } from '@home/models/widget-component.models';
+import {WindowMessage} from '@shared/models/window-message.model';
+import {TranslateService} from '@ngx-translate/core';
+import {customTranslationsPrefix, i18nPrefix} from '@app/shared/models/constants';
+import {DataKey, Datasource, DatasourceType, KeyInfo} from '@shared/models/widget.models';
+import {EntityType} from '@shared/models/entity-type.models';
+import {DataKeyType} from '@app/shared/models/telemetry/telemetry.models';
+import {alarmFields} from '@shared/models/alarm.models';
+import {materialColors} from '@app/shared/models/material.models';
+import {WidgetInfo} from '@home/models/widget-component.models';
 import jsonSchemaDefaults from 'json-schema-defaults';
 import materialIconsCodepoints from '!raw-loader!./material-icons-codepoints.raw';
-import { Observable, of, ReplaySubject } from 'rxjs';
-import { publishReplay, refCount } from 'rxjs/operators';
-import { WidgetContext } from '@app/modules/home/models/widget-component.models';
+import {Observable, of, ReplaySubject} from 'rxjs';
+import {publishReplay, refCount} from 'rxjs/operators';
+import {WidgetContext} from '@app/modules/home/models/widget-component.models';
 import {
   AttributeData,
   LatestTelemetry,
   TelemetrySubscriber,
   TelemetryType
 } from '@shared/models/telemetry/telemetry.models';
-import { EntityId } from '@shared/models/id/entity-id';
+import {EntityId} from '@shared/models/id/entity-id';
 
 const i18nRegExp = new RegExp(`{${i18nPrefix}:[^{}]+}`, 'g');
 

@@ -1,13 +1,13 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { select, Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { selectHasRepository } from '@core/auth/auth.selectors';
-import { HasConfirmForm } from '@core/guards/confirm-on-exit.guard';
-import { RepositorySettingsComponent } from '@home/components/vc/repository-settings.component';
-import { FormGroup } from '@angular/forms';
-import { EntityId } from '@shared/models/id/entity-id';
-import { Observable } from 'rxjs';
-import { TbPopoverComponent } from '@shared/components/popover.component';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {select, Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {selectHasRepository} from '@core/auth/auth.selectors';
+import {HasConfirmForm} from '@core/guards/confirm-on-exit.guard';
+import {RepositorySettingsComponent} from '@home/components/vc/repository-settings.component';
+import {FormGroup} from '@angular/forms';
+import {EntityId} from '@shared/models/id/entity-id';
+import {Observable} from 'rxjs';
+import {TbPopoverComponent} from '@shared/components/popover.component';
 
 @Component({
   selector: 'tb-version-control',

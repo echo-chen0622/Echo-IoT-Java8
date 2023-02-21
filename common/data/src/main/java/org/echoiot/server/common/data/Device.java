@@ -10,13 +10,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.device.data.DeviceData;
+import org.echoiot.server.common.data.id.*;
 import org.echoiot.server.common.data.validation.Length;
 import org.echoiot.server.common.data.validation.NoXss;
-import org.echoiot.server.common.data.id.CustomerId;
-import org.echoiot.server.common.data.id.DeviceId;
-import org.echoiot.server.common.data.id.DeviceProfileId;
-import org.echoiot.server.common.data.id.OtaPackageId;
-import org.echoiot.server.common.data.id.TenantId;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

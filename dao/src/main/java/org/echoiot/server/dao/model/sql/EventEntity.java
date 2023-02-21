@@ -14,10 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static org.echoiot.server.dao.model.ModelConstants.EVENT_ENTITY_ID_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.EVENT_SERVICE_ID_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.EVENT_TENANT_ID_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.TS_COLUMN;
+import static org.echoiot.server.dao.model.ModelConstants.*;
 
 @Data
 @NoArgsConstructor

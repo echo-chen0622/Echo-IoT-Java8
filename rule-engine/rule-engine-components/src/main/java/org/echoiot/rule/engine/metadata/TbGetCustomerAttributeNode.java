@@ -1,9 +1,9 @@
 package org.echoiot.rule.engine.metadata;
 
 import com.google.common.util.concurrent.ListenableFuture;
-import org.echoiot.rule.engine.util.EntitiesCustomerIdAsyncLoader;
 import org.echoiot.rule.engine.api.RuleNode;
 import org.echoiot.rule.engine.api.TbContext;
+import org.echoiot.rule.engine.util.EntitiesCustomerIdAsyncLoader;
 import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.plugin.ComponentType;

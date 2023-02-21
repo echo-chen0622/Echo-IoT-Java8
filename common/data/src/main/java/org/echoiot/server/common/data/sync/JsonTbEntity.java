@@ -5,15 +5,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import org.echoiot.server.common.data.*;
 import org.echoiot.server.common.data.asset.Asset;
 import org.echoiot.server.common.data.asset.AssetProfile;
-import org.echoiot.server.common.data.widget.WidgetsBundle;
-import org.echoiot.server.common.data.Customer;
-import org.echoiot.server.common.data.Dashboard;
-import org.echoiot.server.common.data.Device;
-import org.echoiot.server.common.data.DeviceProfile;
-import org.echoiot.server.common.data.EntityView;
 import org.echoiot.server.common.data.rule.RuleChain;
+import org.echoiot.server.common.data.widget.WidgetsBundle;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

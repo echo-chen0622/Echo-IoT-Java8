@@ -1,17 +1,18 @@
-import { Component, forwardRef, Input, OnInit } from '@angular/core';
+import {Component, forwardRef, Input, OnInit} from '@angular/core';
 import {
   ControlValueAccessor,
   FormBuilder,
   FormControl,
-  FormGroup, NG_VALIDATORS,
+  FormGroup,
+  NG_VALIDATORS,
   NG_VALUE_ACCESSOR,
   Validator,
   Validators
 } from '@angular/forms';
-import { PageComponent } from '@shared/components/page.component';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { TranslateService } from '@ngx-translate/core';
+import {PageComponent} from '@shared/components/page.component';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {TranslateService} from '@ngx-translate/core';
 import {
   GoogleMapProviderSettings,
   HereMapProviderSettings,
@@ -22,9 +23,9 @@ import {
   OpenStreetMapProviderSettings,
   TencentMapProviderSettings
 } from '@home/components/widget/lib/maps/map-models';
-import { extractType } from '@core/utils';
-import { keys } from 'ts-transformer-keys';
-import { IAliasController } from '@core/api/widget-api.models';
+import {extractType} from '@core/utils';
+import {keys} from 'ts-transformer-keys';
+import {IAliasController} from '@core/api/widget-api.models';
 
 @Component({
   selector: 'tb-map-provider-settings',

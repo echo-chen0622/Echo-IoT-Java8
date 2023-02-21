@@ -6,16 +6,16 @@ import {FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, Validat
 import {DialogComponent} from '@shared/components/dialog.component';
 import {Router} from '@angular/router';
 import {
-    createDeviceProfileConfiguration,
-    createDeviceProfileTransportConfiguration,
-    DeviceProfile,
-    DeviceProfileInfo,
-    DeviceProfileType,
-    DeviceProvisionConfiguration,
-    DeviceProvisionType,
-    DeviceTransportType,
-    deviceTransportTypeHintMap,
-    deviceTransportTypeTranslationMap
+  createDeviceProfileConfiguration,
+  createDeviceProfileTransportConfiguration,
+  DeviceProfile,
+  DeviceProfileInfo,
+  DeviceProfileType,
+  DeviceProvisionConfiguration,
+  DeviceProvisionType,
+  DeviceTransportType,
+  deviceTransportTypeHintMap,
+  deviceTransportTypeTranslationMap
 } from '@shared/models/device.models';
 import {MatHorizontalStepper} from '@angular/material/stepper';
 import {AddEntityDialogData} from '@home/models/entity/entity-component.models';

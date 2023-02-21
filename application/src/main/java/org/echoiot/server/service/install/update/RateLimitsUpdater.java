@@ -8,9 +8,10 @@ import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.dao.tenant.TenantProfileService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 
 @Component
 class RateLimitsUpdater extends PaginatedUpdater<String, TenantProfile> {

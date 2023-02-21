@@ -1,13 +1,13 @@
 import {Component, EventEmitter, forwardRef, OnDestroy, OnInit, Output} from '@angular/core';
 import {
-    ControlValueAccessor,
-    FormBuilder,
-    FormGroup,
-    NG_VALIDATORS,
-    NG_VALUE_ACCESSOR,
-    ValidationErrors,
-    Validator,
-    Validators
+  ControlValueAccessor,
+  FormBuilder,
+  FormGroup,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR,
+  ValidationErrors,
+  Validator,
+  Validators
 } from '@angular/forms';
 import {BingingMode, BingingModeTranslationsMap, ServerSecurityConfig} from './lwm2m-profile-config.models';
 import {DeviceProfileService} from '@core/http/device-profile.service';
@@ -15,9 +15,9 @@ import {Subject} from 'rxjs';
 import {mergeMap, takeUntil, tap} from 'rxjs/operators';
 import {Observable} from 'rxjs/internal/Observable';
 import {
-    Lwm2mPublicKeyOrIdTooltipTranslationsMap,
-    Lwm2mSecurityType,
-    Lwm2mSecurityTypeTranslationMap
+  Lwm2mPublicKeyOrIdTooltipTranslationsMap,
+  Lwm2mSecurityType,
+  Lwm2mSecurityTypeTranslationMap
 } from '@shared/models/lwm2m-security-config.models';
 
 @Component({

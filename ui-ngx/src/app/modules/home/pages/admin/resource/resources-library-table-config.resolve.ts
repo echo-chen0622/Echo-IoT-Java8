@@ -1,25 +1,25 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {
   checkBoxCell,
   DateEntityTableColumn,
   EntityTableColumn,
   EntityTableConfig
 } from '@home/models/entity/entities-table-config.models';
-import { Resolve, Router } from '@angular/router';
-import { Resource, ResourceInfo, ResourceTypeTranslationMap } from '@shared/models/resource.models';
-import { EntityType, entityTypeResources, entityTypeTranslations } from '@shared/models/entity-type.models';
-import { NULL_UUID } from '@shared/models/id/has-uuid';
-import { DatePipe } from '@angular/common';
-import { TranslateService } from '@ngx-translate/core';
-import { ResourceService } from '@core/http/resource.service';
-import { getCurrentAuthUser } from '@core/auth/auth.selectors';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { Authority } from '@shared/models/authority.enum';
-import { ResourcesLibraryComponent } from '@home/pages/admin/resource/resources-library.component';
-import { PageLink } from '@shared/models/page/page-link';
-import { EntityAction } from '@home/models/entity/entity-component.models';
-import { map } from 'rxjs/operators';
+import {Resolve, Router} from '@angular/router';
+import {Resource, ResourceInfo, ResourceTypeTranslationMap} from '@shared/models/resource.models';
+import {EntityType, entityTypeResources, entityTypeTranslations} from '@shared/models/entity-type.models';
+import {NULL_UUID} from '@shared/models/id/has-uuid';
+import {DatePipe} from '@angular/common';
+import {TranslateService} from '@ngx-translate/core';
+import {ResourceService} from '@core/http/resource.service';
+import {getCurrentAuthUser} from '@core/auth/auth.selectors';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {Authority} from '@shared/models/authority.enum';
+import {ResourcesLibraryComponent} from '@home/pages/admin/resource/resources-library.component';
+import {PageLink} from '@shared/models/page/page-link';
+import {EntityAction} from '@home/models/entity/entity-component.models';
+import {map} from 'rxjs/operators';
 
 @Injectable()
 export class ResourcesLibraryTableConfigResolver implements Resolve<EntityTableConfig<Resource, PageLink, ResourceInfo>> {

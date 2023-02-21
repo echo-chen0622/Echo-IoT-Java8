@@ -9,11 +9,11 @@ import {effects, metaReducers, reducers} from './core.state';
 import {environment as env} from '@env/environment';
 
 import {
-    MissingTranslationHandler,
-    TranslateCompiler,
-    TranslateLoader,
-    TranslateModule,
-    TranslateParser
+  MissingTranslationHandler,
+  TranslateCompiler,
+  TranslateLoader,
+  TranslateModule,
+  TranslateParser
 } from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {TbMissingTranslationHandler} from './translate/missing-translate-handler';

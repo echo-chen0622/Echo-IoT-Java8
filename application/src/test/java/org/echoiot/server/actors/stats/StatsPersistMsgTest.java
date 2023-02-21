@@ -1,8 +1,8 @@
 package org.echoiot.server.actors.stats;
 
+import org.echoiot.server.common.data.id.TenantId;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
-import org.echoiot.server.common.data.id.TenantId;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

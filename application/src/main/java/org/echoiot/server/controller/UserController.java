@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.echoiot.rule.engine.api.MailService;
 import org.echoiot.server.common.data.User;
 import org.echoiot.server.common.data.exception.EchoiotErrorCode;
 import org.echoiot.server.common.data.exception.EchoiotException;
@@ -23,45 +24,18 @@ import org.echoiot.server.service.security.model.SecurityUser;
 import org.echoiot.server.service.security.model.UserPrincipal;
 import org.echoiot.server.service.security.model.token.JwtTokenFactory;
 import org.echoiot.server.service.security.permission.Operation;
-import org.echoiot.server.service.security.permission.Resource;
+import org.echoiot.server.service.security.permission.PerResource;
 import org.echoiot.server.service.security.system.SystemSecurityService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-import org.echoiot.rule.engine.api.MailService;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static org.echoiot.server.controller.ControllerConstants.CUSTOMER_ID;
-import static org.echoiot.server.controller.ControllerConstants.CUSTOMER_ID_PARAM_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.DEFAULT_DASHBOARD;
-import static org.echoiot.server.controller.ControllerConstants.HOME_DASHBOARD;
-import static org.echoiot.server.controller.ControllerConstants.PAGE_DATA_PARAMETERS;
-import static org.echoiot.server.controller.ControllerConstants.PAGE_NUMBER_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.PAGE_SIZE_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES;
-import static org.echoiot.server.controller.ControllerConstants.SORT_ORDER_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.SORT_PROPERTY_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.SYSTEM_AUTHORITY_PARAGRAPH;
-import static org.echoiot.server.controller.ControllerConstants.SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH;
-import static org.echoiot.server.controller.ControllerConstants.TENANT_AUTHORITY_PARAGRAPH;
-import static org.echoiot.server.controller.ControllerConstants.TENANT_ID;
-import static org.echoiot.server.controller.ControllerConstants.TENANT_ID_PARAM_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH;
-import static org.echoiot.server.controller.ControllerConstants.USER_ID_PARAM_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.USER_SORT_PROPERTY_ALLOWABLE_VALUES;
-import static org.echoiot.server.controller.ControllerConstants.USER_TEXT_SEARCH_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.UUID_WIKI_LINK;
+import static org.echoiot.server.controller.ControllerConstants.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -177,7 +151,7 @@ public class UserController extends BaseController {
         if (!Authority.SYS_ADMIN.equals(getCurrentUser().getAuthority())) {
             user.setTenantId(getCurrentUser().getTenantId());
         }
-        checkEntity(user.getId(), user, Resource.USER);
+        checkEntity(user.getId(), user, PerResource.USER);
         return tbUserService.save(getTenantId(), getCurrentUser().getCustomerId(), user, sendActivationMail, request, getCurrentUser());
     }
 
@@ -193,8 +167,8 @@ public class UserController extends BaseController {
         try {
             User user = checkNotNull(userService.findUserByEmail(getCurrentUser().getTenantId(), email));
 
-            accessControlService.checkPermission(getCurrentUser(), Resource.USER, Operation.READ,
-                    user.getId(), user);
+            accessControlService.checkPermission(getCurrentUser(), PerResource.USER, Operation.READ,
+                                                 user.getId(), user);
 
             UserCredentials userCredentials = userService.findUserCredentialsByUserId(getCurrentUser().getTenantId(), user.getId());
             if (!userCredentials.isEnabled() && userCredentials.getActivateToken() != null) {

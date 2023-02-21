@@ -1,14 +1,14 @@
 package org.echoiot.server.dao.sql.event;
 
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-import org.springframework.stereotype.Repository;
 import org.echoiot.server.common.data.event.EventType;
 import org.echoiot.server.dao.sql.JpaAbstractDaoListeningExecutorService;
 import org.echoiot.server.dao.sqlts.insert.sql.SqlPartitioningRepository;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.dao.DataAccessException;
+import org.springframework.stereotype.Repository;
 
+import javax.annotation.Resource;
 import java.util.concurrent.TimeUnit;
 
 

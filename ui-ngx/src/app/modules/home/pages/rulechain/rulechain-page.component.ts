@@ -1,29 +1,32 @@
 import {
   AfterViewInit,
   Component,
-  ElementRef, EventEmitter,
+  ElementRef,
+  EventEmitter,
   HostBinding,
   Inject,
   OnDestroy,
   OnInit,
-  QueryList, Renderer2,
+  QueryList,
+  Renderer2,
   SkipSelf,
   ViewChild,
-  ViewChildren, ViewContainerRef,
+  ViewChildren,
+  ViewContainerRef,
   ViewEncapsulation
 } from '@angular/core';
-import { PageComponent } from '@shared/components/page.component';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, Validators } from '@angular/forms';
-import { HasDirtyFlag } from '@core/guards/confirm-on-exit.guard';
-import { TranslateService } from '@ngx-translate/core';
-import { ErrorStateMatcher } from '@angular/material/core';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { MatExpansionPanel } from '@angular/material/expansion';
-import { DialogService } from '@core/services/dialog.service';
-import { AuthService } from '@core/auth/auth.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import {PageComponent} from '@shared/components/page.component';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, Validators} from '@angular/forms';
+import {HasDirtyFlag} from '@core/guards/confirm-on-exit.guard';
+import {TranslateService} from '@ngx-translate/core';
+import {ErrorStateMatcher} from '@angular/material/core';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
+import {MatExpansionPanel} from '@angular/material/expansion';
+import {DialogService} from '@core/services/dialog.service';
+import {AuthService} from '@core/auth/auth.service';
+import {ActivatedRoute, Router} from '@angular/router';
 import {
   inputNodeComponent,
   NodeConnectionInfo,
@@ -32,38 +35,38 @@ import {
   RuleChainMetaData,
   RuleChainType
 } from '@shared/models/rule-chain.models';
-import { FcItemInfo, FlowchartConstants, NgxFlowchartComponent, UserCallbacks } from 'ngx-flowchart';
+import {FcItemInfo, FlowchartConstants, NgxFlowchartComponent, UserCallbacks} from 'ngx-flowchart';
 import {
   FcRuleEdge,
   FcRuleNode,
   FcRuleNodeType,
   getRuleNodeHelpLink,
-  LinkLabel, outputNodeClazz, ruleChainNodeClazz,
+  LinkLabel,
+  outputNodeClazz,
+  ruleChainNodeClazz,
   RuleNode,
   RuleNodeComponentDescriptor,
   RuleNodeType,
   ruleNodeTypeDescriptors,
   ruleNodeTypesLibrary
 } from '@shared/models/rule-node.models';
-import { FcRuleNodeModel, FcRuleNodeTypeModel, RuleChainMenuContextInfo } from './rulechain-page.models';
-import { RuleChainService } from '@core/http/rule-chain.service';
-import { fromEvent, NEVER, Observable, of, ReplaySubject, Subscription } from 'rxjs';
-import { debounceTime, distinctUntilChanged, mergeMap, tap } from 'rxjs/operators';
-import { ISearchableComponent } from '../../models/searchable-component.models';
-import { deepClone } from '@core/utils';
-import { RuleNodeDetailsComponent } from '@home/pages/rulechain/rule-node-details.component';
-import { RuleNodeLinkComponent } from './rule-node-link.component';
-import { DialogComponent } from '@shared/components/dialog.component';
-import { MatMenuTrigger } from '@angular/material/menu';
-import { ItemBufferService, RuleNodeConnection } from '@core/services/item-buffer.service';
-import { Hotkey } from 'angular2-hotkeys';
-import { DebugEventType, EventType } from '@shared/models/event.models';
+import {FcRuleNodeModel, FcRuleNodeTypeModel, RuleChainMenuContextInfo} from './rulechain-page.models';
+import {RuleChainService} from '@core/http/rule-chain.service';
+import {fromEvent, NEVER, Observable, of, ReplaySubject, Subscription} from 'rxjs';
+import {debounceTime, distinctUntilChanged, mergeMap, tap} from 'rxjs/operators';
+import {ISearchableComponent} from '../../models/searchable-component.models';
+import {deepClone} from '@core/utils';
+import {RuleNodeDetailsComponent} from '@home/pages/rulechain/rule-node-details.component';
+import {RuleNodeLinkComponent} from './rule-node-link.component';
+import {DialogComponent} from '@shared/components/dialog.component';
+import {MatMenuTrigger} from '@angular/material/menu';
+import {ItemBufferService, RuleNodeConnection} from '@core/services/item-buffer.service';
+import {Hotkey} from 'angular2-hotkeys';
+import {DebugEventType, EventType} from '@shared/models/event.models';
+import {MatButton} from '@angular/material/button';
+import {TbPopoverService} from '@shared/components/popover.service';
+import {VersionControlComponent} from '@home/components/vc/version-control.component';
 import Timeout = NodeJS.Timeout;
-import { MatButton } from '@angular/material/button';
-import { TbPopoverService } from '@shared/components/popover.service';
-import { EntityVersionCreateComponent } from '@home/components/vc/entity-version-create.component';
-import { VersionCreationResult } from '@shared/models/vc.models';
-import { VersionControlComponent } from '@home/components/vc/version-control.component';
 
 @Component({
   selector: 'tb-rulechain-page',

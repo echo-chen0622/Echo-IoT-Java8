@@ -1,12 +1,12 @@
 package org.echoiot.server.transport.lwm2m.server.rpc.composite;
 
 import org.echoiot.server.common.transport.TransportService;
-import org.echoiot.server.transport.lwm2m.server.downlink.DownlinkRequestCallback;
-import org.eclipse.leshan.core.request.LwM2mRequest;
-import org.eclipse.leshan.core.response.ReadCompositeResponse;
 import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.transport.lwm2m.server.client.LwM2mClient;
+import org.echoiot.server.transport.lwm2m.server.downlink.DownlinkRequestCallback;
 import org.echoiot.server.transport.lwm2m.server.rpc.RpcLwM2MDownlinkCallback;
+import org.eclipse.leshan.core.request.LwM2mRequest;
+import org.eclipse.leshan.core.response.ReadCompositeResponse;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;

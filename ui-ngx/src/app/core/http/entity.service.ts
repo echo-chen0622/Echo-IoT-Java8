@@ -1,32 +1,32 @@
-import { Injectable } from '@angular/core';
-import { EMPTY, forkJoin, Observable, of, throwError } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
-import { PageLink } from '@shared/models/page/page-link';
-import { AliasEntityType, EntityType } from '@shared/models/entity-type.models';
-import { BaseData, HasId } from '@shared/models/base-data';
-import { EntityId } from '@shared/models/id/entity-id';
-import { DeviceService } from '@core/http/device.service';
-import { TenantService } from '@core/http/tenant.service';
-import { CustomerService } from '@core/http/customer.service';
-import { UserService } from './user.service';
-import { DashboardService } from '@core/http/dashboard.service';
-import { Direction } from '@shared/models/page/sort-order';
-import { PageData } from '@shared/models/page/page-data';
-import { getCurrentAuthState, getCurrentAuthUser } from '@core/auth/auth.selectors';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { Authority } from '@shared/models/authority.enum';
-import { Tenant } from '@shared/models/tenant.model';
-import { catchError, concatMap, expand, map, mergeMap, toArray } from 'rxjs/operators';
-import { Customer } from '@app/shared/models/customer.model';
-import { AssetService } from '@core/http/asset.service';
-import { EntityViewService } from '@core/http/entity-view.service';
-import { AttributeScope, DataKeyType } from '@shared/models/telemetry/telemetry.models';
-import { defaultHttpOptionsFromConfig, RequestConfig } from '@core/http/http-utils';
-import { RuleChainService } from '@core/http/rule-chain.service';
-import { AliasInfo, StateParams, SubscriptionInfo } from '@core/api/widget-api.models';
-import { DataKey, Datasource, DatasourceType, KeyInfo } from '@app/shared/models/widget.models';
-import { UtilsService } from '@core/services/utils.service';
+import {Injectable} from '@angular/core';
+import {EMPTY, forkJoin, Observable, of, throwError} from 'rxjs';
+import {HttpClient} from '@angular/common/http';
+import {PageLink} from '@shared/models/page/page-link';
+import {AliasEntityType, EntityType} from '@shared/models/entity-type.models';
+import {BaseData, HasId} from '@shared/models/base-data';
+import {EntityId} from '@shared/models/id/entity-id';
+import {DeviceService} from '@core/http/device.service';
+import {TenantService} from '@core/http/tenant.service';
+import {CustomerService} from '@core/http/customer.service';
+import {UserService} from './user.service';
+import {DashboardService} from '@core/http/dashboard.service';
+import {Direction} from '@shared/models/page/sort-order';
+import {PageData} from '@shared/models/page/page-data';
+import {getCurrentAuthState, getCurrentAuthUser} from '@core/auth/auth.selectors';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {Authority} from '@shared/models/authority.enum';
+import {Tenant} from '@shared/models/tenant.model';
+import {catchError, concatMap, expand, map, mergeMap, toArray} from 'rxjs/operators';
+import {Customer} from '@app/shared/models/customer.model';
+import {AssetService} from '@core/http/asset.service';
+import {EntityViewService} from '@core/http/entity-view.service';
+import {AttributeScope, DataKeyType} from '@shared/models/telemetry/telemetry.models';
+import {defaultHttpOptionsFromConfig, RequestConfig} from '@core/http/http-utils';
+import {RuleChainService} from '@core/http/rule-chain.service';
+import {AliasInfo, StateParams, SubscriptionInfo} from '@core/api/widget-api.models';
+import {DataKey, Datasource, DatasourceType, KeyInfo} from '@app/shared/models/widget.models';
+import {UtilsService} from '@core/services/utils.service';
 import {
   AliasFilterType,
   edgeAliasFilterTypes,
@@ -42,11 +42,11 @@ import {
   ImportEntitiesResultInfo,
   ImportEntityData
 } from '@shared/models/entity.models';
-import { EntityRelationService } from '@core/http/entity-relation.service';
-import { deepClone, generateSecret, guid, isDefined, isDefinedAndNotNull, isNotEmptyStr } from '@core/utils';
-import { Asset } from '@shared/models/asset.models';
-import { Device, DeviceCredentialsType } from '@shared/models/device.models';
-import { AttributeService } from '@core/http/attribute.service';
+import {EntityRelationService} from '@core/http/entity-relation.service';
+import {deepClone, generateSecret, guid, isDefined, isDefinedAndNotNull, isNotEmptyStr} from '@core/utils';
+import {Asset} from '@shared/models/asset.models';
+import {Device, DeviceCredentialsType} from '@shared/models/device.models';
+import {AttributeService} from '@core/http/attribute.service';
 import {
   AlarmData,
   AlarmDataQuery,
@@ -63,15 +63,15 @@ import {
   singleEntityDataPageLink,
   StringOperation
 } from '@shared/models/query/query.models';
-import { alarmFields } from '@shared/models/alarm.models';
-import { OtaPackageService } from '@core/http/ota-package.service';
-import { EdgeService } from '@core/http/edge.service';
-import { bodyContentEdgeEventActionTypes, Edge, EdgeEvent, EdgeEventType } from '@shared/models/edge.models';
-import { RuleChainMetaData, RuleChainType } from '@shared/models/rule-chain.models';
-import { WidgetService } from '@core/http/widget.service';
-import { DeviceProfileService } from '@core/http/device-profile.service';
-import { QueueService } from '@core/http/queue.service';
-import { AssetProfileService } from '@core/http/asset-profile.service';
+import {alarmFields} from '@shared/models/alarm.models';
+import {OtaPackageService} from '@core/http/ota-package.service';
+import {EdgeService} from '@core/http/edge.service';
+import {bodyContentEdgeEventActionTypes, Edge, EdgeEvent, EdgeEventType} from '@shared/models/edge.models';
+import {RuleChainMetaData, RuleChainType} from '@shared/models/rule-chain.models';
+import {WidgetService} from '@core/http/widget.service';
+import {DeviceProfileService} from '@core/http/device-profile.service';
+import {QueueService} from '@core/http/queue.service';
+import {AssetProfileService} from '@core/http/asset-profile.service';
 
 @Injectable({
   providedIn: 'root'

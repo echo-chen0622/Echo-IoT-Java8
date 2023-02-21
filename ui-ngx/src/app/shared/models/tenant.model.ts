@@ -1,8 +1,8 @@
-import { ContactBased } from '@shared/models/contact-based.model';
-import { TenantId } from './id/tenant-id';
-import { TenantProfileId } from '@shared/models/id/tenant-profile-id';
-import { BaseData } from '@shared/models/base-data';
-import { QueueInfo } from '@shared/models/queue.models';
+import {ContactBased} from '@shared/models/contact-based.model';
+import {TenantId} from './id/tenant-id';
+import {TenantProfileId} from '@shared/models/id/tenant-profile-id';
+import {BaseData} from '@shared/models/base-data';
+import {QueueInfo} from '@shared/models/queue.models';
 
 export enum TenantProfileType {
   DEFAULT = 'DEFAULT'

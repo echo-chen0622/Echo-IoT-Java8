@@ -1,13 +1,13 @@
 import {Component, ElementRef, forwardRef, Input, ViewChild} from '@angular/core';
 import {
-    ControlValueAccessor,
-    FormBuilder,
-    FormGroup,
-    NG_VALIDATORS,
-    NG_VALUE_ACCESSOR,
-    ValidationErrors,
-    Validator,
-    Validators
+  ControlValueAccessor,
+  FormBuilder,
+  FormGroup,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR,
+  ValidationErrors,
+  Validator,
+  Validators
 } from '@angular/forms';
 import {INSTANCES_ID_VALUE_MAX, INSTANCES_ID_VALUE_MIN} from './lwm2m-profile-config.models';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';

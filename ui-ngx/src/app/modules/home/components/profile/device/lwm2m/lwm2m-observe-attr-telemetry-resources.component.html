@@ -1,7 +1,7 @@
 <section [formGroup]="resourcesFormGroup">
   <div fxLayout="row" fxLayoutAlign="start center">
     <div fxFlex="30">
-      <mat-label translate>device-profile.lwm2m.resource-label</mat-label>
+      <mat-label translate>device-profile.lwm2m.perResource-label</mat-label>
     </div>
     <div fxFlex="10" class="checkbox-column-title">
       <mat-label translate>device-profile.lwm2m.attribute-label</mat-label>
@@ -19,8 +19,8 @@
   <mat-divider></mat-divider>
   <div formArrayName="resources"
     *ngFor="let resourceLwM2M of resourcesFormArray.controls; let $index = index; trackBy: trackByParams">
-    <div [formGroupName]="$index" fxLayout="row" fxLayoutAlign="start center" class="resource-list">
-      <div class="resource-name" fxFlex="30">
+    <div [formGroupName]="$index" fxLayout="row" fxLayoutAlign="start center" class="perResource-list">
+      <div class="perResource-name" fxFlex="30">
         #{{resourceLwM2M.get('id').value}} <span class="name">{{resourceLwM2M.get('name').value}}</span>
       </div>
       <div fxFlex="10" fxLayoutAlign="center center">

@@ -2,23 +2,26 @@ import {
   ChangeDetectorRef,
   Component,
   ComponentFactory,
-  ComponentRef, ElementRef,
+  ComponentRef,
+  ElementRef,
   EventEmitter,
   Inject,
   Injector,
-  Input, OnChanges,
+  Input,
+  OnChanges,
   Output,
   SimpleChanges,
-  Type, ViewChild,
+  Type,
+  ViewChild,
   ViewContainerRef
 } from '@angular/core';
-import { HelpService } from '@core/services/help.service';
-import { MarkdownService, PrismPlugin } from 'ngx-markdown';
-import { DynamicComponentFactoryService } from '@core/services/dynamic-component-factory.service';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { SHARED_MODULE_TOKEN } from '@shared/components/tokens';
-import { isDefinedAndNotNull } from '@core/utils';
-import { Observable, of, ReplaySubject } from 'rxjs';
+import {HelpService} from '@core/services/help.service';
+import {MarkdownService, PrismPlugin} from 'ngx-markdown';
+import {DynamicComponentFactoryService} from '@core/services/dynamic-component-factory.service';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {SHARED_MODULE_TOKEN} from '@shared/components/tokens';
+import {isDefinedAndNotNull} from '@core/utils';
+import {Observable, of, ReplaySubject} from 'rxjs';
 
 @Component({
   selector: 'tb-markdown',

@@ -1,16 +1,16 @@
 import {
-    AfterViewInit,
-    ChangeDetectorRef,
-    Component,
-    ElementRef,
-    EventEmitter,
-    Injector,
-    Input,
-    NgZone,
-    OnInit,
-    StaticProvider,
-    ViewChild,
-    ViewContainerRef
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Injector,
+  Input,
+  NgZone,
+  OnInit,
+  StaticProvider,
+  ViewChild,
+  ViewContainerRef
 } from '@angular/core';
 import {PageComponent} from '@shared/components/page.component';
 import {Store} from '@ngrx/store';
@@ -33,71 +33,71 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatSort, SortDirection} from '@angular/material/sort';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {
-    CellContentInfo,
-    CellStyleInfo,
-    checkHasActions,
-    constructTableCssString,
-    DisplayColumn,
-    EntityColumn,
-    entityDataSortOrderFromString,
-    findColumnByEntityKey,
-    findEntityKeyByColumnDef,
-    fromEntityColumnDef,
-    getAlarmValue,
-    getCellContentInfo,
-    getCellStyleInfo,
-    getColumnDefaultVisibility,
-    getColumnSelectionAvailability,
-    getColumnWidth,
-    getHeaderTitle,
-    getRowStyleInfo,
-    getTableCellButtonActions,
-    noDataMessage,
-    prepareTableCellButtonActions,
-    RowStyleInfo,
-    TableCellButtonActionDescriptor,
-    TableWidgetDataKeySettings,
-    TableWidgetSettings,
-    widthStyle
+  CellContentInfo,
+  CellStyleInfo,
+  checkHasActions,
+  constructTableCssString,
+  DisplayColumn,
+  EntityColumn,
+  entityDataSortOrderFromString,
+  findColumnByEntityKey,
+  findEntityKeyByColumnDef,
+  fromEntityColumnDef,
+  getAlarmValue,
+  getCellContentInfo,
+  getCellStyleInfo,
+  getColumnDefaultVisibility,
+  getColumnSelectionAvailability,
+  getColumnWidth,
+  getHeaderTitle,
+  getRowStyleInfo,
+  getTableCellButtonActions,
+  noDataMessage,
+  prepareTableCellButtonActions,
+  RowStyleInfo,
+  TableCellButtonActionDescriptor,
+  TableWidgetDataKeySettings,
+  TableWidgetSettings,
+  widthStyle
 } from '@home/components/widget/lib/table-widget.models';
 import {ConnectedPosition, Overlay, OverlayConfig, OverlayRef} from '@angular/cdk/overlay';
 import {ComponentPortal} from '@angular/cdk/portal';
 import {
-    DISPLAY_COLUMNS_PANEL_DATA,
-    DisplayColumnsPanelComponent,
-    DisplayColumnsPanelData
+  DISPLAY_COLUMNS_PANEL_DATA,
+  DisplayColumnsPanelComponent,
+  DisplayColumnsPanelData
 } from '@home/components/widget/lib/display-columns-panel.component';
 import {
-    AlarmDataInfo,
-    alarmFields,
-    AlarmSearchStatus,
-    alarmSeverityColors,
-    alarmSeverityTranslations,
-    AlarmStatus,
-    alarmStatusTranslations
+  AlarmDataInfo,
+  alarmFields,
+  AlarmSearchStatus,
+  alarmSeverityColors,
+  alarmSeverityTranslations,
+  AlarmStatus,
+  alarmStatusTranslations
 } from '@shared/models/alarm.models';
 import {DatePipe} from '@angular/common';
 import {
-    AlarmDetailsDialogComponent,
-    AlarmDetailsDialogData
+  AlarmDetailsDialogComponent,
+  AlarmDetailsDialogData
 } from '@home/components/alarm/alarm-details-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
 import {NULL_UUID} from '@shared/models/id/has-uuid';
 import {DialogService} from '@core/services/dialog.service';
 import {AlarmService} from '@core/http/alarm.service';
 import {
-    AlarmData,
-    AlarmDataPageLink,
-    dataKeyToEntityKey,
-    dataKeyTypeToEntityKeyType,
-    entityDataPageLinkSortDirection,
-    KeyFilter
+  AlarmData,
+  AlarmDataPageLink,
+  dataKeyToEntityKey,
+  dataKeyTypeToEntityKeyType,
+  entityDataPageLinkSortDirection,
+  KeyFilter
 } from '@app/shared/models/query/query.models';
 import {DataKeyType} from '@shared/models/telemetry/telemetry.models';
 import {
-    ALARM_FILTER_PANEL_DATA,
-    AlarmFilterPanelComponent,
-    AlarmFilterPanelData
+  ALARM_FILTER_PANEL_DATA,
+  AlarmFilterPanelComponent,
+  AlarmFilterPanelData
 } from '@home/components/widget/lib/alarm-filter-panel.component';
 import {entityFields} from '@shared/models/entity.models';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';

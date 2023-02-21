@@ -1,20 +1,17 @@
 package org.echoiot.server.actors.stats;
 
-import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.echoiot.server.actors.ActorSystemContext;
 import org.echoiot.server.common.data.event.Event;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.dao.event.EventService;
 import org.echoiot.server.queue.discovery.TbServiceInfoProvider;
+import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.willReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 class StatsActorTest {
 

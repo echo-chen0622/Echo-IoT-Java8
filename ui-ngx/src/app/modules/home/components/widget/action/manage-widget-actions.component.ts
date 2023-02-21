@@ -9,19 +9,19 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
-import { PageComponent } from '@shared/components/page.component';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { MatDialog } from '@angular/material/dialog';
-import { DialogService } from '@core/services/dialog.service';
-import { PageLink } from '@shared/models/page/page-link';
-import { Direction, SortOrder } from '@shared/models/page/sort-order';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { fromEvent, merge } from 'rxjs';
-import { debounceTime, distinctUntilChanged, first, tap } from 'rxjs/operators';
+import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {TranslateService} from '@ngx-translate/core';
+import {PageComponent} from '@shared/components/page.component';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {MatDialog} from '@angular/material/dialog';
+import {DialogService} from '@core/services/dialog.service';
+import {PageLink} from '@shared/models/page/page-link';
+import {Direction, SortOrder} from '@shared/models/page/sort-order';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatSort} from '@angular/material/sort';
+import {fromEvent, merge} from 'rxjs';
+import {debounceTime, distinctUntilChanged, first, tap} from 'rxjs/operators';
 import {
   toWidgetActionDescriptor,
   WidgetActionCallbacks,
@@ -29,16 +29,16 @@ import {
   WidgetActionsData,
   WidgetActionsDatasource
 } from '@home/components/widget/action/manage-widget-actions.component.models';
-import { UtilsService } from '@core/services/utils.service';
-import { WidgetActionDescriptor, WidgetActionSource, widgetType } from '@shared/models/widget.models';
+import {UtilsService} from '@core/services/utils.service';
+import {WidgetActionDescriptor, WidgetActionSource, widgetType} from '@shared/models/widget.models';
 import {
   WidgetActionDialogComponent,
   WidgetActionDialogData
 } from '@home/components/widget/action/widget-action-dialog.component';
-import { deepClone } from '@core/utils';
-import { ResizeObserver } from '@juggle/resize-observer';
-import { hidePageSizePixelValue } from '@shared/models/constants';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import {deepClone} from '@core/utils';
+import {ResizeObserver} from '@juggle/resize-observer';
+import {hidePageSizePixelValue} from '@shared/models/constants';
+import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'tb-manage-widget-actions',

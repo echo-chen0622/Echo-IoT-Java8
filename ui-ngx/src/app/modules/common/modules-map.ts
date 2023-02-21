@@ -190,13 +190,16 @@ import * as DataKeyConfigComponent from '@home/components/widget/data-key-config
 import * as LegendConfigComponent from '@home/components/widget/legend-config.component';
 import * as ManageWidgetActionsComponent from '@home/components/widget/action/manage-widget-actions.component';
 import * as WidgetActionDialogComponent from '@home/components/widget/action/widget-action-dialog.component';
-import * as CustomActionPrettyResourcesTabsComponent from '@home/components/widget/action/custom-action-pretty-resources-tabs.component';
-import * as CustomActionPrettyEditorComponent from '@home/components/widget/action/custom-action-pretty-editor.component';
+import * as CustomActionPrettyResourcesTabsComponent
+  from '@home/components/widget/action/custom-action-pretty-resources-tabs.component';
+import * as CustomActionPrettyEditorComponent
+  from '@home/components/widget/action/custom-action-pretty-editor.component';
 import * as MobileActionEditorComponent from '@home/components/widget/action/mobile-action-editor.component';
 import * as CustomDialogService from '@home/components/widget/dialog/custom-dialog.service';
 import * as CustomDialogContainerComponent from '@home/components/widget/dialog/custom-dialog-container.component';
 import * as ImportDialogComponent from '@home/components/import-export/import-dialog.component';
-import * as AddWidgetToDashboardDialogComponent from '@home/components/attribute/add-widget-to-dashboard-dialog.component';
+import * as AddWidgetToDashboardDialogComponent
+  from '@home/components/attribute/add-widget-to-dashboard-dialog.component';
 import * as ImportDialogCsvComponent from '@home/components/import-export/import-dialog-csv.component';
 import * as TableColumnsAssignmentComponent from '@home/components/import-export/table-columns-assignment.component';
 import * as EventContentDialogComponent from '@home/components/event/event-content-dialog.component';
@@ -211,7 +214,8 @@ import * as ComplexFilterPredicateComponent from '@home/components/filter/comple
 import * as FilterPredicateComponent from '@home/components/filter/filter-predicate.component';
 import * as FilterPredicateListComponent from '@home/components/filter/filter-predicate-list.component';
 import * as KeyFilterListComponent from '@home/components/filter/key-filter-list.component';
-import * as ComplexFilterPredicateDialogComponent from '@home/components/filter/complex-filter-predicate-dialog.component';
+import * as ComplexFilterPredicateDialogComponent
+  from '@home/components/filter/complex-filter-predicate-dialog.component';
 import * as KeyFilterDialogComponent from '@home/components/filter/key-filter-dialog.component';
 import * as FiltersDialogComponent from '@home/components/filter/filters-dialog.component';
 import * as FilterDialogComponent from '@home/components/filter/filter-dialog.component';
@@ -226,15 +230,21 @@ import * as TenantProfileComponent from '@home/components/profile/tenant-profile
 import * as TenantProfileDialogComponent from '@home/components/profile/tenant-profile-dialog.component';
 import * as TenantProfileDataComponent from '@home/components/profile/tenant-profile-data.component';
 // tslint:disable-next-line:max-line-length
-import * as DefaultDeviceProfileConfigurationComponent from '@home/components/profile/device/default-device-profile-configuration.component';
-import * as DeviceProfileConfigurationComponent from '@home/components/profile/device/device-profile-configuration.component';
+import * as DefaultDeviceProfileConfigurationComponent
+  from '@home/components/profile/device/default-device-profile-configuration.component';
+import * as DeviceProfileConfigurationComponent
+  from '@home/components/profile/device/device-profile-configuration.component';
 import * as DeviceProfileComponent from '@home/components/profile/device-profile.component';
-import * as DefaultDeviceProfileTransportConfigurationComponent from '@home/components/profile/device/default-device-profile-transport-configuration.component';
-import * as DeviceProfileTransportConfigurationComponent from '@home/components/profile/device/device-profile-transport-configuration.component';
+import * as DefaultDeviceProfileTransportConfigurationComponent
+  from '@home/components/profile/device/default-device-profile-transport-configuration.component';
+import * as DeviceProfileTransportConfigurationComponent
+  from '@home/components/profile/device/device-profile-transport-configuration.component';
 import * as DeviceProfileDialogComponent from '@home/components/profile/device-profile-dialog.component';
 import * as DeviceProfileAutocompleteComponent from '@home/components/profile/device-profile-autocomplete.component';
-import * as MqttDeviceProfileTransportConfigurationComponent from '@home/components/profile/device/mqtt-device-profile-transport-configuration.component';
-import * as CoapDeviceProfileTransportConfigurationComponent from '@home/components/profile/device/coap-device-profile-transport-configuration.component';
+import * as MqttDeviceProfileTransportConfigurationComponent
+  from '@home/components/profile/device/mqtt-device-profile-transport-configuration.component';
+import * as CoapDeviceProfileTransportConfigurationComponent
+  from '@home/components/profile/device/coap-device-profile-transport-configuration.component';
 import * as DeviceProfileAlarmsComponent from '@home/components/profile/alarm/device-profile-alarms.component';
 import * as DeviceProfileAlarmComponent from '@home/components/profile/alarm/device-profile-alarm.component';
 import * as CreateAlarmRulesComponent from '@home/components/profile/alarm/create-alarm-rules.component';
@@ -243,34 +253,43 @@ import * as AlarmRuleConditionComponent from '@home/components/profile/alarm/ala
 import * as FilterTextComponent from '@home/components/filter/filter-text.component';
 import * as AddDeviceProfileDialogComponent from '@home/components/profile/add-device-profile-dialog.component';
 import * as RuleChainAutocompleteComponent from '@home/components/rule-chain/rule-chain-autocomplete.component';
-import * as DeviceProfileProvisionConfigurationComponent from '@home/components/profile/device-profile-provision-configuration.component';
+import * as DeviceProfileProvisionConfigurationComponent
+  from '@home/components/profile/device-profile-provision-configuration.component';
 import * as AlarmScheduleComponent from '@home/components/profile/alarm/alarm-schedule.component';
 import * as DeviceWizardDialogComponent from '@home/components/wizard/device-wizard-dialog.component';
 import * as AlarmScheduleInfoComponent from '@home/components/profile/alarm/alarm-schedule-info.component';
 import * as AlarmScheduleDialogComponent from '@home/components/profile/alarm/alarm-schedule-dialog.component';
 import * as EditAlarmDetailsDialogComponent from '@home/components/profile/alarm/edit-alarm-details-dialog.component';
-import * as AlarmRuleConditionDialogComponent from '@home/components/profile/alarm/alarm-rule-condition-dialog.component';
+import * as AlarmRuleConditionDialogComponent
+  from '@home/components/profile/alarm/alarm-rule-condition-dialog.component';
 // tslint:disable-next-line:max-line-length
-import * as DefaultTenantProfileConfigurationComponent from '@home/components/profile/tenant/default-tenant-profile-configuration.component';
-import * as TenantProfileConfigurationComponent from '@home/components/profile/tenant/tenant-profile-configuration.component';
+import * as DefaultTenantProfileConfigurationComponent
+  from '@home/components/profile/tenant/default-tenant-profile-configuration.component';
+import * as TenantProfileConfigurationComponent
+  from '@home/components/profile/tenant/tenant-profile-configuration.component';
 import * as SmsProviderConfigurationComponent from '@home/components/sms/sms-provider-configuration.component';
 import * as AwsSnsProviderConfigurationComponent from '@home/components/sms/aws-sns-provider-configuration.component';
-import * as TwilioSmsProviderConfigurationComponent from '@home/components/sms/twilio-sms-provider-configuration.component';
+import * as TwilioSmsProviderConfigurationComponent
+  from '@home/components/sms/twilio-sms-provider-configuration.component';
 import * as DashboardPageComponent from '@home/components/dashboard-page/dashboard-page.component';
 import * as DashboardToolbarComponent from '@home/components/dashboard-page/dashboard-toolbar.component';
 import * as DashboardLayoutComponent from '@home/components/dashboard-page/layout/dashboard-layout.component';
 import * as EditWidgetComponent from '@home/components/dashboard-page/edit-widget.component';
 import * as DashboardWidgetSelectComponent from '@home/components/dashboard-page/dashboard-widget-select.component';
 import * as AddWidgetDialogComponent from '@home/components/dashboard-page/add-widget-dialog.component';
-import * as ManageDashboardLayoutsDialogComponent from '@home/components/dashboard-page/layout/manage-dashboard-layouts-dialog.component';
+import * as ManageDashboardLayoutsDialogComponent
+  from '@home/components/dashboard-page/layout/manage-dashboard-layouts-dialog.component';
 import * as DashboardSettingsDialogComponent from '@home/components/dashboard-page/dashboard-settings-dialog.component';
-import * as ManageDashboardStatesDialogComponent from '@home/components/dashboard-page/states/manage-dashboard-states-dialog.component';
-import * as DashboardStateDialogComponent from '@home/components/dashboard-page/states/dashboard-state-dialog.component';
+import * as ManageDashboardStatesDialogComponent
+  from '@home/components/dashboard-page/states/manage-dashboard-states-dialog.component';
+import * as DashboardStateDialogComponent
+  from '@home/components/dashboard-page/states/dashboard-state-dialog.component';
 import * as EmbedDashboardDialogComponent from '@home/components/widget/dialog/embed-dashboard-dialog.component';
 import * as EdgeDownlinkTableComponent from '@home/components/edge/edge-downlink-table.component';
 import * as EdgeDownlinkTableHeaderComponent from '@home/components/edge/edge-downlink-table-header.component';
 import * as DisplayWidgetTypesPanelComponent from '@home/components/dashboard-page/widget-types-panel.component';
-import * as AlarmDurationPredicateValueComponent from '@home/components/profile/alarm/alarm-duration-predicate-value.component';
+import * as AlarmDurationPredicateValueComponent
+  from '@home/components/profile/alarm/alarm-duration-predicate-value.component';
 import * as DashboardImageDialogComponent from '@home/components/dashboard-page/dashboard-image-dialog.component';
 import * as WidgetContainerComponent from '@home/components/widget/widget-container.component';
 import * as TenantProfileQueuesComponent from '@home/components/profile/queue/tenant-profile-queues.component';
@@ -279,7 +298,7 @@ import * as AssetProfileComponent from '@home/components/profile/asset-profile.c
 import * as AssetProfileDialogComponent from '@home/components/profile/asset-profile-dialog.component';
 import * as AssetProfileAutocompleteComponent from '@home/components/profile/asset-profile-autocomplete.component';
 
-import { IModulesMap } from '@modules/common/modules-map.models';
+import {IModulesMap} from '@modules/common/modules-map.models';
 
 declare const System;
 

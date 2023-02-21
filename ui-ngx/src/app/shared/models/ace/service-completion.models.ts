@@ -1,4 +1,4 @@
-import { FunctionArg, FunctionArgType, TbEditorCompletions } from '@shared/models/ace/completion.models';
+import {FunctionArg, FunctionArgType, TbEditorCompletions} from '@shared/models/ace/completion.models';
 
 export const entityIdHref = '<a href="https://github.com/echoiot/echoiot/blob/13e6b10b7ab830e64d31b99614a9d95a1a25928a/ui-ngx/src/app/shared/models/id/entity-id.ts#L20">EntityId</a>';
 

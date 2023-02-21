@@ -1,20 +1,20 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
 
-import { EntitiesTableComponent } from '../../components/entity/entities-table.component';
-import { Authority } from '@shared/models/authority.enum';
-import { UsersTableConfigResolver } from '../user/users-table-config.resolver';
-import { CustomersTableConfigResolver } from './customers-table-config.resolver';
-import { DevicesTableConfigResolver } from '@modules/home/pages/device/devices-table-config.resolver';
-import { AssetsTableConfigResolver } from '../asset/assets-table-config.resolver';
-import { DashboardsTableConfigResolver } from '@modules/home/pages/dashboard/dashboards-table-config.resolver';
-import { DashboardPageComponent } from '@home/components/dashboard-page/dashboard-page.component';
-import { BreadCrumbConfig } from '@shared/components/breadcrumb';
-import { dashboardBreadcumbLabelFunction, DashboardResolver } from '@home/pages/dashboard/dashboard-routing.module';
-import { EdgesTableConfigResolver } from '@home/pages/edge/edges-table-config.resolver';
-import { EntityDetailsPageComponent } from '@home/components/entity/entity-details-page.component';
-import { ConfirmOnExitGuard } from '@core/guards/confirm-on-exit.guard';
-import { entityDetailsPageBreadcrumbLabelFunction } from '@home/pages/home-pages.models';
+import {EntitiesTableComponent} from '../../components/entity/entities-table.component';
+import {Authority} from '@shared/models/authority.enum';
+import {UsersTableConfigResolver} from '../user/users-table-config.resolver';
+import {CustomersTableConfigResolver} from './customers-table-config.resolver';
+import {DevicesTableConfigResolver} from '@modules/home/pages/device/devices-table-config.resolver';
+import {AssetsTableConfigResolver} from '../asset/assets-table-config.resolver';
+import {DashboardsTableConfigResolver} from '@modules/home/pages/dashboard/dashboards-table-config.resolver';
+import {DashboardPageComponent} from '@home/components/dashboard-page/dashboard-page.component';
+import {BreadCrumbConfig} from '@shared/components/breadcrumb';
+import {dashboardBreadcumbLabelFunction, DashboardResolver} from '@home/pages/dashboard/dashboard-routing.module';
+import {EdgesTableConfigResolver} from '@home/pages/edge/edges-table-config.resolver';
+import {EntityDetailsPageComponent} from '@home/components/entity/entity-details-page.component';
+import {ConfirmOnExitGuard} from '@core/guards/confirm-on-exit.guard';
+import {entityDetailsPageBreadcrumbLabelFunction} from '@home/pages/home-pages.models';
 
 const routes: Routes = [
   {

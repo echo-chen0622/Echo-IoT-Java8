@@ -1,21 +1,21 @@
-import { ActivationEnd, Router } from '@angular/router';
-import { Injectable } from '@angular/core';
-import { select, Store } from '@ngrx/store';
-import { Actions, Effect, ofType } from '@ngrx/effects';
-import { TranslateService } from '@ngx-translate/core';
-import { merge } from 'rxjs';
-import { distinctUntilChanged, filter, map, tap, withLatestFrom } from 'rxjs/operators';
+import {ActivationEnd, Router} from '@angular/router';
+import {Injectable} from '@angular/core';
+import {select, Store} from '@ngrx/store';
+import {Actions, Effect, ofType} from '@ngrx/effects';
+import {TranslateService} from '@ngx-translate/core';
+import {merge} from 'rxjs';
+import {distinctUntilChanged, filter, map, tap, withLatestFrom} from 'rxjs/operators';
 
-import { SettingsActions, SettingsActionTypes, } from './settings.actions';
-import { selectSettingsState } from './settings.selectors';
-import { AppState } from '@app/core/core.state';
-import { LocalStorageService } from '@app/core/local-storage/local-storage.service';
-import { TitleService } from '@app/core/services/title.service';
-import { updateUserLang } from '@app/core/settings/settings.utils';
-import { AuthService } from '@core/auth/auth.service';
-import { UtilsService } from '@core/services/utils.service';
-import { getCurrentAuthUser } from '@core/auth/auth.selectors';
-import { ActionAuthUpdateLastPublicDashboardId } from '../auth/auth.actions';
+import {SettingsActions, SettingsActionTypes,} from './settings.actions';
+import {selectSettingsState} from './settings.selectors';
+import {AppState} from '@app/core/core.state';
+import {LocalStorageService} from '@app/core/local-storage/local-storage.service';
+import {TitleService} from '@app/core/services/title.service';
+import {updateUserLang} from '@app/core/settings/settings.utils';
+import {AuthService} from '@core/auth/auth.service';
+import {UtilsService} from '@core/services/utils.service';
+import {getCurrentAuthUser} from '@core/auth/auth.selectors';
+import {ActionAuthUpdateLastPublicDashboardId} from '../auth/auth.actions';
 
 export const SETTINGS_KEY = 'SETTINGS';
 

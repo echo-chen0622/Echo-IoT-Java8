@@ -1,13 +1,13 @@
-import { Inject, Injectable } from '@angular/core';
-import { WINDOW } from '@core/services/window.service';
-import { isDefined } from '@core/utils';
-import { MobileActionResult, WidgetMobileActionResult, WidgetMobileActionType } from '@shared/models/widget.models';
-import { from, of } from 'rxjs';
-import { Observable } from 'rxjs/internal/Observable';
-import { catchError, tap } from 'rxjs/operators';
-import { OpenDashboardMessage, ReloadUserMessage, WindowMessage } from '@shared/models/window-message.model';
-import { Params, Router } from '@angular/router';
-import { AuthService } from '@core/auth/auth.service';
+import {Inject, Injectable} from '@angular/core';
+import {WINDOW} from '@core/services/window.service';
+import {isDefined} from '@core/utils';
+import {MobileActionResult, WidgetMobileActionResult, WidgetMobileActionType} from '@shared/models/widget.models';
+import {from, of} from 'rxjs';
+import {Observable} from 'rxjs/internal/Observable';
+import {catchError, tap} from 'rxjs/operators';
+import {OpenDashboardMessage, ReloadUserMessage, WindowMessage} from '@shared/models/window-message.model';
+import {Params, Router} from '@angular/router';
+import {AuthService} from '@core/auth/auth.service';
 
 const dashboardStateNameHandler = 'tbMobileDashboardStateNameHandler';
 const dashboardLoadedHandler = 'tbMobileDashboardLoadedHandler';

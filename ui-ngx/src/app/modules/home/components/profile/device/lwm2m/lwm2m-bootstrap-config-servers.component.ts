@@ -1,13 +1,13 @@
 import {Component, EventEmitter, forwardRef, Input, OnInit, Output} from '@angular/core';
 import {
-    AbstractControl,
-    ControlValueAccessor,
-    FormArray,
-    FormBuilder,
-    FormControl,
-    FormGroup,
-    NG_VALIDATORS,
-    NG_VALUE_ACCESSOR
+  AbstractControl,
+  ControlValueAccessor,
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR
 } from '@angular/forms';
 import {of, Subscription} from 'rxjs';
 import {ServerSecurityConfig} from '@home/components/profile/device/lwm2m/lwm2m-profile-config.models';
@@ -15,7 +15,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {DialogService} from '@core/services/dialog.service';
 import {MatDialog} from '@angular/material/dialog';
 import {
-    Lwm2mBootstrapAddConfigServerDialogComponent
+  Lwm2mBootstrapAddConfigServerDialogComponent
 } from '@home/components/profile/device/lwm2m/lwm2m-bootstrap-add-config-server-dialog.component';
 import {mergeMap} from 'rxjs/operators';
 import {DeviceProfileService} from '@core/http/device-profile.service';

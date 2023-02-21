@@ -1,6 +1,6 @@
-import { BaseData } from '@shared/models/base-data';
-import { TenantId } from '@shared/models/id/tenant-id';
-import { QueueId } from '@shared/models/id/queue-id';
+import {BaseData} from '@shared/models/base-data';
+import {TenantId} from '@shared/models/id/tenant-id';
+import {QueueId} from '@shared/models/id/queue-id';
 
 export enum ServiceType {
   TB_CORE = 'TB_CORE',

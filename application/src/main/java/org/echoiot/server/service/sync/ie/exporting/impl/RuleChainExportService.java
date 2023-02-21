@@ -7,11 +7,11 @@ import org.echoiot.server.common.data.rule.RuleChain;
 import org.echoiot.server.common.data.rule.RuleChainMetaData;
 import org.echoiot.server.common.data.sync.ie.RuleChainExportData;
 import org.echoiot.server.dao.rule.RuleChainService;
+import org.echoiot.server.queue.util.TbCoreComponent;
+import org.echoiot.server.service.sync.vc.data.EntitiesExportCtx;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
-import org.echoiot.server.queue.util.TbCoreComponent;
-import org.echoiot.server.service.sync.vc.data.EntitiesExportCtx;
 
 import java.util.Collections;
 import java.util.Optional;

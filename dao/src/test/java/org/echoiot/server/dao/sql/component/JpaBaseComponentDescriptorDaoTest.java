@@ -7,15 +7,15 @@ import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.common.data.plugin.ComponentDescriptor;
 import org.echoiot.server.common.data.plugin.ComponentScope;
 import org.echoiot.server.common.data.plugin.ComponentType;
+import org.echoiot.server.dao.AbstractJpaDaoTest;
 import org.echoiot.server.dao.component.ComponentDescriptorDao;
 import org.echoiot.server.dao.service.AbstractServiceTest;
 import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.echoiot.server.dao.AbstractJpaDaoTest;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;

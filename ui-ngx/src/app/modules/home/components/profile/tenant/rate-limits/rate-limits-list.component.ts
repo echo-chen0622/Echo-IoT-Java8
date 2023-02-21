@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input, OnDestroy, OnInit } from '@angular/core';
+import {Component, forwardRef, Input, OnDestroy, OnInit} from '@angular/core';
 import {
   ControlValueAccessor,
   FormArray,
@@ -10,10 +10,10 @@ import {
   Validator,
   Validators
 } from '@angular/forms';
-import { Subject, Subscription } from 'rxjs';
-import { RateLimits, rateLimitsArrayToString, stringToRateLimitsArray } from './rate-limits.models';
-import { isDefinedAndNotNull } from '@core/utils';
-import { takeUntil } from 'rxjs/operators';
+import {Subject, Subscription} from 'rxjs';
+import {RateLimits, rateLimitsArrayToString, stringToRateLimitsArray} from './rate-limits.models';
+import {isDefinedAndNotNull} from '@core/utils';
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
   selector: 'tb-rate-limits-list',

@@ -12,13 +12,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.DataConstants;
 import org.echoiot.server.common.data.TbTransportService;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.annotation.Resource;
 import java.net.InetSocketAddress;
 
 /**

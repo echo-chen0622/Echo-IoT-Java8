@@ -1,15 +1,15 @@
 package org.echoiot.server.service.sync.vc.repository;
 
+import org.echoiot.server.cache.TbTransactionalCache;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.sync.vc.RepositoryAuthMethod;
 import org.echoiot.server.common.data.sync.vc.RepositorySettings;
 import org.echoiot.server.dao.settings.AdminSettingsService;
 import org.echoiot.server.queue.util.TbCoreComponent;
+import org.echoiot.server.service.sync.vc.TbAbstractVersionControlSettingsService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
-import org.echoiot.server.cache.TbTransactionalCache;
-import org.echoiot.server.service.sync.vc.TbAbstractVersionControlSettingsService;
 
 @Service
 @TbCoreComponent

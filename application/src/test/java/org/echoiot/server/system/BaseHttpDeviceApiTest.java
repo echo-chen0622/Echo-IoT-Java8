@@ -1,5 +1,7 @@
 package org.echoiot.server.system;
 
+import org.echoiot.server.common.data.Device;
+import org.echoiot.server.common.data.security.DeviceCredentials;
 import org.echoiot.server.controller.AbstractControllerTest;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
@@ -7,8 +9,6 @@ import org.junit.Test;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.echoiot.server.common.data.Device;
-import org.echoiot.server.common.data.security.DeviceCredentials;
 
 import java.util.HashMap;
 import java.util.Map;

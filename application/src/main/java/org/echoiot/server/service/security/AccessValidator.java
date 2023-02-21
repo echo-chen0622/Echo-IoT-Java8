@@ -34,7 +34,7 @@ import org.echoiot.server.dao.user.UserService;
 import org.echoiot.server.service.security.model.SecurityUser;
 import org.echoiot.server.service.security.permission.AccessControlService;
 import org.echoiot.server.service.security.permission.Operation;
-import org.echoiot.server.service.security.permission.Resource;
+import org.echoiot.server.service.security.permission.PerResource;
 import org.echoiot.server.service.telemetry.exception.ToErrorResponseEntity;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +46,7 @@ import org.springframework.web.context.request.async.DeferredResult;
 import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.annotation.Resource;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.BiConsumer;
@@ -232,7 +233,7 @@ public class AccessValidator {
                     return ValidationResult.entityNotFound(DEVICE_WITH_REQUESTED_ID_NOT_FOUND);
                 } else {
                     try {
-                        accessControlService.checkPermission(currentUser, Resource.DEVICE, operation, entityId, device);
+                        accessControlService.checkPermission(currentUser, PerResource.DEVICE, operation, entityId, device);
                     } catch (EchoiotException e) {
                         return ValidationResult.accessDenied(e.getMessage());
                     }
@@ -249,7 +250,7 @@ public class AccessValidator {
                 return ValidationResult.entityNotFound("Rpc with requested id wasn't found!");
             } else {
                 try {
-                    accessControlService.checkPermission(currentUser, Resource.RPC, operation, entityId, rpc);
+                    accessControlService.checkPermission(currentUser, PerResource.RPC, operation, entityId, rpc);
                 } catch (EchoiotException e) {
                     return ValidationResult.accessDenied(e.getMessage());
                 }
@@ -267,7 +268,7 @@ public class AccessValidator {
                 callback.onSuccess(ValidationResult.entityNotFound("Device profile with requested id wasn't found!"));
             } else {
                 try {
-                    accessControlService.checkPermission(currentUser, Resource.DEVICE_PROFILE, operation, entityId, deviceProfile);
+                    accessControlService.checkPermission(currentUser, PerResource.DEVICE_PROFILE, operation, entityId, deviceProfile);
                 } catch (EchoiotException e) {
                     callback.onSuccess(ValidationResult.accessDenied(e.getMessage()));
                 }
@@ -285,7 +286,7 @@ public class AccessValidator {
                 callback.onSuccess(ValidationResult.entityNotFound("Asset profile with requested id wasn't found!"));
             } else {
                 try {
-                    accessControlService.checkPermission(currentUser, Resource.ASSET_PROFILE, operation, entityId, assetProfile);
+                    accessControlService.checkPermission(currentUser, PerResource.ASSET_PROFILE, operation, entityId, assetProfile);
                 } catch (EchoiotException e) {
                     callback.onSuccess(ValidationResult.accessDenied(e.getMessage()));
                 }
@@ -306,7 +307,7 @@ public class AccessValidator {
                 callback.onSuccess(ValidationResult.entityNotFound("Api Usage State with requested id wasn't found!"));
             } else {
                 try {
-                    accessControlService.checkPermission(currentUser, Resource.API_USAGE_STATE, operation, entityId, apiUsageState);
+                    accessControlService.checkPermission(currentUser, PerResource.API_USAGE_STATE, operation, entityId, apiUsageState);
                 } catch (EchoiotException e) {
                     callback.onSuccess(ValidationResult.accessDenied(e.getMessage()));
                 }
@@ -324,7 +325,7 @@ public class AccessValidator {
                 callback.onSuccess(ValidationResult.entityNotFound("OtaPackage with requested id wasn't found!"));
             } else {
                 try {
-                    accessControlService.checkPermission(currentUser, Resource.OTA_PACKAGE, operation, entityId, otaPackage);
+                    accessControlService.checkPermission(currentUser, PerResource.OTA_PACKAGE, operation, entityId, otaPackage);
                 } catch (EchoiotException e) {
                     callback.onSuccess(ValidationResult.accessDenied(e.getMessage()));
                 }
@@ -340,7 +341,7 @@ public class AccessValidator {
                 return ValidationResult.entityNotFound("Resource with requested id wasn't found!");
             } else {
                 try {
-                    accessControlService.checkPermission(currentUser, Resource.TB_RESOURCE, operation, entityId, resource);
+                    accessControlService.checkPermission(currentUser, PerResource.TB_RESOURCE, operation, entityId, resource);
                 } catch (EchoiotException e) {
                     return ValidationResult.accessDenied(e.getMessage());
                 }
@@ -359,7 +360,7 @@ public class AccessValidator {
                     return ValidationResult.entityNotFound("Asset with requested id wasn't found!");
                 } else {
                     try {
-                        accessControlService.checkPermission(currentUser, Resource.ASSET, operation, entityId, asset);
+                        accessControlService.checkPermission(currentUser, PerResource.ASSET, operation, entityId, asset);
                     } catch (EchoiotException e) {
                         return ValidationResult.accessDenied(e.getMessage());
                     }
@@ -379,7 +380,7 @@ public class AccessValidator {
                     return ValidationResult.entityNotFound("Rule chain with requested id wasn't found!");
                 } else {
                     try {
-                        accessControlService.checkPermission(currentUser, Resource.RULE_CHAIN, operation, entityId, ruleChain);
+                        accessControlService.checkPermission(currentUser, PerResource.RULE_CHAIN, operation, entityId, ruleChain);
                     } catch (EchoiotException e) {
                         return ValidationResult.accessDenied(e.getMessage());
                     }
@@ -404,7 +405,7 @@ public class AccessValidator {
                     //TODO: make async
                     RuleChain ruleChain = ruleChainService.findRuleChainById(currentUser.getTenantId(), ruleNode.getRuleChainId());
                     try {
-                        accessControlService.checkPermission(currentUser, Resource.RULE_CHAIN, operation, ruleNode.getRuleChainId(), ruleChain);
+                        accessControlService.checkPermission(currentUser, PerResource.RULE_CHAIN, operation, ruleNode.getRuleChainId(), ruleChain);
                     } catch (EchoiotException e) {
                         return ValidationResult.accessDenied(e.getMessage());
                     }
@@ -424,7 +425,7 @@ public class AccessValidator {
                     return ValidationResult.entityNotFound("Customer with requested id wasn't found!");
                 } else {
                     try {
-                        accessControlService.checkPermission(currentUser, Resource.CUSTOMER, operation, entityId, customer);
+                        accessControlService.checkPermission(currentUser, PerResource.CUSTOMER, operation, entityId, customer);
                     } catch (EchoiotException e) {
                         return ValidationResult.accessDenied(e.getMessage());
                     }
@@ -446,7 +447,7 @@ public class AccessValidator {
                     return ValidationResult.entityNotFound("Tenant with requested id wasn't found!");
                 }
                 try {
-                    accessControlService.checkPermission(currentUser, Resource.TENANT, operation, entityId, tenant);
+                    accessControlService.checkPermission(currentUser, PerResource.TENANT, operation, entityId, tenant);
                 } catch (EchoiotException e) {
                     return ValidationResult.accessDenied(e.getMessage());
                 }
@@ -471,7 +472,7 @@ public class AccessValidator {
                 return ValidationResult.entityNotFound("User with requested id wasn't found!");
             }
             try {
-                accessControlService.checkPermission(currentUser, Resource.USER, operation, entityId, user);
+                accessControlService.checkPermission(currentUser, PerResource.USER, operation, entityId, user);
             } catch (EchoiotException e) {
                 return ValidationResult.accessDenied(e.getMessage());
             }
@@ -490,7 +491,7 @@ public class AccessValidator {
                     return ValidationResult.entityNotFound(ENTITY_VIEW_WITH_REQUESTED_ID_NOT_FOUND);
                 } else {
                     try {
-                        accessControlService.checkPermission(currentUser, Resource.ENTITY_VIEW, operation, entityId, entityView);
+                        accessControlService.checkPermission(currentUser, PerResource.ENTITY_VIEW, operation, entityId, entityView);
                     } catch (EchoiotException e) {
                         return ValidationResult.accessDenied(e.getMessage());
                     }
@@ -510,7 +511,7 @@ public class AccessValidator {
                     return ValidationResult.entityNotFound(EDGE_WITH_REQUESTED_ID_NOT_FOUND);
                 } else {
                     try {
-                        accessControlService.checkPermission(currentUser, Resource.EDGE, operation, entityId, edge);
+                        accessControlService.checkPermission(currentUser, PerResource.EDGE, operation, entityId, edge);
                     } catch (EchoiotException e) {
                         return ValidationResult.accessDenied(e.getMessage());
                     }

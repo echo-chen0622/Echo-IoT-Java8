@@ -7,14 +7,13 @@ import org.echoiot.server.common.data.TbProperty;
 import org.echoiot.server.common.transport.config.ssl.SslCredentials;
 import org.echoiot.server.common.transport.config.ssl.SslCredentialsConfig;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 @Slf4j

@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input, OnDestroy, OnInit } from '@angular/core';
+import {Component, forwardRef, Input, OnDestroy, OnInit} from '@angular/core';
 import {
   ControlValueAccessor,
   FormBuilder,
@@ -9,8 +9,8 @@ import {
   Validator,
   Validators
 } from '@angular/forms';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import {Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 import {
   FullTimeUnit,
   HOUR,
@@ -20,7 +20,7 @@ import {
   TimeUnitMilli,
   timeUnitTranslationMap
 } from '@shared/models/time/time.models';
-import { isDefinedAndNotNull, isNumber } from '@core/utils';
+import {isDefinedAndNotNull, isNumber} from '@core/utils';
 
 interface FormGroupModel {
   time: number;

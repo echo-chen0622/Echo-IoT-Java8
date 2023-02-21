@@ -1,23 +1,23 @@
 import {Component, forwardRef, Input, OnInit} from '@angular/core';
 import {
-    AbstractControl,
-    ControlValueAccessor,
-    FormArray,
-    FormBuilder,
-    FormControl,
-    FormGroup,
-    NG_VALIDATORS,
-    NG_VALUE_ACCESSOR,
-    ValidationErrors,
-    Validator,
-    Validators
+  AbstractControl,
+  ControlValueAccessor,
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR,
+  ValidationErrors,
+  Validator,
+  Validators
 } from '@angular/forms';
 import {Observable, Subscription} from 'rxjs';
 import {
-    EntityKeyType,
-    entityKeyTypeTranslationMap,
-    KeyFilterInfo,
-    keyFilterInfosToKeyFilters
+  EntityKeyType,
+  entityKeyTypeTranslationMap,
+  KeyFilterInfo,
+  keyFilterInfosToKeyFilters
 } from '@shared/models/query/query.models';
 import {MatDialog} from '@angular/material/dialog';
 import {deepClone} from '@core/utils';

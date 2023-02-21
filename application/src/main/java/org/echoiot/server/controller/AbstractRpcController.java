@@ -25,13 +25,13 @@ import org.echoiot.server.service.security.model.SecurityUser;
 import org.echoiot.server.service.security.permission.Operation;
 import org.echoiot.server.service.telemetry.exception.ToErrorResponseEntity;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.async.DeferredResult;
 
 import javax.annotation.Nullable;
+import javax.annotation.Resource;
 import java.util.Optional;
 import java.util.UUID;
 

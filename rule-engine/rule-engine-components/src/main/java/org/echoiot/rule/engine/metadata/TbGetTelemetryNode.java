@@ -9,11 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.echoiot.common.util.DonAsynchron;
 import org.echoiot.common.util.JacksonUtil;
-import org.echoiot.rule.engine.api.RuleNode;
-import org.echoiot.rule.engine.api.TbContext;
-import org.echoiot.rule.engine.api.TbNode;
-import org.echoiot.rule.engine.api.TbNodeConfiguration;
-import org.echoiot.rule.engine.api.TbNodeException;
+import org.echoiot.rule.engine.api.*;
 import org.echoiot.rule.engine.api.util.TbNodeUtils;
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.kv.Aggregation;
@@ -30,9 +26,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import static org.echoiot.rule.engine.metadata.TbGetTelemetryNodeConfiguration.FETCH_MODE_ALL;
-import static org.echoiot.rule.engine.metadata.TbGetTelemetryNodeConfiguration.FETCH_MODE_FIRST;
-import static org.echoiot.rule.engine.metadata.TbGetTelemetryNodeConfiguration.MAX_FETCH_SIZE;
+import static org.echoiot.rule.engine.metadata.TbGetTelemetryNodeConfiguration.*;
 
 /**
  * Created by mshvayka on 04.09.18.

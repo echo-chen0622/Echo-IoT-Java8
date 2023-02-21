@@ -1,10 +1,10 @@
-import { PageComponent } from '@shared/components/page.component';
-import { Component, Input, NgZone, OnInit } from '@angular/core';
-import { WidgetContext } from '@home/models/widget-component.models';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { Router } from '@angular/router';
-import { UtilsService } from '@core/services/utils.service';
+import {PageComponent} from '@shared/components/page.component';
+import {Component, Input, NgZone, OnInit} from '@angular/core';
+import {WidgetContext} from '@home/models/widget-component.models';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {Router} from '@angular/router';
+import {UtilsService} from '@core/services/utils.service';
 
 interface NavigationCardWidgetSettings {
   name: string;

@@ -1,21 +1,21 @@
-import { Injectable, NgModule } from '@angular/core';
-import { ActivatedRouteSnapshot, Resolve, RouterModule, Routes } from '@angular/router';
+import {Injectable, NgModule} from '@angular/core';
+import {ActivatedRouteSnapshot, Resolve, RouterModule, Routes} from '@angular/router';
 
-import { EntitiesTableComponent } from '../../components/entity/entities-table.component';
-import { Authority } from '@shared/models/authority.enum';
-import { WidgetsBundlesTableConfigResolver } from '@modules/home/pages/widget/widgets-bundles-table-config.resolver';
-import { WidgetLibraryComponent } from '@home/pages/widget/widget-library.component';
-import { BreadCrumbConfig, BreadCrumbLabelFunction } from '@shared/components/breadcrumb';
-import { Observable } from 'rxjs';
-import { WidgetsBundle } from '@shared/models/widgets-bundle.model';
-import { WidgetService } from '@core/http/widget.service';
-import { WidgetEditorComponent } from '@home/pages/widget/widget-editor.component';
-import { map } from 'rxjs/operators';
-import { detailsToWidgetInfo, toWidgetInfo, WidgetInfo } from '@home/models/widget-component.models';
-import { widgetType, WidgetType, WidgetTypeDetails } from '@app/shared/models/widget.models';
-import { ConfirmOnExitGuard } from '@core/guards/confirm-on-exit.guard';
-import { WidgetsData } from '@home/models/dashboard-component.models';
-import { NULL_UUID } from '@shared/models/id/has-uuid';
+import {EntitiesTableComponent} from '../../components/entity/entities-table.component';
+import {Authority} from '@shared/models/authority.enum';
+import {WidgetsBundlesTableConfigResolver} from '@modules/home/pages/widget/widgets-bundles-table-config.resolver';
+import {WidgetLibraryComponent} from '@home/pages/widget/widget-library.component';
+import {BreadCrumbConfig, BreadCrumbLabelFunction} from '@shared/components/breadcrumb';
+import {Observable} from 'rxjs';
+import {WidgetsBundle} from '@shared/models/widgets-bundle.model';
+import {WidgetService} from '@core/http/widget.service';
+import {WidgetEditorComponent} from '@home/pages/widget/widget-editor.component';
+import {map} from 'rxjs/operators';
+import {detailsToWidgetInfo, WidgetInfo} from '@home/models/widget-component.models';
+import {widgetType, WidgetTypeDetails} from '@app/shared/models/widget.models';
+import {ConfirmOnExitGuard} from '@core/guards/confirm-on-exit.guard';
+import {WidgetsData} from '@home/models/dashboard-component.models';
+import {NULL_UUID} from '@shared/models/id/has-uuid';
 
 export interface WidgetEditorData {
   widgetTypeDetails: WidgetTypeDetails;

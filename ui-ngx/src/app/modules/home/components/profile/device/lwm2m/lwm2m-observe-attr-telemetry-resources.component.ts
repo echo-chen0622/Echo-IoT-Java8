@@ -1,15 +1,15 @@
 import {Component, forwardRef, Input, OnDestroy} from '@angular/core';
 import {
-    AbstractControl,
-    ControlValueAccessor,
-    FormArray,
-    FormBuilder,
-    FormGroup,
-    NG_VALIDATORS,
-    NG_VALUE_ACCESSOR,
-    ValidationErrors,
-    Validator,
-    Validators
+  AbstractControl,
+  ControlValueAccessor,
+  FormArray,
+  FormBuilder,
+  FormGroup,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR,
+  ValidationErrors,
+  Validator,
+  Validators
 } from '@angular/forms';
 import {ResourceLwM2M} from '@home/components/profile/device/lwm2m/lwm2m-profile-config.models';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';

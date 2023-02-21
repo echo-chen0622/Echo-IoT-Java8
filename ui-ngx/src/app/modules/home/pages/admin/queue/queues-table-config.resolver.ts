@@ -1,26 +1,26 @@
-import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Resolve, Router } from '@angular/router';
-import { EntityTableColumn, EntityTableConfig } from '@home/models/entity/entities-table-config.models';
+import {Injectable} from '@angular/core';
+import {ActivatedRouteSnapshot, Resolve, Router} from '@angular/router';
+import {EntityTableColumn, EntityTableConfig} from '@home/models/entity/entities-table-config.models';
 import {
   QueueInfo,
   QueueProcessingStrategyTypesMap,
   QueueSubmitStrategyTypesMap,
   ServiceType
 } from '@shared/models/queue.models';
-import { select, Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { BroadcastService } from '@core/services/broadcast.service';
-import { CustomerService } from '@core/http/customer.service';
-import { DialogService } from '@core/services/dialog.service';
-import { HomeDialogsService } from '@home/dialogs/home-dialogs.service';
-import { map, mergeMap, take } from 'rxjs/operators';
-import { Observable } from 'rxjs';
-import { EntityType, entityTypeResources, entityTypeTranslations } from '@app/shared/models/entity-type.models';
-import { TranslateService } from '@ngx-translate/core';
-import { QueueComponent } from './queue.component';
-import { QueueService } from '@core/http/queue.service';
-import { selectAuthUser } from '@core/auth/auth.selectors';
-import { EntityAction } from '@home/models/entity/entity-component.models';
+import {select, Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {BroadcastService} from '@core/services/broadcast.service';
+import {CustomerService} from '@core/http/customer.service';
+import {DialogService} from '@core/services/dialog.service';
+import {HomeDialogsService} from '@home/dialogs/home-dialogs.service';
+import {map, mergeMap, take} from 'rxjs/operators';
+import {Observable} from 'rxjs';
+import {EntityType, entityTypeResources, entityTypeTranslations} from '@app/shared/models/entity-type.models';
+import {TranslateService} from '@ngx-translate/core';
+import {QueueComponent} from './queue.component';
+import {QueueService} from '@core/http/queue.service';
+import {selectAuthUser} from '@core/auth/auth.selectors';
+import {EntityAction} from '@home/models/entity/entity-component.models';
 
 @Injectable()
 export class QueuesTableConfigResolver implements Resolve<EntityTableConfig<QueueInfo>> {

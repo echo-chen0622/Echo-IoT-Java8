@@ -1,4 +1,3 @@
-
 import L from 'leaflet';
 import LeafletMap from '../leaflet-map';
 import {DEFAULT_ZOOM_LEVEL, WidgetUnitedMapSettings} from '../map-models';

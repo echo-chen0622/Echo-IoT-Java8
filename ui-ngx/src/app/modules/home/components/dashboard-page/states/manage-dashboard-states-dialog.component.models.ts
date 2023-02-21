@@ -1,9 +1,9 @@
-import { DashboardState } from '@shared/models/dashboard.models';
-import { CollectionViewer, DataSource } from '@angular/cdk/collections';
-import { BehaviorSubject, Observable, of, ReplaySubject } from 'rxjs';
-import { emptyPageData, PageData } from '@shared/models/page/page-data';
-import { PageLink } from '@shared/models/page/page-link';
-import { catchError, map, publishReplay, refCount } from 'rxjs/operators';
+import {DashboardState} from '@shared/models/dashboard.models';
+import {CollectionViewer, DataSource} from '@angular/cdk/collections';
+import {BehaviorSubject, Observable, of, ReplaySubject} from 'rxjs';
+import {emptyPageData, PageData} from '@shared/models/page/page-data';
+import {PageLink} from '@shared/models/page/page-link';
+import {catchError, map, publishReplay, refCount} from 'rxjs/operators';
 
 export interface DashboardStateInfo extends DashboardState {
   id: string;

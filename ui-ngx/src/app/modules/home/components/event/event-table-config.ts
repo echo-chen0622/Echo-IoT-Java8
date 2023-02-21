@@ -1,9 +1,9 @@
 import {
-    CellActionDescriptorType,
-    DateEntityTableColumn,
-    EntityActionTableColumn,
-    EntityTableColumn,
-    EntityTableConfig
+  CellActionDescriptorType,
+  DateEntityTableColumn,
+  EntityActionTableColumn,
+  EntityTableColumn,
+  EntityTableConfig
 } from '@home/models/entity/entities-table-config.models';
 import {DebugEventType, Event, EventType, FilterEventBody} from '@shared/models/event.models';
 import {TimePageLink} from '@shared/models/page/page-link';
@@ -20,18 +20,18 @@ import {Direction} from '@shared/models/page/sort-order';
 import {DialogService} from '@core/services/dialog.service';
 import {ContentType} from '@shared/models/constants';
 import {
-    EventContentDialogComponent,
-    EventContentDialogData
+  EventContentDialogComponent,
+  EventContentDialogData
 } from '@home/components/event/event-content-dialog.component';
 import {isEqual, sortObjectKeys} from '@core/utils';
 import {ConnectedPosition, Overlay, OverlayConfig, OverlayRef} from '@angular/cdk/overlay';
 import {ChangeDetectorRef, Injector, StaticProvider, ViewContainerRef} from '@angular/core';
 import {ComponentPortal} from '@angular/cdk/portal';
 import {
-    EVENT_FILTER_PANEL_DATA,
-    EventFilterPanelComponent,
-    EventFilterPanelData,
-    FilterEntityColumn
+  EVENT_FILTER_PANEL_DATA,
+  EventFilterPanelComponent,
+  EventFilterPanelData,
+  FilterEntityColumn
 } from '@home/components/event/event-filter-panel.component';
 
 export class EventTableConfig extends EntityTableConfig<Event, TimePageLink> {

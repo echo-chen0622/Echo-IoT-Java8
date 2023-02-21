@@ -1,23 +1,14 @@
 package org.echoiot.server.dao.device;
 
 import com.google.common.util.concurrent.ListenableFuture;
+import org.echoiot.server.common.data.*;
 import org.echoiot.server.common.data.device.DeviceSearchQuery;
+import org.echoiot.server.common.data.id.*;
 import org.echoiot.server.common.data.ota.OtaPackageType;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.common.data.security.DeviceCredentials;
 import org.echoiot.server.dao.device.provision.ProvisionRequest;
-import org.echoiot.server.common.data.Device;
-import org.echoiot.server.common.data.DeviceInfo;
-import org.echoiot.server.common.data.DeviceProfile;
-import org.echoiot.server.common.data.DeviceTransportType;
-import org.echoiot.server.common.data.EntitySubtype;
-import org.echoiot.server.common.data.DeviceIdInfo;
-import org.echoiot.server.common.data.id.CustomerId;
-import org.echoiot.server.common.data.id.DeviceId;
-import org.echoiot.server.common.data.id.DeviceProfileId;
-import org.echoiot.server.common.data.id.EdgeId;
-import org.echoiot.server.common.data.id.TenantId;
 
 import java.util.List;
 import java.util.UUID;

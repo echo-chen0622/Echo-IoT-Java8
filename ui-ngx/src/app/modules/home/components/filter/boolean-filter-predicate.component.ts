@@ -1,20 +1,20 @@
 import {Component, forwardRef, Input, OnInit} from '@angular/core';
 import {
-    ControlValueAccessor,
-    FormBuilder,
-    FormGroup,
-    NG_VALIDATORS,
-    NG_VALUE_ACCESSOR,
-    ValidationErrors,
-    Validator,
-    Validators
+  ControlValueAccessor,
+  FormBuilder,
+  FormGroup,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR,
+  ValidationErrors,
+  Validator,
+  Validators
 } from '@angular/forms';
 import {
-    BooleanFilterPredicate,
-    BooleanOperation,
-    booleanOperationTranslationMap,
-    EntityKeyValueType,
-    FilterPredicateType
+  BooleanFilterPredicate,
+  BooleanOperation,
+  booleanOperationTranslationMap,
+  EntityKeyValueType,
+  FilterPredicateType
 } from '@shared/models/query/query.models';
 
 @Component({

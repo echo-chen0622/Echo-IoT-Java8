@@ -19,10 +19,10 @@ import org.echoiot.server.dao.widget.WidgetTypeService;
 import org.echoiot.server.dao.widget.WidgetsBundleService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -33,7 +33,7 @@ import java.util.Optional;
 import static org.echoiot.server.service.install.DatabaseHelper.objectMapper;
 
 /**
- * Created by Echo on 18.04.18.
+ * 安装脚本
  */
 @Component
 @Slf4j

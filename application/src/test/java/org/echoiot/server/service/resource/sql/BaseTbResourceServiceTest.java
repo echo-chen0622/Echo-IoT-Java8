@@ -14,8 +14,8 @@ import org.echoiot.server.service.resource.TbResourceService;
 import org.jetbrains.annotations.NotNull;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
-import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collections;

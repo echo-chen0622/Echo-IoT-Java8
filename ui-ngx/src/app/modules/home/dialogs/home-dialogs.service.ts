@@ -3,8 +3,8 @@ import {MatDialog} from '@angular/material/dialog';
 import {EntityType} from '@shared/models/entity-type.models';
 import {Observable} from 'rxjs';
 import {
-    ImportDialogCsvComponent,
-    ImportDialogCsvData
+  ImportDialogCsvComponent,
+  ImportDialogCsvData
 } from '@home/components/import-export/import-dialog-csv.component';
 
 @Injectable()

@@ -4,10 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.tenant.profile.DefaultTenantProfileConfiguration;
+import org.echoiot.server.common.msg.tools.TbRateLimits;
 import org.echoiot.server.dao.tenant.TbTenantProfileCache;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
-import org.echoiot.server.common.msg.tools.TbRateLimits;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

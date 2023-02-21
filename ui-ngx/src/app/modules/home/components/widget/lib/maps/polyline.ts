@@ -1,10 +1,10 @@
 // @ts-ignore
-import L, { PolylineDecorator, PolylineDecoratorOptions, Symbol } from 'leaflet';
+import L, {PolylineDecorator, PolylineDecoratorOptions, Symbol} from 'leaflet';
 import 'leaflet-polylinedecorator';
 
-import { WidgetPolylineSettings } from './map-models';
-import { functionValueCalculator } from '@home/components/widget/lib/maps/common-maps-utils';
-import { FormattedData } from '@shared/models/widget.models';
+import {WidgetPolylineSettings} from './map-models';
+import {functionValueCalculator} from '@home/components/widget/lib/maps/common-maps-utils';
+import {FormattedData} from '@shared/models/widget.models';
 
 export class Polyline {
 

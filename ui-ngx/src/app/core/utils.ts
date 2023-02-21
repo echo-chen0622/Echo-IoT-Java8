@@ -1,13 +1,13 @@
 import _ from 'lodash';
-import { Observable, Subject } from 'rxjs';
-import { finalize, share } from 'rxjs/operators';
-import { Datasource, DatasourceData, FormattedData, ReplaceInfo } from '@app/shared/models/widget.models';
-import { EntityId } from '@shared/models/id/entity-id';
-import { NULL_UUID } from '@shared/models/id/has-uuid';
-import { EntityType, baseDetailsPageByEntityType } from '@shared/models/entity-type.models';
-import { HttpErrorResponse } from '@angular/common/http';
-import { TranslateService } from '@ngx-translate/core';
-import { serverErrorCodesTranslations } from '@shared/models/constants';
+import {Observable, Subject} from 'rxjs';
+import {finalize, share} from 'rxjs/operators';
+import {Datasource, DatasourceData, FormattedData, ReplaceInfo} from '@app/shared/models/widget.models';
+import {EntityId} from '@shared/models/id/entity-id';
+import {NULL_UUID} from '@shared/models/id/has-uuid';
+import {baseDetailsPageByEntityType, EntityType} from '@shared/models/entity-type.models';
+import {HttpErrorResponse} from '@angular/common/http';
+import {TranslateService} from '@ngx-translate/core';
+import {serverErrorCodesTranslations} from '@shared/models/constants';
 
 const varsRegex = /\${([^}]*)}/g;
 

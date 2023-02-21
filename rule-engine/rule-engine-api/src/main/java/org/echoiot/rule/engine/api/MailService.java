@@ -1,13 +1,13 @@
 package org.echoiot.rule.engine.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.echoiot.server.common.data.ApiFeature;
 import org.echoiot.server.common.data.ApiUsageStateMailMessage;
 import org.echoiot.server.common.data.ApiUsageStateValue;
 import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.id.TenantId;
+import org.springframework.mail.javamail.JavaMailSender;
 
 public interface MailService {
 

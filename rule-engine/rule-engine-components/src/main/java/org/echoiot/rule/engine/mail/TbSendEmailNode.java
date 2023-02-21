@@ -2,18 +2,13 @@ package org.echoiot.rule.engine.mail;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.echoiot.server.common.data.StringUtils;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.echoiot.rule.engine.api.RuleNode;
-import org.echoiot.rule.engine.api.TbContext;
-import org.echoiot.rule.engine.api.TbEmail;
-import org.echoiot.rule.engine.api.TbNode;
-import org.echoiot.rule.engine.api.TbNodeConfiguration;
-import org.echoiot.rule.engine.api.TbNodeException;
+import org.echoiot.rule.engine.api.*;
 import org.echoiot.rule.engine.api.util.TbNodeUtils;
+import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.msg.TbMsg;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import java.io.IOException;
 import java.util.Properties;

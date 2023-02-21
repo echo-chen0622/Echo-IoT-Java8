@@ -1,13 +1,13 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
-import { WidgetSettings, WidgetSettingsComponent } from '@shared/models/widget.models';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { MatChipInputEvent, MatChipList } from '@angular/material/chips';
-import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { COMMA, ENTER, SEMICOLON } from '@angular/cdk/keycodes';
-import { Observable, of, Subject } from 'rxjs';
-import { map, mergeMap, share, startWith } from 'rxjs/operators';
+import {Component, ElementRef, ViewChild} from '@angular/core';
+import {WidgetSettings, WidgetSettingsComponent} from '@shared/models/widget.models';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {MatChipInputEvent, MatChipList} from '@angular/material/chips';
+import {MatAutocomplete, MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
+import {COMMA, ENTER, SEMICOLON} from '@angular/cdk/keycodes';
+import {Observable, of, Subject} from 'rxjs';
+import {map, mergeMap, share, startWith} from 'rxjs/operators';
 
 @Component({
   selector: 'tb-navigation-cards-widget-settings',

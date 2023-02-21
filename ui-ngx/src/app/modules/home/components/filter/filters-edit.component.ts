@@ -1,12 +1,12 @@
 import {
-    Component,
-    Injector,
-    Input,
-    OnDestroy,
-    OnInit,
-    StaticProvider,
-    ViewChild,
-    ViewContainerRef
+  Component,
+  Injector,
+  Input,
+  OnDestroy,
+  OnInit,
+  StaticProvider,
+  ViewChild,
+  ViewContainerRef
 } from '@angular/core';
 import {TooltipPosition} from '@angular/material/tooltip';
 import {IAliasController} from '@core/api/widget-api.models';
@@ -17,9 +17,9 @@ import {BreakpointObserver} from '@angular/cdk/layout';
 import {deepClone} from '@core/utils';
 import {Filter, FilterInfo, isFilterEditable} from '@shared/models/query/query.models';
 import {
-    FILTER_EDIT_PANEL_DATA,
-    FiltersEditPanelComponent,
-    FiltersEditPanelData
+  FILTER_EDIT_PANEL_DATA,
+  FiltersEditPanelComponent,
+  FiltersEditPanelData
 } from '@home/components/filter/filters-edit-panel.component';
 import {ComponentPortal} from '@angular/cdk/portal';
 import {UserFilterDialogComponent, UserFilterDialogData} from '@home/components/filter/user-filter-dialog.component';

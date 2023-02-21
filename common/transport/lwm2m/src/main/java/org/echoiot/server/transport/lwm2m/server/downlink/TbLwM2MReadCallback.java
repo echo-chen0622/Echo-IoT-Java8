@@ -1,14 +1,14 @@
 package org.echoiot.server.transport.lwm2m.server.downlink;
 
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.server.transport.lwm2m.server.client.LwM2mClient;
+import org.echoiot.server.transport.lwm2m.server.log.LwM2MTelemetryLogService;
+import org.echoiot.server.transport.lwm2m.server.uplink.LwM2mUplinkMsgHandler;
 import org.eclipse.leshan.core.model.ResourceModel;
 import org.eclipse.leshan.core.node.LwM2mSingleResource;
 import org.eclipse.leshan.core.request.ReadRequest;
 import org.eclipse.leshan.core.response.ReadResponse;
 import org.eclipse.leshan.core.util.Hex;
-import org.echoiot.server.transport.lwm2m.server.client.LwM2mClient;
-import org.echoiot.server.transport.lwm2m.server.log.LwM2MTelemetryLogService;
-import org.echoiot.server.transport.lwm2m.server.uplink.LwM2mUplinkMsgHandler;
 import org.jetbrains.annotations.NotNull;
 
 @Slf4j

@@ -1,10 +1,6 @@
 package org.echoiot.edge.rpc;
 
-import org.echoiot.server.gen.edge.v1.DownlinkMsg;
-import org.echoiot.server.gen.edge.v1.DownlinkResponseMsg;
-import org.echoiot.server.gen.edge.v1.EdgeConfiguration;
-import org.echoiot.server.gen.edge.v1.UplinkMsg;
-import org.echoiot.server.gen.edge.v1.UplinkResponseMsg;
+import org.echoiot.server.gen.edge.v1.*;
 
 import java.util.function.Consumer;
 

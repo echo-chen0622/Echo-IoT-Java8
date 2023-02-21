@@ -6,6 +6,7 @@ import org.echoiot.server.dao.oauth2.OAuth2Configuration;
 import org.echoiot.server.dao.oauth2.OAuth2Service;
 import org.echoiot.server.service.security.auth.oauth2.TbOAuth2ParameterNames;
 import org.echoiot.server.service.security.model.token.OAuth2AppTokenFactory;
+import org.echoiot.server.utils.MiscUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +28,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.echoiot.server.utils.MiscUtils;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;

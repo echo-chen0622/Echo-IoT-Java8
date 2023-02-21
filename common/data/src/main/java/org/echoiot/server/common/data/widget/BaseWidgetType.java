@@ -2,12 +2,12 @@ package org.echoiot.server.common.data.widget;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import org.echoiot.server.common.data.validation.Length;
-import org.echoiot.server.common.data.validation.NoXss;
 import org.echoiot.server.common.data.BaseData;
 import org.echoiot.server.common.data.HasTenantId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.id.WidgetTypeId;
+import org.echoiot.server.common.data.validation.Length;
+import org.echoiot.server.common.data.validation.NoXss;
 import org.jetbrains.annotations.NotNull;
 
 @Data

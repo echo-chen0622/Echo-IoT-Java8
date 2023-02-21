@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.common.data.EdgeUtils;
 import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.edge.EdgeEvent;
@@ -11,32 +12,18 @@ import org.echoiot.server.common.data.edge.EdgeEventActionType;
 import org.echoiot.server.common.data.edge.EdgeEventType;
 import org.echoiot.server.common.data.exception.EchoiotErrorCode;
 import org.echoiot.server.common.data.exception.EchoiotException;
+import org.echoiot.server.common.data.id.*;
 import org.echoiot.server.common.data.relation.EntityRelation;
 import org.echoiot.server.common.data.relation.RelationTypeGroup;
-import org.echoiot.server.queue.util.TbCoreComponent;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.stereotype.Component;
-import org.echoiot.common.util.JacksonUtil;
-import org.echoiot.server.common.data.id.AssetId;
-import org.echoiot.server.common.data.id.CustomerId;
-import org.echoiot.server.common.data.id.DashboardId;
-import org.echoiot.server.common.data.id.DeviceId;
-import org.echoiot.server.common.data.id.EdgeId;
-import org.echoiot.server.common.data.id.EntityId;
-import org.echoiot.server.common.data.id.EntityIdFactory;
-import org.echoiot.server.common.data.id.EntityViewId;
-import org.echoiot.server.common.data.id.TenantId;
-import org.echoiot.server.common.data.id.UserId;
 import org.echoiot.server.gen.edge.v1.DownlinkMsg;
 import org.echoiot.server.gen.edge.v1.RelationUpdateMsg;
 import org.echoiot.server.gen.edge.v1.UpdateMsgType;
 import org.echoiot.server.gen.transport.TransportProtos;
+import org.echoiot.server.queue.util.TbCoreComponent;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Component
 @Slf4j

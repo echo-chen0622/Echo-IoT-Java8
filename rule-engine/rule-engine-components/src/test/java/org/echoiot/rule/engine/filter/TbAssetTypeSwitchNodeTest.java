@@ -1,16 +1,7 @@
 package org.echoiot.rule.engine.filter;
 
-import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 import org.echoiot.common.util.JacksonUtil;
-import org.echoiot.rule.engine.api.EmptyNodeConfiguration;
-import org.echoiot.rule.engine.api.RuleEngineAssetProfileCache;
-import org.echoiot.rule.engine.api.TbContext;
-import org.echoiot.rule.engine.api.TbNodeConfiguration;
-import org.echoiot.rule.engine.api.TbNodeException;
+import org.echoiot.rule.engine.api.*;
 import org.echoiot.server.common.data.asset.AssetProfile;
 import org.echoiot.server.common.data.id.AssetId;
 import org.echoiot.server.common.data.id.CustomerId;
@@ -19,6 +10,11 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.TbMsgMetaData;
 import org.echoiot.server.common.msg.queue.TbMsgCallback;
+import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 
 import java.util.UUID;
 
@@ -26,12 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class TbAssetTypeSwitchNodeTest {
 

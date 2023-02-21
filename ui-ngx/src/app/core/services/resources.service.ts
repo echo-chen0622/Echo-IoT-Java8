@@ -7,10 +7,10 @@ import {
   ModuleWithComponentFactories,
   Type
 } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
-import { forkJoin, Observable, ReplaySubject, throwError } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
-import { IModulesMap } from '@modules/common/modules-map.models';
+import {DOCUMENT} from '@angular/common';
+import {forkJoin, Observable, ReplaySubject, throwError} from 'rxjs';
+import {HttpClient} from '@angular/common/http';
+import {IModulesMap} from '@modules/common/modules-map.models';
 
 declare const System;
 

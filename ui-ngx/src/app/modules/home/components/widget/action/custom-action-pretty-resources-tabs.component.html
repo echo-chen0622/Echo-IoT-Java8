@@ -4,18 +4,18 @@
       <div class="mat-padding">
         <div fxFlex fxLayout="row" style="max-height: 40px;"
              fxLayoutAlign="start center"
-             *ngFor="let resource of action.customResources; let i = index" >
-          <mat-form-field fxFlex class="mat-block resource-field" floatLabel="never"
+             *ngFor="let perResource of action.customResources; let i = index" >
+          <mat-form-field fxFlex class="mat-block perResource-field" floatLabel="never"
                           style="margin: 10px 0 0; max-height: 40px;">
-            <input required matInput [(ngModel)]="resource.url"
+            <input required matInput [(ngModel)]="perResource.url"
                    (ngModelChange)="notifyActionUpdated()"
-                   placeholder="{{ 'widget.resource-url' | translate }}"/>
+                   placeholder="{{ 'widget.perResource-url' | translate }}"/>
           </mat-form-field>
           <button mat-icon-button color="primary"
                   [disabled]="isLoading$ | async"
                   type="button"
                   (click)="removeResource(i)"
-                  matTooltip="{{'widget.remove-resource' | translate}}"
+                  matTooltip="{{'widget.remove-perResource' | translate}}"
                   matTooltipPosition="above">
             <mat-icon>close</mat-icon>
           </button>
@@ -25,7 +25,7 @@
                   [disabled]="isLoading$ | async"
                   type="button"
                   (click)="addResource()"
-                  matTooltip="{{'widget.add-resource' | translate}}"
+                  matTooltip="{{'widget.add-perResource' | translate}}"
                   matTooltipPosition="above">
             <span translate>action.add</span>
           </button>

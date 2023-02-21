@@ -4,31 +4,23 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.echoiot.server.dao.util.mapping.JsonBinaryType;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
 import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.common.data.DeviceProfile;
 import org.echoiot.server.common.data.DeviceProfileProvisionType;
 import org.echoiot.server.common.data.DeviceProfileType;
 import org.echoiot.server.common.data.DeviceTransportType;
 import org.echoiot.server.common.data.device.profile.DeviceProfileData;
-import org.echoiot.server.common.data.id.DashboardId;
-import org.echoiot.server.common.data.id.DeviceProfileId;
-import org.echoiot.server.common.data.id.OtaPackageId;
-import org.echoiot.server.common.data.id.RuleChainId;
-import org.echoiot.server.common.data.id.TenantId;
+import org.echoiot.server.common.data.id.*;
 import org.echoiot.server.dao.model.BaseSqlEntity;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.model.SearchTextEntity;
+import org.echoiot.server.dao.util.mapping.JsonBinaryType;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.UUID;
 
 @Data

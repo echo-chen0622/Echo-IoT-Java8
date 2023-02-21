@@ -1,6 +1,7 @@
 package org.echoiot.server.transport.lwm2m.server;
 
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.server.cache.ota.OtaPackageDataCache;
 import org.echoiot.server.transport.lwm2m.server.ota.DefaultLwM2MOtaUpdateService;
 import org.eclipse.californium.core.coap.CoAP;
 import org.eclipse.californium.core.coap.Request;
@@ -10,7 +11,6 @@ import org.eclipse.californium.core.observe.ObserveRelation;
 import org.eclipse.californium.core.server.resources.CoapExchange;
 import org.eclipse.californium.core.server.resources.Resource;
 import org.eclipse.californium.core.server.resources.ResourceObserver;
-import org.echoiot.server.cache.ota.OtaPackageDataCache;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;

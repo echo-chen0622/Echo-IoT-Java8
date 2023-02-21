@@ -5,12 +5,8 @@ import org.echoiot.server.common.data.edge.Edge;
 import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.RuleChainId;
 import org.echoiot.server.common.data.id.TenantId;
+import org.echoiot.server.common.data.rule.*;
 import org.echoiot.server.service.entitiy.SimpleTbEntityService;
-import org.echoiot.server.common.data.rule.DefaultRuleChainCreateRequest;
-import org.echoiot.server.common.data.rule.RuleChain;
-import org.echoiot.server.common.data.rule.RuleChainMetaData;
-import org.echoiot.server.common.data.rule.RuleChainOutputLabelsUsage;
-import org.echoiot.server.common.data.rule.RuleChainUpdateResult;
 
 import java.util.List;
 import java.util.Set;

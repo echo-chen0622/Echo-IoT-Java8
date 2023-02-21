@@ -1,8 +1,8 @@
 import indigo from '@material-ui/core/colors/indigo';
 import deeepOrange from '@material-ui/core/colors/deepOrange';
-import { ThemeOptions } from '@material-ui/core/styles';
-import { PaletteOptions } from '@material-ui/core/styles/createPalette';
-import { mergeDeep } from '@core/utils';
+import {ThemeOptions} from '@material-ui/core/styles';
+import {PaletteOptions} from '@material-ui/core/styles/createPalette';
+import {mergeDeep} from '@core/utils';
 
 const PRIMARY_COLOR = '#305680';
 const SECONDARY_COLOR = '#527dad';

@@ -5,36 +5,36 @@ import org.echoiot.server.common.data.User;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.UserId;
 import org.echoiot.server.common.data.security.Authority;
+import org.echoiot.server.service.security.model.SecurityUser;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
-import org.echoiot.server.service.security.model.SecurityUser;
 
 @Component(value="tenantAdminPermissions")
 public class TenantAdminPermissions extends AbstractPermissions {
 
     public TenantAdminPermissions() {
         super();
-        put(Resource.ADMIN_SETTINGS, PermissionChecker.allowAllPermissionChecker);
-        put(Resource.ALARM, tenantEntityPermissionChecker);
-        put(Resource.ASSET, tenantEntityPermissionChecker);
-        put(Resource.DEVICE, tenantEntityPermissionChecker);
-        put(Resource.CUSTOMER, tenantEntityPermissionChecker);
-        put(Resource.DASHBOARD, tenantEntityPermissionChecker);
-        put(Resource.ENTITY_VIEW, tenantEntityPermissionChecker);
-        put(Resource.TENANT, tenantPermissionChecker);
-        put(Resource.RULE_CHAIN, tenantEntityPermissionChecker);
-        put(Resource.USER, userPermissionChecker);
-        put(Resource.WIDGETS_BUNDLE, widgetsPermissionChecker);
-        put(Resource.WIDGET_TYPE, widgetsPermissionChecker);
-        put(Resource.DEVICE_PROFILE, tenantEntityPermissionChecker);
-        put(Resource.ASSET_PROFILE, tenantEntityPermissionChecker);
-        put(Resource.API_USAGE_STATE, tenantEntityPermissionChecker);
-        put(Resource.TB_RESOURCE, tbResourcePermissionChecker);
-        put(Resource.OTA_PACKAGE, tenantEntityPermissionChecker);
-        put(Resource.EDGE, tenantEntityPermissionChecker);
-        put(Resource.RPC, tenantEntityPermissionChecker);
-        put(Resource.QUEUE, queuePermissionChecker);
-        put(Resource.VERSION_CONTROL, PermissionChecker.allowAllPermissionChecker);
+        put(PerResource.ADMIN_SETTINGS, PermissionChecker.allowAllPermissionChecker);
+        put(PerResource.ALARM, tenantEntityPermissionChecker);
+        put(PerResource.ASSET, tenantEntityPermissionChecker);
+        put(PerResource.DEVICE, tenantEntityPermissionChecker);
+        put(PerResource.CUSTOMER, tenantEntityPermissionChecker);
+        put(PerResource.DASHBOARD, tenantEntityPermissionChecker);
+        put(PerResource.ENTITY_VIEW, tenantEntityPermissionChecker);
+        put(PerResource.TENANT, tenantPermissionChecker);
+        put(PerResource.RULE_CHAIN, tenantEntityPermissionChecker);
+        put(PerResource.USER, userPermissionChecker);
+        put(PerResource.WIDGETS_BUNDLE, widgetsPermissionChecker);
+        put(PerResource.WIDGET_TYPE, widgetsPermissionChecker);
+        put(PerResource.DEVICE_PROFILE, tenantEntityPermissionChecker);
+        put(PerResource.ASSET_PROFILE, tenantEntityPermissionChecker);
+        put(PerResource.API_USAGE_STATE, tenantEntityPermissionChecker);
+        put(PerResource.TB_RESOURCE, tbResourcePermissionChecker);
+        put(PerResource.OTA_PACKAGE, tenantEntityPermissionChecker);
+        put(PerResource.EDGE, tenantEntityPermissionChecker);
+        put(PerResource.RPC, tenantEntityPermissionChecker);
+        put(PerResource.QUEUE, queuePermissionChecker);
+        put(PerResource.VERSION_CONTROL, PermissionChecker.allowAllPermissionChecker);
     }
 
     public static final PermissionChecker tenantEntityPermissionChecker = new PermissionChecker() {

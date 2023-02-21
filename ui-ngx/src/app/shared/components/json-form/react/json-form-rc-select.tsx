@@ -2,9 +2,9 @@ import * as React from 'react';
 import EchoiotBaseComponent from './json-form-base-component';
 import Select, {Option} from 'rc-select';
 import {
-    JsonFormFieldProps,
-    JsonFormFieldState,
-    KeyLabelItem
+  JsonFormFieldProps,
+  JsonFormFieldState,
+  KeyLabelItem
 } from '@shared/components/json-form/react/json-form.models';
 import {Mode} from 'rc-select/lib/interface';
 import {deepClone} from '@core/utils';

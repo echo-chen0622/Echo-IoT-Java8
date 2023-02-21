@@ -3,9 +3,9 @@ package org.echoiot.server.common.data.widget;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.echoiot.server.common.data.id.WidgetTypeId;
 import org.echoiot.server.common.data.validation.Length;
 import org.echoiot.server.common.data.validation.NoXss;
-import org.echoiot.server.common.data.id.WidgetTypeId;
 import org.jetbrains.annotations.NotNull;
 
 @Data

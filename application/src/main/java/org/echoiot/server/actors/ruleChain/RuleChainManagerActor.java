@@ -2,8 +2,11 @@ package org.echoiot.server.actors.ruleChain;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.server.actors.ActorSystemContext;
 import org.echoiot.server.actors.TbActorRef;
 import org.echoiot.server.actors.TbEntityActorId;
+import org.echoiot.server.actors.TbEntityTypeActorIdPredicate;
+import org.echoiot.server.actors.service.ContextAwareActor;
 import org.echoiot.server.actors.service.DefaultActorService;
 import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.id.EntityId;
@@ -14,9 +17,6 @@ import org.echoiot.server.common.data.rule.RuleChain;
 import org.echoiot.server.common.data.rule.RuleChainType;
 import org.echoiot.server.common.msg.TbActorMsg;
 import org.echoiot.server.dao.rule.RuleChainService;
-import org.echoiot.server.actors.ActorSystemContext;
-import org.echoiot.server.actors.TbEntityTypeActorIdPredicate;
-import org.echoiot.server.actors.service.ContextAwareActor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

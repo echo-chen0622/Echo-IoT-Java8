@@ -1,10 +1,10 @@
 package org.echoiot.server.service.profile;
 
+import org.echoiot.rule.engine.api.RuleEngineAssetProfileCache;
 import org.echoiot.server.common.data.asset.AssetProfile;
 import org.echoiot.server.common.data.id.AssetId;
 import org.echoiot.server.common.data.id.AssetProfileId;
 import org.echoiot.server.common.data.id.TenantId;
-import org.echoiot.rule.engine.api.RuleEngineAssetProfileCache;
 
 public interface TbAssetProfileCache extends RuleEngineAssetProfileCache {
 

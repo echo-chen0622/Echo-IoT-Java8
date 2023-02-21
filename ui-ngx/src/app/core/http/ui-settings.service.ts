@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { defaultHttpOptions, defaultHttpOptionsFromConfig, RequestConfig } from '@core/http/http-utils';
-import { Observable } from 'rxjs';
-import { publishReplay, refCount } from 'rxjs/operators';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {defaultHttpOptions} from '@core/http/http-utils';
+import {Observable} from 'rxjs';
+import {publishReplay, refCount} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'

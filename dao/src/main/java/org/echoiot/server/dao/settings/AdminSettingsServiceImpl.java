@@ -2,14 +2,15 @@ package org.echoiot.server.dao.settings;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.echoiot.server.common.data.AdminSettings;
 import org.echoiot.server.common.data.id.AdminSettingsId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.dao.service.DataValidator;
 import org.echoiot.server.dao.service.Validator;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
 
 @Service
 @Slf4j

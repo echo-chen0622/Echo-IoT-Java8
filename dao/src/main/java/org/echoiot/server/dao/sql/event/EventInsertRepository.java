@@ -1,8 +1,9 @@
 package org.echoiot.server.dao.sql.event;
 
+import org.echoiot.server.common.data.event.*;
+import org.echoiot.server.dao.util.SqlDao;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,16 +12,9 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
-import org.echoiot.server.common.data.event.ErrorEvent;
-import org.echoiot.server.common.data.event.Event;
-import org.echoiot.server.common.data.event.EventType;
-import org.echoiot.server.common.data.event.LifecycleEvent;
-import org.echoiot.server.common.data.event.RuleChainDebugEvent;
-import org.echoiot.server.common.data.event.RuleNodeDebugEvent;
-import org.echoiot.server.common.data.event.StatisticsEvent;
-import org.echoiot.server.dao.util.SqlDao;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;

@@ -11,21 +11,21 @@ import {
   ViewChildren,
   ViewEncapsulation
 } from '@angular/core';
-import { ErrorStateMatcher } from '@angular/material/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, Validators } from '@angular/forms';
-import { NEVER, Observable, of } from 'rxjs';
-import { Router } from '@angular/router';
-import { DialogComponent } from '@shared/components/dialog.component';
-import { ContentType } from '@shared/models/constants';
-import { JsonContentComponent } from '@shared/components/json-content.component';
-import { ScriptLanguage, TestScriptInputParams } from '@shared/models/rule-node.models';
-import { RuleChainService } from '@core/http/rule-chain.service';
-import { mergeMap } from 'rxjs/operators';
-import { ActionNotificationShow } from '@core/notification/notification.actions';
-import { beautifyJs } from '@shared/models/beautify.models';
+import {ErrorStateMatcher} from '@angular/material/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, Validators} from '@angular/forms';
+import {NEVER, Observable, of} from 'rxjs';
+import {Router} from '@angular/router';
+import {DialogComponent} from '@shared/components/dialog.component';
+import {ContentType} from '@shared/models/constants';
+import {JsonContentComponent} from '@shared/components/json-content.component';
+import {ScriptLanguage, TestScriptInputParams} from '@shared/models/rule-node.models';
+import {RuleChainService} from '@core/http/rule-chain.service';
+import {mergeMap} from 'rxjs/operators';
+import {ActionNotificationShow} from '@core/notification/notification.actions';
+import {beautifyJs} from '@shared/models/beautify.models';
 
 export interface NodeScriptTestDialogData {
   script: string;

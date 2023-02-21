@@ -1,7 +1,7 @@
 package org.echoiot.rule.engine.profile;
 
-import lombok.Data;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Data;
 import org.echoiot.rule.engine.api.NodeConfiguration;
 import org.jetbrains.annotations.NotNull;
 

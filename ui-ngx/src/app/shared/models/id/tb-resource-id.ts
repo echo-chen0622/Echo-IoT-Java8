@@ -1,5 +1,5 @@
-import { EntityId } from '@shared/models/id/entity-id';
-import { EntityType } from '@shared/models/entity-type.models';
+import {EntityId} from '@shared/models/id/entity-id';
+import {EntityType} from '@shared/models/entity-type.models';
 
 export class TbResourceId implements EntityId {
   entityType = EntityType.TB_RESOURCE;

@@ -1,21 +1,21 @@
 import {Component, forwardRef, Input, OnInit} from '@angular/core';
 import {
-    ControlValueAccessor,
-    FormBuilder,
-    FormControl,
-    FormGroup,
-    NG_VALIDATORS,
-    NG_VALUE_ACCESSOR,
-    Validator,
-    Validators
+  ControlValueAccessor,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR,
+  Validator,
+  Validators
 } from '@angular/forms';
 import {MatDialog} from '@angular/material/dialog';
 import {deepClone, isDefinedAndNotNull} from '@core/utils';
 import {TranslateService} from '@ngx-translate/core';
 import {AlarmCondition, AlarmConditionType} from '@shared/models/device.models';
 import {
-    AlarmRuleConditionDialogComponent,
-    AlarmRuleConditionDialogData
+  AlarmRuleConditionDialogComponent,
+  AlarmRuleConditionDialogData
 } from '@home/components/profile/alarm/alarm-rule-condition-dialog.component';
 import {TimeUnit} from '@shared/models/time/time.models';
 import {EntityId} from '@shared/models/id/entity-id';

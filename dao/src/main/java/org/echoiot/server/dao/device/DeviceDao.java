@@ -1,11 +1,7 @@
 package org.echoiot.server.dao.device;
 
 import com.google.common.util.concurrent.ListenableFuture;
-import org.echoiot.server.common.data.Device;
-import org.echoiot.server.common.data.DeviceInfo;
-import org.echoiot.server.common.data.DeviceTransportType;
-import org.echoiot.server.common.data.EntitySubtype;
-import org.echoiot.server.common.data.DeviceIdInfo;
+import org.echoiot.server.common.data.*;
 import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.ota.OtaPackageType;

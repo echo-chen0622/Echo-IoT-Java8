@@ -1,12 +1,9 @@
-import L, { LatLngExpression, LeafletMouseEvent } from 'leaflet';
-import { createTooltip, isCutPolygon } from './maps-utils';
-import {
-  functionValueCalculator,
-  parseWithTranslation
-} from './common-maps-utils';
-import { WidgetPolygonSettings } from './map-models';
-import { FormattedData } from '@shared/models/widget.models';
-import { fillDataPattern, processDataPattern, safeExecute } from '@core/utils';
+import L, {LatLngExpression, LeafletMouseEvent} from 'leaflet';
+import {createTooltip, isCutPolygon} from './maps-utils';
+import {functionValueCalculator, parseWithTranslation} from './common-maps-utils';
+import {WidgetPolygonSettings} from './map-models';
+import {FormattedData} from '@shared/models/widget.models';
+import {fillDataPattern, processDataPattern, safeExecute} from '@core/utils';
 import LeafletMap from '@home/components/widget/lib/maps/leaflet-map';
 
 export class Polygon {

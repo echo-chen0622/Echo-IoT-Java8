@@ -4,14 +4,14 @@ import {AppState} from '@core/core.state';
 import {EntityComponent} from '../../components/entity/entity.component';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {
-    createDeviceConfiguration,
-    createDeviceTransportConfiguration,
-    DeviceCredentials,
-    DeviceData,
-    DeviceInfo,
-    DeviceProfileInfo,
-    DeviceProfileType,
-    DeviceTransportType
+  createDeviceConfiguration,
+  createDeviceTransportConfiguration,
+  DeviceCredentials,
+  DeviceData,
+  DeviceInfo,
+  DeviceProfileInfo,
+  DeviceProfileType,
+  DeviceTransportType
 } from '@shared/models/device.models';
 import {EntityType} from '@shared/models/entity-type.models';
 import {NULL_UUID} from '@shared/models/id/has-uuid';

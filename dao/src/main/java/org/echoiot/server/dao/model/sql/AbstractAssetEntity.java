@@ -3,8 +3,6 @@ package org.echoiot.server.dao.model.sql;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
 import org.echoiot.server.common.data.asset.Asset;
 import org.echoiot.server.common.data.id.AssetId;
 import org.echoiot.server.common.data.id.AssetProfileId;
@@ -14,19 +12,15 @@ import org.echoiot.server.dao.model.BaseSqlEntity;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.model.SearchTextEntity;
 import org.echoiot.server.dao.util.mapping.JsonStringType;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import java.util.UUID;
 
-import static org.echoiot.server.dao.model.ModelConstants.ASSET_CUSTOMER_ID_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.ASSET_LABEL_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.ASSET_NAME_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.ASSET_TENANT_ID_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.ASSET_TYPE_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.EXTERNAL_ID_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.SEARCH_TEXT_PROPERTY;
+import static org.echoiot.server.dao.model.ModelConstants.*;
 
 @Data
 @EqualsAndHashCode(callSuper = true)

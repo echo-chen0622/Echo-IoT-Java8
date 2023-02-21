@@ -1,13 +1,13 @@
 package org.echoiot.server.service.stats;
 
+import org.echoiot.server.actors.JsInvokeStats;
 import org.echoiot.server.common.stats.StatsCounter;
 import org.echoiot.server.common.stats.StatsFactory;
 import org.echoiot.server.common.stats.StatsType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.echoiot.server.actors.JsInvokeStats;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 
 @Service
 public class DefaultJsInvokeStats implements JsInvokeStats {

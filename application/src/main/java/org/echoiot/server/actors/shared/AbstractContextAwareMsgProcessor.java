@@ -2,9 +2,9 @@ package org.echoiot.server.actors.shared;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.echoiot.server.common.msg.TbActorMsg;
 import org.echoiot.server.actors.ActorSystemContext;
 import org.echoiot.server.actors.TbActorCtx;
+import org.echoiot.server.common.msg.TbActorMsg;
 
 import java.util.concurrent.ScheduledExecutorService;
 

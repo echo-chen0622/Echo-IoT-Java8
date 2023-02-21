@@ -4,8 +4,9 @@ import org.echoiot.server.common.data.OtaPackageInfo;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.dao.ota.OtaPackageInfoDao;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 
 @Component
 public class OtaPackageInfoDataValidator extends BaseOtaPackageDataValidator<OtaPackageInfo> {

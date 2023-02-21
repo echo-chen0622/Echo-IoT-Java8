@@ -1,14 +1,14 @@
 import {
-    Component,
-    ElementRef,
-    Input,
-    OnChanges,
-    OnDestroy,
-    Renderer2,
-    SimpleChanges,
-    ViewChild,
-    ViewContainerRef,
-    ViewEncapsulation
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  OnDestroy,
+  Renderer2,
+  SimpleChanges,
+  ViewChild,
+  ViewContainerRef,
+  ViewEncapsulation
 } from '@angular/core';
 import {TbPopoverService} from '@shared/components/popover.service';
 import {PopoverPlacement} from '@shared/components/popover.models';

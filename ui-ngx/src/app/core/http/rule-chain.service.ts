@@ -1,9 +1,9 @@
-import { ComponentFactory, Injectable } from '@angular/core';
-import { defaultHttpOptionsFromConfig, RequestConfig } from './http-utils';
-import { forkJoin, Observable, of } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
-import { PageLink } from '@shared/models/page/page-link';
-import { PageData } from '@shared/models/page/page-data';
+import {ComponentFactory, Injectable} from '@angular/core';
+import {defaultHttpOptionsFromConfig, RequestConfig} from './http-utils';
+import {forkJoin, Observable, of} from 'rxjs';
+import {HttpClient} from '@angular/common/http';
+import {PageLink} from '@shared/models/page/page-link';
+import {PageData} from '@shared/models/page/page-data';
 import {
   RuleChain,
   RuleChainMetaData,
@@ -11,21 +11,23 @@ import {
   ruleNodeTypeComponentTypes,
   unknownNodeComponent
 } from '@shared/models/rule-chain.models';
-import { ComponentDescriptorService } from './component-descriptor.service';
+import {ComponentDescriptorService} from './component-descriptor.service';
 import {
   IRuleNodeConfigurationComponent,
   LinkLabel,
-  RuleNodeComponentDescriptor, RuleNodeConfiguration, ScriptLanguage,
+  RuleNodeComponentDescriptor,
+  RuleNodeConfiguration,
+  ScriptLanguage,
   TestScriptInputParams,
   TestScriptResult
 } from '@app/shared/models/rule-node.models';
-import { ResourcesService } from '../services/resources.service';
-import { catchError, map, mergeMap } from 'rxjs/operators';
-import { TranslateService } from '@ngx-translate/core';
-import { deepClone, snakeCase } from '@core/utils';
-import { DebugRuleNodeEventBody } from '@app/shared/models/event.models';
-import { Edge } from '@shared/models/edge.models';
-import { IModulesMap } from '@modules/common/modules-map.models';
+import {ResourcesService} from '../services/resources.service';
+import {catchError, map, mergeMap} from 'rxjs/operators';
+import {TranslateService} from '@ngx-translate/core';
+import {deepClone, snakeCase} from '@core/utils';
+import {DebugRuleNodeEventBody} from '@app/shared/models/event.models';
+import {Edge} from '@shared/models/edge.models';
+import {IModulesMap} from '@modules/common/modules-map.models';
 
 @Injectable({
   providedIn: 'root'

@@ -2,12 +2,12 @@ package org.echoiot.rule.engine.rest;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.echoiot.rule.engine.api.NodeConfiguration;
 import org.echoiot.rule.engine.credentials.AnonymousCredentials;
 import org.echoiot.rule.engine.credentials.ClientCredentials;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 
 import java.util.Collections;
 import java.util.Map;

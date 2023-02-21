@@ -1,7 +1,7 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { SharedModule } from '@shared/shared.module';
-import { VcRoutingModule } from '@home/pages/vc/vc-routing.module';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {SharedModule} from '@shared/shared.module';
+import {VcRoutingModule} from '@home/pages/vc/vc-routing.module';
 
 @NgModule({
   declarations: [

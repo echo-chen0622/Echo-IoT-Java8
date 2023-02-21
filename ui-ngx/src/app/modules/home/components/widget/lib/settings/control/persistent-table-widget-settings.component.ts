@@ -1,16 +1,16 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
-import { WidgetSettings, WidgetSettingsComponent } from '@shared/models/widget.models';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { TranslateService } from '@ngx-translate/core';
-import { Observable, of, Subject } from 'rxjs';
-import { TruncatePipe } from '@shared/pipe/truncate.pipe';
-import { MatChipInputEvent, MatChipList } from '@angular/material/chips';
-import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { map, mergeMap, share, startWith } from 'rxjs/operators';
-import { COMMA, ENTER, SEMICOLON } from '@angular/cdk/keycodes';
+import {Component, ElementRef, ViewChild} from '@angular/core';
+import {WidgetSettings, WidgetSettingsComponent} from '@shared/models/widget.models';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
+import {TranslateService} from '@ngx-translate/core';
+import {Observable, of, Subject} from 'rxjs';
+import {TruncatePipe} from '@shared/pipe/truncate.pipe';
+import {MatChipInputEvent, MatChipList} from '@angular/material/chips';
+import {MatAutocomplete, MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
+import {map, mergeMap, share, startWith} from 'rxjs/operators';
+import {COMMA, ENTER, SEMICOLON} from '@angular/cdk/keycodes';
 
 interface DisplayColumn {
   name: string;

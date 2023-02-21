@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input, OnInit } from '@angular/core';
+import {Component, forwardRef, Input, OnInit} from '@angular/core';
 import {
   ControlValueAccessor,
   FormBuilder,
@@ -11,11 +11,11 @@ import {
   ValidatorFn,
   Validators
 } from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
-import { Country, CountryData } from '@shared/models/country.models';
+import {TranslateService} from '@ngx-translate/core';
+import {Country, CountryData} from '@shared/models/country.models';
 import examples from 'libphonenumber-js/examples.mobile.json';
-import { Subscription } from 'rxjs';
-import { FloatLabelType, MatFormFieldAppearance } from '@angular/material/form-field/form-field';
+import {Subscription} from 'rxjs';
+import {FloatLabelType, MatFormFieldAppearance} from '@angular/material/form-field/form-field';
 
 @Component({
   selector: 'tb-phone-input',

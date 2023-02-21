@@ -4,15 +4,7 @@ import lombok.Data;
 import org.echoiot.server.dao.model.sql.AbstractTsKvEntity;
 import org.echoiot.server.dao.sqlts.latest.SearchTsKvLatestRepository;
 
-import javax.persistence.ColumnResult;
-import javax.persistence.ConstructorResult;
-import javax.persistence.Entity;
-import javax.persistence.IdClass;
-import javax.persistence.NamedNativeQueries;
-import javax.persistence.NamedNativeQuery;
-import javax.persistence.SqlResultSetMapping;
-import javax.persistence.SqlResultSetMappings;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.UUID;
 
 @Data

@@ -1,32 +1,7 @@
 package org.echoiot.server.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import org.echoiot.server.dao.device.DeviceProfileDao;
-import org.echoiot.server.dao.exception.DataValidationException;
-import org.jetbrains.annotations.NotNull;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.AdditionalAnswers;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Primary;
-import org.springframework.test.context.ContextConfiguration;
-import org.echoiot.server.common.data.Customer;
-import org.echoiot.server.common.data.Dashboard;
-import org.echoiot.server.common.data.Device;
-import org.echoiot.server.common.data.DeviceProfile;
-import org.echoiot.server.common.data.DeviceProfileInfo;
-import org.echoiot.server.common.data.DeviceProfileProvisionType;
-import org.echoiot.server.common.data.DeviceProfileType;
-import org.echoiot.server.common.data.DeviceTransportType;
-import org.echoiot.server.common.data.OtaPackageInfo;
-import org.echoiot.server.common.data.SaveOtaPackageInfoRequest;
-import org.echoiot.server.common.data.StringUtils;
-import org.echoiot.server.common.data.Tenant;
-import org.echoiot.server.common.data.User;
+import org.echoiot.server.common.data.*;
 import org.echoiot.server.common.data.audit.ActionType;
 import org.echoiot.server.common.data.device.profile.JsonTransportPayloadConfiguration;
 import org.echoiot.server.common.data.device.profile.MqttDeviceProfileTransportConfiguration;
@@ -36,16 +11,29 @@ import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.common.data.rule.RuleChain;
 import org.echoiot.server.common.data.security.Authority;
+import org.echoiot.server.dao.device.DeviceProfileDao;
+import org.echoiot.server.dao.exception.DataValidationException;
+import org.jetbrains.annotations.NotNull;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.AdditionalAnswers;
+import org.mockito.Mockito;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
+import org.springframework.test.context.ContextConfiguration;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.echoiot.server.common.data.ota.OtaPackageType.FIRMWARE;
 import static org.echoiot.server.common.data.ota.OtaPackageType.SOFTWARE;
+import static org.hamcrest.Matchers.containsString;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ContextConfiguration(classes = {BaseDeviceProfileControllerTest.Config.class})
 public abstract class BaseDeviceProfileControllerTest extends AbstractControllerTest {

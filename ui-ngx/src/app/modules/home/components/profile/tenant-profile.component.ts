@@ -1,13 +1,13 @@
-import { ChangeDetectorRef, Component, Inject, Input, Optional } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { createTenantProfileConfiguration, TenantProfile, TenantProfileType } from '@shared/models/tenant.model';
-import { ActionNotificationShow } from '@app/core/notification/notification.actions';
-import { TranslateService } from '@ngx-translate/core';
-import { EntityTableConfig } from '@home/models/entity/entities-table-config.models';
-import { EntityComponent } from '../entity/entity.component';
-import { guid } from '@core/utils';
+import {ChangeDetectorRef, Component, Inject, Input, Optional} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {createTenantProfileConfiguration, TenantProfile, TenantProfileType} from '@shared/models/tenant.model';
+import {ActionNotificationShow} from '@app/core/notification/notification.actions';
+import {TranslateService} from '@ngx-translate/core';
+import {EntityTableConfig} from '@home/models/entity/entities-table-config.models';
+import {EntityComponent} from '../entity/entity.component';
+import {guid} from '@core/utils';
 
 @Component({
   selector: 'tb-tenant-profile',

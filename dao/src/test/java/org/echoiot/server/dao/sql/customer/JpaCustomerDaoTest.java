@@ -6,12 +6,12 @@ import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
+import org.echoiot.server.dao.AbstractJpaDaoTest;
 import org.echoiot.server.dao.customer.CustomerDao;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.echoiot.server.dao.AbstractJpaDaoTest;
 
+import javax.annotation.Resource;
 import java.util.Optional;
 import java.util.UUID;
 

@@ -77,7 +77,7 @@ import org.echoiot.server.service.resource.TbResourceService;
 import org.echoiot.server.service.security.model.SecurityUser;
 import org.echoiot.server.service.security.permission.AccessControlService;
 import org.echoiot.server.service.security.permission.Operation;
-import org.echoiot.server.service.security.permission.Resource;
+import org.echoiot.server.service.security.permission.PerResource;
 import org.echoiot.server.service.state.DeviceStateService;
 import org.echoiot.server.service.sync.vc.EntitiesVersionControlService;
 import org.echoiot.server.service.telemetry.AlarmSubscriptionService;
@@ -95,6 +95,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.async.AsyncRequestTimeoutException;
 import org.springframework.web.context.request.async.DeferredResult;
 
+import javax.annotation.Resource;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -410,7 +411,7 @@ public abstract class BaseController {
             validateId(tenantId, INCORRECT_TENANT_ID + tenantId);
             Tenant tenant = tenantService.findTenantById(tenantId);
             checkNotNull(tenant, "Tenant with id [" + tenantId + "] is not found");
-            accessControlService.checkPermission(getCurrentUser(), Resource.TENANT, operation, tenantId, tenant);
+            accessControlService.checkPermission(getCurrentUser(), PerResource.TENANT, operation, tenantId, tenant);
             return tenant;
         } catch (Exception e) {
             throw handleException(e, false);
@@ -422,7 +423,7 @@ public abstract class BaseController {
             validateId(tenantId, INCORRECT_TENANT_ID + tenantId);
             TenantInfo tenant = tenantService.findTenantInfoById(tenantId);
             checkNotNull(tenant, "Tenant with id [" + tenantId + "] is not found");
-            accessControlService.checkPermission(getCurrentUser(), Resource.TENANT, operation, tenantId, tenant);
+            accessControlService.checkPermission(getCurrentUser(), PerResource.TENANT, operation, tenantId, tenant);
             return tenant;
         } catch (Exception e) {
             throw handleException(e, false);
@@ -434,7 +435,7 @@ public abstract class BaseController {
             Validator.validateId(tenantProfileId, "Incorrect tenantProfileId " + tenantProfileId);
             TenantProfile tenantProfile = tenantProfileService.findTenantProfileById(getTenantId(), tenantProfileId);
             checkNotNull(tenantProfile, "Tenant profile with id [" + tenantProfileId + "] is not found");
-            accessControlService.checkPermission(getCurrentUser(), Resource.TENANT_PROFILE, operation);
+            accessControlService.checkPermission(getCurrentUser(), PerResource.TENANT_PROFILE, operation);
             return tenantProfile;
         } catch (Exception e) {
             throw handleException(e, false);
@@ -450,7 +451,7 @@ public abstract class BaseController {
             Validator.validateId(customerId, "Incorrect customerId " + customerId);
             Customer customer = customerService.findCustomerById(getTenantId(), customerId);
             checkNotNull(customer, "Customer with id [" + customerId + "] is not found");
-            accessControlService.checkPermission(getCurrentUser(), Resource.CUSTOMER, operation, customerId, customer);
+            accessControlService.checkPermission(getCurrentUser(), PerResource.CUSTOMER, operation, customerId, customer);
             return customer;
         } catch (Exception e) {
             throw handleException(e, false);
@@ -462,17 +463,17 @@ public abstract class BaseController {
             Validator.validateId(userId, "Incorrect userId " + userId);
             User user = userService.findUserById(getCurrentUser().getTenantId(), userId);
             checkNotNull(user, "User with id [" + userId + "] is not found");
-            accessControlService.checkPermission(getCurrentUser(), Resource.USER, operation, userId, user);
+            accessControlService.checkPermission(getCurrentUser(), PerResource.USER, operation, userId, user);
             return user;
         } catch (Exception e) {
             throw handleException(e, false);
         }
     }
 
-    protected <I extends EntityId, T extends HasTenantId> void checkEntity(@Nullable I entityId, T entity, Resource resource) throws EchoiotException {
+    protected <I extends EntityId, T extends HasTenantId> void checkEntity(@Nullable I entityId, T entity, PerResource perResource) throws EchoiotException {
         if (entityId == null) {
             accessControlService
-                    .checkPermission(getCurrentUser(), resource, Operation.CREATE, null, entity);
+                    .checkPermission(getCurrentUser(), perResource, Operation.CREATE, null, entity);
         } else {
             checkEntityId(entityId, Operation.WRITE);
         }
@@ -555,7 +556,7 @@ public abstract class BaseController {
             Validator.validateId(deviceId, "Incorrect deviceId " + deviceId);
             Device device = deviceService.findDeviceById(getCurrentUser().getTenantId(), deviceId);
             checkNotNull(device, "Device with id [" + deviceId + "] is not found");
-            accessControlService.checkPermission(getCurrentUser(), Resource.DEVICE, operation, deviceId, device);
+            accessControlService.checkPermission(getCurrentUser(), PerResource.DEVICE, operation, deviceId, device);
             return device;
         } catch (Exception e) {
             throw handleException(e, false);
@@ -567,7 +568,7 @@ public abstract class BaseController {
             Validator.validateId(deviceId, "Incorrect deviceId " + deviceId);
             DeviceInfo device = deviceService.findDeviceInfoById(getCurrentUser().getTenantId(), deviceId);
             checkNotNull(device, "Device with id [" + deviceId + "] is not found");
-            accessControlService.checkPermission(getCurrentUser(), Resource.DEVICE, operation, deviceId, device);
+            accessControlService.checkPermission(getCurrentUser(), PerResource.DEVICE, operation, deviceId, device);
             return device;
         } catch (Exception e) {
             throw handleException(e, false);
@@ -579,7 +580,7 @@ public abstract class BaseController {
             Validator.validateId(deviceProfileId, "Incorrect deviceProfileId " + deviceProfileId);
             DeviceProfile deviceProfile = deviceProfileService.findDeviceProfileById(getCurrentUser().getTenantId(), deviceProfileId);
             checkNotNull(deviceProfile, "Device profile with id [" + deviceProfileId + "] is not found");
-            accessControlService.checkPermission(getCurrentUser(), Resource.DEVICE_PROFILE, operation, deviceProfileId, deviceProfile);
+            accessControlService.checkPermission(getCurrentUser(), PerResource.DEVICE_PROFILE, operation, deviceProfileId, deviceProfile);
             return deviceProfile;
         } catch (Exception e) {
             throw handleException(e, false);
@@ -591,7 +592,7 @@ public abstract class BaseController {
             Validator.validateId(entityViewId, "Incorrect entityViewId " + entityViewId);
             EntityView entityView = entityViewService.findEntityViewById(getCurrentUser().getTenantId(), entityViewId);
             checkNotNull(entityView, "Entity view with id [" + entityViewId + "] is not found");
-            accessControlService.checkPermission(getCurrentUser(), Resource.ENTITY_VIEW, operation, entityViewId, entityView);
+            accessControlService.checkPermission(getCurrentUser(), PerResource.ENTITY_VIEW, operation, entityViewId, entityView);
             return entityView;
         } catch (Exception e) {
             throw handleException(e, false);
@@ -603,7 +604,7 @@ public abstract class BaseController {
             Validator.validateId(entityViewId, "Incorrect entityViewId " + entityViewId);
             EntityViewInfo entityView = entityViewService.findEntityViewInfoById(getCurrentUser().getTenantId(), entityViewId);
             checkNotNull(entityView, "Entity view with id [" + entityViewId + "] is not found");
-            accessControlService.checkPermission(getCurrentUser(), Resource.ENTITY_VIEW, operation, entityViewId, entityView);
+            accessControlService.checkPermission(getCurrentUser(), PerResource.ENTITY_VIEW, operation, entityViewId, entityView);
             return entityView;
         } catch (Exception e) {
             throw handleException(e, false);
@@ -615,7 +616,7 @@ public abstract class BaseController {
             Validator.validateId(assetId, "Incorrect assetId " + assetId);
             Asset asset = assetService.findAssetById(getCurrentUser().getTenantId(), assetId);
             checkNotNull(asset, "Asset with id [" + assetId + "] is not found");
-            accessControlService.checkPermission(getCurrentUser(), Resource.ASSET, operation, assetId, asset);
+            accessControlService.checkPermission(getCurrentUser(), PerResource.ASSET, operation, assetId, asset);
             return asset;
         } catch (Exception e) {
             throw handleException(e, false);
@@ -627,7 +628,7 @@ public abstract class BaseController {
             Validator.validateId(assetId, "Incorrect assetId " + assetId);
             AssetInfo asset = assetService.findAssetInfoById(getCurrentUser().getTenantId(), assetId);
             checkNotNull(asset, "Asset with id [" + assetId + "] is not found");
-            accessControlService.checkPermission(getCurrentUser(), Resource.ASSET, operation, assetId, asset);
+            accessControlService.checkPermission(getCurrentUser(), PerResource.ASSET, operation, assetId, asset);
             return asset;
         } catch (Exception e) {
             throw handleException(e, false);
@@ -639,7 +640,7 @@ public abstract class BaseController {
             Validator.validateId(assetProfileId, "Incorrect assetProfileId " + assetProfileId);
             AssetProfile assetProfile = assetProfileService.findAssetProfileById(getCurrentUser().getTenantId(), assetProfileId);
             checkNotNull(assetProfile, "Asset profile with id [" + assetProfileId + "] is not found");
-            accessControlService.checkPermission(getCurrentUser(), Resource.ASSET_PROFILE, operation, assetProfileId, assetProfile);
+            accessControlService.checkPermission(getCurrentUser(), PerResource.ASSET_PROFILE, operation, assetProfileId, assetProfile);
             return assetProfile;
         } catch (Exception e) {
             throw handleException(e, false);
@@ -651,7 +652,7 @@ public abstract class BaseController {
             Validator.validateId(alarmId, "Incorrect alarmId " + alarmId);
             Alarm alarm = alarmService.findAlarmByIdAsync(getCurrentUser().getTenantId(), alarmId).get();
             checkNotNull(alarm, "Alarm with id [" + alarmId + "] is not found");
-            accessControlService.checkPermission(getCurrentUser(), Resource.ALARM, operation, alarmId, alarm);
+            accessControlService.checkPermission(getCurrentUser(), PerResource.ALARM, operation, alarmId, alarm);
             return alarm;
         } catch (Exception e) {
             throw handleException(e, false);
@@ -663,7 +664,7 @@ public abstract class BaseController {
             Validator.validateId(alarmId, "Incorrect alarmId " + alarmId);
             AlarmInfo alarmInfo = alarmService.findAlarmInfoByIdAsync(getCurrentUser().getTenantId(), alarmId).get();
             checkNotNull(alarmInfo, "Alarm with id [" + alarmId + "] is not found");
-            accessControlService.checkPermission(getCurrentUser(), Resource.ALARM, operation, alarmId, alarmInfo);
+            accessControlService.checkPermission(getCurrentUser(), PerResource.ALARM, operation, alarmId, alarmInfo);
             return alarmInfo;
         } catch (Exception e) {
             throw handleException(e, false);
@@ -675,7 +676,7 @@ public abstract class BaseController {
             Validator.validateId(widgetsBundleId, "Incorrect widgetsBundleId " + widgetsBundleId);
             WidgetsBundle widgetsBundle = widgetsBundleService.findWidgetsBundleById(getCurrentUser().getTenantId(), widgetsBundleId);
             checkNotNull(widgetsBundle, "Widgets bundle with id [" + widgetsBundleId + "] is not found");
-            accessControlService.checkPermission(getCurrentUser(), Resource.WIDGETS_BUNDLE, operation, widgetsBundleId, widgetsBundle);
+            accessControlService.checkPermission(getCurrentUser(), PerResource.WIDGETS_BUNDLE, operation, widgetsBundleId, widgetsBundle);
             return widgetsBundle;
         } catch (Exception e) {
             throw handleException(e, false);
@@ -687,7 +688,7 @@ public abstract class BaseController {
             Validator.validateId(widgetTypeId, "Incorrect widgetTypeId " + widgetTypeId);
             WidgetTypeDetails widgetTypeDetails = widgetTypeService.findWidgetTypeDetailsById(getCurrentUser().getTenantId(), widgetTypeId);
             checkNotNull(widgetTypeDetails, "Widget type with id [" + widgetTypeId + "] is not found");
-            accessControlService.checkPermission(getCurrentUser(), Resource.WIDGET_TYPE, operation, widgetTypeId, widgetTypeDetails);
+            accessControlService.checkPermission(getCurrentUser(), PerResource.WIDGET_TYPE, operation, widgetTypeId, widgetTypeDetails);
             return widgetTypeDetails;
         } catch (Exception e) {
             throw handleException(e, false);
@@ -699,7 +700,7 @@ public abstract class BaseController {
             Validator.validateId(dashboardId, "Incorrect dashboardId " + dashboardId);
             Dashboard dashboard = dashboardService.findDashboardById(getCurrentUser().getTenantId(), dashboardId);
             checkNotNull(dashboard, "Dashboard with id [" + dashboardId + "] is not found");
-            accessControlService.checkPermission(getCurrentUser(), Resource.DASHBOARD, operation, dashboardId, dashboard);
+            accessControlService.checkPermission(getCurrentUser(), PerResource.DASHBOARD, operation, dashboardId, dashboard);
             return dashboard;
         } catch (Exception e) {
             throw handleException(e, false);
@@ -711,7 +712,7 @@ public abstract class BaseController {
             Validator.validateId(edgeId, "Incorrect edgeId " + edgeId);
             Edge edge = edgeService.findEdgeById(getTenantId(), edgeId);
             checkNotNull(edge, "Edge with id [" + edgeId + "] is not found");
-            accessControlService.checkPermission(getCurrentUser(), Resource.EDGE, operation, edgeId, edge);
+            accessControlService.checkPermission(getCurrentUser(), PerResource.EDGE, operation, edgeId, edge);
             return edge;
         } catch (Exception e) {
             throw handleException(e, false);
@@ -723,7 +724,7 @@ public abstract class BaseController {
             Validator.validateId(edgeId, "Incorrect edgeId " + edgeId);
             EdgeInfo edge = edgeService.findEdgeInfoById(getCurrentUser().getTenantId(), edgeId);
             checkNotNull(edge, "Edge with id [" + edgeId + "] is not found");
-            accessControlService.checkPermission(getCurrentUser(), Resource.EDGE, operation, edgeId, edge);
+            accessControlService.checkPermission(getCurrentUser(), PerResource.EDGE, operation, edgeId, edge);
             return edge;
         } catch (Exception e) {
             throw handleException(e, false);
@@ -735,7 +736,7 @@ public abstract class BaseController {
             Validator.validateId(dashboardId, "Incorrect dashboardId " + dashboardId);
             DashboardInfo dashboardInfo = dashboardService.findDashboardInfoById(getCurrentUser().getTenantId(), dashboardId);
             checkNotNull(dashboardInfo, "Dashboard with id [" + dashboardId + "] is not found");
-            accessControlService.checkPermission(getCurrentUser(), Resource.DASHBOARD, operation, dashboardId, dashboardInfo);
+            accessControlService.checkPermission(getCurrentUser(), PerResource.DASHBOARD, operation, dashboardId, dashboardInfo);
             return dashboardInfo;
         } catch (Exception e) {
             throw handleException(e, false);
@@ -773,7 +774,7 @@ public abstract class BaseController {
         Validator.validateId(ruleChainId, "Incorrect ruleChainId " + ruleChainId);
         RuleChain ruleChain = ruleChainService.findRuleChainById(getCurrentUser().getTenantId(), ruleChainId);
         checkNotNull(ruleChain, "Rule chain with id [" + ruleChainId + "] is not found");
-        accessControlService.checkPermission(getCurrentUser(), Resource.RULE_CHAIN, operation, ruleChainId, ruleChain);
+        accessControlService.checkPermission(getCurrentUser(), PerResource.RULE_CHAIN, operation, ruleChainId, ruleChain);
         return ruleChain;
     }
 
@@ -791,7 +792,7 @@ public abstract class BaseController {
             Validator.validateId(resourceId, "Incorrect resourceId " + resourceId);
             TbResource resource = resourceService.findResourceById(getCurrentUser().getTenantId(), resourceId);
             checkNotNull(resource, "Resource with id [" + resourceId + "] is not found");
-            accessControlService.checkPermission(getCurrentUser(), Resource.TB_RESOURCE, operation, resourceId, resource);
+            accessControlService.checkPermission(getCurrentUser(), PerResource.TB_RESOURCE, operation, resourceId, resource);
             return resource;
         } catch (Exception e) {
             throw handleException(e, false);
@@ -803,7 +804,7 @@ public abstract class BaseController {
             Validator.validateId(resourceId, "Incorrect resourceId " + resourceId);
             TbResourceInfo resourceInfo = resourceService.findResourceInfoById(getCurrentUser().getTenantId(), resourceId);
             checkNotNull(resourceInfo, "Resource with id [" + resourceId + "] is not found");
-            accessControlService.checkPermission(getCurrentUser(), Resource.TB_RESOURCE, operation, resourceId, resourceInfo);
+            accessControlService.checkPermission(getCurrentUser(), PerResource.TB_RESOURCE, operation, resourceId, resourceInfo);
             return resourceInfo;
         } catch (Exception e) {
             throw handleException(e, false);
@@ -815,7 +816,7 @@ public abstract class BaseController {
             Validator.validateId(otaPackageId, "Incorrect otaPackageId " + otaPackageId);
             OtaPackage otaPackage = otaPackageService.findOtaPackageById(getCurrentUser().getTenantId(), otaPackageId);
             checkNotNull(otaPackage, "OTA package with id [" + otaPackageId + "] is not found");
-            accessControlService.checkPermission(getCurrentUser(), Resource.OTA_PACKAGE, operation, otaPackageId, otaPackage);
+            accessControlService.checkPermission(getCurrentUser(), PerResource.OTA_PACKAGE, operation, otaPackageId, otaPackage);
             return otaPackage;
         } catch (Exception e) {
             throw handleException(e, false);
@@ -827,7 +828,7 @@ public abstract class BaseController {
             Validator.validateId(otaPackageId, "Incorrect otaPackageId " + otaPackageId);
             OtaPackageInfo otaPackageIn = otaPackageService.findOtaPackageInfoById(getCurrentUser().getTenantId(), otaPackageId);
             checkNotNull(otaPackageIn, "OTA package with id [" + otaPackageId + "] is not found");
-            accessControlService.checkPermission(getCurrentUser(), Resource.OTA_PACKAGE, operation, otaPackageId, otaPackageIn);
+            accessControlService.checkPermission(getCurrentUser(), PerResource.OTA_PACKAGE, operation, otaPackageId, otaPackageIn);
             return otaPackageIn;
         } catch (Exception e) {
             throw handleException(e, false);
@@ -839,7 +840,7 @@ public abstract class BaseController {
             Validator.validateId(rpcId, "Incorrect rpcId " + rpcId);
             Rpc rpc = rpcService.findById(getCurrentUser().getTenantId(), rpcId);
             checkNotNull(rpc, "RPC with id [" + rpcId + "] is not found");
-            accessControlService.checkPermission(getCurrentUser(), Resource.RPC, operation, rpcId, rpc);
+            accessControlService.checkPermission(getCurrentUser(), PerResource.RPC, operation, rpcId, rpc);
             return rpc;
         } catch (Exception e) {
             throw handleException(e, false);
@@ -851,7 +852,7 @@ public abstract class BaseController {
         Validator.validateId(queueId, "Incorrect queueId " + queueId);
         Queue queue = queueService.findQueueById(getCurrentUser().getTenantId(), queueId);
         checkNotNull(queue);
-        accessControlService.checkPermission(getCurrentUser(), Resource.QUEUE, operation, queueId, queue);
+        accessControlService.checkPermission(getCurrentUser(), PerResource.QUEUE, operation, queueId, queue);
         TenantId tenantId = getTenantId();
         if (queue.getTenantId().isNullUid() && !tenantId.isNullUid()) {
             @Nullable TenantProfile tenantProfile = tenantProfileCache.get(tenantId);

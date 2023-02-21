@@ -1,12 +1,12 @@
 import express from 'express';
 import config from 'config';
-import { _logger}  from './config/logger';
+import {_logger} from './config/logger';
 import path from 'path';
-import http, { ServerResponse } from 'http';
+import http, {ServerResponse} from 'http';
 import httpProxy from 'http-proxy';
 import compression from 'compression';
 import historyApiFallback from 'connect-history-api-fallback';
-import { Socket } from 'net';
+import {Socket} from 'net';
 
 const logger = _logger('main');
 

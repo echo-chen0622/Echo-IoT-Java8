@@ -7,8 +7,8 @@ import org.echoiot.server.common.msg.MsgType;
 import org.echoiot.server.common.msg.TbActorMsg;
 import org.echoiot.server.common.msg.aware.DeviceAwareMsg;
 import org.echoiot.server.common.msg.aware.TenantAwareMsg;
-import org.echoiot.server.gen.transport.TransportProtos.TransportToDeviceActorMsg;
 import org.echoiot.server.common.msg.queue.TbCallback;
+import org.echoiot.server.gen.transport.TransportProtos.TransportToDeviceActorMsg;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;

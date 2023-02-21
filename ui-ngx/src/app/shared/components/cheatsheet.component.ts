@@ -1,7 +1,7 @@
-import { Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
-import { Hotkey, HotkeysService } from 'angular2-hotkeys';
-import { MousetrapInstance } from 'mousetrap';
+import {Component, ElementRef, Input, OnDestroy, OnInit} from '@angular/core';
+import {Hotkey, HotkeysService} from 'angular2-hotkeys';
 import * as Mousetrap from 'mousetrap';
+import {MousetrapInstance} from 'mousetrap';
 
 @Component({
   selector : 'tb-hotkeys-cheatsheet',

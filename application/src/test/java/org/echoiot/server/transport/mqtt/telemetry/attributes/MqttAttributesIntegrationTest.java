@@ -3,31 +3,21 @@ package org.echoiot.server.transport.mqtt.telemetry.attributes;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.junit.Before;
-import org.junit.Test;
 import org.echoiot.server.common.data.Device;
 import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.dao.service.DaoSqlTest;
 import org.echoiot.server.transport.mqtt.AbstractMqttIntegrationTest;
 import org.echoiot.server.transport.mqtt.MqttTestClient;
 import org.echoiot.server.transport.mqtt.MqttTestConfigProperties;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.junit.Before;
+import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.echoiot.server.common.data.device.profile.MqttTopics.DEVICE_ATTRIBUTES_SHORT_JSON_TOPIC;
-import static org.echoiot.server.common.data.device.profile.MqttTopics.DEVICE_ATTRIBUTES_SHORT_TOPIC;
-import static org.echoiot.server.common.data.device.profile.MqttTopics.DEVICE_ATTRIBUTES_TOPIC;
-import static org.echoiot.server.common.data.device.profile.MqttTopics.GATEWAY_ATTRIBUTES_TOPIC;
+import static org.echoiot.server.common.data.device.profile.MqttTopics.*;
+import static org.junit.Assert.*;
 
 @Slf4j
 @DaoSqlTest

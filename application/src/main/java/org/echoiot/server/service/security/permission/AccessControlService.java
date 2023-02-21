@@ -7,8 +7,8 @@ import org.echoiot.server.service.security.model.SecurityUser;
 
 public interface AccessControlService {
 
-    void checkPermission(SecurityUser user, Resource resource, Operation operation) throws EchoiotException;
+    void checkPermission(SecurityUser user, PerResource perResource, Operation operation) throws EchoiotException;
 
-    <I extends EntityId, T extends HasTenantId> void checkPermission(SecurityUser user, Resource resource, Operation operation, I entityId, T entity) throws EchoiotException;
+    <I extends EntityId, T extends HasTenantId> void checkPermission(SecurityUser user, PerResource perResource, Operation operation, I entityId, T entity) throws EchoiotException;
 
 }

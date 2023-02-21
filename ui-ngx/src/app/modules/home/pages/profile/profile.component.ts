@@ -1,19 +1,19 @@
-import { Component, OnInit } from '@angular/core';
-import { UserService } from '@core/http/user.service';
-import { AuthUser, User } from '@shared/models/user.model';
-import { Authority } from '@shared/models/authority.enum';
-import { PageComponent } from '@shared/components/page.component';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HasConfirmForm } from '@core/guards/confirm-on-exit.guard';
-import { ActionAuthUpdateUserDetails } from '@core/auth/auth.actions';
-import { environment as env } from '@env/environment';
-import { TranslateService } from '@ngx-translate/core';
-import { ActionSettingsChangeLanguage } from '@core/settings/settings.actions';
-import { ActivatedRoute } from '@angular/router';
-import { isDefinedAndNotNull } from '@core/utils';
-import { getCurrentAuthUser } from '@core/auth/auth.selectors';
+import {Component, OnInit} from '@angular/core';
+import {UserService} from '@core/http/user.service';
+import {AuthUser, User} from '@shared/models/user.model';
+import {Authority} from '@shared/models/authority.enum';
+import {PageComponent} from '@shared/components/page.component';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {HasConfirmForm} from '@core/guards/confirm-on-exit.guard';
+import {ActionAuthUpdateUserDetails} from '@core/auth/auth.actions';
+import {environment as env} from '@env/environment';
+import {TranslateService} from '@ngx-translate/core';
+import {ActionSettingsChangeLanguage} from '@core/settings/settings.actions';
+import {ActivatedRoute} from '@angular/router';
+import {isDefinedAndNotNull} from '@core/utils';
+import {getCurrentAuthUser} from '@core/auth/auth.selectors';
 
 @Component({
   selector: 'tb-profile',

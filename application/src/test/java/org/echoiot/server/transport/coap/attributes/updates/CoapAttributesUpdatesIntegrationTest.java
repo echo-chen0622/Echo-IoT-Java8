@@ -3,15 +3,14 @@ package org.echoiot.server.transport.coap.attributes.updates;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.coapserver.DefaultCoapServerService;
 import org.echoiot.server.common.transport.service.DefaultTransportService;
-import org.eclipse.californium.core.server.resources.Resource;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.echoiot.server.dao.service.DaoSqlTest;
 import org.echoiot.server.transport.coap.CoapTestConfigProperties;
 import org.echoiot.server.transport.coap.CoapTransportResource;
 import org.echoiot.server.transport.coap.attributes.AbstractCoapAttributesIntegrationTest;
+import org.eclipse.californium.core.server.resources.Resource;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import static org.mockito.Mockito.spy;
 

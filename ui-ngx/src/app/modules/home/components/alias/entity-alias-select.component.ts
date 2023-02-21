@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, forwardRef, Input, OnInit, SkipSelf, ViewChild } from '@angular/core';
+import {AfterViewInit, Component, ElementRef, forwardRef, Input, OnInit, SkipSelf, ViewChild} from '@angular/core';
 import {
   ControlValueAccessor,
   FormBuilder,
@@ -8,21 +8,21 @@ import {
   NG_VALUE_ACCESSOR,
   NgForm
 } from '@angular/forms';
-import { Observable, of } from 'rxjs';
-import { map, mergeMap, share, tap } from 'rxjs/operators';
-import { Store } from '@ngrx/store';
-import { AppState } from '@app/core/core.state';
-import { TranslateService } from '@ngx-translate/core';
-import { EntityType } from '@shared/models/entity-type.models';
-import { EntityService } from '@core/http/entity.service';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { EntityAlias } from '@shared/models/alias.models';
-import { IAliasController } from '@core/api/widget-api.models';
-import { TruncatePipe } from '@shared/pipe/truncate.pipe';
-import { MatAutocomplete, MatAutocompleteTrigger } from '@angular/material/autocomplete';
-import { EntityAliasSelectCallbacks } from './entity-alias-select.component.models';
-import { ENTER } from '@angular/cdk/keycodes';
-import { ErrorStateMatcher } from '@angular/material/core';
+import {Observable, of} from 'rxjs';
+import {map, mergeMap, share, tap} from 'rxjs/operators';
+import {Store} from '@ngrx/store';
+import {AppState} from '@app/core/core.state';
+import {TranslateService} from '@ngx-translate/core';
+import {EntityType} from '@shared/models/entity-type.models';
+import {EntityService} from '@core/http/entity.service';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {EntityAlias} from '@shared/models/alias.models';
+import {IAliasController} from '@core/api/widget-api.models';
+import {TruncatePipe} from '@shared/pipe/truncate.pipe';
+import {MatAutocomplete, MatAutocompleteTrigger} from '@angular/material/autocomplete';
+import {EntityAliasSelectCallbacks} from './entity-alias-select.component.models';
+import {ENTER} from '@angular/cdk/keycodes';
+import {ErrorStateMatcher} from '@angular/material/core';
 
 @Component({
   selector: 'tb-entity-alias-select',

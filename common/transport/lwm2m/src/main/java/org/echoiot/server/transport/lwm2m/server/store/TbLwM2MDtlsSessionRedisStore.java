@@ -1,10 +1,10 @@
 package org.echoiot.server.transport.lwm2m.server.store;
 
+import org.echoiot.server.transport.lwm2m.secure.TbX509DtlsSessionInfo;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.nustaq.serialization.FSTConfiguration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.echoiot.server.transport.lwm2m.secure.TbX509DtlsSessionInfo;
 
 public class TbLwM2MDtlsSessionRedisStore implements TbLwM2MDtlsSessionStore {
 

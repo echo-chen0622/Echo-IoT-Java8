@@ -5,11 +5,7 @@ import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.EntityIdFactory;
 import org.echoiot.server.common.data.page.PageData;
-import org.echoiot.server.common.data.query.EntityData;
-import org.echoiot.server.common.data.query.EntityDataPageLink;
-import org.echoiot.server.common.data.query.EntityKey;
-import org.echoiot.server.common.data.query.EntityKeyType;
-import org.echoiot.server.common.data.query.TsValue;
+import org.echoiot.server.common.data.query.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

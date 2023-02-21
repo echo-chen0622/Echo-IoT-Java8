@@ -1,16 +1,16 @@
-import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
-import { DialogComponent } from '@shared/components/dialog.component';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { Router } from '@angular/router';
-import { DatePipe } from '@angular/common';
-import { TranslateService } from '@ngx-translate/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { DeviceService } from '@core/http/device.service';
-import { PersistentRpc, RpcStatus, rpcStatusColors, rpcStatusTranslation } from '@shared/models/rpc.models';
-import { NULL_UUID } from '@shared/models/id/has-uuid';
-import { DialogService } from '@core/services/dialog.service';
+import {Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
+import {DialogComponent} from '@shared/components/dialog.component';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {Router} from '@angular/router';
+import {DatePipe} from '@angular/common';
+import {TranslateService} from '@ngx-translate/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {DeviceService} from '@core/http/device.service';
+import {PersistentRpc, RpcStatus, rpcStatusColors, rpcStatusTranslation} from '@shared/models/rpc.models';
+import {NULL_UUID} from '@shared/models/id/has-uuid';
+import {DialogService} from '@core/services/dialog.service';
 
 export interface PersistentDetailsDialogData {
   persistentRequest: PersistentRpc;

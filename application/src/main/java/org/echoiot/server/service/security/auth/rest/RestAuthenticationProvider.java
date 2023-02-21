@@ -13,23 +13,19 @@ import org.echoiot.server.common.data.security.UserCredentials;
 import org.echoiot.server.dao.customer.CustomerService;
 import org.echoiot.server.dao.user.UserService;
 import org.echoiot.server.queue.util.TbCoreComponent;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.InsufficientAuthenticationException;
-import org.springframework.security.authentication.LockedException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 import org.echoiot.server.service.security.auth.MfaAuthenticationToken;
 import org.echoiot.server.service.security.auth.mfa.TwoFactorAuthService;
 import org.echoiot.server.service.security.model.SecurityUser;
 import org.echoiot.server.service.security.model.UserPrincipal;
 import org.echoiot.server.service.security.system.SystemSecurityService;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 
 import java.util.UUID;
 
@@ -44,7 +40,7 @@ public class RestAuthenticationProvider implements AuthenticationProvider {
     private final CustomerService customerService;
     private final TwoFactorAuthService twoFactorAuthService;
 
-    @Resource
+    @Autowired
     public RestAuthenticationProvider(final UserService userService,
                                       final CustomerService customerService,
                                       final SystemSecurityService systemSecurityService,

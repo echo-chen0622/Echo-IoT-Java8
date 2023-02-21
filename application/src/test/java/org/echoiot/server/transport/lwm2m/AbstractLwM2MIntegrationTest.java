@@ -39,11 +39,11 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.util.SocketUtils;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.*;

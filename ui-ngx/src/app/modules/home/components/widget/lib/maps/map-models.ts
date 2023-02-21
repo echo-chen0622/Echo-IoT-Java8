@@ -1,6 +1,6 @@
-import { Datasource, FormattedData } from '@app/shared/models/widget.models';
+import {Datasource, FormattedData} from '@app/shared/models/widget.models';
 import tinycolor from 'tinycolor2';
-import { BaseIconOptions, Icon } from 'leaflet';
+import {BaseIconOptions, Icon} from 'leaflet';
 
 export const DEFAULT_MAP_PAGE_SIZE = 16384;
 export const DEFAULT_ZOOM_LEVEL = 8;

@@ -3,11 +3,6 @@ package org.echoiot.server.dao.model.sql;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.springframework.util.CollectionUtils;
 import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.alarm.Alarm;
@@ -21,6 +16,11 @@ import org.echoiot.server.dao.model.BaseEntity;
 import org.echoiot.server.dao.model.BaseSqlEntity;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.util.mapping.JsonStringType;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.springframework.util.CollectionUtils;
 
 import javax.persistence.Column;
 import javax.persistence.EnumType;
@@ -30,21 +30,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.UUID;
 
-import static org.echoiot.server.dao.model.ModelConstants.ALARM_ACK_TS_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.ALARM_CLEAR_TS_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.ALARM_CUSTOMER_ID_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.ALARM_END_TS_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.ALARM_ORIGINATOR_ID_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.ALARM_ORIGINATOR_TYPE_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.ALARM_PROPAGATE_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.ALARM_PROPAGATE_RELATION_TYPES;
-import static org.echoiot.server.dao.model.ModelConstants.ALARM_PROPAGATE_TO_OWNER_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.ALARM_PROPAGATE_TO_TENANT_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.ALARM_SEVERITY_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.ALARM_START_TS_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.ALARM_STATUS_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.ALARM_TENANT_ID_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.ALARM_TYPE_PROPERTY;
+import static org.echoiot.server.dao.model.ModelConstants.*;
 
 @Data
 @EqualsAndHashCode(callSuper = true)

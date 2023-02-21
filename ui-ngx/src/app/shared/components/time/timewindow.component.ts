@@ -11,9 +11,9 @@ import {
   ViewChild,
   ViewContainerRef
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
-import { MillisecondsToTimeStringPipe } from '@shared/pipe/milliseconds-to-time-string.pipe';
+import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {TranslateService} from '@ngx-translate/core';
+import {MillisecondsToTimeStringPipe} from '@shared/pipe/milliseconds-to-time-string.pipe';
 import {
   cloneSelectedTimewindow,
   getTimezoneInfo,
@@ -24,21 +24,21 @@ import {
   Timewindow,
   TimewindowType
 } from '@shared/models/time/time.models';
-import { DatePipe, DOCUMENT } from '@angular/common';
-import { CdkOverlayOrigin, ConnectedPosition, Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
+import {DatePipe, DOCUMENT} from '@angular/common';
+import {CdkOverlayOrigin, ConnectedPosition, Overlay, OverlayConfig, OverlayRef} from '@angular/cdk/overlay';
 import {
   TIMEWINDOW_PANEL_DATA,
   TimewindowPanelComponent,
   TimewindowPanelData
 } from '@shared/components/time/timewindow-panel.component';
-import { ComponentPortal } from '@angular/cdk/portal';
-import { MediaBreakpoints } from '@shared/models/constants';
-import { BreakpointObserver } from '@angular/cdk/layout';
-import { WINDOW } from '@core/services/window.service';
-import { TimeService } from '@core/services/time.service';
-import { TooltipPosition } from '@angular/material/tooltip';
-import { deepClone, isDefinedAndNotNull } from '@core/utils';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import {ComponentPortal} from '@angular/cdk/portal';
+import {MediaBreakpoints} from '@shared/models/constants';
+import {BreakpointObserver} from '@angular/cdk/layout';
+import {WINDOW} from '@core/services/window.service';
+import {TimeService} from '@core/services/time.service';
+import {TooltipPosition} from '@angular/material/tooltip';
+import {deepClone, isDefinedAndNotNull} from '@core/utils';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
 
 // @dynamic
 @Component({

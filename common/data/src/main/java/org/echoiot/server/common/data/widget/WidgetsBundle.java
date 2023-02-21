@@ -6,14 +6,14 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import org.echoiot.server.common.data.validation.Length;
-import org.echoiot.server.common.data.validation.NoXss;
 import org.echoiot.server.common.data.ExportableEntity;
 import org.echoiot.server.common.data.HasName;
 import org.echoiot.server.common.data.HasTenantId;
 import org.echoiot.server.common.data.SearchTextBased;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.id.WidgetsBundleId;
+import org.echoiot.server.common.data.validation.Length;
+import org.echoiot.server.common.data.validation.NoXss;
 import org.jetbrains.annotations.NotNull;
 
 @ApiModel

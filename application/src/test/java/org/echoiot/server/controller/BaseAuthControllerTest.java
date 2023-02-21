@@ -1,8 +1,8 @@
 package org.echoiot.server.controller;
 
+import org.echoiot.server.common.data.security.Authority;
 import org.hamcrest.Matchers;
 import org.junit.Test;
-import org.echoiot.server.common.data.security.Authority;
 
 import java.util.concurrent.TimeUnit;
 

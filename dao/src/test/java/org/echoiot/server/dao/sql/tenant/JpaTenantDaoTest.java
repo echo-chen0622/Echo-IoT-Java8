@@ -7,6 +7,7 @@ import org.echoiot.server.common.data.TenantProfile;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
+import org.echoiot.server.dao.AbstractJpaDaoTest;
 import org.echoiot.server.dao.service.AbstractServiceTest;
 import org.echoiot.server.dao.service.BaseTenantProfileServiceTest;
 import org.echoiot.server.dao.tenant.TenantDao;
@@ -16,9 +17,8 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.echoiot.server.dao.AbstractJpaDaoTest;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;

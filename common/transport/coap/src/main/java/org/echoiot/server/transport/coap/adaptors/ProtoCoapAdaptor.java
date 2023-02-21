@@ -11,15 +11,14 @@ import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.transport.adaptor.AdaptorException;
 import org.echoiot.server.common.transport.adaptor.JsonConverter;
 import org.echoiot.server.common.transport.adaptor.ProtoConverter;
+import org.echoiot.server.gen.transport.TransportProtos;
+import org.echoiot.server.transport.coap.CoapTransportResource;
 import org.eclipse.californium.core.coap.CoAP;
 import org.eclipse.californium.core.coap.MediaTypeRegistry;
 import org.eclipse.californium.core.coap.Request;
 import org.eclipse.californium.core.coap.Response;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
-import org.echoiot.server.gen.transport.TransportApiProtos;
-import org.echoiot.server.gen.transport.TransportProtos;
-import org.echoiot.server.transport.coap.CoapTransportResource;
 
 import java.util.Optional;
 import java.util.UUID;

@@ -1,9 +1,9 @@
 import config from 'config';
-import { _logger } from '../config/logger';
-import { JsInvokeMessageProcessor } from '../api/jsInvokeMessageProcessor'
-import { PubSub } from '@google-cloud/pubsub';
-import { IQueue } from './queue.models';
-import { Message } from '@google-cloud/pubsub/build/src/subscriber';
+import {_logger} from '../config/logger';
+import {JsInvokeMessageProcessor} from '../api/jsInvokeMessageProcessor'
+import {PubSub} from '@google-cloud/pubsub';
+import {IQueue} from './queue.models';
+import {Message} from '@google-cloud/pubsub/build/src/subscriber';
 
 export class PubSubTemplate implements IQueue {
 

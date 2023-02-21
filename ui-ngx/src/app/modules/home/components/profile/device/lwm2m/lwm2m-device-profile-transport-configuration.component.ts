@@ -1,32 +1,32 @@
 import {ChangeDetectorRef, Component, forwardRef, Input, OnDestroy} from '@angular/core';
 import {
-    ControlValueAccessor,
-    FormBuilder,
-    FormGroup,
-    NG_VALIDATORS,
-    NG_VALUE_ACCESSOR,
-    ValidationErrors,
-    Validator,
-    Validators
+  ControlValueAccessor,
+  FormBuilder,
+  FormGroup,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR,
+  ValidationErrors,
+  Validator,
+  Validators
 } from '@angular/forms';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
-    ATTRIBUTE,
-    DEFAULT_EDRX_CYCLE,
-    DEFAULT_FW_UPDATE_RESOURCE,
-    DEFAULT_PAGING_TRANSMISSION_WINDOW,
-    DEFAULT_PSM_ACTIVITY_TIMER,
-    DEFAULT_SW_UPDATE_RESOURCE,
-    Instance,
-    INSTANCES,
-    KEY_NAME,
-    Lwm2mProfileConfigModels,
-    ObjectLwM2M,
-    OBSERVE,
-    PowerMode,
-    RESOURCES,
-    ServerSecurityConfig,
-    TELEMETRY
+  ATTRIBUTE,
+  DEFAULT_EDRX_CYCLE,
+  DEFAULT_FW_UPDATE_RESOURCE,
+  DEFAULT_PAGING_TRANSMISSION_WINDOW,
+  DEFAULT_PSM_ACTIVITY_TIMER,
+  DEFAULT_SW_UPDATE_RESOURCE,
+  Instance,
+  INSTANCES,
+  KEY_NAME,
+  Lwm2mProfileConfigModels,
+  ObjectLwM2M,
+  OBSERVE,
+  PowerMode,
+  RESOURCES,
+  ServerSecurityConfig,
+  TELEMETRY
 } from './lwm2m-profile-config.models';
 import {DeviceProfileService} from '@core/http/device-profile.service';
 import {deepClone, isDefinedAndNotNull, isEmpty} from '@core/utils';

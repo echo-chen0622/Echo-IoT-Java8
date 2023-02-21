@@ -1,11 +1,11 @@
-import L, { LeafletMouseEvent } from 'leaflet';
-import { MarkerIconInfo, MarkerIconReadyFunction, MarkerImageInfo, WidgetMarkersSettings, } from './map-models';
-import { bindPopupActions, createTooltip } from './maps-utils';
-import { aspectCache, parseWithTranslation } from './common-maps-utils';
+import L, {LeafletMouseEvent} from 'leaflet';
+import {MarkerIconInfo, MarkerIconReadyFunction, MarkerImageInfo, WidgetMarkersSettings,} from './map-models';
+import {bindPopupActions, createTooltip} from './maps-utils';
+import {aspectCache, parseWithTranslation} from './common-maps-utils';
 import tinycolor from 'tinycolor2';
-import { fillDataPattern, isDefined, isDefinedAndNotNull, processDataPattern, safeExecute } from '@core/utils';
+import {fillDataPattern, isDefined, isDefinedAndNotNull, processDataPattern, safeExecute} from '@core/utils';
 import LeafletMap from './leaflet-map';
-import { FormattedData } from '@shared/models/widget.models';
+import {FormattedData} from '@shared/models/widget.models';
 
 export class Marker {
 

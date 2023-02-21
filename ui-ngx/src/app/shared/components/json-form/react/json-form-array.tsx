@@ -8,9 +8,9 @@ import Clear from '@material-ui/icons/Clear';
 import Add from '@material-ui/icons/Add';
 import Tooltip from '@material-ui/core/Tooltip';
 import {
-    JsonFormData,
-    JsonFormFieldProps,
-    JsonFormFieldState
+  JsonFormData,
+  JsonFormFieldProps,
+  JsonFormFieldState
 } from '@shared/components/json-form/react/json-form.models';
 
 interface EchoiotArrayState extends JsonFormFieldState {

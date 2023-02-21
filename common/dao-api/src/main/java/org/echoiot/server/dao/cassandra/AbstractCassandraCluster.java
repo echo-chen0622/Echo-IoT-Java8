@@ -10,12 +10,12 @@ import org.echoiot.server.dao.cassandra.guava.GuavaSession;
 import org.echoiot.server.dao.cassandra.guava.GuavaSessionBuilder;
 import org.echoiot.server.dao.cassandra.guava.GuavaSessionUtils;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.Profiles;
 
 import javax.annotation.PreDestroy;
+import javax.annotation.Resource;
 import java.nio.file.Paths;
 
 @Slf4j

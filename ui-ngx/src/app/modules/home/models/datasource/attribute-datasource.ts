@@ -6,11 +6,11 @@ import {catchError, map, publishReplay, refCount, take, tap} from 'rxjs/operator
 import {EntityId} from '@app/shared/models/id/entity-id';
 import {TranslateService} from '@ngx-translate/core';
 import {
-    AttributeData,
-    AttributeScope,
-    isClientSideTelemetryType,
-    TelemetrySubscriber,
-    TelemetryType
+  AttributeData,
+  AttributeScope,
+  isClientSideTelemetryType,
+  TelemetrySubscriber,
+  TelemetryType
 } from '@shared/models/telemetry/telemetry.models';
 import {AttributeService} from '@core/http/attribute.service';
 import {TelemetryWebsocketService} from '@core/ws/telemetry-websocket.service';

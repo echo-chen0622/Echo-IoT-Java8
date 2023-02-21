@@ -8,11 +8,11 @@ import org.echoiot.server.transport.coap.adaptors.JsonCoapAdaptor;
 import org.echoiot.server.transport.coap.adaptors.ProtoCoapAdaptor;
 import org.echoiot.server.transport.coap.client.CoapClientContext;
 import org.echoiot.server.transport.coap.efento.adaptor.EfentoCoapAdaptor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 

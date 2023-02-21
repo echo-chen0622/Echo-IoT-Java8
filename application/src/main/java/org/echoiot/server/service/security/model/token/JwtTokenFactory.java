@@ -1,14 +1,6 @@
 package org.echoiot.server.service.security.model.token;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.JwtBuilder;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.SignatureException;
-import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.StringUtils;
@@ -19,13 +11,13 @@ import org.echoiot.server.common.data.security.Authority;
 import org.echoiot.server.common.data.security.model.JwtPair;
 import org.echoiot.server.common.data.security.model.JwtToken;
 import org.echoiot.server.service.security.auth.jwt.settings.JwtSettingsService;
+import org.echoiot.server.service.security.exception.JwtExpiredTokenException;
+import org.echoiot.server.service.security.model.SecurityUser;
+import org.echoiot.server.service.security.model.UserPrincipal;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
-import org.echoiot.server.service.security.exception.JwtExpiredTokenException;
-import org.echoiot.server.service.security.model.SecurityUser;
-import org.echoiot.server.service.security.model.UserPrincipal;
 
 import java.time.ZonedDateTime;
 import java.util.Collections;

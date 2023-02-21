@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input, OnInit } from '@angular/core';
+import {Component, forwardRef, Input, OnInit} from '@angular/core';
 import {
   ControlValueAccessor,
   FormBuilder,
@@ -8,7 +8,7 @@ import {
   NG_VALUE_ACCESSOR,
   Validator
 } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import {MatDialog} from '@angular/material/dialog';
 import {
   RateLimitsDetailsDialogComponent,
   RateLimitsDetailsDialogData
@@ -20,7 +20,7 @@ import {
   RateLimitsType,
   stringToRateLimitsArray
 } from './rate-limits.models';
-import { isDefined } from '@core/utils';
+import {isDefined} from '@core/utils';
 
 @Component({
   selector: 'tb-rate-limits',

@@ -6,10 +6,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.echoiot.server.common.data.validation.Length;
 import org.echoiot.server.common.data.HasName;
 import org.echoiot.server.common.data.SearchTextBasedWithAdditionalInfo;
 import org.echoiot.server.common.data.id.OAuth2ClientRegistrationTemplateId;
+import org.echoiot.server.common.data.validation.Length;
 import org.jetbrains.annotations.NotNull;
 
 import javax.validation.Valid;

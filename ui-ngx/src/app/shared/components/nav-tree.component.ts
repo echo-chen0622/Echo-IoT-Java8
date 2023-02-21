@@ -1,6 +1,6 @@
-import { Component, ElementRef, Input, NgZone, OnInit, ViewEncapsulation } from '@angular/core';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { deepClone } from '@core/utils';
+import {Component, ElementRef, Input, NgZone, OnInit, ViewEncapsulation} from '@angular/core';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {deepClone} from '@core/utils';
 
 export interface NavTreeNodeState {
   disabled?: boolean;

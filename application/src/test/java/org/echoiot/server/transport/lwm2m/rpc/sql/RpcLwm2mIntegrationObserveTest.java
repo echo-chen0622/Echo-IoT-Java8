@@ -2,22 +2,19 @@ package org.echoiot.server.transport.lwm2m.rpc.sql;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.common.util.JacksonUtil;
+import org.echoiot.server.transport.lwm2m.rpc.AbstractRpcLwM2MIntegrationTest;
 import org.eclipse.leshan.core.ResponseCode;
 import org.eclipse.leshan.core.node.LwM2mPath;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.junit.Test;
-import org.echoiot.common.util.JacksonUtil;
-import org.echoiot.server.transport.lwm2m.rpc.AbstractRpcLwM2MIntegrationTest;
 
+import static org.echoiot.server.transport.lwm2m.Lwm2mTestHelper.*;
+import static org.echoiot.server.transport.lwm2m.utils.LwM2MTransportUtil.fromVersionedIdToObjectId;
 import static org.eclipse.leshan.core.LwM2mId.ACCESS_CONTROL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.echoiot.server.transport.lwm2m.Lwm2mTestHelper.OBJECT_INSTANCE_ID_0;
-import static org.echoiot.server.transport.lwm2m.Lwm2mTestHelper.RESOURCE_ID_0;
-import static org.echoiot.server.transport.lwm2m.Lwm2mTestHelper.RESOURCE_ID_14;
-import static org.echoiot.server.transport.lwm2m.Lwm2mTestHelper.RESOURCE_ID_3;
-import static org.echoiot.server.transport.lwm2m.utils.LwM2MTransportUtil.fromVersionedIdToObjectId;
 
 @Slf4j
 public class RpcLwm2mIntegrationObserveTest extends AbstractRpcLwM2MIntegrationTest {

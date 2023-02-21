@@ -1,13 +1,13 @@
 package org.echoiot.server.transport.lwm2m.server.store;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.common.data.ota.OtaPackageType;
 import org.echoiot.server.transport.lwm2m.server.ota.LwM2MClientOtaInfo;
 import org.echoiot.server.transport.lwm2m.server.ota.firmware.LwM2MClientFwOtaInfo;
 import org.echoiot.server.transport.lwm2m.server.ota.software.LwM2MClientSwOtaInfo;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 
 public class TbLwM2mRedisClientOtaInfoStore implements TbLwM2MClientOtaInfoStore {
     private static final String OTA_EP = "OTA#EP#";

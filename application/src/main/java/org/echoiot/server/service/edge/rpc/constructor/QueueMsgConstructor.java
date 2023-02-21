@@ -4,13 +4,13 @@ import org.echoiot.server.common.data.id.QueueId;
 import org.echoiot.server.common.data.queue.ProcessingStrategy;
 import org.echoiot.server.common.data.queue.Queue;
 import org.echoiot.server.common.data.queue.SubmitStrategy;
-import org.echoiot.server.queue.util.TbCoreComponent;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.stereotype.Component;
 import org.echoiot.server.gen.edge.v1.ProcessingStrategyProto;
 import org.echoiot.server.gen.edge.v1.QueueUpdateMsg;
 import org.echoiot.server.gen.edge.v1.SubmitStrategyProto;
 import org.echoiot.server.gen.edge.v1.UpdateMsgType;
+import org.echoiot.server.queue.util.TbCoreComponent;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.stereotype.Component;
 
 @Component
 @TbCoreComponent

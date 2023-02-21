@@ -1,10 +1,10 @@
 package org.echoiot.server.service.sync.vc;
 
+import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.cache.TbTransactionalCache;
 import org.echoiot.server.common.data.AdminSettings;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.dao.settings.AdminSettingsService;
-import org.echoiot.common.util.JacksonUtil;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;

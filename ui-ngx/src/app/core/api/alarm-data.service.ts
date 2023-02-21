@@ -5,9 +5,9 @@ import {AlarmData, AlarmDataPageLink, KeyFilter} from '@shared/models/query/quer
 import {Injectable} from '@angular/core';
 import {TelemetryWebsocketService} from '@core/ws/telemetry-websocket.service';
 import {
-    AlarmDataSubscription,
-    AlarmDataSubscriptionOptions,
-    AlarmSubscriptionDataKey
+  AlarmDataSubscription,
+  AlarmDataSubscriptionOptions,
+  AlarmSubscriptionDataKey
 } from '@core/api/alarm-data-subscription';
 import {deepClone} from '@core/utils';
 

@@ -4,11 +4,11 @@ import com.google.protobuf.ByteString;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.id.WidgetsBundleId;
 import org.echoiot.server.common.data.widget.WidgetsBundle;
+import org.echoiot.server.gen.edge.v1.UpdateMsgType;
+import org.echoiot.server.gen.edge.v1.WidgetsBundleUpdateMsg;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
-import org.echoiot.server.gen.edge.v1.UpdateMsgType;
-import org.echoiot.server.gen.edge.v1.WidgetsBundleUpdateMsg;
 
 import java.nio.charset.StandardCharsets;
 

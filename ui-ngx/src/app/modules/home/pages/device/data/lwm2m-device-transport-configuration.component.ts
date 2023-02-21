@@ -4,9 +4,9 @@ import {Store} from '@ngrx/store';
 import {AppState} from '@app/core/core.state';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
-    DeviceTransportConfiguration,
-    DeviceTransportType,
-    Lwm2mDeviceTransportConfiguration
+  DeviceTransportConfiguration,
+  DeviceTransportType,
+  Lwm2mDeviceTransportConfiguration
 } from '@shared/models/device.models';
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';

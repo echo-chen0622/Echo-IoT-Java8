@@ -1,12 +1,12 @@
 import {AggKey, IndexedSubscriptionData,} from '@app/shared/models/telemetry/telemetry.models';
 import {
-    AggregationType,
-    calculateIntervalComparisonEndTime,
-    calculateIntervalEndTime,
-    calculateIntervalStartEndTime,
-    getCurrentTime,
-    getTime,
-    SubscriptionTimewindow
+  AggregationType,
+  calculateIntervalComparisonEndTime,
+  calculateIntervalEndTime,
+  calculateIntervalStartEndTime,
+  getCurrentTime,
+  getTime,
+  SubscriptionTimewindow
 } from '@shared/models/time/time.models';
 import {UtilsService} from '@core/services/utils.service';
 import {deepClone, isDefinedAndNotNull, isNumber, isNumeric} from '@core/utils';

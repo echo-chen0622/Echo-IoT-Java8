@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.echoiot.server.common.data.device.data.SnmpDeviceTransportConfiguration;
 import org.echoiot.server.common.data.device.profile.SnmpDeviceProfileTransportConfiguration;
 import org.echoiot.server.common.data.transport.snmp.SnmpProtocolVersion;
+import org.echoiot.server.queue.util.TbSnmpTransportComponent;
 import org.echoiot.server.transport.snmp.session.DeviceSessionContext;
 import org.jetbrains.annotations.NotNull;
 import org.snmp4j.AbstractTarget;
@@ -20,7 +21,6 @@ import org.snmp4j.smi.OID;
 import org.snmp4j.smi.OctetString;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.echoiot.server.queue.util.TbSnmpTransportComponent;
 
 import java.util.Optional;
 

@@ -10,6 +10,7 @@ import org.echoiot.server.common.data.security.DeviceTokenCredentials;
 import org.echoiot.server.common.transport.TransportServiceCallback;
 import org.echoiot.server.common.transport.auth.SessionInfoCreator;
 import org.echoiot.server.common.transport.auth.ValidateDeviceCredentialsResponse;
+import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.transport.coap.callback.CoapDeviceAuthCallback;
 import org.eclipse.californium.core.coap.CoAP;
 import org.eclipse.californium.core.coap.Request;
@@ -17,7 +18,6 @@ import org.eclipse.californium.core.coap.Response;
 import org.eclipse.californium.core.network.Exchange;
 import org.eclipse.californium.core.server.resources.CoapExchange;
 import org.eclipse.californium.core.server.resources.Resource;
-import org.echoiot.server.gen.transport.TransportProtos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

@@ -1,11 +1,11 @@
-import { BaseData } from '@shared/models/base-data';
-import { EntityId } from '@shared/models/id/entity-id';
-import { NavTreeNode, NodesCallback } from '@shared/components/nav-tree.component';
-import { Datasource } from '@shared/models/widget.models';
-import { isDefined, isUndefined } from '@core/utils';
-import { EntityRelationsQuery, EntitySearchDirection, RelationTypeGroup } from '@shared/models/relation.models';
-import { EntityType } from '@shared/models/entity-type.models';
-import { WidgetContext } from '@home/models/widget-component.models';
+import {BaseData} from '@shared/models/base-data';
+import {EntityId} from '@shared/models/id/entity-id';
+import {NavTreeNode} from '@shared/components/nav-tree.component';
+import {Datasource} from '@shared/models/widget.models';
+import {isDefined, isUndefined} from '@core/utils';
+import {EntityRelationsQuery, EntitySearchDirection, RelationTypeGroup} from '@shared/models/relation.models';
+import {EntityType} from '@shared/models/entity-type.models';
+import {WidgetContext} from '@home/models/widget-component.models';
 
 export interface EntitiesHierarchyWidgetSettings {
   nodeRelationQueryFunction: string;

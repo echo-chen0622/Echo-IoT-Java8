@@ -15,40 +15,19 @@ import org.echoiot.server.common.data.security.Authority;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.resource.TbResourceService;
 import org.echoiot.server.service.security.permission.Operation;
-import org.echoiot.server.service.security.permission.Resource;
+import org.echoiot.server.service.security.permission.PerResource;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Base64;
 import java.util.List;
 
-import static org.echoiot.server.controller.ControllerConstants.LWM2M_OBJECT_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.LWM2M_OBJECT_SORT_PROPERTY_ALLOWABLE_VALUES;
-import static org.echoiot.server.controller.ControllerConstants.PAGE_DATA_PARAMETERS;
-import static org.echoiot.server.controller.ControllerConstants.PAGE_NUMBER_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.PAGE_SIZE_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.RESOURCE_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.RESOURCE_ID_PARAM_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.RESOURCE_INFO_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.RESOURCE_SORT_PROPERTY_ALLOWABLE_VALUES;
-import static org.echoiot.server.controller.ControllerConstants.RESOURCE_TEXT_SEARCH_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES;
-import static org.echoiot.server.controller.ControllerConstants.SORT_ORDER_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.SORT_PROPERTY_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH;
-import static org.echoiot.server.controller.ControllerConstants.TENANT_AUTHORITY_PARAGRAPH;
-import static org.echoiot.server.controller.ControllerConstants.UUID_WIKI_LINK;
+import static org.echoiot.server.controller.ControllerConstants.*;
 
 @Slf4j
 @RestController
@@ -138,7 +117,7 @@ public class TbResourceController extends BaseController {
     public TbResource saveResource(@NotNull @ApiParam(value = "A JSON value representing the Resource.")
                                    @RequestBody TbResource resource) throws Exception {
         resource.setTenantId(getTenantId());
-        checkEntity(resource.getId(), resource, Resource.TB_RESOURCE);
+        checkEntity(resource.getId(), resource, PerResource.TB_RESOURCE);
         return tbResourceService.save(resource, getCurrentUser());
     }
 

@@ -1,8 +1,8 @@
 package org.echoiot.server.service.security.auth.oauth2;
 
 import org.echoiot.server.common.data.oauth2.OAuth2Registration;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.echoiot.server.service.security.model.SecurityUser;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 
 import javax.servlet.http.HttpServletRequest;
 

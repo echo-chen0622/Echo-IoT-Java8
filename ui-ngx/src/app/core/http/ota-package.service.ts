@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { PageLink } from '@shared/models/page/page-link';
-import { defaultHttpOptionsFromConfig, defaultHttpUploadOptions, RequestConfig } from '@core/http/http-utils';
-import { forkJoin, Observable, of } from 'rxjs';
-import { PageData } from '@shared/models/page/page-data';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {PageLink} from '@shared/models/page/page-link';
+import {defaultHttpOptionsFromConfig, defaultHttpUploadOptions, RequestConfig} from '@core/http/http-utils';
+import {forkJoin, Observable, of} from 'rxjs';
+import {PageData} from '@shared/models/page/page-data';
 import {
   ChecksumAlgorithm,
   OtaPackage,
@@ -11,12 +11,12 @@ import {
   OtaPagesIds,
   OtaUpdateType
 } from '@shared/models/ota-package.models';
-import { catchError, map, mergeMap } from 'rxjs/operators';
-import { deepClone } from '@core/utils';
-import { BaseData } from '@shared/models/base-data';
-import { EntityId } from '@shared/models/id/entity-id';
-import { TranslateService } from '@ngx-translate/core';
-import { DialogService } from '@core/services/dialog.service';
+import {catchError, map, mergeMap} from 'rxjs/operators';
+import {deepClone} from '@core/utils';
+import {BaseData} from '@shared/models/base-data';
+import {EntityId} from '@shared/models/id/entity-id';
+import {TranslateService} from '@ngx-translate/core';
+import {DialogService} from '@core/services/dialog.service';
 
 @Injectable({
   providedIn: 'root'

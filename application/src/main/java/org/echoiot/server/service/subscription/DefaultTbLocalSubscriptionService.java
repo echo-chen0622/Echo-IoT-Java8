@@ -1,7 +1,12 @@
 package org.echoiot.server.service.subscription;
 
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.common.util.EchoiotExecutors;
 import org.echoiot.server.cluster.TbClusterService;
+import org.echoiot.server.common.msg.queue.ServiceType;
+import org.echoiot.server.common.msg.queue.TbCallback;
+import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
+import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.queue.discovery.PartitionService;
 import org.echoiot.server.queue.discovery.TbApplicationEventListener;
 import org.echoiot.server.queue.discovery.event.ClusterTopologyChangeEvent;
@@ -10,18 +15,13 @@ import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.telemetry.sub.AlarmSubscriptionUpdate;
 import org.echoiot.server.service.telemetry.sub.TelemetrySubscriptionUpdate;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
-import org.echoiot.common.util.EchoiotExecutors;
-import org.echoiot.server.gen.transport.TransportProtos;
-import org.echoiot.server.common.msg.queue.ServiceType;
-import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
-import org.echoiot.server.common.msg.queue.TbCallback;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;

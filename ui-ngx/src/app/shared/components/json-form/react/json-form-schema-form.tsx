@@ -20,13 +20,13 @@ import EchoiotHelp from './json-form-help';
 import EchoiotFieldSet from './json-form-fieldset';
 import EchoiotIcon from './json-form-icon';
 import {
-    JsonFormData,
-    JsonFormProps,
-    onChangeFn,
-    OnColorClickFn,
-    onHelpClickFn,
-    OnIconClickFn,
-    onToggleFullscreenFn
+  JsonFormData,
+  JsonFormProps,
+  onChangeFn,
+  OnColorClickFn,
+  onHelpClickFn,
+  OnIconClickFn,
+  onToggleFullscreenFn
 } from './json-form.models';
 
 import _ from 'lodash';

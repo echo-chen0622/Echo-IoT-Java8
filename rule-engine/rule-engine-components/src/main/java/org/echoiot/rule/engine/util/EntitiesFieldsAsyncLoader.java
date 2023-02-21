@@ -7,15 +7,7 @@ import org.echoiot.rule.engine.api.TbContext;
 import org.echoiot.rule.engine.api.TbNodeException;
 import org.echoiot.server.common.data.BaseData;
 import org.echoiot.server.common.data.EntityFieldsData;
-import org.echoiot.server.common.data.id.AlarmId;
-import org.echoiot.server.common.data.id.AssetId;
-import org.echoiot.server.common.data.id.CustomerId;
-import org.echoiot.server.common.data.id.DeviceId;
-import org.echoiot.server.common.data.id.EntityId;
-import org.echoiot.server.common.data.id.EntityViewId;
-import org.echoiot.server.common.data.id.RuleChainId;
-import org.echoiot.server.common.data.id.TenantId;
-import org.echoiot.server.common.data.id.UserId;
+import org.echoiot.server.common.data.id.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;

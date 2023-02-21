@@ -2,11 +2,11 @@ import {Component, forwardRef, Input, OnDestroy, OnInit} from '@angular/core';
 import {ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {isDefined} from '@core/utils';
 import {
-    LegendConfig,
-    LegendDirection,
-    legendDirectionTranslationMap,
-    LegendPosition,
-    legendPositionTranslationMap
+  LegendConfig,
+  LegendDirection,
+  legendDirectionTranslationMap,
+  LegendPosition,
+  legendPositionTranslationMap
 } from '@shared/models/widget.models';
 import {Subscription} from 'rxjs';
 

@@ -2,13 +2,6 @@ package org.echoiot.server.dao.sql.entityview;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import lombok.extern.slf4j.Slf4j;
-import org.echoiot.server.dao.model.sql.EntityViewEntity;
-import org.echoiot.server.dao.model.sql.EntityViewInfoEntity;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Component;
 import org.echoiot.server.common.data.EntitySubtype;
 import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.EntityView;
@@ -19,15 +12,17 @@ import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.dao.DaoUtil;
 import org.echoiot.server.dao.entityview.EntityViewDao;
+import org.echoiot.server.dao.model.sql.EntityViewEntity;
+import org.echoiot.server.dao.model.sql.EntityViewInfoEntity;
 import org.echoiot.server.dao.sql.JpaAbstractSearchTextDao;
 import org.echoiot.server.dao.util.SqlDao;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import javax.annotation.Resource;
+import java.util.*;
 
 /**
  * Created by Victor Basanets on 8/31/2017.

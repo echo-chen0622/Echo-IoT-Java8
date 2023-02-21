@@ -1,13 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DialogComponent } from '@shared/components/dialog.component';
-import { Router } from '@angular/router';
-import { WidgetsBundle } from '@shared/models/widgets-bundle.model';
-import { getCurrentAuthUser } from '@core/auth/auth.selectors';
-import { Authority } from '@shared/models/authority.enum';
+import {Component, OnInit} from '@angular/core';
+import {MatDialogRef} from '@angular/material/dialog';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {DialogComponent} from '@shared/components/dialog.component';
+import {Router} from '@angular/router';
+import {WidgetsBundle} from '@shared/models/widgets-bundle.model';
+import {getCurrentAuthUser} from '@core/auth/auth.selectors';
+import {Authority} from '@shared/models/authority.enum';
 
 export interface SaveWidgetTypeAsDialogResult {
   widgetName: string;

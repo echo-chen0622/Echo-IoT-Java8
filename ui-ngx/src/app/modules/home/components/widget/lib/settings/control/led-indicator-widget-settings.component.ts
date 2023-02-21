@@ -1,10 +1,10 @@
-import { Component } from '@angular/core';
-import { WidgetSettings, WidgetSettingsComponent } from '@shared/models/widget.models';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { WidgetService } from '@core/http/widget.service';
-import { DataKeyType } from '@shared/models/telemetry/telemetry.models';
+import {Component} from '@angular/core';
+import {WidgetSettings, WidgetSettingsComponent} from '@shared/models/widget.models';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {WidgetService} from '@core/http/widget.service';
+import {DataKeyType} from '@shared/models/telemetry/telemetry.models';
 
 @Component({
   selector: 'tb-led-indicator-widget-settings',

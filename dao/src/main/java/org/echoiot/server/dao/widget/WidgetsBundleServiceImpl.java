@@ -1,20 +1,20 @@
 package org.echoiot.server.dao.widget;
 
 import lombok.extern.slf4j.Slf4j;
-import org.echoiot.server.dao.exception.IncorrectParameterException;
-import org.echoiot.server.dao.service.DataValidator;
-import org.echoiot.server.dao.service.Validator;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.id.WidgetsBundleId;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.common.data.widget.WidgetsBundle;
 import org.echoiot.server.dao.entity.AbstractCachedEntityService;
+import org.echoiot.server.dao.exception.IncorrectParameterException;
+import org.echoiot.server.dao.service.DataValidator;
 import org.echoiot.server.dao.service.PaginatedRemover;
+import org.echoiot.server.dao.service.Validator;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 

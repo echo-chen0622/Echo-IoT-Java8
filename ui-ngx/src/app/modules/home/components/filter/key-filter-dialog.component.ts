@@ -7,12 +7,12 @@ import {FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, Validat
 import {Router} from '@angular/router';
 import {DialogComponent} from '@app/shared/components/dialog.component';
 import {
-    EntityKeyType,
-    entityKeyTypeTranslationMap,
-    EntityKeyValueType,
-    entityKeyValueTypesMap,
-    KeyFilterInfo,
-    KeyFilterPredicate
+  EntityKeyType,
+  entityKeyTypeTranslationMap,
+  EntityKeyValueType,
+  entityKeyValueTypesMap,
+  KeyFilterInfo,
+  KeyFilterPredicate
 } from '@shared/models/query/query.models';
 import {DialogService} from '@core/services/dialog.service';
 import {TranslateService} from '@ngx-translate/core';

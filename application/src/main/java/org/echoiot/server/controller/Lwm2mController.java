@@ -11,11 +11,11 @@ import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.security.DeviceCredentials;
 import org.echoiot.server.service.lwm2m.LwM2MService;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.util.Map;
 
 import static org.echoiot.server.controller.ControllerConstants.IS_BOOTSTRAP_SERVER_PARAM_DESCRIPTION;

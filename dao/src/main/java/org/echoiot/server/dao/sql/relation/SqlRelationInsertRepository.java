@@ -1,15 +1,15 @@
 package org.echoiot.server.dao.sql.relation;
 
+import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.dao.model.sql.RelationEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import org.echoiot.common.util.JacksonUtil;
 
+import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;

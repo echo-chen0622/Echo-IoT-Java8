@@ -17,9 +17,10 @@ import org.echoiot.server.dao.tenant.TenantService;
 import org.echoiot.server.dao.user.UserDao;
 import org.echoiot.server.dao.user.UserService;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 
 @Component
 public class UserDataValidator extends DataValidator<User> {

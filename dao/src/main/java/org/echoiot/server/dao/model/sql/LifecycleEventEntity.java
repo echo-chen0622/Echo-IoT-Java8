@@ -12,10 +12,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import static org.echoiot.server.dao.model.ModelConstants.EVENT_ERROR_COLUMN_NAME;
-import static org.echoiot.server.dao.model.ModelConstants.EVENT_SUCCESS_COLUMN_NAME;
-import static org.echoiot.server.dao.model.ModelConstants.EVENT_TYPE_COLUMN_NAME;
-import static org.echoiot.server.dao.model.ModelConstants.LC_EVENT_TABLE_NAME;
+import static org.echoiot.server.dao.model.ModelConstants.*;
 
 @Data
 @EqualsAndHashCode(callSuper = true)

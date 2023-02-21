@@ -1,4 +1,4 @@
-import { HasUUID } from '@shared/models/id/has-uuid';
+import {HasUUID} from '@shared/models/id/has-uuid';
 
 export interface OAuth2Info {
   enabled: boolean;

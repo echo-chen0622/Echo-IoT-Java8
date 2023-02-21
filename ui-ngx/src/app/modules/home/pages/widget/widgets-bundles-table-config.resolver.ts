@@ -1,29 +1,28 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 
-import { Resolve, Router } from '@angular/router';
+import {Resolve, Router} from '@angular/router';
 import {
   checkBoxCell,
   DateEntityTableColumn,
   EntityTableColumn,
   EntityTableConfig
 } from '@home/models/entity/entities-table-config.models';
-import { TranslateService } from '@ngx-translate/core';
-import { DatePipe } from '@angular/common';
-import { EntityType, entityTypeResources, entityTypeTranslations } from '@shared/models/entity-type.models';
-import { EntityAction } from '@home/models/entity/entity-component.models';
-import { WidgetsBundle } from '@shared/models/widgets-bundle.model';
-import { WidgetService } from '@app/core/http/widget.service';
-import { WidgetsBundleComponent } from '@modules/home/pages/widget/widgets-bundle.component';
-import { NULL_UUID } from '@shared/models/id/has-uuid';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { getCurrentAuthState, getCurrentAuthUser } from '@app/core/auth/auth.selectors';
-import { Authority } from '@shared/models/authority.enum';
-import { DialogService } from '@core/services/dialog.service';
-import { ImportExportService } from '@home/components/import-export/import-export.service';
-import { Direction } from '@shared/models/page/sort-order';
-import { map } from 'rxjs/operators';
-import { WidgetsBundleTabsComponent } from '@home/pages/widget/widgets-bundle-tabs.component';
+import {TranslateService} from '@ngx-translate/core';
+import {DatePipe} from '@angular/common';
+import {EntityType, entityTypeResources, entityTypeTranslations} from '@shared/models/entity-type.models';
+import {EntityAction} from '@home/models/entity/entity-component.models';
+import {WidgetsBundle} from '@shared/models/widgets-bundle.model';
+import {WidgetService} from '@app/core/http/widget.service';
+import {WidgetsBundleComponent} from '@modules/home/pages/widget/widgets-bundle.component';
+import {NULL_UUID} from '@shared/models/id/has-uuid';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {getCurrentAuthState, getCurrentAuthUser} from '@app/core/auth/auth.selectors';
+import {Authority} from '@shared/models/authority.enum';
+import {DialogService} from '@core/services/dialog.service';
+import {ImportExportService} from '@home/components/import-export/import-export.service';
+import {Direction} from '@shared/models/page/sort-order';
+import {WidgetsBundleTabsComponent} from '@home/pages/widget/widgets-bundle-tabs.component';
 
 @Injectable()
 export class WidgetsBundlesTableConfigResolver implements Resolve<EntityTableConfig<WidgetsBundle>> {

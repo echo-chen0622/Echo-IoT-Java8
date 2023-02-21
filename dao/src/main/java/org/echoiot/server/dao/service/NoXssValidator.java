@@ -2,11 +2,11 @@ package org.echoiot.server.dao.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.server.common.data.validation.NoXss;
 import org.owasp.validator.html.AntiSamy;
 import org.owasp.validator.html.Policy;
 import org.owasp.validator.html.PolicyException;
 import org.owasp.validator.html.ScanException;
-import org.echoiot.server.common.data.validation.NoXss;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

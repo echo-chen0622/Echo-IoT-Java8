@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.echoiot.server.common.data.security.Authority;
 import org.echoiot.server.common.data.security.model.JwtPair;
+import org.echoiot.server.service.security.auth.MfaAuthenticationToken;
 import org.echoiot.server.service.security.auth.mfa.config.TwoFaConfigManager;
+import org.echoiot.server.service.security.model.SecurityUser;
 import org.echoiot.server.service.security.model.token.JwtTokenFactory;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
@@ -13,8 +15,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-import org.echoiot.server.service.security.auth.MfaAuthenticationToken;
-import org.echoiot.server.service.security.model.SecurityUser;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

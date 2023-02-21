@@ -9,20 +9,20 @@ import {
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
-import { PageComponent } from '@shared/components/page.component';
-import { WidgetContext } from '@home/models/widget-component.models';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { Overlay } from '@angular/cdk/overlay';
-import { UtilsService } from '@core/services/utils.service';
-import { Datasource, DatasourceData, DatasourceType } from '@shared/models/widget.models';
-import { WINDOW } from '@core/services/window.service';
-import { AttributeService } from '@core/http/attribute.service';
-import { EntityId } from '@shared/models/id/entity-id';
-import { AttributeScope, DataKeyType } from '@shared/models/telemetry/telemetry.models';
-import { Observable } from 'rxjs';
-import { isString } from '@core/utils';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import {PageComponent} from '@shared/components/page.component';
+import {WidgetContext} from '@home/models/widget-component.models';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {Overlay} from '@angular/cdk/overlay';
+import {UtilsService} from '@core/services/utils.service';
+import {Datasource, DatasourceData, DatasourceType} from '@shared/models/widget.models';
+import {WINDOW} from '@core/services/window.service';
+import {AttributeService} from '@core/http/attribute.service';
+import {EntityId} from '@shared/models/id/entity-id';
+import {AttributeScope, DataKeyType} from '@shared/models/telemetry/telemetry.models';
+import {Observable} from 'rxjs';
+import {isString} from '@core/utils';
+import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 
 interface PhotoCameraInputWidgetSettings {
   widgetTitle: string;

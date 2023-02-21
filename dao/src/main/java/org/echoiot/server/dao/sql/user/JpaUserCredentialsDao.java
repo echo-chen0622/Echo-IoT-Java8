@@ -1,17 +1,17 @@
 package org.echoiot.server.dao.sql.user;
 
-import org.echoiot.server.dao.model.sql.UserCredentialsEntity;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Component;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.security.UserCredentials;
 import org.echoiot.server.dao.DaoUtil;
+import org.echoiot.server.dao.model.sql.UserCredentialsEntity;
 import org.echoiot.server.dao.sql.JpaAbstractDao;
 import org.echoiot.server.dao.user.UserCredentialsDao;
 import org.echoiot.server.dao.util.SqlDao;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.UUID;
 
 /**

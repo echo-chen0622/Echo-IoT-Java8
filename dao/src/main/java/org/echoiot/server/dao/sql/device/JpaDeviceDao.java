@@ -2,23 +2,7 @@ package org.echoiot.server.dao.sql.device;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import lombok.extern.slf4j.Slf4j;
-import org.echoiot.server.dao.model.sql.DeviceEntity;
-import org.echoiot.server.dao.model.sql.DeviceInfoEntity;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-import org.echoiot.server.common.data.Device;
-import org.echoiot.server.common.data.DeviceIdInfo;
-import org.echoiot.server.common.data.DeviceInfo;
-import org.echoiot.server.common.data.DeviceTransportType;
-import org.echoiot.server.common.data.EntitySubtype;
-import org.echoiot.server.common.data.EntityType;
-import org.echoiot.server.common.data.StringUtils;
+import org.echoiot.server.common.data.*;
 import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.ota.OtaPackageType;
@@ -27,15 +11,20 @@ import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.dao.DaoUtil;
 import org.echoiot.server.dao.device.DeviceDao;
+import org.echoiot.server.dao.model.sql.DeviceEntity;
+import org.echoiot.server.dao.model.sql.DeviceInfoEntity;
 import org.echoiot.server.dao.sql.JpaAbstractSearchTextDao;
 import org.echoiot.server.dao.util.SqlDao;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import javax.annotation.Resource;
+import java.util.*;
 
 /**
  * Created by Valerii Sosliuk on 5/6/2017.

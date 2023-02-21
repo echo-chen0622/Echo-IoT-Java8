@@ -1,8 +1,8 @@
 package org.echoiot.server.dao.cassandra;
 
+import org.echoiot.server.dao.util.NoSqlAnyDao;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-import org.echoiot.server.dao.util.NoSqlAnyDao;
 
 import javax.annotation.PostConstruct;
 

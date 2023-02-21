@@ -3,13 +3,7 @@ package org.echoiot.server.service.edge.rpc.sync;
 import com.google.common.util.concurrent.ListenableFuture;
 import org.echoiot.server.common.data.edge.Edge;
 import org.echoiot.server.common.data.id.TenantId;
-import org.echoiot.server.gen.edge.v1.AttributesRequestMsg;
-import org.echoiot.server.gen.edge.v1.DeviceCredentialsRequestMsg;
-import org.echoiot.server.gen.edge.v1.EntityViewsRequestMsg;
-import org.echoiot.server.gen.edge.v1.RelationRequestMsg;
-import org.echoiot.server.gen.edge.v1.RuleChainMetadataRequestMsg;
-import org.echoiot.server.gen.edge.v1.UserCredentialsRequestMsg;
-import org.echoiot.server.gen.edge.v1.WidgetBundleTypesRequestMsg;
+import org.echoiot.server.gen.edge.v1.*;
 
 public interface EdgeRequestsService {
 

@@ -8,17 +8,11 @@ import org.echoiot.server.common.data.id.OAuth2ClientRegistrationTemplateId;
 import org.echoiot.server.common.data.oauth2.OAuth2ClientRegistrationTemplate;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.security.permission.Operation;
-import org.echoiot.server.service.security.permission.Resource;
+import org.echoiot.server.service.security.permission.PerResource;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -38,7 +32,7 @@ public class OAuth2ConfigTemplateController extends BaseController {
     @ResponseStatus(value = HttpStatus.OK)
     public OAuth2ClientRegistrationTemplate saveClientRegistrationTemplate(@RequestBody OAuth2ClientRegistrationTemplate clientRegistrationTemplate) throws EchoiotException {
         try {
-            accessControlService.checkPermission(getCurrentUser(), Resource.OAUTH2_CONFIGURATION_TEMPLATE, Operation.WRITE);
+            accessControlService.checkPermission(getCurrentUser(), PerResource.OAUTH2_CONFIGURATION_TEMPLATE, Operation.WRITE);
             return oAuth2ConfigTemplateService.saveClientRegistrationTemplate(clientRegistrationTemplate);
         } catch (Exception e) {
             throw handleException(e);
@@ -54,7 +48,7 @@ public class OAuth2ConfigTemplateController extends BaseController {
                                                  @PathVariable(CLIENT_REGISTRATION_TEMPLATE_ID) String strClientRegistrationTemplateId) throws EchoiotException {
         checkParameter(CLIENT_REGISTRATION_TEMPLATE_ID, strClientRegistrationTemplateId);
         try {
-            accessControlService.checkPermission(getCurrentUser(), Resource.OAUTH2_CONFIGURATION_TEMPLATE, Operation.DELETE);
+            accessControlService.checkPermission(getCurrentUser(), PerResource.OAUTH2_CONFIGURATION_TEMPLATE, Operation.DELETE);
             @NotNull OAuth2ClientRegistrationTemplateId clientRegistrationTemplateId = new OAuth2ClientRegistrationTemplateId(toUUID(strClientRegistrationTemplateId));
             oAuth2ConfigTemplateService.deleteClientRegistrationTemplateById(clientRegistrationTemplateId);
         } catch (Exception e) {
@@ -69,7 +63,7 @@ public class OAuth2ConfigTemplateController extends BaseController {
     @ResponseBody
     public List<OAuth2ClientRegistrationTemplate> getClientRegistrationTemplates() throws EchoiotException {
         try {
-            accessControlService.checkPermission(getCurrentUser(), Resource.OAUTH2_CONFIGURATION_TEMPLATE, Operation.READ);
+            accessControlService.checkPermission(getCurrentUser(), PerResource.OAUTH2_CONFIGURATION_TEMPLATE, Operation.READ);
             return oAuth2ConfigTemplateService.findAllClientRegistrationTemplates();
         } catch (Exception e) {
             throw handleException(e);

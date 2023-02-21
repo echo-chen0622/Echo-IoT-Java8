@@ -1,6 +1,6 @@
-import { ComponentFactory, ComponentFactoryResolver, Injectable, Type } from '@angular/core';
-import { deepClone } from '@core/utils';
-import { IStateControllerComponent } from '@home/components/dashboard-page/states/state-controller.models';
+import {ComponentFactory, ComponentFactoryResolver, Injectable, Type} from '@angular/core';
+import {deepClone} from '@core/utils';
+import {IStateControllerComponent} from '@home/components/dashboard-page/states/state-controller.models';
 
 export interface StateControllerData {
   factory: ComponentFactory<IStateControllerComponent>;

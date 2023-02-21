@@ -2,6 +2,7 @@ package org.echoiot.server.transport.lwm2m.server.store;
 
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.transport.lwm2m.server.client.LwM2MClientState;
+import org.echoiot.server.transport.lwm2m.server.client.LwM2mClient;
 import org.echoiot.server.transport.lwm2m.server.store.util.LwM2MClientSerDes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -9,7 +10,6 @@ import org.springframework.data.redis.connection.RedisClusterConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.ScanOptions;
-import org.echoiot.server.transport.lwm2m.server.client.LwM2mClient;
 
 import java.util.ArrayList;
 import java.util.HashSet;

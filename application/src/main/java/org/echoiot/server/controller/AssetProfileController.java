@@ -13,7 +13,7 @@ import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.entitiy.asset.profile.TbAssetProfileService;
 import org.echoiot.server.service.security.permission.Operation;
-import org.echoiot.server.service.security.permission.Resource;
+import org.echoiot.server.service.security.permission.PerResource;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -100,7 +100,7 @@ public class AssetProfileController extends BaseController {
             @NotNull @ApiParam(value = "A JSON value representing the asset profile.")
             @RequestBody AssetProfile assetProfile) throws Exception {
         assetProfile.setTenantId(getTenantId());
-        checkEntity(assetProfile.getId(), assetProfile, Resource.ASSET_PROFILE);
+        checkEntity(assetProfile.getId(), assetProfile, PerResource.ASSET_PROFILE);
         return tbAssetProfileService.save(assetProfile, getCurrentUser());
     }
 

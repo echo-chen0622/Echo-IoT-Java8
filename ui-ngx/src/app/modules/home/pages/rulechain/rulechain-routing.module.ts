@@ -1,4 +1,4 @@
-import { Inject, Injectable, NgModule, Optional } from '@angular/core';
+import {Inject, Injectable, NgModule, Optional} from '@angular/core';
 import {
   ActivatedRouteSnapshot,
   CanActivate,
@@ -10,22 +10,19 @@ import {
   UrlTree
 } from '@angular/router';
 
-import { EntitiesTableComponent } from '../../components/entity/entities-table.component';
-import { Authority } from '@shared/models/authority.enum';
-import { RuleChainsTableConfigResolver } from '@modules/home/pages/rulechain/rulechains-table-config.resolver';
-import { from, Observable } from 'rxjs';
-import { BreadCrumbConfig, BreadCrumbLabelFunction } from '@shared/components/breadcrumb';
-import {
-  RuleChainMetaData,
-  RuleChain, RuleChainType
-} from '@shared/models/rule-chain.models';
-import { RuleChainService } from '@core/http/rule-chain.service';
-import { RuleChainPageComponent } from '@home/pages/rulechain/rulechain-page.component';
-import { RuleNodeComponentDescriptor } from '@shared/models/rule-node.models';
-import { ConfirmOnExitGuard } from '@core/guards/confirm-on-exit.guard';
-import { ItemBufferService } from '@core/public-api';
-import { MODULES_MAP } from '@shared/public-api';
-import { IModulesMap } from '@modules/common/modules-map.models';
+import {EntitiesTableComponent} from '../../components/entity/entities-table.component';
+import {Authority} from '@shared/models/authority.enum';
+import {RuleChainsTableConfigResolver} from '@modules/home/pages/rulechain/rulechains-table-config.resolver';
+import {from, Observable} from 'rxjs';
+import {BreadCrumbConfig, BreadCrumbLabelFunction} from '@shared/components/breadcrumb';
+import {RuleChain, RuleChainMetaData, RuleChainType} from '@shared/models/rule-chain.models';
+import {RuleChainService} from '@core/http/rule-chain.service';
+import {RuleChainPageComponent} from '@home/pages/rulechain/rulechain-page.component';
+import {RuleNodeComponentDescriptor} from '@shared/models/rule-node.models';
+import {ConfirmOnExitGuard} from '@core/guards/confirm-on-exit.guard';
+import {ItemBufferService} from '@core/public-api';
+import {MODULES_MAP} from '@shared/public-api';
+import {IModulesMap} from '@modules/common/modules-map.models';
 
 @Injectable()
 export class RuleChainResolver implements Resolve<RuleChain> {

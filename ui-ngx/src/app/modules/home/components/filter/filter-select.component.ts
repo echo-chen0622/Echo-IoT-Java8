@@ -1,12 +1,12 @@
 import {AfterViewInit, Component, ElementRef, forwardRef, Input, OnInit, SkipSelf, ViewChild} from '@angular/core';
 import {
-    ControlValueAccessor,
-    FormBuilder,
-    FormControl,
-    FormGroup,
-    FormGroupDirective,
-    NG_VALUE_ACCESSOR,
-    NgForm
+  ControlValueAccessor,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  FormGroupDirective,
+  NG_VALUE_ACCESSOR,
+  NgForm
 } from '@angular/forms';
 import {Observable, of} from 'rxjs';
 import {map, mergeMap, share, tap} from 'rxjs/operators';

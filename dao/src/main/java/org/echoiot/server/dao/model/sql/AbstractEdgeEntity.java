@@ -3,8 +3,6 @@ package org.echoiot.server.dao.model.sql;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
 import org.echoiot.server.common.data.edge.Edge;
 import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.id.EdgeId;
@@ -14,21 +12,15 @@ import org.echoiot.server.dao.model.BaseSqlEntity;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.model.SearchTextEntity;
 import org.echoiot.server.dao.util.mapping.JsonStringType;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import java.util.UUID;
 
-import static org.echoiot.server.dao.model.ModelConstants.EDGE_CUSTOMER_ID_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.EDGE_LABEL_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.EDGE_NAME_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.EDGE_ROOT_RULE_CHAIN_ID_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.EDGE_ROUTING_KEY_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.EDGE_SECRET_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.EDGE_TENANT_ID_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.EDGE_TYPE_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.SEARCH_TEXT_PROPERTY;
+import static org.echoiot.server.dao.model.ModelConstants.*;
 
 @Data
 @EqualsAndHashCode(callSuper = true)

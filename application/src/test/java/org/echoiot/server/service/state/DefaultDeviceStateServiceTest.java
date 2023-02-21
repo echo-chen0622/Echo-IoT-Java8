@@ -1,15 +1,6 @@
 package org.echoiot.server.service.state;
 
 import org.echoiot.server.cluster.TbClusterService;
-import org.hamcrest.CoreMatchers;
-import org.jetbrains.annotations.NotNull;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.echoiot.server.common.data.DeviceIdInfo;
 import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.data.id.TenantId;
@@ -22,17 +13,24 @@ import org.echoiot.server.dao.tenant.TenantService;
 import org.echoiot.server.dao.timeseries.TimeseriesService;
 import org.echoiot.server.queue.discovery.PartitionService;
 import org.echoiot.server.queue.discovery.TbServiceInfoProvider;
+import org.hamcrest.CoreMatchers;
+import org.jetbrains.annotations.NotNull;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Map;
 import java.util.UUID;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.echoiot.server.service.state.DefaultDeviceStateService.INACTIVITY_TIMEOUT;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
-import static org.echoiot.server.service.state.DefaultDeviceStateService.INACTIVITY_TIMEOUT;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DefaultDeviceStateServiceTest {

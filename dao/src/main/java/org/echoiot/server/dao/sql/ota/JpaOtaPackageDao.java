@@ -1,18 +1,18 @@
 package org.echoiot.server.dao.sql.ota;
 
 import lombok.extern.slf4j.Slf4j;
-import org.echoiot.server.dao.model.sql.OtaPackageEntity;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Component;
 import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.OtaPackage;
 import org.echoiot.server.common.data.id.TenantId;
+import org.echoiot.server.dao.model.sql.OtaPackageEntity;
 import org.echoiot.server.dao.ota.OtaPackageDao;
 import org.echoiot.server.dao.sql.JpaAbstractSearchTextDao;
 import org.echoiot.server.dao.util.SqlDao;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.UUID;
 
 @Slf4j

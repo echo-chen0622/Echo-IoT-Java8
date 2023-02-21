@@ -1,21 +1,21 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 
-import { Resolve, Router } from '@angular/router';
+import {Resolve, Router} from '@angular/router';
 
-import { TenantInfo } from '@shared/models/tenant.model';
+import {TenantInfo} from '@shared/models/tenant.model';
 import {
   DateEntityTableColumn,
   EntityTableColumn,
   EntityTableConfig
 } from '@home/models/entity/entities-table-config.models';
-import { TenantService } from '@core/http/tenant.service';
-import { TranslateService } from '@ngx-translate/core';
-import { DatePipe } from '@angular/common';
-import { EntityType, entityTypeResources, entityTypeTranslations } from '@shared/models/entity-type.models';
-import { TenantComponent } from '@modules/home/pages/tenant/tenant.component';
-import { EntityAction } from '@home/models/entity/entity-component.models';
-import { TenantTabsComponent } from '@home/pages/tenant/tenant-tabs.component';
-import { mergeMap } from 'rxjs/operators';
+import {TenantService} from '@core/http/tenant.service';
+import {TranslateService} from '@ngx-translate/core';
+import {DatePipe} from '@angular/common';
+import {EntityType, entityTypeResources, entityTypeTranslations} from '@shared/models/entity-type.models';
+import {TenantComponent} from '@modules/home/pages/tenant/tenant.component';
+import {EntityAction} from '@home/models/entity/entity-component.models';
+import {TenantTabsComponent} from '@home/pages/tenant/tenant-tabs.component';
+import {mergeMap} from 'rxjs/operators';
 
 @Injectable()
 export class TenantsTableConfigResolver implements Resolve<EntityTableConfig<TenantInfo>> {

@@ -2,18 +2,16 @@ package org.echoiot.server.transport.mqtt.rpc;
 
 import com.datastax.oss.driver.api.core.uuid.Uuids;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.server.dao.service.DaoSqlTest;
+import org.echoiot.server.service.security.AccessValidator;
+import org.echoiot.server.transport.mqtt.MqttTestConfigProperties;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.echoiot.server.dao.service.DaoSqlTest;
-import org.echoiot.server.service.security.AccessValidator;
-import org.echoiot.server.transport.mqtt.MqttTestConfigProperties;
 
+import static org.echoiot.server.common.data.device.profile.MqttTopics.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.echoiot.server.common.data.device.profile.MqttTopics.DEVICE_RPC_REQUESTS_SUB_SHORT_JSON_TOPIC;
-import static org.echoiot.server.common.data.device.profile.MqttTopics.DEVICE_RPC_REQUESTS_SUB_SHORT_TOPIC;
-import static org.echoiot.server.common.data.device.profile.MqttTopics.DEVICE_RPC_REQUESTS_SUB_TOPIC;
 
 @Slf4j
 @DaoSqlTest

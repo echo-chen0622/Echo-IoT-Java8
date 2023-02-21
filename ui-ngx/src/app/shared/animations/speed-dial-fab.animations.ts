@@ -1,4 +1,4 @@
-import { animate, keyframes, query, stagger, state, style, transition, trigger } from '@angular/animations';
+import {animate, keyframes, query, stagger, state, style, transition, trigger} from '@angular/animations';
 
 export const speedDialFabAnimations = [
   trigger('fabToggler', [

@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { PageLink } from '@shared/models/page/page-link';
-import { defaultHttpOptionsFromConfig, RequestConfig } from './http-utils';
-import { Observable } from 'rxjs';
-import { PageData } from '@shared/models/page/page-data';
-import { TenantProfile } from '@shared/models/tenant.model';
-import { EntityInfoData } from '@shared/models/entity.models';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {PageLink} from '@shared/models/page/page-link';
+import {defaultHttpOptionsFromConfig, RequestConfig} from './http-utils';
+import {Observable} from 'rxjs';
+import {PageData} from '@shared/models/page/page-data';
+import {TenantProfile} from '@shared/models/tenant.model';
+import {EntityInfoData} from '@shared/models/entity.models';
 
 @Injectable({
   providedIn: 'root'

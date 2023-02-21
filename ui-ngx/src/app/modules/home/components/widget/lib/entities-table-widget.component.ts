@@ -11,40 +11,26 @@ import {
   ViewChild,
   ViewContainerRef
 } from '@angular/core';
-import { PageComponent } from '@shared/components/page.component';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { WidgetAction, WidgetContext } from '@home/models/widget-component.models';
-import {
-  DataKey,
-  Datasource,
-  DatasourceData,
-  WidgetActionDescriptor,
-  WidgetConfig
-} from '@shared/models/widget.models';
-import { IWidgetSubscription } from '@core/api/widget-api.models';
-import { UtilsService } from '@core/services/utils.service';
-import { TranslateService } from '@ngx-translate/core';
-import {
-  createLabelFromDatasource,
-  deepClone,
-  hashCode,
-  isDefined,
-  isNumber,
-  isObject,
-  isUndefined
-} from '@core/utils';
+import {PageComponent} from '@shared/components/page.component';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {WidgetAction, WidgetContext} from '@home/models/widget-component.models';
+import {DataKey, Datasource, DatasourceData, WidgetActionDescriptor, WidgetConfig} from '@shared/models/widget.models';
+import {IWidgetSubscription} from '@core/api/widget-api.models';
+import {UtilsService} from '@core/services/utils.service';
+import {TranslateService} from '@ngx-translate/core';
+import {createLabelFromDatasource, deepClone, hashCode, isDefined, isNumber, isObject, isUndefined} from '@core/utils';
 import cssjs from '@core/css/css';
-import { CollectionViewer, DataSource } from '@angular/cdk/collections';
-import { DataKeyType } from '@shared/models/telemetry/telemetry.models';
-import { BehaviorSubject, fromEvent, merge, Observable } from 'rxjs';
-import { emptyPageData, PageData } from '@shared/models/page/page-data';
-import { EntityId } from '@shared/models/id/entity-id';
-import { entityTypeTranslations } from '@shared/models/entity-type.models';
-import { debounceTime, distinctUntilChanged, map, tap } from 'rxjs/operators';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort, SortDirection } from '@angular/material/sort';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import {CollectionViewer, DataSource} from '@angular/cdk/collections';
+import {DataKeyType} from '@shared/models/telemetry/telemetry.models';
+import {BehaviorSubject, fromEvent, merge, Observable} from 'rxjs';
+import {emptyPageData, PageData} from '@shared/models/page/page-data';
+import {EntityId} from '@shared/models/id/entity-id';
+import {entityTypeTranslations} from '@shared/models/entity-type.models';
+import {debounceTime, distinctUntilChanged, map, tap} from 'rxjs/operators';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatSort, SortDirection} from '@angular/material/sort';
+import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {
   CellContentInfo,
   CellStyleInfo,
@@ -62,8 +48,8 @@ import {
   getColumnDefaultVisibility,
   getColumnSelectionAvailability,
   getColumnWidth,
-  getHeaderTitle,
   getEntityValue,
+  getHeaderTitle,
   getRowStyleInfo,
   getTableCellButtonActions,
   noDataMessage,
@@ -74,8 +60,8 @@ import {
   TableWidgetSettings,
   widthStyle
 } from '@home/components/widget/lib/table-widget.models';
-import { ConnectedPosition, Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
-import { ComponentPortal } from '@angular/cdk/portal';
+import {ConnectedPosition, Overlay, OverlayConfig, OverlayRef} from '@angular/cdk/overlay';
+import {ComponentPortal} from '@angular/cdk/portal';
 import {
   DISPLAY_COLUMNS_PANEL_DATA,
   DisplayColumnsPanelComponent,
@@ -89,13 +75,13 @@ import {
   EntityKeyType,
   KeyFilter
 } from '@shared/models/query/query.models';
-import { sortItems } from '@shared/models/page/page-link';
-import { entityFields } from '@shared/models/entity.models';
-import { DatePipe } from '@angular/common';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ResizeObserver } from '@juggle/resize-observer';
-import { hidePageSizePixelValue } from '@shared/models/constants';
-import { AggregationType } from '@shared/models/time/time.models';
+import {sortItems} from '@shared/models/page/page-link';
+import {entityFields} from '@shared/models/entity.models';
+import {DatePipe} from '@angular/common';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {ResizeObserver} from '@juggle/resize-observer';
+import {hidePageSizePixelValue} from '@shared/models/constants';
+import {AggregationType} from '@shared/models/time/time.models';
 
 interface EntitiesTableWidgetSettings extends TableWidgetSettings {
   entitiesTitle: string;

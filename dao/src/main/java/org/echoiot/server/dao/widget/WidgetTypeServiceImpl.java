@@ -1,17 +1,17 @@
 package org.echoiot.server.dao.widget;
 
 import lombok.extern.slf4j.Slf4j;
-import org.echoiot.server.dao.service.DataValidator;
-import org.echoiot.server.dao.service.Validator;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.id.WidgetTypeId;
 import org.echoiot.server.common.data.widget.WidgetType;
 import org.echoiot.server.common.data.widget.WidgetTypeDetails;
 import org.echoiot.server.common.data.widget.WidgetTypeInfo;
+import org.echoiot.server.dao.service.DataValidator;
+import org.echoiot.server.dao.service.Validator;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 @Service

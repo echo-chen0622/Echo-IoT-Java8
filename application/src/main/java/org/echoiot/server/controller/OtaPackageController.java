@@ -17,20 +17,13 @@ import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.entitiy.ota.TbOtaPackageService;
 import org.echoiot.server.service.security.permission.Operation;
-import org.echoiot.server.service.security.permission.Resource;
+import org.echoiot.server.service.security.permission.PerResource;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -129,7 +122,7 @@ public class OtaPackageController extends BaseController {
     public OtaPackageInfo saveOtaPackageInfo(@NotNull @ApiParam(value = "A JSON value representing the OTA Package.")
                                              @RequestBody SaveOtaPackageInfoRequest otaPackageInfo) throws EchoiotException {
         otaPackageInfo.setTenantId(getTenantId());
-        checkEntity(otaPackageInfo.getId(), otaPackageInfo, Resource.OTA_PACKAGE);
+        checkEntity(otaPackageInfo.getId(), otaPackageInfo, PerResource.OTA_PACKAGE);
 
         return tbOtaPackageService.save(otaPackageInfo, getCurrentUser());
     }

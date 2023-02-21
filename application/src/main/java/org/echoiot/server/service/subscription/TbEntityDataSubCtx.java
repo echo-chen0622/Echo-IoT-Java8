@@ -6,32 +6,20 @@ import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.kv.Aggregation;
 import org.echoiot.server.common.data.page.PageData;
+import org.echoiot.server.common.data.query.*;
 import org.echoiot.server.dao.attributes.AttributesService;
 import org.echoiot.server.dao.entity.EntityService;
+import org.echoiot.server.service.telemetry.TelemetryWebSocketService;
+import org.echoiot.server.service.telemetry.TelemetryWebSocketSessionRef;
 import org.echoiot.server.service.telemetry.cmd.v2.EntityDataCmd;
 import org.echoiot.server.service.telemetry.cmd.v2.EntityDataUpdate;
 import org.echoiot.server.service.telemetry.cmd.v2.LatestValueCmd;
 import org.echoiot.server.service.telemetry.cmd.v2.TimeSeriesCmd;
 import org.echoiot.server.service.telemetry.sub.TelemetrySubscriptionUpdate;
-import org.echoiot.server.common.data.query.EntityData;
-import org.echoiot.server.common.data.query.EntityDataQuery;
-import org.echoiot.server.common.data.query.EntityKey;
-import org.echoiot.server.common.data.query.EntityKeyType;
-import org.echoiot.server.common.data.query.TsValue;
-import org.echoiot.server.service.telemetry.TelemetryWebSocketService;
-import org.echoiot.server.service.telemetry.TelemetryWebSocketSessionRef;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j

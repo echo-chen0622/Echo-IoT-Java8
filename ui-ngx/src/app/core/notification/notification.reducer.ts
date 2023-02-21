@@ -1,5 +1,5 @@
-import { NotificationState } from './notification.models';
-import { NotificationActions, NotificationActionTypes } from './notification.actions';
+import {NotificationState} from './notification.models';
+import {NotificationActions, NotificationActionTypes} from './notification.actions';
 
 export const initialState: NotificationState = {
   notification: null,

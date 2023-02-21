@@ -2,10 +2,10 @@ package org.echoiot.server.transport.lwm2m.server.downlink.composite;
 
 import lombok.Builder;
 import lombok.Getter;
-import org.eclipse.leshan.core.request.ContentFormat;
-import org.eclipse.leshan.core.response.WriteCompositeResponse;
 import org.echoiot.server.transport.lwm2m.server.LwM2MOperationType;
 import org.echoiot.server.transport.lwm2m.server.downlink.AbstractTbLwM2MTargetedDownlinkRequest;
+import org.eclipse.leshan.core.request.ContentFormat;
+import org.eclipse.leshan.core.response.WriteCompositeResponse;
 import org.jetbrains.annotations.NotNull;
 
 public class TbLwM2MWriteCompositeRequest extends AbstractTbLwM2MTargetedDownlinkRequest<WriteCompositeResponse> {

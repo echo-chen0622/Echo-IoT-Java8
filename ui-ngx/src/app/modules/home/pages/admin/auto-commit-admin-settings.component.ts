@@ -1,12 +1,12 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { PageComponent } from '@shared/components/page.component';
-import { HasConfirmForm } from '@core/guards/confirm-on-exit.guard';
-import { select, Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { FormGroup } from '@angular/forms';
-import { AutoCommitSettingsComponent } from '@home/components/vc/auto-commit-settings.component';
-import { selectHasRepository } from '@core/auth/auth.selectors';
-import { RepositorySettingsComponent } from '@home/components/vc/repository-settings.component';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {PageComponent} from '@shared/components/page.component';
+import {HasConfirmForm} from '@core/guards/confirm-on-exit.guard';
+import {select, Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {FormGroup} from '@angular/forms';
+import {AutoCommitSettingsComponent} from '@home/components/vc/auto-commit-settings.component';
+import {selectHasRepository} from '@core/auth/auth.selectors';
+import {RepositorySettingsComponent} from '@home/components/vc/repository-settings.component';
 
 @Component({
   selector: 'tb-auto-commit-admin-settings',

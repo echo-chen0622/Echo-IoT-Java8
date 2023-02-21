@@ -2,19 +2,19 @@ package org.echoiot.server.service.security.auth.oauth2;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.oauth2.OAuth2MapperConfig;
 import org.echoiot.server.common.data.oauth2.OAuth2Registration;
 import org.echoiot.server.dao.oauth2.OAuth2User;
+import org.echoiot.server.queue.util.TbCoreComponent;
+import org.echoiot.server.service.security.model.SecurityUser;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.echoiot.common.util.JacksonUtil;
-import org.echoiot.server.queue.util.TbCoreComponent;
-import org.echoiot.server.service.security.model.SecurityUser;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;

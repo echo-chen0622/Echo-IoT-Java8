@@ -8,19 +8,19 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { PageComponent } from '@shared/components/page.component';
-import { PageLink } from '@shared/models/page/page-link';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { TranslateService } from '@ngx-translate/core';
-import { MatDialog } from '@angular/material/dialog';
-import { DialogService } from '@core/services/dialog.service';
-import { EntityRelationService } from '@core/http/entity-relation.service';
-import { Direction, SortOrder } from '@shared/models/page/sort-order';
-import { forkJoin, fromEvent, merge, Observable } from 'rxjs';
-import { debounceTime, distinctUntilChanged, tap } from 'rxjs/operators';
+import {PageComponent} from '@shared/components/page.component';
+import {PageLink} from '@shared/models/page/page-link';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatSort} from '@angular/material/sort';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {TranslateService} from '@ngx-translate/core';
+import {MatDialog} from '@angular/material/dialog';
+import {DialogService} from '@core/services/dialog.service';
+import {EntityRelationService} from '@core/http/entity-relation.service';
+import {Direction, SortOrder} from '@shared/models/page/sort-order';
+import {forkJoin, fromEvent, merge, Observable} from 'rxjs';
+import {debounceTime, distinctUntilChanged, tap} from 'rxjs/operators';
 import {
   EntityRelation,
   EntityRelationInfo,
@@ -28,11 +28,11 @@ import {
   entitySearchDirectionTranslations,
   RelationTypeGroup
 } from '@shared/models/relation.models';
-import { EntityId } from '@shared/models/id/entity-id';
-import { RelationsDatasource } from '../../models/datasource/relation-datasource';
-import { RelationDialogComponent, RelationDialogData } from '@home/components/relation/relation-dialog.component';
-import { hidePageSizePixelValue } from '@shared/models/constants';
-import { ResizeObserver } from '@juggle/resize-observer';
+import {EntityId} from '@shared/models/id/entity-id';
+import {RelationsDatasource} from '../../models/datasource/relation-datasource';
+import {RelationDialogComponent, RelationDialogData} from '@home/components/relation/relation-dialog.component';
+import {hidePageSizePixelValue} from '@shared/models/constants';
+import {ResizeObserver} from '@juggle/resize-observer';
 
 @Component({
   selector: 'tb-relation-table',

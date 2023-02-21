@@ -23,14 +23,14 @@ import {
   ViewContainerRef,
   ViewEncapsulation
 } from '@angular/core';
-import { Direction, Directionality } from '@angular/cdk/bidi';
+import {Direction, Directionality} from '@angular/cdk/bidi';
 import {
   CdkConnectedOverlay,
   CdkOverlayOrigin,
   ConnectedOverlayPositionChange,
   ConnectionPositionPair
 } from '@angular/cdk/overlay';
-import { Subject, Subscription } from 'rxjs';
+import {Subject, Subscription} from 'rxjs';
 import {
   DEFAULT_POPOVER_POSITIONS,
   getPlacementName,
@@ -39,9 +39,9 @@ import {
   POSITION_MAP,
   PropertyMapping
 } from '@shared/components/popover.models';
-import { distinctUntilChanged, take, takeUntil } from 'rxjs/operators';
-import { isNotEmptyStr, onParentScrollOrWindowResize } from '@core/utils';
-import { animate, AnimationBuilder, AnimationMetadata, style } from '@angular/animations';
+import {distinctUntilChanged, take, takeUntil} from 'rxjs/operators';
+import {isNotEmptyStr, onParentScrollOrWindowResize} from '@core/utils';
+import {animate, AnimationBuilder, AnimationMetadata, style} from '@angular/animations';
 
 export type TbPopoverTrigger = 'click' | 'focus' | 'hover' | null;
 

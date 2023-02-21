@@ -7,16 +7,16 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {DialogComponent} from '@shared/components/dialog.component';
 import {Router} from '@angular/router';
 import {
-    createDeviceProfileConfiguration,
-    createDeviceProfileTransportConfiguration,
-    DeviceProfile,
-    DeviceProfileType,
-    deviceProfileTypeTranslationMap,
-    DeviceProvisionConfiguration,
-    DeviceProvisionType,
-    DeviceTransportType,
-    deviceTransportTypeHintMap,
-    deviceTransportTypeTranslationMap
+  createDeviceProfileConfiguration,
+  createDeviceProfileTransportConfiguration,
+  DeviceProfile,
+  DeviceProfileType,
+  deviceProfileTypeTranslationMap,
+  DeviceProvisionConfiguration,
+  DeviceProvisionType,
+  DeviceTransportType,
+  deviceTransportTypeHintMap,
+  deviceTransportTypeTranslationMap
 } from '@shared/models/device.models';
 import {DeviceProfileService} from '@core/http/device-profile.service';
 import {EntityType} from '@shared/models/entity-type.models';

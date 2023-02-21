@@ -2,13 +2,13 @@ import {Injectable} from '@angular/core';
 
 import {ActivatedRouteSnapshot, Resolve, Router} from '@angular/router';
 import {
-    CellActionDescriptor,
-    checkBoxCell,
-    DateEntityTableColumn,
-    EntityTableColumn,
-    EntityTableConfig,
-    GroupActionDescriptor,
-    HeaderActionDescriptor
+  CellActionDescriptor,
+  checkBoxCell,
+  DateEntityTableColumn,
+  EntityTableColumn,
+  EntityTableConfig,
+  GroupActionDescriptor,
+  HeaderActionDescriptor
 } from '@home/models/entity/entities-table-config.models';
 import {TranslateService} from '@ngx-translate/core';
 import {DatePipe} from '@angular/common';
@@ -27,12 +27,12 @@ import {BroadcastService} from '@core/services/broadcast.service';
 import {MatDialog} from '@angular/material/dialog';
 import {DialogService} from '@core/services/dialog.service';
 import {
-    AssignToCustomerDialogComponent,
-    AssignToCustomerDialogData
+  AssignToCustomerDialogComponent,
+  AssignToCustomerDialogData
 } from '@modules/home/dialogs/assign-to-customer-dialog.component';
 import {
-    AddEntitiesToCustomerDialogComponent,
-    AddEntitiesToCustomerDialogData
+  AddEntitiesToCustomerDialogComponent,
+  AddEntitiesToCustomerDialogData
 } from '../../dialogs/add-entities-to-customer-dialog.component';
 import {Asset, AssetInfo} from '@app/shared/models/asset.models';
 import {AssetService} from '@app/core/http/asset.service';
@@ -43,8 +43,8 @@ import {AssetTabsComponent} from '@home/pages/asset/asset-tabs.component';
 import {HomeDialogsService} from '@home/dialogs/home-dialogs.service';
 import {EdgeService} from '@core/http/edge.service';
 import {
-    AddEntitiesToEdgeDialogComponent,
-    AddEntitiesToEdgeDialogData
+  AddEntitiesToEdgeDialogComponent,
+  AddEntitiesToEdgeDialogData
 } from '@home/dialogs/add-entities-to-edge-dialog.component';
 
 @Injectable()

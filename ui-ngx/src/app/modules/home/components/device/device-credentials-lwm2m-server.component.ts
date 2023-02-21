@@ -1,20 +1,20 @@
 import {Component, forwardRef, OnDestroy} from '@angular/core';
 import {
-    ControlValueAccessor,
-    FormBuilder,
-    FormGroup,
-    NG_VALIDATORS,
-    NG_VALUE_ACCESSOR,
-    ValidationErrors,
-    Validator,
-    Validators
+  ControlValueAccessor,
+  FormBuilder,
+  FormGroup,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR,
+  ValidationErrors,
+  Validator,
+  Validators
 } from '@angular/forms';
 import {
-    Lwm2mClientSecretKeyTooltipTranslationsMap,
-    Lwm2mPublicKeyOrIdTooltipTranslationsMap,
-    Lwm2mSecurityType,
-    Lwm2mSecurityTypeTranslationMap,
-    ServerSecurityConfig
+  Lwm2mClientSecretKeyTooltipTranslationsMap,
+  Lwm2mPublicKeyOrIdTooltipTranslationsMap,
+  Lwm2mSecurityType,
+  Lwm2mSecurityTypeTranslationMap,
+  ServerSecurityConfig
 } from '@shared/models/lwm2m-security-config.models';
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';

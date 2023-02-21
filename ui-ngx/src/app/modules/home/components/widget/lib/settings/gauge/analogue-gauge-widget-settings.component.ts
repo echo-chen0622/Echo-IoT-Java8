@@ -1,9 +1,9 @@
-import { WidgetSettings, WidgetSettingsComponent } from '@shared/models/widget.models';
-import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { GaugeHighlight } from '@home/components/widget/lib/settings/gauge/gauge-highlight.component';
-import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import {WidgetSettings, WidgetSettingsComponent} from '@shared/models/widget.models';
+import {AbstractControl, FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {GaugeHighlight} from '@home/components/widget/lib/settings/gauge/gauge-highlight.component';
+import {CdkDragDrop} from '@angular/cdk/drag-drop';
 
 export class AnalogueGaugeWidgetSettingsComponent extends WidgetSettingsComponent {
 

@@ -2,15 +2,15 @@ package org.echoiot.server.dao.sql.device;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.server.common.data.DeviceIdInfo;
+import org.echoiot.server.common.data.id.TenantId;
+import org.echoiot.server.common.data.page.PageData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.support.TransactionTemplate;
-import org.echoiot.server.common.data.DeviceIdInfo;
-import org.echoiot.server.common.data.id.TenantId;
-import org.echoiot.server.common.data.page.PageData;
 
 import java.util.Collections;
 import java.util.List;

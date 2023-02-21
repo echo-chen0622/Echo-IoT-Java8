@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input, OnDestroy, OnInit } from '@angular/core';
+import {Component, forwardRef, Input, OnDestroy, OnInit} from '@angular/core';
 import {
   AbstractControl,
   ControlValueAccessor,
@@ -11,10 +11,10 @@ import {
   Validator,
   Validators
 } from '@angular/forms';
-import { SnmpMapping } from '@shared/models/device.models';
-import { Subscription } from 'rxjs';
-import { DataType, DataTypeTranslationMap } from '@shared/models/constants';
-import { isUndefinedOrNull } from '@core/utils';
+import {SnmpMapping} from '@shared/models/device.models';
+import {Subscription} from 'rxjs';
+import {DataType, DataTypeTranslationMap} from '@shared/models/constants';
+import {isUndefinedOrNull} from '@core/utils';
 
 @Component({
   selector: 'tb-snmp-device-profile-mapping',

@@ -11,24 +11,17 @@ import org.echoiot.server.common.transport.auth.ValidateDeviceCredentialsRespons
 import org.echoiot.server.common.transport.config.ssl.SslCredentials;
 import org.echoiot.server.common.transport.config.ssl.SslCredentialsConfig;
 import org.echoiot.server.common.transport.util.SslUtil;
+import org.echoiot.server.gen.transport.TransportProtos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-import org.echoiot.server.gen.transport.TransportProtos;
 
-import javax.net.ssl.KeyManager;
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLEngine;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.TrustManagerFactory;
-import javax.net.ssl.X509TrustManager;
+import javax.annotation.Resource;
+import javax.net.ssl.*;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;

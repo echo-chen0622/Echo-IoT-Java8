@@ -2,6 +2,7 @@ package org.echoiot.server.transport.lwm2m.secure;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.server.queue.util.TbLwM2mTransportComponent;
 import org.echoiot.server.transport.lwm2m.server.client.LwM2MAuthException;
 import org.echoiot.server.transport.lwm2m.server.client.LwM2mClientContext;
 import org.echoiot.server.transport.lwm2m.server.store.TbLwM2MDtlsSessionStore;
@@ -16,7 +17,6 @@ import org.eclipse.leshan.server.security.SecurityInfo;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Component;
-import org.echoiot.server.queue.util.TbLwM2mTransportComponent;
 
 import java.util.Arrays;
 

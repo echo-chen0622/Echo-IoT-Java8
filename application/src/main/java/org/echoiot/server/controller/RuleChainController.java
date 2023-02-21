@@ -8,6 +8,10 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.rule.engine.api.ScriptEngine;
+import org.echoiot.script.api.js.JsInvokeService;
+import org.echoiot.script.api.tbel.TbelInvokeService;
+import org.echoiot.server.actors.ActorSystemContext;
 import org.echoiot.server.actors.tenant.DebugTbRateLimits;
 import org.echoiot.server.common.data.EventInfo;
 import org.echoiot.server.common.data.StringUtils;
@@ -22,6 +26,7 @@ import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageDataIterableByTenant;
 import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.common.data.plugin.ComponentLifecycleEvent;
+import org.echoiot.server.common.data.rule.*;
 import org.echoiot.server.common.data.script.ScriptLanguage;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.TbMsgDataType;
@@ -32,7 +37,7 @@ import org.echoiot.server.service.rule.TbRuleChainService;
 import org.echoiot.server.service.script.RuleNodeJsScriptEngine;
 import org.echoiot.server.service.script.RuleNodeTbelScriptEngine;
 import org.echoiot.server.service.security.permission.Operation;
-import org.echoiot.server.service.security.permission.Resource;
+import org.echoiot.server.service.security.permission.PerResource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,26 +45,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-import org.echoiot.rule.engine.api.ScriptEngine;
-import org.echoiot.script.api.js.JsInvokeService;
-import org.echoiot.script.api.tbel.TbelInvokeService;
-import org.echoiot.server.actors.ActorSystemContext;
-import org.echoiot.server.common.data.rule.DefaultRuleChainCreateRequest;
-import org.echoiot.server.common.data.rule.RuleChain;
-import org.echoiot.server.common.data.rule.RuleChainData;
-import org.echoiot.server.common.data.rule.RuleChainImportResult;
-import org.echoiot.server.common.data.rule.RuleChainMetaData;
-import org.echoiot.server.common.data.rule.RuleChainOutputLabelsUsage;
-import org.echoiot.server.common.data.rule.RuleChainType;
+import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -67,28 +55,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 
-import static org.echoiot.server.controller.ControllerConstants.EDGE_ASSIGN_ASYNC_FIRST_STEP_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.EDGE_ASSIGN_RECEIVE_STEP_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.EDGE_ID;
-import static org.echoiot.server.controller.ControllerConstants.EDGE_ID_PARAM_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.EDGE_UNASSIGN_ASYNC_FIRST_STEP_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.EDGE_UNASSIGN_RECEIVE_STEP_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.MARKDOWN_CODE_BLOCK_END;
-import static org.echoiot.server.controller.ControllerConstants.MARKDOWN_CODE_BLOCK_START;
-import static org.echoiot.server.controller.ControllerConstants.PAGE_DATA_PARAMETERS;
-import static org.echoiot.server.controller.ControllerConstants.PAGE_NUMBER_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.PAGE_SIZE_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.RULE_CHAIN_ID_PARAM_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.RULE_CHAIN_SORT_PROPERTY_ALLOWABLE_VALUES;
-import static org.echoiot.server.controller.ControllerConstants.RULE_CHAIN_TEXT_SEARCH_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.RULE_CHAIN_TYPES_ALLOWABLE_VALUES;
-import static org.echoiot.server.controller.ControllerConstants.RULE_CHAIN_TYPE_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.RULE_NODE_ID_PARAM_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES;
-import static org.echoiot.server.controller.ControllerConstants.SORT_ORDER_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.SORT_PROPERTY_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.TENANT_AUTHORITY_PARAGRAPH;
-import static org.echoiot.server.controller.ControllerConstants.UUID_WIKI_LINK;
+import static org.echoiot.server.controller.ControllerConstants.*;
 
 @Slf4j
 @RestController
@@ -232,7 +199,7 @@ public class RuleChainController extends BaseController {
             @NotNull @ApiParam(value = "A JSON value representing the rule chain.")
             @RequestBody RuleChain ruleChain) throws Exception {
         ruleChain.setTenantId(getCurrentUser().getTenantId());
-        checkEntity(ruleChain.getId(), ruleChain, Resource.RULE_CHAIN);
+        checkEntity(ruleChain.getId(), ruleChain, PerResource.RULE_CHAIN);
         return tbRuleChainService.save(ruleChain, getCurrentUser());
     }
 

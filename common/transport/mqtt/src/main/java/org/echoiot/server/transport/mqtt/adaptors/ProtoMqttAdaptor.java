@@ -15,12 +15,12 @@ import org.echoiot.server.common.data.ota.OtaPackageType;
 import org.echoiot.server.common.transport.adaptor.AdaptorException;
 import org.echoiot.server.common.transport.adaptor.JsonConverter;
 import org.echoiot.server.common.transport.adaptor.ProtoConverter;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.stereotype.Component;
 import org.echoiot.server.gen.transport.TransportApiProtos;
 import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.transport.mqtt.session.DeviceSessionCtx;
 import org.echoiot.server.transport.mqtt.session.MqttDeviceAwareSessionContext;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 

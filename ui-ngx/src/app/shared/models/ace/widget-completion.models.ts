@@ -1,5 +1,5 @@
-import { TbEditorCompletion, TbEditorCompletions } from '@shared/models/ace/completion.models';
-import { entityIdHref, serviceCompletions } from '@shared/models/ace/service-completion.models';
+import {TbEditorCompletion, TbEditorCompletions} from '@shared/models/ace/completion.models';
+import {entityIdHref, serviceCompletions} from '@shared/models/ace/service-completion.models';
 
 export const timewindowCompletion: TbEditorCompletion = {
   description: 'Timewindow configuration object',

@@ -13,53 +13,26 @@ import org.echoiot.server.common.data.id.EntityIdFactory;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
+import org.echoiot.server.common.data.sync.vc.*;
 import org.echoiot.server.common.data.sync.vc.request.create.VersionCreateRequest;
 import org.echoiot.server.common.data.sync.vc.request.load.VersionLoadRequest;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.security.model.SecurityUser;
 import org.echoiot.server.service.security.permission.Operation;
-import org.echoiot.server.service.security.permission.Resource;
+import org.echoiot.server.service.security.permission.PerResource;
 import org.echoiot.server.service.sync.vc.EntitiesVersionControlService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
-import org.echoiot.server.common.data.sync.vc.BranchInfo;
-import org.echoiot.server.common.data.sync.vc.EntityDataDiff;
-import org.echoiot.server.common.data.sync.vc.EntityDataInfo;
-import org.echoiot.server.common.data.sync.vc.EntityVersion;
-import org.echoiot.server.common.data.sync.vc.VersionCreationResult;
-import org.echoiot.server.common.data.sync.vc.VersionLoadResult;
-import org.echoiot.server.common.data.sync.vc.VersionedEntityInfo;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static org.echoiot.server.controller.ControllerConstants.BRANCH_PARAM_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.ENTITY_TYPE_PARAM_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.MARKDOWN_CODE_BLOCK_END;
-import static org.echoiot.server.controller.ControllerConstants.MARKDOWN_CODE_BLOCK_START;
-import static org.echoiot.server.controller.ControllerConstants.NEW_LINE;
-import static org.echoiot.server.controller.ControllerConstants.PAGE_DATA_PARAMETERS;
-import static org.echoiot.server.controller.ControllerConstants.PAGE_SIZE_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.PAGE_NUMBER_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.ENTITY_VERSION_TEXT_SEARCH_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.SORT_PROPERTY_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.SORT_ORDER_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES;
-import static org.echoiot.server.controller.ControllerConstants.TENANT_AUTHORITY_PARAGRAPH;
-import static org.echoiot.server.controller.ControllerConstants.VC_REQUEST_ID_PARAM_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.VERSION_ID_PARAM_DESCRIPTION;
+import static org.echoiot.server.controller.ControllerConstants.*;
 
 @RestController
 @TbCoreComponent
@@ -146,7 +119,7 @@ public class EntitiesVersionControlController extends BaseController {
     @PostMapping("/version")
     public DeferredResult<UUID> saveEntitiesVersion(@RequestBody VersionCreateRequest request) throws Exception {
         SecurityUser user = getCurrentUser();
-        accessControlService.checkPermission(getCurrentUser(), Resource.VERSION_CONTROL, Operation.WRITE);
+        accessControlService.checkPermission(getCurrentUser(), PerResource.VERSION_CONTROL, Operation.WRITE);
         return wrapFuture(versionControlService.saveEntitiesVersion(user, request));
     }
 
@@ -179,7 +152,7 @@ public class EntitiesVersionControlController extends BaseController {
     @GetMapping(value = "/version/{requestId}/status")
     public VersionCreationResult getVersionCreateRequestStatus(@ApiParam(value = VC_REQUEST_ID_PARAM_DESCRIPTION, required = true)
                                                                @PathVariable UUID requestId) throws Exception {
-        accessControlService.checkPermission(getCurrentUser(), Resource.VERSION_CONTROL, Operation.WRITE);
+        accessControlService.checkPermission(getCurrentUser(), PerResource.VERSION_CONTROL, Operation.WRITE);
         return versionControlService.getVersionCreateStatus(getCurrentUser(), requestId);
     }
 
@@ -236,7 +209,7 @@ public class EntitiesVersionControlController extends BaseController {
                                                                       @RequestParam(required = false) String sortProperty,
                                                                       @NotNull @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
                                                                       @RequestParam(required = false) String sortOrder) throws Exception {
-        accessControlService.checkPermission(getCurrentUser(), Resource.VERSION_CONTROL, Operation.READ);
+        accessControlService.checkPermission(getCurrentUser(), PerResource.VERSION_CONTROL, Operation.READ);
         EntityId externalEntityId = EntityIdFactory.getByTypeAndUuid(entityType, externalEntityUuid);
         @NotNull PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
         return wrapFuture(versionControlService.listEntityVersions(getTenantId(), branch, externalEntityId, pageLink));
@@ -263,7 +236,7 @@ public class EntitiesVersionControlController extends BaseController {
                                                                           @RequestParam(required = false) String sortProperty,
                                                                           @NotNull @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
                                                                           @RequestParam(required = false) String sortOrder) throws Exception {
-        accessControlService.checkPermission(getCurrentUser(), Resource.VERSION_CONTROL, Operation.READ);
+        accessControlService.checkPermission(getCurrentUser(), PerResource.VERSION_CONTROL, Operation.READ);
         @NotNull PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
         return wrapFuture(versionControlService.listEntityTypeVersions(getTenantId(), branch, entityType, pageLink));
     }
@@ -286,7 +259,7 @@ public class EntitiesVersionControlController extends BaseController {
                                                                 @RequestParam(required = false) String sortProperty,
                                                                 @NotNull @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
                                                                 @RequestParam(required = false) String sortOrder) throws Exception {
-        accessControlService.checkPermission(getCurrentUser(), Resource.VERSION_CONTROL, Operation.READ);
+        accessControlService.checkPermission(getCurrentUser(), PerResource.VERSION_CONTROL, Operation.READ);
         @NotNull PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
         return wrapFuture(versionControlService.listVersions(getTenantId(), branch, pageLink));
     }
@@ -302,7 +275,7 @@ public class EntitiesVersionControlController extends BaseController {
                                                                            @PathVariable EntityType entityType,
                                                                            @ApiParam(value = VERSION_ID_PARAM_DESCRIPTION, required = true)
                                                                            @PathVariable String versionId) throws Exception {
-        accessControlService.checkPermission(getCurrentUser(), Resource.VERSION_CONTROL, Operation.READ);
+        accessControlService.checkPermission(getCurrentUser(), PerResource.VERSION_CONTROL, Operation.READ);
         return wrapFuture(versionControlService.listEntitiesAtVersion(getTenantId(), versionId, entityType));
     }
 
@@ -314,7 +287,7 @@ public class EntitiesVersionControlController extends BaseController {
     @GetMapping(value = "/entity/{versionId}")
     public DeferredResult<List<VersionedEntityInfo>> listAllEntitiesAtVersion(@ApiParam(value = VERSION_ID_PARAM_DESCRIPTION, required = true)
                                                                               @PathVariable String versionId) throws Exception {
-        accessControlService.checkPermission(getCurrentUser(), Resource.VERSION_CONTROL, Operation.READ);
+        accessControlService.checkPermission(getCurrentUser(), PerResource.VERSION_CONTROL, Operation.READ);
         return wrapFuture(versionControlService.listAllEntitiesAtVersion(getTenantId(), versionId));
     }
 
@@ -331,7 +304,7 @@ public class EntitiesVersionControlController extends BaseController {
                                                             @PathVariable EntityType entityType,
                                                             @ApiParam(value = "A string value representing external entity id", required = true)
                                                             @PathVariable UUID externalEntityUuid) throws Exception {
-        accessControlService.checkPermission(getCurrentUser(), Resource.VERSION_CONTROL, Operation.READ);
+        accessControlService.checkPermission(getCurrentUser(), PerResource.VERSION_CONTROL, Operation.READ);
         EntityId entityId = EntityIdFactory.getByTypeAndUuid(entityType, externalEntityUuid);
         return wrapFuture(versionControlService.getEntityDataInfo(getCurrentUser(), entityId, versionId));
     }
@@ -347,7 +320,7 @@ public class EntitiesVersionControlController extends BaseController {
                                                                      @PathVariable UUID internalEntityUuid,
                                                                      @ApiParam(value = VERSION_ID_PARAM_DESCRIPTION, required = true)
                                                                      @RequestParam String versionId) throws Exception {
-        accessControlService.checkPermission(getCurrentUser(), Resource.VERSION_CONTROL, Operation.READ);
+        accessControlService.checkPermission(getCurrentUser(), PerResource.VERSION_CONTROL, Operation.READ);
         EntityId entityId = EntityIdFactory.getByTypeAndUuid(entityType, internalEntityUuid);
         return wrapFuture(versionControlService.compareEntityDataToVersion(getCurrentUser(), entityId, versionId));
     }
@@ -414,7 +387,7 @@ public class EntitiesVersionControlController extends BaseController {
     @PostMapping("/entity")
     public UUID loadEntitiesVersion(@RequestBody VersionLoadRequest request) throws Exception {
         SecurityUser user = getCurrentUser();
-        accessControlService.checkPermission(user, Resource.VERSION_CONTROL, Operation.WRITE);
+        accessControlService.checkPermission(user, PerResource.VERSION_CONTROL, Operation.WRITE);
         return versionControlService.loadEntitiesVersion(user, request);
     }
 
@@ -456,7 +429,7 @@ public class EntitiesVersionControlController extends BaseController {
     @GetMapping(value = "/entity/{requestId}/status")
     public VersionLoadResult getVersionLoadRequestStatus(@ApiParam(value = VC_REQUEST_ID_PARAM_DESCRIPTION, required = true)
                                                          @PathVariable UUID requestId) throws Exception {
-        accessControlService.checkPermission(getCurrentUser(), Resource.VERSION_CONTROL, Operation.WRITE);
+        accessControlService.checkPermission(getCurrentUser(), PerResource.VERSION_CONTROL, Operation.WRITE);
         return versionControlService.getVersionLoadStatus(getCurrentUser(), requestId);
     }
 
@@ -482,7 +455,7 @@ public class EntitiesVersionControlController extends BaseController {
             MARKDOWN_CODE_BLOCK_END)
     @GetMapping("/branches")
     public DeferredResult<List<BranchInfo>> listBranches() throws Exception {
-        accessControlService.checkPermission(getCurrentUser(), Resource.VERSION_CONTROL, Operation.READ);
+        accessControlService.checkPermission(getCurrentUser(), PerResource.VERSION_CONTROL, Operation.READ);
         final TenantId tenantId = getTenantId();
         ListenableFuture<List<BranchInfo>> branches = versionControlService.listBranches(tenantId);
         return wrapFuture(Futures.transform(branches, remoteBranches -> {

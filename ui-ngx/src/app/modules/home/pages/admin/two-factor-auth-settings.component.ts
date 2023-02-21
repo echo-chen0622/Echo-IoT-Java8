@@ -1,10 +1,10 @@
-import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
-import { PageComponent } from '@shared/components/page.component';
-import { HasConfirmForm } from '@core/guards/confirm-on-exit.guard';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { TwoFactorAuthenticationService } from '@core/http/two-factor-authentication.service';
+import {Component, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {PageComponent} from '@shared/components/page.component';
+import {HasConfirmForm} from '@core/guards/confirm-on-exit.guard';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {TwoFactorAuthenticationService} from '@core/http/two-factor-authentication.service';
 import {
   TwoFactorAuthProviderConfigForm,
   twoFactorAuthProvidersData,
@@ -12,10 +12,10 @@ import {
   TwoFactorAuthSettings,
   TwoFactorAuthSettingsForm
 } from '@shared/models/two-factor-auth.models';
-import { isNotEmptyStr } from '@core/utils';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { MatExpansionPanel } from '@angular/material/expansion';
+import {isNotEmptyStr} from '@core/utils';
+import {Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
+import {MatExpansionPanel} from '@angular/material/expansion';
 
 @Component({
   selector: 'tb-2fa-settings',

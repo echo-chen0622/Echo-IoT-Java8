@@ -1,14 +1,14 @@
-import { Component, Inject, InjectionToken } from '@angular/core';
+import {Component, Inject, InjectionToken} from '@angular/core';
 import {
   AlarmSearchStatus,
   alarmSearchStatusTranslations,
   AlarmSeverity,
   alarmSeverityTranslations
 } from '@shared/models/alarm.models';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { MatChipInputEvent } from '@angular/material/chips';
-import { COMMA, ENTER, SEMICOLON } from '@angular/cdk/keycodes';
-import { OverlayRef } from '@angular/cdk/overlay';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {MatChipInputEvent} from '@angular/material/chips';
+import {COMMA, ENTER, SEMICOLON} from '@angular/cdk/keycodes';
+import {OverlayRef} from '@angular/cdk/overlay';
 
 export const ALARM_FILTER_PANEL_DATA = new InjectionToken<any>('AlarmFilterPanelData');
 

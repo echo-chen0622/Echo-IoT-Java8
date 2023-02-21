@@ -3,9 +3,11 @@ package org.echoiot.server.dao.service.validator;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.id.TenantId;
+import org.echoiot.server.common.data.rule.*;
 import org.echoiot.server.common.data.tenant.profile.DefaultTenantProfileConfiguration;
 import org.echoiot.server.common.data.util.ReflectionUtils;
 import org.echoiot.server.dao.exception.DataValidationException;
@@ -17,21 +19,11 @@ import org.echoiot.server.dao.tenant.TbTenantProfileCache;
 import org.echoiot.server.dao.tenant.TenantService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
-import org.echoiot.common.util.JacksonUtil;
-import org.echoiot.server.common.data.rule.NodeConnectionInfo;
-import org.echoiot.server.common.data.rule.RuleChain;
-import org.echoiot.server.common.data.rule.RuleChainMetaData;
-import org.echoiot.server.common.data.rule.RuleChainType;
-import org.echoiot.server.common.data.rule.RuleNode;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import javax.annotation.Resource;
+import java.util.*;
 
 @Component
 @Slf4j

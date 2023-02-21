@@ -25,7 +25,7 @@ import org.echoiot.server.service.asset.AssetBulkImportService;
 import org.echoiot.server.service.entitiy.asset.TbAssetService;
 import org.echoiot.server.service.security.model.SecurityUser;
 import org.echoiot.server.service.security.permission.Operation;
-import org.echoiot.server.service.security.permission.Resource;
+import org.echoiot.server.service.security.permission.PerResource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.http.HttpStatus;
@@ -100,7 +100,7 @@ public class AssetController extends BaseController {
     @ResponseBody
     public Asset saveAsset(@NotNull @ApiParam(value = "A JSON value representing the asset.") @RequestBody Asset asset) throws Exception {
         asset.setTenantId(getTenantId());
-        checkEntity(asset.getId(), asset, Resource.ASSET);
+        checkEntity(asset.getId(), asset, PerResource.ASSET);
         return tbAssetService.save(asset, getCurrentUser());
     }
 
@@ -373,7 +373,7 @@ public class AssetController extends BaseController {
             List<Asset> assets = checkNotNull(assetService.findAssetsByQuery(getTenantId(), query).get());
             assets = assets.stream().filter(asset -> {
                 try {
-                    accessControlService.checkPermission(getCurrentUser(), Resource.ASSET, Operation.READ, asset.getId(), asset);
+                    accessControlService.checkPermission(getCurrentUser(), PerResource.ASSET, Operation.READ, asset.getId(), asset);
                     return true;
                 } catch (EchoiotException e) {
                     return false;
@@ -487,7 +487,7 @@ public class AssetController extends BaseController {
             }
             @NotNull List<Asset> filteredAssets = nonFilteredResult.getData().stream().filter(asset -> {
                 try {
-                    accessControlService.checkPermission(getCurrentUser(), Resource.ASSET, Operation.READ, asset.getId(), asset);
+                    accessControlService.checkPermission(getCurrentUser(), PerResource.ASSET, Operation.READ, asset.getId(), asset);
                     return true;
                 } catch (EchoiotException e) {
                     return false;

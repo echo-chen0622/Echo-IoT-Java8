@@ -1,15 +1,11 @@
 package org.echoiot.server.transport.lwm2m.bootstrap.store;
 
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.server.queue.util.TbLwM2mBootstrapTransportComponent;
 import org.eclipse.leshan.core.request.Identity;
-import org.eclipse.leshan.server.bootstrap.BootstrapConfig;
-import org.eclipse.leshan.server.bootstrap.BootstrapSession;
-import org.eclipse.leshan.server.bootstrap.ConfigurationChecker;
-import org.eclipse.leshan.server.bootstrap.InMemoryBootstrapConfigStore;
-import org.eclipse.leshan.server.bootstrap.InvalidConfigurationException;
+import org.eclipse.leshan.server.bootstrap.*;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
-import org.echoiot.server.queue.util.TbLwM2mBootstrapTransportComponent;
 
 import java.util.Map;
 import java.util.concurrent.locks.Lock;

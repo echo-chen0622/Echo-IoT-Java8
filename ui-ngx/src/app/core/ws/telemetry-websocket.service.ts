@@ -1,10 +1,11 @@
-import { Inject, Injectable, NgZone } from '@angular/core';
+import {Inject, Injectable, NgZone} from '@angular/core';
 import {
   AlarmDataCmd,
   AlarmDataUnsubscribeCmd,
   AlarmDataUpdate,
   AttributesSubscriptionCmd,
-  EntityCountCmd, EntityCountUnsubscribeCmd,
+  EntityCountCmd,
+  EntityCountUnsubscribeCmd,
   EntityCountUpdate,
   EntityDataCmd,
   EntityDataUnsubscribeCmd,
@@ -22,13 +23,13 @@ import {
   TimeseriesSubscriptionCmd,
   WebsocketDataMsg
 } from '@app/shared/models/telemetry/telemetry.models';
-import { select, Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { AuthService } from '@core/auth/auth.service';
-import { selectIsAuthenticated } from '@core/auth/auth.selectors';
-import { WINDOW } from '@core/services/window.service';
-import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
-import { ActionNotificationShow } from '@core/notification/notification.actions';
+import {select, Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {AuthService} from '@core/auth/auth.service';
+import {selectIsAuthenticated} from '@core/auth/auth.selectors';
+import {WINDOW} from '@core/services/window.service';
+import {webSocket, WebSocketSubject} from 'rxjs/webSocket';
+import {ActionNotificationShow} from '@core/notification/notification.actions';
 import Timeout = NodeJS.Timeout;
 
 const RECONNECT_INTERVAL = 2000;

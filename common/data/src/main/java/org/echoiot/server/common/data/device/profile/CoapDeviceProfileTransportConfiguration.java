@@ -1,8 +1,8 @@
 package org.echoiot.server.common.data.device.profile;
 
 import lombok.Data;
-import org.echoiot.server.common.data.device.data.PowerSavingConfiguration;
 import org.echoiot.server.common.data.DeviceTransportType;
+import org.echoiot.server.common.data.device.data.PowerSavingConfiguration;
 import org.jetbrains.annotations.NotNull;
 
 @Data

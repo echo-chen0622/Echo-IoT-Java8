@@ -3,16 +3,7 @@ package org.echoiot.server.dao.oauth2;
 import org.echoiot.server.common.data.BaseData;
 import org.echoiot.server.common.data.id.OAuth2ParamsId;
 import org.echoiot.server.common.data.id.TenantId;
-import org.echoiot.server.common.data.oauth2.OAuth2ClientInfo;
-import org.echoiot.server.common.data.oauth2.OAuth2Domain;
-import org.echoiot.server.common.data.oauth2.OAuth2DomainInfo;
-import org.echoiot.server.common.data.oauth2.OAuth2Info;
-import org.echoiot.server.common.data.oauth2.OAuth2Mobile;
-import org.echoiot.server.common.data.oauth2.OAuth2MobileInfo;
-import org.echoiot.server.common.data.oauth2.OAuth2Params;
-import org.echoiot.server.common.data.oauth2.OAuth2ParamsInfo;
-import org.echoiot.server.common.data.oauth2.OAuth2Registration;
-import org.echoiot.server.common.data.oauth2.OAuth2RegistrationInfo;
+import org.echoiot.server.common.data.oauth2.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Comparator;

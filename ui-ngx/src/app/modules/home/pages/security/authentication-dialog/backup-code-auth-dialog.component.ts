@@ -7,9 +7,9 @@ import {TwoFactorAuthenticationService} from '@core/http/two-factor-authenticati
 import {MatDialogRef} from '@angular/material/dialog';
 import {FormBuilder} from '@angular/forms';
 import {
-    AccountTwoFaSettings,
-    BackupCodeTwoFactorAuthAccountConfig,
-    TwoFactorAuthProviderType
+  AccountTwoFaSettings,
+  BackupCodeTwoFactorAuthAccountConfig,
+  TwoFactorAuthProviderType
 } from '@shared/models/two-factor-auth.models';
 import {mergeMap, tap} from 'rxjs/operators';
 import {ImportExportService} from '@home/components/import-export/import-export.service';

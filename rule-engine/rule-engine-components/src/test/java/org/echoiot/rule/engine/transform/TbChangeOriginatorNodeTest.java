@@ -4,6 +4,16 @@ import com.datastax.oss.driver.api.core.uuid.Uuids;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
+import org.echoiot.common.util.ListeningExecutor;
+import org.echoiot.rule.engine.api.TbContext;
+import org.echoiot.rule.engine.api.TbNodeConfiguration;
+import org.echoiot.rule.engine.api.TbNodeException;
+import org.echoiot.server.common.data.asset.Asset;
+import org.echoiot.server.common.data.id.*;
+import org.echoiot.server.common.msg.TbMsg;
+import org.echoiot.server.common.msg.TbMsgDataType;
+import org.echoiot.server.common.msg.TbMsgMetaData;
+import org.echoiot.server.dao.asset.AssetService;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,30 +21,14 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.echoiot.common.util.ListeningExecutor;
-import org.echoiot.rule.engine.api.TbContext;
-import org.echoiot.rule.engine.api.TbNodeConfiguration;
-import org.echoiot.rule.engine.api.TbNodeException;
-import org.echoiot.server.common.data.asset.Asset;
-import org.echoiot.server.common.data.id.AssetId;
-import org.echoiot.server.common.data.id.CustomerId;
-import org.echoiot.server.common.data.id.EntityId;
-import org.echoiot.server.common.data.id.RuleChainId;
-import org.echoiot.server.common.data.id.RuleNodeId;
-import org.echoiot.server.common.msg.TbMsg;
-import org.echoiot.server.common.msg.TbMsgDataType;
-import org.echoiot.server.common.msg.TbMsgMetaData;
-import org.echoiot.server.dao.asset.AssetService;
 
 import java.util.concurrent.Callable;
 
+import static org.echoiot.rule.engine.api.TbRelationTypes.FAILURE;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.same;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.echoiot.rule.engine.api.TbRelationTypes.FAILURE;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TbChangeOriginatorNodeTest {

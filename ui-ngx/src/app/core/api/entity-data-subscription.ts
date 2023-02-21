@@ -1,4 +1,4 @@
-import { ComparisonResultType, DataSet, DataSetHolder, DatasourceType, widgetType } from '@shared/models/widget.models';
+import {ComparisonResultType, DataSet, DataSetHolder, DatasourceType, widgetType} from '@shared/models/widget.models';
 import {
   AggregationType,
   ComparisonDuration,
@@ -28,15 +28,15 @@ import {
   TelemetryService,
   TelemetrySubscriber
 } from '@shared/models/telemetry/telemetry.models';
-import { UtilsService } from '@core/services/utils.service';
-import { EntityDataListener, EntityDataLoadResult } from '@core/api/entity-data.service';
-import { deepClone, isDefined, isDefinedAndNotNull, isNumeric, isObject, objectHashCode } from '@core/utils';
-import { PageData } from '@shared/models/page/page-data';
-import { DataAggregator } from '@core/api/data-aggregator';
-import { NULL_UUID } from '@shared/models/id/has-uuid';
-import { EntityType } from '@shared/models/entity-type.models';
-import { Observable, of, ReplaySubject, Subject } from 'rxjs';
-import { EntityId } from '@shared/models/id/entity-id';
+import {UtilsService} from '@core/services/utils.service';
+import {EntityDataListener, EntityDataLoadResult} from '@core/api/entity-data.service';
+import {deepClone, isDefined, isDefinedAndNotNull, isNumeric, isObject, objectHashCode} from '@core/utils';
+import {PageData} from '@shared/models/page/page-data';
+import {DataAggregator} from '@core/api/data-aggregator';
+import {NULL_UUID} from '@shared/models/id/has-uuid';
+import {EntityType} from '@shared/models/entity-type.models';
+import {Observable, of, ReplaySubject, Subject} from 'rxjs';
+import {EntityId} from '@shared/models/id/entity-id';
 import Timeout = NodeJS.Timeout;
 
 declare type DataKeyFunction = (time: number, prevValue: any) => any;

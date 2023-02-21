@@ -1,12 +1,6 @@
 package org.echoiot.server.dao.sql.component;
 
 import com.datastax.oss.driver.api.core.uuid.Uuids;
-import org.echoiot.server.dao.model.sql.ComponentDescriptorEntity;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 import org.echoiot.server.common.data.id.ComponentDescriptorId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.page.PageData;
@@ -16,8 +10,14 @@ import org.echoiot.server.common.data.plugin.ComponentScope;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.dao.DaoUtil;
 import org.echoiot.server.dao.component.ComponentDescriptorDao;
+import org.echoiot.server.dao.model.sql.ComponentDescriptorEntity;
 import org.echoiot.server.dao.sql.JpaAbstractSearchTextDao;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;

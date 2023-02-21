@@ -1,6 +1,5 @@
-
-import { isPlatformBrowser } from '@angular/common';
-import { ClassProvider, FactoryProvider, Injectable, InjectionToken, PLATFORM_ID } from '@angular/core';
+import {isPlatformBrowser} from '@angular/common';
+import {ClassProvider, FactoryProvider, Injectable, InjectionToken, PLATFORM_ID} from '@angular/core';
 
 /* Create a new injection token for injecting the window into a component. */
 export const WINDOW = new InjectionToken('WindowToken');

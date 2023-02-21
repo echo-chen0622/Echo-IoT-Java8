@@ -3,6 +3,7 @@ package org.echoiot.server.service.rpc;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.cluster.TbClusterService;
 import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.data.id.RpcId;
@@ -18,7 +19,6 @@ import org.echoiot.server.queue.util.TbCoreComponent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
-import org.echoiot.common.util.JacksonUtil;
 
 @TbCoreComponent
 @Service

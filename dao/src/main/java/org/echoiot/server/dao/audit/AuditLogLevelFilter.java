@@ -1,10 +1,10 @@
 package org.echoiot.server.dao.audit;
 
+import org.echoiot.server.common.data.EntityType;
+import org.echoiot.server.common.data.audit.ActionType;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
-import org.echoiot.server.common.data.EntityType;
-import org.echoiot.server.common.data.audit.ActionType;
 
 import java.util.HashMap;
 import java.util.Locale;

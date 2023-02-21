@@ -1,14 +1,14 @@
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { RuleChainService } from '@core/http/rule-chain.service';
-import { switchMap } from 'rxjs/operators';
-import { MatDialog } from '@angular/material/dialog';
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs';
+import {RuleChainService} from '@core/http/rule-chain.service';
+import {switchMap} from 'rxjs/operators';
+import {MatDialog} from '@angular/material/dialog';
 import {
   NodeScriptTestDialogComponent,
   NodeScriptTestDialogData
 } from '@shared/components/dialog/node-script-test-dialog.component';
-import { sortObjectKeys } from '@core/utils';
-import { ScriptLanguage } from '@shared/models/rule-node.models';
+import {sortObjectKeys} from '@core/utils';
+import {ScriptLanguage} from '@shared/models/rule-node.models';
 
 @Injectable({
   providedIn: 'root'

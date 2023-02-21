@@ -1,11 +1,6 @@
 package org.echoiot.server.dao.sql.resource;
 
 import lombok.extern.slf4j.Slf4j;
-import org.echoiot.server.dao.model.sql.TbResourceEntity;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Component;
 import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.ResourceType;
 import org.echoiot.server.common.data.TbResource;
@@ -13,9 +8,14 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.dao.DaoUtil;
+import org.echoiot.server.dao.model.sql.TbResourceEntity;
 import org.echoiot.server.dao.resource.TbResourceDao;
 import org.echoiot.server.dao.sql.JpaAbstractSearchTextDao;
 import org.echoiot.server.dao.util.SqlDao;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Objects;

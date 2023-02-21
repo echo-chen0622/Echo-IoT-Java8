@@ -1,4 +1,3 @@
-
 import config from 'config';
 import path from 'path';
 import DailyRotateFile from 'winston-daily-rotate-file';

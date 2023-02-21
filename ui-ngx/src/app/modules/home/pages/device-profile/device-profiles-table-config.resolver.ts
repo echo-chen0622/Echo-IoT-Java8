@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
 import {Resolve, Router} from '@angular/router';
 import {
-    checkBoxCell,
-    DateEntityTableColumn,
-    EntityTableColumn,
-    EntityTableConfig,
-    HeaderActionDescriptor
+  checkBoxCell,
+  DateEntityTableColumn,
+  EntityTableColumn,
+  EntityTableConfig,
+  HeaderActionDescriptor
 } from '@home/models/entity/entities-table-config.models';
 import {TranslateService} from '@ngx-translate/core';
 import {DatePipe} from '@angular/common';
@@ -13,17 +13,17 @@ import {EntityType, entityTypeResources, entityTypeTranslations} from '@shared/m
 import {EntityAction} from '@home/models/entity/entity-component.models';
 import {DialogService} from '@core/services/dialog.service';
 import {
-    DeviceProfile,
-    deviceProfileTypeTranslationMap,
-    deviceTransportTypeTranslationMap
+  DeviceProfile,
+  deviceProfileTypeTranslationMap,
+  deviceTransportTypeTranslationMap
 } from '@shared/models/device.models';
 import {DeviceProfileService} from '@core/http/device-profile.service';
 import {DeviceProfileComponent} from '@home/components/profile/device-profile.component';
 import {DeviceProfileTabsComponent} from './device-profile-tabs.component';
 import {MatDialog} from '@angular/material/dialog';
 import {
-    AddDeviceProfileDialogComponent,
-    AddDeviceProfileDialogData
+  AddDeviceProfileDialogComponent,
+  AddDeviceProfileDialogData
 } from '@home/components/profile/add-device-profile-dialog.component';
 import {ImportExportService} from '@home/components/import-export/import-export.service';
 import {HomeDialogsService} from '@home/dialogs/home-dialogs.service';

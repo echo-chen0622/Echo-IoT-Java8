@@ -15,30 +15,19 @@ import org.echoiot.rule.engine.api.TbNodeConfiguration;
 import org.echoiot.rule.engine.api.TbNodeException;
 import org.echoiot.rule.engine.api.util.TbNodeUtils;
 import org.echoiot.server.common.data.id.EntityId;
-import org.echoiot.server.common.data.kv.AttributeKvEntry;
-import org.echoiot.server.common.data.kv.BasicTsKvEntry;
-import org.echoiot.server.common.data.kv.JsonDataEntry;
-import org.echoiot.server.common.data.kv.KvEntry;
-import org.echoiot.server.common.data.kv.TsKvEntry;
+import org.echoiot.server.common.data.kv.*;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.TbMsgMetaData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import static org.echoiot.common.util.DonAsynchron.withCallback;
 import static org.echoiot.rule.engine.api.TbRelationTypes.FAILURE;
-import static org.echoiot.server.common.data.DataConstants.CLIENT_SCOPE;
-import static org.echoiot.server.common.data.DataConstants.LATEST_TS;
-import static org.echoiot.server.common.data.DataConstants.SERVER_SCOPE;
-import static org.echoiot.server.common.data.DataConstants.SHARED_SCOPE;
+import static org.echoiot.server.common.data.DataConstants.*;
 
 public abstract class TbAbstractGetAttributesNode<C extends TbGetAttributesNodeConfiguration, T extends EntityId> implements TbNode {
 

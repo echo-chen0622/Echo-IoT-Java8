@@ -1,5 +1,5 @@
-import { FcModel } from 'ngx-flowchart';
-import { FcRuleEdge, FcRuleNode, FcRuleNodeType } from '@shared/models/rule-node.models';
+import {FcModel} from 'ngx-flowchart';
+import {FcRuleEdge, FcRuleNode, FcRuleNodeType} from '@shared/models/rule-node.models';
 
 export interface FcRuleNodeTypeModel extends FcModel {
   nodes: Array<FcRuleNodeType>;

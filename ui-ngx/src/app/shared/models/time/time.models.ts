@@ -1,5 +1,5 @@
-import { TimeService } from '@core/services/time.service';
-import { deepClone, isDefined, isNumeric, isUndefined } from '@app/core/utils';
+import {TimeService} from '@core/services/time.service';
+import {deepClone, isDefined, isNumeric, isUndefined} from '@app/core/utils';
 import * as moment_ from 'moment';
 import * as momentTz from 'moment-timezone';
 

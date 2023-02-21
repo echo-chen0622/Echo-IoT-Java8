@@ -1,10 +1,5 @@
 package org.echoiot.rule.engine.metadata;
 
-import org.jetbrains.annotations.NotNull;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.echoiot.rule.engine.api.TbNodeException;
 import org.echoiot.server.common.data.Device;
 import org.echoiot.server.common.data.User;
@@ -13,6 +8,11 @@ import org.echoiot.server.common.data.id.AssetId;
 import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.UserId;
+import org.jetbrains.annotations.NotNull;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.UUID;
 

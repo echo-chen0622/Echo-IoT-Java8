@@ -2,7 +2,6 @@ package org.echoiot.server.dao.model.sql;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.annotations.TypeDef;
 import org.echoiot.server.common.data.id.EntityIdFactory;
 import org.echoiot.server.common.data.id.RuleNodeId;
 import org.echoiot.server.common.data.id.RuleNodeStateId;
@@ -11,6 +10,7 @@ import org.echoiot.server.dao.DaoUtil;
 import org.echoiot.server.dao.model.BaseSqlEntity;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.util.mapping.JsonStringType;
+import org.hibernate.annotations.TypeDef;
 import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Column;

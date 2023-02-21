@@ -1,13 +1,13 @@
 package org.echoiot.server.dao.sql.audit;
 
+import org.echoiot.server.common.data.EntityType;
+import org.echoiot.server.common.data.audit.ActionType;
 import org.echoiot.server.dao.model.sql.AuditLogEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.echoiot.server.common.data.EntityType;
-import org.echoiot.server.common.data.audit.ActionType;
 
 import java.util.List;
 import java.util.UUID;

@@ -18,7 +18,7 @@ import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.entitiy.dashboard.TbDashboardService;
 import org.echoiot.server.service.security.model.SecurityUser;
 import org.echoiot.server.service.security.permission.Operation;
-import org.echoiot.server.service.security.permission.Resource;
+import org.echoiot.server.service.security.permission.PerResource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Value;
@@ -130,7 +130,7 @@ public class DashboardController extends BaseController {
             @NotNull @ApiParam(value = "A JSON value representing the dashboard.")
             @RequestBody Dashboard dashboard) throws Exception {
         dashboard.setTenantId(getTenantId());
-        checkEntity(dashboard.getId(), dashboard, Resource.DASHBOARD);
+        checkEntity(dashboard.getId(), dashboard, PerResource.DASHBOARD);
         return tbDashboardService.save(dashboard, getCurrentUser());
     }
 
@@ -641,7 +641,7 @@ public class DashboardController extends BaseController {
             PageData<DashboardInfo> nonFilteredResult = dashboardService.findDashboardsByTenantIdAndEdgeId(tenantId, edgeId, pageLink);
             @NotNull List<DashboardInfo> filteredDashboards = nonFilteredResult.getData().stream().filter(dashboardInfo -> {
                 try {
-                    accessControlService.checkPermission(getCurrentUser(), Resource.DASHBOARD, Operation.READ, dashboardInfo.getId(), dashboardInfo);
+                    accessControlService.checkPermission(getCurrentUser(), PerResource.DASHBOARD, Operation.READ, dashboardInfo.getId(), dashboardInfo);
                     return true;
                 } catch (EchoiotException e) {
                     return false;

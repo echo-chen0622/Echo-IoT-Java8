@@ -8,14 +8,14 @@ import {AliasFilterType, EntityAliases, SingleEntityFilter} from '@shared/models
 import {EntityInfo} from '@shared/models/entity.models';
 import {map, mergeMap} from 'rxjs/operators';
 import {
-    createDefaultEntityDataPageLink,
-    Filter,
-    FilterInfo,
-    filterInfoToKeyFilters,
-    Filters,
-    KeyFilter,
-    singleEntityDataPageLink,
-    updateDatasourceFromEntityInfo
+  createDefaultEntityDataPageLink,
+  Filter,
+  FilterInfo,
+  filterInfoToKeyFilters,
+  Filters,
+  KeyFilter,
+  singleEntityDataPageLink,
+  updateDatasourceFromEntityInfo
 } from '@shared/models/query/query.models';
 import {TranslateService} from '@ngx-translate/core';
 

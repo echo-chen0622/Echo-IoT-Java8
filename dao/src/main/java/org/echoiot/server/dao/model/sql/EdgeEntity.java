@@ -2,9 +2,9 @@ package org.echoiot.server.dao.model.sql;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.annotations.TypeDef;
 import org.echoiot.server.common.data.edge.Edge;
 import org.echoiot.server.dao.util.mapping.JsonStringType;
+import org.hibernate.annotations.TypeDef;
 import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Entity;

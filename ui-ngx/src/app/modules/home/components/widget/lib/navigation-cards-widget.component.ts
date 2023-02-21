@@ -1,12 +1,12 @@
-import { PageComponent } from '@shared/components/page.component';
-import { Component, Input, NgZone, OnInit } from '@angular/core';
-import { WidgetContext } from '@home/models/widget-component.models';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { MenuService } from '@core/services/menu.service';
-import { HomeSection, HomeSectionPlace } from '@core/services/menu.models';
-import { Router } from '@angular/router';
-import { map } from 'rxjs/operators';
+import {PageComponent} from '@shared/components/page.component';
+import {Component, Input, NgZone, OnInit} from '@angular/core';
+import {WidgetContext} from '@home/models/widget-component.models';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {MenuService} from '@core/services/menu.service';
+import {HomeSection, HomeSectionPlace} from '@core/services/menu.models';
+import {Router} from '@angular/router';
+import {map} from 'rxjs/operators';
 
 interface NavigationCardsWidgetSettings {
   filterType: 'all' | 'include' | 'exclude';

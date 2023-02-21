@@ -1,37 +1,21 @@
 package org.echoiot.server.transport.lwm2m.rpc;
 
-import org.jetbrains.annotations.NotNull;
-import org.junit.Before;
 import org.echoiot.server.common.data.Device;
 import org.echoiot.server.common.data.device.credentials.lwm2m.LwM2MDeviceCredentials;
 import org.echoiot.server.common.data.device.profile.Lwm2mDeviceProfileTransportConfiguration;
 import org.echoiot.server.dao.service.DaoSqlTest;
 import org.echoiot.server.transport.lwm2m.AbstractLwM2MIntegrationTest;
+import org.jetbrains.annotations.NotNull;
+import org.junit.Before;
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 
-import static org.eclipse.leshan.core.LwM2mId.ACCESS_CONTROL;
-import static org.eclipse.leshan.core.LwM2mId.DEVICE;
-import static org.eclipse.leshan.core.LwM2mId.FIRMWARE;
-import static org.eclipse.leshan.core.LwM2mId.SERVER;
-import static org.eclipse.leshan.core.LwM2mId.SOFTWARE_MANAGEMENT;
-import static org.echoiot.server.transport.lwm2m.Lwm2mTestHelper.BINARY_APP_DATA_CONTAINER;
-import static org.echoiot.server.transport.lwm2m.Lwm2mTestHelper.TEMPERATURE_SENSOR;
-import static org.echoiot.server.transport.lwm2m.Lwm2mTestHelper.OBJECT_ID_0;
-import static org.echoiot.server.transport.lwm2m.Lwm2mTestHelper.OBJECT_INSTANCE_ID_0;
-import static org.echoiot.server.transport.lwm2m.Lwm2mTestHelper.OBJECT_INSTANCE_ID_1;
-import static org.echoiot.server.transport.lwm2m.Lwm2mTestHelper.RESOURCE_ID_NAME_19_0_0;
-import static org.echoiot.server.transport.lwm2m.Lwm2mTestHelper.RESOURCE_ID_NAME_19_1_0;
-import static org.echoiot.server.transport.lwm2m.Lwm2mTestHelper.RESOURCE_ID_NAME_3_14;
-import static org.echoiot.server.transport.lwm2m.Lwm2mTestHelper.RESOURCE_ID_NAME_3_9;
-import static org.echoiot.server.transport.lwm2m.Lwm2mTestHelper.RESOURCE_ID_0;
-import static org.echoiot.server.transport.lwm2m.Lwm2mTestHelper.RESOURCE_ID_14;
-import static org.echoiot.server.transport.lwm2m.Lwm2mTestHelper.RESOURCE_ID_9;
-import static org.echoiot.server.transport.lwm2m.Lwm2mTestHelper.resources;
+import static org.echoiot.server.transport.lwm2m.Lwm2mTestHelper.*;
 import static org.echoiot.server.transport.lwm2m.Lwm2mTestHelper.LwM2MProfileBootstrapConfigType.NONE;
+import static org.eclipse.leshan.core.LwM2mId.*;
 
 @DaoSqlTest
 public abstract class AbstractRpcLwM2MIntegrationTest extends AbstractLwM2MIntegrationTest {

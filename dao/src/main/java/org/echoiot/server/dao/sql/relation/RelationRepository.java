@@ -1,5 +1,6 @@
 package org.echoiot.server.dao.sql.relation;
 
+import org.echoiot.server.common.data.rule.RuleChainType;
 import org.echoiot.server.dao.model.sql.RelationCompositeKey;
 import org.echoiot.server.dao.model.sql.RelationEntity;
 import org.springframework.data.domain.Pageable;
@@ -9,7 +10,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
-import org.echoiot.server.common.data.rule.RuleChainType;
 
 import java.util.List;
 import java.util.UUID;

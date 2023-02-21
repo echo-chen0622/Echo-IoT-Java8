@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input, OnDestroy, OnInit } from '@angular/core';
+import {Component, forwardRef, Input, OnDestroy, OnInit} from '@angular/core';
 import {
   AbstractControl,
   ControlValueAccessor,
@@ -10,10 +10,10 @@ import {
   Validator,
   Validators
 } from '@angular/forms';
-import { SnmpCommunicationConfig, SnmpSpecType, SnmpSpecTypeTranslationMap } from '@shared/models/device.models';
-import { Subject, Subscription } from 'rxjs';
-import { isUndefinedOrNull } from '@core/utils';
-import { takeUntil } from 'rxjs/operators';
+import {SnmpCommunicationConfig, SnmpSpecType, SnmpSpecTypeTranslationMap} from '@shared/models/device.models';
+import {Subject, Subscription} from 'rxjs';
+import {isUndefinedOrNull} from '@core/utils';
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
   selector: 'tb-snmp-device-profile-communication-config',

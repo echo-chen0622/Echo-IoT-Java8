@@ -4,7 +4,7 @@ import {FormBuilder, Validators} from '@angular/forms';
 import {Store} from '@ngrx/store';
 import {AppState} from '@core/core.state';
 import {
-    AnalogueGaugeWidgetSettingsComponent
+  AnalogueGaugeWidgetSettingsComponent
 } from '@home/components/widget/lib/settings/gauge/analogue-gauge-widget-settings.component';
 
 @Component({

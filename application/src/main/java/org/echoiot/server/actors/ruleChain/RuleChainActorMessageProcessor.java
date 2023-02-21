@@ -1,7 +1,13 @@
 package org.echoiot.server.actors.ruleChain;
 
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.rule.engine.api.TbRelationTypes;
+import org.echoiot.server.actors.ActorSystemContext;
+import org.echoiot.server.actors.TbActorCtx;
+import org.echoiot.server.actors.TbActorRef;
 import org.echoiot.server.actors.TbEntityActorId;
+import org.echoiot.server.actors.service.DefaultActorService;
+import org.echoiot.server.actors.shared.ComponentMsgProcessor;
 import org.echoiot.server.cluster.TbClusterService;
 import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.id.EntityId;
@@ -15,36 +21,19 @@ import org.echoiot.server.common.data.rule.RuleChain;
 import org.echoiot.server.common.data.rule.RuleChainType;
 import org.echoiot.server.common.data.rule.RuleNode;
 import org.echoiot.server.common.msg.TbMsg;
+import org.echoiot.server.common.msg.plugin.ComponentLifecycleMsg;
+import org.echoiot.server.common.msg.plugin.RuleNodeUpdatedMsg;
+import org.echoiot.server.common.msg.queue.*;
 import org.echoiot.server.common.stats.TbApiUsageReportClient;
 import org.echoiot.server.dao.rule.RuleChainService;
+import org.echoiot.server.gen.transport.TransportProtos.ToRuleEngineMsg;
 import org.echoiot.server.queue.TbQueueCallback;
 import org.echoiot.server.queue.common.MultipleTbQueueTbMsgCallbackWrapper;
 import org.echoiot.server.queue.common.TbQueueTbMsgCallbackWrapper;
-import org.echoiot.rule.engine.api.TbRelationTypes;
-import org.echoiot.server.actors.ActorSystemContext;
-import org.echoiot.server.actors.TbActorCtx;
-import org.echoiot.server.actors.TbActorRef;
-import org.echoiot.server.actors.service.DefaultActorService;
-import org.echoiot.server.actors.shared.ComponentMsgProcessor;
-import org.echoiot.server.common.msg.plugin.ComponentLifecycleMsg;
-import org.echoiot.server.common.msg.plugin.RuleNodeUpdatedMsg;
-import org.echoiot.server.common.msg.queue.PartitionChangeMsg;
-import org.echoiot.server.common.msg.queue.QueueToRuleEngineMsg;
-import org.echoiot.server.common.msg.queue.RuleEngineException;
-import org.echoiot.server.common.msg.queue.RuleNodeException;
-import org.echoiot.server.common.msg.queue.ServiceType;
-import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
-import org.echoiot.server.gen.transport.TransportProtos.ToRuleEngineMsg;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**

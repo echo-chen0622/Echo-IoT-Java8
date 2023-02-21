@@ -2,9 +2,9 @@ package org.echoiot.server.service.script;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.util.JsonFormat;
+import org.echoiot.server.gen.js.JsInvokeProtos;
 import org.echoiot.server.queue.common.TbProtoQueueMsg;
 import org.echoiot.server.queue.kafka.TbKafkaEncoder;
-import org.echoiot.server.gen.js.JsInvokeProtos;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.charset.StandardCharsets;

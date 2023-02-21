@@ -5,9 +5,9 @@ import {AppState} from '@app/core/core.state';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {isDefinedAndNotNull} from '@core/utils';
 import {
-    AwsSnsSmsProviderConfiguration,
-    SmsProviderConfiguration,
-    SmsProviderType
+  AwsSnsSmsProviderConfiguration,
+  SmsProviderConfiguration,
+  SmsProviderType
 } from '@shared/models/settings.models';
 
 @Component({

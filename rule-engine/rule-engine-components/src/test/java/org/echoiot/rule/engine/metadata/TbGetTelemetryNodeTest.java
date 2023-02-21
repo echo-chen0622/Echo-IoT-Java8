@@ -1,13 +1,13 @@
 package org.echoiot.rule.engine.metadata;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.jetbrains.annotations.NotNull;
-import org.junit.Before;
-import org.junit.Test;
 import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.rule.engine.api.TbContext;
 import org.echoiot.rule.engine.api.TbNodeConfiguration;
 import org.echoiot.server.common.data.kv.Aggregation;
+import org.jetbrains.annotations.NotNull;
+import org.junit.Before;
+import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;

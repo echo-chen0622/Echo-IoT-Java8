@@ -1,20 +1,20 @@
 package org.echoiot.server.dao.sql.widget;
 
-import org.echoiot.server.dao.model.sql.WidgetTypeDetailsEntity;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Component;
 import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.widget.WidgetType;
 import org.echoiot.server.common.data.widget.WidgetTypeDetails;
 import org.echoiot.server.common.data.widget.WidgetTypeInfo;
 import org.echoiot.server.dao.DaoUtil;
+import org.echoiot.server.dao.model.sql.WidgetTypeDetailsEntity;
 import org.echoiot.server.dao.sql.JpaAbstractDao;
 import org.echoiot.server.dao.util.SqlDao;
 import org.echoiot.server.dao.widget.WidgetTypeDao;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.UUID;
 

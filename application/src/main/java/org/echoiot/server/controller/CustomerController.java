@@ -15,18 +15,11 @@ import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.entitiy.customer.TbCustomerService;
 import org.echoiot.server.service.security.permission.Operation;
-import org.echoiot.server.service.security.permission.Resource;
+import org.echoiot.server.service.security.permission.PerResource;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @TbCoreComponent
@@ -120,7 +113,7 @@ public class CustomerController extends BaseController {
     @ResponseBody
     public Customer saveCustomer(@NotNull @ApiParam(value = "A JSON value representing the customer.") @RequestBody Customer customer) throws Exception {
         customer.setTenantId(getTenantId());
-        checkEntity(customer.getId(), customer, Resource.CUSTOMER);
+        checkEntity(customer.getId(), customer, PerResource.CUSTOMER);
         return tbCustomerService.save(customer, getCurrentUser());
     }
 

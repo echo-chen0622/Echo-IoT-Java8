@@ -1,20 +1,20 @@
-import { Component, ElementRef, forwardRef, Input, OnInit, ViewChild } from '@angular/core';
-import { ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Observable, of } from 'rxjs';
-import { catchError, debounceTime, distinctUntilChanged, map, share, switchMap, tap } from 'rxjs/operators';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { TranslateService } from '@ngx-translate/core';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { EntityId } from '@shared/models/id/entity-id';
-import { BaseData } from '@shared/models/base-data';
-import { EntityService } from '@core/http/entity.service';
-import { TruncatePipe } from '@shared/pipe/truncate.pipe';
-import { QueueInfo, ServiceType } from '@shared/models/queue.models';
-import { QueueService } from '@core/http/queue.service';
-import { PageLink } from '@shared/models/page/page-link';
-import { Direction } from '@shared/models/page/sort-order';
-import { emptyPageData } from '@shared/models/page/page-data';
+import {Component, ElementRef, forwardRef, Input, OnInit, ViewChild} from '@angular/core';
+import {ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {Observable, of} from 'rxjs';
+import {catchError, debounceTime, distinctUntilChanged, map, share, switchMap, tap} from 'rxjs/operators';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {TranslateService} from '@ngx-translate/core';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {EntityId} from '@shared/models/id/entity-id';
+import {BaseData} from '@shared/models/base-data';
+import {EntityService} from '@core/http/entity.service';
+import {TruncatePipe} from '@shared/pipe/truncate.pipe';
+import {QueueInfo, ServiceType} from '@shared/models/queue.models';
+import {QueueService} from '@core/http/queue.service';
+import {PageLink} from '@shared/models/page/page-link';
+import {Direction} from '@shared/models/page/sort-order';
+import {emptyPageData} from '@shared/models/page/page-data';
 
 @Component({
   selector: 'tb-queue-autocomplete',

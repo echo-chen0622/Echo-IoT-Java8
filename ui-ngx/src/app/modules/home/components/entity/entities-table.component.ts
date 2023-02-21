@@ -12,20 +12,20 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import { PageComponent } from '@shared/components/page.component';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { MAX_SAFE_PAGE_SIZE, PageLink, PageQueryParam, TimePageLink } from '@shared/models/page/page-link';
-import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort, SortDirection } from '@angular/material/sort';
-import { EntitiesDataSource } from '@home/models/datasource/entity-datasource';
-import { catchError, debounceTime, distinctUntilChanged, map, skip, tap } from 'rxjs/operators';
-import { Direction, SortOrder } from '@shared/models/page/sort-order';
-import { forkJoin, fromEvent, merge, Observable, of, Subscription } from 'rxjs';
-import { TranslateService } from '@ngx-translate/core';
-import { BaseData, HasId } from '@shared/models/base-data';
-import { ActivatedRoute, QueryParamsHandling, Router } from '@angular/router';
+import {PageComponent} from '@shared/components/page.component';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {MAX_SAFE_PAGE_SIZE, PageLink, PageQueryParam, TimePageLink} from '@shared/models/page/page-link';
+import {MatDialog} from '@angular/material/dialog';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatSort, SortDirection} from '@angular/material/sort';
+import {EntitiesDataSource} from '@home/models/datasource/entity-datasource';
+import {catchError, debounceTime, distinctUntilChanged, map, skip, tap} from 'rxjs/operators';
+import {Direction, SortOrder} from '@shared/models/page/sort-order';
+import {forkJoin, fromEvent, merge, Observable, of, Subscription} from 'rxjs';
+import {TranslateService} from '@ngx-translate/core';
+import {BaseData, HasId} from '@shared/models/base-data';
+import {ActivatedRoute, QueryParamsHandling, Router} from '@angular/router';
 import {
   CellActionDescriptor,
   CellActionDescriptorType,
@@ -36,19 +36,19 @@ import {
   GroupActionDescriptor,
   HeaderActionDescriptor
 } from '@home/models/entity/entities-table-config.models';
-import { EntityTypeTranslation } from '@shared/models/entity-type.models';
-import { DialogService } from '@core/services/dialog.service';
-import { AddEntityDialogComponent } from './add-entity-dialog.component';
-import { AddEntityDialogData, EntityAction } from '@home/models/entity/entity-component.models';
-import { calculateIntervalStartEndTime, HistoryWindowType, Timewindow } from '@shared/models/time/time.models';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { TbAnchorComponent } from '@shared/components/tb-anchor.component';
-import { isDefined, isEmptyStr, isEqual, isString, isUndefined } from '@core/utils';
-import { HasUUID } from '@shared/models/id/has-uuid';
-import { ResizeObserver } from '@juggle/resize-observer';
-import { hidePageSizePixelValue } from '@shared/models/constants';
-import { IEntitiesTableComponent } from '@home/models/entity/entity-table-component.models';
-import { EntityDetailsPanelComponent } from '@home/components/entity/entity-details-panel.component';
+import {EntityTypeTranslation} from '@shared/models/entity-type.models';
+import {DialogService} from '@core/services/dialog.service';
+import {AddEntityDialogComponent} from './add-entity-dialog.component';
+import {AddEntityDialogData, EntityAction} from '@home/models/entity/entity-component.models';
+import {calculateIntervalStartEndTime, HistoryWindowType, Timewindow} from '@shared/models/time/time.models';
+import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
+import {TbAnchorComponent} from '@shared/components/tb-anchor.component';
+import {isDefined, isEmptyStr, isEqual, isString, isUndefined} from '@core/utils';
+import {HasUUID} from '@shared/models/id/has-uuid';
+import {ResizeObserver} from '@juggle/resize-observer';
+import {hidePageSizePixelValue} from '@shared/models/constants';
+import {IEntitiesTableComponent} from '@home/models/entity/entity-table-component.models';
+import {EntityDetailsPanelComponent} from '@home/components/entity/entity-details-panel.component';
 
 @Component({
   selector: 'tb-entities-table',

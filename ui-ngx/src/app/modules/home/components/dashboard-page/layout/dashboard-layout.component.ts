@@ -6,10 +6,10 @@ import {Store} from '@ngrx/store';
 import {AppState} from '@core/core.state';
 import {Widget} from '@shared/models/widget.models';
 import {
-    DashboardCallbacks,
-    DashboardContextMenuItem,
-    IDashboardComponent,
-    WidgetContextMenuItem
+  DashboardCallbacks,
+  DashboardContextMenuItem,
+  IDashboardComponent,
+  WidgetContextMenuItem
 } from '@home/models/dashboard-component.models';
 import {Subscription} from 'rxjs';
 import {Hotkey} from 'angular2-hotkeys';

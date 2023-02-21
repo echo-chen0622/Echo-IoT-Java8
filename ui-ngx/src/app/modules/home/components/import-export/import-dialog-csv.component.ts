@@ -10,15 +10,15 @@ import {TranslateService} from '@ngx-translate/core';
 import {ActionNotificationShow} from '@core/notification/notification.actions';
 import {MatVerticalStepper} from '@angular/material/stepper';
 import {
-    BulkImportRequest,
-    BulkImportResult,
-    ColumnMapping,
-    convertCSVToJson,
-    CsvColumnParam,
-    CSVDelimiter,
-    CsvToJsonConfig,
-    CsvToJsonResult,
-    ImportEntityColumnType
+  BulkImportRequest,
+  BulkImportResult,
+  ColumnMapping,
+  convertCSVToJson,
+  CsvColumnParam,
+  CSVDelimiter,
+  CsvToJsonConfig,
+  CsvToJsonResult,
+  ImportEntityColumnType
 } from '@home/components/import-export/import-export.models';
 import {ImportExportService} from '@home/components/import-export/import-export.service';
 import {TableColumnsAssignmentComponent} from '@home/components/import-export/table-columns-assignment.component';

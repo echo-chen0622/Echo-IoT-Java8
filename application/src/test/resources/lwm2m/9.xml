@@ -98,7 +98,7 @@ LEGAL DISCLAIMER
 				<Units></Units>
 				<Description><![CDATA[Software package
 The package can be in one single software component, or any delivery material used by the Device to determine the software component(s) and proceed to their installation.
-Can be archive file, executable, manifest. This resource to be used when it is single block of delivery.
+Can be archive file, executable, manifest. This perResource to be used when it is single block of delivery.
 ]]>				</Description>
 			</Item>
 			<Item ID="3">
@@ -110,7 +110,7 @@ Can be archive file, executable, manifest. This resource to be used when it is s
 				<RangeEnumeration>0..255 bytes</RangeEnumeration>
 				<Units></Units>
 				<Description><![CDATA[URI from where the device can download the software package by an alternative mechanism. As soon the device has received the Package URI it performs the download at the next practical opportunity.
-Can be direct link to a single software component or link to archive file, executable, or manifest, used by the Device to determine, then access to the software component(s). This resource to be used when it is single block of delivery.
+Can be direct link to a single software component or link to archive file, executable, or manifest, used by the Device to determine, then access to the software component(s). This perResource to be used when it is single block of delivery.
 ]]>				</Description>
 			</Item>
 
@@ -122,7 +122,7 @@ Can be direct link to a single software component or link to archive file, execu
 				<Type></Type>
 				<RangeEnumeration></RangeEnumeration>
 				<Units></Units>
-				<Description><![CDATA[Installs software from the package either stored in Package resource, or, downloaded from the Package URI. This Resource is only executable when the value of the State Resource is DELIVERED.]]></Description>
+				<Description><![CDATA[Installs software from the package either stored in Package perResource, or, downloaded from the Package URI. This Resource is only executable when the value of the State Resource is DELIVERED.]]></Description>
 			</Item>
 			<Item ID="5">
 				<Name>Checkpoint</Name>
@@ -143,7 +143,7 @@ Can be direct link to a single software component or link to archive file, execu
 				<RangeEnumeration></RangeEnumeration>
 				<Units></Units>
 				<Description><![CDATA[Uninstalls the software package.
-This executable resource may have one argument.
+This executable perResource may have one argument.
 If used with no argument or argument is 0, the Package is removed i from the Device. If the argument is 1 ("ForUpdate"), the Client MUST prepare itself for receiving a Package used to upgrade the Software already in place. Update State is set back to INITIAL state.
 ]]>				</Description>
 			</Item>
@@ -163,10 +163,10 @@ Before downloading.
 The downloading process has started and is on-going.
 (see 5.1.2.2)
 2: DOWNLOADED
-The package has been completely downloaded 
+The package has been completely downloaded
 (see 5.1.2.3)
 3: DELIVERED
-In that state, the package has been correctly downloaded and is ready to be installed. 
+In that state, the package has been correctly downloaded and is ready to be installed.
 (see 5.1.2.4)
 If executing the Install Resource failed, the state remains at DELIVERED.
 If executing the Install Resource was successful, the state changes from DELIVERED to INSTALLED.
@@ -184,7 +184,7 @@ In that state the software is correctly installed and can be activated or deacti
 				<Type>Boolean</Type>
 				<RangeEnumeration></RangeEnumeration>
 				<Units></Units>
-				<Description><![CDATA[If this value is true, the LwM2M Client MUST inform the registered LwM2M Servers of Objects and Object Instances parameter by sending an Update or Registration message after the software update operation at the next practical opportunity if supported Objects in the LwM2M Client have changed, in order for the LwM2M Servers to promptly manage newly installed Objects. 
+				<Description><![CDATA[If this value is true, the LwM2M Client MUST inform the registered LwM2M Servers of Objects and Object Instances parameter by sending an Update or Registration message after the software update operation at the next practical opportunity if supported Objects in the LwM2M Client have changed, in order for the LwM2M Servers to promptly manage newly installed Objects.
 If false, Objects and Object Instances parameter MUST be reported at the next periodic Update message.
 The default value is false.
 ]]>				</Description>
@@ -198,7 +198,7 @@ The default value is false.
 				<RangeEnumeration>0..200</RangeEnumeration>
 				<Units></Units>
 				<Description><![CDATA[Contains the result of downloading or installing/uninstalling the software
-0: Initial value. Prior to download any new package in the Device, Update Result MUST be reset to this initial value. One side effect of executing the Uninstall resource is to reset Update Result to this initial value "0".
+0: Initial value. Prior to download any new package in the Device, Update Result MUST be reset to this initial value. One side effect of executing the Uninstall perResource is to reset Update Result to this initial value "0".
 1: Downloading. The package downloading process is on-going.
 2: Software successfully installed.
 3: Successfully Downloaded and package integrity verified
@@ -259,7 +259,7 @@ Activation State is ENABLED only if the Software Activation State Machine is in 
 				<Type>Objlnk</Type>
 				<RangeEnumeration></RangeEnumeration>
 				<Units></Units>
-				<Description><![CDATA[Link to "Package Settings" object which allows to modify at any time software configuration settings. This is an application specific object. 
+				<Description><![CDATA[Link to "Package Settings" object which allows to modify at any time software configuration settings. This is an application specific object.
 Note: OMA might provide a template for a Package Settings object in a future release of this specification.
 ]]>				</Description>
 			</Item>
@@ -303,7 +303,7 @@ Key based mechanism can alternatively use for talking to the component server in
 				<Type>Objlnk</Type>
 				<RangeEnumeration></RangeEnumeration>
 				<Units></Units>
-				<Description><![CDATA[Reference to SW Components downloaded and installed in scope of the present SW Update Package Note: When resource 17 objlink exist, resources 2, 3 and 12 in this table are ignored.]]></Description>
+				<Description><![CDATA[Reference to SW Components downloaded and installed in scope of the present SW Update Package Note: When perResource 17 objlink exist, resources 2, 3 and 12 in this table are ignored.]]></Description>
 			</Item>
 			<Item ID="18">
 				<Name>Software Component tree length</Name>

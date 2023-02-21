@@ -17,16 +17,9 @@
  */
 package org.apache.cassandra.io.sstable;
 
-import java.io.File;
-import java.io.IOError;
-import java.io.IOException;
-import java.util.*;
-import java.util.regex.Pattern;
-
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Objects;
-
 import org.apache.cassandra.db.Directories;
 import org.apache.cassandra.io.sstable.format.SSTableFormat;
 import org.apache.cassandra.io.sstable.format.Version;
@@ -36,6 +29,12 @@ import org.apache.cassandra.io.sstable.metadata.MetadataSerializer;
 import org.apache.cassandra.utils.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.io.File;
+import java.io.IOError;
+import java.io.IOException;
+import java.util.*;
+import java.util.regex.Pattern;
 
 import static org.apache.cassandra.io.sstable.Component.separator;
 

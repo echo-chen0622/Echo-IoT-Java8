@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
-import { WidgetSettings, WidgetSettingsComponent } from '@shared/models/widget.models';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
+import {Component} from '@angular/core';
+import {WidgetSettings, WidgetSettingsComponent} from '@shared/models/widget.models';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
 import {
   CircleSettings,
   defaultTripAnimationSettings,
@@ -13,8 +13,8 @@ import {
   TripAnimationCommonSettings,
   TripAnimationMarkerSettings
 } from 'src/app/modules/home/components/widget/lib/maps/map-models';
-import { extractType } from '@core/utils';
-import { keys } from 'ts-transformer-keys';
+import {extractType} from '@core/utils';
+import {keys} from 'ts-transformer-keys';
 
 @Component({
   selector: 'tb-trip-animation-widget-settings',

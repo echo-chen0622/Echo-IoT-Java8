@@ -1,23 +1,23 @@
-import { BaseData } from '@shared/models/base-data';
-import { TenantId } from '@shared/models/id/tenant-id';
-import { WidgetTypeId } from '@shared/models/id/widget-type-id';
-import { AggregationType, ComparisonDuration, Timewindow } from '@shared/models/time/time.models';
-import { EntityType } from '@shared/models/entity-type.models';
-import { AlarmSearchStatus, AlarmSeverity } from '@shared/models/alarm.models';
-import { DataKeyType } from './telemetry/telemetry.models';
-import { EntityId } from '@shared/models/id/entity-id';
+import {BaseData} from '@shared/models/base-data';
+import {TenantId} from '@shared/models/id/tenant-id';
+import {WidgetTypeId} from '@shared/models/id/widget-type-id';
+import {AggregationType, ComparisonDuration, Timewindow} from '@shared/models/time/time.models';
+import {EntityType} from '@shared/models/entity-type.models';
+import {AlarmSearchStatus, AlarmSeverity} from '@shared/models/alarm.models';
+import {DataKeyType} from './telemetry/telemetry.models';
+import {EntityId} from '@shared/models/id/entity-id';
 import * as moment_ from 'moment';
-import { EntityDataPageLink, EntityFilter, KeyFilter } from '@shared/models/query/query.models';
-import { PopoverPlacement } from '@shared/components/popover.models';
-import { PageComponent } from '@shared/components/page.component';
-import { AfterViewInit, Directive, EventEmitter, Inject, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { AbstractControl, FormGroup } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { Dashboard } from '@shared/models/dashboard.models';
-import { IAliasController } from '@core/api/widget-api.models';
-import { isEmptyStr } from '@core/utils';
+import {EntityDataPageLink, EntityFilter, KeyFilter} from '@shared/models/query/query.models';
+import {PopoverPlacement} from '@shared/components/popover.models';
+import {PageComponent} from '@shared/components/page.component';
+import {AfterViewInit, Directive, EventEmitter, Inject, OnInit} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {AbstractControl, FormGroup} from '@angular/forms';
+import {Observable} from 'rxjs';
+import {Dashboard} from '@shared/models/dashboard.models';
+import {IAliasController} from '@core/api/widget-api.models';
+import {isEmptyStr} from '@core/utils';
 
 export enum widgetType {
   timeseries = 'timeseries',

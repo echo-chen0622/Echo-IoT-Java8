@@ -1,15 +1,15 @@
-import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { PageComponent } from '@shared/components/page.component';
-import { WidgetContext } from '@home/models/widget-component.models';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { isDefined } from '@core/utils';
+import {Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {PageComponent} from '@shared/components/page.component';
+import {WidgetContext} from '@home/models/widget-component.models';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {isDefined} from '@core/utils';
 import * as tinycolor_ from 'tinycolor2';
-import { UtilsService } from '@core/services/utils.service';
-import { IWidgetSubscription, SubscriptionInfo, WidgetSubscriptionOptions } from '@core/api/widget-api.models';
-import { DatasourceType, widgetType } from '@shared/models/widget.models';
-import { EntityType } from '@shared/models/entity-type.models';
-import { ResizeObserver } from '@juggle/resize-observer';
+import {UtilsService} from '@core/services/utils.service';
+import {IWidgetSubscription, SubscriptionInfo, WidgetSubscriptionOptions} from '@core/api/widget-api.models';
+import {DatasourceType, widgetType} from '@shared/models/widget.models';
+import {EntityType} from '@shared/models/entity-type.models';
+import {ResizeObserver} from '@juggle/resize-observer';
 import Timeout = NodeJS.Timeout;
 
 const tinycolor = tinycolor_;

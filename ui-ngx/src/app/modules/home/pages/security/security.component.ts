@@ -1,25 +1,25 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { User } from '@shared/models/user.model';
-import { PageComponent } from '@shared/components/page.component';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {User} from '@shared/models/user.model';
+import {PageComponent} from '@shared/components/page.component';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
 import {
   AbstractControl,
   FormBuilder,
-  FormGroup, FormGroupDirective,
-  NgForm,
+  FormGroup,
+  FormGroupDirective,
   ValidationErrors,
   ValidatorFn,
   Validators
 } from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
-import { MatDialog } from '@angular/material/dialog';
-import { DialogService } from '@core/services/dialog.service';
-import { ActivatedRoute } from '@angular/router';
-import { ActionNotificationShow } from '@core/notification/notification.actions';
-import { DatePipe } from '@angular/common';
-import { ClipboardService } from 'ngx-clipboard';
-import { TwoFactorAuthenticationService } from '@core/http/two-factor-authentication.service';
+import {TranslateService} from '@ngx-translate/core';
+import {MatDialog} from '@angular/material/dialog';
+import {DialogService} from '@core/services/dialog.service';
+import {ActivatedRoute} from '@angular/router';
+import {ActionNotificationShow} from '@core/notification/notification.actions';
+import {DatePipe} from '@angular/common';
+import {ClipboardService} from 'ngx-clipboard';
+import {TwoFactorAuthenticationService} from '@core/http/two-factor-authentication.service';
 import {
   AccountTwoFaSettingProviders,
   AccountTwoFaSettings,
@@ -29,12 +29,12 @@ import {
   twoFactorAuthProvidersData,
   TwoFactorAuthProviderType
 } from '@shared/models/two-factor-auth.models';
-import { authenticationDialogMap } from '@home/pages/security/authentication-dialog/authentication-dialog.map';
-import { takeUntil, tap } from 'rxjs/operators';
-import { Observable, of, Subject } from 'rxjs';
-import { isDefinedAndNotNull, isEqual } from '@core/utils';
-import { AuthService } from '@core/auth/auth.service';
-import { UserPasswordPolicy } from '@shared/models/settings.models';
+import {authenticationDialogMap} from '@home/pages/security/authentication-dialog/authentication-dialog.map';
+import {takeUntil, tap} from 'rxjs/operators';
+import {Observable, of, Subject} from 'rxjs';
+import {isDefinedAndNotNull, isEqual} from '@core/utils';
+import {AuthService} from '@core/auth/auth.service';
+import {UserPasswordPolicy} from '@shared/models/settings.models';
 
 @Component({
   selector: 'tb-security',

@@ -3,17 +3,17 @@ package org.echoiot.server.dao.nosql;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.SettableFuture;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 import org.echoiot.server.common.stats.StatsFactory;
 import org.echoiot.server.dao.entity.EntityService;
 import org.echoiot.server.dao.tenant.TbTenantProfileCache;
 import org.echoiot.server.dao.util.AbstractBufferedRateExecutor;
 import org.echoiot.server.dao.util.AsyncTaskContext;
 import org.echoiot.server.dao.util.NoSqlAnyDao;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PreDestroy;
 
@@ -36,9 +36,9 @@ public class CassandraBufferedRateReadExecutor extends AbstractBufferedRateExecu
             @Value("${cassandra.query.poll_ms:50}") long pollMs,
             @Value("${cassandra.query.tenant_rate_limits.print_tenant_names}") boolean printTenantNames,
             @Value("${cassandra.query.print_queries_freq:0}") int printQueriesFreq,
-            @NotNull @Resource StatsFactory statsFactory,
-            @Resource EntityService entityService,
-            @Resource TbTenantProfileCache tenantProfileCache) {
+            @NotNull @Autowired StatsFactory statsFactory,
+            @Autowired EntityService entityService,
+            @Autowired TbTenantProfileCache tenantProfileCache) {
         super(queueLimit, concurrencyLimit, maxWaitTime, dispatcherThreads, callbackThreads, pollMs, printQueriesFreq, statsFactory,
                 entityService, tenantProfileCache, printTenantNames);
     }

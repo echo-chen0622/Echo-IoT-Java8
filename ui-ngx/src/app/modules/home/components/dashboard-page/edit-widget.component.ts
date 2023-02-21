@@ -1,15 +1,15 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { PageComponent } from '@shared/components/page.component';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { MatDialog } from '@angular/material/dialog';
-import { Dashboard, WidgetLayout } from '@shared/models/dashboard.models';
-import { IAliasController } from '@core/api/widget-api.models';
-import { Widget } from '@shared/models/widget.models';
-import { WidgetComponentService } from '@home/components/widget/widget-component.service';
-import { WidgetConfigComponentData } from '../../models/widget-component.models';
-import { isDefined, isString } from '@core/utils';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {PageComponent} from '@shared/components/page.component';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {MatDialog} from '@angular/material/dialog';
+import {Dashboard, WidgetLayout} from '@shared/models/dashboard.models';
+import {IAliasController} from '@core/api/widget-api.models';
+import {Widget} from '@shared/models/widget.models';
+import {WidgetComponentService} from '@home/components/widget/widget-component.service';
+import {WidgetConfigComponentData} from '../../models/widget-component.models';
+import {isDefined, isString} from '@core/utils';
+import {FormBuilder, FormGroup} from '@angular/forms';
 
 @Component({
   selector: 'tb-edit-widget',

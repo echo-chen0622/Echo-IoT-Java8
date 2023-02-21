@@ -1,6 +1,7 @@
 package org.echoiot.server.dao.service;
 
 import com.datastax.oss.driver.api.core.uuid.Uuids;
+import org.echoiot.server.common.data.*;
 import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.ota.ChecksumAlgorithm;
@@ -14,21 +15,8 @@ import org.echoiot.server.dao.exception.DataValidationException;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.ExpectedException;
-import org.echoiot.server.common.data.Customer;
-import org.echoiot.server.common.data.Device;
-import org.echoiot.server.common.data.DeviceInfo;
-import org.echoiot.server.common.data.DeviceProfile;
-import org.echoiot.server.common.data.EntitySubtype;
-import org.echoiot.server.common.data.OtaPackage;
-import org.echoiot.server.common.data.StringUtils;
-import org.echoiot.server.common.data.Tenant;
-import org.echoiot.server.common.data.TenantProfile;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;

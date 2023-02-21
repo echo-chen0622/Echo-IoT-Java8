@@ -1,11 +1,11 @@
 package org.echoiot.server.transport.lwm2m.server.downlink.composite;
 
-import org.eclipse.leshan.core.request.WriteCompositeRequest;
-import org.eclipse.leshan.core.response.WriteCompositeResponse;
 import org.echoiot.server.transport.lwm2m.server.client.LwM2mClient;
 import org.echoiot.server.transport.lwm2m.server.downlink.TbLwM2MUplinkTargetedCallback;
 import org.echoiot.server.transport.lwm2m.server.log.LwM2MTelemetryLogService;
 import org.echoiot.server.transport.lwm2m.server.uplink.LwM2mUplinkMsgHandler;
+import org.eclipse.leshan.core.request.WriteCompositeRequest;
+import org.eclipse.leshan.core.response.WriteCompositeResponse;
 import org.jetbrains.annotations.NotNull;
 
 public class TbLwM2MWriteResponseCompositeCallback extends TbLwM2MUplinkTargetedCallback<WriteCompositeRequest, WriteCompositeResponse> {

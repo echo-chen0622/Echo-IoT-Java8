@@ -3,8 +3,6 @@ package org.echoiot.server.dao.model.sql;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
 import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.common.data.OtaPackageInfo;
 import org.echoiot.server.common.data.id.DeviceProfileId;
@@ -16,31 +14,15 @@ import org.echoiot.server.dao.model.BaseSqlEntity;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.model.SearchTextEntity;
 import org.echoiot.server.dao.util.mapping.JsonStringType;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.util.UUID;
 
-import static org.echoiot.server.dao.model.ModelConstants.OTA_PACKAGE_CHECKSUM_ALGORITHM_COLUMN;
-import static org.echoiot.server.dao.model.ModelConstants.OTA_PACKAGE_CHECKSUM_COLUMN;
-import static org.echoiot.server.dao.model.ModelConstants.OTA_PACKAGE_CONTENT_TYPE_COLUMN;
-import static org.echoiot.server.dao.model.ModelConstants.OTA_PACKAGE_DATA_SIZE_COLUMN;
-import static org.echoiot.server.dao.model.ModelConstants.OTA_PACKAGE_DEVICE_PROFILE_ID_COLUMN;
-import static org.echoiot.server.dao.model.ModelConstants.OTA_PACKAGE_FILE_NAME_COLUMN;
-import static org.echoiot.server.dao.model.ModelConstants.OTA_PACKAGE_TABLE_NAME;
-import static org.echoiot.server.dao.model.ModelConstants.OTA_PACKAGE_TAG_COLUMN;
-import static org.echoiot.server.dao.model.ModelConstants.OTA_PACKAGE_TENANT_ID_COLUMN;
-import static org.echoiot.server.dao.model.ModelConstants.OTA_PACKAGE_TILE_COLUMN;
-import static org.echoiot.server.dao.model.ModelConstants.OTA_PACKAGE_TYPE_COLUMN;
-import static org.echoiot.server.dao.model.ModelConstants.OTA_PACKAGE_URL_COLUMN;
-import static org.echoiot.server.dao.model.ModelConstants.OTA_PACKAGE_VERSION_COLUMN;
-import static org.echoiot.server.dao.model.ModelConstants.SEARCH_TEXT_PROPERTY;
+import static org.echoiot.server.dao.model.ModelConstants.*;
 
 @Data
 @EqualsAndHashCode(callSuper = true)

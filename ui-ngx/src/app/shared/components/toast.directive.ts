@@ -1,24 +1,39 @@
 import {
-  AfterViewInit, ChangeDetectorRef,
-  Component, ComponentFactoryResolver, ComponentRef,
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ComponentFactoryResolver,
+  ComponentRef,
   Directive,
-  ElementRef, HostBinding,
+  ElementRef,
+  HostBinding,
   Inject,
   Injector,
   Input,
   NgZone,
-  OnDestroy, Optional,
+  OnDestroy,
+  Optional,
   StaticProvider,
   ViewChild,
   ViewContainerRef
 } from '@angular/core';
-import { MAT_SNACK_BAR_DATA, MatSnackBar, MatSnackBarConfig, MatSnackBarRef } from '@angular/material/snack-bar';
-import { NotificationMessage } from '@app/core/notification/notification.models';
-import { Subscription } from 'rxjs';
-import { NotificationService } from '@app/core/services/notification.service';
-import { BreakpointObserver } from '@angular/cdk/layout';
-import { MediaBreakpoints } from '@shared/models/constants';
-import { MatButton } from '@angular/material/button';
+import {MAT_SNACK_BAR_DATA, MatSnackBar, MatSnackBarConfig, MatSnackBarRef} from '@angular/material/snack-bar';
+import {NotificationMessage} from '@app/core/notification/notification.models';
+import {Subscription} from 'rxjs';
+import {NotificationService} from '@app/core/services/notification.service';
+import {BreakpointObserver} from '@angular/cdk/layout';
+import {MediaBreakpoints} from '@shared/models/constants';
+import {MatButton} from '@angular/material/button';
+import {
+  animate,
+  AnimationEvent,
+  AnimationTriggerMetadata,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
+import {onParentScrollOrWindowResize} from '@core/utils';
 import Timeout = NodeJS.Timeout;
 
 @Directive({
@@ -229,17 +244,6 @@ interface ToastPanelData {
   panelClass: string[];
   destroyToastComponent: () => void;
 }
-
-import {
-  AnimationTriggerMetadata,
-  AnimationEvent,
-  trigger,
-  state,
-  transition,
-  style,
-  animate,
-} from '@angular/animations';
-import { onParentScrollOrWindowResize } from '@core/utils';
 
 export const toastAnimations: {
   readonly showHideToast: AnimationTriggerMetadata;

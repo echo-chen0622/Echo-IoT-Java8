@@ -1,22 +1,22 @@
-
-import { EntityType } from '@shared/models/entity-type.models';
-import { AggregationType } from '../time/time.models';
-import { Observable, ReplaySubject, Subject } from 'rxjs';
-import { EntityId } from '@shared/models/id/entity-id';
-import { map } from 'rxjs/operators';
-import { NgZone } from '@angular/core';
+import {EntityType} from '@shared/models/entity-type.models';
+import {AggregationType} from '../time/time.models';
+import {Observable, ReplaySubject, Subject} from 'rxjs';
+import {EntityId} from '@shared/models/id/entity-id';
+import {map} from 'rxjs/operators';
+import {NgZone} from '@angular/core';
 import {
   AlarmData,
-  AlarmDataQuery, EntityCountQuery,
+  AlarmDataQuery,
+  EntityCountQuery,
   EntityData,
   EntityDataQuery,
   EntityKey,
   TsValue
 } from '@shared/models/query/query.models';
-import { PageData } from '@shared/models/page/page-data';
-import { alarmFields } from '@shared/models/alarm.models';
-import { entityFields } from '@shared/models/entity.models';
-import { isUndefined } from '@core/utils';
+import {PageData} from '@shared/models/page/page-data';
+import {alarmFields} from '@shared/models/alarm.models';
+import {entityFields} from '@shared/models/entity.models';
+import {isUndefined} from '@core/utils';
 
 export enum DataKeyType {
   timeseries = 'timeseries',

@@ -1,19 +1,20 @@
 package org.echoiot.server.dao.rule;
 
 import lombok.extern.slf4j.Slf4j;
-import org.echoiot.server.dao.entity.AbstractEntityService;
-import org.echoiot.server.dao.exception.DataValidationException;
-import org.hibernate.exception.ConstraintViolationException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.RuleNodeId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.common.data.rule.RuleNodeState;
+import org.echoiot.server.dao.entity.AbstractEntityService;
+import org.echoiot.server.dao.exception.DataValidationException;
+import org.hibernate.exception.ConstraintViolationException;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
 
 @Service
 @Slf4j

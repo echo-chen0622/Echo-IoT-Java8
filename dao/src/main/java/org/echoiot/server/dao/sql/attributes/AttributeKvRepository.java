@@ -1,5 +1,6 @@
 package org.echoiot.server.dao.sql.attributes;
 
+import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.dao.model.sql.AttributeKvCompositeKey;
 import org.echoiot.server.dao.model.sql.AttributeKvEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -7,7 +8,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
-import org.echoiot.server.common.data.EntityType;
 
 import java.util.List;
 import java.util.UUID;

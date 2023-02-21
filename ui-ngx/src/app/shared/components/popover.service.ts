@@ -10,10 +10,10 @@ import {
   Type,
   ViewContainerRef
 } from '@angular/core';
-import { PopoverPlacement, PopoverWithTrigger } from '@shared/components/popover.models';
-import { TbPopoverComponent } from '@shared/components/popover.component';
-import { ComponentType } from '@angular/cdk/portal';
-import { HELP_MARKDOWN_COMPONENT_TOKEN } from '@shared/components/tokens';
+import {PopoverPlacement, PopoverWithTrigger} from '@shared/components/popover.models';
+import {TbPopoverComponent} from '@shared/components/popover.component';
+import {ComponentType} from '@angular/cdk/portal';
+import {HELP_MARKDOWN_COMPONENT_TOKEN} from '@shared/components/tokens';
 
 @Injectable()
 export class TbPopoverService {

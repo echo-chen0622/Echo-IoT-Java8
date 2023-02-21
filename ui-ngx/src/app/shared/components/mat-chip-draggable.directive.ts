@@ -1,5 +1,5 @@
-import { AfterViewInit, Directive, ElementRef, EventEmitter, HostListener, Output } from '@angular/core';
-import { MatChip, MatChipList } from '@angular/material/chips';
+import {AfterViewInit, Directive, ElementRef, EventEmitter, HostListener, Output} from '@angular/core';
+import {MatChip, MatChipList} from '@angular/material/chips';
 import Timeout = NodeJS.Timeout;
 
 export interface MatChipDropEvent {

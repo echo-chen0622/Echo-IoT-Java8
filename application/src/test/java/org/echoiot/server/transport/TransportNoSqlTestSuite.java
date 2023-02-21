@@ -1,11 +1,11 @@
 package org.echoiot.server.transport;
 
 import org.cassandraunit.dataset.cql.ClassPathCQLDataSet;
+import org.echoiot.server.dao.CustomCassandraCQLUnit;
 import org.jetbrains.annotations.NotNull;
 import org.junit.ClassRule;
 import org.junit.extensions.cpsuite.ClasspathSuite;
 import org.junit.runner.RunWith;
-import org.echoiot.server.dao.CustomCassandraCQLUnit;
 
 import java.util.Arrays;
 

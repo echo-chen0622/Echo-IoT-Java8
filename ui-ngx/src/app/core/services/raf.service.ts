@@ -1,5 +1,5 @@
-import { Inject, Injectable, NgZone } from '@angular/core';
-import { WINDOW } from '@core/services/window.service';
+import {Inject, Injectable, NgZone} from '@angular/core';
+import {WINDOW} from '@core/services/window.service';
 
 export type CancelAnimationFrame = () => void;
 

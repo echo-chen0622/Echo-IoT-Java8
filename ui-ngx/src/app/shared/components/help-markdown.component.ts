@@ -1,13 +1,7 @@
-import {
-  Component,
-  EventEmitter,
-  Input, OnChanges,
-  OnDestroy, OnInit,
-  Output, SimpleChanges
-} from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { share } from 'rxjs/operators';
-import { HelpService } from '@core/services/help.service';
+import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
+import {BehaviorSubject} from 'rxjs';
+import {share} from 'rxjs/operators';
+import {HelpService} from '@core/services/help.service';
 
 @Component({
   selector: 'tb-help-markdown',

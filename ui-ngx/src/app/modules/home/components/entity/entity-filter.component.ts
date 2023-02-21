@@ -1,10 +1,10 @@
-import { Component, EventEmitter, forwardRef, Input, OnInit, Output } from '@angular/core';
-import { ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
-import { AliasFilterType, aliasFilterTypeTranslationMap, EntityAliasFilter } from '@shared/models/alias.models';
-import { AliasEntityType, EntityType } from '@shared/models/entity-type.models';
-import { TranslateService } from '@ngx-translate/core';
-import { EntityService } from '@core/http/entity.service';
-import { EntitySearchDirection, entitySearchDirectionTranslations } from '@shared/models/relation.models';
+import {Component, EventEmitter, forwardRef, Input, OnInit, Output} from '@angular/core';
+import {ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR, Validators} from '@angular/forms';
+import {AliasFilterType, aliasFilterTypeTranslationMap, EntityAliasFilter} from '@shared/models/alias.models';
+import {AliasEntityType, EntityType} from '@shared/models/entity-type.models';
+import {TranslateService} from '@ngx-translate/core';
+import {EntityService} from '@core/http/entity.service';
+import {EntitySearchDirection, entitySearchDirectionTranslations} from '@shared/models/relation.models';
 
 @Component({
   selector: 'tb-entity-filter',

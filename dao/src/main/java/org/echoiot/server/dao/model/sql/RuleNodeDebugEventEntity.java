@@ -14,17 +14,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.util.UUID;
 
-import static org.echoiot.server.dao.model.ModelConstants.EVENT_DATA_COLUMN_NAME;
-import static org.echoiot.server.dao.model.ModelConstants.EVENT_DATA_TYPE_COLUMN_NAME;
-import static org.echoiot.server.dao.model.ModelConstants.EVENT_ENTITY_ID_COLUMN_NAME;
-import static org.echoiot.server.dao.model.ModelConstants.EVENT_ENTITY_TYPE_COLUMN_NAME;
-import static org.echoiot.server.dao.model.ModelConstants.EVENT_ERROR_COLUMN_NAME;
-import static org.echoiot.server.dao.model.ModelConstants.EVENT_METADATA_COLUMN_NAME;
-import static org.echoiot.server.dao.model.ModelConstants.EVENT_MSG_ID_COLUMN_NAME;
-import static org.echoiot.server.dao.model.ModelConstants.EVENT_MSG_TYPE_COLUMN_NAME;
-import static org.echoiot.server.dao.model.ModelConstants.EVENT_RELATION_TYPE_COLUMN_NAME;
-import static org.echoiot.server.dao.model.ModelConstants.EVENT_TYPE_COLUMN_NAME;
-import static org.echoiot.server.dao.model.ModelConstants.RULE_NODE_DEBUG_EVENT_TABLE_NAME;
+import static org.echoiot.server.dao.model.ModelConstants.*;
 
 @Data
 @EqualsAndHashCode(callSuper = true)

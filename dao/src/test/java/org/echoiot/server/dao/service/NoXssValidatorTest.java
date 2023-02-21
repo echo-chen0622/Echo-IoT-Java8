@@ -1,12 +1,12 @@
 package org.echoiot.server.dao.service;
 
 import com.fasterxml.jackson.databind.node.TextNode;
+import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.common.data.asset.Asset;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.echoiot.common.util.JacksonUtil;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 

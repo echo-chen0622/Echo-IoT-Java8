@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { PageLink } from '@shared/models/page/page-link';
-import { defaultHttpOptionsFromConfig, RequestConfig } from '@core/http/http-utils';
-import { forkJoin, Observable, of } from 'rxjs';
-import { PageData } from '@shared/models/page/page-data';
-import { Resource, ResourceInfo } from '@shared/models/resource.models';
-import { catchError, map, mergeMap } from 'rxjs/operators';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {PageLink} from '@shared/models/page/page-link';
+import {defaultHttpOptionsFromConfig, RequestConfig} from '@core/http/http-utils';
+import {forkJoin, Observable, of} from 'rxjs';
+import {PageData} from '@shared/models/page/page-data';
+import {Resource, ResourceInfo} from '@shared/models/resource.models';
+import {catchError, map, mergeMap} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'

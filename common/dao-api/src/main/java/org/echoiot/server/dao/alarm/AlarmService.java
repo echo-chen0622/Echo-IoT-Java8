@@ -2,6 +2,7 @@ package org.echoiot.server.dao.alarm;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.util.concurrent.ListenableFuture;
+import org.echoiot.server.common.data.alarm.*;
 import org.echoiot.server.common.data.id.AlarmId;
 import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.id.EntityId;
@@ -9,12 +10,6 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.query.AlarmData;
 import org.echoiot.server.common.data.query.AlarmDataQuery;
-import org.echoiot.server.common.data.alarm.Alarm;
-import org.echoiot.server.common.data.alarm.AlarmInfo;
-import org.echoiot.server.common.data.alarm.AlarmQuery;
-import org.echoiot.server.common.data.alarm.AlarmSearchStatus;
-import org.echoiot.server.common.data.alarm.AlarmSeverity;
-import org.echoiot.server.common.data.alarm.AlarmStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;

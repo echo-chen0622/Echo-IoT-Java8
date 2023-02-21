@@ -1,13 +1,13 @@
 import {
-    ChangeDetectorRef,
-    Component,
-    Injector,
-    Input,
-    OnDestroy,
-    OnInit,
-    StaticProvider,
-    ViewChild,
-    ViewContainerRef
+  ChangeDetectorRef,
+  Component,
+  Injector,
+  Input,
+  OnDestroy,
+  OnInit,
+  StaticProvider,
+  ViewChild,
+  ViewContainerRef
 } from '@angular/core';
 import {TooltipPosition} from '@angular/material/tooltip';
 import {AliasInfo, IAliasController} from '@core/api/widget-api.models';
@@ -17,9 +17,9 @@ import {Subscription} from 'rxjs';
 import {BreakpointObserver} from '@angular/cdk/layout';
 import {ComponentPortal} from '@angular/cdk/portal';
 import {
-    ALIASES_ENTITY_SELECT_PANEL_DATA,
-    AliasesEntitySelectPanelComponent,
-    AliasesEntitySelectPanelData
+  ALIASES_ENTITY_SELECT_PANEL_DATA,
+  AliasesEntitySelectPanelComponent,
+  AliasesEntitySelectPanelData
 } from './aliases-entity-select-panel.component';
 import {deepClone} from '@core/utils';
 import {AliasFilterType} from '@shared/models/alias.models';

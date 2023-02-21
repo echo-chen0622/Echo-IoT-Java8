@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { MenuService } from '@core/services/menu.service';
-import { MenuSection } from '@core/services/menu.models';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {MenuService} from '@core/services/menu.service';
+import {MenuSection} from '@core/services/menu.models';
 
 @Component({
   selector: 'tb-side-menu',

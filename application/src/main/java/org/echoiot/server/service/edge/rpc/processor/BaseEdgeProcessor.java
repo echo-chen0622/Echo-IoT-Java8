@@ -51,9 +51,9 @@ import org.echoiot.server.service.state.DeviceStateService;
 import org.echoiot.server.service.telemetry.TelemetrySubscriptionService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;

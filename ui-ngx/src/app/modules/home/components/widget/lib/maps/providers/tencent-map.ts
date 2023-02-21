@@ -1,8 +1,7 @@
-
 import L from 'leaflet';
 import LeafletMap from '../leaflet-map';
-import { DEFAULT_ZOOM_LEVEL, WidgetUnitedMapSettings } from '../map-models';
-import { WidgetContext } from '@home/models/widget-component.models';
+import {DEFAULT_ZOOM_LEVEL, WidgetUnitedMapSettings} from '../map-models';
+import {WidgetContext} from '@home/models/widget-component.models';
 
 export class TencentMap extends LeafletMap {
   constructor(ctx: WidgetContext, $container, options: WidgetUnitedMapSettings) {

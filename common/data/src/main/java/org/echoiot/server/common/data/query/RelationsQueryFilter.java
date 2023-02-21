@@ -1,10 +1,10 @@
 package org.echoiot.server.common.data.query;
 
 import lombok.Data;
-import org.echoiot.server.common.data.relation.EntitySearchDirection;
-import org.echoiot.server.common.data.relation.RelationEntityTypeFilter;
 import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.id.EntityId;
+import org.echoiot.server.common.data.relation.EntitySearchDirection;
+import org.echoiot.server.common.data.relation.RelationEntityTypeFilter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;

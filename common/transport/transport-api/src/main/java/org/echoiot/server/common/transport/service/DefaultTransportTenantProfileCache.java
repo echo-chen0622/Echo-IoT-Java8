@@ -43,13 +43,13 @@ public class DefaultTransportTenantProfileCache implements TransportTenantProfil
     private TransportService transportService;
 
     @Lazy
-    @Resource
+    @Autowired
     public void setRateLimitService(TransportRateLimitService rateLimitService) {
         this.rateLimitService = rateLimitService;
     }
 
     @Lazy
-    @Resource
+    @Autowired
     public void setTransportService(TransportService transportService) {
         this.transportService = transportService;
     }

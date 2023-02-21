@@ -1,5 +1,5 @@
-import { Component, forwardRef, Input, OnInit } from '@angular/core';
-import { ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
+import {Component, forwardRef, Input, OnInit} from '@angular/core';
+import {ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR, Validators} from '@angular/forms';
 import {
   DynamicValueSourceType,
   dynamicValueSourceTypeTranslationMap,
@@ -7,7 +7,7 @@ import {
   getDynamicSourcesForAllowUser,
   inheritModeForDynamicValueSourceType
 } from '@shared/models/query/query.models';
-import { AlarmConditionType } from '@shared/models/device.models';
+import {AlarmConditionType} from '@shared/models/device.models';
 
 @Component({
   selector: 'tb-alarm-duration-predicate-value',

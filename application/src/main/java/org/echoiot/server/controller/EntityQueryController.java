@@ -9,11 +9,12 @@ import org.echoiot.server.common.data.query.*;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.query.EntityQueryService;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
+
+import javax.annotation.Resource;
 
 import static org.echoiot.server.controller.ControllerConstants.*;
 

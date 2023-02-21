@@ -1,27 +1,22 @@
 package org.echoiot.server.cluster;
 
-import org.echoiot.server.common.msg.TbMsg;
-import org.echoiot.server.common.data.ApiUsageState;
-import org.echoiot.server.common.data.Device;
-import org.echoiot.server.common.data.DeviceProfile;
-import org.echoiot.server.common.data.TbResource;
-import org.echoiot.server.common.data.Tenant;
-import org.echoiot.server.common.data.TenantProfile;
+import org.echoiot.server.common.data.*;
 import org.echoiot.server.common.data.edge.EdgeEventActionType;
 import org.echoiot.server.common.data.edge.EdgeEventType;
 import org.echoiot.server.common.data.id.EdgeId;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.plugin.ComponentLifecycleEvent;
+import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.ToDeviceActorNotificationMsg;
 import org.echoiot.server.common.msg.edge.FromEdgeSyncResponse;
 import org.echoiot.server.common.msg.edge.ToEdgeSyncRequest;
 import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
 import org.echoiot.server.common.msg.rpc.FromDeviceRpcResponse;
-import org.echoiot.server.gen.transport.TransportProtos.ToVersionControlServiceMsg;
 import org.echoiot.server.gen.transport.TransportProtos.ToCoreMsg;
 import org.echoiot.server.gen.transport.TransportProtos.ToRuleEngineMsg;
 import org.echoiot.server.gen.transport.TransportProtos.ToTransportMsg;
+import org.echoiot.server.gen.transport.TransportProtos.ToVersionControlServiceMsg;
 import org.echoiot.server.queue.TbQueueCallback;
 import org.echoiot.server.queue.TbQueueClusterService;
 

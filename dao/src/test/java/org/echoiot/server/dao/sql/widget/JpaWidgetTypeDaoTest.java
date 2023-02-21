@@ -3,15 +3,15 @@ package org.echoiot.server.dao.sql.widget;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.widget.WidgetType;
 import org.echoiot.server.common.data.widget.WidgetTypeDetails;
+import org.echoiot.server.dao.AbstractJpaDaoTest;
 import org.echoiot.server.dao.widget.WidgetTypeDao;
 import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.echoiot.server.dao.AbstractJpaDaoTest;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 

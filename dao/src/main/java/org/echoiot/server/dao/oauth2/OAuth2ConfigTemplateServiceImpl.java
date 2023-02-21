@@ -2,6 +2,9 @@ package org.echoiot.server.dao.oauth2;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.server.common.data.id.OAuth2ClientRegistrationTemplateId;
+import org.echoiot.server.common.data.id.TenantId;
+import org.echoiot.server.common.data.oauth2.OAuth2ClientRegistrationTemplate;
 import org.echoiot.server.dao.entity.AbstractEntityService;
 import org.echoiot.server.dao.exception.DataValidationException;
 import org.echoiot.server.dao.service.DataValidator;
@@ -10,9 +13,6 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
-import org.echoiot.server.common.data.id.OAuth2ClientRegistrationTemplateId;
-import org.echoiot.server.common.data.id.TenantId;
-import org.echoiot.server.common.data.oauth2.OAuth2ClientRegistrationTemplate;
 
 import java.util.List;
 import java.util.Optional;

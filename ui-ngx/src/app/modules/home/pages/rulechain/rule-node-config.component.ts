@@ -9,19 +9,19 @@ import {
   ViewChild,
   ViewContainerRef
 } from '@angular/core';
-import { ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
+import {ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR, Validators} from '@angular/forms';
 import {
   IRuleNodeConfigurationComponent,
   RuleNodeConfiguration,
   RuleNodeDefinition
 } from '@shared/models/rule-node.models';
-import { Subscription } from 'rxjs';
-import { RuleChainService } from '@core/http/rule-chain.service';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { TranslateService } from '@ngx-translate/core';
-import { JsonObjectEditComponent } from '@shared/components/json-object-edit.component';
-import { deepClone } from '@core/utils';
-import { RuleChainType } from '@shared/models/rule-chain.models';
+import {Subscription} from 'rxjs';
+import {RuleChainService} from '@core/http/rule-chain.service';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {TranslateService} from '@ngx-translate/core';
+import {JsonObjectEditComponent} from '@shared/components/json-object-edit.component';
+import {deepClone} from '@core/utils';
+import {RuleChainType} from '@shared/models/rule-chain.models';
 
 @Component({
   selector: 'tb-rule-node-config',

@@ -35,7 +35,7 @@ DROP TABLE IF EXISTS oauth2_client_registration_template;
 DROP TABLE IF EXISTS oauth2_client_registration;
 DROP TABLE IF EXISTS oauth2_client_registration_info;
 DROP TABLE IF EXISTS api_usage_state;
-DROP TABLE IF EXISTS resource;
+DROP TABLE IF EXISTS perResource;
 DROP TABLE IF EXISTS firmware;
 DROP TABLE IF EXISTS edge;
 DROP TABLE IF EXISTS edge_event;

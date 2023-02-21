@@ -1,6 +1,7 @@
 package org.echoiot.server.dao.service;
 
 import com.datastax.oss.driver.api.core.uuid.Uuids;
+import org.echoiot.server.common.data.*;
 import org.echoiot.server.common.data.edge.Edge;
 import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.id.EdgeId;
@@ -15,11 +16,6 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.echoiot.server.common.data.Customer;
-import org.echoiot.server.common.data.Dashboard;
-import org.echoiot.server.common.data.DashboardInfo;
-import org.echoiot.server.common.data.StringUtils;
-import org.echoiot.server.common.data.Tenant;
 
 import java.io.IOException;
 import java.util.ArrayList;

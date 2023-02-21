@@ -2,13 +2,13 @@ import {Injectable} from '@angular/core';
 
 import {ActivatedRouteSnapshot, Resolve, Router} from '@angular/router';
 import {
-    CellActionDescriptor,
-    checkBoxCell,
-    DateEntityTableColumn,
-    EntityTableColumn,
-    EntityTableConfig,
-    GroupActionDescriptor,
-    HeaderActionDescriptor
+  CellActionDescriptor,
+  checkBoxCell,
+  DateEntityTableColumn,
+  EntityTableColumn,
+  EntityTableConfig,
+  GroupActionDescriptor,
+  HeaderActionDescriptor
 } from '@home/models/entity/entities-table-config.models';
 import {TranslateService} from '@ngx-translate/core';
 import {DatePipe} from '@angular/common';
@@ -25,33 +25,33 @@ import {Customer} from '@app/shared/models/customer.model';
 import {MatDialog} from '@angular/material/dialog';
 import {DialogService} from '@core/services/dialog.service';
 import {
-    AddEntitiesToCustomerDialogComponent,
-    AddEntitiesToCustomerDialogData
+  AddEntitiesToCustomerDialogComponent,
+  AddEntitiesToCustomerDialogData
 } from '../../dialogs/add-entities-to-customer-dialog.component';
 import {
-    Dashboard,
-    DashboardInfo,
-    getDashboardAssignedCustomersText,
-    isCurrentPublicDashboardCustomer,
-    isPublicDashboard
+  Dashboard,
+  DashboardInfo,
+  getDashboardAssignedCustomersText,
+  isCurrentPublicDashboardCustomer,
+  isPublicDashboard
 } from '@app/shared/models/dashboard.models';
 import {DashboardService} from '@app/core/http/dashboard.service';
 import {DashboardFormComponent} from '@modules/home/pages/dashboard/dashboard-form.component';
 import {
-    ManageDashboardCustomersActionType,
-    ManageDashboardCustomersDialogComponent,
-    ManageDashboardCustomersDialogData
+  ManageDashboardCustomersActionType,
+  ManageDashboardCustomersDialogComponent,
+  ManageDashboardCustomersDialogData
 } from './manage-dashboard-customers-dialog.component';
 import {
-    MakeDashboardPublicDialogComponent,
-    MakeDashboardPublicDialogData
+  MakeDashboardPublicDialogComponent,
+  MakeDashboardPublicDialogData
 } from '@modules/home/pages/dashboard/make-dashboard-public-dialog.component';
 import {DashboardTabsComponent} from '@home/pages/dashboard/dashboard-tabs.component';
 import {ImportExportService} from '@home/components/import-export/import-export.service';
 import {EdgeService} from '@core/http/edge.service';
 import {
-    AddEntitiesToEdgeDialogComponent,
-    AddEntitiesToEdgeDialogData
+  AddEntitiesToEdgeDialogComponent,
+  AddEntitiesToEdgeDialogData
 } from '@home/dialogs/add-entities-to-edge-dialog.component';
 import {HomeDialogsService} from '@home/dialogs/home-dialogs.service';
 

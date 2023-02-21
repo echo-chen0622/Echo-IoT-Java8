@@ -3,41 +3,23 @@ package org.echoiot.server.dao.model.sql;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
 import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.audit.ActionStatus;
 import org.echoiot.server.common.data.audit.ActionType;
 import org.echoiot.server.common.data.audit.AuditLog;
-import org.echoiot.server.common.data.id.AuditLogId;
-import org.echoiot.server.common.data.id.CustomerId;
-import org.echoiot.server.common.data.id.EntityIdFactory;
-import org.echoiot.server.common.data.id.TenantId;
-import org.echoiot.server.common.data.id.UserId;
+import org.echoiot.server.common.data.id.*;
 import org.echoiot.server.dao.model.BaseEntity;
 import org.echoiot.server.dao.model.BaseSqlEntity;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.util.mapping.JsonStringType;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 import org.jetbrains.annotations.NotNull;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.UUID;
 
-import static org.echoiot.server.dao.model.ModelConstants.AUDIT_LOG_ACTION_DATA_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.AUDIT_LOG_ACTION_FAILURE_DETAILS_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.AUDIT_LOG_ACTION_STATUS_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.AUDIT_LOG_ACTION_TYPE_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.AUDIT_LOG_CUSTOMER_ID_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.AUDIT_LOG_ENTITY_ID_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.AUDIT_LOG_ENTITY_NAME_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.AUDIT_LOG_ENTITY_TYPE_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.AUDIT_LOG_TENANT_ID_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.AUDIT_LOG_USER_ID_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.AUDIT_LOG_USER_NAME_PROPERTY;
+import static org.echoiot.server.dao.model.ModelConstants.*;
 
 @Data
 @EqualsAndHashCode(callSuper = true)

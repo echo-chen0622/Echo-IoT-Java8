@@ -6,10 +6,10 @@ import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.data.sync.ie.DeviceExportData;
 import org.echoiot.server.dao.device.DeviceCredentialsService;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.stereotype.Service;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.sync.vc.data.EntitiesExportCtx;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.stereotype.Service;
 
 import java.util.Set;
 

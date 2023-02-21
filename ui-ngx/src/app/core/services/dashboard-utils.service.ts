@@ -2,16 +2,16 @@ import {Injectable} from '@angular/core';
 import {UtilsService} from '@core/services/utils.service';
 import {TimeService} from '@core/services/time.service';
 import {
-    Dashboard,
-    DashboardConfiguration,
-    DashboardLayout,
-    DashboardLayoutId,
-    DashboardLayoutInfo,
-    DashboardLayoutsInfo,
-    DashboardState,
-    DashboardStateLayouts,
-    GridSettings,
-    WidgetLayout
+  Dashboard,
+  DashboardConfiguration,
+  DashboardLayout,
+  DashboardLayoutId,
+  DashboardLayoutInfo,
+  DashboardLayoutsInfo,
+  DashboardState,
+  DashboardStateLayouts,
+  GridSettings,
+  WidgetLayout
 } from '@shared/models/dashboard.models';
 import {isDefined, isString, isUndefined} from '@core/utils';
 import {Datasource, DatasourceType, Widget, widgetType} from '@app/shared/models/widget.models';

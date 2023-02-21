@@ -1,4 +1,4 @@
-import { Action } from '@ngrx/store';
+import {Action} from '@ngrx/store';
 
 export enum SettingsActionTypes {
   CHANGE_LANGUAGE = '[Settings] Change Language'

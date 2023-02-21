@@ -1,4 +1,4 @@
-import { Directive, ElementRef, forwardRef, HostListener, Renderer2, SkipSelf } from '@angular/core';
+import {Directive, ElementRef, forwardRef, HostListener, Renderer2, SkipSelf} from '@angular/core';
 import {
   ControlValueAccessor,
   FormControl,
@@ -9,8 +9,8 @@ import {
   ValidationErrors,
   Validator
 } from '@angular/forms';
-import { ErrorStateMatcher } from '@angular/material/core';
-import { isObject } from "@core/utils";
+import {ErrorStateMatcher} from '@angular/material/core';
+import {isObject} from "@core/utils";
 
 @Directive({
   selector: '[tb-json-to-string]',

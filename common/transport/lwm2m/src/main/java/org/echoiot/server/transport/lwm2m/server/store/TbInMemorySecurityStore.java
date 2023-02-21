@@ -1,9 +1,9 @@
 package org.echoiot.server.transport.lwm2m.server.store;
 
+import org.echoiot.server.transport.lwm2m.secure.TbLwM2MSecurityInfo;
 import org.eclipse.leshan.core.SecurityMode;
 import org.eclipse.leshan.server.security.NonUniqueSecurityInfoException;
 import org.eclipse.leshan.server.security.SecurityInfo;
-import org.echoiot.server.transport.lwm2m.secure.TbLwM2MSecurityInfo;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

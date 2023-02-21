@@ -15,9 +15,9 @@ import {OtaPackageId} from '@shared/models/id/ota-package-id';
 import {DashboardId} from '@shared/models/id/dashboard-id';
 import {DataType} from '@shared/models/constants';
 import {
-    getDefaultProfileClientLwM2mSettingsConfig,
-    getDefaultProfileObserveAttrConfig,
-    PowerMode
+  getDefaultProfileClientLwM2mSettingsConfig,
+  getDefaultProfileObserveAttrConfig,
+  PowerMode
 } from '@home/components/profile/device/lwm2m/lwm2m-profile-config.models';
 
 export enum DeviceProfileType {

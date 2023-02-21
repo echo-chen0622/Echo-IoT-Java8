@@ -1,9 +1,9 @@
 package org.echoiot.server.transport.lwm2m.server.downlink;
 
 import lombok.Builder;
+import org.echoiot.server.transport.lwm2m.server.LwM2MOperationType;
 import org.eclipse.leshan.core.request.ContentFormat;
 import org.eclipse.leshan.core.response.ReadResponse;
-import org.echoiot.server.transport.lwm2m.server.LwM2MOperationType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;

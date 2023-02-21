@@ -1,4 +1,4 @@
-import { Component, Inject, InjectionToken, OnInit, ViewContainerRef } from '@angular/core';
+import {Component, Inject, InjectionToken, OnInit, ViewContainerRef} from '@angular/core';
 import {
   aggregationTranslations,
   AggregationType,
@@ -9,12 +9,12 @@ import {
   Timewindow,
   TimewindowType
 } from '@shared/models/time/time.models';
-import { OverlayRef } from '@angular/cdk/overlay';
-import { PageComponent } from '@shared/components/page.component';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { TimeService } from '@core/services/time.service';
+import {OverlayRef} from '@angular/cdk/overlay';
+import {PageComponent} from '@shared/components/page.component';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {TimeService} from '@core/services/time.service';
 
 export const TIMEWINDOW_PANEL_DATA = new InjectionToken<any>('TimewindowPanelData');
 

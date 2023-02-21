@@ -1,15 +1,15 @@
 package org.echoiot.server.service.apiusage;
 
+import org.echoiot.rule.engine.api.RuleEngineApiUsageStateService;
 import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.id.TenantProfileId;
+import org.echoiot.server.common.msg.queue.TbCallback;
 import org.echoiot.server.common.stats.TbApiUsageStateClient;
+import org.echoiot.server.gen.transport.TransportProtos.ToUsageStatsServiceMsg;
 import org.echoiot.server.queue.common.TbProtoQueueMsg;
 import org.echoiot.server.queue.discovery.event.PartitionChangeEvent;
 import org.springframework.context.ApplicationListener;
-import org.echoiot.rule.engine.api.RuleEngineApiUsageStateService;
-import org.echoiot.server.common.msg.queue.TbCallback;
-import org.echoiot.server.gen.transport.TransportProtos.ToUsageStatsServiceMsg;
 
 public interface TbApiUsageStateService extends TbApiUsageStateClient, RuleEngineApiUsageStateService, ApplicationListener<PartitionChangeEvent> {
 

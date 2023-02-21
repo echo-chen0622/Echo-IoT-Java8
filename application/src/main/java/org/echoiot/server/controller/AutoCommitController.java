@@ -5,8 +5,8 @@ import com.google.common.util.concurrent.ListenableFuture;
 import org.echoiot.server.common.data.User;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.service.sync.vc.EntitiesVersionControlService;
-import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.Resource;
 import java.util.UUID;
 
 public class AutoCommitController extends BaseController {

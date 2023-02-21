@@ -1,9 +1,9 @@
-import { Component, forwardRef, Input, OnInit, ViewEncapsulation } from '@angular/core';
-import { ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { PageComponent } from '@shared/components/page.component';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { ScriptLanguage } from '@shared/models/rule-node.models';
+import {Component, forwardRef, Input, OnInit, ViewEncapsulation} from '@angular/core';
+import {ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {PageComponent} from '@shared/components/page.component';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {ScriptLanguage} from '@shared/models/rule-node.models';
 
 @Component({
   selector: 'tb-script-lang',

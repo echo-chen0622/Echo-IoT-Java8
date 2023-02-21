@@ -1,13 +1,13 @@
 package org.echoiot.server.dao.sqlts.insert.timescale;
 
 import org.echoiot.server.dao.model.sqlts.timescale.ts.TimescaleTsKvEntity;
+import org.echoiot.server.dao.sqlts.insert.AbstractInsertRepository;
+import org.echoiot.server.dao.sqlts.insert.InsertTsRepository;
 import org.echoiot.server.dao.util.TimescaleDBTsDao;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import org.echoiot.server.dao.sqlts.insert.AbstractInsertRepository;
-import org.echoiot.server.dao.sqlts.insert.InsertTsRepository;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

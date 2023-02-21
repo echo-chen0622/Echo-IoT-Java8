@@ -1,13 +1,8 @@
 package org.echoiot.server.common.transport.limits;
 
 import lombok.extern.slf4j.Slf4j;
-import org.echoiot.server.common.transport.profile.TenantProfileUpdateResult;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.EntityType;
+import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.TenantProfile;
 import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.data.id.EntityId;
@@ -15,7 +10,12 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.tenant.profile.DefaultTenantProfileConfiguration;
 import org.echoiot.server.common.data.tenant.profile.TenantProfileData;
 import org.echoiot.server.common.transport.TransportTenantProfileCache;
+import org.echoiot.server.common.transport.profile.TenantProfileUpdateResult;
 import org.echoiot.server.queue.util.TbTransportComponent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;

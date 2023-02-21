@@ -1,23 +1,23 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
-import { PageComponent } from '@shared/components/page.component';
-import { FormBuilder, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
-import { select, Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { AdminService } from '@core/http/admin.service';
+import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
+import {PageComponent} from '@shared/components/page.component';
+import {FormBuilder, FormGroup, FormGroupDirective, Validators} from '@angular/forms';
+import {select, Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {AdminService} from '@core/http/admin.service';
 import {
-  RepositorySettings,
   RepositoryAuthMethod,
-  repositoryAuthMethodTranslationMap
+  repositoryAuthMethodTranslationMap,
+  RepositorySettings
 } from '@shared/models/settings.models';
-import { ActionNotificationShow } from '@core/notification/notification.actions';
-import { TranslateService } from '@ngx-translate/core';
-import { isNotEmptyStr } from '@core/utils';
-import { DialogService } from '@core/services/dialog.service';
-import { ActionAuthUpdateHasRepository } from '@core/auth/auth.actions';
-import { selectHasRepository } from '@core/auth/auth.selectors';
-import { catchError, mergeMap, take } from 'rxjs/operators';
-import { of } from 'rxjs';
-import { TbPopoverComponent } from '@shared/components/popover.component';
+import {ActionNotificationShow} from '@core/notification/notification.actions';
+import {TranslateService} from '@ngx-translate/core';
+import {isNotEmptyStr} from '@core/utils';
+import {DialogService} from '@core/services/dialog.service';
+import {ActionAuthUpdateHasRepository} from '@core/auth/auth.actions';
+import {selectHasRepository} from '@core/auth/auth.selectors';
+import {catchError, mergeMap, take} from 'rxjs/operators';
+import {of} from 'rxjs';
+import {TbPopoverComponent} from '@shared/components/popover.component';
 
 @Component({
   selector: 'tb-repository-settings',

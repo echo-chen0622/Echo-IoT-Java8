@@ -9,7 +9,11 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.oauth2.OAuth2Registration;
 import org.echoiot.server.common.data.security.model.JwtPair;
 import org.echoiot.server.dao.oauth2.OAuth2Service;
+import org.echoiot.server.queue.util.TbCoreComponent;
+import org.echoiot.server.service.security.auth.rest.RestAuthenticationDetails;
+import org.echoiot.server.service.security.model.SecurityUser;
 import org.echoiot.server.service.security.model.token.JwtTokenFactory;
+import org.echoiot.server.service.security.system.SystemSecurityService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -19,12 +23,7 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-import org.echoiot.server.queue.util.TbCoreComponent;
-import org.echoiot.server.service.security.auth.rest.RestAuthenticationDetails;
-import org.echoiot.server.service.security.model.SecurityUser;
-import org.echoiot.server.service.security.system.SystemSecurityService;
 
-import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -48,7 +47,7 @@ public class Oauth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
     private final SystemSecurityService systemSecurityService;
 
-    @Resource
+    @Autowired
     public Oauth2AuthenticationSuccessHandler(final JwtTokenFactory tokenFactory,
                                               final OAuth2ClientMapperProvider oauth2ClientMapperProvider,
                                               final OAuth2Service oAuth2Service,

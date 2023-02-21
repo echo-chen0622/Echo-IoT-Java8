@@ -2,6 +2,11 @@ package org.echoiot.server.transport.coap.telemetry.timeseries;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.server.common.data.id.DeviceId;
+import org.echoiot.server.common.msg.session.FeatureType;
+import org.echoiot.server.transport.coap.AbstractCoapIntegrationTest;
+import org.echoiot.server.transport.coap.CoapTestClient;
+import org.echoiot.server.transport.coap.CoapTestConfigProperties;
 import org.eclipse.californium.core.CoapResponse;
 import org.eclipse.californium.core.coap.CoAP;
 import org.jetbrains.annotations.NotNull;
@@ -9,17 +14,8 @@ import org.jetbrains.annotations.Nullable;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.echoiot.server.common.data.id.DeviceId;
-import org.echoiot.server.common.msg.session.FeatureType;
-import org.echoiot.server.transport.coap.AbstractCoapIntegrationTest;
-import org.echoiot.server.transport.coap.CoapTestClient;
-import org.echoiot.server.transport.coap.CoapTestConfigProperties;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

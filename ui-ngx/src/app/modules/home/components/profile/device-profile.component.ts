@@ -7,18 +7,18 @@ import {TranslateService} from '@ngx-translate/core';
 import {EntityTableConfig} from '@home/models/entity/entities-table-config.models';
 import {EntityComponent} from '../entity/entity.component';
 import {
-    createDeviceProfileConfiguration,
-    createDeviceProfileTransportConfiguration,
-    DeviceProfile,
-    DeviceProfileData,
-    DeviceProfileType,
-    deviceProfileTypeConfigurationInfoMap,
-    deviceProfileTypeTranslationMap,
-    DeviceProvisionConfiguration,
-    DeviceProvisionType,
-    DeviceTransportType,
-    deviceTransportTypeConfigurationInfoMap,
-    deviceTransportTypeTranslationMap
+  createDeviceProfileConfiguration,
+  createDeviceProfileTransportConfiguration,
+  DeviceProfile,
+  DeviceProfileData,
+  DeviceProfileType,
+  deviceProfileTypeConfigurationInfoMap,
+  deviceProfileTypeTranslationMap,
+  DeviceProvisionConfiguration,
+  DeviceProvisionType,
+  DeviceTransportType,
+  deviceTransportTypeConfigurationInfoMap,
+  deviceTransportTypeTranslationMap
 } from '@shared/models/device.models';
 import {EntityType} from '@shared/models/entity-type.models';
 import {RuleChainId} from '@shared/models/id/rule-chain-id';

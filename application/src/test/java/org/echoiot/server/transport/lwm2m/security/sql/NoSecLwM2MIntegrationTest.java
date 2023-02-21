@@ -1,16 +1,13 @@
 package org.echoiot.server.transport.lwm2m.security.sql;
 
-import org.jetbrains.annotations.NotNull;
-import org.junit.Test;
 import org.echoiot.server.common.data.device.credentials.lwm2m.LwM2MDeviceCredentials;
 import org.echoiot.server.transport.lwm2m.security.AbstractSecurityLwM2MIntegrationTest;
+import org.jetbrains.annotations.NotNull;
+import org.junit.Test;
 
 import static org.echoiot.server.transport.lwm2m.Lwm2mTestHelper.LwM2MClientState.ON_BOOTSTRAP_SUCCESS;
 import static org.echoiot.server.transport.lwm2m.Lwm2mTestHelper.LwM2MClientState.ON_REGISTRATION_SUCCESS;
-import static org.echoiot.server.transport.lwm2m.Lwm2mTestHelper.LwM2MProfileBootstrapConfigType.BOOTSTRAP_ONLY;
-import static org.echoiot.server.transport.lwm2m.Lwm2mTestHelper.LwM2MProfileBootstrapConfigType.BOTH;
-import static org.echoiot.server.transport.lwm2m.Lwm2mTestHelper.LwM2MProfileBootstrapConfigType.LWM2M_ONLY;
-import static org.echoiot.server.transport.lwm2m.Lwm2mTestHelper.LwM2MProfileBootstrapConfigType.NONE;
+import static org.echoiot.server.transport.lwm2m.Lwm2mTestHelper.LwM2MProfileBootstrapConfigType.*;
 
 public class NoSecLwM2MIntegrationTest extends AbstractSecurityLwM2MIntegrationTest {
 

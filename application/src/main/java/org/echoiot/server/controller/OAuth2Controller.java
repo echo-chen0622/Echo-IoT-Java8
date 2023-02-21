@@ -11,21 +11,15 @@ import org.echoiot.server.common.data.oauth2.PlatformType;
 import org.echoiot.server.dao.oauth2.OAuth2Configuration;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.security.permission.Operation;
-import org.echoiot.server.service.security.permission.Resource;
+import org.echoiot.server.service.security.permission.PerResource;
+import org.echoiot.server.utils.MiscUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-import org.echoiot.server.utils.MiscUtils;
+import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
 import java.util.List;
@@ -81,7 +75,7 @@ public class OAuth2Controller extends BaseController {
     @ResponseBody
     public OAuth2Info getCurrentOAuth2Info() throws EchoiotException {
         try {
-            accessControlService.checkPermission(getCurrentUser(), Resource.OAUTH2_CONFIGURATION_INFO, Operation.READ);
+            accessControlService.checkPermission(getCurrentUser(), PerResource.OAUTH2_CONFIGURATION_INFO, Operation.READ);
             return oAuth2Service.findOAuth2Info();
         } catch (Exception e) {
             throw handleException(e);
@@ -94,7 +88,7 @@ public class OAuth2Controller extends BaseController {
     @ResponseStatus(value = HttpStatus.OK)
     public OAuth2Info saveOAuth2Info(@RequestBody OAuth2Info oauth2Info) throws EchoiotException {
         try {
-            accessControlService.checkPermission(getCurrentUser(), Resource.OAUTH2_CONFIGURATION_INFO, Operation.WRITE);
+            accessControlService.checkPermission(getCurrentUser(), PerResource.OAUTH2_CONFIGURATION_INFO, Operation.WRITE);
             oAuth2Service.saveOAuth2Info(oauth2Info);
             return oAuth2Service.findOAuth2Info();
         } catch (Exception e) {
@@ -112,7 +106,7 @@ public class OAuth2Controller extends BaseController {
     @ResponseBody
     public String getLoginProcessingUrl() throws EchoiotException {
         try {
-            accessControlService.checkPermission(getCurrentUser(), Resource.OAUTH2_CONFIGURATION_INFO, Operation.READ);
+            accessControlService.checkPermission(getCurrentUser(), PerResource.OAUTH2_CONFIGURATION_INFO, Operation.READ);
             return "\"" + oAuth2Configuration.getLoginProcessingUrl() + "\"";
         } catch (Exception e) {
             throw handleException(e);

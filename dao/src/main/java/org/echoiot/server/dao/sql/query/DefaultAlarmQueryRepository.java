@@ -1,11 +1,6 @@
 package org.echoiot.server.dao.sql.query;
 
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.support.TransactionTemplate;
 import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.alarm.AlarmSearchStatus;
@@ -14,22 +9,15 @@ import org.echoiot.server.common.data.alarm.AlarmStatus;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.page.PageData;
-import org.echoiot.server.common.data.query.AlarmData;
-import org.echoiot.server.common.data.query.AlarmDataPageLink;
-import org.echoiot.server.common.data.query.AlarmDataQuery;
-import org.echoiot.server.common.data.query.EntityDataSortOrder;
-import org.echoiot.server.common.data.query.EntityKey;
-import org.echoiot.server.common.data.query.EntityKeyType;
+import org.echoiot.server.common.data.query.*;
 import org.echoiot.server.dao.model.ModelConstants;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.support.TransactionTemplate;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository

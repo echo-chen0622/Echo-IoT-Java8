@@ -4,10 +4,10 @@ import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.EntityView;
 import org.echoiot.server.common.data.id.EntityViewId;
 import org.echoiot.server.common.data.sync.ie.EntityExportData;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.stereotype.Service;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.sync.vc.data.EntitiesExportCtx;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.stereotype.Service;
 
 import java.util.Set;
 

@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
-import { HideNotification, NotificationMessage } from '@app/core/notification/notification.models';
-import { Observable, Subject } from 'rxjs';
+import {Injectable} from '@angular/core';
+import {HideNotification, NotificationMessage} from '@app/core/notification/notification.models';
+import {Observable, Subject} from 'rxjs';
 
 
 @Injectable(

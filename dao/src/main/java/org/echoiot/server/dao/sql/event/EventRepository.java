@@ -1,9 +1,9 @@
 package org.echoiot.server.dao.sql.event;
 
+import org.echoiot.server.common.data.event.Event;
 import org.echoiot.server.dao.model.sql.EventEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.echoiot.server.common.data.event.Event;
 
 import java.util.List;
 import java.util.UUID;

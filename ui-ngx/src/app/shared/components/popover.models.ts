@@ -1,6 +1,6 @@
-import { animate, AnimationTriggerMetadata, style, transition, trigger } from '@angular/animations';
-import { ConnectedOverlayPositionChange, ConnectionPositionPair } from '@angular/cdk/overlay';
-import { TbPopoverComponent } from '@shared/components/popover.component';
+import {animate, AnimationTriggerMetadata, style, transition, trigger} from '@angular/animations';
+import {ConnectedOverlayPositionChange, ConnectionPositionPair} from '@angular/cdk/overlay';
+import {TbPopoverComponent} from '@shared/components/popover.component';
 
 export const popoverMotion: AnimationTriggerMetadata = trigger('popoverMotion', [
   transition('void => active', [

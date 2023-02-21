@@ -1,11 +1,11 @@
 package org.echoiot.server.queue.discovery;
 
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.server.queue.util.AfterStartUp;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
-import org.echoiot.server.queue.util.AfterStartUp;
 
 import java.util.Collections;
 

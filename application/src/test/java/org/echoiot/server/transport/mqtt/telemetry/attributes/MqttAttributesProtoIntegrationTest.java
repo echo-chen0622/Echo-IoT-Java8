@@ -5,9 +5,6 @@ import com.google.protobuf.Descriptors;
 import com.google.protobuf.DynamicMessage;
 import com.squareup.wire.schema.internal.parser.ProtoFileElement;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
-import org.junit.Before;
-import org.junit.Test;
 import org.echoiot.server.common.data.DynamicProtoUtils;
 import org.echoiot.server.common.data.TransportPayloadType;
 import org.echoiot.server.common.data.device.profile.DeviceProfileTransportConfiguration;
@@ -18,15 +15,16 @@ import org.echoiot.server.dao.service.DaoSqlTest;
 import org.echoiot.server.gen.transport.TransportApiProtos;
 import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.transport.mqtt.MqttTestConfigProperties;
+import org.jetbrains.annotations.NotNull;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
 
+import static org.echoiot.server.common.data.device.profile.MqttTopics.*;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.echoiot.server.common.data.device.profile.MqttTopics.DEVICE_ATTRIBUTES_SHORT_JSON_TOPIC;
-import static org.echoiot.server.common.data.device.profile.MqttTopics.DEVICE_ATTRIBUTES_SHORT_PROTO_TOPIC;
-import static org.echoiot.server.common.data.device.profile.MqttTopics.DEVICE_ATTRIBUTES_SHORT_TOPIC;
 
 @Slf4j
 @DaoSqlTest

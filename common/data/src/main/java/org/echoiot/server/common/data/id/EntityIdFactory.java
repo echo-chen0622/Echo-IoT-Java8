@@ -1,7 +1,7 @@
 package org.echoiot.server.common.data.id;
 
-import org.echoiot.server.common.data.edge.EdgeEventType;
 import org.echoiot.server.common.data.EntityType;
+import org.echoiot.server.common.data.edge.EdgeEventType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;

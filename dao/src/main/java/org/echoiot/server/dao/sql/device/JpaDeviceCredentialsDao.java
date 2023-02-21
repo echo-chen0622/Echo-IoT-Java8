@@ -1,18 +1,18 @@
 package org.echoiot.server.dao.sql.device;
 
-import org.echoiot.server.dao.model.sql.DeviceCredentialsEntity;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.security.DeviceCredentials;
 import org.echoiot.server.dao.DaoUtil;
 import org.echoiot.server.dao.device.DeviceCredentialsDao;
+import org.echoiot.server.dao.model.sql.DeviceCredentialsEntity;
 import org.echoiot.server.dao.sql.JpaAbstractDao;
 import org.echoiot.server.dao.util.SqlDao;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.UUID;
 
 /**

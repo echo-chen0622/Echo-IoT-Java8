@@ -1,8 +1,8 @@
 package org.echoiot.server.dao.sql;
 
+import org.echoiot.common.util.EchoiotThreadFactory;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
-import org.echoiot.common.util.EchoiotThreadFactory;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;

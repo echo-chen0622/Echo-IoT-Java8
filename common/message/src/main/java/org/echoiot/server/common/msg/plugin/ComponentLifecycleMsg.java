@@ -8,8 +8,8 @@ import org.echoiot.server.common.data.id.RuleChainId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.plugin.ComponentLifecycleEvent;
 import org.echoiot.server.common.msg.MsgType;
-import org.echoiot.server.common.msg.cluster.ToAllNodesMsg;
 import org.echoiot.server.common.msg.aware.TenantAwareMsg;
+import org.echoiot.server.common.msg.cluster.ToAllNodesMsg;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;

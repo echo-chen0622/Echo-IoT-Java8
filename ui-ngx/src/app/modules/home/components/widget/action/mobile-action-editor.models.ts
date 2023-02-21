@@ -1,4 +1,4 @@
-import { WidgetMobileActionType } from '@shared/models/widget.models';
+import {WidgetMobileActionType} from '@shared/models/widget.models';
 
 const processImageFunctionTemplate =
   '// Function body to process image obtained as a result of mobile action (take photo, take image from gallery, etc.). \n' +

@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { defaultHttpOptionsFromConfig, RequestConfig } from '@core/http/http-utils';
-import { Observable, of, timer } from 'rxjs';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {defaultHttpOptionsFromConfig, RequestConfig} from '@core/http/http-utils';
+import {Observable, of, timer} from 'rxjs';
 import {
   BranchInfo,
   EntityDataDiff,
@@ -15,17 +15,17 @@ import {
   VersionLoadRequest,
   VersionLoadResult
 } from '@shared/models/vc.models';
-import { PageLink } from '@shared/models/page/page-link';
-import { PageData } from '@shared/models/page/page-data';
-import { EntityId } from '@shared/models/id/entity-id';
-import { EntityType, entityTypeTranslations } from '@shared/models/entity-type.models';
-import { select, Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { selectIsUserLoaded } from '@core/auth/auth.selectors';
-import { catchError, finalize, switchMap, takeWhile, tap } from 'rxjs/operators';
-import { TranslateService } from '@ngx-translate/core';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { ActionLoadFinish, ActionLoadStart } from '@core/interceptors/load.actions';
+import {PageLink} from '@shared/models/page/page-link';
+import {PageData} from '@shared/models/page/page-data';
+import {EntityId} from '@shared/models/id/entity-id';
+import {EntityType, entityTypeTranslations} from '@shared/models/entity-type.models';
+import {select, Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {selectIsUserLoaded} from '@core/auth/auth.selectors';
+import {catchError, finalize, switchMap, takeWhile, tap} from 'rxjs/operators';
+import {TranslateService} from '@ngx-translate/core';
+import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
+import {ActionLoadFinish, ActionLoadStart} from '@core/interceptors/load.actions';
 
 @Injectable({
   providedIn: 'root'

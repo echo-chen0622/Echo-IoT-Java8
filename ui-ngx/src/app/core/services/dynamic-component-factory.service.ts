@@ -1,14 +1,14 @@
 import {
-    Compiler,
-    Component,
-    ComponentFactory,
-    Injectable,
-    Injector,
-    NgModule,
-    NgModuleRef,
-    OnDestroy,
-    Type,
-    ɵresetCompiledComponents
+  Compiler,
+  Component,
+  ComponentFactory,
+  Injectable,
+  Injector,
+  NgModule,
+  NgModuleRef,
+  OnDestroy,
+  Type,
+  ɵresetCompiledComponents
 } from '@angular/core';
 import {from, Observable} from 'rxjs';
 import {CommonModule} from '@angular/common';

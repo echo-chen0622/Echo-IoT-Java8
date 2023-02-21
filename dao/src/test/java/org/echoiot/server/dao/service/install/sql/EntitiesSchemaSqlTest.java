@@ -1,14 +1,14 @@
 package org.echoiot.server.dao.service.install.sql;
 
 import org.assertj.core.api.Assertions;
-import org.jetbrains.annotations.NotNull;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.echoiot.server.dao.service.AbstractServiceTest;
 import org.echoiot.server.dao.service.DaoSqlTest;
+import org.jetbrains.annotations.NotNull;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jdbc.core.JdbcTemplate;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;

@@ -9,19 +9,10 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.dao.model.ToData;
 import org.jetbrains.annotations.NotNull;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.UUID;
 
-import static org.echoiot.server.dao.model.ModelConstants.CREATED_TIME_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.CUSTOMER_ID_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.ENTITY_ALARM_COLUMN_FAMILY_NAME;
-import static org.echoiot.server.dao.model.ModelConstants.ENTITY_ID_COLUMN;
-import static org.echoiot.server.dao.model.ModelConstants.ENTITY_TYPE_COLUMN;
-import static org.echoiot.server.dao.model.ModelConstants.TENANT_ID_COLUMN;
+import static org.echoiot.server.dao.model.ModelConstants.*;
 
 @Data
 @Entity

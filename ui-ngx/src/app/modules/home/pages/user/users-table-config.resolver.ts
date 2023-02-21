@@ -1,40 +1,40 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 
-import { ActivatedRouteSnapshot, Resolve, Router } from '@angular/router';
+import {ActivatedRouteSnapshot, Resolve, Router} from '@angular/router';
 import {
   DateEntityTableColumn,
   EntityTableColumn,
   EntityTableConfig
 } from '@home/models/entity/entities-table-config.models';
-import { TranslateService } from '@ngx-translate/core';
-import { DatePipe } from '@angular/common';
-import { EntityType, entityTypeResources, entityTypeTranslations } from '@shared/models/entity-type.models';
-import { User } from '@shared/models/user.model';
-import { UserService } from '@core/http/user.service';
-import { UserComponent } from '@modules/home/pages/user/user.component';
-import { CustomerService } from '@core/http/customer.service';
-import { map, mergeMap, take, tap } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
-import { Authority } from '@shared/models/authority.enum';
-import { CustomerId } from '@shared/models/id/customer-id';
-import { MatDialog } from '@angular/material/dialog';
-import { EntityAction } from '@home/models/entity/entity-component.models';
-import { AddUserDialogComponent, AddUserDialogData } from '@modules/home/pages/user/add-user-dialog.component';
-import { AuthState } from '@core/auth/auth.models';
-import { select, Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { selectAuth } from '@core/auth/auth.selectors';
-import { AuthService } from '@core/auth/auth.service';
+import {TranslateService} from '@ngx-translate/core';
+import {DatePipe} from '@angular/common';
+import {EntityType, entityTypeResources, entityTypeTranslations} from '@shared/models/entity-type.models';
+import {User} from '@shared/models/user.model';
+import {UserService} from '@core/http/user.service';
+import {UserComponent} from '@modules/home/pages/user/user.component';
+import {CustomerService} from '@core/http/customer.service';
+import {map, mergeMap, take, tap} from 'rxjs/operators';
+import {Observable, of} from 'rxjs';
+import {Authority} from '@shared/models/authority.enum';
+import {CustomerId} from '@shared/models/id/customer-id';
+import {MatDialog} from '@angular/material/dialog';
+import {EntityAction} from '@home/models/entity/entity-component.models';
+import {AddUserDialogComponent, AddUserDialogData} from '@modules/home/pages/user/add-user-dialog.component';
+import {AuthState} from '@core/auth/auth.models';
+import {select, Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {selectAuth} from '@core/auth/auth.selectors';
+import {AuthService} from '@core/auth/auth.service';
 import {
   ActivationLinkDialogComponent,
   ActivationLinkDialogData
 } from '@modules/home/pages/user/activation-link-dialog.component';
-import { ActionNotificationShow } from '@core/notification/notification.actions';
-import { NULL_UUID } from '@shared/models/id/has-uuid';
-import { TenantService } from '@app/core/http/tenant.service';
-import { TenantId } from '@app/shared/models/id/tenant-id';
-import { UserTabsComponent } from '@home/pages/user/user-tabs.component';
-import { isDefinedAndNotNull } from '@core/utils';
+import {ActionNotificationShow} from '@core/notification/notification.actions';
+import {NULL_UUID} from '@shared/models/id/has-uuid';
+import {TenantService} from '@app/core/http/tenant.service';
+import {TenantId} from '@app/shared/models/id/tenant-id';
+import {UserTabsComponent} from '@home/pages/user/user-tabs.component';
+import {isDefinedAndNotNull} from '@core/utils';
 
 export interface UsersTableRouteData {
   authority: Authority;

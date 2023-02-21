@@ -6,8 +6,8 @@ import {AppState} from '@core/core.state';
 import {GaugeType} from '@home/components/widget/lib/canvas-digital-gauge';
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
 import {
-    FixedColorLevel,
-    fixedColorLevelValidator
+  FixedColorLevel,
+  fixedColorLevelValidator
 } from '@home/components/widget/lib/settings/gauge/fixed-color-level.component';
 import {ValueSourceProperty} from '@home/components/widget/lib/settings/common/value-source.component';
 

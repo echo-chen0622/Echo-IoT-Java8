@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
 import {Resolve, Router} from '@angular/router';
 import {
-    checkBoxCell,
-    DateEntityTableColumn,
-    EntityTableColumn,
-    EntityTableConfig,
-    HeaderActionDescriptor
+  checkBoxCell,
+  DateEntityTableColumn,
+  EntityTableColumn,
+  EntityTableConfig,
+  HeaderActionDescriptor
 } from '@home/models/entity/entities-table-config.models';
 import {TranslateService} from '@ngx-translate/core';
 import {DatePipe} from '@angular/common';

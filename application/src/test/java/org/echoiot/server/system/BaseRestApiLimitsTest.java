@@ -1,12 +1,11 @@
 package org.echoiot.server.system;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.common.util.concurrent.MoreExecutors;
-import com.google.common.util.concurrent.Uninterruptibles;
+import com.google.common.util.concurrent.*;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.server.common.data.TenantProfile;
+import org.echoiot.server.common.data.page.PageData;
+import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.common.data.tenant.profile.DefaultTenantProfileConfiguration;
 import org.echoiot.server.common.data.tenant.profile.TenantProfileConfiguration;
 import org.echoiot.server.common.data.tenant.profile.TenantProfileData;
@@ -17,9 +16,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.test.web.servlet.ResultActions;
-import org.echoiot.server.common.data.TenantProfile;
-import org.echoiot.server.common.data.page.PageData;
-import org.echoiot.server.common.data.page.PageLink;
 
 import java.util.ArrayList;
 import java.util.List;

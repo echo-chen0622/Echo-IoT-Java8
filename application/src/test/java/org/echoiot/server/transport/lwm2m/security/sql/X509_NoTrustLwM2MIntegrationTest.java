@@ -1,28 +1,28 @@
 package org.echoiot.server.transport.lwm2m.security.sql;
 
+import org.echoiot.server.common.data.device.credentials.lwm2m.LwM2MDeviceCredentials;
+import org.echoiot.server.common.data.device.credentials.lwm2m.X509ClientCredential;
+import org.echoiot.server.common.data.device.profile.Lwm2mDeviceProfileTransportConfiguration;
+import org.echoiot.server.transport.lwm2m.security.AbstractSecurityLwM2MIntegrationTest;
 import org.eclipse.leshan.client.object.Security;
 import org.eclipse.leshan.core.util.Hex;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.util.Base64Utils;
-import org.echoiot.server.common.data.device.credentials.lwm2m.LwM2MDeviceCredentials;
-import org.echoiot.server.common.data.device.credentials.lwm2m.X509ClientCredential;
-import org.echoiot.server.common.data.device.profile.Lwm2mDeviceProfileTransportConfiguration;
-import org.echoiot.server.transport.lwm2m.security.AbstractSecurityLwM2MIntegrationTest;
 
 import javax.servlet.http.HttpServletResponse;
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
 
-import static org.eclipse.leshan.client.object.Security.x509;
-import static org.eclipse.leshan.client.object.Security.x509Bootstrap;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.echoiot.server.common.data.device.credentials.lwm2m.LwM2MSecurityMode.X509;
 import static org.echoiot.server.transport.lwm2m.Lwm2mTestHelper.LwM2MClientState.ON_REGISTRATION_SUCCESS;
 import static org.echoiot.server.transport.lwm2m.Lwm2mTestHelper.LwM2MProfileBootstrapConfigType.BOTH;
 import static org.echoiot.server.transport.lwm2m.Lwm2mTestHelper.LwM2MProfileBootstrapConfigType.NONE;
+import static org.eclipse.leshan.client.object.Security.x509;
+import static org.eclipse.leshan.client.object.Security.x509Bootstrap;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class X509_NoTrustLwM2MIntegrationTest extends AbstractSecurityLwM2MIntegrationTest {
 

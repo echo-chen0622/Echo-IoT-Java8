@@ -1,10 +1,10 @@
 package org.echoiot.server.common.transport;
 
 import com.google.protobuf.ByteString;
-import org.echoiot.server.common.transport.profile.TenantProfileUpdateResult;
 import org.echoiot.server.common.data.TenantProfile;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.id.TenantProfileId;
+import org.echoiot.server.common.transport.profile.TenantProfileUpdateResult;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;

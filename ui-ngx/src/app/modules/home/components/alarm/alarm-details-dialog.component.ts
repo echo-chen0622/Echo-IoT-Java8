@@ -7,11 +7,11 @@ import {Observable, ReplaySubject} from 'rxjs';
 import {Router} from '@angular/router';
 import {DialogComponent} from '@app/shared/components/dialog.component';
 import {
-    AlarmInfo,
-    alarmSeverityColors,
-    alarmSeverityTranslations,
-    AlarmStatus,
-    alarmStatusTranslations
+  AlarmInfo,
+  alarmSeverityColors,
+  alarmSeverityTranslations,
+  AlarmStatus,
+  alarmStatusTranslations
 } from '@app/shared/models/alarm.models';
 import {AlarmService} from '@core/http/alarm.service';
 import {tap} from 'rxjs/operators';

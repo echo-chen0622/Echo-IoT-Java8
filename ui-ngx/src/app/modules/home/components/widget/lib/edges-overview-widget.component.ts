@@ -1,31 +1,31 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
-import { PageComponent } from '@shared/components/page.component';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { WidgetContext } from '@home/models/widget-component.models';
-import { Datasource, DatasourceType, WidgetConfig } from '@shared/models/widget.models';
-import { IWidgetSubscription } from '@core/api/widget-api.models';
-import { UtilsService } from '@core/services/utils.service';
-import { LoadNodesCallback } from '@shared/components/nav-tree.component';
-import { EntityType } from '@shared/models/entity-type.models';
+import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
+import {PageComponent} from '@shared/components/page.component';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {WidgetContext} from '@home/models/widget-component.models';
+import {Datasource, DatasourceType, WidgetConfig} from '@shared/models/widget.models';
+import {IWidgetSubscription} from '@core/api/widget-api.models';
+import {UtilsService} from '@core/services/utils.service';
+import {LoadNodesCallback} from '@shared/components/nav-tree.component';
+import {EntityType} from '@shared/models/entity-type.models';
 import {
   EdgeGroupNodeData,
   edgeGroupsNodeText,
   edgeGroupsTypes,
-  entityNodeText,
   EdgeOverviewNode,
   EntityNodeData,
-  EntityNodeDatasource
+  EntityNodeDatasource,
+  entityNodeText
 } from '@home/components/widget/lib/edges-overview-widget.models';
-import { EdgeService } from '@core/http/edge.service';
-import { EntityService } from '@core/http/entity.service';
-import { TranslateService } from '@ngx-translate/core';
-import { PageLink } from '@shared/models/page/page-link';
-import { BaseData, HasId } from '@shared/models/base-data';
-import { EntityId } from '@shared/models/id/entity-id';
-import { getCurrentAuthUser } from '@core/auth/auth.selectors';
-import { Authority } from '@shared/models/authority.enum';
-import { isDefined } from '@core/utils';
+import {EdgeService} from '@core/http/edge.service';
+import {EntityService} from '@core/http/entity.service';
+import {TranslateService} from '@ngx-translate/core';
+import {PageLink} from '@shared/models/page/page-link';
+import {BaseData, HasId} from '@shared/models/base-data';
+import {EntityId} from '@shared/models/id/entity-id';
+import {getCurrentAuthUser} from '@core/auth/auth.selectors';
+import {Authority} from '@shared/models/authority.enum';
+import {isDefined} from '@core/utils';
 
 interface EdgesOverviewWidgetSettings {
   enableDefaultTitle: boolean;

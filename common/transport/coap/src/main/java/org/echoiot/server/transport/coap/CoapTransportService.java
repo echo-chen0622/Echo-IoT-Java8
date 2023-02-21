@@ -10,11 +10,11 @@ import org.echoiot.server.transport.coap.efento.CoapEfentoTransportResource;
 import org.eclipse.californium.core.CoapResource;
 import org.eclipse.californium.core.CoapServer;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.annotation.Resource;
 import java.net.UnknownHostException;
 
 @Service("CoapTransportService")

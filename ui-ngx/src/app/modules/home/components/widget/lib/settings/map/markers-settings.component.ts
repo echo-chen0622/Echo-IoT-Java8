@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import {Component, forwardRef, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {
   ControlValueAccessor,
   FormBuilder,
@@ -6,17 +6,20 @@ import {
   FormGroup,
   NG_VALIDATORS,
   NG_VALUE_ACCESSOR,
-  Validator, Validators
+  Validator,
+  Validators
 } from '@angular/forms';
-import { PageComponent } from '@shared/components/page.component';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { TranslateService } from '@ngx-translate/core';
+import {PageComponent} from '@shared/components/page.component';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {TranslateService} from '@ngx-translate/core';
 import {
   MapProviders,
-  MarkersSettings, ShowTooltipAction, showTooltipActionTranslationMap
+  MarkersSettings,
+  ShowTooltipAction,
+  showTooltipActionTranslationMap
 } from '@home/components/widget/lib/maps/map-models';
-import { WidgetService } from '@core/http/widget.service';
+import {WidgetService} from '@core/http/widget.service';
 
 @Component({
   selector: 'tb-markers-settings',

@@ -3,24 +3,16 @@ package org.echoiot.server.dao.model.sql;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
 import org.echoiot.server.common.data.id.OAuth2ClientRegistrationTemplateId;
-import org.echoiot.server.common.data.oauth2.MapperType;
-import org.echoiot.server.common.data.oauth2.OAuth2BasicMapperConfig;
-import org.echoiot.server.common.data.oauth2.OAuth2ClientRegistrationTemplate;
-import org.echoiot.server.common.data.oauth2.OAuth2MapperConfig;
-import org.echoiot.server.common.data.oauth2.TenantNameStrategyType;
+import org.echoiot.server.common.data.oauth2.*;
 import org.echoiot.server.dao.model.BaseSqlEntity;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.util.mapping.JsonStringType;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 import org.jetbrains.annotations.NotNull;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Arrays;
 
 @Data

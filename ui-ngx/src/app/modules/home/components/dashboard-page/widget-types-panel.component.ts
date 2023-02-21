@@ -1,5 +1,5 @@
-import { Component, Inject, InjectionToken } from '@angular/core';
-import { widgetType } from '@shared/models/widget.models';
+import {Component, Inject, InjectionToken} from '@angular/core';
+import {widgetType} from '@shared/models/widget.models';
 
 export const DISPLAY_WIDGET_TYPES_PANEL_DATA = new InjectionToken<any>('DisplayWidgetTypesPanelData');
 

@@ -1,10 +1,10 @@
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { Component, OnInit } from '@angular/core';
-import { FcNodeComponent } from 'ngx-flowchart';
-import { FcRuleNode, RuleNodeType } from '@shared/models/rule-node.models';
-import { Router } from '@angular/router';
-import { RuleChainType } from '@app/shared/models/rule-chain.models';
-import { TranslateService } from '@ngx-translate/core';
+import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
+import {Component, OnInit} from '@angular/core';
+import {FcNodeComponent} from 'ngx-flowchart';
+import {FcRuleNode, RuleNodeType} from '@shared/models/rule-node.models';
+import {Router} from '@angular/router';
+import {RuleChainType} from '@app/shared/models/rule-chain.models';
+import {TranslateService} from '@ngx-translate/core';
 
 @Component({
   // tslint:disable-next-line:component-selector

@@ -1,10 +1,11 @@
-import { Component, Inject, OnInit, SkipSelf } from '@angular/core';
-import { ErrorStateMatcher } from '@angular/material/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
+import {Component, Inject, OnInit, SkipSelf} from '@angular/core';
+import {ErrorStateMatcher} from '@angular/material/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
 import {
-  AbstractControl, FormArray,
+  AbstractControl,
+  FormArray,
   FormBuilder,
   FormControl,
   FormGroup,
@@ -12,16 +13,17 @@ import {
   NgForm,
   Validators
 } from '@angular/forms';
-import { Router } from '@angular/router';
-import { DialogComponent } from '@app/shared/components/dialog.component';
-import { TranslateService } from '@ngx-translate/core';
+import {Router} from '@angular/router';
+import {DialogComponent} from '@app/shared/components/dialog.component';
+import {TranslateService} from '@ngx-translate/core';
 import {
   EntityKeyValueType,
-  Filter, FilterPredicateValue,
+  Filter,
+  FilterPredicateValue,
   filterToUserFilterInfoList,
   UserFilterInputInfo
 } from '@shared/models/query/query.models';
-import { isDefinedAndNotNull } from '@core/utils';
+import {isDefinedAndNotNull} from '@core/utils';
 
 export interface UserFilterDialogData {
   filter: Filter;

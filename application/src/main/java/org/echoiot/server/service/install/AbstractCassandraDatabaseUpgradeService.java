@@ -5,9 +5,8 @@ import org.echoiot.server.dao.cassandra.CassandraCluster;
 import org.echoiot.server.dao.cassandra.CassandraInstallCluster;
 import org.echoiot.server.service.install.cql.CQLStatementsParser;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
+import javax.annotation.Resource;
 import java.nio.file.Path;
 import java.util.List;
 

@@ -1,10 +1,10 @@
 package org.echoiot.server.service.subscription;
 
+import org.echoiot.server.common.msg.queue.TbCallback;
 import org.echoiot.server.queue.discovery.event.ClusterTopologyChangeEvent;
 import org.echoiot.server.queue.discovery.event.PartitionChangeEvent;
 import org.echoiot.server.service.telemetry.sub.AlarmSubscriptionUpdate;
 import org.echoiot.server.service.telemetry.sub.TelemetrySubscriptionUpdate;
-import org.echoiot.server.common.msg.queue.TbCallback;
 
 public interface TbLocalSubscriptionService {
 

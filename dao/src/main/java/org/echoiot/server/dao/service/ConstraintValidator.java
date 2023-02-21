@@ -2,12 +2,12 @@ package org.echoiot.server.dao.service;
 
 import com.google.common.collect.Iterators;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.server.common.data.validation.Length;
+import org.echoiot.server.common.data.validation.NoXss;
 import org.echoiot.server.dao.exception.DataValidationException;
 import org.hibernate.validator.HibernateValidator;
 import org.hibernate.validator.HibernateValidatorConfiguration;
 import org.hibernate.validator.cfg.ConstraintMapping;
-import org.echoiot.server.common.data.validation.Length;
-import org.echoiot.server.common.data.validation.NoXss;
 import org.jetbrains.annotations.NotNull;
 
 import javax.validation.Path;

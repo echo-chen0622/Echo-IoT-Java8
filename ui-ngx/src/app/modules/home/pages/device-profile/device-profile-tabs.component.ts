@@ -3,10 +3,10 @@ import {Store} from '@ngrx/store';
 import {AppState} from '@core/core.state';
 import {EntityTabsComponent} from '../../components/entity/entity-tabs.component';
 import {
-    DeviceProfile,
-    DeviceTransportType,
-    deviceTransportTypeHintMap,
-    deviceTransportTypeTranslationMap
+  DeviceProfile,
+  DeviceTransportType,
+  deviceTransportTypeHintMap,
+  deviceTransportTypeTranslationMap
 } from '@shared/models/device.models';
 
 @Component({

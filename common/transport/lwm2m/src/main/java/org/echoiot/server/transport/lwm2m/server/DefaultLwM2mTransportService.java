@@ -2,11 +2,18 @@ package org.echoiot.server.transport.lwm2m.server;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.server.cache.ota.OtaPackageDataCache;
 import org.echoiot.server.common.data.DataConstants;
 import org.echoiot.server.common.transport.config.ssl.SslCredentials;
+import org.echoiot.server.queue.util.AfterStartUp;
+import org.echoiot.server.queue.util.TbLwM2mTransportComponent;
+import org.echoiot.server.transport.lwm2m.config.LwM2MTransportServerConfig;
+import org.echoiot.server.transport.lwm2m.secure.TbLwM2MAuthorizer;
+import org.echoiot.server.transport.lwm2m.secure.TbLwM2MDtlsCertificateVerifier;
 import org.echoiot.server.transport.lwm2m.server.ota.DefaultLwM2MOtaUpdateService;
 import org.echoiot.server.transport.lwm2m.server.store.TbSecurityStore;
 import org.echoiot.server.transport.lwm2m.server.uplink.DefaultLwM2mUplinkMsgHandler;
+import org.echoiot.server.transport.lwm2m.utils.LwM2mValueConverterImpl;
 import org.eclipse.californium.scandium.config.DtlsConfig;
 import org.eclipse.californium.scandium.config.DtlsConnectorConfig;
 import org.eclipse.californium.scandium.dtls.cipher.CipherSuite;
@@ -17,28 +24,15 @@ import org.eclipse.leshan.server.californium.LeshanServerBuilder;
 import org.eclipse.leshan.server.californium.registration.CaliforniumRegistrationStore;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
-import org.echoiot.server.cache.ota.OtaPackageDataCache;
-import org.echoiot.server.queue.util.AfterStartUp;
-import org.echoiot.server.queue.util.TbLwM2mTransportComponent;
-import org.echoiot.server.transport.lwm2m.config.LwM2MTransportServerConfig;
-import org.echoiot.server.transport.lwm2m.secure.TbLwM2MAuthorizer;
-import org.echoiot.server.transport.lwm2m.secure.TbLwM2MDtlsCertificateVerifier;
-import org.echoiot.server.transport.lwm2m.utils.LwM2mValueConverterImpl;
 
 import javax.annotation.PreDestroy;
 import java.security.cert.X509Certificate;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static org.eclipse.californium.scandium.config.DtlsConfig.DTLS_RECOMMENDED_CIPHER_SUITES_ONLY;
-import static org.eclipse.californium.scandium.config.DtlsConfig.DTLS_RECOMMENDED_CURVES_ONLY;
-import static org.eclipse.californium.scandium.config.DtlsConfig.DTLS_RETRANSMISSION_TIMEOUT;
-import static org.eclipse.californium.scandium.config.DtlsConfig.DTLS_ROLE;
-import static org.eclipse.californium.scandium.config.DtlsConfig.DtlsRole.SERVER_ONLY;
-import static org.eclipse.californium.scandium.dtls.cipher.CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256;
-import static org.eclipse.californium.scandium.dtls.cipher.CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_128_CCM_8;
-import static org.eclipse.californium.scandium.dtls.cipher.CipherSuite.TLS_PSK_WITH_AES_128_CBC_SHA256;
-import static org.eclipse.californium.scandium.dtls.cipher.CipherSuite.TLS_PSK_WITH_AES_128_CCM_8;
 import static org.echoiot.server.transport.lwm2m.server.LwM2MNetworkConfig.getCoapConfig;
+import static org.eclipse.californium.scandium.config.DtlsConfig.*;
+import static org.eclipse.californium.scandium.config.DtlsConfig.DtlsRole.SERVER_ONLY;
+import static org.eclipse.californium.scandium.dtls.cipher.CipherSuite.*;
 
 @Slf4j
 @Component

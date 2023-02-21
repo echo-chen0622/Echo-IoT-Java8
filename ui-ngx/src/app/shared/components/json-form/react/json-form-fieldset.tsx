@@ -1,8 +1,8 @@
 import * as React from 'react';
 import {
-    JsonFormData,
-    JsonFormFieldProps,
-    JsonFormFieldState
+  JsonFormData,
+  JsonFormFieldProps,
+  JsonFormFieldState
 } from '@shared/components/json-form/react/json-form.models';
 
 class EchoiotFieldSet extends React.Component<JsonFormFieldProps, JsonFormFieldState> {

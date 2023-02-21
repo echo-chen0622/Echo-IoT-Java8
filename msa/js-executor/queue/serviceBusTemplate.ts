@@ -1,7 +1,7 @@
 import config from 'config';
-import { _logger } from '../config/logger';
-import { JsInvokeMessageProcessor } from '../api/jsInvokeMessageProcessor'
-import { IQueue } from './queue.models';
+import {_logger} from '../config/logger';
+import {JsInvokeMessageProcessor} from '../api/jsInvokeMessageProcessor'
+import {IQueue} from './queue.models';
 import {
     CreateQueueOptions,
     ProcessErrorArgs,

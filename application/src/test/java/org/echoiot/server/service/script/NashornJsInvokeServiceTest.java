@@ -1,19 +1,19 @@
 package org.echoiot.server.service.script;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.echoiot.server.controller.AbstractControllerTest;
-import org.jetbrains.annotations.NotNull;
-import org.junit.Assert;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.test.context.TestPropertySource;
 import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.script.api.ScriptType;
 import org.echoiot.script.api.js.NashornJsInvokeService;
 import org.echoiot.server.common.data.id.TenantId;
+import org.echoiot.server.controller.AbstractControllerTest;
 import org.echoiot.server.dao.service.DaoSqlTest;
+import org.jetbrains.annotations.NotNull;
+import org.junit.Assert;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.test.context.TestPropertySource;
 
+import javax.annotation.Resource;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;

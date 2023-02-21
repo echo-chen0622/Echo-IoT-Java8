@@ -1,9 +1,9 @@
 package org.echoiot.server.queue.memory;
 
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
 import org.echoiot.server.queue.TbQueueConsumer;
 import org.echoiot.server.queue.TbQueueMsg;
-import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;

@@ -1,9 +1,9 @@
 package org.echoiot.server.common.transport.limits;
 
-import org.echoiot.server.common.transport.profile.TenantProfileUpdateResult;
 import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.data.id.TenantId;
+import org.echoiot.server.common.transport.profile.TenantProfileUpdateResult;
 
 import java.net.InetSocketAddress;
 

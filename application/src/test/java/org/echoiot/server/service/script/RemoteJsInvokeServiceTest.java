@@ -2,13 +2,6 @@ package org.echoiot.server.service.script;
 
 import com.google.common.util.concurrent.Futures;
 import org.apache.commons.lang3.StringUtils;
-import org.echoiot.server.queue.TbQueueRequestTemplate;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 import org.echoiot.script.api.ScriptType;
 import org.echoiot.server.common.data.ApiUsageState;
 import org.echoiot.server.common.data.id.TenantId;
@@ -17,26 +10,22 @@ import org.echoiot.server.common.stats.TbApiUsageStateClient;
 import org.echoiot.server.gen.js.JsInvokeProtos;
 import org.echoiot.server.gen.js.JsInvokeProtos.RemoteJsRequest;
 import org.echoiot.server.gen.js.JsInvokeProtos.RemoteJsResponse;
+import org.echoiot.server.queue.TbQueueRequestTemplate;
 import org.echoiot.server.queue.common.TbProtoJsQueueMsg;
 import org.echoiot.server.queue.common.TbProtoQueueMsg;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class RemoteJsInvokeServiceTest {
 

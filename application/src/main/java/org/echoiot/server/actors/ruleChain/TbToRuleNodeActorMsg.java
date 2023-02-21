@@ -2,10 +2,10 @@ package org.echoiot.server.actors.ruleChain;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import org.echoiot.rule.engine.api.TbContext;
 import org.echoiot.server.common.msg.TbActorStopReason;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.TbRuleEngineActorMsg;
-import org.echoiot.rule.engine.api.TbContext;
 import org.echoiot.server.common.msg.queue.RuleNodeException;
 import org.jetbrains.annotations.NotNull;
 

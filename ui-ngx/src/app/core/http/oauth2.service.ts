@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { defaultHttpOptionsFromConfig, RequestConfig } from '@core/http/http-utils';
-import { Observable } from 'rxjs';
-import { OAuth2ClientRegistrationTemplate, OAuth2Info } from '@shared/models/oauth2.models';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {defaultHttpOptionsFromConfig, RequestConfig} from '@core/http/http-utils';
+import {Observable} from 'rxjs';
+import {OAuth2ClientRegistrationTemplate, OAuth2Info} from '@shared/models/oauth2.models';
 
 @Injectable({
   providedIn: 'root'

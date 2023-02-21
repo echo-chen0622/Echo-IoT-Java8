@@ -2,14 +2,14 @@ package org.echoiot.server.transport.coap.rpc;
 
 import com.datastax.oss.driver.api.core.uuid.Uuids;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.server.dao.service.DaoSqlTest;
+import org.echoiot.server.service.security.AccessValidator;
+import org.echoiot.server.transport.coap.CoapTestConfigProperties;
 import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.echoiot.server.dao.service.DaoSqlTest;
-import org.echoiot.server.service.security.AccessValidator;
-import org.echoiot.server.transport.coap.CoapTestConfigProperties;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 

@@ -1,15 +1,15 @@
 import {Component, forwardRef, Input, OnInit} from '@angular/core';
 import {
-    AbstractControl,
-    ControlValueAccessor,
-    FormArray,
-    FormBuilder,
-    FormControl,
-    FormGroup,
-    NG_VALIDATORS,
-    NG_VALUE_ACCESSOR,
-    Validator,
-    Validators
+  AbstractControl,
+  ControlValueAccessor,
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR,
+  Validator,
+  Validators
 } from '@angular/forms';
 import {PageComponent} from '@shared/components/page.component';
 import {ChartType, TbFlotKeySettings, TbFlotKeyThreshold} from '@home/components/widget/lib/flot-widget.models';

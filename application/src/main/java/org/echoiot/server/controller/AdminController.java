@@ -25,19 +25,20 @@ import org.echoiot.server.service.security.auth.jwt.settings.JwtSettingsService;
 import org.echoiot.server.service.security.model.SecurityUser;
 import org.echoiot.server.service.security.model.token.JwtTokenFactory;
 import org.echoiot.server.service.security.permission.Operation;
-import org.echoiot.server.service.security.permission.Resource;
+import org.echoiot.server.service.security.permission.PerResource;
 import org.echoiot.server.service.security.system.SystemSecurityService;
 import org.echoiot.server.service.sync.vc.EntitiesVersionControlService;
 import org.echoiot.server.service.sync.vc.autocommit.TbAutoCommitSettingsService;
 import org.echoiot.server.service.update.UpdateService;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
+
+import javax.annotation.Resource;
 
 @RestController
 @TbCoreComponent
@@ -83,7 +84,7 @@ public class AdminController extends BaseController {
             @ApiParam(value = "A string value of the key (e.g. 'general' or 'mail').")
             @PathVariable("key") String key) throws EchoiotException {
         try {
-            accessControlService.checkPermission(getCurrentUser(), Resource.ADMIN_SETTINGS, Operation.READ);
+            accessControlService.checkPermission(getCurrentUser(), PerResource.ADMIN_SETTINGS, Operation.READ);
             @NotNull AdminSettings adminSettings = checkNotNull(adminSettingsService.findAdminSettingsByKey(TenantId.SYS_TENANT_ID, key), "No Administration settings found for key: " + key);
             if (adminSettings.getKey().equals("mail")) {
                 ((ObjectNode) adminSettings.getJsonValue()).remove("password");
@@ -107,7 +108,7 @@ public class AdminController extends BaseController {
             @NotNull @ApiParam(value = "A JSON value representing the Administration Settings.")
             @RequestBody AdminSettings adminSettings) throws EchoiotException {
         try {
-            accessControlService.checkPermission(getCurrentUser(), Resource.ADMIN_SETTINGS, Operation.WRITE);
+            accessControlService.checkPermission(getCurrentUser(), PerResource.ADMIN_SETTINGS, Operation.WRITE);
             adminSettings.setTenantId(getTenantId());
             adminSettings = checkNotNull(adminSettingsService.saveAdminSettings(TenantId.SYS_TENANT_ID, adminSettings));
             if (adminSettings.getKey().equals("mail")) {
@@ -129,7 +130,7 @@ public class AdminController extends BaseController {
     @ResponseBody
     public SecuritySettings getSecuritySettings() throws EchoiotException {
         try {
-            accessControlService.checkPermission(getCurrentUser(), Resource.ADMIN_SETTINGS, Operation.READ);
+            accessControlService.checkPermission(getCurrentUser(), PerResource.ADMIN_SETTINGS, Operation.READ);
             return checkNotNull(systemSecurityService.getSecuritySettings(TenantId.SYS_TENANT_ID));
         } catch (Exception e) {
             throw handleException(e);
@@ -145,7 +146,7 @@ public class AdminController extends BaseController {
             @ApiParam(value = "A JSON value representing the Security Settings.")
             @RequestBody SecuritySettings securitySettings) throws EchoiotException {
         try {
-            accessControlService.checkPermission(getCurrentUser(), Resource.ADMIN_SETTINGS, Operation.WRITE);
+            accessControlService.checkPermission(getCurrentUser(), PerResource.ADMIN_SETTINGS, Operation.WRITE);
             securitySettings = checkNotNull(systemSecurityService.saveSecuritySettings(TenantId.SYS_TENANT_ID, securitySettings));
             return securitySettings;
         } catch (Exception e) {
@@ -161,7 +162,7 @@ public class AdminController extends BaseController {
     @ResponseBody
     public JwtSettings getJwtSettings() throws EchoiotException {
         try {
-            accessControlService.checkPermission(getCurrentUser(), Resource.ADMIN_SETTINGS, Operation.READ);
+            accessControlService.checkPermission(getCurrentUser(), PerResource.ADMIN_SETTINGS, Operation.READ);
             return checkNotNull(jwtSettingsService.getJwtSettings());
         } catch (Exception e) {
             throw handleException(e);
@@ -179,7 +180,7 @@ public class AdminController extends BaseController {
             @RequestBody JwtSettings jwtSettings) throws EchoiotException {
         try {
             SecurityUser securityUser = getCurrentUser();
-            accessControlService.checkPermission(securityUser, Resource.ADMIN_SETTINGS, Operation.WRITE);
+            accessControlService.checkPermission(securityUser, PerResource.ADMIN_SETTINGS, Operation.WRITE);
             checkNotNull(jwtSettingsService.saveJwtSettings(jwtSettings));
             return tokenFactory.createTokenPair(securityUser);
         } catch (Exception e) {
@@ -196,7 +197,7 @@ public class AdminController extends BaseController {
             @ApiParam(value = "A JSON value representing the Mail Settings.")
             @RequestBody AdminSettings adminSettings) throws EchoiotException {
         try {
-            accessControlService.checkPermission(getCurrentUser(), Resource.ADMIN_SETTINGS, Operation.READ);
+            accessControlService.checkPermission(getCurrentUser(), PerResource.ADMIN_SETTINGS, Operation.READ);
             adminSettings = checkNotNull(adminSettings);
             if (adminSettings.getKey().equals("mail")) {
                 if (!adminSettings.getJsonValue().has("password")) {
@@ -220,7 +221,7 @@ public class AdminController extends BaseController {
             @ApiParam(value = "A JSON value representing the Test SMS request.")
             @RequestBody TestSmsRequest testSmsRequest) throws EchoiotException {
         try {
-            accessControlService.checkPermission(getCurrentUser(), Resource.ADMIN_SETTINGS, Operation.READ);
+            accessControlService.checkPermission(getCurrentUser(), PerResource.ADMIN_SETTINGS, Operation.READ);
             smsService.sendTestSms(testSmsRequest);
         } catch (Exception e) {
             throw handleException(e);
@@ -234,7 +235,7 @@ public class AdminController extends BaseController {
     @GetMapping("/repositorySettings")
     public RepositorySettings getRepositorySettings() throws EchoiotException {
         try {
-            accessControlService.checkPermission(getCurrentUser(), Resource.VERSION_CONTROL, Operation.READ);
+            accessControlService.checkPermission(getCurrentUser(), PerResource.VERSION_CONTROL, Operation.READ);
             RepositorySettings versionControlSettings = checkNotNull(versionControlService.getVersionControlSettings(getTenantId()));
             versionControlSettings.setPassword(null);
             versionControlSettings.setPrivateKey(null);
@@ -252,7 +253,7 @@ public class AdminController extends BaseController {
     @GetMapping("/repositorySettings/exists")
     public Boolean repositorySettingsExists() throws EchoiotException {
         try {
-            accessControlService.checkPermission(getCurrentUser(), Resource.VERSION_CONTROL, Operation.READ);
+            accessControlService.checkPermission(getCurrentUser(), PerResource.VERSION_CONTROL, Operation.READ);
             return versionControlService.getVersionControlSettings(getTenantId()) != null;
         } catch (Exception e) {
             throw handleException(e);
@@ -262,7 +263,7 @@ public class AdminController extends BaseController {
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
     @GetMapping("/repositorySettings/info")
     public RepositorySettingsInfo getRepositorySettingsInfo() throws Exception {
-        accessControlService.checkPermission(getCurrentUser(), Resource.VERSION_CONTROL, Operation.READ);
+        accessControlService.checkPermission(getCurrentUser(), PerResource.VERSION_CONTROL, Operation.READ);
         RepositorySettings repositorySettings = versionControlService.getVersionControlSettings(getTenantId());
         if (repositorySettings != null) {
             return RepositorySettingsInfo.builder()
@@ -281,7 +282,7 @@ public class AdminController extends BaseController {
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
     @PostMapping("/repositorySettings")
     public DeferredResult<RepositorySettings> saveRepositorySettings(@RequestBody RepositorySettings settings) throws EchoiotException {
-        accessControlService.checkPermission(getCurrentUser(), Resource.VERSION_CONTROL, Operation.WRITE);
+        accessControlService.checkPermission(getCurrentUser(), PerResource.VERSION_CONTROL, Operation.WRITE);
         ListenableFuture<RepositorySettings> future = versionControlService.saveVersionControlSettings(getTenantId(), settings);
         return wrapFuture(Futures.transform(future, savedSettings -> {
             savedSettings.setPassword(null);
@@ -299,7 +300,7 @@ public class AdminController extends BaseController {
     @ResponseStatus(value = HttpStatus.OK)
     public DeferredResult<Void> deleteRepositorySettings() throws EchoiotException {
         try {
-            accessControlService.checkPermission(getCurrentUser(), Resource.VERSION_CONTROL, Operation.DELETE);
+            accessControlService.checkPermission(getCurrentUser(), PerResource.VERSION_CONTROL, Operation.DELETE);
             return wrapFuture(versionControlService.deleteVersionControlSettings(getTenantId()));
         } catch (Exception e) {
             throw handleException(e);
@@ -315,7 +316,7 @@ public class AdminController extends BaseController {
             @ApiParam(value = "A JSON value representing the Repository Settings.")
             @RequestBody RepositorySettings settings) throws EchoiotException {
         try {
-            accessControlService.checkPermission(getCurrentUser(), Resource.VERSION_CONTROL, Operation.READ);
+            accessControlService.checkPermission(getCurrentUser(), PerResource.VERSION_CONTROL, Operation.READ);
             settings = checkNotNull(settings);
             return wrapFuture(versionControlService.checkVersionControlAccess(getTenantId(), settings));
         } catch (Exception e) {
@@ -329,7 +330,7 @@ public class AdminController extends BaseController {
     @GetMapping("/autoCommitSettings")
     public AutoCommitSettings getAutoCommitSettings() throws EchoiotException {
         try {
-            accessControlService.checkPermission(getCurrentUser(), Resource.VERSION_CONTROL, Operation.READ);
+            accessControlService.checkPermission(getCurrentUser(), PerResource.VERSION_CONTROL, Operation.READ);
             return checkNotNull(autoCommitSettingsService.get(getTenantId()));
         } catch (Exception e) {
             throw handleException(e);
@@ -343,7 +344,7 @@ public class AdminController extends BaseController {
     @GetMapping("/autoCommitSettings/exists")
     public Boolean autoCommitSettingsExists() throws EchoiotException {
         try {
-            accessControlService.checkPermission(getCurrentUser(), Resource.VERSION_CONTROL, Operation.READ);
+            accessControlService.checkPermission(getCurrentUser(), PerResource.VERSION_CONTROL, Operation.READ);
             return autoCommitSettingsService.get(getTenantId()) != null;
         } catch (Exception e) {
             throw handleException(e);
@@ -355,7 +356,7 @@ public class AdminController extends BaseController {
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
     @PostMapping("/autoCommitSettings")
     public AutoCommitSettings saveAutoCommitSettings(@RequestBody AutoCommitSettings settings) throws EchoiotException {
-        accessControlService.checkPermission(getCurrentUser(), Resource.VERSION_CONTROL, Operation.WRITE);
+        accessControlService.checkPermission(getCurrentUser(), PerResource.VERSION_CONTROL, Operation.WRITE);
         return autoCommitSettingsService.save(getTenantId(), settings);
     }
 
@@ -367,7 +368,7 @@ public class AdminController extends BaseController {
     @ResponseStatus(value = HttpStatus.OK)
     public void deleteAutoCommitSettings() throws EchoiotException {
         try {
-            accessControlService.checkPermission(getCurrentUser(), Resource.VERSION_CONTROL, Operation.DELETE);
+            accessControlService.checkPermission(getCurrentUser(), PerResource.VERSION_CONTROL, Operation.DELETE);
             autoCommitSettingsService.delete(getTenantId());
         } catch (Exception e) {
             throw handleException(e);

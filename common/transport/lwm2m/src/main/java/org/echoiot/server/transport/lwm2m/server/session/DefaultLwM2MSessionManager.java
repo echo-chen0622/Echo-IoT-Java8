@@ -3,14 +3,14 @@ package org.echoiot.server.transport.lwm2m.server.session;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.transport.TransportService;
 import org.echoiot.server.common.transport.service.DefaultTransportService;
-import org.echoiot.server.transport.lwm2m.server.attributes.LwM2MAttributesService;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Service;
 import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.queue.util.TbLwM2mTransportComponent;
 import org.echoiot.server.transport.lwm2m.server.LwM2mSessionMsgListener;
+import org.echoiot.server.transport.lwm2m.server.attributes.LwM2MAttributesService;
 import org.echoiot.server.transport.lwm2m.server.rpc.LwM2MRpcRequestHandler;
 import org.echoiot.server.transport.lwm2m.server.uplink.LwM2mUplinkMsgHandler;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service

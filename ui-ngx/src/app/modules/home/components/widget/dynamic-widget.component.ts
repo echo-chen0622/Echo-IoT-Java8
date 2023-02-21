@@ -6,9 +6,9 @@ import {IDynamicWidgetComponent, WidgetContext} from '@home/models/widget-compon
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {RafService} from '@core/services/raf.service';
 import {
-    NotificationHorizontalPosition,
-    NotificationType,
-    NotificationVerticalPosition
+  NotificationHorizontalPosition,
+  NotificationType,
+  NotificationVerticalPosition
 } from '@core/notification/notification.models';
 import {FormBuilder, Validators} from '@angular/forms';
 import {DeviceService} from '@core/http/device.service';

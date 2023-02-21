@@ -1,5 +1,7 @@
 package org.echoiot.server.dao.sqlts.insert.latest.sql;
 
+import org.echoiot.server.dao.model.sqlts.latest.TsKvLatestEntity;
+import org.echoiot.server.dao.sqlts.insert.AbstractInsertRepository;
 import org.echoiot.server.dao.sqlts.insert.latest.InsertLatestTsRepository;
 import org.echoiot.server.dao.util.SqlDao;
 import org.echoiot.server.dao.util.SqlTsLatestAnyDao;
@@ -10,8 +12,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
-import org.echoiot.server.dao.model.sqlts.latest.TsKvLatestEntity;
-import org.echoiot.server.dao.sqlts.insert.AbstractInsertRepository;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

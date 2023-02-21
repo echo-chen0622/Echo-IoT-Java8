@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { EntityTabsComponent } from '../../components/entity/entity-tabs.component';
-import { WidgetsBundle } from '@shared/models/widgets-bundle.model';
-import { NULL_UUID } from '@shared/models/id/has-uuid';
+import {Component} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {EntityTabsComponent} from '../../components/entity/entity-tabs.component';
+import {WidgetsBundle} from '@shared/models/widgets-bundle.model';
+import {NULL_UUID} from '@shared/models/id/has-uuid';
 
 @Component({
   selector: 'tb-widgets-bundle-tabs',

@@ -1,16 +1,16 @@
-import { AliasFilterType, EntityFilters } from '@shared/models/alias.models';
-import { EntityId } from '@shared/models/id/entity-id';
-import { SortDirection } from '@angular/material/sort';
-import { DataKeyType } from '@shared/models/telemetry/telemetry.models';
-import { EntityInfo } from '@shared/models/entity.models';
-import { EntityType } from '@shared/models/entity-type.models';
-import { DataKey, Datasource, DatasourceType } from '@shared/models/widget.models';
-import { PageData } from '@shared/models/page/page-data';
-import { isDefined, isEqual } from '@core/utils';
-import { TranslateService } from '@ngx-translate/core';
-import { AlarmInfo, AlarmSearchStatus, AlarmSeverity } from '../alarm.models';
-import { Filter } from '@material-ui/icons';
-import { DatePipe } from '@angular/common';
+import {AliasFilterType, EntityFilters} from '@shared/models/alias.models';
+import {EntityId} from '@shared/models/id/entity-id';
+import {SortDirection} from '@angular/material/sort';
+import {DataKeyType} from '@shared/models/telemetry/telemetry.models';
+import {EntityInfo} from '@shared/models/entity.models';
+import {EntityType} from '@shared/models/entity-type.models';
+import {DataKey, Datasource, DatasourceType} from '@shared/models/widget.models';
+import {PageData} from '@shared/models/page/page-data';
+import {isDefined, isEqual} from '@core/utils';
+import {TranslateService} from '@ngx-translate/core';
+import {AlarmInfo, AlarmSearchStatus, AlarmSeverity} from '../alarm.models';
+import {Filter} from '@material-ui/icons';
+import {DatePipe} from '@angular/common';
 
 export enum EntityKeyType {
   ATTRIBUTE = 'ATTRIBUTE',

@@ -15,7 +15,7 @@ import org.echoiot.server.common.data.page.TimePageLink;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.entitiy.alarm.TbAlarmService;
 import org.echoiot.server.service.security.permission.Operation;
-import org.echoiot.server.service.security.permission.Resource;
+import org.echoiot.server.service.security.permission.PerResource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.http.HttpStatus;
@@ -95,7 +95,7 @@ public class AlarmController extends BaseController {
     @ResponseBody
     public Alarm saveAlarm(@NotNull @ApiParam(value = "A JSON value representing the alarm.") @RequestBody Alarm alarm) throws EchoiotException {
         alarm.setTenantId(getTenantId());
-        checkEntity(alarm.getId(), alarm, Resource.ALARM);
+        checkEntity(alarm.getId(), alarm, PerResource.ALARM);
         return tbAlarmService.save(alarm, getCurrentUser());
     }
 

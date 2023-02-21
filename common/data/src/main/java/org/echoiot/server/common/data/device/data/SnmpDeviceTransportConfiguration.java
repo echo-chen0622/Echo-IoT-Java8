@@ -3,11 +3,11 @@ package org.echoiot.server.common.data.device.data;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.ToString;
+import org.echoiot.server.common.data.DeviceTransportType;
+import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.transport.snmp.AuthenticationProtocol;
 import org.echoiot.server.common.data.transport.snmp.PrivacyProtocol;
 import org.echoiot.server.common.data.transport.snmp.SnmpProtocolVersion;
-import org.echoiot.server.common.data.DeviceTransportType;
-import org.echoiot.server.common.data.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 @Data

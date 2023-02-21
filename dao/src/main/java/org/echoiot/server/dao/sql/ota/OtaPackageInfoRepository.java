@@ -1,12 +1,12 @@
 package org.echoiot.server.dao.sql.ota;
 
+import org.echoiot.server.common.data.ota.OtaPackageType;
 import org.echoiot.server.dao.model.sql.OtaPackageInfoEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.echoiot.server.common.data.ota.OtaPackageType;
 
 import java.util.UUID;
 

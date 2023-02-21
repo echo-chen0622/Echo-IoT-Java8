@@ -1,16 +1,6 @@
 package org.echoiot.server.dao.tenant;
 
 import lombok.extern.slf4j.Slf4j;
-import org.echoiot.server.dao.exception.DataValidationException;
-import org.echoiot.server.dao.service.DataValidator;
-import org.echoiot.server.dao.service.PaginatedRemover;
-import org.echoiot.server.dao.service.Validator;
-import org.hibernate.exception.ConstraintViolationException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.event.TransactionalEventListener;
 import org.echoiot.server.common.data.EntityInfo;
 import org.echoiot.server.common.data.TenantProfile;
 import org.echoiot.server.common.data.id.TenantId;
@@ -20,7 +10,17 @@ import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.common.data.tenant.profile.DefaultTenantProfileConfiguration;
 import org.echoiot.server.common.data.tenant.profile.TenantProfileData;
 import org.echoiot.server.dao.entity.AbstractCachedEntityService;
+import org.echoiot.server.dao.exception.DataValidationException;
+import org.echoiot.server.dao.service.DataValidator;
+import org.echoiot.server.dao.service.PaginatedRemover;
+import org.echoiot.server.dao.service.Validator;
+import org.hibernate.exception.ConstraintViolationException;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.event.TransactionalEventListener;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 

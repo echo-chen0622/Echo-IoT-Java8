@@ -3,8 +3,8 @@ package org.echoiot.server.service.ttl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.id.TenantId;
-import org.echoiot.server.queue.discovery.PartitionService;
 import org.echoiot.server.common.msg.queue.ServiceType;
+import org.echoiot.server.queue.discovery.PartitionService;
 import org.jetbrains.annotations.NotNull;
 
 

@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { isLocalUrl } from '@core/utils';
+import {Component, Input, OnInit} from '@angular/core';
+import {isLocalUrl} from '@core/utils';
 
 @Component({
   selector: 'tb-social-share-panel',

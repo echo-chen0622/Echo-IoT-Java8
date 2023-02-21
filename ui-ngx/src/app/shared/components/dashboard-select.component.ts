@@ -1,13 +1,13 @@
 import {
-    Component,
-    forwardRef,
-    Inject,
-    Injector,
-    Input,
-    OnInit,
-    StaticProvider,
-    ViewChild,
-    ViewContainerRef
+  Component,
+  forwardRef,
+  Inject,
+  Injector,
+  Input,
+  OnInit,
+  StaticProvider,
+  ViewChild,
+  ViewContainerRef
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {Observable, of} from 'rxjs';
@@ -28,9 +28,9 @@ import {DOCUMENT} from '@angular/common';
 import {WINDOW} from '@core/services/window.service';
 import {ComponentPortal} from '@angular/cdk/portal';
 import {
-    DASHBOARD_SELECT_PANEL_DATA,
-    DashboardSelectPanelComponent,
-    DashboardSelectPanelData
+  DASHBOARD_SELECT_PANEL_DATA,
+  DashboardSelectPanelComponent,
+  DashboardSelectPanelData
 } from './dashboard-select-panel.component';
 import {NULL_UUID} from '@shared/models/id/has-uuid';
 

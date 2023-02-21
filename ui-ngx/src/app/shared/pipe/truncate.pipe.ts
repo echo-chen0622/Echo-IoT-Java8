@@ -1,5 +1,5 @@
-import { Pipe, PipeTransform } from '@angular/core';
-import { isString } from '@core/utils';
+import {Pipe, PipeTransform} from '@angular/core';
+import {isString} from '@core/utils';
 
 @Pipe({ name: 'truncate' })
 export class TruncatePipe implements PipeTransform {

@@ -1,10 +1,10 @@
 package org.echoiot.server.service.script;
 
 import com.google.protobuf.util.JsonFormat;
+import org.echoiot.server.gen.js.JsInvokeProtos;
 import org.echoiot.server.queue.TbQueueMsg;
 import org.echoiot.server.queue.common.TbProtoQueueMsg;
 import org.echoiot.server.queue.kafka.TbKafkaDecoder;
-import org.echoiot.server.gen.js.JsInvokeProtos;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;

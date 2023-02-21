@@ -8,39 +8,19 @@ import org.echoiot.server.common.data.id.QueueId;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.common.data.queue.Queue;
+import org.echoiot.server.common.msg.queue.ServiceType;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.entitiy.queue.TbQueueService;
 import org.echoiot.server.service.security.permission.Operation;
-import org.echoiot.server.service.security.permission.Resource;
+import org.echoiot.server.service.security.permission.PerResource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-import org.echoiot.server.common.msg.queue.ServiceType;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-import static org.echoiot.server.controller.ControllerConstants.PAGE_DATA_PARAMETERS;
-import static org.echoiot.server.controller.ControllerConstants.PAGE_NUMBER_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.PAGE_SIZE_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.QUEUE_ID_PARAM_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.QUEUE_NAME_PARAM_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.QUEUE_QUEUE_TEXT_SEARCH_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.QUEUE_SERVICE_TYPE_ALLOWABLE_VALUES;
-import static org.echoiot.server.controller.ControllerConstants.QUEUE_SERVICE_TYPE_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.QUEUE_SORT_PROPERTY_ALLOWABLE_VALUES;
-import static org.echoiot.server.controller.ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES;
-import static org.echoiot.server.controller.ControllerConstants.SORT_ORDER_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.SORT_PROPERTY_DESCRIPTION;
-import static org.echoiot.server.controller.ControllerConstants.SYSTEM_AUTHORITY_PARAGRAPH;
-import static org.echoiot.server.controller.ControllerConstants.SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH;
-import static org.echoiot.server.controller.ControllerConstants.UUID_WIKI_LINK;
+import static org.echoiot.server.controller.ControllerConstants.*;
 
 @RestController
 @TbCoreComponent
@@ -121,7 +101,7 @@ public class QueueController extends BaseController {
         checkParameter("serviceType", serviceType);
         queue.setTenantId(getCurrentUser().getTenantId());
 
-        checkEntity(queue.getId(), queue, Resource.QUEUE);
+        checkEntity(queue.getId(), queue, PerResource.QUEUE);
 
         @NotNull ServiceType type = ServiceType.valueOf(serviceType);
         if (type == ServiceType.TB_RULE_ENGINE) {

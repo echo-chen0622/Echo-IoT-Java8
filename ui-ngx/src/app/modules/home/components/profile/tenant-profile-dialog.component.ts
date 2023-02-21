@@ -1,22 +1,14 @@
-import {
-  AfterViewInit,
-  Component,
-  ComponentFactoryResolver,
-  Inject,
-  Injector,
-  SkipSelf,
-  ViewChild
-} from '@angular/core';
-import { ErrorStateMatcher } from '@angular/material/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { FormControl, FormGroupDirective, NgForm } from '@angular/forms';
-import { DialogComponent } from '@shared/components/dialog.component';
-import { Router } from '@angular/router';
-import { TenantProfile } from '@shared/models/tenant.model';
-import { TenantProfileComponent } from './tenant-profile.component';
-import { TenantProfileService } from '@core/http/tenant-profile.service';
+import {AfterViewInit, Component, ComponentFactoryResolver, Inject, Injector, SkipSelf, ViewChild} from '@angular/core';
+import {ErrorStateMatcher} from '@angular/material/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {FormControl, FormGroupDirective, NgForm} from '@angular/forms';
+import {DialogComponent} from '@shared/components/dialog.component';
+import {Router} from '@angular/router';
+import {TenantProfile} from '@shared/models/tenant.model';
+import {TenantProfileComponent} from './tenant-profile.component';
+import {TenantProfileService} from '@core/http/tenant-profile.service';
 
 export interface TenantProfileDialogData {
   tenantProfile: TenantProfile;

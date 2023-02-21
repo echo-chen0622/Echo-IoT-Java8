@@ -1,5 +1,7 @@
 package org.echoiot.server.service.mail;
 
+import org.echoiot.rule.engine.api.MailService;
+import org.echoiot.server.common.data.exception.EchoiotException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mockito.Mockito;
@@ -9,8 +11,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
-import org.echoiot.rule.engine.api.MailService;
-import org.echoiot.server.common.data.exception.EchoiotException;
 
 @Profile("test")
 @Configuration

@@ -2,15 +2,6 @@ package org.echoiot.server.dao.tenant;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import lombok.extern.slf4j.Slf4j;
-import org.echoiot.server.dao.service.DataValidator;
-import org.echoiot.server.dao.service.PaginatedRemover;
-import org.echoiot.server.dao.service.Validator;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.event.TransactionalEventListener;
 import org.echoiot.server.cache.TbTransactionalCache;
 import org.echoiot.server.common.data.Tenant;
 import org.echoiot.server.common.data.TenantInfo;
@@ -31,11 +22,20 @@ import org.echoiot.server.dao.queue.QueueService;
 import org.echoiot.server.dao.resource.ResourceService;
 import org.echoiot.server.dao.rpc.RpcService;
 import org.echoiot.server.dao.rule.RuleChainService;
+import org.echoiot.server.dao.service.DataValidator;
+import org.echoiot.server.dao.service.PaginatedRemover;
+import org.echoiot.server.dao.service.Validator;
 import org.echoiot.server.dao.settings.AdminSettingsService;
 import org.echoiot.server.dao.usagerecord.ApiUsageStateService;
 import org.echoiot.server.dao.user.UserService;
 import org.echoiot.server.dao.widget.WidgetsBundleService;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionalEventListener;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 import static org.echoiot.server.dao.service.Validator.validateId;

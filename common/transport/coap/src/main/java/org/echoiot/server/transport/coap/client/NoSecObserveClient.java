@@ -1,13 +1,13 @@
 package org.echoiot.server.transport.coap.client;
 
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.common.util.EchoiotThreadFactory;
 import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapHandler;
 import org.eclipse.californium.core.CoapObserveRelation;
 import org.eclipse.californium.core.CoapResponse;
 import org.eclipse.californium.core.coap.CoAP;
 import org.eclipse.californium.core.coap.Request;
-import org.echoiot.common.util.EchoiotThreadFactory;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.URI;

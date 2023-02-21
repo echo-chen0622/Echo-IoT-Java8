@@ -1,15 +1,15 @@
 package org.echoiot.server.actors.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.echoiot.server.actors.shared.ComponentMsgProcessor;
-import org.echoiot.server.common.data.id.EntityId;
-import org.echoiot.server.common.data.id.TenantId;
-import org.echoiot.server.common.data.plugin.ComponentLifecycleEvent;
 import org.echoiot.server.actors.ActorSystemContext;
 import org.echoiot.server.actors.TbActorCtx;
 import org.echoiot.server.actors.TbActorException;
 import org.echoiot.server.actors.TbRuleNodeUpdateException;
+import org.echoiot.server.actors.shared.ComponentMsgProcessor;
 import org.echoiot.server.actors.stats.StatsPersistMsg;
+import org.echoiot.server.common.data.id.EntityId;
+import org.echoiot.server.common.data.id.TenantId;
+import org.echoiot.server.common.data.plugin.ComponentLifecycleEvent;
 import org.echoiot.server.common.msg.plugin.ComponentLifecycleMsg;
 import org.echoiot.server.common.msg.queue.PartitionChangeMsg;
 import org.jetbrains.annotations.NotNull;

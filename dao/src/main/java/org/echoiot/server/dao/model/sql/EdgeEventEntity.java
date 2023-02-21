@@ -4,8 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
 import org.echoiot.server.common.data.edge.EdgeEvent;
 import org.echoiot.server.common.data.edge.EdgeEventActionType;
 import org.echoiot.server.common.data.edge.EdgeEventType;
@@ -15,25 +13,14 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.dao.model.BaseEntity;
 import org.echoiot.server.dao.model.BaseSqlEntity;
 import org.echoiot.server.dao.util.mapping.JsonStringType;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 import org.jetbrains.annotations.NotNull;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.UUID;
 
-import static org.echoiot.server.dao.model.ModelConstants.EDGE_EVENT_ACTION_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.EDGE_EVENT_BODY_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.EDGE_EVENT_COLUMN_FAMILY_NAME;
-import static org.echoiot.server.dao.model.ModelConstants.EDGE_EVENT_EDGE_ID_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.EDGE_EVENT_ENTITY_ID_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.EDGE_EVENT_TENANT_ID_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.EDGE_EVENT_TYPE_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.EDGE_EVENT_UID_PROPERTY;
-import static org.echoiot.server.dao.model.ModelConstants.EPOCH_DIFF;
-import static org.echoiot.server.dao.model.ModelConstants.TS_COLUMN;
+import static org.echoiot.server.dao.model.ModelConstants.*;
 
 @Data
 @EqualsAndHashCode(callSuper = true)

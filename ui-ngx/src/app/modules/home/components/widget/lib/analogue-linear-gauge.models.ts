@@ -1,4 +1,4 @@
-import { AnalogueGaugeSettings } from '@home/components/widget/lib/analogue-gauge.models';
+import {AnalogueGaugeSettings} from '@home/components/widget/lib/analogue-gauge.models';
 
 export interface AnalogueLinearGaugeSettings extends AnalogueGaugeSettings {
   barStrokeWidth: number;

@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input, OnDestroy } from '@angular/core';
+import {Component, forwardRef, Input, OnDestroy} from '@angular/core';
 import {
   AbstractControl,
   ControlValueAccessor,
@@ -11,13 +11,13 @@ import {
   Validator,
   Validators
 } from '@angular/forms';
-import { Store } from '@ngrx/store';
-import { AppState } from '@app/core/core.state';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { Subscription } from 'rxjs';
-import { QueueInfo } from '@shared/models/queue.models';
-import { UtilsService } from '@core/services/utils.service';
-import { guid } from '@core/utils';
+import {Store} from '@ngrx/store';
+import {AppState} from '@app/core/core.state';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {Subscription} from 'rxjs';
+import {QueueInfo} from '@shared/models/queue.models';
+import {UtilsService} from '@core/services/utils.service';
+import {guid} from '@core/utils';
 
 @Component({
   selector: 'tb-tenant-profile-queues',

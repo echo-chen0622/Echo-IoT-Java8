@@ -3,6 +3,7 @@ package org.echoiot.server.service.edge.rpc.fetch;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.common.data.EdgeUtils;
 import org.echoiot.server.common.data.edge.Edge;
 import org.echoiot.server.common.data.edge.EdgeEvent;
@@ -13,7 +14,6 @@ import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.common.data.rule.RuleChain;
 import org.echoiot.server.dao.rule.RuleChainService;
-import org.echoiot.common.util.JacksonUtil;
 import org.jetbrains.annotations.NotNull;
 
 import static org.echoiot.server.service.edge.DefaultEdgeNotificationService.EDGE_IS_ROOT_BODY_KEY;

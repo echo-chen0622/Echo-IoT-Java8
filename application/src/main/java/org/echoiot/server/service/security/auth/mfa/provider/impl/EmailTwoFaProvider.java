@@ -1,5 +1,6 @@
 package org.echoiot.server.service.security.auth.mfa.provider.impl;
 
+import org.echoiot.rule.engine.api.MailService;
 import org.echoiot.server.common.data.User;
 import org.echoiot.server.common.data.exception.EchoiotErrorCode;
 import org.echoiot.server.common.data.exception.EchoiotException;
@@ -7,12 +8,11 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.security.model.mfa.account.EmailTwoFaAccountConfig;
 import org.echoiot.server.common.data.security.model.mfa.provider.EmailTwoFaProviderConfig;
 import org.echoiot.server.common.data.security.model.mfa.provider.TwoFaProviderType;
+import org.echoiot.server.queue.util.TbCoreComponent;
+import org.echoiot.server.service.security.model.SecurityUser;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
-import org.echoiot.rule.engine.api.MailService;
-import org.echoiot.server.queue.util.TbCoreComponent;
-import org.echoiot.server.service.security.model.SecurityUser;
 
 @Service
 @TbCoreComponent

@@ -2,9 +2,9 @@ package org.echoiot.server.actors.ruleChain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.echoiot.server.actors.TbActorRef;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.rule.RuleNode;
-import org.echoiot.server.actors.TbActorRef;
 import org.jetbrains.annotations.NotNull;
 
 /**

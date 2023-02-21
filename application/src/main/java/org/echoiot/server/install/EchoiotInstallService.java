@@ -4,10 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.service.component.ComponentDiscoveryService;
 import org.echoiot.server.service.install.*;
 import org.echoiot.server.service.install.update.CacheCleanupService;
-import org.echoiot.server.service.install.update.DataUpdateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
@@ -53,9 +51,6 @@ public class EchoiotInstallService {
     @Autowired(required = false)
     private TsLatestDatabaseSchemaService tsLatestDatabaseSchemaService;
 
-    @Resource
-    private DatabaseEntitiesUpgradeService databaseEntitiesUpgradeService;
-
     /**
      * 数据升级服务。数据库支持不同类型的服务，所以，这里spring boot自动装配找不到应该用哪个服务。不是问题
      */
@@ -67,13 +62,7 @@ public class EchoiotInstallService {
     private ComponentDiscoveryService componentDiscoveryService;
 
     @Resource
-    private ApplicationContext context;
-
-    @Resource
     private SystemDataLoaderService systemDataLoaderService;
-
-    @Resource
-    private DataUpdateService dataUpdateService;
 
     @Resource
     private CacheCleanupService cacheCleanupService;
@@ -86,45 +75,40 @@ public class EchoiotInstallService {
         if (Boolean.TRUE.equals(isUpgrade)) {
             log.info("开始 Echoiot 升级 , 现版本: {} ...", upgradeFromVersion);
 
-            // 清空历史缓存
+            // 清空历史缓存。因为缓存只需要清理一次，所以放到这里单独处理，不跟数据库升级放在一起
             cacheCleanupService.clearCache(upgradeFromVersion);
 
             switch (upgradeFromVersion) {
                 case "1.0.0":
                     log.info("Upgrading Echoiot from version 1.0.0 to 1.0.1 ...");
-                    // 升级数据库
+                    /* 升级数据库 同时需要判断，是否需要升级实体、系统数据、时间序列数据等数据
                     if (databaseTsUpgradeService != null) {
                         databaseTsUpgradeService.upgradeDatabase("1.0.0");
                     }
-                    // 升级实体数据库
-                    databaseEntitiesUpgradeService.upgradeDatabase("1.0.0");
-                    // 升级数据
-                    dataUpdateService.updateData("1.0.0");
-                    // 升级系统数据
-                    systemDataLoaderService.updateSystemWidgets();
+                    */
                 case "1.0.1":
+                    //逐级升级，case不加break，但是切记，调用的执行方法，要每个 case加break
                     log.info("Upgrading Echoiot from version 1.0.1 to 1.0.2 ...");
                     break;
-
-                //dupdate CacheCleanupService on the next version upgrade
-
                 default:
                     throw new RuntimeException("Unable to upgrade Echoiot, unsupported fromVersion: " + upgradeFromVersion);
 
             }
-            log.info("Upgrade finished successfully!");
+            log.info("升级 Echoiot 成功！");
 
         } else {
 
-            log.info("Starting Echoiot Installation...");
+            log.info("开始安装 Echoiot ...");
 
-            log.info("Installing DataBase schema for entities...");
+            log.info("正在安装 sql 数据库架构...");
 
+            // 创建实体数据库
             entityDatabaseSchemaService.createDatabaseSchema();
 
-            log.info("Installing DataBase schema for timeseries...");
+            log.info("正在安装 sql 时序数据库...");
 
             if (noSqlKeyspaceService != null) {
+                // 创建 NoSql 数据库
                 noSqlKeyspaceService.createDatabaseSchema();
             }
 

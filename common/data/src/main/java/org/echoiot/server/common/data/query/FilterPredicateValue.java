@@ -9,7 +9,6 @@ import org.echoiot.server.common.data.validation.NoXss;
 import org.jetbrains.annotations.NotNull;
 
 import javax.validation.Valid;
-
 import java.io.Serializable;
 
 @Data

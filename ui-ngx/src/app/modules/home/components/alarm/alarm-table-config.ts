@@ -1,7 +1,7 @@
 import {
-    DateEntityTableColumn,
-    EntityTableColumn,
-    EntityTableConfig
+  DateEntityTableColumn,
+  EntityTableColumn,
+  EntityTableConfig
 } from '@home/models/entity/entities-table-config.models';
 import {EntityType, EntityTypeResource, entityTypeTranslations} from '@shared/models/entity-type.models';
 import {TranslateService} from '@ngx-translate/core';
@@ -13,19 +13,19 @@ import {Observable} from 'rxjs';
 import {PageData} from '@shared/models/page/page-data';
 import {EntityId} from '@shared/models/id/entity-id';
 import {
-    AlarmInfo,
-    AlarmQuery,
-    AlarmSearchStatus,
-    alarmSeverityColors,
-    alarmSeverityTranslations,
-    alarmStatusTranslations
+  AlarmInfo,
+  AlarmQuery,
+  AlarmSearchStatus,
+  alarmSeverityColors,
+  alarmSeverityTranslations,
+  alarmStatusTranslations
 } from '@app/shared/models/alarm.models';
 import {AlarmService} from '@app/core/http/alarm.service';
 import {DialogService} from '@core/services/dialog.service';
 import {AlarmTableHeaderComponent} from '@home/components/alarm/alarm-table-header.component';
 import {
-    AlarmDetailsDialogComponent,
-    AlarmDetailsDialogData
+  AlarmDetailsDialogComponent,
+  AlarmDetailsDialogData
 } from '@home/components/alarm/alarm-details-dialog.component';
 import {DAY, historyInterval} from '@shared/models/time/time.models';
 import {Store} from '@ngrx/store';

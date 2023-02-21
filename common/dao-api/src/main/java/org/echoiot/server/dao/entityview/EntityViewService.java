@@ -5,13 +5,9 @@ import org.echoiot.server.common.data.EntitySubtype;
 import org.echoiot.server.common.data.EntityView;
 import org.echoiot.server.common.data.EntityViewInfo;
 import org.echoiot.server.common.data.entityview.EntityViewSearchQuery;
+import org.echoiot.server.common.data.id.*;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
-import org.echoiot.server.common.data.id.CustomerId;
-import org.echoiot.server.common.data.id.EdgeId;
-import org.echoiot.server.common.data.id.EntityId;
-import org.echoiot.server.common.data.id.EntityViewId;
-import org.echoiot.server.common.data.id.TenantId;
 
 import java.util.List;
 

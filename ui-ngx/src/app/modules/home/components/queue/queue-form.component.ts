@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input, OnDestroy, OnInit } from '@angular/core';
+import {Component, forwardRef, Input, OnDestroy, OnInit} from '@angular/core';
 import {
   ControlValueAccessor,
   FormBuilder,
@@ -9,7 +9,7 @@ import {
   Validator,
   Validators
 } from '@angular/forms';
-import { UtilsService } from '@core/services/utils.service';
+import {UtilsService} from '@core/services/utils.service';
 import {
   QueueInfo,
   QueueProcessingStrategyTypes,
@@ -17,8 +17,8 @@ import {
   QueueSubmitStrategyTypes,
   QueueSubmitStrategyTypesMap
 } from '@shared/models/queue.models';
-import { isDefinedAndNotNull } from '@core/utils';
-import { Subscription } from 'rxjs';
+import {isDefinedAndNotNull} from '@core/utils';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'tb-queue-form',

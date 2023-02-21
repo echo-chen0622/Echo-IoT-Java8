@@ -4,17 +4,7 @@ import com.datastax.oss.driver.api.core.cql.Row;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import lombok.extern.slf4j.Slf4j;
-import org.echoiot.server.common.data.kv.AggTsKvEntry;
-import org.echoiot.server.common.data.kv.Aggregation;
-import org.echoiot.server.common.data.kv.BasicTsKvEntry;
-import org.echoiot.server.common.data.kv.BooleanDataEntry;
-import org.echoiot.server.common.data.kv.DataType;
-import org.echoiot.server.common.data.kv.DoubleDataEntry;
-import org.echoiot.server.common.data.kv.JsonDataEntry;
-import org.echoiot.server.common.data.kv.LongDataEntry;
-import org.echoiot.server.common.data.kv.StringDataEntry;
-import org.echoiot.server.common.data.kv.TsKvEntry;
-import org.echoiot.server.common.data.kv.TsKvEntryAggWrapper;
+import org.echoiot.server.common.data.kv.*;
 import org.echoiot.server.dao.nosql.TbResultSet;
 import org.jetbrains.annotations.NotNull;
 

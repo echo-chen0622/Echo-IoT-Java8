@@ -1,34 +1,27 @@
 import {
   AfterViewInit,
-  Component, ComponentFactoryResolver,
+  Component,
+  ComponentFactoryResolver,
   ComponentRef,
   forwardRef,
-  Input, OnChanges,
+  Input,
+  OnChanges,
   OnDestroy,
-  OnInit, SimpleChanges,
+  OnInit,
+  SimpleChanges,
   ViewChild,
   ViewContainerRef
 } from '@angular/core';
-import { ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
-import {
-  IRuleNodeConfigurationComponent,
-  RuleNodeConfiguration,
-  RuleNodeDefinition
-} from '@shared/models/rule-node.models';
-import { Subscription } from 'rxjs';
-import { RuleChainService } from '@core/http/rule-chain.service';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { TranslateService } from '@ngx-translate/core';
-import { JsonObjectEditComponent } from '@shared/components/json-object-edit.component';
-import { deepClone } from '@core/utils';
-import { RuleChainType } from '@shared/models/rule-chain.models';
-import { JsonFormComponent } from '@shared/components/json-form/json-form.component';
-import { JsonFormComponentData } from '@shared/components/json-form/json-form-component.models';
-import { IWidgetSettingsComponent, Widget, WidgetSettings } from '@shared/models/widget.models';
-import { widgetSettingsComponentsMap } from '@home/components/widget/lib/settings/widget-settings.module';
-import { Dashboard } from '@shared/models/dashboard.models';
-import { WidgetService } from '@core/http/widget.service';
-import { IAliasController } from '@core/api/widget-api.models';
+import {ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR, Validators} from '@angular/forms';
+import {Subscription} from 'rxjs';
+import {TranslateService} from '@ngx-translate/core';
+import {JsonFormComponent} from '@shared/components/json-form/json-form.component';
+import {JsonFormComponentData} from '@shared/components/json-form/json-form-component.models';
+import {IWidgetSettingsComponent, Widget, WidgetSettings} from '@shared/models/widget.models';
+import {widgetSettingsComponentsMap} from '@home/components/widget/lib/settings/widget-settings.module';
+import {Dashboard} from '@shared/models/dashboard.models';
+import {WidgetService} from '@core/http/widget.service';
+import {IAliasController} from '@core/api/widget-api.models';
 
 @Component({
   selector: 'tb-widget-settings',

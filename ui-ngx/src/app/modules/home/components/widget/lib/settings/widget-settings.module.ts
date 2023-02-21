@@ -1,9 +1,11 @@
-import { NgModule, Type } from '@angular/core';
-import { QrCodeWidgetSettingsComponent } from '@home/components/widget/lib/settings/cards/qrcode-widget-settings.component';
-import { CommonModule } from '@angular/common';
-import { SharedModule } from '@shared/shared.module';
-import { SharedHomeComponentsModule } from '@home/components/shared-home-components.module';
-import { IWidgetSettingsComponent } from '@shared/models/widget.models';
+import {NgModule, Type} from '@angular/core';
+import {
+  QrCodeWidgetSettingsComponent
+} from '@home/components/widget/lib/settings/cards/qrcode-widget-settings.component';
+import {CommonModule} from '@angular/common';
+import {SharedModule} from '@shared/shared.module';
+import {SharedHomeComponentsModule} from '@home/components/shared-home-components.module';
+import {IWidgetSettingsComponent} from '@shared/models/widget.models';
 import {
   TimeseriesTableWidgetSettingsComponent
 } from '@home/components/widget/lib/settings/cards/timeseries-table-widget-settings.component';
@@ -16,9 +18,9 @@ import {
 import {
   MarkdownWidgetSettingsComponent
 } from '@home/components/widget/lib/settings/cards/markdown-widget-settings.component';
-import { WidgetFontComponent } from '@home/components/widget/lib/settings/common/widget-font.component';
-import { LabelWidgetLabelComponent } from '@home/components/widget/lib/settings/cards/label-widget-label.component';
-import { LabelWidgetSettingsComponent } from '@home/components/widget/lib/settings/cards/label-widget-settings.component';
+import {WidgetFontComponent} from '@home/components/widget/lib/settings/common/widget-font.component';
+import {LabelWidgetLabelComponent} from '@home/components/widget/lib/settings/cards/label-widget-label.component';
+import {LabelWidgetSettingsComponent} from '@home/components/widget/lib/settings/cards/label-widget-settings.component';
 import {
   SimpleCardWidgetSettingsComponent
 } from '@home/components/widget/lib/settings/cards/simple-card-widget-settings.component';
@@ -43,7 +45,7 @@ import {
 import {
   AlarmsTableKeySettingsComponent
 } from '@home/components/widget/lib/settings/alarm/alarms-table-key-settings.component';
-import { GaugeHighlightComponent } from '@home/components/widget/lib/settings/gauge/gauge-highlight.component';
+import {GaugeHighlightComponent} from '@home/components/widget/lib/settings/gauge/gauge-highlight.component';
 import {
   AnalogueRadialGaugeWidgetSettingsComponent
 } from '@home/components/widget/lib/settings/gauge/analogue-radial-gauge-widget-settings.component';
@@ -56,41 +58,35 @@ import {
 import {
   DigitalGaugeWidgetSettingsComponent
 } from '@home/components/widget/lib/settings/gauge/digital-gauge-widget-settings.component';
-import { ValueSourceComponent } from '@home/components/widget/lib/settings/common/value-source.component';
-import { FixedColorLevelComponent } from '@home/components/widget/lib/settings/gauge/fixed-color-level.component';
-import { TickValueComponent } from '@home/components/widget/lib/settings/gauge/tick-value.component';
-import { FlotWidgetSettingsComponent } from '@home/components/widget/lib/settings/chart/flot-widget-settings.component';
+import {ValueSourceComponent} from '@home/components/widget/lib/settings/common/value-source.component';
+import {FixedColorLevelComponent} from '@home/components/widget/lib/settings/gauge/fixed-color-level.component';
+import {TickValueComponent} from '@home/components/widget/lib/settings/gauge/tick-value.component';
+import {FlotWidgetSettingsComponent} from '@home/components/widget/lib/settings/chart/flot-widget-settings.component';
 import {
   FlotLineWidgetSettingsComponent
 } from '@home/components/widget/lib/settings/chart/flot-line-widget-settings.component';
-import { LabelDataKeyComponent } from '@home/components/widget/lib/settings/chart/label-data-key.component';
+import {LabelDataKeyComponent} from '@home/components/widget/lib/settings/chart/label-data-key.component';
 import {
   FlotBarWidgetSettingsComponent
 } from '@home/components/widget/lib/settings/chart/flot-bar-widget-settings.component';
-import { FlotThresholdComponent } from '@home/components/widget/lib/settings/chart/flot-threshold.component';
-import { FlotKeySettingsComponent } from '@home/components/widget/lib/settings/chart/flot-key-settings.component';
+import {FlotThresholdComponent} from '@home/components/widget/lib/settings/chart/flot-threshold.component';
+import {FlotKeySettingsComponent} from '@home/components/widget/lib/settings/chart/flot-key-settings.component';
 import {
   FlotLineKeySettingsComponent
 } from '@home/components/widget/lib/settings/chart/flot-line-key-settings.component';
-import {
-  FlotBarKeySettingsComponent
-} from '@home/components/widget/lib/settings/chart/flot-bar-key-settings.component';
+import {FlotBarKeySettingsComponent} from '@home/components/widget/lib/settings/chart/flot-bar-key-settings.component';
 import {
   FlotLatestKeySettingsComponent
 } from '@home/components/widget/lib/settings/chart/flot-latest-key-settings.component';
 import {
   FlotPieWidgetSettingsComponent
 } from '@home/components/widget/lib/settings/chart/flot-pie-widget-settings.component';
-import {
-  FlotPieKeySettingsComponent
-} from '@home/components/widget/lib/settings/chart/flot-pie-key-settings.component';
-import {
-  ChartWidgetSettingsComponent
-} from '@home/components/widget/lib/settings/chart/chart-widget-settings.component';
+import {FlotPieKeySettingsComponent} from '@home/components/widget/lib/settings/chart/flot-pie-key-settings.component';
+import {ChartWidgetSettingsComponent} from '@home/components/widget/lib/settings/chart/chart-widget-settings.component';
 import {
   DoughnutChartWidgetSettingsComponent
 } from '@home/components/widget/lib/settings/chart/doughnut-chart-widget-settings.component';
-import { SwitchRpcSettingsComponent } from '@home/components/widget/lib/settings/control/switch-rpc-settings.component';
+import {SwitchRpcSettingsComponent} from '@home/components/widget/lib/settings/control/switch-rpc-settings.component';
 import {
   RoundSwitchWidgetSettingsComponent
 } from '@home/components/widget/lib/settings/control/round-switch-widget-settings.component';
@@ -103,7 +99,7 @@ import {
 import {
   PersistentTableWidgetSettingsComponent
 } from '@home/components/widget/lib/settings/control/persistent-table-widget-settings.component';
-import { RpcButtonStyleComponent } from '@home/components/widget/lib/settings/control/rpc-button-style.component';
+import {RpcButtonStyleComponent} from '@home/components/widget/lib/settings/control/rpc-button-style.component';
 import {
   UpdateDeviceAttributeWidgetSettingsComponent
 } from '@home/components/widget/lib/settings/control/update-device-attribute-widget-settings.component';
@@ -140,7 +136,7 @@ import {
 import {
   GatewayEventsWidgetSettingsComponent
 } from '@home/components/widget/lib/settings/gateway/gateway-events-widget-settings.component';
-import { GpioItemComponent } from '@home/components/widget/lib/settings/gpio/gpio-item.component';
+import {GpioItemComponent} from '@home/components/widget/lib/settings/gpio/gpio-item.component';
 import {
   GpioControlWidgetSettingsComponent
 } from '@home/components/widget/lib/settings/gpio/gpio-control-widget-settings.component';
@@ -189,18 +185,16 @@ import {
 import {
   UpdateMultipleAttributesWidgetSettingsComponent
 } from '@home/components/widget/lib/settings/input/update-multiple-attributes-widget-settings.component';
-import {
-  DataKeySelectOptionComponent
-} from '@home/components/widget/lib/settings/input/datakey-select-option.component';
+import {DataKeySelectOptionComponent} from '@home/components/widget/lib/settings/input/datakey-select-option.component';
 import {
   UpdateMultipleAttributesKeySettingsComponent
 } from '@home/components/widget/lib/settings/input/update-multiple-attributes-key-settings.component';
 import {
   OpenStreetMapProviderSettingsComponent
 } from '@home/components/widget/lib/settings/map/openstreet-map-provider-settings.component';
-import { MapProviderSettingsComponent } from '@home/components/widget/lib/settings/map/map-provider-settings.component';
-import { MapSettingsComponent } from '@home/components/widget/lib/settings/map/map-settings.component';
-import { MapWidgetSettingsComponent } from '@home/components/widget/lib/settings/map/map-widget-settings.component';
+import {MapProviderSettingsComponent} from '@home/components/widget/lib/settings/map/map-provider-settings.component';
+import {MapSettingsComponent} from '@home/components/widget/lib/settings/map/map-settings.component';
+import {MapWidgetSettingsComponent} from '@home/components/widget/lib/settings/map/map-widget-settings.component';
 import {
   GoogleMapProviderSettingsComponent
 } from '@home/components/widget/lib/settings/map/google-map-provider-settings.component';
@@ -216,15 +210,15 @@ import {
 import {
   DatasourcesKeyAutocompleteComponent
 } from '@home/components/widget/lib/settings/map/datasources-key-autocomplete.component';
-import { CommonMapSettingsComponent } from '@home/components/widget/lib/settings/map/common-map-settings.component';
-import { MarkersSettingsComponent } from '@home/components/widget/lib/settings/map/markers-settings.component';
-import { PolygonSettingsComponent } from '@home/components/widget/lib/settings/map/polygon-settings.component';
-import { CircleSettingsComponent } from '@home/components/widget/lib/settings/map/circle-settings.component';
+import {CommonMapSettingsComponent} from '@home/components/widget/lib/settings/map/common-map-settings.component';
+import {MarkersSettingsComponent} from '@home/components/widget/lib/settings/map/markers-settings.component';
+import {PolygonSettingsComponent} from '@home/components/widget/lib/settings/map/polygon-settings.component';
+import {CircleSettingsComponent} from '@home/components/widget/lib/settings/map/circle-settings.component';
 import {
   MarkerClusteringSettingsComponent
 } from '@home/components/widget/lib/settings/map/marker-clustering-settings.component';
-import { MapEditorSettingsComponent } from '@home/components/widget/lib/settings/map/map-editor-settings.component';
-import { RouteMapSettingsComponent } from '@home/components/widget/lib/settings/map/route-map-settings.component';
+import {MapEditorSettingsComponent} from '@home/components/widget/lib/settings/map/map-editor-settings.component';
+import {RouteMapSettingsComponent} from '@home/components/widget/lib/settings/map/route-map-settings.component';
 import {
   RouteMapWidgetSettingsComponent
 } from '@home/components/widget/lib/settings/map/route-map-widget-settings.component';

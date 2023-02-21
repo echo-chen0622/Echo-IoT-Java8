@@ -1,14 +1,7 @@
 package org.echoiot.server.dao.model.sql;
 
 import lombok.Data;
-import org.echoiot.server.common.data.kv.AttributeKvEntry;
-import org.echoiot.server.common.data.kv.BaseAttributeKvEntry;
-import org.echoiot.server.common.data.kv.BooleanDataEntry;
-import org.echoiot.server.common.data.kv.DoubleDataEntry;
-import org.echoiot.server.common.data.kv.JsonDataEntry;
-import org.echoiot.server.common.data.kv.KvEntry;
-import org.echoiot.server.common.data.kv.LongDataEntry;
-import org.echoiot.server.common.data.kv.StringDataEntry;
+import org.echoiot.server.common.data.kv.*;
 import org.echoiot.server.dao.model.ToData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -19,12 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.io.Serializable;
 
-import static org.echoiot.server.dao.model.ModelConstants.BOOLEAN_VALUE_COLUMN;
-import static org.echoiot.server.dao.model.ModelConstants.DOUBLE_VALUE_COLUMN;
-import static org.echoiot.server.dao.model.ModelConstants.JSON_VALUE_COLUMN;
-import static org.echoiot.server.dao.model.ModelConstants.LAST_UPDATE_TS_COLUMN;
-import static org.echoiot.server.dao.model.ModelConstants.LONG_VALUE_COLUMN;
-import static org.echoiot.server.dao.model.ModelConstants.STRING_VALUE_COLUMN;
+import static org.echoiot.server.dao.model.ModelConstants.*;
 
 @Data
 @Entity

@@ -3,9 +3,9 @@ package org.echoiot.server.transport.lwm2m.server.ota;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.ota.OtaPackageType;
 import org.echoiot.server.common.data.ota.OtaPackageUpdateStatus;
-import org.echoiot.server.common.data.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

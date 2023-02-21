@@ -1,9 +1,9 @@
 import config from 'config';
-import { _logger } from '../config/logger';
-import { JsInvokeMessageProcessor } from '../api/jsInvokeMessageProcessor'
-import { IQueue } from './queue.models';
-import amqp, { ConfirmChannel, Connection } from 'amqplib';
-import { Options, Replies } from 'amqplib/properties';
+import {_logger} from '../config/logger';
+import {JsInvokeMessageProcessor} from '../api/jsInvokeMessageProcessor'
+import {IQueue} from './queue.models';
+import amqp, {ConfirmChannel, Connection} from 'amqplib';
+import {Options, Replies} from 'amqplib/properties';
 
 export class RabbitMqTemplate implements IQueue {
 

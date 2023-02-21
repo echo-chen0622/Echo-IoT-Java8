@@ -4,15 +4,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.echoiot.server.common.transport.limits.TransportRateLimitService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.echoiot.common.util.EchoiotExecutors;
 import org.echoiot.server.cache.ota.OtaPackageDataCache;
+import org.echoiot.server.common.transport.limits.TransportRateLimitService;
 import org.echoiot.server.queue.discovery.TbServiceInfoProvider;
 import org.echoiot.server.queue.scheduler.SchedulerComponent;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.annotation.Resource;
 import java.util.concurrent.ExecutorService;
 
 /**

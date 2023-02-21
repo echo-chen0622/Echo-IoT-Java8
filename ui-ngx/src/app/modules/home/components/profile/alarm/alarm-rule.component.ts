@@ -1,21 +1,21 @@
 import {Component, forwardRef, Input, OnInit} from '@angular/core';
 import {
-    ControlValueAccessor,
-    FormBuilder,
-    FormControl,
-    FormGroup,
-    NG_VALIDATORS,
-    NG_VALUE_ACCESSOR,
-    Validator,
-    Validators
+  ControlValueAccessor,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR,
+  Validator,
+  Validators
 } from '@angular/forms';
 import {AlarmRule} from '@shared/models/device.models';
 import {MatDialog} from '@angular/material/dialog';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {isDefinedAndNotNull} from '@core/utils';
 import {
-    EditAlarmDetailsDialogComponent,
-    EditAlarmDetailsDialogData
+  EditAlarmDetailsDialogComponent,
+  EditAlarmDetailsDialogData
 } from '@home/components/profile/alarm/edit-alarm-details-dialog.component';
 import {EntityId} from '@shared/models/id/entity-id';
 import {DashboardId} from '@shared/models/id/dashboard-id';

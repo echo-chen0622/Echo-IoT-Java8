@@ -13,10 +13,10 @@ import org.echoiot.server.common.data.kv.TsKvEntry;
 import org.echoiot.server.dao.asset.AssetService;
 import org.echoiot.server.queue.discovery.TbServiceInfoProvider;
 import org.echoiot.server.queue.util.TbRuleEngineComponent;
+import org.echoiot.server.service.queue.TbRuleEngineConsumerStats;
 import org.echoiot.server.service.telemetry.TelemetrySubscriptionService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
-import org.echoiot.server.service.queue.TbRuleEngineConsumerStats;
 
 import javax.annotation.Nullable;
 import java.util.Collections;

@@ -15,14 +15,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.util.UUID;
 
-import static org.echoiot.server.dao.model.ModelConstants.RESOURCE_DATA_COLUMN;
-import static org.echoiot.server.dao.model.ModelConstants.RESOURCE_FILE_NAME_COLUMN;
-import static org.echoiot.server.dao.model.ModelConstants.RESOURCE_KEY_COLUMN;
-import static org.echoiot.server.dao.model.ModelConstants.RESOURCE_TABLE_NAME;
-import static org.echoiot.server.dao.model.ModelConstants.RESOURCE_TENANT_ID_COLUMN;
-import static org.echoiot.server.dao.model.ModelConstants.RESOURCE_TITLE_COLUMN;
-import static org.echoiot.server.dao.model.ModelConstants.RESOURCE_TYPE_COLUMN;
-import static org.echoiot.server.dao.model.ModelConstants.SEARCH_TEXT_PROPERTY;
+import static org.echoiot.server.dao.model.ModelConstants.*;
 
 @Data
 @EqualsAndHashCode(callSuper = true)

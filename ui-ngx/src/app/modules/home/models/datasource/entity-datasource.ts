@@ -1,10 +1,10 @@
-import { PageLink } from '@shared/models/page/page-link';
-import { BehaviorSubject, Observable, of, ReplaySubject } from 'rxjs';
-import { emptyPageData, PageData } from '@shared/models/page/page-data';
-import { BaseData, HasId } from '@shared/models/base-data';
-import { CollectionViewer, DataSource, SelectionModel } from '@angular/cdk/collections';
-import { catchError, map, share, take, tap } from 'rxjs/operators';
-import { EntityBooleanFunction } from '@home/models/entity/entities-table-config.models';
+import {PageLink} from '@shared/models/page/page-link';
+import {BehaviorSubject, Observable, of, ReplaySubject} from 'rxjs';
+import {emptyPageData, PageData} from '@shared/models/page/page-data';
+import {BaseData, HasId} from '@shared/models/base-data';
+import {CollectionViewer, DataSource, SelectionModel} from '@angular/cdk/collections';
+import {catchError, map, share, take, tap} from 'rxjs/operators';
+import {EntityBooleanFunction} from '@home/models/entity/entities-table-config.models';
 
 export type EntitiesFetchFunction<T extends BaseData<HasId>, P extends PageLink> = (pageLink: P) => Observable<PageData<T>>;
 

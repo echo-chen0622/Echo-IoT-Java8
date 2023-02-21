@@ -34,7 +34,7 @@ public class DefaultTransportDeviceProfileCache implements TransportDeviceProfil
     private TransportService transportService;
 
     @Lazy
-    @Resource
+    @Autowired
     public void setTransportService(TransportService transportService) {
         this.transportService = transportService;
     }

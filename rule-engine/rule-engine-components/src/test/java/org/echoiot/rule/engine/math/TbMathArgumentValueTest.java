@@ -1,11 +1,11 @@
 package org.echoiot.rule.engine.math;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.echoiot.common.util.JacksonUtil;
+import org.echoiot.server.common.msg.TbMsgMetaData;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Test;
-import org.echoiot.common.util.JacksonUtil;
-import org.echoiot.server.common.msg.TbMsgMetaData;
 
 import java.util.Optional;
 

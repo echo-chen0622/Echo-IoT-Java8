@@ -16,8 +16,8 @@ import {DashboardService} from '@core/http/dashboard.service';
 import {forkJoin, Observable, of} from 'rxjs';
 import {SelectTargetLayoutDialogComponent} from '@home/components/dashboard/select-target-layout-dialog.component';
 import {
-    SelectTargetStateDialogComponent,
-    SelectTargetStateDialogData
+  SelectTargetStateDialogComponent,
+  SelectTargetStateDialogData
 } from '@home/components/dashboard/select-target-state-dialog.component';
 import {mergeMap} from 'rxjs/operators';
 import {AliasesInfo} from '@shared/models/alias.models';

@@ -11,9 +11,9 @@ import {
   SimpleChanges,
   ViewEncapsulation
 } from '@angular/core';
-import { WINDOW } from '@core/services/window.service';
-import { CanColorCtor, mixinColor } from '@angular/material/core';
-import { ResizeObserver } from '@juggle/resize-observer';
+import {WINDOW} from '@core/services/window.service';
+import {CanColorCtor, mixinColor} from '@angular/material/core';
+import {ResizeObserver} from '@juggle/resize-observer';
 
 export declare type FabToolbarDirection = 'left' | 'right';
 

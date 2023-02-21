@@ -2,11 +2,11 @@ import * as tv from 'tv4';
 import ObjectPath from 'objectpath';
 import _ from 'lodash';
 import {
-    DefaultsFormOptions,
-    FormOption,
-    JsonFormData,
-    JsonSchemaData,
-    SchemaValidationResult
+  DefaultsFormOptions,
+  FormOption,
+  JsonFormData,
+  JsonSchemaData,
+  SchemaValidationResult
 } from './json-form.models';
 import {isDefined, isEqual, isString, isUndefined} from '@core/utils';
 

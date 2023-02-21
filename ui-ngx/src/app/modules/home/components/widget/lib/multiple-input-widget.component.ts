@@ -1,32 +1,25 @@
-import { Component, ElementRef, Input, NgZone, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
-import { PageComponent } from '@shared/components/page.component';
-import { WidgetContext } from '@home/models/widget-component.models';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { Overlay } from '@angular/cdk/overlay';
-import { UtilsService } from '@core/services/utils.service';
-import { TranslateService } from '@ngx-translate/core';
-import { DataKey, Datasource, DatasourceData, DatasourceType, WidgetConfig } from '@shared/models/widget.models';
-import { IWidgetSubscription } from '@core/api/widget-api.models';
-import {
-  createLabelFromDatasource,
-  isBoolean, isDefined,
-  isDefinedAndNotNull,
-  isEqual,
-  isNotEmptyStr,
-  isUndefined
-} from '@core/utils';
-import { EntityType } from '@shared/models/entity-type.models';
+import {Component, ElementRef, Input, NgZone, OnDestroy, OnInit, ViewChild, ViewContainerRef} from '@angular/core';
+import {PageComponent} from '@shared/components/page.component';
+import {WidgetContext} from '@home/models/widget-component.models';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {Overlay} from '@angular/cdk/overlay';
+import {UtilsService} from '@core/services/utils.service';
+import {TranslateService} from '@ngx-translate/core';
+import {DataKey, Datasource, DatasourceData, DatasourceType, WidgetConfig} from '@shared/models/widget.models';
+import {IWidgetSubscription} from '@core/api/widget-api.models';
+import {createLabelFromDatasource, isBoolean, isDefined, isDefinedAndNotNull, isEqual, isUndefined} from '@core/utils';
+import {EntityType} from '@shared/models/entity-type.models';
 import * as _moment from 'moment';
-import { FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
-import { RequestConfig } from '@core/http/http-utils';
-import { AttributeService } from '@core/http/attribute.service';
-import { AttributeData, AttributeScope, LatestTelemetry } from '@shared/models/telemetry/telemetry.models';
-import { forkJoin, Observable, Subject } from 'rxjs';
-import { EntityId } from '@shared/models/id/entity-id';
-import { ResizeObserver } from '@juggle/resize-observer';
-import { takeUntil } from 'rxjs/operators';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import {FormBuilder, FormGroup, ValidatorFn, Validators} from '@angular/forms';
+import {RequestConfig} from '@core/http/http-utils';
+import {AttributeService} from '@core/http/attribute.service';
+import {AttributeData, AttributeScope, LatestTelemetry} from '@shared/models/telemetry/telemetry.models';
+import {forkJoin, Observable, Subject} from 'rxjs';
+import {EntityId} from '@shared/models/id/entity-id';
+import {ResizeObserver} from '@juggle/resize-observer';
+import {takeUntil} from 'rxjs/operators';
+import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 
 type FieldAlignment = 'row' | 'column';
 

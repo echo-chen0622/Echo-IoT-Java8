@@ -1,13 +1,13 @@
 package org.echoiot.server.transport.mqtt.attributes.request;
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Before;
-import org.junit.Test;
 import org.echoiot.server.common.data.TransportPayloadType;
 import org.echoiot.server.common.data.device.profile.MqttTopics;
 import org.echoiot.server.dao.service.DaoSqlTest;
 import org.echoiot.server.transport.mqtt.MqttTestConfigProperties;
 import org.echoiot.server.transport.mqtt.attributes.AbstractMqttAttributesIntegrationTest;
+import org.junit.Before;
+import org.junit.Test;
 
 @Slf4j
 @DaoSqlTest

@@ -19,7 +19,7 @@ import {
   ViewContainerRef,
   ViewEncapsulation
 } from '@angular/core';
-import { DashboardWidget } from '@home/models/dashboard-component.models';
+import {DashboardWidget} from '@home/models/dashboard-component.models';
 import {
   defaultLegendConfig,
   LegendConfig,
@@ -36,12 +36,12 @@ import {
   widgetType,
   WidgetTypeParameters
 } from '@shared/models/widget.models';
-import { PageComponent } from '@shared/components/page.component';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { WidgetService } from '@core/http/widget.service';
-import { UtilsService } from '@core/services/utils.service';
-import { forkJoin, Observable, of, ReplaySubject, Subscription, throwError } from 'rxjs';
+import {PageComponent} from '@shared/components/page.component';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {WidgetService} from '@core/http/widget.service';
+import {UtilsService} from '@core/services/utils.service';
+import {forkJoin, Observable, of, ReplaySubject, Subscription, throwError} from 'rxjs';
 import {
   deepClone,
   insertVariable,
@@ -70,35 +70,35 @@ import {
   WidgetSubscriptionContext,
   WidgetSubscriptionOptions
 } from '@core/api/widget-api.models';
-import { EntityId } from '@shared/models/id/entity-id';
-import { ActivatedRoute, Router } from '@angular/router';
+import {EntityId} from '@shared/models/id/entity-id';
+import {ActivatedRoute, Router} from '@angular/router';
 import cssjs from '@core/css/css';
-import { ResourcesService } from '@core/services/resources.service';
-import { catchError, map, switchMap } from 'rxjs/operators';
-import { ActionNotificationShow } from '@core/notification/notification.actions';
-import { TimeService } from '@core/services/time.service';
-import { DeviceService } from '@app/core/http/device.service';
-import { ExceptionData } from '@shared/models/error.models';
-import { WidgetComponentService } from './widget-component.service';
-import { Timewindow } from '@shared/models/time/time.models';
-import { CancelAnimationFrame, RafService } from '@core/services/raf.service';
-import { DashboardService } from '@core/http/dashboard.service';
-import { WidgetSubscription } from '@core/api/widget-subscription';
-import { EntityService } from '@core/http/entity.service';
-import { ServicesMap } from '@home/models/services.map';
-import { ResizeObserver } from '@juggle/resize-observer';
-import { EntityDataService } from '@core/api/entity-data.service';
-import { TranslateService } from '@ngx-translate/core';
-import { NotificationType } from '@core/notification/notification.models';
-import { AlarmDataService } from '@core/api/alarm-data.service';
-import { MatDialog } from '@angular/material/dialog';
-import { ComponentType } from '@angular/cdk/portal';
-import { EMBED_DASHBOARD_DIALOG_TOKEN } from '@home/components/widget/dialog/embed-dashboard-dialog-token';
-import { MobileService } from '@core/services/mobile.service';
-import { DialogService } from '@core/services/dialog.service';
-import { PopoverPlacement } from '@shared/components/popover.models';
-import { TbPopoverService } from '@shared/components/popover.service';
-import { DASHBOARD_PAGE_COMPONENT_TOKEN } from '@home/components/tokens';
+import {ResourcesService} from '@core/services/resources.service';
+import {catchError, map, switchMap} from 'rxjs/operators';
+import {ActionNotificationShow} from '@core/notification/notification.actions';
+import {TimeService} from '@core/services/time.service';
+import {DeviceService} from '@app/core/http/device.service';
+import {ExceptionData} from '@shared/models/error.models';
+import {WidgetComponentService} from './widget-component.service';
+import {Timewindow} from '@shared/models/time/time.models';
+import {CancelAnimationFrame, RafService} from '@core/services/raf.service';
+import {DashboardService} from '@core/http/dashboard.service';
+import {WidgetSubscription} from '@core/api/widget-subscription';
+import {EntityService} from '@core/http/entity.service';
+import {ServicesMap} from '@home/models/services.map';
+import {ResizeObserver} from '@juggle/resize-observer';
+import {EntityDataService} from '@core/api/entity-data.service';
+import {TranslateService} from '@ngx-translate/core';
+import {NotificationType} from '@core/notification/notification.models';
+import {AlarmDataService} from '@core/api/alarm-data.service';
+import {MatDialog} from '@angular/material/dialog';
+import {ComponentType} from '@angular/cdk/portal';
+import {EMBED_DASHBOARD_DIALOG_TOKEN} from '@home/components/widget/dialog/embed-dashboard-dialog-token';
+import {MobileService} from '@core/services/mobile.service';
+import {DialogService} from '@core/services/dialog.service';
+import {PopoverPlacement} from '@shared/components/popover.models';
+import {TbPopoverService} from '@shared/components/popover.service';
+import {DASHBOARD_PAGE_COMPONENT_TOKEN} from '@home/components/tokens';
 
 @Component({
   selector: 'tb-widget',

@@ -1,7 +1,6 @@
 package org.echoiot.server.dao.service;
 
 import org.apache.commons.lang3.StringUtils;
-import org.echoiot.server.dao.exception.IncorrectParameterException;
 import org.echoiot.common.util.RegexUtils;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.UUIDBased;
@@ -9,6 +8,7 @@ import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.common.data.query.EntityDataPageLink;
 import org.echoiot.server.common.data.query.EntityKey;
 import org.echoiot.server.common.data.query.EntityKeyType;
+import org.echoiot.server.dao.exception.IncorrectParameterException;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;

@@ -1,5 +1,5 @@
-import { Observable } from 'rxjs';
-import { EntityId } from '@app/shared/models/id/entity-id';
+import {Observable} from 'rxjs';
+import {EntityId} from '@app/shared/models/id/entity-id';
 import {
   DataSet,
   Datasource,
@@ -11,16 +11,16 @@ import {
   WidgetActionDescriptor,
   widgetType
 } from '@shared/models/widget.models';
-import { TimeService } from '../services/time.service';
-import { DeviceService } from '../http/device.service';
-import { UtilsService } from '@core/services/utils.service';
-import { Timewindow, WidgetTimewindow } from '@shared/models/time/time.models';
-import { EntityType } from '@shared/models/entity-type.models';
-import { HttpErrorResponse } from '@angular/common/http';
-import { RafService } from '@core/services/raf.service';
-import { EntityAliases } from '@shared/models/alias.models';
-import { EntityInfo } from '@app/shared/models/entity.models';
-import { IDashboardComponent } from '@home/models/dashboard-component.models';
+import {TimeService} from '../services/time.service';
+import {DeviceService} from '../http/device.service';
+import {UtilsService} from '@core/services/utils.service';
+import {Timewindow, WidgetTimewindow} from '@shared/models/time/time.models';
+import {EntityType} from '@shared/models/entity-type.models';
+import {HttpErrorResponse} from '@angular/common/http';
+import {RafService} from '@core/services/raf.service';
+import {EntityAliases} from '@shared/models/alias.models';
+import {EntityInfo} from '@app/shared/models/entity.models';
+import {IDashboardComponent} from '@home/models/dashboard-component.models';
 import * as moment_ from 'moment';
 import {
   AlarmData,
@@ -33,13 +33,13 @@ import {
   Filters,
   KeyFilter
 } from '@shared/models/query/query.models';
-import { EntityDataService } from '@core/api/entity-data.service';
-import { PageData } from '@shared/models/page/page-data';
-import { TranslateService } from '@ngx-translate/core';
-import { AlarmDataService } from '@core/api/alarm-data.service';
-import { IDashboardController } from '@home/components/dashboard-page/dashboard-page.models';
-import { PopoverPlacement } from '@shared/components/popover.models';
-import { PersistentRpc } from '@shared/models/rpc.models';
+import {EntityDataService} from '@core/api/entity-data.service';
+import {PageData} from '@shared/models/page/page-data';
+import {TranslateService} from '@ngx-translate/core';
+import {AlarmDataService} from '@core/api/alarm-data.service';
+import {IDashboardController} from '@home/components/dashboard-page/dashboard-page.models';
+import {PopoverPlacement} from '@shared/components/popover.models';
+import {PersistentRpc} from '@shared/models/rpc.models';
 
 export interface TimewindowFunctions {
   onUpdateTimewindow: (startTimeMs: number, endTimeMs: number, interval?: number) => void;

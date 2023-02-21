@@ -5,20 +5,15 @@ import com.google.protobuf.Descriptors;
 import com.google.protobuf.DynamicMessage;
 import com.squareup.wire.schema.internal.parser.ProtoFileElement;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
-import org.junit.Before;
-import org.junit.Test;
 import org.echoiot.server.common.data.CoapDeviceType;
 import org.echoiot.server.common.data.DynamicProtoUtils;
 import org.echoiot.server.common.data.TransportPayloadType;
-import org.echoiot.server.common.data.device.profile.CoapDeviceProfileTransportConfiguration;
-import org.echoiot.server.common.data.device.profile.CoapDeviceTypeConfiguration;
-import org.echoiot.server.common.data.device.profile.DefaultCoapDeviceTypeConfiguration;
-import org.echoiot.server.common.data.device.profile.DeviceProfileTransportConfiguration;
-import org.echoiot.server.common.data.device.profile.ProtoTransportPayloadConfiguration;
-import org.echoiot.server.common.data.device.profile.TransportPayloadTypeConfiguration;
+import org.echoiot.server.common.data.device.profile.*;
 import org.echoiot.server.dao.service.DaoSqlTest;
 import org.echoiot.server.transport.coap.CoapTestConfigProperties;
+import org.jetbrains.annotations.NotNull;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.Arrays;
 

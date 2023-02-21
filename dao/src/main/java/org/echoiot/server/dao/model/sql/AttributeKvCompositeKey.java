@@ -12,10 +12,7 @@ import javax.persistence.Enumerated;
 import java.io.Serializable;
 import java.util.UUID;
 
-import static org.echoiot.server.dao.model.ModelConstants.ATTRIBUTE_KEY_COLUMN;
-import static org.echoiot.server.dao.model.ModelConstants.ATTRIBUTE_TYPE_COLUMN;
-import static org.echoiot.server.dao.model.ModelConstants.ENTITY_ID_COLUMN;
-import static org.echoiot.server.dao.model.ModelConstants.ENTITY_TYPE_COLUMN;
+import static org.echoiot.server.dao.model.ModelConstants.*;
 
 @Data
 @AllArgsConstructor

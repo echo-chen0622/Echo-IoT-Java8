@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef } from '@angular/core';
+import {AfterViewInit, Component, ElementRef} from '@angular/core';
 
 @Component({
   selector: 'tb-toggle-password',

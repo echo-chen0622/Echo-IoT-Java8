@@ -4,9 +4,9 @@ import {Store} from '@ngrx/store';
 import {AppState} from '@app/core/core.state';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
-    DefaultDeviceTransportConfiguration,
-    DeviceTransportConfiguration,
-    DeviceTransportType
+  DefaultDeviceTransportConfiguration,
+  DeviceTransportConfiguration,
+  DeviceTransportType
 } from '@shared/models/device.models';
 
 @Component({

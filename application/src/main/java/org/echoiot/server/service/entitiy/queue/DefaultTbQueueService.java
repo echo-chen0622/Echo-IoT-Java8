@@ -9,15 +9,15 @@ import org.echoiot.server.common.data.id.QueueId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.queue.Queue;
 import org.echoiot.server.common.data.tenant.profile.TenantProfileQueueConfiguration;
+import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
 import org.echoiot.server.dao.queue.QueueService;
 import org.echoiot.server.queue.TbQueueAdmin;
 import org.echoiot.server.queue.scheduler.SchedulerComponent;
 import org.echoiot.server.queue.util.TbCoreComponent;
+import org.echoiot.server.service.entitiy.AbstractTbEntityService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
-import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
-import org.echoiot.server.service.entitiy.AbstractTbEntityService;
 
 import java.util.ArrayList;
 import java.util.Collections;

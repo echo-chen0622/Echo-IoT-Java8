@@ -3,8 +3,6 @@ package org.echoiot.server.dao.model.sql;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
 import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.data.id.RpcId;
 import org.echoiot.server.common.data.id.TenantId;
@@ -13,23 +11,14 @@ import org.echoiot.server.common.data.rpc.RpcStatus;
 import org.echoiot.server.dao.model.BaseEntity;
 import org.echoiot.server.dao.model.BaseSqlEntity;
 import org.echoiot.server.dao.util.mapping.JsonStringType;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 import org.jetbrains.annotations.NotNull;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.UUID;
 
-import static org.echoiot.server.dao.model.ModelConstants.RPC_ADDITIONAL_INFO;
-import static org.echoiot.server.dao.model.ModelConstants.RPC_DEVICE_ID;
-import static org.echoiot.server.dao.model.ModelConstants.RPC_EXPIRATION_TIME;
-import static org.echoiot.server.dao.model.ModelConstants.RPC_REQUEST;
-import static org.echoiot.server.dao.model.ModelConstants.RPC_RESPONSE;
-import static org.echoiot.server.dao.model.ModelConstants.RPC_STATUS;
-import static org.echoiot.server.dao.model.ModelConstants.RPC_TABLE_NAME;
-import static org.echoiot.server.dao.model.ModelConstants.RPC_TENANT_ID_COLUMN;
+import static org.echoiot.server.dao.model.ModelConstants.*;
 
 @Data
 @EqualsAndHashCode(callSuper = true)

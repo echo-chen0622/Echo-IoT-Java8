@@ -16,15 +16,15 @@ import {
   MapProviders,
   WidgetUnitedTripAnimationSettings
 } from '@home/components/widget/lib/maps/map-models';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { WidgetContext } from '@app/modules/home/models/widget-component.models';
+import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
+import {WidgetContext} from '@app/modules/home/models/widget-component.models';
 import {
   findAngle,
   getRatio,
   interpolateOnLineSegment,
   parseWithTranslation
 } from '@home/components/widget/lib/maps/common-maps-utils';
-import { FormattedData, WidgetConfig } from '@shared/models/widget.models';
+import {FormattedData, WidgetConfig} from '@shared/models/widget.models';
 import moment from 'moment';
 import {
   formattedDataArrayFromDatasourceData,
@@ -35,8 +35,8 @@ import {
   parseFunction,
   safeExecute
 } from '@core/utils';
-import { ResizeObserver } from '@juggle/resize-observer';
-import { MapWidgetInterface } from '@home/components/widget/lib/maps/map-widget.interface';
+import {ResizeObserver} from '@juggle/resize-observer';
+import {MapWidgetInterface} from '@home/components/widget/lib/maps/map-widget.interface';
 
 interface DataMap {
   [key: string]: FormattedData;

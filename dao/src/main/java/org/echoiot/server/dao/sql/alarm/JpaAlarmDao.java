@@ -2,22 +2,8 @@ package org.echoiot.server.dao.sql.alarm;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import lombok.extern.slf4j.Slf4j;
-import org.echoiot.server.dao.model.sql.AlarmEntity;
-import org.echoiot.server.dao.model.sql.EntityAlarmEntity;
-import org.echoiot.server.dao.sql.query.AlarmQueryRepository;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Component;
 import org.echoiot.server.common.data.EntityType;
-import org.echoiot.server.common.data.alarm.Alarm;
-import org.echoiot.server.common.data.alarm.AlarmInfo;
-import org.echoiot.server.common.data.alarm.AlarmQuery;
-import org.echoiot.server.common.data.alarm.AlarmSeverity;
-import org.echoiot.server.common.data.alarm.AlarmStatus;
-import org.echoiot.server.common.data.alarm.EntityAlarm;
+import org.echoiot.server.common.data.alarm.*;
 import org.echoiot.server.common.data.id.AlarmId;
 import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.id.EntityId;
@@ -28,15 +14,19 @@ import org.echoiot.server.common.data.query.AlarmData;
 import org.echoiot.server.common.data.query.AlarmDataQuery;
 import org.echoiot.server.dao.DaoUtil;
 import org.echoiot.server.dao.alarm.AlarmDao;
+import org.echoiot.server.dao.model.sql.AlarmEntity;
+import org.echoiot.server.dao.model.sql.EntityAlarmEntity;
 import org.echoiot.server.dao.sql.JpaAbstractDao;
+import org.echoiot.server.dao.sql.query.AlarmQueryRepository;
 import org.echoiot.server.dao.util.SqlDao;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Component;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import javax.annotation.Resource;
+import java.util.*;
 
 /**
  * Created by Valerii Sosliuk on 5/19/2017.

@@ -14,21 +14,20 @@ import {
   ViewChild,
   ViewChildren
 } from '@angular/core';
-import { PageComponent } from '@shared/components/page.component';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { EntityTableConfig } from '@home/models/entity/entities-table-config.models';
-import { BaseData, HasId, hasIdEquals } from '@shared/models/base-data';
-import { EntityType, EntityTypeResource, EntityTypeTranslation } from '@shared/models/entity-type.models';
-import { FormGroup } from '@angular/forms';
-import { EntityComponent } from './entity.component';
-import { TbAnchorComponent } from '@shared/components/tb-anchor.component';
-import { EntityAction } from '@home/models/entity/entity-component.models';
-import { Observable, ReplaySubject, Subscription } from 'rxjs';
-import { MatTab, MatTabGroup } from '@angular/material/tabs';
-import { EntityTabsComponent } from '@home/components/entity/entity-tabs.component';
-import { deepClone, mergeDeep } from '@core/utils';
-import { entityIdEquals } from '@shared/models/id/entity-id';
+import {PageComponent} from '@shared/components/page.component';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {EntityTableConfig} from '@home/models/entity/entities-table-config.models';
+import {BaseData, HasId, hasIdEquals} from '@shared/models/base-data';
+import {EntityType, EntityTypeResource, EntityTypeTranslation} from '@shared/models/entity-type.models';
+import {FormGroup} from '@angular/forms';
+import {EntityComponent} from './entity.component';
+import {TbAnchorComponent} from '@shared/components/tb-anchor.component';
+import {EntityAction} from '@home/models/entity/entity-component.models';
+import {Observable, ReplaySubject, Subscription} from 'rxjs';
+import {MatTab, MatTabGroup} from '@angular/material/tabs';
+import {EntityTabsComponent} from '@home/components/entity/entity-tabs.component';
+import {deepClone, mergeDeep} from '@core/utils';
 
 @Component({
   selector: 'tb-entity-details-panel',

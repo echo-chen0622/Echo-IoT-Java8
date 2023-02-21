@@ -1,22 +1,14 @@
-import {
-  Component,
-  ElementRef,
-  forwardRef,
-  Input,
-  OnDestroy,
-  OnInit,
-  ViewChild
-} from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Ace } from 'ace-builds';
-import { CancelAnimationFrame, RafService } from '@core/services/raf.service';
-import { ResizeObserver } from '@juggle/resize-observer';
-import { guid } from '@core/utils';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { Store } from '@ngrx/store';
-import { AppState } from '@core/core.state';
-import { getAce } from '@shared/models/ace/ace.models';
-import { beautifyJs } from '@shared/models/beautify.models';
+import {Component, ElementRef, forwardRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {Ace} from 'ace-builds';
+import {CancelAnimationFrame, RafService} from '@core/services/raf.service';
+import {ResizeObserver} from '@juggle/resize-observer';
+import {guid} from '@core/utils';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {Store} from '@ngrx/store';
+import {AppState} from '@core/core.state';
+import {getAce} from '@shared/models/ace/ace.models';
+import {beautifyJs} from '@shared/models/beautify.models';
 
 @Component({
   selector: 'tb-protobuf-content',

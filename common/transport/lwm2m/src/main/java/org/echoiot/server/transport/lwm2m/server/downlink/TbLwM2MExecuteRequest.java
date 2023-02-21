@@ -2,8 +2,8 @@ package org.echoiot.server.transport.lwm2m.server.downlink;
 
 import lombok.Builder;
 import lombok.Getter;
-import org.eclipse.leshan.core.response.ReadResponse;
 import org.echoiot.server.transport.lwm2m.server.LwM2MOperationType;
+import org.eclipse.leshan.core.response.ReadResponse;
 import org.jetbrains.annotations.NotNull;
 
 public class TbLwM2MExecuteRequest extends AbstractTbLwM2MTargetedDownlinkRequest<ReadResponse> {

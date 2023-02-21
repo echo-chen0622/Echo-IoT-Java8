@@ -7,27 +7,9 @@ import org.echoiot.server.dao.model.sql.AbstractTsKvEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.persistence.ColumnResult;
-import javax.persistence.ConstructorResult;
-import javax.persistence.Entity;
-import javax.persistence.IdClass;
-import javax.persistence.NamedNativeQueries;
-import javax.persistence.NamedNativeQuery;
-import javax.persistence.SqlResultSetMapping;
-import javax.persistence.SqlResultSetMappings;
-import javax.persistence.Table;
+import javax.persistence.*;
 
-import static org.echoiot.server.dao.sqlts.timescale.AggregationRepository.FIND_AVG;
-import static org.echoiot.server.dao.sqlts.timescale.AggregationRepository.FIND_AVG_QUERY;
-import static org.echoiot.server.dao.sqlts.timescale.AggregationRepository.FIND_COUNT;
-import static org.echoiot.server.dao.sqlts.timescale.AggregationRepository.FIND_COUNT_QUERY;
-import static org.echoiot.server.dao.sqlts.timescale.AggregationRepository.FIND_MAX;
-import static org.echoiot.server.dao.sqlts.timescale.AggregationRepository.FIND_MAX_QUERY;
-import static org.echoiot.server.dao.sqlts.timescale.AggregationRepository.FIND_MIN;
-import static org.echoiot.server.dao.sqlts.timescale.AggregationRepository.FIND_MIN_QUERY;
-import static org.echoiot.server.dao.sqlts.timescale.AggregationRepository.FIND_SUM;
-import static org.echoiot.server.dao.sqlts.timescale.AggregationRepository.FIND_SUM_QUERY;
-import static org.echoiot.server.dao.sqlts.timescale.AggregationRepository.FROM_WHERE_CLAUSE;
+import static org.echoiot.server.dao.sqlts.timescale.AggregationRepository.*;
 
 @Data
 @EqualsAndHashCode(callSuper = true)

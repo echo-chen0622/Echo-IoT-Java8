@@ -2,13 +2,6 @@ package org.echoiot.server.dao.dashboard;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import lombok.extern.slf4j.Slf4j;
-import org.echoiot.server.dao.exception.DataValidationException;
-import org.hibernate.exception.ConstraintViolationException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.echoiot.server.common.data.Customer;
 import org.echoiot.server.common.data.Dashboard;
 import org.echoiot.server.common.data.DashboardInfo;
@@ -24,10 +17,17 @@ import org.echoiot.server.common.data.relation.RelationTypeGroup;
 import org.echoiot.server.dao.customer.CustomerDao;
 import org.echoiot.server.dao.edge.EdgeDao;
 import org.echoiot.server.dao.entity.AbstractEntityService;
+import org.echoiot.server.dao.exception.DataValidationException;
 import org.echoiot.server.dao.service.DataValidator;
 import org.echoiot.server.dao.service.PaginatedRemover;
 import org.echoiot.server.dao.service.Validator;
+import org.hibernate.exception.ConstraintViolationException;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 import static org.echoiot.server.dao.service.Validator.validateId;
