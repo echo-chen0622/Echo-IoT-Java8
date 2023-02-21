@@ -24,7 +24,8 @@ public class ApplicationUtil {
     public static String[] updateArguments(@NotNull String[] args, String defaultSpringConfigParam) {
         // 如果没有设置配置文件名称，则设置默认的配置文件名称
         if (Arrays.stream(args).noneMatch(arg -> arg.startsWith(SPRING_CONFIG_NAME_KEY))) {
-            String[] modifiedArgs = ArrayUtil.clone(args);
+            // 使数组长度加 1，然后把配置文件名称放到最后一个位置
+            String[] modifiedArgs = ArrayUtil.resize(args, args.length + 1);
             modifiedArgs[args.length] = defaultSpringConfigParam;
             return modifiedArgs;
         }

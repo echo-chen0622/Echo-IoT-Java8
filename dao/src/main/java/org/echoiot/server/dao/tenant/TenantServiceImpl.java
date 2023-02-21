@@ -30,6 +30,7 @@ import org.echoiot.server.dao.usagerecord.ApiUsageStateService;
 import org.echoiot.server.dao.user.UserService;
 import org.echoiot.server.dao.widget.WidgetsBundleService;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -105,7 +106,7 @@ public class TenantServiceImpl extends AbstractCachedEntityService<TenantId, Ten
     @Resource
     private AdminSettingsService adminSettingsService;
 
-    @Resource
+    @Autowired
     protected TbTransactionalCache<TenantId, Boolean> existsTenantCache;
 
     @TransactionalEventListener(classes = TenantEvictEvent.class)

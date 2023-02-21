@@ -2,6 +2,7 @@ package org.echoiot.server.dao.entity;
 
 import org.echoiot.server.cache.TbTransactionalCache;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
@@ -10,7 +11,7 @@ import java.io.Serializable;
 
 public abstract class AbstractCachedEntityService<K extends Serializable, V extends Serializable, E> extends AbstractEntityService {
 
-    @Resource
+    @Autowired
     protected TbTransactionalCache<K, V> cache;
 
     @Resource
