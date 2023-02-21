@@ -21,6 +21,7 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.common.data.sync.ie.EntityExportData;
+import org.echoiot.server.common.data.sync.vc.EntityVersionsDiff;
 import org.echoiot.server.common.data.sync.vc.*;
 import org.echoiot.server.common.data.sync.vc.request.create.VersionCreateRequest;
 import org.echoiot.server.gen.transport.TransportProtos;
