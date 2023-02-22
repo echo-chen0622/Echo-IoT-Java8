@@ -15,7 +15,6 @@ import org.echoiot.server.common.data.id.RuleChainId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.validation.Length;
 import org.echoiot.server.common.data.validation.NoXss;
-import org.jetbrains.annotations.NotNull;
 
 @ApiModel
 @EqualsAndHashCode(callSuper = true)
@@ -52,7 +51,7 @@ public class Edge extends SearchTextBasedWithAdditionalInfo<EdgeId> implements H
         super(id);
     }
 
-    public Edge(@NotNull Edge edge) {
+    public Edge(Edge edge) {
         super(edge);
         this.tenantId = edge.getTenantId();
         this.customerId = edge.getCustomerId();
@@ -64,7 +63,7 @@ public class Edge extends SearchTextBasedWithAdditionalInfo<EdgeId> implements H
         this.secret = edge.getSecret();
     }
 
-    public void update(@NotNull Edge edge) {
+    public void update(Edge edge) {
         this.tenantId = edge.getTenantId();
         this.customerId = edge.getCustomerId();
         this.rootRuleChainId = edge.getRootRuleChainId();

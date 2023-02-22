@@ -22,7 +22,6 @@ import org.apache.cassandra.config.CFMetaData;
 import org.apache.cassandra.db.RowIndexEntry;
 import org.apache.cassandra.db.SerializationHeader;
 import org.apache.cassandra.io.sstable.format.big.BigFormat;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Provides the accessors to data on disk.
@@ -50,17 +49,15 @@ public interface SSTableFormat
         BIG("big", BigFormat.instance);
 
         public final SSTableFormat info;
-        @NotNull
-        public final String name;
+            public final String name;
 
-        @NotNull
-        public static Type current()
+            public static Type current()
         {
             return BIG;
         }
 
         @SuppressWarnings("deprecation")
-        Type(@NotNull String name, SSTableFormat info)
+        Type(String name, SSTableFormat info)
         {
             //Since format comes right after generation
             //we disallow formats with numeric names
@@ -71,10 +68,9 @@ public interface SSTableFormat
             this.info = info;
         }
 
-        @NotNull
-        public static Type validate(String name)
+            public static Type validate(String name)
         {
-            for (@NotNull Type valid : Type.values())
+            for (Type valid : Type.values())
             {
                 //This is used internally for old sstables
                 if (valid == LEGACY)

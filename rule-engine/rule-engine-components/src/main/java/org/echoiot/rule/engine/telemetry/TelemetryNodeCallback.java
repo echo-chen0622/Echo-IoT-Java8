@@ -4,7 +4,6 @@ import com.google.common.util.concurrent.FutureCallback;
 import lombok.Data;
 import org.echoiot.rule.engine.api.TbContext;
 import org.echoiot.server.common.msg.TbMsg;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
@@ -13,9 +12,7 @@ import javax.annotation.Nullable;
  */
 @Data
 class TelemetryNodeCallback implements FutureCallback<Void> {
-    @NotNull
     private final TbContext ctx;
-    @NotNull
     private final TbMsg msg;
 
     @Override

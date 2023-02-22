@@ -5,7 +5,6 @@ import org.echoiot.server.common.data.TransportPayloadType;
 import org.echoiot.server.transport.mqtt.MqttTestCallback;
 import org.echoiot.server.transport.mqtt.MqttTestClient;
 import org.echoiot.server.transport.mqtt.MqttTestConfigProperties;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -35,7 +34,7 @@ public abstract class AbstractMqttTimeseriesJsonIntegrationTest extends Abstract
                 .telemetryTopicFilter(POST_DATA_TELEMETRY_TOPIC)
                 .build();
         processBeforeTest(configProperties);
-        @NotNull List<String> expectedKeys = Arrays.asList("key1", "key2", "key3", "key4", "key5");
+        List<String> expectedKeys = Arrays.asList("key1", "key2", "key3", "key4", "key5");
         processJsonPayloadTelemetryTest(POST_DATA_TELEMETRY_TOPIC, expectedKeys, PAYLOAD_VALUES_STR.getBytes(), false);
     }
 
@@ -47,8 +46,8 @@ public abstract class AbstractMqttTimeseriesJsonIntegrationTest extends Abstract
                 .telemetryTopicFilter(POST_DATA_TELEMETRY_TOPIC)
                 .build();
         processBeforeTest(configProperties);
-        @NotNull String payloadStr = "{\"ts\": 10000, \"values\": " + PAYLOAD_VALUES_STR + "}";
-        @NotNull List<String> expectedKeys = Arrays.asList("key1", "key2", "key3", "key4", "key5");
+        String payloadStr = "{\"ts\": 10000, \"values\": " + PAYLOAD_VALUES_STR + "}";
+        List<String> expectedKeys = Arrays.asList("key1", "key2", "key3", "key4", "key5");
         processJsonPayloadTelemetryTest(POST_DATA_TELEMETRY_TOPIC, expectedKeys, payloadStr.getBytes(), true);
     }
 
@@ -107,9 +106,9 @@ public abstract class AbstractMqttTimeseriesJsonIntegrationTest extends Abstract
                 .sendAckOnValidationException(true)
                 .build();
         processBeforeTest(configProperties);
-        @NotNull MqttTestClient client = new MqttTestClient();
+        MqttTestClient client = new MqttTestClient();
         client.connectAndWait(accessToken);
-        @NotNull MqttTestCallback callback = new MqttTestCallback();
+        MqttTestCallback callback = new MqttTestCallback();
         client.setCallback(callback);
         client.publish(POST_DATA_TELEMETRY_TOPIC, MALFORMED_JSON_PAYLOAD.getBytes());
         callback.getDeliveryLatch().await(DEFAULT_WAIT_TIMEOUT_SECONDS, TimeUnit.SECONDS);
@@ -125,9 +124,9 @@ public abstract class AbstractMqttTimeseriesJsonIntegrationTest extends Abstract
                 .telemetryTopicFilter(POST_DATA_TELEMETRY_TOPIC)
                 .build();
         processBeforeTest(configProperties);
-        @NotNull MqttTestClient client = new MqttTestClient();
+        MqttTestClient client = new MqttTestClient();
         client.connectAndWait(accessToken);
-        @NotNull MqttTestCallback callback = new MqttTestCallback();
+        MqttTestCallback callback = new MqttTestCallback();
         client.setCallback(callback);
         client.publish(POST_DATA_TELEMETRY_TOPIC, MALFORMED_JSON_PAYLOAD.getBytes());
         callback.getDeliveryLatch().await(DEFAULT_WAIT_TIMEOUT_SECONDS, TimeUnit.SECONDS);
@@ -144,9 +143,9 @@ public abstract class AbstractMqttTimeseriesJsonIntegrationTest extends Abstract
                 .sendAckOnValidationException(true)
                 .build();
         processBeforeTest(configProperties);
-        @NotNull MqttTestClient client = new MqttTestClient();
+        MqttTestClient client = new MqttTestClient();
         client.connectAndWait(gatewayAccessToken);
-        @NotNull MqttTestCallback callback = new MqttTestCallback();
+        MqttTestCallback callback = new MqttTestCallback();
         client.setCallback(callback);
         client.publish(POST_DATA_TELEMETRY_TOPIC, MALFORMED_JSON_PAYLOAD.getBytes());
         callback.getDeliveryLatch().await(DEFAULT_WAIT_TIMEOUT_SECONDS, TimeUnit.SECONDS);
@@ -163,9 +162,9 @@ public abstract class AbstractMqttTimeseriesJsonIntegrationTest extends Abstract
                 .telemetryTopicFilter(POST_DATA_TELEMETRY_TOPIC)
                 .build();
         processBeforeTest(configProperties);
-        @NotNull MqttTestClient client = new MqttTestClient();
+        MqttTestClient client = new MqttTestClient();
         client.connectAndWait(gatewayAccessToken);
-        @NotNull MqttTestCallback callback = new MqttTestCallback();
+        MqttTestCallback callback = new MqttTestCallback();
         client.setCallback(callback);
         client.publish(POST_DATA_TELEMETRY_TOPIC, MALFORMED_JSON_PAYLOAD.getBytes());
         callback.getDeliveryLatch().await(DEFAULT_WAIT_TIMEOUT_SECONDS, TimeUnit.SECONDS);

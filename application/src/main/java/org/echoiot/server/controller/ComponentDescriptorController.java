@@ -8,7 +8,6 @@ import org.echoiot.server.common.data.plugin.ComponentDescriptor;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.data.rule.RuleChainType;
 import org.echoiot.server.queue.util.TbCoreComponent;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -69,13 +68,13 @@ public class ComponentDescriptorController extends BaseController {
     @RequestMapping(value = "/components", params = {"componentTypes"}, method = RequestMethod.GET)
     @ResponseBody
     public List<ComponentDescriptor> getComponentDescriptorsByTypes(
-            @NotNull @ApiParam(value = "List of types of the Rule Nodes, (ENRICHMENT, FILTER, TRANSFORMATION, ACTION or EXTERNAL)", required = true)
+            @ApiParam(value = "List of types of the Rule Nodes, (ENRICHMENT, FILTER, TRANSFORMATION, ACTION or EXTERNAL)", required = true)
             @RequestParam("componentTypes") String[] strComponentTypes,
             @ApiParam(value = "Type of the Rule Chain", allowableValues = "CORE,EDGE")
             @RequestParam(value = "ruleChainType", required = false) String strRuleChainType) throws EchoiotException {
         checkArrayParameter("componentTypes", strComponentTypes);
         try {
-            @NotNull Set<ComponentType> componentTypes = new HashSet<>();
+            Set<ComponentType> componentTypes = new HashSet<>();
             for (String strComponentType : strComponentTypes) {
                 componentTypes.add(ComponentType.valueOf(strComponentType));
             }
@@ -85,7 +84,6 @@ public class ComponentDescriptorController extends BaseController {
         }
     }
 
-    @NotNull
     private RuleChainType getRuleChainType(String strRuleChainType) {
         RuleChainType ruleChainType;
         if (StringUtils.isEmpty(strRuleChainType)) {

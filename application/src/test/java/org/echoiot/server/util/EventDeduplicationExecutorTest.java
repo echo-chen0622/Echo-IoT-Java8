@@ -4,7 +4,6 @@ import com.google.common.util.concurrent.MoreExecutors;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.common.util.EchoiotThreadFactory;
 import org.echoiot.server.utils.EventDeduplicationExecutor;
-import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,7 +18,6 @@ import java.util.function.Consumer;
 @RunWith(MockitoJUnitRunner.class)
 public class EventDeduplicationExecutorTest {
 
-    @NotNull
     EchoiotThreadFactory threadFactory = EchoiotThreadFactory.forName(getClass().getSimpleName());
     ExecutorService executor;
 
@@ -81,14 +79,14 @@ public class EventDeduplicationExecutorTest {
         exceptionFlow(executor);
     }
 
-    private void simpleFlow(@NotNull ExecutorService executorService) throws InterruptedException {
+    private void simpleFlow(ExecutorService executorService) throws InterruptedException {
         try {
             Consumer<String> function = Mockito.spy(StringConsumer.class);
-            @NotNull EventDeduplicationExecutor<String> executor = new EventDeduplicationExecutor<>(EventDeduplicationExecutorTest.class.getSimpleName(), executorService, function);
+            EventDeduplicationExecutor<String> executor = new EventDeduplicationExecutor<>(EventDeduplicationExecutorTest.class.getSimpleName(), executorService, function);
 
-            @NotNull String params1 = "params1";
-            @NotNull String params2 = "params2";
-            @NotNull String params3 = "params3";
+            String params1 = "params1";
+            String params2 = "params2";
+            String params3 = "params3";
 
             executor.submit(params1);
             executor.submit(params2);
@@ -101,14 +99,14 @@ public class EventDeduplicationExecutorTest {
         }
     }
 
-    private void periodicFlow(@NotNull ExecutorService executorService) throws InterruptedException {
+    private void periodicFlow(ExecutorService executorService) throws InterruptedException {
         try {
             Consumer<String> function = Mockito.spy(StringConsumer.class);
-            @NotNull EventDeduplicationExecutor<String> executor = new EventDeduplicationExecutor<>(EventDeduplicationExecutorTest.class.getSimpleName(), executorService, function);
+            EventDeduplicationExecutor<String> executor = new EventDeduplicationExecutor<>(EventDeduplicationExecutorTest.class.getSimpleName(), executorService, function);
 
-            @NotNull String params1 = "params1";
-            @NotNull String params2 = "params2";
-            @NotNull String params3 = "params3";
+            String params1 = "params1";
+            String params2 = "params2";
+            String params3 = "params3";
 
             executor.submit(params1);
             Thread.sleep(500);
@@ -124,14 +122,14 @@ public class EventDeduplicationExecutorTest {
         }
     }
 
-    private void exceptionFlow(@NotNull ExecutorService executorService) throws InterruptedException {
+    private void exceptionFlow(ExecutorService executorService) throws InterruptedException {
         try {
             Consumer<String> function = Mockito.spy(StringConsumer.class);
-            @NotNull EventDeduplicationExecutor<String> executor = new EventDeduplicationExecutor<>(EventDeduplicationExecutorTest.class.getSimpleName(), executorService, function);
+            EventDeduplicationExecutor<String> executor = new EventDeduplicationExecutor<>(EventDeduplicationExecutorTest.class.getSimpleName(), executorService, function);
 
-            @NotNull String params1 = "params1";
-            @NotNull String params2 = "params2";
-            @NotNull String params3 = "params3";
+            String params1 = "params1";
+            String params2 = "params2";
+            String params3 = "params3";
 
             Mockito.doThrow(new RuntimeException()).when(function).accept("params1");
             executor.submit(params1);

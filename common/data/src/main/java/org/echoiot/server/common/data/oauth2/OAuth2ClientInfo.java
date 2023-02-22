@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.jetbrains.annotations.NotNull;
 
 @EqualsAndHashCode
 @Data
@@ -23,7 +22,7 @@ public class OAuth2ClientInfo {
             example = "/oauth2/authorization/8352f191-2b4d-11ec-9ed1-cbf57c026ecc")
     private String url;
 
-    public OAuth2ClientInfo(@NotNull OAuth2ClientInfo oauth2ClientInfo) {
+    public OAuth2ClientInfo(OAuth2ClientInfo oauth2ClientInfo) {
         this.name = oauth2ClientInfo.getName();
         this.icon = oauth2ClientInfo.getIcon();
         this.url = oauth2ClientInfo.getUrl();

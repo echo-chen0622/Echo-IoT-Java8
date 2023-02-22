@@ -18,7 +18,6 @@ import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.entitiy.ota.TbOtaPackageService;
 import org.echoiot.server.service.security.permission.Operation;
 import org.echoiot.server.service.security.permission.PerResource;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -38,29 +37,27 @@ import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 @RequiredArgsConstructor
 public class OtaPackageController extends BaseController {
 
-    @NotNull
     private final TbOtaPackageService tbOtaPackageService;
 
     public static final String OTA_PACKAGE_ID = "otaPackageId";
     public static final String CHECKSUM_ALGORITHM = "checksumAlgorithm";
 
-    @NotNull
     @ApiOperation(value = "Download OTA Package (downloadOtaPackage)", notes = "Download OTA Package based on the provided OTA Package Id." + ControllerConstants.TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority( 'TENANT_ADMIN')")
     @RequestMapping(value = "/otaPackage/{otaPackageId}/download", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<org.springframework.core.io.Resource> downloadOtaPackage(@NotNull @ApiParam(value = ControllerConstants.OTA_PACKAGE_ID_PARAM_DESCRIPTION)
+    public ResponseEntity<org.springframework.core.io.Resource> downloadOtaPackage(@ApiParam(value = ControllerConstants.OTA_PACKAGE_ID_PARAM_DESCRIPTION)
                                                                                    @PathVariable(OTA_PACKAGE_ID) String strOtaPackageId) throws EchoiotException {
         checkParameter(OTA_PACKAGE_ID, strOtaPackageId);
         try {
-            @NotNull OtaPackageId otaPackageId = new OtaPackageId(toUUID(strOtaPackageId));
+            OtaPackageId otaPackageId = new OtaPackageId(toUUID(strOtaPackageId));
             OtaPackage otaPackage = checkOtaPackageId(otaPackageId, Operation.READ);
 
             if (otaPackage.hasUrl()) {
                 return ResponseEntity.badRequest().build();
             }
 
-            @NotNull ByteArrayResource resource = new ByteArrayResource(otaPackage.getData().array());
+            ByteArrayResource resource = new ByteArrayResource(otaPackage.getData().array());
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + otaPackage.getFileName())
                     .header("x-filename", otaPackage.getFileName())
@@ -79,11 +76,11 @@ public class OtaPackageController extends BaseController {
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/otaPackage/info/{otaPackageId}", method = RequestMethod.GET)
     @ResponseBody
-    public OtaPackageInfo getOtaPackageInfoById(@NotNull @ApiParam(value = ControllerConstants.OTA_PACKAGE_ID_PARAM_DESCRIPTION)
+    public OtaPackageInfo getOtaPackageInfoById(@ApiParam(value = ControllerConstants.OTA_PACKAGE_ID_PARAM_DESCRIPTION)
                                                 @PathVariable(OTA_PACKAGE_ID) String strOtaPackageId) throws EchoiotException {
         checkParameter(OTA_PACKAGE_ID, strOtaPackageId);
         try {
-            @NotNull OtaPackageId otaPackageId = new OtaPackageId(toUUID(strOtaPackageId));
+            OtaPackageId otaPackageId = new OtaPackageId(toUUID(strOtaPackageId));
             return checkNotNull(otaPackageService.findOtaPackageInfoById(getTenantId(), otaPackageId));
         } catch (Exception e) {
             throw handleException(e);
@@ -97,11 +94,11 @@ public class OtaPackageController extends BaseController {
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN')")
     @RequestMapping(value = "/otaPackage/{otaPackageId}", method = RequestMethod.GET)
     @ResponseBody
-    public OtaPackage getOtaPackageById(@NotNull @ApiParam(value = ControllerConstants.OTA_PACKAGE_ID_PARAM_DESCRIPTION)
+    public OtaPackage getOtaPackageById(@ApiParam(value = ControllerConstants.OTA_PACKAGE_ID_PARAM_DESCRIPTION)
                                         @PathVariable(OTA_PACKAGE_ID) String strOtaPackageId) throws EchoiotException {
         checkParameter(OTA_PACKAGE_ID, strOtaPackageId);
         try {
-            @NotNull OtaPackageId otaPackageId = new OtaPackageId(toUUID(strOtaPackageId));
+            OtaPackageId otaPackageId = new OtaPackageId(toUUID(strOtaPackageId));
             return checkOtaPackageId(otaPackageId, Operation.READ);
         } catch (Exception e) {
             throw handleException(e);
@@ -119,7 +116,7 @@ public class OtaPackageController extends BaseController {
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN')")
     @RequestMapping(value = "/otaPackage", method = RequestMethod.POST)
     @ResponseBody
-    public OtaPackageInfo saveOtaPackageInfo(@NotNull @ApiParam(value = "A JSON value representing the OTA Package.")
+    public OtaPackageInfo saveOtaPackageInfo(@ApiParam(value = "A JSON value representing the OTA Package.")
                                              @RequestBody SaveOtaPackageInfoRequest otaPackageInfo) throws EchoiotException {
         otaPackageInfo.setTenantId(getTenantId());
         checkEntity(otaPackageInfo.getId(), otaPackageInfo, PerResource.OTA_PACKAGE);
@@ -134,20 +131,20 @@ public class OtaPackageController extends BaseController {
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN')")
     @RequestMapping(value = "/otaPackage/{otaPackageId}", method = RequestMethod.POST, consumes = MULTIPART_FORM_DATA_VALUE)
     @ResponseBody
-    public OtaPackageInfo saveOtaPackageData(@NotNull @ApiParam(value = ControllerConstants.OTA_PACKAGE_ID_PARAM_DESCRIPTION)
+    public OtaPackageInfo saveOtaPackageData(@ApiParam(value = ControllerConstants.OTA_PACKAGE_ID_PARAM_DESCRIPTION)
                                              @PathVariable(OTA_PACKAGE_ID) String strOtaPackageId,
                                              @ApiParam(value = "OTA Package checksum. For example, '0xd87f7e0c'")
                                              @RequestParam(required = false) String checksum,
-                                             @NotNull @ApiParam(value = "OTA Package checksum algorithm.", allowableValues = ControllerConstants.OTA_PACKAGE_CHECKSUM_ALGORITHM_ALLOWABLE_VALUES)
+                                             @ApiParam(value = "OTA Package checksum algorithm.", allowableValues = ControllerConstants.OTA_PACKAGE_CHECKSUM_ALGORITHM_ALLOWABLE_VALUES)
                                              @RequestParam(CHECKSUM_ALGORITHM) String checksumAlgorithmStr,
-                                             @NotNull @ApiParam(value = "OTA Package data.")
+                                             @ApiParam(value = "OTA Package data.")
                                              @RequestPart MultipartFile file) throws EchoiotException, IOException {
         checkParameter(OTA_PACKAGE_ID, strOtaPackageId);
         checkParameter(CHECKSUM_ALGORITHM, checksumAlgorithmStr);
-        @NotNull OtaPackageId otaPackageId = new OtaPackageId(toUUID(strOtaPackageId));
+        OtaPackageId otaPackageId = new OtaPackageId(toUUID(strOtaPackageId));
         OtaPackageInfo otaPackageInfo = checkOtaPackageInfoId(otaPackageId, Operation.READ);
-        @NotNull ChecksumAlgorithm checksumAlgorithm = ChecksumAlgorithm.valueOf(checksumAlgorithmStr.toUpperCase());
-        @NotNull byte[] data = file.getBytes();
+        ChecksumAlgorithm checksumAlgorithm = ChecksumAlgorithm.valueOf(checksumAlgorithmStr.toUpperCase());
+        byte[] data = file.getBytes();
         return tbOtaPackageService.saveOtaPackageData(otaPackageInfo, checksum, checksumAlgorithm,
                 data, file.getOriginalFilename(), file.getContentType(), getCurrentUser());
     }
@@ -167,10 +164,10 @@ public class OtaPackageController extends BaseController {
                                                    @RequestParam(required = false) String textSearch,
                                                    @ApiParam(value = ControllerConstants.SORT_PROPERTY_DESCRIPTION, allowableValues = ControllerConstants.OTA_PACKAGE_SORT_PROPERTY_ALLOWABLE_VALUES)
                                                    @RequestParam(required = false) String sortProperty,
-                                                   @NotNull @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
+                                                   @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
                                                    @RequestParam(required = false) String sortOrder) throws EchoiotException {
         try {
-            @NotNull PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
+            PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
             return checkNotNull(otaPackageService.findTenantOtaPackagesByTenantId(getTenantId(), pageLink));
         } catch (Exception e) {
             throw handleException(e);
@@ -184,7 +181,7 @@ public class OtaPackageController extends BaseController {
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/otaPackages/{deviceProfileId}/{type}", method = RequestMethod.GET)
     @ResponseBody
-    public PageData<OtaPackageInfo> getOtaPackages(@NotNull @ApiParam(value = ControllerConstants.DEVICE_PROFILE_ID_PARAM_DESCRIPTION)
+    public PageData<OtaPackageInfo> getOtaPackages(@ApiParam(value = ControllerConstants.DEVICE_PROFILE_ID_PARAM_DESCRIPTION)
                                                    @PathVariable("deviceProfileId") String strDeviceProfileId,
                                                    @ApiParam(value = "OTA Package type.", allowableValues = "FIRMWARE, SOFTWARE")
                                                    @PathVariable("type") String strType,
@@ -196,12 +193,12 @@ public class OtaPackageController extends BaseController {
                                                    @RequestParam(required = false) String textSearch,
                                                    @ApiParam(value = ControllerConstants.SORT_PROPERTY_DESCRIPTION, allowableValues = ControllerConstants.OTA_PACKAGE_SORT_PROPERTY_ALLOWABLE_VALUES)
                                                    @RequestParam(required = false) String sortProperty,
-                                                   @NotNull @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
+                                                   @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
                                                    @RequestParam(required = false) String sortOrder) throws EchoiotException {
         checkParameter("deviceProfileId", strDeviceProfileId);
         checkParameter("type", strType);
         try {
-            @NotNull PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
+            PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
             return checkNotNull(otaPackageService.findTenantOtaPackagesByTenantIdAndDeviceProfileIdAndTypeAndHasData(getTenantId(),
                                                                                                                      new DeviceProfileId(toUUID(strDeviceProfileId)), OtaPackageType.valueOf(strType), pageLink));
         } catch (Exception e) {
@@ -216,10 +213,10 @@ public class OtaPackageController extends BaseController {
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN')")
     @RequestMapping(value = "/otaPackage/{otaPackageId}", method = RequestMethod.DELETE)
     @ResponseBody
-    public void deleteOtaPackage(@NotNull @ApiParam(value = ControllerConstants.OTA_PACKAGE_ID_PARAM_DESCRIPTION)
+    public void deleteOtaPackage(@ApiParam(value = ControllerConstants.OTA_PACKAGE_ID_PARAM_DESCRIPTION)
                                  @PathVariable("otaPackageId") String strOtaPackageId) throws EchoiotException {
         checkParameter(OTA_PACKAGE_ID, strOtaPackageId);
-        @NotNull OtaPackageId otaPackageId = new OtaPackageId(toUUID(strOtaPackageId));
+        OtaPackageId otaPackageId = new OtaPackageId(toUUID(strOtaPackageId));
         OtaPackageInfo otaPackageInfo = checkOtaPackageInfoId(otaPackageId, Operation.DELETE);
         tbOtaPackageService.delete(otaPackageInfo, getCurrentUser());
     }

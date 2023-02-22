@@ -12,7 +12,6 @@ import org.echoiot.server.actors.service.ContextBasedCreator;
 import org.echoiot.server.common.data.event.StatisticsEvent;
 import org.echoiot.server.common.msg.MsgType;
 import org.echoiot.server.common.msg.TbActorMsg;
-import org.jetbrains.annotations.NotNull;
 
 @Slf4j
 public class StatsActor extends ContextAwareActor {
@@ -24,7 +23,7 @@ public class StatsActor extends ContextAwareActor {
     }
 
     @Override
-    protected boolean doProcess(@NotNull TbActorMsg msg) {
+    protected boolean doProcess(TbActorMsg msg) {
         log.debug("Received message: {}", msg);
         if (msg.getMsgType().equals(MsgType.STATS_PERSIST_MSG)) {
             onStatsPersistMsg((StatsPersistMsg) msg);
@@ -34,7 +33,7 @@ public class StatsActor extends ContextAwareActor {
         }
     }
 
-    public void onStatsPersistMsg(@NotNull StatsPersistMsg msg) {
+    public void onStatsPersistMsg(StatsPersistMsg msg) {
         if (msg.isEmpty()) {
             return;
         }
@@ -60,14 +59,12 @@ public class StatsActor extends ContextAwareActor {
             this.actorId = actorId;
         }
 
-        @NotNull
-        @Override
+            @Override
         public TbActorId createActorId() {
             return new TbStringActorId(actorId);
         }
 
-        @NotNull
-        @Override
+            @Override
         public TbActor createActor() {
             return new StatsActor(context);
         }

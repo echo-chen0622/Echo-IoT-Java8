@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.echoiot.server.common.data.id.WidgetTypeId;
-import org.jetbrains.annotations.NotNull;
 
 @Data
 public class WidgetType extends BaseWidgetType {
@@ -24,7 +23,7 @@ public class WidgetType extends BaseWidgetType {
         super(baseWidgetType);
     }
 
-    public WidgetType(@NotNull WidgetType widgetType) {
+    public WidgetType(WidgetType widgetType) {
         super(widgetType);
         this.descriptor = widgetType.getDescriptor();
     }

@@ -6,7 +6,6 @@ import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.kv.*;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.nosql.CassandraAbstractAsyncDao;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -22,7 +21,7 @@ public abstract class AbstractCassandraBaseTimeseriesDao extends CassandraAbstra
     public static final String EQUALS_PARAM = " = ? ";
 
     @Nullable
-    public static KvEntry toKvEntry(@NotNull Row row, String key) {
+    public static KvEntry toKvEntry(Row row, String key) {
         @Nullable KvEntry kvEntry = null;
         @Nullable String strV = row.get(ModelConstants.STRING_VALUE_COLUMN, String.class);
         if (strV != null) {
@@ -53,23 +52,20 @@ public abstract class AbstractCassandraBaseTimeseriesDao extends CassandraAbstra
         return kvEntry;
     }
 
-    @NotNull
-    protected List<TsKvEntry> convertResultToTsKvEntryList(@NotNull List<Row> rows) {
-        @NotNull List<TsKvEntry> entries = new ArrayList<>(rows.size());
+    protected List<TsKvEntry> convertResultToTsKvEntryList(List<Row> rows) {
+        List<TsKvEntry> entries = new ArrayList<>(rows.size());
         if (!rows.isEmpty()) {
             rows.forEach(row -> entries.add(convertResultToTsKvEntry(row)));
         }
         return entries;
     }
 
-    @NotNull
-    private TsKvEntry convertResultToTsKvEntry(@NotNull Row row) {
+    private TsKvEntry convertResultToTsKvEntry(Row row) {
         @Nullable String key = row.getString(ModelConstants.KEY_COLUMN);
         long ts = row.getLong(ModelConstants.TS_COLUMN);
         return new BasicTsKvEntry(ts, toKvEntry(row, key));
     }
 
-    @NotNull
     protected TsKvEntry convertResultToTsKvEntry(String key, @Nullable Row row) {
         if (row != null) {
             return getBasicTsKvEntry(key, row);
@@ -78,7 +74,6 @@ public abstract class AbstractCassandraBaseTimeseriesDao extends CassandraAbstra
         }
     }
 
-    @NotNull
     protected Optional<TsKvEntry> convertResultToTsKvEntryOpt(String key, @Nullable Row row) {
         if (row != null) {
             return Optional.of(getBasicTsKvEntry(key, row));
@@ -87,15 +82,13 @@ public abstract class AbstractCassandraBaseTimeseriesDao extends CassandraAbstra
         }
     }
 
-    @NotNull
-    private BasicTsKvEntry getBasicTsKvEntry(String key, @NotNull Row row) {
-        @NotNull Optional<String> foundKeyOpt = getKey(row);
+    private BasicTsKvEntry getBasicTsKvEntry(String key, Row row) {
+        Optional<String> foundKeyOpt = getKey(row);
         long ts = row.getLong(ModelConstants.TS_COLUMN);
         return new BasicTsKvEntry(ts, toKvEntry(row, foundKeyOpt.orElse(key)));
     }
 
-    @NotNull
-    private Optional<String> getKey(@NotNull Row row){
+    private Optional<String> getKey(Row row){
        try{
            return Optional.ofNullable(row.getString(ModelConstants.KEY_COLUMN));
        } catch (IllegalArgumentException e){

@@ -5,7 +5,6 @@ import com.google.common.util.concurrent.SettableFuture;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.common.util.EchoiotThreadFactory;
 import org.echoiot.server.common.stats.MessagesStats;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -31,13 +30,13 @@ public class TbSqlBlockingQueue<E> implements TbSqlQueue<E> {
     }
 
     @Override
-    public void init(@NotNull ScheduledLogExecutorComponent logExecutor, @NotNull Consumer<List<E>> saveFunction, Comparator<E> batchUpdateComparator, int index) {
+    public void init(ScheduledLogExecutorComponent logExecutor, Consumer<List<E>> saveFunction, Comparator<E> batchUpdateComparator, int index) {
         executor = Executors.newSingleThreadExecutor(EchoiotThreadFactory.forName("sql-queue-" + index + "-" + params.getLogName().toLowerCase()));
         executor.submit(() -> {
             String logName = params.getLogName();
             int batchSize = params.getBatchSize();
             long maxDelay = params.getMaxDelay();
-            @NotNull List<TbSqlQueueElement<E>> entities = new ArrayList<>(batchSize);
+            List<TbSqlQueueElement<E>> entities = new ArrayList<>(batchSize);
             while (!Thread.interrupted()) {
                 try {
                     long currentTs = System.currentTimeMillis();
@@ -97,10 +96,9 @@ public class TbSqlBlockingQueue<E> implements TbSqlQueue<E> {
         }
     }
 
-    @NotNull
     @Override
     public ListenableFuture<Void> add(E element) {
-        @NotNull SettableFuture<Void> future = SettableFuture.create();
+        SettableFuture<Void> future = SettableFuture.create();
         queue.add(new TbSqlQueueElement<>(future, element));
         stats.incrementTotal();
         return future;

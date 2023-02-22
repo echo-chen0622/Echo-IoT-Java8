@@ -5,7 +5,6 @@ import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.transport.lwm2m.rpc.AbstractRpcLwM2MIntegrationTest;
 import org.eclipse.leshan.core.ResponseCode;
 import org.eclipse.leshan.core.node.LwM2mPath;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.junit.Test;
 
@@ -24,7 +23,7 @@ public class RpcLwm2mIntegrationExecuteTest extends AbstractRpcLwM2MIntegrationT
      */
     @Test
     public void testExecuteUpdateFWById_Result_CHANGED() throws Exception {
-        @NotNull String expectedPath = objectInstanceIdVer_5 + "/" + RESOURCE_ID_2;
+        String expectedPath = objectInstanceIdVer_5 + "/" + RESOURCE_ID_2;
         String actualResult = sendRPCExecuteById(expectedPath);
         @Nullable ObjectNode rpcActualResult = JacksonUtil.fromString(actualResult, ObjectNode.class);
         assertEquals(ResponseCode.CHANGED.getName(), rpcActualResult.get("result").asText());
@@ -37,7 +36,7 @@ public class RpcLwm2mIntegrationExecuteTest extends AbstractRpcLwM2MIntegrationT
      */
     @Test
     public void testExecuteUpdateSWById_Result_CHANGED() throws Exception {
-        @NotNull String expectedPath = objectInstanceIdVer_9 + "/" + RESOURCE_ID_4;
+        String expectedPath = objectInstanceIdVer_9 + "/" + RESOURCE_ID_4;
         String actualResult = sendRPCExecuteById(expectedPath);
         @Nullable ObjectNode rpcActualResult = JacksonUtil.fromString(actualResult, ObjectNode.class);
         assertEquals(ResponseCode.CHANGED.getName(), rpcActualResult.get("result").asText());
@@ -50,7 +49,7 @@ public class RpcLwm2mIntegrationExecuteTest extends AbstractRpcLwM2MIntegrationT
      */
     @Test
     public void testExecuteRebootById_Result_CHANGED() throws Exception {
-        @NotNull String expectedPath = objectInstanceIdVer_3 + "/" + RESOURCE_ID_4;
+        String expectedPath = objectInstanceIdVer_3 + "/" + RESOURCE_ID_4;
         String actualResult = sendRPCExecuteById(expectedPath);
         @Nullable ObjectNode rpcActualResult = JacksonUtil.fromString(actualResult, ObjectNode.class);
         assertEquals(ResponseCode.CHANGED.getName(), rpcActualResult.get("result").asText());
@@ -63,7 +62,7 @@ public class RpcLwm2mIntegrationExecuteTest extends AbstractRpcLwM2MIntegrationT
      */
     @Test
     public void testExecuteRegistrationUpdateTriggerById_Result_CHANGED() throws Exception {
-        @NotNull String expectedPath = objectInstanceIdVer_1 + "/" + RESOURCE_ID_8;
+        String expectedPath = objectInstanceIdVer_1 + "/" + RESOURCE_ID_8;
         String actualResult = sendRPCExecuteById(expectedPath);
         @Nullable ObjectNode rpcActualResult = JacksonUtil.fromString(actualResult, ObjectNode.class);
         assertEquals(ResponseCode.CHANGED.getName(), rpcActualResult.get("result").asText());
@@ -77,8 +76,8 @@ public class RpcLwm2mIntegrationExecuteTest extends AbstractRpcLwM2MIntegrationT
      */
     @Test
     public void testExecuteResourceWithParametersById_Result_CHANGED() throws Exception {
-        @NotNull String expectedPath = objectInstanceIdVer_3 + "/" + RESOURCE_ID_4;
-        @NotNull Object expectedValue = 60;
+        String expectedPath = objectInstanceIdVer_3 + "/" + RESOURCE_ID_4;
+        Object expectedValue = 60;
         String actualResult = sendRPCExecuteWithValueById(expectedPath, expectedValue);
         @Nullable ObjectNode rpcActualResult = JacksonUtil.fromString(actualResult, ObjectNode.class);
         assertEquals(ResponseCode.CHANGED.getName(), rpcActualResult.get("result").asText());
@@ -91,11 +90,11 @@ public class RpcLwm2mIntegrationExecuteTest extends AbstractRpcLwM2MIntegrationT
      */
     @Test
     public void testExecuteBootstrapRequestTriggerById_Result_BAD_REQUEST_Error_NoBootstrapServerConfigured() throws Exception {
-        @NotNull String expectedPath = objectInstanceIdVer_1 + "/" + RESOURCE_ID_9;
+        String expectedPath = objectInstanceIdVer_1 + "/" + RESOURCE_ID_9;
         String actualResult = sendRPCExecuteById(expectedPath);
         @Nullable ObjectNode rpcActualResult = JacksonUtil.fromString(actualResult, ObjectNode.class);
         assertEquals(ResponseCode.BAD_REQUEST.getName(), rpcActualResult.get("result").asText());
-        @NotNull String expected = "probably no bootstrap server configured";
+        String expected = "probably no bootstrap server configured";
         String actual = rpcActualResult.get("error").asText();
         assertEquals(actual, expected);
     }
@@ -107,11 +106,11 @@ public class RpcLwm2mIntegrationExecuteTest extends AbstractRpcLwM2MIntegrationT
      */
     @Test
     public void testExecuteResourceWithOperationNotExecuteById_Result_METHOD_NOT_ALLOWED() throws Exception {
-        @NotNull String expectedPath = objectInstanceIdVer_5 + "/" + RESOURCE_ID_3;
+        String expectedPath = objectInstanceIdVer_5 + "/" + RESOURCE_ID_3;
         String actualResult = sendRPCExecuteById(expectedPath);
         @Nullable ObjectNode rpcActualResult = JacksonUtil.fromString(actualResult, ObjectNode.class);
         assertEquals(ResponseCode.BAD_REQUEST.getName(), rpcActualResult.get("result").asText());
-        @NotNull String expected = "Resource with " + expectedPath + " is not executable.";
+        String expected = "Resource with " + expectedPath + " is not executable.";
         String actual = rpcActualResult.get("error").asText();
         assertEquals(actual, expected);
     }
@@ -123,13 +122,13 @@ public class RpcLwm2mIntegrationExecuteTest extends AbstractRpcLwM2MIntegrationT
      */
     @Test
     public void testExecuteNonExistingResourceOnNonExistingObjectById_Result_BAD_REQUEST() throws Exception {
-        @NotNull String expectedPath = OBJECT_ID_VER_50 + "/" + OBJECT_INSTANCE_ID_0 + "/" + RESOURCE_ID_3;
+        String expectedPath = OBJECT_ID_VER_50 + "/" + OBJECT_INSTANCE_ID_0 + "/" + RESOURCE_ID_3;
         String actualResult = sendRPCExecuteById(expectedPath);
         @Nullable ObjectNode rpcActualResult = JacksonUtil.fromString(actualResult, ObjectNode.class);
         assertEquals(ResponseCode.BAD_REQUEST.getName(), rpcActualResult.get("result").asText());
         String expectedObjectId = pathIdVerToObjectId(expectedPath);
-        @NotNull LwM2mPath expectedPathId = new LwM2mPath(expectedObjectId);
-        @NotNull String expected = "Specified object id " + expectedPathId.getObjectId() + " absent in the list supported objects of the client or is security object!";
+        LwM2mPath expectedPathId = new LwM2mPath(expectedObjectId);
+        String expected = "Specified object id " + expectedPathId.getObjectId() + " absent in the list supported objects of the client or is security object!";
         String actual = rpcActualResult.get("error").asText();
         assertEquals(actual, expected);
     }
@@ -141,25 +140,25 @@ public class RpcLwm2mIntegrationExecuteTest extends AbstractRpcLwM2MIntegrationT
      */
     @Test
     public void testExecuteSecurityObjectById_Result_NOT_FOUND() throws Exception {
-        @NotNull String expectedPath = objectIdVer_0 + "/" + OBJECT_INSTANCE_ID_0 + "/" + RESOURCE_ID_3;
+        String expectedPath = objectIdVer_0 + "/" + OBJECT_INSTANCE_ID_0 + "/" + RESOURCE_ID_3;
         String actualResult = sendRPCExecuteById(expectedPath);
         @Nullable ObjectNode rpcActualResult = JacksonUtil.fromString(actualResult, ObjectNode.class);
         assertEquals(ResponseCode.BAD_REQUEST.getName(), rpcActualResult.get("result").asText());
         String expectedObjectId = pathIdVerToObjectId(expectedPath);
-        @NotNull LwM2mPath expectedPathId = new LwM2mPath(expectedObjectId);
-        @NotNull String expected = "Specified object id " + expectedPathId.getObjectId() + " absent in the list supported objects of the client or is security object!";
+        LwM2mPath expectedPathId = new LwM2mPath(expectedObjectId);
+        String expected = "Specified object id " + expectedPathId.getObjectId() + " absent in the list supported objects of the client or is security object!";
         String actual = rpcActualResult.get("error").asText();
         assertEquals(actual, expected);
     }
 
 
     private String sendRPCExecuteById(String path) throws Exception {
-        @NotNull String setRpcRequest = "{\"method\": \"Execute\", \"params\": {\"id\": \"" + path + "\"}}";
+        String setRpcRequest = "{\"method\": \"Execute\", \"params\": {\"id\": \"" + path + "\"}}";
         return doPostAsync("/api/plugins/rpc/twoway/" + deviceId, setRpcRequest, String.class, status().isOk());
     }
 
     private String sendRPCExecuteWithValueById(String path, Object value) throws Exception {
-        @NotNull String setRpcRequest = "{\"method\": \"Execute\", \"params\": {\"id\": \"" + path + "\", \"value\": " + value + " }}";
+        String setRpcRequest = "{\"method\": \"Execute\", \"params\": {\"id\": \"" + path + "\", \"value\": " + value + " }}";
         return doPostAsync("/api/plugins/rpc/twoway/" + deviceId, setRpcRequest, String.class, status().isOk());
     }
 

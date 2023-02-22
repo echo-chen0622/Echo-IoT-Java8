@@ -42,7 +42,6 @@ import org.echoiot.server.dao.timeseries.TimeseriesService;
 import org.echoiot.server.dao.user.UserService;
 import org.echoiot.server.dao.widget.WidgetsBundleService;
 import org.echoiot.server.service.security.auth.jwt.settings.JwtSettingsService;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Lazy;
@@ -124,7 +123,6 @@ public class DefaultSystemDataLoaderService implements SystemDataLoaderService {
     @Resource
     private JwtSettingsService jwtSettingsService;
 
-    @NotNull
     @Bean
     protected BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -153,21 +151,21 @@ public class DefaultSystemDataLoaderService implements SystemDataLoaderService {
     public void createDefaultTenantProfiles() throws Exception {
         tenantProfileService.findOrCreateDefaultTenantProfile(TenantId.SYS_TENANT_ID);
 
-        @NotNull TenantProfileData isolatedRuleEngineTenantProfileData = new TenantProfileData();
+        TenantProfileData isolatedRuleEngineTenantProfileData = new TenantProfileData();
         isolatedRuleEngineTenantProfileData.setConfiguration(new DefaultTenantProfileConfiguration());
 
-        @NotNull TenantProfileQueueConfiguration mainQueueConfiguration = new TenantProfileQueueConfiguration();
+        TenantProfileQueueConfiguration mainQueueConfiguration = new TenantProfileQueueConfiguration();
         mainQueueConfiguration.setName(DataConstants.MAIN_QUEUE_NAME);
         mainQueueConfiguration.setTopic(DataConstants.MAIN_QUEUE_TOPIC);
         mainQueueConfiguration.setPollInterval(25);
         mainQueueConfiguration.setPartitions(10);
         mainQueueConfiguration.setConsumerPerPartition(true);
         mainQueueConfiguration.setPackProcessingTimeout(2000);
-        @NotNull SubmitStrategy mainQueueSubmitStrategy = new SubmitStrategy();
+        SubmitStrategy mainQueueSubmitStrategy = new SubmitStrategy();
         mainQueueSubmitStrategy.setType(SubmitStrategyType.BURST);
         mainQueueSubmitStrategy.setBatchSize(1000);
         mainQueueConfiguration.setSubmitStrategy(mainQueueSubmitStrategy);
-        @NotNull ProcessingStrategy mainQueueProcessingStrategy = new ProcessingStrategy();
+        ProcessingStrategy mainQueueProcessingStrategy = new ProcessingStrategy();
         mainQueueProcessingStrategy.setType(ProcessingStrategyType.SKIP_ALL_FAILURES);
         mainQueueProcessingStrategy.setRetries(3);
         mainQueueProcessingStrategy.setFailurePercentage(0);
@@ -177,7 +175,7 @@ public class DefaultSystemDataLoaderService implements SystemDataLoaderService {
 
         isolatedRuleEngineTenantProfileData.setQueueConfiguration(Collections.singletonList(mainQueueConfiguration));
 
-        @NotNull TenantProfile isolatedTbRuleEngineProfile = new TenantProfile();
+        TenantProfile isolatedTbRuleEngineProfile = new TenantProfile();
         isolatedTbRuleEngineProfile.setDefault(false);
         isolatedTbRuleEngineProfile.setName("Isolated TB Rule Engine");
         isolatedTbRuleEngineProfile.setDescription("Isolated TB Rule Engine tenant profile");
@@ -193,7 +191,7 @@ public class DefaultSystemDataLoaderService implements SystemDataLoaderService {
 
     @Override
     public void createAdminSettings() throws Exception {
-        @NotNull AdminSettings generalSettings = new AdminSettings();
+        AdminSettings generalSettings = new AdminSettings();
         generalSettings.setTenantId(TenantId.SYS_TENANT_ID);
         generalSettings.setKey("general");
         ObjectNode node = objectMapper.createObjectNode();
@@ -202,7 +200,7 @@ public class DefaultSystemDataLoaderService implements SystemDataLoaderService {
         generalSettings.setJsonValue(node);
         adminSettingsService.saveAdminSettings(TenantId.SYS_TENANT_ID, generalSettings);
 
-        @NotNull AdminSettings mailSettings = new AdminSettings();
+        AdminSettings mailSettings = new AdminSettings();
         mailSettings.setTenantId(TenantId.SYS_TENANT_ID);
         mailSettings.setKey("mail");
         node = objectMapper.createObjectNode();
@@ -276,7 +274,7 @@ public class DefaultSystemDataLoaderService implements SystemDataLoaderService {
         createDevice(demoTenant.getId(), null, defaultDeviceProfile.getId(), "Raspberry Pi Demo Device", "RASPBERRY_PI_DEMO_TOKEN", "Demo device that is used in " +
                 "Raspberry Pi GPIO control sample application");
 
-        @NotNull DeviceProfile thermostatDeviceProfile = new DeviceProfile();
+        DeviceProfile thermostatDeviceProfile = new DeviceProfile();
         thermostatDeviceProfile.setTenantId(demoTenant.getId());
         thermostatDeviceProfile.setDefault(false);
         thermostatDeviceProfile.setName("thermostat");
@@ -287,36 +285,36 @@ public class DefaultSystemDataLoaderService implements SystemDataLoaderService {
         thermostatDeviceProfile.setDefaultRuleChainId(ruleChainService.findTenantRuleChainsByType(
                 demoTenant.getId(), RuleChainType.CORE, new PageLink(1, 0, "Thermostat")).getData().get(0).getId());
 
-        @NotNull DeviceProfileData deviceProfileData = new DeviceProfileData();
-        @NotNull DefaultDeviceProfileConfiguration configuration = new DefaultDeviceProfileConfiguration();
-        @NotNull DefaultDeviceProfileTransportConfiguration transportConfiguration = new DefaultDeviceProfileTransportConfiguration();
-        @NotNull DisabledDeviceProfileProvisionConfiguration provisionConfiguration = new DisabledDeviceProfileProvisionConfiguration(null);
+        DeviceProfileData deviceProfileData = new DeviceProfileData();
+        DefaultDeviceProfileConfiguration configuration = new DefaultDeviceProfileConfiguration();
+        DefaultDeviceProfileTransportConfiguration transportConfiguration = new DefaultDeviceProfileTransportConfiguration();
+        DisabledDeviceProfileProvisionConfiguration provisionConfiguration = new DisabledDeviceProfileProvisionConfiguration(null);
         deviceProfileData.setConfiguration(configuration);
         deviceProfileData.setTransportConfiguration(transportConfiguration);
         deviceProfileData.setProvisionConfiguration(provisionConfiguration);
         thermostatDeviceProfile.setProfileData(deviceProfileData);
 
-        @NotNull DeviceProfileAlarm highTemperature = new DeviceProfileAlarm();
+        DeviceProfileAlarm highTemperature = new DeviceProfileAlarm();
         highTemperature.setId("highTemperatureAlarmID");
         highTemperature.setAlarmType("High Temperature");
-        @NotNull AlarmRule temperatureRule = new AlarmRule();
-        @NotNull AlarmCondition temperatureCondition = new AlarmCondition();
+        AlarmRule temperatureRule = new AlarmRule();
+        AlarmCondition temperatureCondition = new AlarmCondition();
         temperatureCondition.setSpec(new SimpleAlarmConditionSpec());
 
-        @NotNull AlarmConditionFilter temperatureAlarmFlagAttributeFilter = new AlarmConditionFilter();
+        AlarmConditionFilter temperatureAlarmFlagAttributeFilter = new AlarmConditionFilter();
         temperatureAlarmFlagAttributeFilter.setKey(new AlarmConditionFilterKey(AlarmConditionKeyType.ATTRIBUTE, "temperatureAlarmFlag"));
         temperatureAlarmFlagAttributeFilter.setValueType(EntityKeyValueType.BOOLEAN);
-        @NotNull BooleanFilterPredicate temperatureAlarmFlagAttributePredicate = new BooleanFilterPredicate();
+        BooleanFilterPredicate temperatureAlarmFlagAttributePredicate = new BooleanFilterPredicate();
         temperatureAlarmFlagAttributePredicate.setOperation(BooleanFilterPredicate.BooleanOperation.EQUAL);
         temperatureAlarmFlagAttributePredicate.setValue(new FilterPredicateValue<>(Boolean.TRUE));
         temperatureAlarmFlagAttributeFilter.setPredicate(temperatureAlarmFlagAttributePredicate);
 
-        @NotNull AlarmConditionFilter temperatureTimeseriesFilter = new AlarmConditionFilter();
+        AlarmConditionFilter temperatureTimeseriesFilter = new AlarmConditionFilter();
         temperatureTimeseriesFilter.setKey(new AlarmConditionFilterKey(AlarmConditionKeyType.TIME_SERIES, "temperature"));
         temperatureTimeseriesFilter.setValueType(EntityKeyValueType.NUMERIC);
-        @NotNull NumericFilterPredicate temperatureTimeseriesFilterPredicate = new NumericFilterPredicate();
+        NumericFilterPredicate temperatureTimeseriesFilterPredicate = new NumericFilterPredicate();
         temperatureTimeseriesFilterPredicate.setOperation(NumericFilterPredicate.NumericOperation.GREATER);
-        @NotNull FilterPredicateValue<Double> temperatureTimeseriesPredicateValue =
+        FilterPredicateValue<Double> temperatureTimeseriesPredicateValue =
                 new FilterPredicateValue<>(25.0, null,
                         new DynamicValue<>(DynamicValueSourceType.CURRENT_DEVICE, "temperatureAlarmThreshold"));
         temperatureTimeseriesFilterPredicate.setValue(temperatureTimeseriesPredicateValue);
@@ -326,16 +324,16 @@ public class DefaultSystemDataLoaderService implements SystemDataLoaderService {
         temperatureRule.setCondition(temperatureCondition);
         highTemperature.setCreateRules(new TreeMap<>(Collections.singletonMap(AlarmSeverity.MAJOR, temperatureRule)));
 
-        @NotNull AlarmRule clearTemperatureRule = new AlarmRule();
-        @NotNull AlarmCondition clearTemperatureCondition = new AlarmCondition();
+        AlarmRule clearTemperatureRule = new AlarmRule();
+        AlarmCondition clearTemperatureCondition = new AlarmCondition();
         clearTemperatureCondition.setSpec(new SimpleAlarmConditionSpec());
 
-        @NotNull AlarmConditionFilter clearTemperatureTimeseriesFilter = new AlarmConditionFilter();
+        AlarmConditionFilter clearTemperatureTimeseriesFilter = new AlarmConditionFilter();
         clearTemperatureTimeseriesFilter.setKey(new AlarmConditionFilterKey(AlarmConditionKeyType.TIME_SERIES, "temperature"));
         clearTemperatureTimeseriesFilter.setValueType(EntityKeyValueType.NUMERIC);
-        @NotNull NumericFilterPredicate clearTemperatureTimeseriesFilterPredicate = new NumericFilterPredicate();
+        NumericFilterPredicate clearTemperatureTimeseriesFilterPredicate = new NumericFilterPredicate();
         clearTemperatureTimeseriesFilterPredicate.setOperation(NumericFilterPredicate.NumericOperation.LESS_OR_EQUAL);
-        @NotNull FilterPredicateValue<Double> clearTemperatureTimeseriesPredicateValue =
+        FilterPredicateValue<Double> clearTemperatureTimeseriesPredicateValue =
                 new FilterPredicateValue<>(25.0, null,
                         new DynamicValue<>(DynamicValueSourceType.CURRENT_DEVICE, "temperatureAlarmThreshold"));
 
@@ -346,27 +344,27 @@ public class DefaultSystemDataLoaderService implements SystemDataLoaderService {
         clearTemperatureRule.setAlarmDetails("Current temperature = ${temperature}");
         highTemperature.setClearRule(clearTemperatureRule);
 
-        @NotNull DeviceProfileAlarm lowHumidity = new DeviceProfileAlarm();
+        DeviceProfileAlarm lowHumidity = new DeviceProfileAlarm();
         lowHumidity.setId("lowHumidityAlarmID");
         lowHumidity.setAlarmType("Low Humidity");
-        @NotNull AlarmRule humidityRule = new AlarmRule();
-        @NotNull AlarmCondition humidityCondition = new AlarmCondition();
+        AlarmRule humidityRule = new AlarmRule();
+        AlarmCondition humidityCondition = new AlarmCondition();
         humidityCondition.setSpec(new SimpleAlarmConditionSpec());
 
-        @NotNull AlarmConditionFilter humidityAlarmFlagAttributeFilter = new AlarmConditionFilter();
+        AlarmConditionFilter humidityAlarmFlagAttributeFilter = new AlarmConditionFilter();
         humidityAlarmFlagAttributeFilter.setKey(new AlarmConditionFilterKey(AlarmConditionKeyType.ATTRIBUTE, "humidityAlarmFlag"));
         humidityAlarmFlagAttributeFilter.setValueType(EntityKeyValueType.BOOLEAN);
-        @NotNull BooleanFilterPredicate humidityAlarmFlagAttributePredicate = new BooleanFilterPredicate();
+        BooleanFilterPredicate humidityAlarmFlagAttributePredicate = new BooleanFilterPredicate();
         humidityAlarmFlagAttributePredicate.setOperation(BooleanFilterPredicate.BooleanOperation.EQUAL);
         humidityAlarmFlagAttributePredicate.setValue(new FilterPredicateValue<>(Boolean.TRUE));
         humidityAlarmFlagAttributeFilter.setPredicate(humidityAlarmFlagAttributePredicate);
 
-        @NotNull AlarmConditionFilter humidityTimeseriesFilter = new AlarmConditionFilter();
+        AlarmConditionFilter humidityTimeseriesFilter = new AlarmConditionFilter();
         humidityTimeseriesFilter.setKey(new AlarmConditionFilterKey(AlarmConditionKeyType.TIME_SERIES, "humidity"));
         humidityTimeseriesFilter.setValueType(EntityKeyValueType.NUMERIC);
-        @NotNull NumericFilterPredicate humidityTimeseriesFilterPredicate = new NumericFilterPredicate();
+        NumericFilterPredicate humidityTimeseriesFilterPredicate = new NumericFilterPredicate();
         humidityTimeseriesFilterPredicate.setOperation(NumericFilterPredicate.NumericOperation.LESS);
-        @NotNull FilterPredicateValue<Double> humidityTimeseriesPredicateValue =
+        FilterPredicateValue<Double> humidityTimeseriesPredicateValue =
                 new FilterPredicateValue<>(60.0, null,
                         new DynamicValue<>(DynamicValueSourceType.CURRENT_DEVICE, "humidityAlarmThreshold"));
         humidityTimeseriesFilterPredicate.setValue(humidityTimeseriesPredicateValue);
@@ -377,16 +375,16 @@ public class DefaultSystemDataLoaderService implements SystemDataLoaderService {
         humidityRule.setAlarmDetails("Current humidity = ${humidity}");
         lowHumidity.setCreateRules(new TreeMap<>(Collections.singletonMap(AlarmSeverity.MINOR, humidityRule)));
 
-        @NotNull AlarmRule clearHumidityRule = new AlarmRule();
-        @NotNull AlarmCondition clearHumidityCondition = new AlarmCondition();
+        AlarmRule clearHumidityRule = new AlarmRule();
+        AlarmCondition clearHumidityCondition = new AlarmCondition();
         clearHumidityCondition.setSpec(new SimpleAlarmConditionSpec());
 
-        @NotNull AlarmConditionFilter clearHumidityTimeseriesFilter = new AlarmConditionFilter();
+        AlarmConditionFilter clearHumidityTimeseriesFilter = new AlarmConditionFilter();
         clearHumidityTimeseriesFilter.setKey(new AlarmConditionFilterKey(AlarmConditionKeyType.TIME_SERIES, "humidity"));
         clearHumidityTimeseriesFilter.setValueType(EntityKeyValueType.NUMERIC);
-        @NotNull NumericFilterPredicate clearHumidityTimeseriesFilterPredicate = new NumericFilterPredicate();
+        NumericFilterPredicate clearHumidityTimeseriesFilterPredicate = new NumericFilterPredicate();
         clearHumidityTimeseriesFilterPredicate.setOperation(NumericFilterPredicate.NumericOperation.GREATER_OR_EQUAL);
-        @NotNull FilterPredicateValue<Double> clearHumidityTimeseriesPredicateValue =
+        FilterPredicateValue<Double> clearHumidityTimeseriesPredicateValue =
                 new FilterPredicateValue<>(60.0, null,
                         new DynamicValue<>(DynamicValueSourceType.CURRENT_DEVICE, "humidityAlarmThreshold"));
 
@@ -456,7 +454,6 @@ public class DefaultSystemDataLoaderService implements SystemDataLoaderService {
         installScripts.loadSystemWidgets();
     }
 
-    @NotNull
     private User createUser(Authority authority,
                             TenantId tenantId,
                             CustomerId customerId,
@@ -476,7 +473,6 @@ public class DefaultSystemDataLoaderService implements SystemDataLoaderService {
         return user;
     }
 
-    @NotNull
     private Device createDevice(TenantId tenantId,
                                 CustomerId customerId,
                                 DeviceProfileId deviceProfileId,
@@ -538,7 +534,7 @@ public class DefaultSystemDataLoaderService implements SystemDataLoaderService {
         }
     }
 
-    private <S> void addTsCallback(@NotNull ListenableFuture<S> saveFuture, @NotNull final FutureCallback<S> callback) {
+    private <S> void addTsCallback(ListenableFuture<S> saveFuture, final FutureCallback<S> callback) {
         Futures.addCallback(saveFuture, new FutureCallback<S>() {
             @Override
             public void onSuccess(@Nullable S result) {
@@ -564,11 +560,11 @@ public class DefaultSystemDataLoaderService implements SystemDataLoaderService {
             mainQueue.setPartitions(10);
             mainQueue.setConsumerPerPartition(true);
             mainQueue.setPackProcessingTimeout(2000);
-            @NotNull SubmitStrategy mainQueueSubmitStrategy = new SubmitStrategy();
+            SubmitStrategy mainQueueSubmitStrategy = new SubmitStrategy();
             mainQueueSubmitStrategy.setType(SubmitStrategyType.BURST);
             mainQueueSubmitStrategy.setBatchSize(1000);
             mainQueue.setSubmitStrategy(mainQueueSubmitStrategy);
-            @NotNull ProcessingStrategy mainQueueProcessingStrategy = new ProcessingStrategy();
+            ProcessingStrategy mainQueueProcessingStrategy = new ProcessingStrategy();
             mainQueueProcessingStrategy.setType(ProcessingStrategyType.SKIP_ALL_FAILURES);
             mainQueueProcessingStrategy.setRetries(3);
             mainQueueProcessingStrategy.setFailurePercentage(0);
@@ -588,11 +584,11 @@ public class DefaultSystemDataLoaderService implements SystemDataLoaderService {
             highPriorityQueue.setPartitions(10);
             highPriorityQueue.setConsumerPerPartition(true);
             highPriorityQueue.setPackProcessingTimeout(2000);
-            @NotNull SubmitStrategy highPriorityQueueSubmitStrategy = new SubmitStrategy();
+            SubmitStrategy highPriorityQueueSubmitStrategy = new SubmitStrategy();
             highPriorityQueueSubmitStrategy.setType(SubmitStrategyType.BURST);
             highPriorityQueueSubmitStrategy.setBatchSize(100);
             highPriorityQueue.setSubmitStrategy(highPriorityQueueSubmitStrategy);
-            @NotNull ProcessingStrategy highPriorityQueueProcessingStrategy = new ProcessingStrategy();
+            ProcessingStrategy highPriorityQueueProcessingStrategy = new ProcessingStrategy();
             highPriorityQueueProcessingStrategy.setType(ProcessingStrategyType.RETRY_FAILED_AND_TIMED_OUT);
             highPriorityQueueProcessingStrategy.setRetries(0);
             highPriorityQueueProcessingStrategy.setFailurePercentage(0);
@@ -612,11 +608,11 @@ public class DefaultSystemDataLoaderService implements SystemDataLoaderService {
             sequentialByOriginatorQueue.setPartitions(10);
             sequentialByOriginatorQueue.setPackProcessingTimeout(2000);
             sequentialByOriginatorQueue.setConsumerPerPartition(true);
-            @NotNull SubmitStrategy sequentialByOriginatorQueueSubmitStrategy = new SubmitStrategy();
+            SubmitStrategy sequentialByOriginatorQueueSubmitStrategy = new SubmitStrategy();
             sequentialByOriginatorQueueSubmitStrategy.setType(SubmitStrategyType.SEQUENTIAL_BY_ORIGINATOR);
             sequentialByOriginatorQueueSubmitStrategy.setBatchSize(100);
             sequentialByOriginatorQueue.setSubmitStrategy(sequentialByOriginatorQueueSubmitStrategy);
-            @NotNull ProcessingStrategy sequentialByOriginatorQueueProcessingStrategy = new ProcessingStrategy();
+            ProcessingStrategy sequentialByOriginatorQueueProcessingStrategy = new ProcessingStrategy();
             sequentialByOriginatorQueueProcessingStrategy.setType(ProcessingStrategyType.RETRY_FAILED_AND_TIMED_OUT);
             sequentialByOriginatorQueueProcessingStrategy.setRetries(3);
             sequentialByOriginatorQueueProcessingStrategy.setFailurePercentage(0);

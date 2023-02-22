@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.stats.MessagesStats;
 import org.echoiot.server.common.stats.StatsFactory;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
@@ -18,13 +17,10 @@ import java.util.function.Function;
 @Data
 public class TbSqlBlockingQueueWrapper<E> {
     private final CopyOnWriteArrayList<TbSqlBlockingQueue<E>> queues = new CopyOnWriteArrayList<>();
-    @NotNull
     private final TbSqlBlockingQueueParams params;
     private ScheduledLogExecutorComponent logExecutor;
-    @NotNull
     private final Function<E, Integer> hashCodeFunction;
     private final int maxThreads;
-    @NotNull
     private final StatsFactory statsFactory;
 
     /**
@@ -35,10 +31,10 @@ public class TbSqlBlockingQueueWrapper<E> {
      * @param  batchUpdateComparator comparator to sort entities by primary key to avoid deadlocks in cluster mode
      *                               NOTE: you must use all of primary key parts in your comparator
      */
-    public void init(@NotNull ScheduledLogExecutorComponent logExecutor, @NotNull Consumer<List<E>> saveFunction, Comparator<E> batchUpdateComparator) {
+    public void init(ScheduledLogExecutorComponent logExecutor, Consumer<List<E>> saveFunction, Comparator<E> batchUpdateComparator) {
         for (int i = 0; i < maxThreads; i++) {
             MessagesStats stats = statsFactory.createMessagesStats(params.getStatsNamePrefix() + ".queue." + i);
-            @NotNull TbSqlBlockingQueue<E> queue = new TbSqlBlockingQueue<>(params, stats);
+            TbSqlBlockingQueue<E> queue = new TbSqlBlockingQueue<>(params, stats);
             queues.add(queue);
             queue.init(logExecutor, saveFunction, batchUpdateComparator, i);
         }

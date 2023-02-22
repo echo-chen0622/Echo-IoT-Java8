@@ -1,7 +1,6 @@
 package org.echoiot.server.queue.common;
 
 import org.echoiot.server.queue.TbQueueMsgHeaders;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +19,6 @@ public class DefaultTbQueueMsgHeaders implements TbQueueMsgHeaders {
         return data.get(key);
     }
 
-    @NotNull
     @Override
     public Map<String, byte[]> getData() {
         return data;

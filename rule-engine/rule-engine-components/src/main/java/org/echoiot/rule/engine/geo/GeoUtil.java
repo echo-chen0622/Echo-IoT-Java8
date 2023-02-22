@@ -4,7 +4,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import lombok.NonNull;
-import org.jetbrains.annotations.NotNull;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.CoordinateSequence;
 import org.locationtech.jts.geom.Geometry;
@@ -28,12 +27,12 @@ public class GeoUtil {
     private static final JsonParser JSON_PARSER = new JsonParser();
 
     static {
-        @NotNull JtsSpatialContextFactory factory = new JtsSpatialContextFactory();
+        JtsSpatialContextFactory factory = new JtsSpatialContextFactory();
         factory.normWrapLongitude = true;
         jtsCtx = factory.newSpatialContext();
     }
 
-    public static synchronized double distance(@NotNull Coordinates x, @NotNull Coordinates y, @NotNull RangeUnit unit) {
+    public static synchronized double distance(Coordinates x, Coordinates y, RangeUnit unit) {
         Point xLL = distCtx.getShapeFactory().pointXY(x.getLongitude(), x.getLatitude());
         Point yLL = distCtx.getShapeFactory().pointXY(y.getLongitude(), y.getLatitude());
         return unit.fromKm(distCtx.getDistCalc().distance(xLL, yLL) * DistanceUtils.DEG_TO_KM);
@@ -44,9 +43,9 @@ public class GeoUtil {
             throw new RuntimeException("Polygon string can't be empty or null!");
         }
 
-        @NotNull JsonArray polygonsJson = normalizePolygonsJson(JSON_PARSER.parse(polygonInString).getAsJsonArray());
-        @NotNull List<Geometry> polygons = buildPolygonsFromJson(polygonsJson);
-        @NotNull Set<Geometry> holes = extractHolesFrom(polygons);
+        JsonArray polygonsJson = normalizePolygonsJson(JSON_PARSER.parse(polygonInString).getAsJsonArray());
+        List<Geometry> polygons = buildPolygonsFromJson(polygonsJson);
+        Set<Geometry> holes = extractHolesFrom(polygons);
         polygons.removeIf(holes::contains);
 
         Geometry globalGeometry = unionToGlobalGeometry(polygons, holes);
@@ -56,10 +55,10 @@ public class GeoUtil {
         return globalGeometry.contains(point);
     }
 
-    private static Geometry unionToGlobalGeometry(@NotNull List<Geometry> polygons, @NotNull Set<Geometry> holes) {
+    private static Geometry unionToGlobalGeometry(List<Geometry> polygons, Set<Geometry> holes) {
         Geometry globalPolygon = polygons.stream().reduce(Geometry::union).orElseThrow(() ->
                 new RuntimeException("Error while calculating globalPolygon - the result of all polygons union is null"));
-        @NotNull Optional<Geometry> globalHole = holes.stream().reduce(Geometry::union);
+        Optional<Geometry> globalHole = holes.stream().reduce(Geometry::union);
         if (globalHole.isEmpty()) {
             return globalPolygon;
         } else {
@@ -67,18 +66,17 @@ public class GeoUtil {
         }
     }
 
-    @NotNull
-    private static JsonArray normalizePolygonsJson(@NotNull JsonArray polygonsJsonArray) {
-        @NotNull JsonArray result = new JsonArray();
+    private static JsonArray normalizePolygonsJson(JsonArray polygonsJsonArray) {
+        JsonArray result = new JsonArray();
         normalizePolygonsJson(polygonsJsonArray, result);
         return result;
     }
 
-    private static void normalizePolygonsJson(@NotNull JsonArray polygonsJsonArray, @NotNull JsonArray result) {
+    private static void normalizePolygonsJson(JsonArray polygonsJsonArray, JsonArray result) {
         if (containsArrayWithPrimitives(polygonsJsonArray)) {
             result.add(polygonsJsonArray);
         } else {
-            for (@NotNull JsonElement element : polygonsJsonArray) {
+            for (JsonElement element : polygonsJsonArray) {
                 if (containsArrayWithPrimitives(element.getAsJsonArray())) {
                     result.add(element);
                 } else {
@@ -88,12 +86,11 @@ public class GeoUtil {
         }
     }
 
-    @NotNull
-    private static Set<Geometry> extractHolesFrom(@NotNull List<Geometry> polygons) {
-        @NotNull Map<Geometry, List<Geometry>> polygonsHoles = new HashMap<>();
+    private static Set<Geometry> extractHolesFrom(List<Geometry> polygons) {
+        Map<Geometry, List<Geometry>> polygonsHoles = new HashMap<>();
 
         for (Geometry polygon : polygons) {
-            @NotNull List<Geometry> holes = polygons.stream()
+            List<Geometry> holes = polygons.stream()
                                                     .filter(another -> !another.equalsExact(polygon))
                                                     .filter(another -> {
                         JtsGeometry currentGeo = jtsCtx.getShapeFactory().makeShape(polygon);
@@ -119,11 +116,10 @@ public class GeoUtil {
         return polygonsHoles.values().stream().flatMap(Collection::stream).collect(Collectors.toSet());
     }
 
-    @NotNull
-    private static List<Geometry> buildPolygonsFromJson(@NotNull JsonArray polygonsJsonArray) {
-        @NotNull List<Geometry> polygons = new LinkedList<>();
+    private static List<Geometry> buildPolygonsFromJson(JsonArray polygonsJsonArray) {
+        List<Geometry> polygons = new LinkedList<>();
 
-        for (@NotNull JsonElement polygonJsonArray : polygonsJsonArray) {
+        for (JsonElement polygonJsonArray : polygonsJsonArray) {
             polygons.add(
                     buildPolygonFromCoordinates(parseCoordinates(polygonJsonArray.getAsJsonArray()))
             );
@@ -132,14 +128,14 @@ public class GeoUtil {
         return polygons;
     }
 
-    private static Geometry buildPolygonFromCoordinates(@NotNull List<Coordinate> coordinates) {
+    private static Geometry buildPolygonFromCoordinates(List<Coordinate> coordinates) {
         if (coordinates.size() == 2) {
             Coordinate a = coordinates.get(0);
             Coordinate c = coordinates.get(1);
             coordinates.clear();
 
-            @NotNull Coordinate b = new Coordinate(a.x, c.y);
-            @NotNull Coordinate d = new Coordinate(c.x, a.y);
+            Coordinate b = new Coordinate(a.x, c.y);
+            Coordinate d = new Coordinate(c.x, a.y);
             coordinates.addAll(List.of(a, b, c, d, a));
         }
 
@@ -152,11 +148,10 @@ public class GeoUtil {
         return GeometryFixer.fix(jtsCtx.getShapeFactory().getGeometryFactory().createPolygon(coordinateSequence));
     }
 
-    @NotNull
-    private static List<Coordinate> parseCoordinates(@NotNull JsonArray coordinatesJson) {
-        @NotNull List<Coordinate> result = new LinkedList<>();
+    private static List<Coordinate> parseCoordinates(JsonArray coordinatesJson) {
+        List<Coordinate> result = new LinkedList<>();
 
-        for (@NotNull JsonElement coords : coordinatesJson) {
+        for (JsonElement coords : coordinatesJson) {
             double x = coords.getAsJsonArray().get(0).getAsDouble();
             double y = coords.getAsJsonArray().get(1).getAsDouble();
             result.add(new Coordinate(x, y));
@@ -169,16 +164,16 @@ public class GeoUtil {
         return result;
     }
 
-    private static boolean containsPrimitives(@NotNull JsonArray array) {
-        for (@NotNull JsonElement element : array) {
+    private static boolean containsPrimitives(JsonArray array) {
+        for (JsonElement element : array) {
             return element.isJsonPrimitive();
         }
 
         return false;
     }
 
-    private static boolean containsArrayWithPrimitives(@NotNull JsonArray array) {
-        for (@NotNull JsonElement element : array) {
+    private static boolean containsArrayWithPrimitives(JsonArray array) {
+        for (JsonElement element : array) {
             if (!containsPrimitives(element.getAsJsonArray())) {
                 return false;
             }

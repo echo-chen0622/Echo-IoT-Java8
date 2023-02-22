@@ -5,7 +5,6 @@ import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.HasTenantId;
 import org.echoiot.server.common.data.id.*;
 import org.echoiot.server.common.data.rule.RuleNode;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -13,7 +12,7 @@ import java.util.UUID;
 public class TenantIdLoader {
 
     @Nullable
-    public static TenantId findTenantId(@NotNull TbContext ctx, @NotNull EntityId entityId) {
+    public static TenantId findTenantId(TbContext ctx, EntityId entityId) {
         UUID id = entityId.getId();
         EntityType entityType = entityId.getEntityType();
         TenantId ctxTenantId = ctx.getTenantId();

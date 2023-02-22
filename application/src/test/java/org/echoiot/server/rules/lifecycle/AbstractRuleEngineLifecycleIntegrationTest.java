@@ -20,7 +20,6 @@ import org.echoiot.server.common.msg.queue.TbMsgCallback;
 import org.echoiot.server.controller.AbstractRuleEngineControllerTest;
 import org.echoiot.server.dao.attributes.AttributesService;
 import org.echoiot.server.dao.event.EventService;
-import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -74,11 +73,11 @@ public abstract class AbstractRuleEngineLifecycleIntegrationTest extends Abstrac
         RuleChainMetaData metaData = new RuleChainMetaData();
         metaData.setRuleChainId(ruleChain.getId());
 
-        @NotNull RuleNode ruleNode = new RuleNode();
+        RuleNode ruleNode = new RuleNode();
         ruleNode.setName("Simple Rule Node");
         ruleNode.setType(org.echoiot.rule.engine.metadata.TbGetAttributesNode.class.getName());
         ruleNode.setDebugMode(true);
-        @NotNull TbGetAttributesNodeConfiguration configuration = new TbGetAttributesNodeConfiguration();
+        TbGetAttributesNodeConfiguration configuration = new TbGetAttributesNodeConfiguration();
         configuration.setServerAttributeNames(Collections.singletonList("serverAttributeKey"));
         ruleNode.setConfiguration(mapper.valueToTree(configuration));
 
@@ -96,7 +95,7 @@ public abstract class AbstractRuleEngineLifecycleIntegrationTest extends Abstrac
                 .pollInterval(10, MILLISECONDS)
                 .atMost(TIMEOUT, TimeUnit.SECONDS)
                 .until(() -> {
-                            @NotNull List<EventInfo> debugEvents = getEvents(tenantId, ruleChainFinal.getFirstRuleNodeId(), EventType.LC_EVENT.getOldName(), 1000)
+                            List<EventInfo> debugEvents = getEvents(tenantId, ruleChainFinal.getFirstRuleNodeId(), EventType.LC_EVENT.getOldName(), 1000)
                                     .getData().stream().filter(e -> {
                                         var body = e.getBody();
                                         return body.has("event") && body.get("event").asText().equals("STARTED")
@@ -120,8 +119,8 @@ public abstract class AbstractRuleEngineLifecycleIntegrationTest extends Abstrac
         log.warn("attr updated");
         TbMsgCallback tbMsgCallback = Mockito.mock(TbMsgCallback.class);
         Mockito.when(tbMsgCallback.isMsgValid()).thenReturn(true);
-        @NotNull TbMsg tbMsg = TbMsg.newMsg("CUSTOM", device.getId(), new TbMsgMetaData(), "{}", tbMsgCallback);
-        @NotNull QueueToRuleEngineMsg qMsg = new QueueToRuleEngineMsg(tenantId, tbMsg, null, null);
+        TbMsg tbMsg = TbMsg.newMsg("CUSTOM", device.getId(), new TbMsgMetaData(), "{}", tbMsgCallback);
+        QueueToRuleEngineMsg qMsg = new QueueToRuleEngineMsg(tenantId, tbMsg, null, null);
         // Pushing Message to the system
         log.warn("before tell tbMsgCallback");
         actorSystem.tell(qMsg);
@@ -132,7 +131,7 @@ public abstract class AbstractRuleEngineLifecycleIntegrationTest extends Abstrac
                 .pollInterval(10, MILLISECONDS)
                 .atMost(TIMEOUT, TimeUnit.SECONDS)
                 .until(() -> {
-                            @NotNull List<EventInfo> debugEvents = getDebugEvents(tenantId, ruleChainFinal.getFirstRuleNodeId(), 1000)
+                            List<EventInfo> debugEvents = getDebugEvents(tenantId, ruleChainFinal.getFirstRuleNodeId(), 1000)
                                     .getData().stream().filter(filterByCustomEvent()).collect(Collectors.toList());
                             log.warn("filtered debug events [{}]", debugEvents.size());
                             debugEvents.forEach((e) -> log.warn("event: {}", e));
@@ -141,11 +140,11 @@ public abstract class AbstractRuleEngineLifecycleIntegrationTest extends Abstrac
                         x -> x.size() == 2);
         log.warn("asserting..");
 
-        @NotNull EventInfo inEvent = events.stream().filter(e -> e.getBody().get("type").asText().equals(DataConstants.IN)).findFirst().get();
+        EventInfo inEvent = events.stream().filter(e -> e.getBody().get("type").asText().equals(DataConstants.IN)).findFirst().get();
         Assert.assertEquals(ruleChainFinal.getFirstRuleNodeId(), inEvent.getEntityId());
         Assert.assertEquals(device.getId().getId().toString(), inEvent.getBody().get("entityId").asText());
 
-        @NotNull EventInfo outEvent = events.stream().filter(e -> e.getBody().get("type").asText().equals(DataConstants.OUT)).findFirst().get();
+        EventInfo outEvent = events.stream().filter(e -> e.getBody().get("type").asText().equals(DataConstants.OUT)).findFirst().get();
         Assert.assertEquals(ruleChainFinal.getFirstRuleNodeId(), outEvent.getEntityId());
         Assert.assertEquals(device.getId().getId().toString(), outEvent.getBody().get("entityId").asText());
 

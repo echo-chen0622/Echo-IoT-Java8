@@ -5,7 +5,6 @@ import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.hibernate.type.PostgresUUIDType;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
@@ -20,9 +19,7 @@ public class QueryContext implements SqlParameterSource {
     private static final PostgresUUIDType UUID_TYPE = new PostgresUUIDType();
 
     private final QuerySecurityContext securityCtx;
-    @NotNull
     private final StringBuilder query;
-    @NotNull
     private final Map<String, Parameter> params;
 
     public QueryContext(QuerySecurityContext securityCtx) {
@@ -32,7 +29,7 @@ public class QueryContext implements SqlParameterSource {
     }
 
     void addParameter(String name, @Nullable Object value, int type, String typeName) {
-        @NotNull Parameter newParam = new Parameter(value, type, typeName);
+        Parameter newParam = new Parameter(value, type, typeName);
         @Nullable Parameter oldParam = params.put(name, newParam);
         if (oldParam != null && oldParam.value != null && !oldParam.value.equals(newParam.value)) {
             throw new RuntimeException("Parameter with name: " + name + " was already registered!");
@@ -61,7 +58,6 @@ public class QueryContext implements SqlParameterSource {
         return checkParameter(paramName).type;
     }
 
-    @NotNull
     private Parameter checkParameter(String paramName) {
         Parameter param = params.get(paramName);
         if (param == null) {
@@ -108,7 +104,6 @@ public class QueryContext implements SqlParameterSource {
         addParameter(name, value, UUID_TYPE.sqlType(), UUID_TYPE.getName());
     }
 
-    @NotNull
     public String getQuery() {
         return query.toString();
     }

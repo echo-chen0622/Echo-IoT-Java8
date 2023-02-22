@@ -20,7 +20,6 @@ import org.echoiot.server.common.data.id.RuleNodeId;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.TbMsgDataType;
 import org.echoiot.server.common.msg.TbMsgMetaData;
-import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -63,8 +62,8 @@ public class TbRestApiCallNodeTest {
 
     private void initWithConfig(TbRestApiCallNodeConfiguration config) {
         try {
-            @NotNull ObjectMapper mapper = new ObjectMapper();
-            @NotNull TbNodeConfiguration nodeConfiguration = new TbNodeConfiguration(mapper.valueToTree(config));
+            ObjectMapper mapper = new ObjectMapper();
+            TbNodeConfiguration nodeConfiguration = new TbNodeConfiguration(mapper.valueToTree(config));
             restNode = new TbRestApiCallNode();
             restNode.init(ctx, nodeConfiguration);
         } catch (TbNodeException ex) {
@@ -79,12 +78,12 @@ public class TbRestApiCallNodeTest {
 
     @Test
     public void deleteRequestWithoutBody() throws IOException, InterruptedException {
-        @NotNull final CountDownLatch latch = new CountDownLatch(1);
-        @NotNull final String path = "/path/to/delete";
+        final CountDownLatch latch = new CountDownLatch(1);
+        final String path = "/path/to/delete";
     	setupServer("*", new HttpRequestHandler() {
 
 			@Override
-			public void handle(@NotNull HttpRequest request, @NotNull HttpResponse response, HttpContext context)
+			public void handle(HttpRequest request, HttpResponse response, HttpContext context)
 					throws HttpException, IOException {
                 try {
                     assertEquals("Request path matches", request.getRequestLine().getUri(), path);
@@ -112,23 +111,23 @@ public class TbRestApiCallNodeTest {
             }
 		});
 
-        @NotNull TbRestApiCallNodeConfiguration config = new TbRestApiCallNodeConfiguration().defaultConfiguration();
+        TbRestApiCallNodeConfiguration config = new TbRestApiCallNodeConfiguration().defaultConfiguration();
         config.setRequestMethod("DELETE");
         config.setHeaders(Collections.singletonMap("Foo", "Bar"));
         config.setIgnoreRequestBody(true);
         config.setRestEndpointUrlPattern(String.format("http://localhost:%d%s", server.getLocalPort(), path));
         initWithConfig(config);
 
-        @NotNull TbMsg msg = TbMsg.newMsg("USER", originator, metaData, TbMsgDataType.JSON, "{}", ruleChainId, ruleNodeId);
+        TbMsg msg = TbMsg.newMsg("USER", originator, metaData, TbMsgDataType.JSON, "{}", ruleChainId, ruleNodeId);
         restNode.onMsg(ctx, msg);
 
         assertTrue("Server handled request", latch.await(10, TimeUnit.SECONDS));
 
-        @NotNull ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
-        @NotNull ArgumentCaptor<String> typeCaptor = ArgumentCaptor.forClass(String.class);
-        @NotNull ArgumentCaptor<EntityId> originatorCaptor = ArgumentCaptor.forClass(EntityId.class);
-        @NotNull ArgumentCaptor<TbMsgMetaData> metadataCaptor = ArgumentCaptor.forClass(TbMsgMetaData.class);
-        @NotNull ArgumentCaptor<String> dataCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        ArgumentCaptor<String> typeCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<EntityId> originatorCaptor = ArgumentCaptor.forClass(EntityId.class);
+        ArgumentCaptor<TbMsgMetaData> metadataCaptor = ArgumentCaptor.forClass(TbMsgMetaData.class);
+        ArgumentCaptor<String> dataCaptor = ArgumentCaptor.forClass(String.class);
         verify(ctx).transformMsg(msgCaptor.capture(), typeCaptor.capture(), originatorCaptor.capture(), metadataCaptor.capture(), dataCaptor.capture());
 
 
@@ -140,12 +139,12 @@ public class TbRestApiCallNodeTest {
 
     @Test
     public void deleteRequestWithBody() throws IOException, InterruptedException {
-        @NotNull final CountDownLatch latch = new CountDownLatch(1);
-        @NotNull final String path = "/path/to/delete";
+        final CountDownLatch latch = new CountDownLatch(1);
+        final String path = "/path/to/delete";
         setupServer("*", new HttpRequestHandler() {
 
             @Override
-            public void handle(@NotNull HttpRequest request, @NotNull HttpResponse response, HttpContext context)
+            public void handle(HttpRequest request, HttpResponse response, HttpContext context)
                     throws HttpException, IOException {
                 try {
                     assertEquals("Request path matches", path, request.getRequestLine().getUri());
@@ -178,23 +177,23 @@ public class TbRestApiCallNodeTest {
             }
         });
 
-        @NotNull TbRestApiCallNodeConfiguration config = new TbRestApiCallNodeConfiguration().defaultConfiguration();
+        TbRestApiCallNodeConfiguration config = new TbRestApiCallNodeConfiguration().defaultConfiguration();
         config.setRequestMethod("DELETE");
         config.setHeaders(Collections.singletonMap("Foo", "Bar"));
         config.setIgnoreRequestBody(false);
         config.setRestEndpointUrlPattern(String.format("http://localhost:%d%s", server.getLocalPort(), path));
         initWithConfig(config);
 
-        @NotNull TbMsg msg = TbMsg.newMsg("USER", originator, metaData, TbMsgDataType.JSON, "{}", ruleChainId, ruleNodeId);
+        TbMsg msg = TbMsg.newMsg("USER", originator, metaData, TbMsgDataType.JSON, "{}", ruleChainId, ruleNodeId);
         restNode.onMsg(ctx, msg);
 
         assertTrue("Server handled request", latch.await(10, TimeUnit.SECONDS));
 
-        @NotNull ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
-        @NotNull ArgumentCaptor<String> typeCaptor = ArgumentCaptor.forClass(String.class);
-        @NotNull ArgumentCaptor<EntityId> originatorCaptor = ArgumentCaptor.forClass(EntityId.class);
-        @NotNull ArgumentCaptor<TbMsgMetaData> metadataCaptor = ArgumentCaptor.forClass(TbMsgMetaData.class);
-        @NotNull ArgumentCaptor<String> dataCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        ArgumentCaptor<String> typeCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<EntityId> originatorCaptor = ArgumentCaptor.forClass(EntityId.class);
+        ArgumentCaptor<TbMsgMetaData> metadataCaptor = ArgumentCaptor.forClass(TbMsgMetaData.class);
+        ArgumentCaptor<String> dataCaptor = ArgumentCaptor.forClass(String.class);
         verify(ctx).transformMsg(msgCaptor.capture(), typeCaptor.capture(), originatorCaptor.capture(), metadataCaptor.capture(), dataCaptor.capture());
 
         assertEquals("USER", typeCaptor.getValue());

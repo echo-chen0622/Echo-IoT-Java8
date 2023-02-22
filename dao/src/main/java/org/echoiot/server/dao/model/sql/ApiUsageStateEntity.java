@@ -12,7 +12,6 @@ import org.echoiot.server.dao.model.BaseSqlEntity;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.util.mapping.JsonStringType;
 import org.hibernate.annotations.TypeDef;
-import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
 import java.util.UUID;
@@ -58,7 +57,7 @@ public class ApiUsageStateEntity extends BaseSqlEntity<ApiUsageState> implements
     public ApiUsageStateEntity() {
     }
 
-    public ApiUsageStateEntity(@NotNull ApiUsageState ur) {
+    public ApiUsageStateEntity(ApiUsageState ur) {
         if (ur.getId() != null) {
             this.setUuid(ur.getId().getId());
         }
@@ -79,10 +78,9 @@ public class ApiUsageStateEntity extends BaseSqlEntity<ApiUsageState> implements
         this.alarmExecState = ur.getAlarmExecState();
     }
 
-    @NotNull
     @Override
     public ApiUsageState toData() {
-        @NotNull ApiUsageState ur = new ApiUsageState(new ApiUsageStateId(this.getUuid()));
+        ApiUsageState ur = new ApiUsageState(new ApiUsageStateId(this.getUuid()));
         ur.setCreatedTime(createdTime);
         if (tenantId != null) {
             ur.setTenantId(TenantId.fromUUID(tenantId));

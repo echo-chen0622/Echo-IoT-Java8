@@ -1,7 +1,6 @@
 package org.echoiot.server.dao.sql.edge;
 
 import org.echoiot.server.dao.model.sql.EdgeEventEntity;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -31,7 +30,7 @@ public class EdgeEventInsertRepository {
     @Resource
     private TransactionTemplate transactionTemplate;
 
-    protected void save(@NotNull List<EdgeEventEntity> entities) {
+    protected void save(List<EdgeEventEntity> entities) {
         transactionTemplate.execute(new TransactionCallbackWithoutResult() {
             @Override
             protected void doInTransactionWithoutResult(TransactionStatus status) {

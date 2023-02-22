@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.queue.common.TbProtoQueueMsg;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedList;
@@ -27,13 +26,13 @@ public abstract class SequentialByEntityIdTbRuleEngineSubmitStrategy extends Abs
     }
 
     @Override
-    public void init(@NotNull List<TbProtoQueueMsg<TransportProtos.ToRuleEngineMsg>> msgs) {
+    public void init(List<TbProtoQueueMsg<TransportProtos.ToRuleEngineMsg>> msgs) {
         super.init(msgs);
         initMaps();
     }
 
     @Override
-    public void submitAttempt(@NotNull BiConsumer<UUID, TbProtoQueueMsg<TransportProtos.ToRuleEngineMsg>> msgConsumer) {
+    public void submitAttempt(BiConsumer<UUID, TbProtoQueueMsg<TransportProtos.ToRuleEngineMsg>> msgConsumer) {
         this.msgConsumer = msgConsumer;
         entityIdToListMap.forEach((entityId, queue) -> {
             IdMsgPair<TransportProtos.ToRuleEngineMsg> msg = queue.peek();
@@ -44,7 +43,7 @@ public abstract class SequentialByEntityIdTbRuleEngineSubmitStrategy extends Abs
     }
 
     @Override
-    public void update(@NotNull ConcurrentMap<UUID, TbProtoQueueMsg<TransportProtos.ToRuleEngineMsg>> reprocessMap) {
+    public void update(ConcurrentMap<UUID, TbProtoQueueMsg<TransportProtos.ToRuleEngineMsg>> reprocessMap) {
         super.update(reprocessMap);
         initMaps();
     }
@@ -73,7 +72,7 @@ public abstract class SequentialByEntityIdTbRuleEngineSubmitStrategy extends Abs
     private void initMaps() {
         msgToEntityIdMap.clear();
         entityIdToListMap.clear();
-        for (@NotNull IdMsgPair<TransportProtos.ToRuleEngineMsg> pair : orderedMsgList) {
+        for (IdMsgPair<TransportProtos.ToRuleEngineMsg> pair : orderedMsgList) {
             EntityId entityId = getEntityId(pair.msg.getValue());
             if (entityId != null) {
                 msgToEntityIdMap.put(pair.uuid, entityId);

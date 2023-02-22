@@ -7,7 +7,6 @@ import org.echoiot.rule.engine.api.util.TbNodeUtils;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.TbMsgMetaData;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,13 +37,13 @@ public class TbMsgDelayNode implements TbNode {
     private Map<UUID, TbMsg> pendingMsgs;
 
     @Override
-    public void init(TbContext ctx, @NotNull TbNodeConfiguration configuration) throws TbNodeException {
+    public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
         this.config = TbNodeUtils.convert(configuration, TbMsgDelayNodeConfiguration.class);
         this.pendingMsgs = new HashMap<>();
     }
 
     @Override
-    public void onMsg(@NotNull TbContext ctx, @NotNull TbMsg msg) {
+    public void onMsg(TbContext ctx, TbMsg msg) {
         if (msg.getType().equals(TB_MSG_DELAY_NODE_MSG)) {
             TbMsg pendingMsg = pendingMsgs.remove(UUID.fromString(msg.getData()));
             if (pendingMsg != null) {
@@ -62,7 +61,7 @@ public class TbMsgDelayNode implements TbNode {
         }
     }
 
-    private long getDelay(@NotNull TbMsg msg) {
+    private long getDelay(TbMsg msg) {
         int periodInSeconds;
         if (config.isUseMetadataPeriodInSecondsPatterns()) {
             if (isParsable(msg, config.getPeriodInSecondsPattern())) {
@@ -76,7 +75,7 @@ public class TbMsgDelayNode implements TbNode {
         return TimeUnit.SECONDS.toMillis(periodInSeconds);
     }
 
-    private boolean isParsable(@NotNull TbMsg msg, String pattern) {
+    private boolean isParsable(TbMsg msg, String pattern) {
         return NumberUtils.isParsable(TbNodeUtils.processPattern(pattern, msg));
     }
 

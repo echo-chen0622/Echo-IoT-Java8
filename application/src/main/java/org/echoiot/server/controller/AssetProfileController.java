@@ -14,7 +14,6 @@ import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.entitiy.asset.profile.TbAssetProfileService;
 import org.echoiot.server.service.security.permission.Operation;
 import org.echoiot.server.service.security.permission.PerResource;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +25,6 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class AssetProfileController extends BaseController {
 
-    @NotNull
     private final TbAssetProfileService tbAssetProfileService;
 
     @ApiOperation(value = "Get Asset Profile (getAssetProfileById)",
@@ -37,18 +35,17 @@ public class AssetProfileController extends BaseController {
     @RequestMapping(value = "/assetProfile/{assetProfileId}", method = RequestMethod.GET)
     @ResponseBody
     public AssetProfile getAssetProfileById(
-            @NotNull @ApiParam(value = ControllerConstants.ASSET_PROFILE_ID_PARAM_DESCRIPTION)
+            @ApiParam(value = ControllerConstants.ASSET_PROFILE_ID_PARAM_DESCRIPTION)
             @PathVariable(ControllerConstants.ASSET_PROFILE_ID) String strAssetProfileId) throws EchoiotException {
         checkParameter(ControllerConstants.ASSET_PROFILE_ID, strAssetProfileId);
         try {
-            @NotNull AssetProfileId assetProfileId = new AssetProfileId(toUUID(strAssetProfileId));
+            AssetProfileId assetProfileId = new AssetProfileId(toUUID(strAssetProfileId));
             return checkAssetProfileId(assetProfileId, Operation.READ);
         } catch (Exception e) {
             throw handleException(e);
         }
     }
 
-    @NotNull
     @ApiOperation(value = "Get Asset Profile Info (getAssetProfileInfoById)",
             notes = "Fetch the Asset Profile Info object based on the provided Asset Profile Id. "
                     + ControllerConstants.ASSET_PROFILE_INFO_DESCRIPTION + ControllerConstants.TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH,
@@ -57,11 +54,11 @@ public class AssetProfileController extends BaseController {
     @RequestMapping(value = "/assetProfileInfo/{assetProfileId}", method = RequestMethod.GET)
     @ResponseBody
     public AssetProfileInfo getAssetProfileInfoById(
-            @NotNull @ApiParam(value = ControllerConstants.ASSET_PROFILE_ID_PARAM_DESCRIPTION)
+            @ApiParam(value = ControllerConstants.ASSET_PROFILE_ID_PARAM_DESCRIPTION)
             @PathVariable(ControllerConstants.ASSET_PROFILE_ID) String strAssetProfileId) throws EchoiotException {
         checkParameter(ControllerConstants.ASSET_PROFILE_ID, strAssetProfileId);
         try {
-            @NotNull AssetProfileId assetProfileId = new AssetProfileId(toUUID(strAssetProfileId));
+            AssetProfileId assetProfileId = new AssetProfileId(toUUID(strAssetProfileId));
             return new AssetProfileInfo(checkAssetProfileId(assetProfileId, Operation.READ));
         } catch (Exception e) {
             throw handleException(e);
@@ -97,7 +94,7 @@ public class AssetProfileController extends BaseController {
     @RequestMapping(value = "/assetProfile", method = RequestMethod.POST)
     @ResponseBody
     public AssetProfile saveAssetProfile(
-            @NotNull @ApiParam(value = "A JSON value representing the asset profile.")
+            @ApiParam(value = "A JSON value representing the asset profile.")
             @RequestBody AssetProfile assetProfile) throws Exception {
         assetProfile.setTenantId(getTenantId());
         checkEntity(assetProfile.getId(), assetProfile, PerResource.ASSET_PROFILE);
@@ -112,10 +109,10 @@ public class AssetProfileController extends BaseController {
     @RequestMapping(value = "/assetProfile/{assetProfileId}", method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.OK)
     public void deleteAssetProfile(
-            @NotNull @ApiParam(value = ControllerConstants.ASSET_PROFILE_ID_PARAM_DESCRIPTION)
+            @ApiParam(value = ControllerConstants.ASSET_PROFILE_ID_PARAM_DESCRIPTION)
             @PathVariable(ControllerConstants.ASSET_PROFILE_ID) String strAssetProfileId) throws EchoiotException {
         checkParameter(ControllerConstants.ASSET_PROFILE_ID, strAssetProfileId);
-        @NotNull AssetProfileId assetProfileId = new AssetProfileId(toUUID(strAssetProfileId));
+        AssetProfileId assetProfileId = new AssetProfileId(toUUID(strAssetProfileId));
         AssetProfile assetProfile = checkAssetProfileId(assetProfileId, Operation.DELETE);
         tbAssetProfileService.delete(assetProfile, getCurrentUser());
     }
@@ -127,10 +124,10 @@ public class AssetProfileController extends BaseController {
     @RequestMapping(value = "/assetProfile/{assetProfileId}/default", method = RequestMethod.POST)
     @ResponseBody
     public AssetProfile setDefaultAssetProfile(
-            @NotNull @ApiParam(value = ControllerConstants.ASSET_PROFILE_ID_PARAM_DESCRIPTION)
+            @ApiParam(value = ControllerConstants.ASSET_PROFILE_ID_PARAM_DESCRIPTION)
             @PathVariable(ControllerConstants.ASSET_PROFILE_ID) String strAssetProfileId) throws EchoiotException {
         checkParameter(ControllerConstants.ASSET_PROFILE_ID, strAssetProfileId);
-        @NotNull AssetProfileId assetProfileId = new AssetProfileId(toUUID(strAssetProfileId));
+        AssetProfileId assetProfileId = new AssetProfileId(toUUID(strAssetProfileId));
         AssetProfile assetProfile = checkAssetProfileId(assetProfileId, Operation.WRITE);
         AssetProfile previousDefaultAssetProfile = assetProfileService.findDefaultAssetProfile(getTenantId());
         return tbAssetProfileService.setDefaultAssetProfile(assetProfile, previousDefaultAssetProfile, getCurrentUser());
@@ -152,10 +149,10 @@ public class AssetProfileController extends BaseController {
             @RequestParam(required = false) String textSearch,
             @ApiParam(value = ControllerConstants.SORT_PROPERTY_DESCRIPTION, allowableValues = ControllerConstants.ASSET_PROFILE_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
-            @NotNull @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
+            @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortOrder) throws EchoiotException {
         try {
-            @NotNull PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
+            PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
             return checkNotNull(assetProfileService.findAssetProfiles(getTenantId(), pageLink));
         } catch (Exception e) {
             throw handleException(e);
@@ -178,10 +175,10 @@ public class AssetProfileController extends BaseController {
             @RequestParam(required = false) String textSearch,
             @ApiParam(value = ControllerConstants.SORT_PROPERTY_DESCRIPTION, allowableValues = ControllerConstants.ASSET_PROFILE_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
-            @NotNull @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
+            @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortOrder) throws EchoiotException {
         try {
-            @NotNull PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
+            PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
             return checkNotNull(assetProfileService.findAssetProfileInfos(getTenantId(), pageLink));
         } catch (Exception e) {
             throw handleException(e);

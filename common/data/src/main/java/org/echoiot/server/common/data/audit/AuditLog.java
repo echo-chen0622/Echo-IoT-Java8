@@ -8,7 +8,6 @@ import lombok.EqualsAndHashCode;
 import org.echoiot.server.common.data.BaseData;
 import org.echoiot.server.common.data.id.*;
 import org.echoiot.server.common.data.validation.NoXss;
-import org.jetbrains.annotations.NotNull;
 
 @ApiModel
 @EqualsAndHashCode(callSuper = true)
@@ -45,7 +44,7 @@ public class AuditLog extends BaseData<AuditLogId> {
         super(id);
     }
 
-    public AuditLog(@NotNull AuditLog auditLog) {
+    public AuditLog(AuditLog auditLog) {
         super(auditLog);
         this.tenantId = auditLog.getTenantId();
         this.customerId = auditLog.getCustomerId();

@@ -9,7 +9,6 @@ import org.echoiot.server.common.data.ShortCustomerInfo;
 import org.echoiot.server.common.data.edge.Edge;
 import org.echoiot.server.gen.edge.v1.DashboardUpdateMsg;
 import org.echoiot.server.gen.edge.v1.UpdateMsgType;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.junit.Assert;
 import org.junit.Test;
@@ -24,7 +23,7 @@ abstract public class BaseDashboardEdgeTest extends AbstractEdgeTest {
     public void testDashboards() throws Exception {
         // create dashboard and assign to edge
         edgeImitator.expectMessageAmount(1);
-        @NotNull Dashboard dashboard = new Dashboard();
+        Dashboard dashboard = new Dashboard();
         dashboard.setTitle("Edge Test Dashboard");
         Dashboard savedDashboard = doPost("/api/dashboard", dashboard, Dashboard.class);
         doPost("/api/edge/" + edge.getUuidId()
@@ -32,7 +31,7 @@ abstract public class BaseDashboardEdgeTest extends AbstractEdgeTest {
         Assert.assertTrue(edgeImitator.waitForMessages());
         AbstractMessage latestMessage = edgeImitator.getLatestMessage();
         Assert.assertTrue(latestMessage instanceof DashboardUpdateMsg);
-        @NotNull DashboardUpdateMsg dashboardUpdateMsg = (DashboardUpdateMsg) latestMessage;
+        DashboardUpdateMsg dashboardUpdateMsg = (DashboardUpdateMsg) latestMessage;
         Assert.assertEquals(UpdateMsgType.ENTITY_CREATED_RPC_MESSAGE, dashboardUpdateMsg.getMsgType());
         Assert.assertEquals(savedDashboard.getUuidId().getMostSignificantBits(), dashboardUpdateMsg.getIdMSB());
         Assert.assertEquals(savedDashboard.getUuidId().getLeastSignificantBits(), dashboardUpdateMsg.getIdLSB());
@@ -85,7 +84,7 @@ abstract public class BaseDashboardEdgeTest extends AbstractEdgeTest {
         Assert.assertEquals(savedDashboard.getTitle(), dashboardUpdateMsg.getTitle());
 
         // assign dashboard #2 to customer
-        @NotNull Customer customer = new Customer();
+        Customer customer = new Customer();
         customer.setTitle("Edge Customer");
         Customer savedCustomer = doPost("/api/customer", customer, Customer.class);
         edgeImitator.expectMessageAmount(2);

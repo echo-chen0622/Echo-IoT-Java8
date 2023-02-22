@@ -3,7 +3,6 @@ package org.echoiot.server.common.msg;
 import org.echoiot.server.common.data.id.RuleChainId;
 import org.echoiot.server.common.data.id.RuleNodeId;
 import org.echoiot.server.common.msg.gen.MsgProtos;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
@@ -15,7 +14,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public final class TbMsgProcessingCtx implements Serializable {
 
-    @NotNull
     private final AtomicInteger ruleNodeExecCounter;
     private volatile LinkedList<TbMsgProcessingStackItem> stack;
 
@@ -36,7 +34,6 @@ public final class TbMsgProcessingCtx implements Serializable {
         return ruleNodeExecCounter.getAndIncrement();
     }
 
-    @NotNull
     public TbMsgProcessingCtx copy() {
         if (stack == null || stack.isEmpty()) {
             return new TbMsgProcessingCtx(ruleNodeExecCounter.get());
@@ -57,12 +54,11 @@ public final class TbMsgProcessingCtx implements Serializable {
         return !stack.isEmpty() ? stack.removeLast() : null;
     }
 
-    @NotNull
-    public static TbMsgProcessingCtx fromProto(@NotNull MsgProtos.TbMsgProcessingCtxProto ctx) {
+    public static TbMsgProcessingCtx fromProto(MsgProtos.TbMsgProcessingCtxProto ctx) {
         int ruleNodeExecCounter = ctx.getRuleNodeExecCounter();
         if (ctx.getStackCount() > 0) {
-            @NotNull LinkedList<TbMsgProcessingStackItem> stack = new LinkedList<>();
-            for (@NotNull MsgProtos.TbMsgProcessingStackItemProto item : ctx.getStackList()) {
+            LinkedList<TbMsgProcessingStackItem> stack = new LinkedList<>();
+            for (MsgProtos.TbMsgProcessingStackItemProto item : ctx.getStackList()) {
                 stack.add(TbMsgProcessingStackItem.fromProto(item));
             }
             return new TbMsgProcessingCtx(ruleNodeExecCounter, stack);
@@ -71,12 +67,11 @@ public final class TbMsgProcessingCtx implements Serializable {
         }
     }
 
-    @NotNull
     public MsgProtos.TbMsgProcessingCtxProto toProto() {
         var ctxBuilder = MsgProtos.TbMsgProcessingCtxProto.newBuilder();
         ctxBuilder.setRuleNodeExecCounter(ruleNodeExecCounter.get());
         if (stack != null) {
-            for (@NotNull TbMsgProcessingStackItem item : stack) {
+            for (TbMsgProcessingStackItem item : stack) {
                 ctxBuilder.addStack(item.toProto());
             }
         }

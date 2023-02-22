@@ -2,7 +2,6 @@ package org.echoiot.server.service.telemetry;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.jetbrains.annotations.NotNull;
 
 @ApiModel
 public class TsData implements Comparable<TsData>{
@@ -27,7 +26,7 @@ public class TsData implements Comparable<TsData>{
     }
 
     @Override
-    public int compareTo(@NotNull TsData o) {
+    public int compareTo(TsData o) {
         return Long.compare(ts, o.ts);
     }
 

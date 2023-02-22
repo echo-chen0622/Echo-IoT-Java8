@@ -8,7 +8,6 @@ import org.eclipse.leshan.core.link.DefaultLinkSerializer;
 import org.eclipse.leshan.core.link.LinkSerializer;
 import org.eclipse.leshan.core.request.DiscoverRequest;
 import org.eclipse.leshan.core.response.DiscoverResponse;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
@@ -20,8 +19,7 @@ public class RpcDiscoverCallback extends RpcLwM2MDownlinkCallback<DiscoverReques
         super(transportService, client, requestMsg, callback);
     }
 
-    @NotNull
-    protected Optional<String> serializeSuccessfulResponse(@NotNull DiscoverResponse response) {
+    protected Optional<String> serializeSuccessfulResponse(DiscoverResponse response) {
         return Optional.of(serializer.serialize(response.getObjectLinks()));
     }
 

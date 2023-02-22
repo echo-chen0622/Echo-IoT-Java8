@@ -2,7 +2,6 @@ package org.echoiot.rest.client.utils;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.echoiot.server.common.data.kv.*;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
@@ -19,11 +18,10 @@ public class RestJsonConverter {
 
     private static final String CAN_T_PARSE_VALUE = "Can't parse value: ";
 
-    @NotNull
-    public static List<AttributeKvEntry> toAttributes(@NotNull List<JsonNode> attributes) {
+    public static List<AttributeKvEntry> toAttributes(List<JsonNode> attributes) {
         if (!CollectionUtils.isEmpty(attributes)) {
             return attributes.stream().map(attr -> {
-                        @NotNull KvEntry entry = parseValue(attr.get(KEY).asText(), attr.get(VALUE));
+                        KvEntry entry = parseValue(attr.get(KEY).asText(), attr.get(VALUE));
                         return new BaseAttributeKvEntry(entry, attr.get(LAST_UPDATE_TS).asLong());
                     }
             ).collect(Collectors.toList());
@@ -32,13 +30,12 @@ public class RestJsonConverter {
         }
     }
 
-    @NotNull
-    public static List<TsKvEntry> toTimeseries(@NotNull Map<String, List<JsonNode>> timeseries) {
+    public static List<TsKvEntry> toTimeseries(Map<String, List<JsonNode>> timeseries) {
         if (!CollectionUtils.isEmpty(timeseries)) {
-            @NotNull List<TsKvEntry> result = new ArrayList<>();
+            List<TsKvEntry> result = new ArrayList<>();
             timeseries.forEach((key, values) ->
                     result.addAll(values.stream().map(ts -> {
-                                @NotNull KvEntry entry = parseValue(key, ts.get(VALUE));
+                                KvEntry entry = parseValue(key, ts.get(VALUE));
                                 return new BasicTsKvEntry(ts.get(TS).asLong(), entry);
                             }
                     ).collect(Collectors.toList()))
@@ -49,8 +46,7 @@ public class RestJsonConverter {
         }
     }
 
-    @NotNull
-    private static KvEntry parseValue(String key, @NotNull JsonNode value) {
+    private static KvEntry parseValue(String key, JsonNode value) {
         if (!value.isContainerNode()) {
             if (value.isBoolean()) {
                 return new BooleanDataEntry(key, value.asBoolean());
@@ -66,8 +62,7 @@ public class RestJsonConverter {
         }
     }
 
-    @NotNull
-    private static KvEntry parseNumericValue(String key, @NotNull JsonNode value) {
+    private static KvEntry parseNumericValue(String key, JsonNode value) {
         if (value.isFloatingPointNumber()) {
             return new DoubleDataEntry(key, value.asDouble());
         } else {

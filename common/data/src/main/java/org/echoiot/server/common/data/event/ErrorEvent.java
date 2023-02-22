@@ -5,7 +5,6 @@ import lombok.*;
 import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.EventInfo;
 import org.echoiot.server.common.data.id.TenantId;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
@@ -29,15 +28,13 @@ public class ErrorEvent extends Event {
     @Setter
     private String error;
 
-    @NotNull
     @Override
     public EventType getType() {
         return EventType.ERROR;
     }
 
-    @NotNull
     @Override
-    public EventInfo toInfo(@NotNull EntityType entityType) {
+    public EventInfo toInfo(EntityType entityType) {
         EventInfo eventInfo = super.toInfo(entityType);
         var json = (ObjectNode) eventInfo.getBody();
         json.put("method", method);

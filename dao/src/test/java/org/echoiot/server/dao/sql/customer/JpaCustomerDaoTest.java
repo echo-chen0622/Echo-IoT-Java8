@@ -8,7 +8,6 @@ import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.dao.AbstractJpaDaoTest;
 import org.echoiot.server.dao.customer.CustomerDao;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
 import javax.annotation.Resource;
@@ -28,8 +27,8 @@ public class JpaCustomerDaoTest extends AbstractJpaDaoTest {
 
     @Test
     public void testFindByTenantId() {
-        @NotNull UUID tenantId1 = Uuids.timeBased();
-        @NotNull UUID tenantId2 = Uuids.timeBased();
+        UUID tenantId1 = Uuids.timeBased();
+        UUID tenantId2 = Uuids.timeBased();
 
         for (int i = 0; i < 20; i++) {
             createCustomer(tenantId1, i);
@@ -47,7 +46,7 @@ public class JpaCustomerDaoTest extends AbstractJpaDaoTest {
 
     @Test
     public void testFindCustomersByTenantIdAndTitle() {
-        @NotNull UUID tenantId = Uuids.timeBased();
+        UUID tenantId = Uuids.timeBased();
 
         for (int i = 0; i < 10; i++) {
             createCustomer(tenantId, i);
@@ -59,7 +58,7 @@ public class JpaCustomerDaoTest extends AbstractJpaDaoTest {
     }
 
     private void createCustomer(UUID tenantId, int index) {
-        @NotNull Customer customer = new Customer();
+        Customer customer = new Customer();
         customer.setId(new CustomerId(Uuids.timeBased()));
         customer.setTenantId(TenantId.fromUUID(tenantId));
         customer.setTitle("CUSTOMER_" + index);

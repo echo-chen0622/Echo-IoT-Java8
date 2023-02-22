@@ -21,7 +21,6 @@ import org.echoiot.server.common.msg.session.SessionMsgType;
 import org.echoiot.server.controller.AbstractControllerTest;
 import org.echoiot.server.dao.service.DaoSqlTest;
 import org.echoiot.server.dao.timeseries.TimeseriesService;
-import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -61,7 +60,7 @@ public class SequentialTimeseriesPersistenceTest extends AbstractControllerTest 
 
         loginSysAdmin();
 
-        @NotNull Tenant tenant = new Tenant();
+        Tenant tenant = new Tenant();
         tenant.setTitle("My tenant");
         savedTenant = doPost("/api/tenant", tenant, Tenant.class);
         Assert.assertNotNull(savedTenant);
@@ -84,13 +83,13 @@ public class SequentialTimeseriesPersistenceTest extends AbstractControllerTest 
 
     @Test
     public void testSequentialTimeseriesPersistence() throws Exception {
-        @NotNull Asset asset = saveAsset("Asset");
+        Asset asset = saveAsset("Asset");
 
-        @NotNull Device deviceA = saveDevice("Device A");
-        @NotNull Device deviceB = saveDevice("Device B");
-        @NotNull Device deviceC = saveDevice("Device C");
-        @NotNull Device deviceD = saveDevice("Device D");
-        @NotNull List<Device> devices = List.of(deviceA, deviceB, deviceC, deviceD);
+        Device deviceA = saveDevice("Device A");
+        Device deviceB = saveDevice("Device B");
+        Device deviceC = saveDevice("Device C");
+        Device deviceD = saveDevice("Device D");
+        List<Device> devices = List.of(deviceA, deviceB, deviceC, deviceD);
 
         for (int i = 0; i < 2; i++) {
             int idx = i * devices.size();
@@ -99,9 +98,8 @@ public class SequentialTimeseriesPersistenceTest extends AbstractControllerTest 
         }
     }
 
-    @NotNull
     Device saveDevice(String name) throws Exception {
-        @NotNull Device device = new Device();
+        Device device = new Device();
         device.setName(name);
         device.setType("default");
         Device savedDevice = doPost("/api/device", device, Device.class);
@@ -109,9 +107,8 @@ public class SequentialTimeseriesPersistenceTest extends AbstractControllerTest 
         return savedDevice;
     }
 
-    @NotNull
     Asset saveAsset(String name) throws Exception {
-        @NotNull Asset asset = new Asset();
+        Asset asset = new Asset();
         asset.setName(name);
         asset.setType("default");
         Asset savedAsset = doPost("/api/asset", asset, Asset.class);
@@ -119,9 +116,9 @@ public class SequentialTimeseriesPersistenceTest extends AbstractControllerTest 
         return savedAsset;
     }
 
-    void saveLatestTsForAssetAndDevice(@NotNull List<Device> devices, @NotNull Asset asset, int idx) throws ExecutionException, InterruptedException, TimeoutException {
-        for (@NotNull Device device : devices) {
-            @NotNull TbMsg tbMsg = TbMsg.newMsg(SessionMsgType.POST_TELEMETRY_REQUEST.name(),
+    void saveLatestTsForAssetAndDevice(List<Device> devices, Asset asset, int idx) throws ExecutionException, InterruptedException, TimeoutException {
+        for (Device device : devices) {
+            TbMsg tbMsg = TbMsg.newMsg(SessionMsgType.POST_TELEMETRY_REQUEST.name(),
                                                 device.getId(),
                                                 getTbMsgMetadata(device.getName(), ts.get(idx)),
                                                 TbMsgDataType.JSON,
@@ -132,45 +129,42 @@ public class SequentialTimeseriesPersistenceTest extends AbstractControllerTest 
         }
     }
 
-    void checkDiffBetweenLatestTsForDevicesAndAsset(@NotNull List<Device> devices, @NotNull Asset asset) throws ExecutionException, InterruptedException, TimeoutException {
+    void checkDiffBetweenLatestTsForDevicesAndAsset(List<Device> devices, Asset asset) throws ExecutionException, InterruptedException, TimeoutException {
         TsKvEntry assetTsKvEntry = getTsKvLatest(asset.getId(), GENERIC_CUMULATIVE_OBJ);
         Assert.assertTrue(assetTsKvEntry.getJsonValue().isPresent());
         JsonObject assetJsonObject = new JsonParser().parse(assetTsKvEntry.getJsonValue().get()).getAsJsonObject();
-        for (@NotNull Device device : devices) {
-            @NotNull Long assetValue = assetJsonObject.get(device.getName()).getAsLong();
+        for (Device device : devices) {
+            Long assetValue = assetJsonObject.get(device.getName()).getAsLong();
             TsKvEntry deviceLatest = getTsKvLatest(device.getId(), TOTALIZER);
             Assert.assertTrue(deviceLatest.getLongValue().isPresent());
-            @NotNull Long deviceValue = deviceLatest.getLongValue().get();
+            Long deviceValue = deviceLatest.getLongValue().get();
             Assert.assertEquals(assetValue, deviceValue);
         }
     }
 
-    @NotNull
     String getTbMsgData(long value) {
         return "{\"Totalizer\": " + value + "}";
     }
 
-    @NotNull
     TbMsgMetaData getTbMsgMetadata(String name, long ts) {
-        @NotNull Map<String, String> metadata = new HashMap<>();
+        Map<String, String> metadata = new HashMap<>();
         metadata.put("deviceName", name);
         metadata.put("ts", String.valueOf(ts));
         return new TbMsgMetaData(metadata);
     }
 
     void saveDeviceTsEntry(EntityId entityId, TbMsg tbMsg, long value) throws ExecutionException, InterruptedException, TimeoutException {
-        @NotNull TsKvEntry tsKvEntry = new BasicTsKvEntry(TbMsgTimeseriesNode.computeTs(tbMsg, configuration.isUseServerTs()), new LongDataEntry(TOTALIZER, value));
+        TsKvEntry tsKvEntry = new BasicTsKvEntry(TbMsgTimeseriesNode.computeTs(tbMsg, configuration.isUseServerTs()), new LongDataEntry(TOTALIZER, value));
         saveTimeseries(entityId, tsKvEntry);
     }
 
-    void saveAssetTsEntry(@NotNull Asset asset, @NotNull String key, long value, long ts) throws ExecutionException, InterruptedException, TimeoutException {
+    void saveAssetTsEntry(Asset asset, String key, long value, long ts) throws ExecutionException, InterruptedException, TimeoutException {
         Optional<String> tsKvEntryOpt = getTsKvLatest(asset.getId(), GENERIC_CUMULATIVE_OBJ).getJsonValue();
-        @NotNull TsKvEntry saveTsKvEntry = new BasicTsKvEntry(ts, new JsonDataEntry(GENERIC_CUMULATIVE_OBJ, getJsonObject(key, value, tsKvEntryOpt).toString()));
+        TsKvEntry saveTsKvEntry = new BasicTsKvEntry(ts, new JsonDataEntry(GENERIC_CUMULATIVE_OBJ, getJsonObject(key, value, tsKvEntryOpt).toString()));
         saveTimeseries(asset.getId(), saveTsKvEntry);
     }
 
-    @NotNull
-    JsonObject getJsonObject(@NotNull String key, long value, @NotNull Optional<String> tsKvEntryOpt) {
+    JsonObject getJsonObject(String key, long value, Optional<String> tsKvEntryOpt) {
         JsonObject jsonObject = new JsonObject();
         if (tsKvEntryOpt.isPresent()) {
             jsonObject = new JsonParser().parse(tsKvEntryOpt.get()).getAsJsonObject();
@@ -179,11 +173,11 @@ public class SequentialTimeseriesPersistenceTest extends AbstractControllerTest 
         return jsonObject;
     }
 
-    void saveTimeseries(EntityId entityId, @NotNull TsKvEntry saveTsKvEntry) throws InterruptedException, ExecutionException, TimeoutException {
+    void saveTimeseries(EntityId entityId, TsKvEntry saveTsKvEntry) throws InterruptedException, ExecutionException, TimeoutException {
         timeseriesService.save(savedTenant.getId(), entityId, List.of(saveTsKvEntry), TTL).get(TIMEOUT, TimeUnit.SECONDS);
     }
 
-    TsKvEntry getTsKvLatest(EntityId entityId, @NotNull String key) throws InterruptedException, ExecutionException, TimeoutException {
+    TsKvEntry getTsKvLatest(EntityId entityId, String key) throws InterruptedException, ExecutionException, TimeoutException {
         List<TsKvEntry> tsKvEntries = timeseriesService.findLatest(
                 savedTenant.getTenantId(),
                 entityId,

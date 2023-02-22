@@ -1,13 +1,12 @@
 package org.echoiot.common.util;
 
 import org.echoiot.server.common.data.kv.KvEntry;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class KvUtil {
 
     @Nullable
-    public static String getStringValue(@NotNull KvEntry entry) {
+    public static String getStringValue(KvEntry entry) {
         switch (entry.getDataType()) {
             case LONG:
                 return entry.getLongValue().map(String::valueOf).orElse(null);
@@ -25,7 +24,7 @@ public class KvUtil {
     }
 
     @Nullable
-    public static Double getDoubleValue(@NotNull KvEntry entry) {
+    public static Double getDoubleValue(KvEntry entry) {
         switch (entry.getDataType()) {
             case LONG:
                 return entry.getLongValue().map(Long::doubleValue).orElse(null);
@@ -51,7 +50,7 @@ public class KvUtil {
     }
 
     @Nullable
-    public static Boolean getBoolValue(@NotNull KvEntry entry) {
+    public static Boolean getBoolValue(KvEntry entry) {
         switch (entry.getDataType()) {
             case LONG:
                 return entry.getLongValue().map(e -> e != 0).orElse(null);

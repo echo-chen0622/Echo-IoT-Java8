@@ -7,7 +7,6 @@ import org.echoiot.server.gen.edge.v1.DeviceProfileUpdateMsg;
 import org.echoiot.server.gen.edge.v1.UpdateMsgType;
 import org.echoiot.server.queue.util.DataDecodingEncodingService;
 import org.echoiot.server.queue.util.TbCoreComponent;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -20,8 +19,7 @@ public class DeviceProfileMsgConstructor {
     @Resource
     private DataDecodingEncodingService dataDecodingEncodingService;
 
-    @NotNull
-    public DeviceProfileUpdateMsg constructDeviceProfileUpdatedMsg(UpdateMsgType msgType, @NotNull DeviceProfile deviceProfile) {
+    public DeviceProfileUpdateMsg constructDeviceProfileUpdatedMsg(UpdateMsgType msgType, DeviceProfile deviceProfile) {
         DeviceProfileUpdateMsg.Builder builder = DeviceProfileUpdateMsg.newBuilder()
                 .setMsgType(msgType)
                 .setIdMSB(deviceProfile.getId().getId().getMostSignificantBits())
@@ -55,8 +53,7 @@ public class DeviceProfileMsgConstructor {
         return builder.build();
     }
 
-    @NotNull
-    public DeviceProfileUpdateMsg constructDeviceProfileDeleteMsg(@NotNull DeviceProfileId deviceProfileId) {
+    public DeviceProfileUpdateMsg constructDeviceProfileDeleteMsg(DeviceProfileId deviceProfileId) {
         return DeviceProfileUpdateMsg.newBuilder()
                 .setMsgType(UpdateMsgType.ENTITY_DELETED_RPC_MESSAGE)
                 .setIdMSB(deviceProfileId.getId().getMostSignificantBits())

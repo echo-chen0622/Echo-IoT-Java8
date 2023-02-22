@@ -17,7 +17,6 @@ import org.echoiot.server.dao.settings.AdminSettingsDao;
 import org.echoiot.server.dao.settings.AdminSettingsService;
 import org.echoiot.server.dao.user.UserAuthSettingsDao;
 import org.echoiot.server.service.security.auth.mfa.TwoFactorAuthService;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -32,11 +31,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class DefaultTwoFaConfigManager implements TwoFaConfigManager {
 
-    @NotNull
     private final UserAuthSettingsDao userAuthSettingsDao;
-    @NotNull
     private final AdminSettingsService adminSettingsService;
-    @NotNull
     private final AdminSettingsDao adminSettingsDao;
     @Resource @Lazy
     private TwoFactorAuthService twoFactorAuthService;
@@ -44,7 +40,6 @@ public class DefaultTwoFaConfigManager implements TwoFaConfigManager {
     protected static final String TWO_FACTOR_AUTH_SETTINGS_KEY = "twoFaSettings";
 
 
-    @NotNull
     @Override
     public Optional<AccountTwoFaSettings> getAccountTwoFaSettings(TenantId tenantId, UserId userId) {
         @Nullable PlatformTwoFaSettings platformTwoFaSettings = getPlatformTwoFaSettings(tenantId, true).orElse(null);
@@ -76,11 +71,10 @@ public class DefaultTwoFaConfigManager implements TwoFaConfigManager {
                 });
     }
 
-    @NotNull
-    protected AccountTwoFaSettings saveAccountTwoFaSettings(TenantId tenantId, UserId userId, @NotNull AccountTwoFaSettings settings) {
-        @NotNull UserAuthSettings userAuthSettings = Optional.ofNullable(userAuthSettingsDao.findByUserId(userId))
+    protected AccountTwoFaSettings saveAccountTwoFaSettings(TenantId tenantId, UserId userId, AccountTwoFaSettings settings) {
+        UserAuthSettings userAuthSettings = Optional.ofNullable(userAuthSettingsDao.findByUserId(userId))
                                                              .orElseGet(() -> {
-                    @NotNull UserAuthSettings newUserAuthSettings = new UserAuthSettings();
+                    UserAuthSettings newUserAuthSettings = new UserAuthSettings();
                     newUserAuthSettings.setUserId(userId);
                     return newUserAuthSettings;
                 });
@@ -92,7 +86,6 @@ public class DefaultTwoFaConfigManager implements TwoFaConfigManager {
     }
 
 
-    @NotNull
     @Override
     public Optional<TwoFaAccountConfig> getTwoFaAccountConfig(TenantId tenantId, UserId userId, TwoFaProviderType providerType) {
         return getAccountTwoFaSettings(tenantId, userId)
@@ -101,12 +94,12 @@ public class DefaultTwoFaConfigManager implements TwoFaConfigManager {
     }
 
     @Override
-    public AccountTwoFaSettings saveTwoFaAccountConfig(TenantId tenantId, UserId userId, @NotNull TwoFaAccountConfig accountConfig) {
+    public AccountTwoFaSettings saveTwoFaAccountConfig(TenantId tenantId, UserId userId, TwoFaAccountConfig accountConfig) {
         getTwoFaProviderConfig(tenantId, accountConfig.getProviderType())
                 .orElseThrow(() -> new IllegalArgumentException("2FA provider is not configured"));
 
-        @NotNull AccountTwoFaSettings settings = getAccountTwoFaSettings(tenantId, userId).orElseGet(() -> {
-            @NotNull AccountTwoFaSettings newSettings = new AccountTwoFaSettings();
+        AccountTwoFaSettings settings = getAccountTwoFaSettings(tenantId, userId).orElseGet(() -> {
+            AccountTwoFaSettings newSettings = new AccountTwoFaSettings();
             newSettings.setConfigs(new LinkedHashMap<>());
             return newSettings;
         });
@@ -142,30 +135,27 @@ public class DefaultTwoFaConfigManager implements TwoFaConfigManager {
     }
 
 
-    @NotNull
     private Optional<TwoFaProviderConfig> getTwoFaProviderConfig(TenantId tenantId, TwoFaProviderType providerType) {
         return getPlatformTwoFaSettings(tenantId, true)
                 .flatMap(twoFaSettings -> twoFaSettings.getProviderConfig(providerType));
     }
 
-    @NotNull
     @Override
     public Optional<PlatformTwoFaSettings> getPlatformTwoFaSettings(TenantId tenantId, boolean sysadminSettingsAsDefault) {
         return Optional.ofNullable(adminSettingsService.findAdminSettingsByKey(TenantId.SYS_TENANT_ID, TWO_FACTOR_AUTH_SETTINGS_KEY))
                 .map(adminSettings -> JacksonUtil.treeToValue(adminSettings.getJsonValue(), PlatformTwoFaSettings.class));
     }
 
-    @NotNull
     @Override
-    public PlatformTwoFaSettings savePlatformTwoFaSettings(TenantId tenantId, @NotNull PlatformTwoFaSettings twoFactorAuthSettings) throws EchoiotException {
+    public PlatformTwoFaSettings savePlatformTwoFaSettings(TenantId tenantId, PlatformTwoFaSettings twoFactorAuthSettings) throws EchoiotException {
         ConstraintValidator.validateFields(twoFactorAuthSettings);
-        for (@NotNull TwoFaProviderConfig providerConfig : twoFactorAuthSettings.getProviders()) {
+        for (TwoFaProviderConfig providerConfig : twoFactorAuthSettings.getProviders()) {
             twoFactorAuthService.checkProvider(tenantId, providerConfig.getProviderType());
         }
 
-        @NotNull AdminSettings settings = Optional.ofNullable(adminSettingsService.findAdminSettingsByKey(tenantId, TWO_FACTOR_AUTH_SETTINGS_KEY))
+        AdminSettings settings = Optional.ofNullable(adminSettingsService.findAdminSettingsByKey(tenantId, TWO_FACTOR_AUTH_SETTINGS_KEY))
                                                   .orElseGet(() -> {
-                    @NotNull AdminSettings newSettings = new AdminSettings();
+                    AdminSettings newSettings = new AdminSettings();
                     newSettings.setKey(TWO_FACTOR_AUTH_SETTINGS_KEY);
                     return newSettings;
                 });

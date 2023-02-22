@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import org.echoiot.server.common.data.event.ErrorEvent;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.dao.model.BaseEntity;
-import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -26,7 +25,7 @@ public class ErrorEventEntity extends EventEntity<ErrorEvent> implements BaseEnt
     @Column(name = EVENT_ERROR_COLUMN_NAME)
     private String error;
 
-    public ErrorEventEntity(@NotNull ErrorEvent event) {
+    public ErrorEventEntity(ErrorEvent event) {
         super(event);
         this.method = event.getMethod();
         this.error = event.getError();

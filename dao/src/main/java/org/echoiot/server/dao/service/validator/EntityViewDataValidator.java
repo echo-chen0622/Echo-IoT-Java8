@@ -12,7 +12,6 @@ import org.echoiot.server.dao.exception.DataValidationException;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.service.DataValidator;
 import org.echoiot.server.dao.tenant.TenantService;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -20,15 +19,12 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class EntityViewDataValidator extends DataValidator<EntityView> {
 
-    @NotNull
     private final EntityViewDao entityViewDao;
-    @NotNull
     private final TenantService tenantService;
-    @NotNull
     private final CustomerDao customerDao;
 
     @Override
-    protected void validateCreate(TenantId tenantId, @NotNull EntityView entityView) {
+    protected void validateCreate(TenantId tenantId, EntityView entityView) {
         entityViewDao.findEntityViewByTenantIdAndName(entityView.getTenantId().getId(), entityView.getName())
                 .ifPresent(e -> {
                     throw new DataValidationException("Entity view with such name already exists!");
@@ -37,7 +33,7 @@ public class EntityViewDataValidator extends DataValidator<EntityView> {
 
     @Nullable
     @Override
-    protected EntityView validateUpdate(TenantId tenantId, @NotNull EntityView entityView) {
+    protected EntityView validateUpdate(TenantId tenantId, EntityView entityView) {
         var opt = entityViewDao.findEntityViewByTenantIdAndName(entityView.getTenantId().getId(), entityView.getName());
         opt.ifPresent(e -> {
             if (!e.getUuidId().equals(entityView.getUuidId())) {
@@ -48,7 +44,7 @@ public class EntityViewDataValidator extends DataValidator<EntityView> {
     }
 
     @Override
-    protected void validateDataImpl(TenantId tenantId, @NotNull EntityView entityView) {
+    protected void validateDataImpl(TenantId tenantId, EntityView entityView) {
         if (StringUtils.isEmpty(entityView.getType())) {
             throw new DataValidationException("Entity View type should be specified!");
         }

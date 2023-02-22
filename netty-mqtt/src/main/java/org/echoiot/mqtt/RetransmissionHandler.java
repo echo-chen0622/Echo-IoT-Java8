@@ -7,7 +7,6 @@ import io.netty.handler.codec.mqtt.MqttMessageType;
 import io.netty.handler.codec.mqtt.MqttQoS;
 import io.netty.util.concurrent.ScheduledFuture;
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
@@ -16,14 +15,13 @@ import java.util.function.BiConsumer;
 final class RetransmissionHandler<T extends MqttMessage> {
 
     private volatile boolean stopped;
-    @NotNull
     private final PendingOperation pendingOperation;
     private ScheduledFuture<?> timer;
     private int timeout = 10;
     private BiConsumer<MqttFixedHeader, T> handler;
     private T originalMessage;
 
-    void start(@NotNull EventLoop eventLoop) {
+    void start(EventLoop eventLoop) {
         if (eventLoop == null) {
             throw new NullPointerException("eventLoop");
         }
@@ -34,7 +32,7 @@ final class RetransmissionHandler<T extends MqttMessage> {
         this.startTimer(eventLoop);
     }
 
-    private void startTimer(@NotNull EventLoop eventLoop) {
+    private void startTimer(EventLoop eventLoop) {
         if (stopped || pendingOperation.isCanceled()) {
             return;
         }
@@ -47,7 +45,7 @@ final class RetransmissionHandler<T extends MqttMessage> {
             if (this.originalMessage.fixedHeader().messageType() == MqttMessageType.PUBLISH && this.originalMessage.fixedHeader().qosLevel() != MqttQoS.AT_MOST_ONCE) {
                 isDup = true;
             }
-            @NotNull MqttFixedHeader fixedHeader = new MqttFixedHeader(this.originalMessage.fixedHeader().messageType(), isDup, this.originalMessage.fixedHeader().qosLevel(), this.originalMessage.fixedHeader().isRetain(), this.originalMessage.fixedHeader().remainingLength());
+            MqttFixedHeader fixedHeader = new MqttFixedHeader(this.originalMessage.fixedHeader().messageType(), isDup, this.originalMessage.fixedHeader().qosLevel(), this.originalMessage.fixedHeader().isRetain(), this.originalMessage.fixedHeader().remainingLength());
             handler.accept(fixedHeader, originalMessage);
             startTimer(eventLoop);
         }, timeout, TimeUnit.SECONDS);

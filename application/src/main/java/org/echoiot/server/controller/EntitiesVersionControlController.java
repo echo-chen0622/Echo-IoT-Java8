@@ -21,7 +21,6 @@ import org.echoiot.server.service.security.model.SecurityUser;
 import org.echoiot.server.service.security.permission.Operation;
 import org.echoiot.server.service.security.permission.PerResource;
 import org.echoiot.server.service.sync.vc.EntitiesVersionControlService;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -41,7 +40,6 @@ import static org.echoiot.server.controller.ControllerConstants.*;
 @RequiredArgsConstructor
 public class EntitiesVersionControlController extends BaseController {
 
-    @NotNull
     private final EntitiesVersionControlService versionControlService;
 
 
@@ -193,7 +191,7 @@ public class EntitiesVersionControlController extends BaseController {
             MARKDOWN_CODE_BLOCK_END +
             TENANT_AUTHORITY_PARAGRAPH)
     @GetMapping(value = "/version/{entityType}/{externalEntityUuid}", params = {"branch", "pageSize", "page"})
-    public DeferredResult<PageData<EntityVersion>> listEntityVersions(@NotNull @ApiParam(value = ENTITY_TYPE_PARAM_DESCRIPTION, required = true)
+    public DeferredResult<PageData<EntityVersion>> listEntityVersions(@ApiParam(value = ENTITY_TYPE_PARAM_DESCRIPTION, required = true)
                                                                       @PathVariable EntityType entityType,
                                                                       @ApiParam(value = "A string value representing external entity id. This is `externalId` property of an entity, or otherwise if not set - simply id of this entity.")
                                                                       @PathVariable UUID externalEntityUuid,
@@ -207,11 +205,11 @@ public class EntitiesVersionControlController extends BaseController {
                                                                       @RequestParam(required = false) String textSearch,
                                                                       @ApiParam(value = SORT_PROPERTY_DESCRIPTION, allowableValues = "timestamp")
                                                                       @RequestParam(required = false) String sortProperty,
-                                                                      @NotNull @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
+                                                                      @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
                                                                       @RequestParam(required = false) String sortOrder) throws Exception {
         accessControlService.checkPermission(getCurrentUser(), PerResource.VERSION_CONTROL, Operation.READ);
         EntityId externalEntityId = EntityIdFactory.getByTypeAndUuid(entityType, externalEntityUuid);
-        @NotNull PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
+        PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
         return wrapFuture(versionControlService.listEntityVersions(getTenantId(), branch, externalEntityId, pageLink));
     }
 
@@ -234,10 +232,10 @@ public class EntitiesVersionControlController extends BaseController {
                                                                           @RequestParam(required = false) String textSearch,
                                                                           @ApiParam(value = SORT_PROPERTY_DESCRIPTION, allowableValues = "timestamp")
                                                                           @RequestParam(required = false) String sortProperty,
-                                                                          @NotNull @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
+                                                                          @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
                                                                           @RequestParam(required = false) String sortOrder) throws Exception {
         accessControlService.checkPermission(getCurrentUser(), PerResource.VERSION_CONTROL, Operation.READ);
-        @NotNull PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
+        PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
         return wrapFuture(versionControlService.listEntityTypeVersions(getTenantId(), branch, entityType, pageLink));
     }
 
@@ -257,10 +255,10 @@ public class EntitiesVersionControlController extends BaseController {
                                                                 @RequestParam(required = false) String textSearch,
                                                                 @ApiParam(value = SORT_PROPERTY_DESCRIPTION, allowableValues = "timestamp")
                                                                 @RequestParam(required = false) String sortProperty,
-                                                                @NotNull @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
+                                                                @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
                                                                 @RequestParam(required = false) String sortOrder) throws Exception {
         accessControlService.checkPermission(getCurrentUser(), PerResource.VERSION_CONTROL, Operation.READ);
-        @NotNull PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
+        PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
         return wrapFuture(versionControlService.listVersions(getTenantId(), branch, pageLink));
     }
 
@@ -300,7 +298,7 @@ public class EntitiesVersionControlController extends BaseController {
     @GetMapping("/info/{versionId}/{entityType}/{externalEntityUuid}")
     public DeferredResult<EntityDataInfo> getEntityDataInfo(@ApiParam(value = VERSION_ID_PARAM_DESCRIPTION, required = true)
                                                             @PathVariable String versionId,
-                                                            @NotNull @ApiParam(value = ENTITY_TYPE_PARAM_DESCRIPTION, required = true)
+                                                            @ApiParam(value = ENTITY_TYPE_PARAM_DESCRIPTION, required = true)
                                                             @PathVariable EntityType entityType,
                                                             @ApiParam(value = "A string value representing external entity id", required = true)
                                                             @PathVariable UUID externalEntityUuid) throws Exception {
@@ -314,7 +312,7 @@ public class EntitiesVersionControlController extends BaseController {
             "Entity data structure is the same as stored in a repository. " +
             TENANT_AUTHORITY_PARAGRAPH)
     @GetMapping(value = "/diff/{entityType}/{internalEntityUuid}", params = {"versionId"})
-    public DeferredResult<EntityDataDiff> compareEntityDataToVersion(@NotNull @ApiParam(value = ENTITY_TYPE_PARAM_DESCRIPTION, required = true)
+    public DeferredResult<EntityDataDiff> compareEntityDataToVersion(@ApiParam(value = ENTITY_TYPE_PARAM_DESCRIPTION, required = true)
                                                                      @PathVariable EntityType entityType,
                                                                      @ApiParam(value = ENTITY_ID_PARAM_DESCRIPTION, required = true)
                                                                      @PathVariable UUID internalEntityUuid,
@@ -459,7 +457,7 @@ public class EntitiesVersionControlController extends BaseController {
         final TenantId tenantId = getTenantId();
         ListenableFuture<List<BranchInfo>> branches = versionControlService.listBranches(tenantId);
         return wrapFuture(Futures.transform(branches, remoteBranches -> {
-            @NotNull List<BranchInfo> infos = new ArrayList<>();
+            List<BranchInfo> infos = new ArrayList<>();
             @Nullable BranchInfo defaultBranch;
             String defaultBranchName = versionControlService.getVersionControlSettings(tenantId).getDefaultBranch();
             if (StringUtils.isNotEmpty(defaultBranchName)) {

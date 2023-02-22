@@ -4,7 +4,6 @@ import com.datastax.oss.driver.api.core.cql.*;
 import com.datastax.oss.driver.internal.core.util.CountingIterator;
 import com.datastax.oss.driver.internal.core.util.concurrent.BlockingOperation;
 import edu.umd.cs.findbugs.annotations.NonNull;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.ByteBuffer;
@@ -14,7 +13,6 @@ import java.util.List;
 
 public class GuavaMultiPageResultSet implements ResultSet {
 
-    @NotNull
     private final RowIterator iterator;
     private final List<ExecutionInfo> executionInfos = new ArrayList<>();
     private ColumnDefinitions columnDefinitions;
@@ -65,7 +63,7 @@ public class GuavaMultiPageResultSet implements ResultSet {
         private AsyncResultSet currentPage;
         private Iterator<Row> currentRows;
 
-        private RowIterator(GuavaSession session, Statement statement, @NotNull AsyncResultSet firstPage) {
+        private RowIterator(GuavaSession session, Statement statement, AsyncResultSet firstPage) {
             super(firstPage.remaining());
             this.session = session;
             this.statement = statement;

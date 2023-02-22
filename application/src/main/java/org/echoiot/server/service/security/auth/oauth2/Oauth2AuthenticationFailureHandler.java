@@ -6,7 +6,6 @@ import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.security.system.SystemSecurityService;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticationException;
@@ -37,7 +36,7 @@ public class Oauth2AuthenticationFailureHandler extends SimpleUrlAuthenticationF
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request,
-                                        HttpServletResponse response, @NotNull AuthenticationException exception)
+                                        HttpServletResponse response, AuthenticationException exception)
             throws IOException, ServletException {
         String baseUrl;
         String errorPrefix;

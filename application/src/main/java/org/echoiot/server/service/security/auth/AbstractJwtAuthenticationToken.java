@@ -2,7 +2,6 @@ package org.echoiot.server.service.security.auth;
 
 import org.echoiot.server.service.security.model.SecurityUser;
 import org.echoiot.server.service.security.model.token.RawAccessJwtToken;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 
@@ -20,7 +19,7 @@ public abstract class AbstractJwtAuthenticationToken extends AbstractAuthenticat
         this.setAuthenticated(false);
     }
 
-    public AbstractJwtAuthenticationToken(@NotNull SecurityUser securityUser) {
+    public AbstractJwtAuthenticationToken(SecurityUser securityUser) {
         super(securityUser.getAuthorities());
         this.eraseCredentials();
         this.securityUser = securityUser;

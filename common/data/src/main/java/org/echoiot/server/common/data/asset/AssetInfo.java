@@ -4,7 +4,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.echoiot.server.common.data.id.AssetId;
-import org.jetbrains.annotations.NotNull;
 
 @ApiModel
 @Data
@@ -27,7 +26,7 @@ public class AssetInfo extends Asset {
         super(assetId);
     }
 
-    public AssetInfo(@NotNull Asset asset, String customerTitle, boolean customerIsPublic, String assetProfileName) {
+    public AssetInfo(Asset asset, String customerTitle, boolean customerIsPublic, String assetProfileName) {
         super(asset);
         this.customerTitle = customerTitle;
         this.customerIsPublic = customerIsPublic;

@@ -17,7 +17,6 @@ import org.echoiot.script.api.TbScriptException;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.stats.TbApiUsageReportClient;
 import org.echoiot.server.common.stats.TbApiUsageStateClient;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mvel2.*;
 import org.mvel2.optimizers.OptimizerFactory;
@@ -126,13 +125,11 @@ public class DefaultTbelInvokeService extends AbstractScriptInvokeService implem
         }
     }
 
-    @NotNull
     @Override
     protected String getStatsName() {
         return "TBEL Scripts Stats";
     }
 
-    @NotNull
     @Override
     protected Executor getCallbackExecutor() {
         return MoreExecutors.directExecutor();
@@ -143,12 +140,11 @@ public class DefaultTbelInvokeService extends AbstractScriptInvokeService implem
         return scriptIdToHash.containsKey(scriptId);
     }
 
-    @NotNull
     @Override
-    protected ListenableFuture<UUID> doEvalScript(TenantId tenantId, ScriptType scriptType, @NotNull String scriptBody, @NotNull UUID scriptId, @NotNull String[] argNames) {
+    protected ListenableFuture<UUID> doEvalScript(TenantId tenantId, ScriptType scriptType, String scriptBody, UUID scriptId, String[] argNames) {
         return executor.submit(() -> {
             try {
-                @NotNull String scriptHash = hash(scriptBody, argNames);
+                String scriptHash = hash(scriptBody, argNames);
                 compiledScriptsCache.get(scriptHash, k -> compileScript(scriptBody));
                 lock.lock();
                 try {
@@ -164,10 +160,9 @@ public class DefaultTbelInvokeService extends AbstractScriptInvokeService implem
         });
     }
 
-    @NotNull
     @Override
-    protected TbelScriptExecutionTask doInvokeFunction(UUID scriptId, @NotNull Object[] args) {
-        @NotNull ExecutionContext executionContext = new ExecutionContext(this.parserConfig, maxMemoryLimitMb * 1024 * 1024);
+    protected TbelScriptExecutionTask doInvokeFunction(UUID scriptId, Object[] args) {
+        ExecutionContext executionContext = new ExecutionContext(this.parserConfig, maxMemoryLimitMb * 1024 * 1024);
         return new TbelScriptExecutionTask(executionContext, executor.submit(() -> {
             String scriptHash = scriptIdToHash.get(scriptId);
             if (scriptHash == null) {
@@ -205,12 +200,11 @@ public class DefaultTbelInvokeService extends AbstractScriptInvokeService implem
         return MVEL.compileExpression(scriptBody, new ParserContext());
     }
 
-    @NotNull
     @SuppressWarnings("UnstableApiUsage")
-    protected String hash(@NotNull String scriptBody, @NotNull String[] argNames) {
-        @NotNull Hasher hasher = Hashing.murmur3_128().newHasher();
+    protected String hash(String scriptBody, String[] argNames) {
+        Hasher hasher = Hashing.murmur3_128().newHasher();
         hasher.putUnencodedChars(scriptBody);
-        for (@NotNull String argName : argNames) {
+        for (String argName : argNames) {
             hasher.putString(argName, StandardCharsets.UTF_8);
         }
         return hasher.hash().toString();

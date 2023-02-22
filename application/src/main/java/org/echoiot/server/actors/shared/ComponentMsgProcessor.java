@@ -11,7 +11,6 @@ import org.echoiot.server.common.data.tenant.profile.TenantProfileConfiguration;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.queue.PartitionChangeMsg;
 import org.echoiot.server.common.msg.queue.RuleNodeException;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Slf4j
@@ -68,7 +67,7 @@ public abstract class ComponentMsgProcessor<T extends EntityId> extends Abstract
         schedulePeriodicMsgWithDelay(context, new StatsPersistTick(), statsPersistFrequency, statsPersistFrequency);
     }
 
-    protected boolean checkMsgValid(@NotNull TbMsg tbMsg) {
+    protected boolean checkMsgValid(TbMsg tbMsg) {
         var valid = tbMsg.isValid();
         if (!valid) {
             if (log.isTraceEnabled()) {

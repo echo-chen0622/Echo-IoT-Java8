@@ -3,7 +3,6 @@ package org.echoiot.server.common.msg;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -27,15 +26,15 @@ public class TbMsgMetaDataTest {
 
     @Test
     public void testScript_whenMetadataWithoutPropertiesValueNull_returnMetadataWithAllValue() {
-        @NotNull TbMsgMetaData tbMsgMetaData = new TbMsgMetaData(metadataExpected);
-        @NotNull Map<String, String> dataActual = tbMsgMetaData.values();
+        TbMsgMetaData tbMsgMetaData = new TbMsgMetaData(metadataExpected);
+        Map<String, String> dataActual = tbMsgMetaData.values();
         assertEquals(metadataExpected.size(), dataActual.size());
     }
 
     @Test
     public void testScript_whenMetadataWithPropertiesValueNull_returnMetadataWithoutPropertiesValueEqualsNull() {
         metadataExpected.put("deviceName", null);
-        @NotNull TbMsgMetaData tbMsgMetaData = new TbMsgMetaData(metadataExpected);
+        TbMsgMetaData tbMsgMetaData = new TbMsgMetaData(metadataExpected);
         Map<String, String> dataActual = tbMsgMetaData.copy().getData();
         assertEquals(metadataExpected.size() - 1, dataActual.size());
     }

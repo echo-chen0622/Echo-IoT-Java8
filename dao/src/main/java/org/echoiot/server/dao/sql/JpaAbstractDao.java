@@ -9,7 +9,6 @@ import org.echoiot.server.dao.Dao;
 import org.echoiot.server.dao.DaoUtil;
 import org.echoiot.server.dao.model.BaseEntity;
 import org.echoiot.server.dao.util.SqlDao;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,7 +35,7 @@ public abstract class JpaAbstractDao<E extends BaseEntity<D>, D>
 
     @Override
     @Transactional
-    public D save(TenantId tenantId, @NotNull D domain) {
+    public D save(TenantId tenantId, D domain) {
         E entity;
         try {
             entity = getEntityClass().getConstructor(domain.getClass()).newInstance(domain);
@@ -47,7 +46,7 @@ public abstract class JpaAbstractDao<E extends BaseEntity<D>, D>
         setSearchText(entity);
         log.debug("Saving entity {}", entity);
         if (entity.getUuid() == null) {
-            @NotNull UUID uuid = Uuids.timeBased();
+            UUID uuid = Uuids.timeBased();
             entity.setUuid(uuid);
             entity.setCreatedTime(Uuids.unixTimestamp(uuid));
         }
@@ -57,54 +56,54 @@ public abstract class JpaAbstractDao<E extends BaseEntity<D>, D>
 
     @Override
     @Transactional
-    public D saveAndFlush(TenantId tenantId, @NotNull D domain) {
+    public D saveAndFlush(TenantId tenantId, D domain) {
         D d = save(tenantId, domain);
         getRepository().flush();
         return d;
     }
 
     @Override
-    public D findById(TenantId tenantId, @NotNull UUID key) {
+    public D findById(TenantId tenantId, UUID key) {
         log.debug("Get entity by key {}", key);
-        @NotNull Optional<E> entity = getRepository().findById(key);
+        Optional<E> entity = getRepository().findById(key);
         return DaoUtil.getData(entity);
     }
 
     @Override
-    public ListenableFuture<D> findByIdAsync(TenantId tenantId, @NotNull UUID key) {
+    public ListenableFuture<D> findByIdAsync(TenantId tenantId, UUID key) {
         log.debug("Get entity by key async {}", key);
         return service.submit(() -> DaoUtil.getData(getRepository().findById(key)));
     }
 
     @Override
-    public boolean existsById(TenantId tenantId, @NotNull UUID key) {
+    public boolean existsById(TenantId tenantId, UUID key) {
         log.debug("Exists by key {}", key);
         return getRepository().existsById(key);
     }
 
     @Override
-    public ListenableFuture<Boolean> existsByIdAsync(TenantId tenantId, @NotNull UUID key) {
+    public ListenableFuture<Boolean> existsByIdAsync(TenantId tenantId, UUID key) {
         log.debug("Exists by key async {}", key);
         return service.submit(() -> getRepository().existsById(key));
     }
 
     @Override
     @Transactional
-    public boolean removeById(TenantId tenantId, @NotNull UUID id) {
+    public boolean removeById(TenantId tenantId, UUID id) {
         getRepository().deleteById(id);
         log.debug("Remove request: {}", id);
         return !getRepository().existsById(id);
     }
 
     @Transactional
-    public void removeAllByIds(@NotNull Collection<UUID> ids) {
+    public void removeAllByIds(Collection<UUID> ids) {
         JpaRepository<E, UUID> repository = getRepository();
         ids.forEach(repository::deleteById);
     }
 
     @Override
     public List<D> find(TenantId tenantId) {
-        @NotNull List<E> entities = Lists.newArrayList(getRepository().findAll());
+        List<E> entities = Lists.newArrayList(getRepository().findAll());
         return DaoUtil.convertDataList(entities);
     }
 }

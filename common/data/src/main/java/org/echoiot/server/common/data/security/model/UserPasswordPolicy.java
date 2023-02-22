@@ -3,7 +3,6 @@ package org.echoiot.server.common.data.security.model;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 
@@ -21,7 +20,6 @@ public class UserPasswordPolicy implements Serializable {
     private Integer minimumDigits;
     @ApiModelProperty(position = 1, value = "Minimum number of special in the password." )
     private Integer minimumSpecialCharacters;
-    @NotNull
     @ApiModelProperty(position = 1, value = "Allow whitespaces")
     private Boolean allowWhitespaces = true;
 

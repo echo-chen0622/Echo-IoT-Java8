@@ -16,7 +16,6 @@ import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.entitiy.tenant.TbTenantService;
 import org.echoiot.server.service.security.permission.Operation;
 import org.echoiot.server.service.security.permission.PerResource;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -32,23 +31,20 @@ public class TenantController extends BaseController {
 
     private static final String TENANT_INFO_DESCRIPTION = "The Tenant Info object extends regular Tenant object and includes Tenant Profile name. ";
 
-    @NotNull
     private final TenantService tenantService;
-    @NotNull
     private final TbTenantService tbTenantService;
 
-    @NotNull
     @ApiOperation(value = "Get Tenant (getTenantById)",
             notes = "Fetch the Tenant object based on the provided Tenant Id. " + SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
     @RequestMapping(value = "/tenant/{tenantId}", method = RequestMethod.GET)
     @ResponseBody
     public Tenant getTenantById(
-            @NotNull @ApiParam(value = TENANT_ID_PARAM_DESCRIPTION)
+            @ApiParam(value = TENANT_ID_PARAM_DESCRIPTION)
             @PathVariable(TENANT_ID) String strTenantId) throws EchoiotException {
         checkParameter(TENANT_ID, strTenantId);
         try {
-            @NotNull TenantId tenantId = TenantId.fromUUID(toUUID(strTenantId));
+            TenantId tenantId = TenantId.fromUUID(toUUID(strTenantId));
             Tenant tenant = checkTenantId(tenantId, Operation.READ);
             if (!tenant.getAdditionalInfo().isNull()) {
                 processDashboardIdFromAdditionalInfo((ObjectNode) tenant.getAdditionalInfo(), HOME_DASHBOARD);
@@ -66,11 +62,11 @@ public class TenantController extends BaseController {
     @RequestMapping(value = "/tenant/info/{tenantId}", method = RequestMethod.GET)
     @ResponseBody
     public TenantInfo getTenantInfoById(
-            @NotNull @ApiParam(value = TENANT_ID_PARAM_DESCRIPTION)
+            @ApiParam(value = TENANT_ID_PARAM_DESCRIPTION)
             @PathVariable(TENANT_ID) String strTenantId) throws EchoiotException {
         checkParameter(TENANT_ID, strTenantId);
         try {
-            @NotNull TenantId tenantId = TenantId.fromUUID(toUUID(strTenantId));
+            TenantId tenantId = TenantId.fromUUID(toUUID(strTenantId));
             return checkTenantInfoId(tenantId, Operation.READ);
         } catch (Exception e) {
             throw handleException(e);
@@ -88,7 +84,7 @@ public class TenantController extends BaseController {
     @PreAuthorize("hasAuthority('SYS_ADMIN')")
     @RequestMapping(value = "/tenant", method = RequestMethod.POST)
     @ResponseBody
-    public Tenant saveTenant(@NotNull @ApiParam(value = "A JSON value representing the tenant.")
+    public Tenant saveTenant(@ApiParam(value = "A JSON value representing the tenant.")
                              @RequestBody Tenant tenant) throws Exception {
         checkEntity(tenant.getId(), tenant, PerResource.TENANT);
         return tbTenantService.save(tenant);
@@ -99,10 +95,10 @@ public class TenantController extends BaseController {
     @PreAuthorize("hasAuthority('SYS_ADMIN')")
     @RequestMapping(value = "/tenant/{tenantId}", method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.OK)
-    public void deleteTenant(@NotNull @ApiParam(value = TENANT_ID_PARAM_DESCRIPTION)
+    public void deleteTenant(@ApiParam(value = TENANT_ID_PARAM_DESCRIPTION)
                              @PathVariable(TENANT_ID) String strTenantId) throws Exception {
         checkParameter(TENANT_ID, strTenantId);
-        @NotNull TenantId tenantId = TenantId.fromUUID(toUUID(strTenantId));
+        TenantId tenantId = TenantId.fromUUID(toUUID(strTenantId));
         Tenant tenant = checkTenantId(tenantId, Operation.DELETE);
         tbTenantService.delete(tenant);
     }
@@ -120,10 +116,10 @@ public class TenantController extends BaseController {
             @RequestParam(required = false) String textSearch,
             @ApiParam(value = SORT_PROPERTY_DESCRIPTION, allowableValues = TENANT_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
-            @NotNull @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
+            @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortOrder) throws EchoiotException {
         try {
-            @NotNull PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
+            PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
             return checkNotNull(tenantService.findTenants(pageLink));
         } catch (Exception e) {
             throw handleException(e);
@@ -144,11 +140,11 @@ public class TenantController extends BaseController {
             @RequestParam(required = false) String textSearch,
             @ApiParam(value = SORT_PROPERTY_DESCRIPTION, allowableValues = TENANT_INFO_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
-            @NotNull @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
+            @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortOrder
     ) throws EchoiotException {
         try {
-            @NotNull PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
+            PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
             return checkNotNull(tenantService.findTenantInfos(pageLink));
         } catch (Exception e) {
             throw handleException(e);

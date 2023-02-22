@@ -3,7 +3,6 @@ package org.echoiot.server.dao.sql.attributes;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.dao.model.sql.AttributeKvEntity;
 import org.echoiot.server.dao.util.SqlDao;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
@@ -47,11 +46,11 @@ public abstract class AttributeKvInsertRepository {
     @Value("${sql.remove_null_chars:true}")
     private boolean removeNullChars;
 
-    public void saveOrUpdate(@NotNull List<AttributeKvEntity> entities) {
+    public void saveOrUpdate(List<AttributeKvEntity> entities) {
         transactionTemplate.execute(new TransactionCallbackWithoutResult() {
             @Override
             protected void doInTransactionWithoutResult(TransactionStatus status) {
-                @NotNull int[] result = jdbcTemplate.batchUpdate(BATCH_UPDATE, new BatchPreparedStatementSetter() {
+                int[] result = jdbcTemplate.batchUpdate(BATCH_UPDATE, new BatchPreparedStatementSetter() {
                     @Override
                     public void setValues(PreparedStatement ps, int i) throws SQLException {
                         AttributeKvEntity kvEntity = entities.get(i);
@@ -97,7 +96,7 @@ public abstract class AttributeKvInsertRepository {
                     }
                 }
 
-                @NotNull List<AttributeKvEntity> insertEntities = new ArrayList<>(updatedCount);
+                List<AttributeKvEntity> insertEntities = new ArrayList<>(updatedCount);
                 for (int i = 0; i < result.length; i++) {
                     if (result[i] == 0) {
                         insertEntities.add(entities.get(i));

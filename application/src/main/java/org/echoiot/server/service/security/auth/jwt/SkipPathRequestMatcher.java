@@ -1,6 +1,5 @@
 package org.echoiot.server.service.security.auth.jwt;
 
-import org.jetbrains.annotations.NotNull;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
@@ -14,9 +13,9 @@ public class SkipPathRequestMatcher implements RequestMatcher {
     private final OrRequestMatcher matchers;
     private final RequestMatcher processingMatcher;
 
-    public SkipPathRequestMatcher(@NotNull List<String> pathsToSkip, @NotNull String processingPath) {
+    public SkipPathRequestMatcher(List<String> pathsToSkip, String processingPath) {
         Assert.notNull(pathsToSkip, "List of paths to skip is required.");
-        @NotNull List<RequestMatcher> m = pathsToSkip.stream().map(path -> new AntPathRequestMatcher(path)).collect(Collectors.toList());
+        List<RequestMatcher> m = pathsToSkip.stream().map(path -> new AntPathRequestMatcher(path)).collect(Collectors.toList());
         matchers = new OrRequestMatcher(m);
         processingMatcher = new AntPathRequestMatcher(processingPath);
     }

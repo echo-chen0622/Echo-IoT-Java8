@@ -5,7 +5,6 @@ import org.echoiot.server.common.data.device.credentials.lwm2m.LwM2MDeviceCreden
 import org.echoiot.server.common.data.device.profile.Lwm2mDeviceProfileTransportConfiguration;
 import org.echoiot.server.dao.service.DaoSqlTest;
 import org.echoiot.server.transport.lwm2m.AbstractLwM2MIntegrationTest;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 
 import java.util.Set;
@@ -38,9 +37,7 @@ public abstract class AbstractRpcLwM2MIntegrationTest extends AbstractLwM2MInteg
     protected String objectIdVer_19;
     protected final String OBJECT_ID_VER_50 = "/50";
     protected String objectIdVer_3303;
-    @NotNull
     protected static AtomicInteger endpointSequence = new AtomicInteger();
-    @NotNull
     protected static String DEVICE_ENDPOINT_RPC_PREF = "deviceEndpointRpc";
     protected String idVer_3_0_9;
     protected String idVer_19_0_0;
@@ -55,7 +52,7 @@ public abstract class AbstractRpcLwM2MIntegrationTest extends AbstractLwM2MInteg
     }
 
     private void initRpc () throws Exception {
-        @NotNull String endpoint = DEVICE_ENDPOINT_RPC_PREF + endpointSequence.incrementAndGet();
+        String endpoint = DEVICE_ENDPOINT_RPC_PREF + endpointSequence.incrementAndGet();
         createNewClient(SECURITY_NO_SEC, COAP_CONFIG, true, endpoint, false, null);
         expectedObjects = ConcurrentHashMap.newKeySet();
         expectedObjectIdVers = ConcurrentHashMap.newKeySet();
@@ -63,11 +60,11 @@ public abstract class AbstractRpcLwM2MIntegrationTest extends AbstractLwM2MInteg
         expectedObjectIdVerInstances = ConcurrentHashMap.newKeySet();
         lwM2MTestClient.getLeshanClient().getObjectTree().getObjectEnablers().forEach((key, val) -> {
             if (key > 0) {
-                @NotNull String objectVerId = "/" + key;
+                String objectVerId = "/" + key;
                 objectVerId += ("_" + val.getObjectModel().version);
                 expectedObjects.add("/" + key);
                 expectedObjectIdVers.add(objectVerId);
-                @NotNull String finalObjectVerId = objectVerId;
+                String finalObjectVerId = objectVerId;
                 val.getAvailableInstanceIds().forEach(inststanceId -> {
                     expectedInstances.add("/" + key + "/" + inststanceId);
                     expectedObjectIdVerInstances.add(finalObjectVerId + "/" + inststanceId);
@@ -122,10 +119,9 @@ public abstract class AbstractRpcLwM2MIntegrationTest extends AbstractLwM2MInteg
         awaitObserveReadAll(2, false, device.getId().getId().toString());
     }
 
-    @NotNull
-    protected String pathIdVerToObjectId(@NotNull String pathIdVer) {
+    protected String pathIdVerToObjectId(String pathIdVer) {
         if (pathIdVer.contains("_")) {
-            @NotNull String[] objVer = pathIdVer.split("/");
+            String[] objVer = pathIdVer.split("/");
             objVer[1] = objVer[1].split("_")[0];
             return String.join("/", objVer);
         }

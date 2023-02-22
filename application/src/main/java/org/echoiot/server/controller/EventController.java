@@ -15,7 +15,6 @@ import org.echoiot.server.common.data.page.TimePageLink;
 import org.echoiot.server.dao.event.EventService;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.security.permission.Operation;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -71,11 +70,11 @@ public class EventController extends BaseController {
     public PageData<EventInfo> getEvents(
             @ApiParam(value = ControllerConstants.ENTITY_TYPE_PARAM_DESCRIPTION, required = true)
             @PathVariable(ControllerConstants.ENTITY_TYPE) String strEntityType,
-            @NotNull @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true)
+            @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true)
             @PathVariable(ControllerConstants.ENTITY_ID) String strEntityId,
             @ApiParam(value = "A string value representing event type", example = "STATS", required = true)
             @PathVariable("eventType") String eventType,
-            @NotNull @ApiParam(value = ControllerConstants.TENANT_ID_PARAM_DESCRIPTION, required = true)
+            @ApiParam(value = ControllerConstants.TENANT_ID_PARAM_DESCRIPTION, required = true)
             @RequestParam(ControllerConstants.TENANT_ID) String strTenantId,
             @ApiParam(value = ControllerConstants.PAGE_SIZE_DESCRIPTION, required = true)
             @RequestParam int pageSize,
@@ -85,7 +84,7 @@ public class EventController extends BaseController {
             @RequestParam(required = false) String textSearch,
             @ApiParam(value = ControllerConstants.SORT_PROPERTY_DESCRIPTION, allowableValues = ControllerConstants.EVENT_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
-            @NotNull @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
+            @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortOrder,
             @ApiParam(value = ControllerConstants.EVENT_START_TIME_DESCRIPTION)
             @RequestParam(required = false) Long startTime,
@@ -93,11 +92,11 @@ public class EventController extends BaseController {
             @RequestParam(required = false) Long endTime) throws EchoiotException {
         checkParameter("EntityId", strEntityId);
         checkParameter("EntityType", strEntityType);
-        @NotNull TenantId tenantId = TenantId.fromUUID(toUUID(strTenantId));
+        TenantId tenantId = TenantId.fromUUID(toUUID(strTenantId));
 
         EntityId entityId = EntityIdFactory.getByTypeAndId(strEntityType, strEntityId);
         checkEntityId(entityId, Operation.READ);
-        @NotNull TimePageLink pageLink = createTimePageLink(pageSize, page, textSearch, sortProperty, sortOrder, startTime, endTime);
+        TimePageLink pageLink = createTimePageLink(pageSize, page, textSearch, sortProperty, sortOrder, startTime, endTime);
         return checkNotNull(eventService.findEvents(tenantId, entityId, resolveEventType(eventType), pageLink));
     }
 
@@ -113,9 +112,9 @@ public class EventController extends BaseController {
     public PageData<EventInfo> getEvents(
             @ApiParam(value = ControllerConstants.ENTITY_TYPE_PARAM_DESCRIPTION, required = true)
             @PathVariable(ControllerConstants.ENTITY_TYPE) String strEntityType,
-            @NotNull @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true)
+            @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true)
             @PathVariable(ControllerConstants.ENTITY_ID) String strEntityId,
-            @NotNull @ApiParam(value = ControllerConstants.TENANT_ID_PARAM_DESCRIPTION, required = true)
+            @ApiParam(value = ControllerConstants.TENANT_ID_PARAM_DESCRIPTION, required = true)
             @RequestParam("tenantId") String strTenantId,
             @ApiParam(value = ControllerConstants.PAGE_SIZE_DESCRIPTION, required = true)
             @RequestParam int pageSize,
@@ -125,7 +124,7 @@ public class EventController extends BaseController {
             @RequestParam(required = false) String textSearch,
             @ApiParam(value = ControllerConstants.SORT_PROPERTY_DESCRIPTION, allowableValues = ControllerConstants.EVENT_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
-            @NotNull @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
+            @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortOrder,
             @ApiParam(value = ControllerConstants.EVENT_START_TIME_DESCRIPTION)
             @RequestParam(required = false) Long startTime,
@@ -133,12 +132,12 @@ public class EventController extends BaseController {
             @RequestParam(required = false) Long endTime) throws EchoiotException {
         checkParameter("EntityId", strEntityId);
         checkParameter("EntityType", strEntityType);
-        @NotNull TenantId tenantId = TenantId.fromUUID(toUUID(strTenantId));
+        TenantId tenantId = TenantId.fromUUID(toUUID(strTenantId));
 
         EntityId entityId = EntityIdFactory.getByTypeAndId(strEntityType, strEntityId);
         checkEntityId(entityId, Operation.READ);
 
-        @NotNull TimePageLink pageLink = createTimePageLink(pageSize, page, textSearch, sortProperty, sortOrder, startTime, endTime);
+        TimePageLink pageLink = createTimePageLink(pageSize, page, textSearch, sortProperty, sortOrder, startTime, endTime);
 
         return checkNotNull(eventService.findEvents(tenantId, entityId, EventType.LC_EVENT, pageLink));
     }
@@ -154,9 +153,9 @@ public class EventController extends BaseController {
     public PageData<EventInfo> getEvents(
             @ApiParam(value = ControllerConstants.ENTITY_TYPE_PARAM_DESCRIPTION, required = true)
             @PathVariable(ControllerConstants.ENTITY_TYPE) String strEntityType,
-            @NotNull @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true)
+            @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true)
             @PathVariable(ControllerConstants.ENTITY_ID) String strEntityId,
-            @NotNull @ApiParam(value = ControllerConstants.TENANT_ID_PARAM_DESCRIPTION, required = true)
+            @ApiParam(value = ControllerConstants.TENANT_ID_PARAM_DESCRIPTION, required = true)
             @RequestParam(ControllerConstants.TENANT_ID) String strTenantId,
             @ApiParam(value = ControllerConstants.PAGE_SIZE_DESCRIPTION, required = true)
             @RequestParam int pageSize,
@@ -168,7 +167,7 @@ public class EventController extends BaseController {
             @RequestParam(required = false) String textSearch,
             @ApiParam(value = ControllerConstants.SORT_PROPERTY_DESCRIPTION, allowableValues = ControllerConstants.EVENT_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
-            @NotNull @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
+            @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortOrder,
             @ApiParam(value = ControllerConstants.EVENT_START_TIME_DESCRIPTION)
             @RequestParam(required = false) Long startTime,
@@ -176,12 +175,12 @@ public class EventController extends BaseController {
             @RequestParam(required = false) Long endTime) throws EchoiotException {
         checkParameter("EntityId", strEntityId);
         checkParameter("EntityType", strEntityType);
-        @NotNull TenantId tenantId = TenantId.fromUUID(toUUID(strTenantId));
+        TenantId tenantId = TenantId.fromUUID(toUUID(strTenantId));
 
         EntityId entityId = EntityIdFactory.getByTypeAndId(strEntityType, strEntityId);
         checkEntityId(entityId, Operation.READ);
 
-        @NotNull TimePageLink pageLink = createTimePageLink(pageSize, page, textSearch, sortProperty, sortOrder, startTime, endTime);
+        TimePageLink pageLink = createTimePageLink(pageSize, page, textSearch, sortProperty, sortOrder, startTime, endTime);
         return checkNotNull(eventService.findEventsByFilter(tenantId, entityId, eventFilter, pageLink));
     }
 
@@ -191,7 +190,7 @@ public class EventController extends BaseController {
     @ResponseStatus(HttpStatus.OK)
     public void clearEvents(@ApiParam(value = ControllerConstants.ENTITY_TYPE_PARAM_DESCRIPTION, required = true)
                             @PathVariable(ControllerConstants.ENTITY_TYPE) String strEntityType,
-                            @NotNull @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true)
+                            @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true)
                             @PathVariable(ControllerConstants.ENTITY_ID) String strEntityId,
                             @ApiParam(value = ControllerConstants.EVENT_START_TIME_DESCRIPTION)
                             @RequestParam(required = false) Long startTime,
@@ -211,9 +210,8 @@ public class EventController extends BaseController {
         }
     }
 
-    @NotNull
     private static EventType resolveEventType(String eventType) throws EchoiotException {
-        for (@NotNull var et : EventType.values()) {
+        for (var et : EventType.values()) {
             if (et.name().equalsIgnoreCase(eventType) || et.getOldName().equalsIgnoreCase(eventType)) {
                 return et;
             }

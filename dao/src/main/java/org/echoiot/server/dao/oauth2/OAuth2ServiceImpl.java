@@ -10,7 +10,6 @@ import org.echoiot.server.dao.entity.AbstractEntityService;
 import org.echoiot.server.dao.exception.DataValidationException;
 import org.echoiot.server.dao.exception.IncorrectParameterException;
 import org.echoiot.server.dao.service.Validator;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -36,9 +35,8 @@ public class OAuth2ServiceImpl extends AbstractEntityService implements OAuth2Se
     @Resource
     private OAuth2MobileDao oauth2MobileDao;
 
-    @NotNull
     @Override
-    public List<OAuth2ClientInfo> getOAuth2Clients(@NotNull String domainSchemeStr, String domainName, String pkgName, PlatformType platformType) {
+    public List<OAuth2ClientInfo> getOAuth2Clients(String domainSchemeStr, String domainName, String pkgName, PlatformType platformType) {
         log.trace("Executing getOAuth2Clients [{}://{}] pkgName=[{}] platformType=[{}]", domainSchemeStr, domainName, pkgName, platformType);
         if (domainSchemeStr == null) {
             throw new IncorrectParameterException(INCORRECT_DOMAIN_SCHEME);
@@ -59,38 +57,37 @@ public class OAuth2ServiceImpl extends AbstractEntityService implements OAuth2Se
 
     @Override
     @Transactional
-    public void saveOAuth2Info(@NotNull OAuth2Info oauth2Info) {
+    public void saveOAuth2Info(OAuth2Info oauth2Info) {
         log.trace("Executing saveOAuth2Info [{}]", oauth2Info);
         oauth2InfoValidator.accept(oauth2Info);
         oauth2ParamsDao.deleteAll();
         oauth2Info.getOauth2ParamsInfos().forEach(oauth2ParamsInfo -> {
-            @NotNull OAuth2Params oauth2Params = OAuth2Utils.infoToOAuth2Params(oauth2Info);
+            OAuth2Params oauth2Params = OAuth2Utils.infoToOAuth2Params(oauth2Info);
             OAuth2Params savedOauth2Params = oauth2ParamsDao.save(TenantId.SYS_TENANT_ID, oauth2Params);
             oauth2ParamsInfo.getClientRegistrations().forEach(registrationInfo -> {
-                @NotNull OAuth2Registration registration = OAuth2Utils.toOAuth2Registration(savedOauth2Params.getId(), registrationInfo);
+                OAuth2Registration registration = OAuth2Utils.toOAuth2Registration(savedOauth2Params.getId(), registrationInfo);
                 oauth2RegistrationDao.save(TenantId.SYS_TENANT_ID, registration);
             });
             oauth2ParamsInfo.getDomainInfos().forEach(domainInfo -> {
-                @NotNull OAuth2Domain domain = OAuth2Utils.toOAuth2Domain(savedOauth2Params.getId(), domainInfo);
+                OAuth2Domain domain = OAuth2Utils.toOAuth2Domain(savedOauth2Params.getId(), domainInfo);
                 oauth2DomainDao.save(TenantId.SYS_TENANT_ID, domain);
             });
             if (oauth2ParamsInfo.getMobileInfos() != null) {
                 oauth2ParamsInfo.getMobileInfos().forEach(mobileInfo -> {
-                    @NotNull OAuth2Mobile mobile = OAuth2Utils.toOAuth2Mobile(savedOauth2Params.getId(), mobileInfo);
+                    OAuth2Mobile mobile = OAuth2Utils.toOAuth2Mobile(savedOauth2Params.getId(), mobileInfo);
                     oauth2MobileDao.save(TenantId.SYS_TENANT_ID, mobile);
                 });
             }
         });
     }
 
-    @NotNull
     @Override
     public OAuth2Info findOAuth2Info() {
         log.trace("Executing findOAuth2Info");
-        @NotNull OAuth2Info oauth2Info = new OAuth2Info();
+        OAuth2Info oauth2Info = new OAuth2Info();
         List<OAuth2Params> oauth2ParamsList = oauth2ParamsDao.find(TenantId.SYS_TENANT_ID);
         oauth2Info.setEnabled(oauth2ParamsList.stream().anyMatch(param -> param.isEnabled()));
-        @NotNull List<OAuth2ParamsInfo> oauth2ParamsInfos = new ArrayList<>();
+        List<OAuth2ParamsInfo> oauth2ParamsInfos = new ArrayList<>();
         oauth2Info.setOauth2ParamsInfos(oauth2ParamsInfos);
         oauth2ParamsList.stream().sorted(Comparator.comparing(BaseData::getUuidId)).forEach(oauth2Params -> {
             List<OAuth2Registration> registrations = oauth2RegistrationDao.findByOAuth2ParamsId(oauth2Params.getId().getId());
@@ -128,12 +125,12 @@ public class OAuth2ServiceImpl extends AbstractEntityService implements OAuth2Se
                 || oauth2Info.getOauth2ParamsInfos() == null) {
             throw new DataValidationException("OAuth2 param infos should be specified!");
         }
-        for (@NotNull OAuth2ParamsInfo oauth2Params : oauth2Info.getOauth2ParamsInfos()) {
+        for (OAuth2ParamsInfo oauth2Params : oauth2Info.getOauth2ParamsInfos()) {
             if (oauth2Params.getDomainInfos() == null
                     || oauth2Params.getDomainInfos().isEmpty()) {
                 throw new DataValidationException("List of domain configuration should be specified!");
             }
-            for (@NotNull OAuth2DomainInfo domainInfo : oauth2Params.getDomainInfos()) {
+            for (OAuth2DomainInfo domainInfo : oauth2Params.getDomainInfos()) {
                 if (StringUtils.isEmpty(domainInfo.getName())) {
                     throw new DataValidationException("Domain name should be specified!");
                 }
@@ -156,7 +153,7 @@ public class OAuth2ServiceImpl extends AbstractEntityService implements OAuth2Se
                                 });
                     });
             if (oauth2Params.getMobileInfos() != null) {
-                for (@NotNull OAuth2MobileInfo mobileInfo : oauth2Params.getMobileInfos()) {
+                for (OAuth2MobileInfo mobileInfo : oauth2Params.getMobileInfos()) {
                     if (StringUtils.isEmpty(mobileInfo.getPkgName())) {
                         throw new DataValidationException("Package should be specified!");
                     }
@@ -178,7 +175,7 @@ public class OAuth2ServiceImpl extends AbstractEntityService implements OAuth2Se
             if (oauth2Params.getClientRegistrations() == null || oauth2Params.getClientRegistrations().isEmpty()) {
                 throw new DataValidationException("Client registrations should be specified!");
             }
-            for (@NotNull OAuth2RegistrationInfo clientRegistration : oauth2Params.getClientRegistrations()) {
+            for (OAuth2RegistrationInfo clientRegistration : oauth2Params.getClientRegistrations()) {
                 if (StringUtils.isEmpty(clientRegistration.getClientId())) {
                     throw new DataValidationException("Client ID should be specified!");
                 }

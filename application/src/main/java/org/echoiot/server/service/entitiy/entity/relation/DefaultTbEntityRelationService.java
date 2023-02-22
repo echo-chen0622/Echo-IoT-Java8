@@ -13,7 +13,6 @@ import org.echoiot.server.common.data.relation.EntityRelation;
 import org.echoiot.server.dao.relation.RelationService;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.entitiy.AbstractTbEntityService;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,11 +21,10 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class DefaultTbEntityRelationService extends AbstractTbEntityService implements TbEntityRelationService {
 
-    @NotNull
     private final RelationService relationService;
 
     @Override
-    public void save(TenantId tenantId, CustomerId customerId, @NotNull EntityRelation relation, User user) throws EchoiotException {
+    public void save(TenantId tenantId, CustomerId customerId, EntityRelation relation, User user) throws EchoiotException {
         try {
             relationService.saveRelation(tenantId, relation);
             notificationEntityService.notifyRelation(tenantId, customerId,
@@ -41,7 +39,7 @@ public class DefaultTbEntityRelationService extends AbstractTbEntityService impl
     }
 
     @Override
-    public void delete(TenantId tenantId, CustomerId customerId, @NotNull EntityRelation relation, User user) throws EchoiotException {
+    public void delete(TenantId tenantId, CustomerId customerId, EntityRelation relation, User user) throws EchoiotException {
         try {
             boolean found = relationService.deleteRelation(tenantId, relation.getFrom(), relation.getTo(), relation.getType(), relation.getTypeGroup());
             if (!found) {

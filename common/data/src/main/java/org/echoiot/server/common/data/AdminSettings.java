@@ -7,7 +7,6 @@ import org.echoiot.server.common.data.id.AdminSettingsId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.validation.Length;
 import org.echoiot.server.common.data.validation.NoXss;
-import org.jetbrains.annotations.NotNull;
 
 @ApiModel
 public class AdminSettings extends BaseData<AdminSettingsId> implements HasTenantId {
@@ -29,7 +28,7 @@ public class AdminSettings extends BaseData<AdminSettingsId> implements HasTenan
         super(id);
     }
 
-    public AdminSettings(@NotNull AdminSettings adminSettings) {
+    public AdminSettings(AdminSettings adminSettings) {
         super(adminSettings);
         this.tenantId = adminSettings.getTenantId();
         this.key = adminSettings.getKey();
@@ -85,14 +84,14 @@ public class AdminSettings extends BaseData<AdminSettingsId> implements HasTenan
     }
 
     @Override
-    public boolean equals(@NotNull Object obj) {
+    public boolean equals(Object obj) {
         if (this == obj)
             return true;
         if (!super.equals(obj))
             return false;
         if (getClass() != obj.getClass())
             return false;
-        @NotNull AdminSettings other = (AdminSettings) obj;
+        AdminSettings other = (AdminSettings) obj;
         if (jsonValue == null) {
             if (other.jsonValue != null)
                 return false;
@@ -103,7 +102,6 @@ public class AdminSettings extends BaseData<AdminSettingsId> implements HasTenan
         } else return key.equals(other.key);
     }
 
-    @NotNull
     @Override
     public String toString() {
         String builder = "AdminSettings [key=" + key + ", jsonValue=" + jsonValue + ", createdTime=" + createdTime + ", id=" + id + "]";

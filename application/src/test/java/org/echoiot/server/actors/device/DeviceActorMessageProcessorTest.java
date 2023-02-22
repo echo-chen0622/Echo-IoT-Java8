@@ -5,7 +5,6 @@ import org.echoiot.server.actors.ActorSystemContext;
 import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.dao.device.DeviceService;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,7 +19,6 @@ public class DeviceActorMessageProcessorTest {
     ActorSystemContext systemContext;
     DeviceService deviceService;
     TenantId tenantId = TenantId.SYS_TENANT_ID;
-    @NotNull
     DeviceId deviceId = DeviceId.fromString("78bf9b26-74ef-4af2-9cfb-ad6cf24ad2ec");
 
     DeviceActorMessageProcessor processor;

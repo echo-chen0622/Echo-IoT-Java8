@@ -9,7 +9,6 @@ import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.kv.AttributeKvEntry;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -50,7 +49,7 @@ public class DynamicPredicateValueCtxImpl implements DynamicPredicateValueCtx {
     }
 
     @Nullable
-    private EntityKeyValue getValue(@NotNull EntityId entityId, String key) {
+    private EntityKeyValue getValue(EntityId entityId, String key) {
         try {
             Optional<AttributeKvEntry> entry = ctx.getAttributesService().find(tenantId, entityId, DataConstants.SERVER_SCOPE, key).get();
             if (entry.isPresent()) {

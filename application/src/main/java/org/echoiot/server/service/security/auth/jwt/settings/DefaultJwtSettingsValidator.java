@@ -6,7 +6,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.util.Arrays;
 import org.echoiot.server.common.data.security.model.JwtSettings;
 import org.echoiot.server.dao.exception.DataValidationException;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 import java.util.Base64;
@@ -18,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 public class DefaultJwtSettingsValidator implements JwtSettingsValidator {
 
     @Override
-    public void validate(@NotNull JwtSettings jwtSettings) {
+    public void validate(JwtSettings jwtSettings) {
         if (StringUtils.isEmpty(jwtSettings.getTokenIssuer())) {
             throw new DataValidationException("JWT token issuer should be specified!");
         }

@@ -12,7 +12,6 @@ import org.echoiot.server.common.data.device.profile.DeviceProfileData;
 import org.echoiot.server.common.data.id.*;
 import org.echoiot.server.common.data.validation.Length;
 import org.echoiot.server.common.data.validation.NoXss;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.validation.Valid;
@@ -82,7 +81,7 @@ public class DeviceProfile extends SearchTextBased<DeviceProfileId> implements H
         super(deviceProfileId);
     }
 
-    public DeviceProfile(@NotNull DeviceProfile deviceProfile) {
+    public DeviceProfile(DeviceProfile deviceProfile) {
         super(deviceProfile);
         this.tenantId = deviceProfile.getTenantId();
         this.name = deviceProfile.getName();

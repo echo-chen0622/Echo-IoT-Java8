@@ -7,7 +7,6 @@ import org.echoiot.server.common.data.event.RuleNodeDebugEvent;
 import org.echoiot.server.common.data.id.EntityIdFactory;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.dao.model.BaseEntity;
-import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -44,7 +43,7 @@ public class RuleNodeDebugEventEntity extends EventEntity<RuleNodeDebugEvent> im
     @Column(name = EVENT_ERROR_COLUMN_NAME)
     private String error;
 
-    public RuleNodeDebugEventEntity(@NotNull RuleNodeDebugEvent event) {
+    public RuleNodeDebugEventEntity(RuleNodeDebugEvent event) {
         super(event);
         this.eventType = event.getEventType();
         if (event.getEventEntity() != null) {

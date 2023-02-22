@@ -24,7 +24,6 @@ import org.echoiot.server.gen.edge.v1.DownlinkMsg;
 import org.echoiot.server.gen.edge.v1.UpdateMsgType;
 import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.queue.util.TbCoreComponent;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -37,8 +36,7 @@ import java.util.UUID;
 @TbCoreComponent
 public class AlarmEdgeProcessor extends BaseEdgeProcessor {
 
-    @NotNull
-    public ListenableFuture<Void> processAlarmFromEdge(TenantId tenantId, @NotNull AlarmUpdateMsg alarmUpdateMsg) {
+    public ListenableFuture<Void> processAlarmFromEdge(TenantId tenantId, AlarmUpdateMsg alarmUpdateMsg) {
         log.trace("[{}] onAlarmUpdate [{}]", tenantId, alarmUpdateMsg);
         @Nullable EntityId originatorId = getAlarmOriginator(tenantId, alarmUpdateMsg.getOriginatorName(),
                                                              EntityType.valueOf(alarmUpdateMsg.getOriginatorType()));
@@ -92,7 +90,7 @@ public class AlarmEdgeProcessor extends BaseEdgeProcessor {
     }
 
     @Nullable
-    private EntityId getAlarmOriginator(TenantId tenantId, String entityName, @NotNull EntityType entityType) {
+    private EntityId getAlarmOriginator(TenantId tenantId, String entityName, EntityType entityType) {
         switch (entityType) {
             case DEVICE:
                 return deviceService.findDeviceByTenantIdAndName(tenantId, entityName).getId();
@@ -106,10 +104,10 @@ public class AlarmEdgeProcessor extends BaseEdgeProcessor {
     }
 
     @Nullable
-    public DownlinkMsg convertAlarmEventToDownlink(@NotNull EdgeEvent edgeEvent) {
-        @NotNull AlarmId alarmId = new AlarmId(edgeEvent.getEntityId());
+    public DownlinkMsg convertAlarmEventToDownlink(EdgeEvent edgeEvent) {
+        AlarmId alarmId = new AlarmId(edgeEvent.getEntityId());
         @Nullable DownlinkMsg downlinkMsg = null;
-        @NotNull UpdateMsgType msgType = getUpdateMsgType(edgeEvent.getAction());
+        UpdateMsgType msgType = getUpdateMsgType(edgeEvent.getAction());
         switch (edgeEvent.getAction()) {
             case ADDED:
             case UPDATED:
@@ -140,9 +138,9 @@ public class AlarmEdgeProcessor extends BaseEdgeProcessor {
         return downlinkMsg;
     }
 
-    public ListenableFuture<Void> processAlarmNotification(TenantId tenantId, @NotNull TransportProtos.EdgeNotificationMsgProto edgeNotificationMsg) throws JsonProcessingException {
-        @NotNull EdgeEventActionType actionType = EdgeEventActionType.valueOf(edgeNotificationMsg.getAction());
-        @NotNull AlarmId alarmId = new AlarmId(new UUID(edgeNotificationMsg.getEntityIdMSB(), edgeNotificationMsg.getEntityIdLSB()));
+    public ListenableFuture<Void> processAlarmNotification(TenantId tenantId, TransportProtos.EdgeNotificationMsgProto edgeNotificationMsg) throws JsonProcessingException {
+        EdgeEventActionType actionType = EdgeEventActionType.valueOf(edgeNotificationMsg.getAction());
+        AlarmId alarmId = new AlarmId(new UUID(edgeNotificationMsg.getEntityIdMSB(), edgeNotificationMsg.getEntityIdLSB()));
         if (actionType == EdgeEventActionType.DELETED) {
             EdgeId edgeId = new EdgeId(new UUID(edgeNotificationMsg.getEdgeIdMSB(), edgeNotificationMsg.getEdgeIdLSB()));
             Alarm deletedAlarm = JacksonUtil.OBJECT_MAPPER.readValue(edgeNotificationMsg.getBody(), Alarm.class);

@@ -1,16 +1,13 @@
 package org.echoiot.server.transport.lwm2m.server.downlink;
 
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CountDownLatch;
 
 @RequiredArgsConstructor
 public class TbLwM2MLatchCallback<R, T> implements DownlinkRequestCallback<R, T> {
 
-    @NotNull
     private final CountDownLatch countDownLatch;
-    @NotNull
     private final DownlinkRequestCallback<R, T> callback;
 
     @Override

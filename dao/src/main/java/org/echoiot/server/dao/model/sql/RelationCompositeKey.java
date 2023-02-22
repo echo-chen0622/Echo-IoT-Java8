@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.echoiot.server.common.data.relation.EntityRelation;
-import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Transient;
 import java.io.Serializable;
@@ -25,7 +24,7 @@ public class RelationCompositeKey implements Serializable {
     private String relationType;
     private String relationTypeGroup;
 
-    public RelationCompositeKey(@NotNull EntityRelation relation) {
+    public RelationCompositeKey(EntityRelation relation) {
         this.fromId = relation.getFrom().getId();
         this.fromType = relation.getFrom().getEntityType().name();
         this.toId = relation.getTo().getId();

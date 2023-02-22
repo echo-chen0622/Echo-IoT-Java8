@@ -9,7 +9,6 @@ import org.echoiot.server.common.data.oauth2.OAuth2Registration;
 import org.echoiot.server.dao.oauth2.OAuth2User;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.security.model.SecurityUser;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Service;
@@ -32,18 +31,18 @@ public class AppleOAuth2ClientMapper extends AbstractOAuth2ClientMapper implemen
     private static final String EMAIL = "email";
 
     @Override
-    public SecurityUser getOrCreateUserByClientPrincipal(@NotNull HttpServletRequest request, @NotNull OAuth2AuthenticationToken token, String providerAccessToken, @NotNull OAuth2Registration registration) {
+    public SecurityUser getOrCreateUserByClientPrincipal(HttpServletRequest request, OAuth2AuthenticationToken token, String providerAccessToken, OAuth2Registration registration) {
         OAuth2MapperConfig config = registration.getMapperConfig();
         Map<String, Object> attributes = updateAttributesFromRequestParams(request, token.getPrincipal().getAttributes());
         @Nullable String email = BasicMapperUtils.getStringAttributeByKey(attributes, config.getBasic().getEmailAttributeKey());
-        @NotNull OAuth2User oauth2User = BasicMapperUtils.getOAuth2User(email, attributes, config);
+        OAuth2User oauth2User = BasicMapperUtils.getOAuth2User(email, attributes, config);
 
         return getOrCreateSecurityUserFromOAuth2User(oauth2User, registration);
     }
 
-    private static Map<String, Object> updateAttributesFromRequestParams(@NotNull HttpServletRequest request, @NotNull Map<String, Object> attributes) {
+    private static Map<String, Object> updateAttributesFromRequestParams(HttpServletRequest request, Map<String, Object> attributes) {
         Map<String, Object> updated = attributes;
-        @NotNull MultiValueMap<String, String> params = toMultiMap(request.getParameterMap());
+        MultiValueMap<String, String> params = toMultiMap(request.getParameterMap());
         @Nullable String userValue = params.getFirst(USER);
         if (StringUtils.hasText(userValue)) {
             @Nullable JsonNode user = null;
@@ -76,9 +75,8 @@ public class AppleOAuth2ClientMapper extends AbstractOAuth2ClientMapper implemen
         return updated;
     }
 
-    @NotNull
-    private static MultiValueMap<String, String> toMultiMap(@NotNull Map<String, String[]> map) {
-        @NotNull MultiValueMap<String, String> params = new LinkedMultiValueMap<>(map.size());
+    private static MultiValueMap<String, String> toMultiMap(Map<String, String[]> map) {
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>(map.size());
         map.forEach((key, values) -> {
             for (String value : values) {
                 params.add(key, value);

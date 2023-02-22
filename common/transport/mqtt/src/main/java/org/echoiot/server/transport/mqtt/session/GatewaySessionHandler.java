@@ -33,7 +33,6 @@ import org.echoiot.server.transport.mqtt.MqttTransportHandler;
 import org.echoiot.server.transport.mqtt.adaptors.JsonMqttAdaptor;
 import org.echoiot.server.transport.mqtt.adaptors.MqttTransportAdaptor;
 import org.echoiot.server.transport.mqtt.adaptors.ProtoMqttAdaptor;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ConcurrentReferenceHashMap;
 
@@ -60,18 +59,14 @@ public class GatewaySessionHandler {
     private final TransportService transportService;
     private final TransportDeviceInfo gateway;
     private final UUID sessionId;
-    @NotNull
     private final ConcurrentMap<String, Lock> deviceCreationLockMap;
-    @NotNull
     private final ConcurrentMap<String, GatewayDeviceSessionCtx> devices;
-    @NotNull
     private final ConcurrentMap<String, ListenableFuture<GatewayDeviceSessionCtx>> deviceFutures;
     private final ConcurrentMap<MqttTopicMatcher, Integer> mqttQoSMap;
     private final ChannelHandlerContext channel;
-    @NotNull
     private final DeviceSessionCtx deviceSessionCtx;
 
-    public GatewaySessionHandler(@NotNull DeviceSessionCtx deviceSessionCtx, UUID sessionId) {
+    public GatewaySessionHandler(DeviceSessionCtx deviceSessionCtx, UUID sessionId) {
         this.context = deviceSessionCtx.getContext();
         this.transportService = context.getTransportService();
         this.deviceSessionCtx = deviceSessionCtx;
@@ -84,12 +79,11 @@ public class GatewaySessionHandler {
         this.channel = deviceSessionCtx.getChannel();
     }
 
-    @NotNull
     ConcurrentReferenceHashMap<String, Lock> createWeakMap() {
         return new ConcurrentReferenceHashMap<>(16, ReferenceType.WEAK);
     }
 
-    public void onDeviceConnect(@NotNull MqttPublishMessage mqttMsg) throws AdaptorException {
+    public void onDeviceConnect(MqttPublishMessage mqttMsg) throws AdaptorException {
         if (isJsonPayloadType()) {
             onDeviceConnectJson(mqttMsg);
         } else {
@@ -97,7 +91,7 @@ public class GatewaySessionHandler {
         }
     }
 
-    public void onDeviceDisconnect(@NotNull MqttPublishMessage mqttMsg) throws AdaptorException {
+    public void onDeviceDisconnect(MqttPublishMessage mqttMsg) throws AdaptorException {
         if (isJsonPayloadType()) {
             onDeviceDisconnectJson(mqttMsg);
         } else {
@@ -105,7 +99,7 @@ public class GatewaySessionHandler {
         }
     }
 
-    public void onDeviceTelemetry(@NotNull MqttPublishMessage mqttMsg) throws AdaptorException {
+    public void onDeviceTelemetry(MqttPublishMessage mqttMsg) throws AdaptorException {
         int msgId = getMsgId(mqttMsg);
         ByteBuf payload = mqttMsg.payload();
         if (isJsonPayloadType()) {
@@ -115,7 +109,7 @@ public class GatewaySessionHandler {
         }
     }
 
-    public void onDeviceClaim(@NotNull MqttPublishMessage mqttMsg) throws AdaptorException {
+    public void onDeviceClaim(MqttPublishMessage mqttMsg) throws AdaptorException {
         int msgId = getMsgId(mqttMsg);
         ByteBuf payload = mqttMsg.payload();
         if (isJsonPayloadType()) {
@@ -125,7 +119,7 @@ public class GatewaySessionHandler {
         }
     }
 
-    public void onDeviceAttributes(@NotNull MqttPublishMessage mqttMsg) throws AdaptorException {
+    public void onDeviceAttributes(MqttPublishMessage mqttMsg) throws AdaptorException {
         int msgId = getMsgId(mqttMsg);
         ByteBuf payload = mqttMsg.payload();
         if (isJsonPayloadType()) {
@@ -135,7 +129,7 @@ public class GatewaySessionHandler {
         }
     }
 
-    public void onDeviceAttributesRequest(@NotNull MqttPublishMessage mqttMsg) throws AdaptorException {
+    public void onDeviceAttributesRequest(MqttPublishMessage mqttMsg) throws AdaptorException {
         if (isJsonPayloadType()) {
             onDeviceAttributesRequestJson(mqttMsg);
         } else {
@@ -143,7 +137,7 @@ public class GatewaySessionHandler {
         }
     }
 
-    public void onDeviceRpcResponse(@NotNull MqttPublishMessage mqttMsg) throws AdaptorException {
+    public void onDeviceRpcResponse(MqttPublishMessage mqttMsg) throws AdaptorException {
         int msgId = getMsgId(mqttMsg);
         ByteBuf payload = mqttMsg.payload();
         if (isJsonPayloadType()) {
@@ -194,7 +188,7 @@ public class GatewaySessionHandler {
         return deviceSessionCtx.isJsonPayloadType();
     }
 
-    private void processOnConnect(@NotNull MqttPublishMessage msg, @NotNull String deviceName, String deviceType) {
+    private void processOnConnect(MqttPublishMessage msg, String deviceName, String deviceType) {
         log.trace("[{}] onDeviceConnect: {}", sessionId, deviceName);
         Futures.addCallback(onDeviceConnect(deviceName, deviceType), new FutureCallback<GatewayDeviceSessionCtx>() {
             @Override
@@ -211,10 +205,10 @@ public class GatewaySessionHandler {
         }, context.getExecutor());
     }
 
-    private ListenableFuture<GatewayDeviceSessionCtx> onDeviceConnect(@NotNull String deviceName, String deviceType) {
+    private ListenableFuture<GatewayDeviceSessionCtx> onDeviceConnect(String deviceName, String deviceType) {
         GatewayDeviceSessionCtx result = devices.get(deviceName);
         if (result == null) {
-            @NotNull Lock deviceCreationLock = deviceCreationLockMap.computeIfAbsent(deviceName, s -> new ReentrantLock());
+            Lock deviceCreationLock = deviceCreationLockMap.computeIfAbsent(deviceName, s -> new ReentrantLock());
             deviceCreationLock.lock();
             try {
                 result = devices.get(deviceName);
@@ -231,9 +225,8 @@ public class GatewaySessionHandler {
         }
     }
 
-    @NotNull
-    private ListenableFuture<GatewayDeviceSessionCtx> getDeviceCreationFuture(@NotNull String deviceName, String deviceType) {
-        @NotNull final SettableFuture<GatewayDeviceSessionCtx> futureToSet = SettableFuture.create();
+    private ListenableFuture<GatewayDeviceSessionCtx> getDeviceCreationFuture(String deviceName, String deviceType) {
+        final SettableFuture<GatewayDeviceSessionCtx> futureToSet = SettableFuture.create();
         @org.jetbrains.annotations.Nullable ListenableFuture<GatewayDeviceSessionCtx> future = deviceFutures.putIfAbsent(deviceName, futureToSet);
         if (future != null) {
             return future;
@@ -246,8 +239,8 @@ public class GatewaySessionHandler {
                                 .setGatewayIdLSB(gateway.getDeviceId().getId().getLeastSignificantBits()).build(),
                         new TransportServiceCallback<GetOrCreateDeviceFromGatewayResponse>() {
                             @Override
-                            public void onSuccess(@NotNull GetOrCreateDeviceFromGatewayResponse msg) {
-                                @NotNull GatewayDeviceSessionCtx deviceSessionCtx = new GatewayDeviceSessionCtx(GatewaySessionHandler.this, msg.getDeviceInfo(), msg.getDeviceProfile(), mqttQoSMap, transportService);
+                            public void onSuccess(GetOrCreateDeviceFromGatewayResponse msg) {
+                                GatewayDeviceSessionCtx deviceSessionCtx = new GatewayDeviceSessionCtx(GatewaySessionHandler.this, msg.getDeviceInfo(), msg.getDeviceProfile(), mqttQoSMap, transportService);
                                 if (devices.putIfAbsent(deviceName, deviceSessionCtx) == null) {
                                     log.trace("[{}] First got or created device [{}], type [{}] for the gateway session", sessionId, deviceName, deviceType);
                                     SessionInfoProto deviceSessionInfo = deviceSessionCtx.getSessionInfo();
@@ -264,7 +257,7 @@ public class GatewaySessionHandler {
                             }
 
                             @Override
-                            public void onError(@NotNull Throwable e) {
+                            public void onError(Throwable e) {
                                 log.warn("[{}] Failed to process device connect command: {}", sessionId, deviceName, e);
                                 futureToSet.setException(e);
                                 deviceFutures.remove(deviceName);
@@ -277,44 +270,44 @@ public class GatewaySessionHandler {
             }
     }
 
-    private int getMsgId(@NotNull MqttPublishMessage mqttMsg) {
+    private int getMsgId(MqttPublishMessage mqttMsg) {
         return mqttMsg.variableHeader().packetId();
     }
 
-    private void onDeviceConnectJson(@NotNull MqttPublishMessage mqttMsg) throws AdaptorException {
+    private void onDeviceConnectJson(MqttPublishMessage mqttMsg) throws AdaptorException {
         JsonElement json = getJson(mqttMsg);
-        @NotNull String deviceName = checkDeviceName(getDeviceName(json));
+        String deviceName = checkDeviceName(getDeviceName(json));
         String deviceType = getDeviceType(json);
         processOnConnect(mqttMsg, deviceName, deviceType);
     }
 
-    private void onDeviceConnectProto(@NotNull MqttPublishMessage mqttMsg) throws AdaptorException {
+    private void onDeviceConnectProto(MqttPublishMessage mqttMsg) throws AdaptorException {
         try {
             TransportApiProtos.ConnectMsg connectProto = TransportApiProtos.ConnectMsg.parseFrom(getBytes(mqttMsg.payload()));
-            @NotNull String deviceName = checkDeviceName(connectProto.getDeviceName());
-            @NotNull String deviceType = StringUtils.isEmpty(connectProto.getDeviceType()) ? DEFAULT_DEVICE_TYPE : connectProto.getDeviceType();
+            String deviceName = checkDeviceName(connectProto.getDeviceName());
+            String deviceType = StringUtils.isEmpty(connectProto.getDeviceType()) ? DEFAULT_DEVICE_TYPE : connectProto.getDeviceType();
             processOnConnect(mqttMsg, deviceName, deviceType);
         } catch (RuntimeException | InvalidProtocolBufferException e) {
             throw new AdaptorException(e);
         }
     }
 
-    private void onDeviceDisconnectJson(@NotNull MqttPublishMessage msg) throws AdaptorException {
-        @NotNull String deviceName = checkDeviceName(getDeviceName(getJson(msg)));
+    private void onDeviceDisconnectJson(MqttPublishMessage msg) throws AdaptorException {
+        String deviceName = checkDeviceName(getDeviceName(getJson(msg)));
         processOnDisconnect(msg, deviceName);
     }
 
-    private void onDeviceDisconnectProto(@NotNull MqttPublishMessage mqttMsg) throws AdaptorException {
+    private void onDeviceDisconnectProto(MqttPublishMessage mqttMsg) throws AdaptorException {
         try {
             TransportApiProtos.DisconnectMsg connectProto = TransportApiProtos.DisconnectMsg.parseFrom(getBytes(mqttMsg.payload()));
-            @NotNull String deviceName = checkDeviceName(connectProto.getDeviceName());
+            String deviceName = checkDeviceName(connectProto.getDeviceName());
             processOnDisconnect(mqttMsg, deviceName);
         } catch (RuntimeException | InvalidProtocolBufferException e) {
             throw new AdaptorException(e);
         }
     }
 
-    private void processOnDisconnect(@NotNull MqttPublishMessage msg, String deviceName) {
+    private void processOnDisconnect(MqttPublishMessage msg, String deviceName) {
         deregisterSession(deviceName);
         ack(msg);
     }
@@ -323,7 +316,7 @@ public class GatewaySessionHandler {
         JsonElement json = JsonMqttAdaptor.validateJsonPayload(sessionId, payload);
         if (json.isJsonObject()) {
             JsonObject jsonObj = json.getAsJsonObject();
-            for (@NotNull Map.Entry<String, JsonElement> deviceEntry : jsonObj.entrySet()) {
+            for (Map.Entry<String, JsonElement> deviceEntry : jsonObj.entrySet()) {
                 String deviceName = deviceEntry.getKey();
                 Futures.addCallback(checkDeviceConnected(deviceName),
                         new FutureCallback<>() {
@@ -352,18 +345,18 @@ public class GatewaySessionHandler {
         }
     }
 
-    private void onDeviceTelemetryProto(int msgId, @NotNull ByteBuf payload) throws AdaptorException {
+    private void onDeviceTelemetryProto(int msgId, ByteBuf payload) throws AdaptorException {
         try {
             TransportApiProtos.GatewayTelemetryMsg telemetryMsgProto = TransportApiProtos.GatewayTelemetryMsg.parseFrom(getBytes(payload));
-            @NotNull List<TransportApiProtos.TelemetryMsg> deviceMsgList = telemetryMsgProto.getMsgList();
+            List<TransportApiProtos.TelemetryMsg> deviceMsgList = telemetryMsgProto.getMsgList();
             if (!CollectionUtils.isEmpty(deviceMsgList)) {
                 deviceMsgList.forEach(telemetryMsg -> {
-                    @NotNull String deviceName = checkDeviceName(telemetryMsg.getDeviceName());
+                    String deviceName = checkDeviceName(telemetryMsg.getDeviceName());
                     Futures.addCallback(checkDeviceConnected(deviceName),
                             new FutureCallback<GatewayDeviceSessionCtx>() {
                                 @Override
                                 public void onSuccess(@Nullable GatewayDeviceSessionCtx deviceCtx) {
-                                    @NotNull TransportProtos.PostTelemetryMsg msg = telemetryMsg.getMsg();
+                                    TransportProtos.PostTelemetryMsg msg = telemetryMsg.getMsg();
                                     try {
                                         TransportProtos.PostTelemetryMsg postTelemetryMsg = ProtoConverter.validatePostTelemetryMsg(msg.toByteArray());
                                         processPostTelemetryMsg(deviceCtx, postTelemetryMsg, deviceName, msgId);
@@ -388,7 +381,7 @@ public class GatewaySessionHandler {
         }
     }
 
-    private void processPostTelemetryMsg(@NotNull GatewayDeviceSessionCtx deviceCtx, TransportProtos.PostTelemetryMsg postTelemetryMsg, String deviceName, int msgId) {
+    private void processPostTelemetryMsg(GatewayDeviceSessionCtx deviceCtx, TransportProtos.PostTelemetryMsg postTelemetryMsg, String deviceName, int msgId) {
         transportService.process(deviceCtx.getSessionInfo(), postTelemetryMsg, getPubAckCallback(channel, deviceName, msgId, postTelemetryMsg));
     }
 
@@ -396,7 +389,7 @@ public class GatewaySessionHandler {
         JsonElement json = JsonMqttAdaptor.validateJsonPayload(sessionId, payload);
         if (json.isJsonObject()) {
             JsonObject jsonObj = json.getAsJsonObject();
-            for (@NotNull Map.Entry<String, JsonElement> deviceEntry : jsonObj.entrySet()) {
+            for (Map.Entry<String, JsonElement> deviceEntry : jsonObj.entrySet()) {
                 String deviceName = deviceEntry.getKey();
                 Futures.addCallback(checkDeviceConnected(deviceName),
                         new FutureCallback<GatewayDeviceSessionCtx>() {
@@ -425,18 +418,18 @@ public class GatewaySessionHandler {
         }
     }
 
-    private void onDeviceClaimProto(int msgId, @NotNull ByteBuf payload) throws AdaptorException {
+    private void onDeviceClaimProto(int msgId, ByteBuf payload) throws AdaptorException {
         try {
             TransportApiProtos.GatewayClaimMsg claimMsgProto = TransportApiProtos.GatewayClaimMsg.parseFrom(getBytes(payload));
-            @NotNull List<TransportApiProtos.ClaimDeviceMsg> claimMsgList = claimMsgProto.getMsgList();
+            List<TransportApiProtos.ClaimDeviceMsg> claimMsgList = claimMsgProto.getMsgList();
             if (!CollectionUtils.isEmpty(claimMsgList)) {
                 claimMsgList.forEach(claimDeviceMsg -> {
-                    @NotNull String deviceName = checkDeviceName(claimDeviceMsg.getDeviceName());
+                    String deviceName = checkDeviceName(claimDeviceMsg.getDeviceName());
                     Futures.addCallback(checkDeviceConnected(deviceName),
                             new FutureCallback<GatewayDeviceSessionCtx>() {
                                 @Override
                                 public void onSuccess(@Nullable GatewayDeviceSessionCtx deviceCtx) {
-                                    @NotNull TransportApiProtos.ClaimDevice claimRequest = claimDeviceMsg.getClaimRequest();
+                                    TransportApiProtos.ClaimDevice claimRequest = claimDeviceMsg.getClaimRequest();
                                     if (claimRequest == null) {
                                         throw new IllegalArgumentException("Claim request for device: " + deviceName + " is null!");
                                     }
@@ -464,7 +457,7 @@ public class GatewaySessionHandler {
         }
     }
 
-    private void processClaimDeviceMsg(@NotNull GatewayDeviceSessionCtx deviceCtx, TransportProtos.ClaimDeviceMsg claimDeviceMsg, String deviceName, int msgId) {
+    private void processClaimDeviceMsg(GatewayDeviceSessionCtx deviceCtx, TransportProtos.ClaimDeviceMsg claimDeviceMsg, String deviceName, int msgId) {
         transportService.process(deviceCtx.getSessionInfo(), claimDeviceMsg, getPubAckCallback(channel, deviceName, msgId, claimDeviceMsg));
     }
 
@@ -472,7 +465,7 @@ public class GatewaySessionHandler {
         JsonElement json = JsonMqttAdaptor.validateJsonPayload(sessionId, payload);
         if (json.isJsonObject()) {
             JsonObject jsonObj = json.getAsJsonObject();
-            for (@NotNull Map.Entry<String, JsonElement> deviceEntry : jsonObj.entrySet()) {
+            for (Map.Entry<String, JsonElement> deviceEntry : jsonObj.entrySet()) {
                 String deviceName = deviceEntry.getKey();
                 Futures.addCallback(checkDeviceConnected(deviceName),
                         new FutureCallback<GatewayDeviceSessionCtx>() {
@@ -496,18 +489,18 @@ public class GatewaySessionHandler {
         }
     }
 
-    private void onDeviceAttributesProto(int msgId, @NotNull ByteBuf payload) throws AdaptorException {
+    private void onDeviceAttributesProto(int msgId, ByteBuf payload) throws AdaptorException {
         try {
             TransportApiProtos.GatewayAttributesMsg attributesMsgProto = TransportApiProtos.GatewayAttributesMsg.parseFrom(getBytes(payload));
-            @NotNull List<TransportApiProtos.AttributesMsg> attributesMsgList = attributesMsgProto.getMsgList();
+            List<TransportApiProtos.AttributesMsg> attributesMsgList = attributesMsgProto.getMsgList();
             if (!CollectionUtils.isEmpty(attributesMsgList)) {
                 attributesMsgList.forEach(attributesMsg -> {
-                    @NotNull String deviceName = checkDeviceName(attributesMsg.getDeviceName());
+                    String deviceName = checkDeviceName(attributesMsg.getDeviceName());
                     Futures.addCallback(checkDeviceConnected(deviceName),
                             new FutureCallback<GatewayDeviceSessionCtx>() {
                                 @Override
                                 public void onSuccess(@Nullable GatewayDeviceSessionCtx deviceCtx) {
-                                    @NotNull TransportProtos.PostAttributeMsg kvListProto = attributesMsg.getMsg();
+                                    TransportProtos.PostAttributeMsg kvListProto = attributesMsg.getMsg();
                                     if (kvListProto == null) {
                                         throw new IllegalArgumentException("Attributes List for device: " + deviceName + " is empty!");
                                     }
@@ -534,11 +527,11 @@ public class GatewaySessionHandler {
         }
     }
 
-    private void processPostAttributesMsg(@NotNull GatewayDeviceSessionCtx deviceCtx, TransportProtos.PostAttributeMsg postAttributeMsg, String deviceName, int msgId) {
+    private void processPostAttributesMsg(GatewayDeviceSessionCtx deviceCtx, TransportProtos.PostAttributeMsg postAttributeMsg, String deviceName, int msgId) {
         transportService.process(deviceCtx.getSessionInfo(), postAttributeMsg, getPubAckCallback(channel, deviceName, msgId, postAttributeMsg));
     }
 
-    private void onDeviceAttributesRequestJson(@NotNull MqttPublishMessage msg) throws AdaptorException {
+    private void onDeviceAttributesRequestJson(MqttPublishMessage msg) throws AdaptorException {
         JsonElement json = JsonMqttAdaptor.validateJsonPayload(sessionId, msg.payload());
         if (json.isJsonObject()) {
             JsonObject jsonObj = json.getAsJsonObject();
@@ -551,7 +544,7 @@ public class GatewaySessionHandler {
             } else {
                 JsonArray keysArray = jsonObj.get("keys").getAsJsonArray();
                 keys = new HashSet<>();
-                for (@NotNull JsonElement keyObj : keysArray) {
+                for (JsonElement keyObj : keysArray) {
                     keys.add(keyObj.getAsString());
                 }
             }
@@ -562,14 +555,14 @@ public class GatewaySessionHandler {
         }
     }
 
-    private void onDeviceAttributesRequestProto(@NotNull MqttPublishMessage mqttMsg) throws AdaptorException {
+    private void onDeviceAttributesRequestProto(MqttPublishMessage mqttMsg) throws AdaptorException {
         try {
             TransportApiProtos.GatewayAttributesRequestMsg gatewayAttributesRequestMsg = TransportApiProtos.GatewayAttributesRequestMsg.parseFrom(getBytes(mqttMsg.payload()));
-            @NotNull String deviceName = checkDeviceName(gatewayAttributesRequestMsg.getDeviceName());
+            String deviceName = checkDeviceName(gatewayAttributesRequestMsg.getDeviceName());
             int requestId = gatewayAttributesRequestMsg.getId();
             boolean clientScope = gatewayAttributesRequestMsg.getClient();
-            @NotNull ProtocolStringList keysList = gatewayAttributesRequestMsg.getKeysList();
-            @NotNull Set<String> keys = new HashSet<>(keysList);
+            ProtocolStringList keysList = gatewayAttributesRequestMsg.getKeysList();
+            Set<String> keys = new HashSet<>(keysList);
             TransportProtos.GetAttributeRequestMsg requestMsg = toGetAttributeRequestMsg(requestId, clientScope, keys);
             processGetAttributeRequestMessage(mqttMsg, deviceName, requestMsg);
         } catch (RuntimeException | InvalidProtocolBufferException e) {
@@ -586,7 +579,7 @@ public class GatewaySessionHandler {
                     new FutureCallback<GatewayDeviceSessionCtx>() {
                         @Override
                         public void onSuccess(@Nullable GatewayDeviceSessionCtx deviceCtx) {
-                            @NotNull Integer requestId = jsonObj.get("id").getAsInt();
+                            Integer requestId = jsonObj.get("id").getAsInt();
                             String data = jsonObj.get("data").toString();
                             TransportProtos.ToDeviceRpcResponseMsg rpcResponseMsg = TransportProtos.ToDeviceRpcResponseMsg.newBuilder()
                                     .setRequestId(requestId).setPayload(data).build();
@@ -603,16 +596,16 @@ public class GatewaySessionHandler {
         }
     }
 
-    private void onDeviceRpcResponseProto(int msgId, @NotNull ByteBuf payload) throws AdaptorException {
+    private void onDeviceRpcResponseProto(int msgId, ByteBuf payload) throws AdaptorException {
         try {
             TransportApiProtos.GatewayRpcResponseMsg gatewayRpcResponseMsg = TransportApiProtos.GatewayRpcResponseMsg.parseFrom(getBytes(payload));
-            @NotNull String deviceName = checkDeviceName(gatewayRpcResponseMsg.getDeviceName());
+            String deviceName = checkDeviceName(gatewayRpcResponseMsg.getDeviceName());
             Futures.addCallback(checkDeviceConnected(deviceName),
                     new FutureCallback<GatewayDeviceSessionCtx>() {
                         @Override
                         public void onSuccess(@Nullable GatewayDeviceSessionCtx deviceCtx) {
-                            @NotNull Integer requestId = gatewayRpcResponseMsg.getId();
-                            @NotNull String data = gatewayRpcResponseMsg.getData();
+                            Integer requestId = gatewayRpcResponseMsg.getId();
+                            String data = gatewayRpcResponseMsg.getData();
                             TransportProtos.ToDeviceRpcResponseMsg rpcResponseMsg = TransportProtos.ToDeviceRpcResponseMsg.newBuilder()
                                     .setRequestId(requestId).setPayload(data).build();
                             processRpcResponseMsg(deviceCtx, rpcResponseMsg, deviceName, msgId);
@@ -628,11 +621,11 @@ public class GatewaySessionHandler {
         }
     }
 
-    private void processRpcResponseMsg(@NotNull GatewayDeviceSessionCtx deviceCtx, TransportProtos.ToDeviceRpcResponseMsg rpcResponseMsg, String deviceName, int msgId) {
+    private void processRpcResponseMsg(GatewayDeviceSessionCtx deviceCtx, TransportProtos.ToDeviceRpcResponseMsg rpcResponseMsg, String deviceName, int msgId) {
         transportService.process(deviceCtx.getSessionInfo(), rpcResponseMsg, getPubAckCallback(channel, deviceName, msgId, rpcResponseMsg));
     }
 
-    private void processGetAttributeRequestMessage(@NotNull MqttPublishMessage mqttMsg, @NotNull String deviceName, TransportProtos.GetAttributeRequestMsg requestMsg) {
+    private void processGetAttributeRequestMessage(MqttPublishMessage mqttMsg, String deviceName, TransportProtos.GetAttributeRequestMsg requestMsg) {
         int msgId = getMsgId(mqttMsg);
         Futures.addCallback(checkDeviceConnected(deviceName),
                 new FutureCallback<GatewayDeviceSessionCtx>() {
@@ -661,7 +654,7 @@ public class GatewaySessionHandler {
         return result.build();
     }
 
-    private ListenableFuture<GatewayDeviceSessionCtx> checkDeviceConnected(@NotNull String deviceName) {
+    private ListenableFuture<GatewayDeviceSessionCtx> checkDeviceConnected(String deviceName) {
         GatewayDeviceSessionCtx ctx = devices.get(deviceName);
         if (ctx == null) {
             log.debug("[{}] Missing device [{}] for the gateway session", sessionId, deviceName);
@@ -671,8 +664,7 @@ public class GatewaySessionHandler {
         }
     }
 
-    @NotNull
-    private String checkDeviceName(@NotNull String deviceName) {
+    private String checkDeviceName(String deviceName) {
         if (StringUtils.isEmpty(deviceName)) {
             throw new RuntimeException("Device name is empty!");
         } else {
@@ -680,38 +672,37 @@ public class GatewaySessionHandler {
         }
     }
 
-    private String getDeviceName(@NotNull JsonElement json) {
+    private String getDeviceName(JsonElement json) {
         return json.getAsJsonObject().get(DEVICE_PROPERTY).getAsString();
     }
 
-    private String getDeviceType(@NotNull JsonElement json) {
+    private String getDeviceType(JsonElement json) {
         JsonElement type = json.getAsJsonObject().get("type");
         return type == null || type instanceof JsonNull ? DEFAULT_DEVICE_TYPE : type.getAsString();
     }
 
-    private JsonElement getJson(@NotNull MqttPublishMessage mqttMsg) throws AdaptorException {
+    private JsonElement getJson(MqttPublishMessage mqttMsg) throws AdaptorException {
         return JsonMqttAdaptor.validateJsonPayload(sessionId, mqttMsg.payload());
     }
 
-    private byte[] getBytes(@NotNull ByteBuf payload) {
+    private byte[] getBytes(ByteBuf payload) {
         return ProtoMqttAdaptor.toBytes(payload);
     }
 
-    private void ack(@NotNull MqttPublishMessage msg) {
+    private void ack(MqttPublishMessage msg) {
         int msgId = getMsgId(msg);
         if (msgId > 0) {
             writeAndFlush(MqttTransportHandler.createMqttPubAckMsg(msgId));
         }
     }
 
-    private void deregisterSession(String deviceName, @NotNull GatewayDeviceSessionCtx deviceSessionCtx) {
+    private void deregisterSession(String deviceName, GatewayDeviceSessionCtx deviceSessionCtx) {
         transportService.deregisterSession(deviceSessionCtx.getSessionInfo());
         transportService.process(deviceSessionCtx.getSessionInfo(), DefaultTransportService.SESSION_EVENT_MSG_CLOSED, null);
         log.debug("[{}] Removed device [{}] from the gateway session", sessionId, deviceName);
     }
 
-    @NotNull
-    private <T> TransportServiceCallback<Void> getPubAckCallback(@NotNull final ChannelHandlerContext ctx, final String deviceName, final int msgId, final T msg) {
+    private <T> TransportServiceCallback<Void> getPubAckCallback(final ChannelHandlerContext ctx, final String deviceName, final int msgId, final T msg) {
         return new TransportServiceCallback<Void>() {
             @Override
             public void onSuccess(Void dummy) {

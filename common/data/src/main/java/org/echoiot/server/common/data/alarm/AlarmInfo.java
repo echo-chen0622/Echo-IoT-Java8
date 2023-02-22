@@ -2,7 +2,6 @@ package org.echoiot.server.common.data.alarm;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -19,11 +18,11 @@ public class AlarmInfo extends Alarm {
         super();
     }
 
-    public AlarmInfo(@NotNull Alarm alarm) {
+    public AlarmInfo(Alarm alarm) {
         super(alarm);
     }
 
-    public AlarmInfo(@NotNull Alarm alarm, String originatorName) {
+    public AlarmInfo(Alarm alarm, String originatorName) {
         super(alarm);
         this.originatorName = originatorName;
     }
@@ -42,7 +41,7 @@ public class AlarmInfo extends Alarm {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
 
-        @NotNull AlarmInfo alarmInfo = (AlarmInfo) o;
+        AlarmInfo alarmInfo = (AlarmInfo) o;
 
         return Objects.equals(originatorName, alarmInfo.originatorName);
 

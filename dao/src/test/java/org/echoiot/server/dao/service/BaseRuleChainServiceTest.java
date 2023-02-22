@@ -15,7 +15,6 @@ import org.echoiot.server.common.data.rule.RuleChainMetaData;
 import org.echoiot.server.common.data.rule.RuleChainType;
 import org.echoiot.server.common.data.rule.RuleNode;
 import org.echoiot.server.dao.exception.DataValidationException;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.junit.After;
 import org.junit.Assert;
@@ -39,7 +38,7 @@ public abstract class BaseRuleChainServiceTest extends AbstractServiceTest {
 
     @Before
     public void before() {
-        @NotNull Tenant tenant = new Tenant();
+        Tenant tenant = new Tenant();
         tenant.setTitle("My tenant");
         Tenant savedTenant = tenantService.saveTenant(tenant);
         Assert.assertNotNull(savedTenant);
@@ -53,7 +52,7 @@ public abstract class BaseRuleChainServiceTest extends AbstractServiceTest {
 
     @Test
     public void testSaveRuleChain() throws IOException {
-        @NotNull RuleChain ruleChain = new RuleChain();
+        RuleChain ruleChain = new RuleChain();
         ruleChain.setTenantId(tenantId);
         ruleChain.setName("My RuleChain");
 
@@ -75,14 +74,14 @@ public abstract class BaseRuleChainServiceTest extends AbstractServiceTest {
 
     @Test(expected = DataValidationException.class)
     public void testSaveRuleChainWithEmptyName() {
-        @NotNull RuleChain ruleChain = new RuleChain();
+        RuleChain ruleChain = new RuleChain();
         ruleChain.setTenantId(tenantId);
         ruleChainService.saveRuleChain(ruleChain);
     }
 
     @Test(expected = DataValidationException.class)
     public void testSaveRuleChainWithInvalidTenant() {
-        @NotNull RuleChain ruleChain = new RuleChain();
+        RuleChain ruleChain = new RuleChain();
         ruleChain.setName("My RuleChain");
         ruleChain.setTenantId(TenantId.fromUUID(Uuids.timeBased()));
         ruleChainService.saveRuleChain(ruleChain);
@@ -90,7 +89,7 @@ public abstract class BaseRuleChainServiceTest extends AbstractServiceTest {
 
     @Test
     public void testFindRuleChainById() {
-        @NotNull RuleChain ruleChain = new RuleChain();
+        RuleChain ruleChain = new RuleChain();
         ruleChain.setTenantId(tenantId);
         ruleChain.setName("My RuleChain");
         RuleChain savedRuleChain = ruleChainService.saveRuleChain(ruleChain);
@@ -102,7 +101,7 @@ public abstract class BaseRuleChainServiceTest extends AbstractServiceTest {
 
     @Test
     public void testDeleteRuleChain() {
-        @NotNull RuleChain ruleChain = new RuleChain();
+        RuleChain ruleChain = new RuleChain();
         ruleChain.setTenantId(tenantId);
         ruleChain.setName("My RuleChain");
         RuleChain savedRuleChain = ruleChainService.saveRuleChain(ruleChain);
@@ -121,15 +120,15 @@ public abstract class BaseRuleChainServiceTest extends AbstractServiceTest {
 
         TenantId tenantId = tenant.getId();
 
-        @NotNull List<RuleChain> ruleChains = new ArrayList<>();
+        List<RuleChain> ruleChains = new ArrayList<>();
         for (int i = 0; i < 165; i++) {
-            @NotNull RuleChain ruleChain = new RuleChain();
+            RuleChain ruleChain = new RuleChain();
             ruleChain.setTenantId(tenantId);
             ruleChain.setName("RuleChain" + i);
             ruleChains.add(ruleChainService.saveRuleChain(ruleChain));
         }
 
-        @NotNull List<RuleChain> loadedRuleChains = new ArrayList<>();
+        List<RuleChain> loadedRuleChains = new ArrayList<>();
         PageLink pageLink = new PageLink(16);
         @Nullable PageData<RuleChain> pageData = null;
         do {
@@ -157,30 +156,30 @@ public abstract class BaseRuleChainServiceTest extends AbstractServiceTest {
 
     @Test
     public void testFindRuleChainsByTenantIdAndName() {
-        @NotNull String name1 = "RuleChain name 1";
-        @NotNull List<RuleChain> ruleChainsName1 = new ArrayList<>();
+        String name1 = "RuleChain name 1";
+        List<RuleChain> ruleChainsName1 = new ArrayList<>();
         for (int i = 0; i < 123; i++) {
-            @NotNull RuleChain ruleChain = new RuleChain();
+            RuleChain ruleChain = new RuleChain();
             ruleChain.setTenantId(tenantId);
-            @NotNull String suffix = StringUtils.randomAlphanumeric((int) (Math.random() * 17));
-            @NotNull String name = name1 + suffix;
+            String suffix = StringUtils.randomAlphanumeric((int) (Math.random() * 17));
+            String name = name1 + suffix;
             name = i % 2 == 0 ? name.toLowerCase() : name.toUpperCase();
             ruleChain.setName(name);
             ruleChainsName1.add(ruleChainService.saveRuleChain(ruleChain));
         }
-        @NotNull String name2 = "RuleChain name 2";
-        @NotNull List<RuleChain> ruleChainsName2 = new ArrayList<>();
+        String name2 = "RuleChain name 2";
+        List<RuleChain> ruleChainsName2 = new ArrayList<>();
         for (int i = 0; i < 193; i++) {
-            @NotNull RuleChain ruleChain = new RuleChain();
+            RuleChain ruleChain = new RuleChain();
             ruleChain.setTenantId(tenantId);
-            @NotNull String suffix = StringUtils.randomAlphanumeric((int) (Math.random() * 15));
-            @NotNull String name = name2 + suffix;
+            String suffix = StringUtils.randomAlphanumeric((int) (Math.random() * 15));
+            String name = name2 + suffix;
             name = i % 2 == 0 ? name.toLowerCase() : name.toUpperCase();
             ruleChain.setName(name);
             ruleChainsName2.add(ruleChainService.saveRuleChain(ruleChain));
         }
 
-        @NotNull List<RuleChain> loadedRuleChainsName1 = new ArrayList<>();
+        List<RuleChain> loadedRuleChainsName1 = new ArrayList<>();
         PageLink pageLink = new PageLink(19, 0, name1);
         @Nullable PageData<RuleChain> pageData = null;
         do {
@@ -196,7 +195,7 @@ public abstract class BaseRuleChainServiceTest extends AbstractServiceTest {
 
         Assert.assertEquals(ruleChainsName1, loadedRuleChainsName1);
 
-        @NotNull List<RuleChain> loadedRuleChainsName2 = new ArrayList<>();
+        List<RuleChain> loadedRuleChainsName2 = new ArrayList<>();
         pageLink = new PageLink(4, 0, name2);
         do {
             pageData = ruleChainService.findTenantRuleChainsByType(tenantId, RuleChainType.CORE, pageLink);
@@ -211,7 +210,7 @@ public abstract class BaseRuleChainServiceTest extends AbstractServiceTest {
 
         Assert.assertEquals(ruleChainsName2, loadedRuleChainsName2);
 
-        for (@NotNull RuleChain ruleChain : loadedRuleChainsName1) {
+        for (RuleChain ruleChain : loadedRuleChainsName1) {
             ruleChainService.deleteRuleChainById(tenantId, ruleChain.getId());
         }
 
@@ -220,7 +219,7 @@ public abstract class BaseRuleChainServiceTest extends AbstractServiceTest {
         Assert.assertFalse(pageData.hasNext());
         Assert.assertEquals(0, pageData.getData().size());
 
-        for (@NotNull RuleChain ruleChain : loadedRuleChainsName2) {
+        for (RuleChain ruleChain : loadedRuleChainsName2) {
             ruleChainService.deleteRuleChainById(tenantId, ruleChain.getId());
         }
 
@@ -238,7 +237,7 @@ public abstract class BaseRuleChainServiceTest extends AbstractServiceTest {
         Assert.assertEquals(3, savedRuleChainMetaData.getNodes().size());
         Assert.assertEquals(3, savedRuleChainMetaData.getConnections().size());
 
-        for (@NotNull RuleNode ruleNode : savedRuleChainMetaData.getNodes()) {
+        for (RuleNode ruleNode : savedRuleChainMetaData.getNodes()) {
             Assert.assertNotNull(ruleNode.getId());
             List<EntityRelation> relations = ruleChainService.getRuleNodeRelations(tenantId, ruleNode.getId());
             if ("name1".equals(ruleNode.getName())) {
@@ -273,7 +272,7 @@ public abstract class BaseRuleChainServiceTest extends AbstractServiceTest {
             }
         }
 
-        @NotNull RuleNode ruleNode4 = new RuleNode();
+        RuleNode ruleNode4 = new RuleNode();
         ruleNode4.setName("name4");
         ruleNode4.setType("type4");
         ruleNode4.setConfiguration(mapper.readTree("\"key4\": \"val4\""));
@@ -286,7 +285,7 @@ public abstract class BaseRuleChainServiceTest extends AbstractServiceTest {
         Assert.assertEquals(3, updatedRuleChainMetaData.getNodes().size());
         Assert.assertEquals(3, updatedRuleChainMetaData.getConnections().size());
 
-        for (@NotNull RuleNode ruleNode : updatedRuleChainMetaData.getNodes()) {
+        for (RuleNode ruleNode : updatedRuleChainMetaData.getNodes()) {
             Assert.assertNotNull(ruleNode.getId());
             List<EntityRelation> relations = ruleChainService.getRuleNodeRelations(tenantId, ruleNode.getId());
             if ("name1".equals(ruleNode.getName())) {
@@ -347,7 +346,7 @@ public abstract class BaseRuleChainServiceTest extends AbstractServiceTest {
     }
 
     private RuleChainId saveRuleChainAndSetAutoAssignToEdge(String name) {
-        @NotNull RuleChain edgeRuleChain = new RuleChain();
+        RuleChain edgeRuleChain = new RuleChain();
         edgeRuleChain.setTenantId(tenantId);
         edgeRuleChain.setType(RuleChainType.EDGE);
         edgeRuleChain.setName(name);
@@ -357,32 +356,32 @@ public abstract class BaseRuleChainServiceTest extends AbstractServiceTest {
     }
 
     private RuleChainMetaData createRuleChainMetadata() throws Exception {
-        @NotNull RuleChain ruleChain = new RuleChain();
+        RuleChain ruleChain = new RuleChain();
         ruleChain.setName("My RuleChain");
         ruleChain.setTenantId(tenantId);
         RuleChain savedRuleChain = ruleChainService.saveRuleChain(ruleChain);
 
-        @NotNull RuleChainMetaData ruleChainMetaData = new RuleChainMetaData();
+        RuleChainMetaData ruleChainMetaData = new RuleChainMetaData();
         ruleChainMetaData.setRuleChainId(savedRuleChain.getId());
 
-        @NotNull ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = new ObjectMapper();
 
-        @NotNull RuleNode ruleNode1 = new RuleNode();
+        RuleNode ruleNode1 = new RuleNode();
         ruleNode1.setName("name1");
         ruleNode1.setType("type1");
         ruleNode1.setConfiguration(mapper.readTree("\"key1\": \"val1\""));
 
-        @NotNull RuleNode ruleNode2 = new RuleNode();
+        RuleNode ruleNode2 = new RuleNode();
         ruleNode2.setName("name2");
         ruleNode2.setType("type2");
         ruleNode2.setConfiguration(mapper.readTree("\"key2\": \"val2\""));
 
-        @NotNull RuleNode ruleNode3 = new RuleNode();
+        RuleNode ruleNode3 = new RuleNode();
         ruleNode3.setName("name3");
         ruleNode3.setType("type3");
         ruleNode3.setConfiguration(mapper.readTree("\"key3\": \"val3\""));
 
-        @NotNull List<RuleNode> ruleNodes = new ArrayList<>();
+        List<RuleNode> ruleNodes = new ArrayList<>();
         ruleNodes.add(ruleNode1);
         ruleNodes.add(ruleNode2);
         ruleNodes.add(ruleNode3);
@@ -397,34 +396,33 @@ public abstract class BaseRuleChainServiceTest extends AbstractServiceTest {
         return ruleChainService.loadRuleChainMetaData(tenantId, ruleChainMetaData.getRuleChainId());
     }
 
-    @NotNull
     private RuleChainMetaData createRuleChainMetadataWithCirclingRelation() throws Exception {
-        @NotNull RuleChain ruleChain = new RuleChain();
+        RuleChain ruleChain = new RuleChain();
         ruleChain.setName("My RuleChain");
         ruleChain.setTenantId(tenantId);
         RuleChain savedRuleChain = ruleChainService.saveRuleChain(ruleChain);
 
-        @NotNull RuleChainMetaData ruleChainMetaData = new RuleChainMetaData();
+        RuleChainMetaData ruleChainMetaData = new RuleChainMetaData();
         ruleChainMetaData.setRuleChainId(savedRuleChain.getId());
 
-        @NotNull ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = new ObjectMapper();
 
-        @NotNull RuleNode ruleNode1 = new RuleNode();
+        RuleNode ruleNode1 = new RuleNode();
         ruleNode1.setName("name1");
         ruleNode1.setType("type1");
         ruleNode1.setConfiguration(mapper.readTree("\"key1\": \"val1\""));
 
-        @NotNull RuleNode ruleNode2 = new RuleNode();
+        RuleNode ruleNode2 = new RuleNode();
         ruleNode2.setName("name2");
         ruleNode2.setType("type2");
         ruleNode2.setConfiguration(mapper.readTree("\"key2\": \"val2\""));
 
-        @NotNull RuleNode ruleNode3 = new RuleNode();
+        RuleNode ruleNode3 = new RuleNode();
         ruleNode3.setName("name3");
         ruleNode3.setType("type3");
         ruleNode3.setConfiguration(mapper.readTree("\"key3\": \"val3\""));
 
-        @NotNull List<RuleNode> ruleNodes = new ArrayList<>();
+        List<RuleNode> ruleNodes = new ArrayList<>();
         ruleNodes.add(ruleNode1);
         ruleNodes.add(ruleNode2);
         ruleNodes.add(ruleNode3);
@@ -439,34 +437,33 @@ public abstract class BaseRuleChainServiceTest extends AbstractServiceTest {
         return ruleChainMetaData;
     }
 
-    @NotNull
     private RuleChainMetaData createRuleChainMetadataWithCirclingRelation2() throws Exception {
-        @NotNull RuleChain ruleChain = new RuleChain();
+        RuleChain ruleChain = new RuleChain();
         ruleChain.setName("My RuleChain");
         ruleChain.setTenantId(tenantId);
         RuleChain savedRuleChain = ruleChainService.saveRuleChain(ruleChain);
 
-        @NotNull RuleChainMetaData ruleChainMetaData = new RuleChainMetaData();
+        RuleChainMetaData ruleChainMetaData = new RuleChainMetaData();
         ruleChainMetaData.setRuleChainId(savedRuleChain.getId());
 
-        @NotNull ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = new ObjectMapper();
 
-        @NotNull RuleNode ruleNode1 = new RuleNode();
+        RuleNode ruleNode1 = new RuleNode();
         ruleNode1.setName("name1");
         ruleNode1.setType("type1");
         ruleNode1.setConfiguration(mapper.readTree("\"key1\": \"val1\""));
 
-        @NotNull RuleNode ruleNode2 = new RuleNode();
+        RuleNode ruleNode2 = new RuleNode();
         ruleNode2.setName("name2");
         ruleNode2.setType("type2");
         ruleNode2.setConfiguration(mapper.readTree("\"key2\": \"val2\""));
 
-        @NotNull RuleNode ruleNode3 = new RuleNode();
+        RuleNode ruleNode3 = new RuleNode();
         ruleNode3.setName("name3");
         ruleNode3.setType("type3");
         ruleNode3.setConfiguration(mapper.readTree("\"key3\": \"val3\""));
 
-        @NotNull List<RuleNode> ruleNodes = new ArrayList<>();
+        List<RuleNode> ruleNodes = new ArrayList<>();
         ruleNodes.add(ruleNode1);
         ruleNodes.add(ruleNode2);
         ruleNodes.add(ruleNode3);
@@ -483,16 +480,16 @@ public abstract class BaseRuleChainServiceTest extends AbstractServiceTest {
 
     @Test
     public void testFindEdgeRuleChainsByTenantIdAndName() {
-        @NotNull Edge edge = constructEdge(tenantId, "My edge", "default");
+        Edge edge = constructEdge(tenantId, "My edge", "default");
         Edge savedEdge = edgeService.saveEdge(edge);
 
-        @NotNull String name1 = "Edge RuleChain name 1";
-        @NotNull List<RuleChain> ruleChainsName1 = new ArrayList<>();
+        String name1 = "Edge RuleChain name 1";
+        List<RuleChain> ruleChainsName1 = new ArrayList<>();
         for (int i = 0; i < 123; i++) {
-            @NotNull RuleChain ruleChain = new RuleChain();
+            RuleChain ruleChain = new RuleChain();
             ruleChain.setTenantId(tenantId);
-            @NotNull String suffix = StringUtils.randomAlphanumeric((int) (Math.random() * 17));
-            @NotNull String name = name1 + suffix;
+            String suffix = StringUtils.randomAlphanumeric((int) (Math.random() * 17));
+            String name = name1 + suffix;
             name = i % 2 == 0 ? name.toLowerCase() : name.toUpperCase();
             ruleChain.setName(name);
             ruleChain.setType(RuleChainType.EDGE);
@@ -500,13 +497,13 @@ public abstract class BaseRuleChainServiceTest extends AbstractServiceTest {
         }
         ruleChainsName1.forEach(ruleChain -> ruleChainService.assignRuleChainToEdge(tenantId, ruleChain.getId(), savedEdge.getId()));
 
-        @NotNull String name2 = "Edge RuleChain name 2";
-        @NotNull List<RuleChain> ruleChainsName2 = new ArrayList<>();
+        String name2 = "Edge RuleChain name 2";
+        List<RuleChain> ruleChainsName2 = new ArrayList<>();
         for (int i = 0; i < 193; i++) {
-            @NotNull RuleChain ruleChain = new RuleChain();
+            RuleChain ruleChain = new RuleChain();
             ruleChain.setTenantId(tenantId);
-            @NotNull String suffix = StringUtils.randomAlphanumeric((int) (Math.random() * 15));
-            @NotNull String name = name2 + suffix;
+            String suffix = StringUtils.randomAlphanumeric((int) (Math.random() * 15));
+            String name = name2 + suffix;
             name = i % 2 == 0 ? name.toLowerCase() : name.toUpperCase();
             ruleChain.setName(name);
             ruleChain.setType(RuleChainType.EDGE);
@@ -514,7 +511,7 @@ public abstract class BaseRuleChainServiceTest extends AbstractServiceTest {
         }
         ruleChainsName2.forEach(ruleChain -> ruleChainService.assignRuleChainToEdge(tenantId, ruleChain.getId(), savedEdge.getId()));
 
-        @NotNull List<RuleChain> loadedRuleChainsName1 = new ArrayList<>();
+        List<RuleChain> loadedRuleChainsName1 = new ArrayList<>();
         PageLink pageLink = new PageLink(19, 0, name1);
         @Nullable PageData<RuleChain> pageData = null;
         do {
@@ -530,7 +527,7 @@ public abstract class BaseRuleChainServiceTest extends AbstractServiceTest {
 
         Assert.assertEquals(ruleChainsName1, loadedRuleChainsName1);
 
-        @NotNull List<RuleChain> loadedRuleChainsName2 = new ArrayList<>();
+        List<RuleChain> loadedRuleChainsName2 = new ArrayList<>();
         pageLink = new PageLink(4, 0, name2);
         do {
             pageData = ruleChainService.findRuleChainsByTenantIdAndEdgeId(tenantId, savedEdge.getId(), pageLink);
@@ -545,7 +542,7 @@ public abstract class BaseRuleChainServiceTest extends AbstractServiceTest {
 
         Assert.assertEquals(ruleChainsName2, loadedRuleChainsName2);
 
-        for (@NotNull RuleChain ruleChain : loadedRuleChainsName1) {
+        for (RuleChain ruleChain : loadedRuleChainsName1) {
             ruleChainService.deleteRuleChainById(tenantId, ruleChain.getId());
         }
 
@@ -554,7 +551,7 @@ public abstract class BaseRuleChainServiceTest extends AbstractServiceTest {
         Assert.assertFalse(pageData.hasNext());
         Assert.assertEquals(0, pageData.getData().size());
 
-        for (@NotNull RuleChain ruleChain : loadedRuleChainsName2) {
+        for (RuleChain ruleChain : loadedRuleChainsName2) {
             ruleChainService.deleteRuleChainById(tenantId, ruleChain.getId());
         }
 

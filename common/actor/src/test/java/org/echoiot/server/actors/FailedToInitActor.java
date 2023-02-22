@@ -1,7 +1,6 @@
 package org.echoiot.server.actors;
 
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 
 @Slf4j
 public class FailedToInitActor extends TestRootActor {
@@ -26,7 +25,6 @@ public class FailedToInitActor extends TestRootActor {
         }
     }
 
-    @NotNull
     @Override
     public InitFailureStrategy onInitFailure(int attempt, Throwable t) {
         return InitFailureStrategy.retryWithDelay(retryDelay);
@@ -51,8 +49,7 @@ public class FailedToInitActor extends TestRootActor {
             return actorId;
         }
 
-        @NotNull
-        @Override
+            @Override
         public TbActor createActor() {
             return new FailedToInitActor(actorId, testCtx, retryAttempts, retryDelay);
         }

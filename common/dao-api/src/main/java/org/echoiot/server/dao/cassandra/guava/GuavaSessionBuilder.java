@@ -6,17 +6,14 @@ import com.datastax.oss.driver.api.core.context.DriverContext;
 import com.datastax.oss.driver.api.core.session.ProgrammaticArguments;
 import com.datastax.oss.driver.api.core.session.SessionBuilder;
 import edu.umd.cs.findbugs.annotations.NonNull;
-import org.jetbrains.annotations.NotNull;
 
 public class GuavaSessionBuilder extends SessionBuilder<GuavaSessionBuilder, GuavaSession> {
 
-    @NotNull
     @Override
-    protected DriverContext buildContext(@NotNull DriverConfigLoader configLoader, @NotNull ProgrammaticArguments programmaticArguments) {
+    protected DriverContext buildContext(DriverConfigLoader configLoader, ProgrammaticArguments programmaticArguments) {
         return new GuavaDriverContext(configLoader, programmaticArguments);
     }
 
-    @NotNull
     @Override
     protected GuavaSession wrap(@NonNull CqlSession defaultSession) {
         return new DefaultGuavaSession(defaultSession);

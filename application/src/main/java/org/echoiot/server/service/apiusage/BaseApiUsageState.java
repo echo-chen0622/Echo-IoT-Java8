@@ -5,7 +5,6 @@ import org.echoiot.server.common.data.*;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.msg.tools.SchedulerUtils;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -69,7 +68,7 @@ public abstract class BaseApiUsageState {
         }
     }
 
-    public ApiUsageStateValue getFeatureValue(@NotNull ApiFeature feature) {
+    public ApiUsageStateValue getFeatureValue(ApiFeature feature) {
         switch (feature) {
             case TRANSPORT:
                 return apiUsageState.getTransportState();
@@ -90,7 +89,7 @@ public abstract class BaseApiUsageState {
         }
     }
 
-    public boolean setFeatureValue(@NotNull ApiFeature feature, ApiUsageStateValue value) {
+    public boolean setFeatureValue(ApiFeature feature, ApiUsageStateValue value) {
         ApiUsageStateValue currentValue = getFeatureValue(feature);
         switch (feature) {
             case TRANSPORT:

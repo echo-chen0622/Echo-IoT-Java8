@@ -11,7 +11,6 @@ import org.echoiot.server.common.data.oauth2.OAuth2Registration;
 import org.echoiot.server.dao.oauth2.OAuth2User;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.security.model.SecurityUser;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
@@ -41,14 +40,14 @@ public class CustomOAuth2ClientMapper extends AbstractOAuth2ClientMapper impleme
     }
 
     @Override
-    public SecurityUser getOrCreateUserByClientPrincipal(HttpServletRequest request, @NotNull OAuth2AuthenticationToken token, String providerAccessToken, @NotNull OAuth2Registration registration) {
+    public SecurityUser getOrCreateUserByClientPrincipal(HttpServletRequest request, OAuth2AuthenticationToken token, String providerAccessToken, OAuth2Registration registration) {
         OAuth2MapperConfig config = registration.getMapperConfig();
         @Nullable OAuth2User oauth2User = getOAuth2User(token, providerAccessToken, config.getCustom());
         return getOrCreateSecurityUserFromOAuth2User(oauth2User, registration);
     }
 
     @Nullable
-    private synchronized OAuth2User getOAuth2User(@NotNull OAuth2AuthenticationToken token, String providerAccessToken, @NotNull OAuth2CustomMapperConfig custom) {
+    private synchronized OAuth2User getOAuth2User(OAuth2AuthenticationToken token, String providerAccessToken, OAuth2CustomMapperConfig custom) {
         if (!StringUtils.isEmpty(custom.getUsername()) && !StringUtils.isEmpty(custom.getPassword())) {
             restTemplateBuilder = restTemplateBuilder.basicAuthentication(custom.getUsername(), custom.getPassword());
         }

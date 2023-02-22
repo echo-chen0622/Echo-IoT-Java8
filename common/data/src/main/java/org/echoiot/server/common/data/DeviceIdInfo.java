@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.data.id.TenantId;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
@@ -17,11 +16,9 @@ public class DeviceIdInfo implements Serializable, HasTenantId {
 
     private static final long serialVersionUID = 2233745129677581815L;
 
-    @NotNull
     private final TenantId tenantId;
     @Nullable
     private final CustomerId customerId;
-    @NotNull
     private final DeviceId deviceId;
 
     public DeviceIdInfo(UUID tenantId, @Nullable UUID customerId, UUID deviceId) {

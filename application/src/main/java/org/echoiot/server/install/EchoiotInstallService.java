@@ -81,7 +81,7 @@ public class EchoiotInstallService {
             switch (upgradeFromVersion) {
                 case "1.0.0":
                     log.info("Upgrading Echoiot from version 1.0.0 to 1.0.1 ...");
-                    /* 升级数据库 同时需要判断，是否需要升级实体、系统数据、时间序列数据等数据
+                    /* 升级数据库 同时需要判断，是否需要升级实体、业务数据、时间序列数据等数据
                     if (databaseTsUpgradeService != null) {
                         databaseTsUpgradeService.upgradeDatabase("1.0.0");
                     }
@@ -100,8 +100,9 @@ public class EchoiotInstallService {
 
             log.info("开始安装 Echoiot ...");
 
-            log.info("正在安装 sql 数据库架构...");
+            log.info("正在安装 sql 数据库结构（建表等语句）...");
 
+            // 这里，用这种抽象方法不见得很好，这是一种插件化类的思想，但是在这里，这种思想不太好，因为，这里的插件化，只是为了创建数据库，而不是为了扩展功能
             // 创建实体数据库
             entityDatabaseSchemaService.createDatabaseSchema();
 
@@ -118,8 +119,9 @@ public class EchoiotInstallService {
                 tsLatestDatabaseSchemaService.createDatabaseSchema();
             }
 
-            log.info("Loading system data...");
+            log.info("加载系统业务数据中...");
 
+            // 发现组件
             componentDiscoveryService.discoverComponents();
 
             systemDataLoaderService.createSysAdmin();
@@ -131,10 +133,10 @@ public class EchoiotInstallService {
             systemDataLoaderService.createQueues();
 
             if (Boolean.TRUE.equals(loadDemo)) {
-                log.info("Loading demo data...");
+                log.info("加载 demo 数据中...");
                 systemDataLoaderService.loadDemoData();
             }
-            log.info("Installation finished successfully!");
+            log.info("安装成功！！！");
         }
 
 

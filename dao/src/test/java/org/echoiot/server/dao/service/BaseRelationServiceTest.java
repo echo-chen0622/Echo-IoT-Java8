@@ -8,7 +8,6 @@ import org.echoiot.server.common.data.id.AssetId;
 import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.data.relation.*;
 import org.echoiot.server.dao.exception.DataValidationException;
-import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -32,10 +31,10 @@ public abstract class BaseRelationServiceTest extends AbstractServiceTest {
 
     @Test
     public void testSaveRelation() throws ExecutionException, InterruptedException {
-        @NotNull AssetId parentId = new AssetId(Uuids.timeBased());
-        @NotNull AssetId childId = new AssetId(Uuids.timeBased());
+        AssetId parentId = new AssetId(Uuids.timeBased());
+        AssetId childId = new AssetId(Uuids.timeBased());
 
-        @NotNull EntityRelation relation = new EntityRelation(parentId, childId, EntityRelation.CONTAINS_TYPE);
+        EntityRelation relation = new EntityRelation(parentId, childId, EntityRelation.CONTAINS_TYPE);
 
         Assert.assertTrue(saveRelation(relation));
 
@@ -50,12 +49,12 @@ public abstract class BaseRelationServiceTest extends AbstractServiceTest {
 
     @Test
     public void testDeleteRelation() throws ExecutionException, InterruptedException {
-        @NotNull AssetId parentId = new AssetId(Uuids.timeBased());
-        @NotNull AssetId childId = new AssetId(Uuids.timeBased());
-        @NotNull AssetId subChildId = new AssetId(Uuids.timeBased());
+        AssetId parentId = new AssetId(Uuids.timeBased());
+        AssetId childId = new AssetId(Uuids.timeBased());
+        AssetId subChildId = new AssetId(Uuids.timeBased());
 
-        @NotNull EntityRelation relationA = new EntityRelation(parentId, childId, EntityRelation.CONTAINS_TYPE);
-        @NotNull EntityRelation relationB = new EntityRelation(childId, subChildId, EntityRelation.CONTAINS_TYPE);
+        EntityRelation relationA = new EntityRelation(parentId, childId, EntityRelation.CONTAINS_TYPE);
+        EntityRelation relationB = new EntityRelation(childId, subChildId, EntityRelation.CONTAINS_TYPE);
 
         saveRelation(relationA);
         saveRelation(relationB);
@@ -71,14 +70,14 @@ public abstract class BaseRelationServiceTest extends AbstractServiceTest {
 
     @Test
     public void testDeleteRelationConcurrently() throws ExecutionException, InterruptedException {
-        @NotNull AssetId parentId = new AssetId(Uuids.timeBased());
-        @NotNull AssetId childId = new AssetId(Uuids.timeBased());
+        AssetId parentId = new AssetId(Uuids.timeBased());
+        AssetId childId = new AssetId(Uuids.timeBased());
 
-        @NotNull EntityRelation relationA = new EntityRelation(parentId, childId, EntityRelation.CONTAINS_TYPE);
+        EntityRelation relationA = new EntityRelation(parentId, childId, EntityRelation.CONTAINS_TYPE);
 
         saveRelation(relationA);
 
-        @NotNull List<ListenableFuture<Boolean>> futures = new ArrayList<>();
+        List<ListenableFuture<Boolean>> futures = new ArrayList<>();
         for (int i = 0; i < 2; i++) {
             futures.add(relationService.deleteRelationAsync(SYSTEM_TENANT_ID, relationA));
         }
@@ -88,12 +87,12 @@ public abstract class BaseRelationServiceTest extends AbstractServiceTest {
 
     @Test
     public void testDeleteEntityRelations() throws ExecutionException, InterruptedException {
-        @NotNull AssetId parentId = new AssetId(Uuids.timeBased());
-        @NotNull AssetId childId = new AssetId(Uuids.timeBased());
-        @NotNull AssetId subChildId = new AssetId(Uuids.timeBased());
+        AssetId parentId = new AssetId(Uuids.timeBased());
+        AssetId childId = new AssetId(Uuids.timeBased());
+        AssetId subChildId = new AssetId(Uuids.timeBased());
 
-        @NotNull EntityRelation relationA = new EntityRelation(parentId, childId, EntityRelation.CONTAINS_TYPE);
-        @NotNull EntityRelation relationB = new EntityRelation(childId, subChildId, EntityRelation.CONTAINS_TYPE);
+        EntityRelation relationA = new EntityRelation(parentId, childId, EntityRelation.CONTAINS_TYPE);
+        EntityRelation relationB = new EntityRelation(childId, subChildId, EntityRelation.CONTAINS_TYPE);
 
         saveRelation(relationA);
         saveRelation(relationB);
@@ -107,16 +106,16 @@ public abstract class BaseRelationServiceTest extends AbstractServiceTest {
 
     @Test
     public void testFindFrom() throws ExecutionException, InterruptedException {
-        @NotNull AssetId parentA = new AssetId(Uuids.timeBased());
-        @NotNull AssetId parentB = new AssetId(Uuids.timeBased());
-        @NotNull AssetId childA = new AssetId(Uuids.timeBased());
-        @NotNull AssetId childB = new AssetId(Uuids.timeBased());
+        AssetId parentA = new AssetId(Uuids.timeBased());
+        AssetId parentB = new AssetId(Uuids.timeBased());
+        AssetId childA = new AssetId(Uuids.timeBased());
+        AssetId childB = new AssetId(Uuids.timeBased());
 
-        @NotNull EntityRelation relationA1 = new EntityRelation(parentA, childA, EntityRelation.CONTAINS_TYPE);
-        @NotNull EntityRelation relationA2 = new EntityRelation(parentA, childB, EntityRelation.CONTAINS_TYPE);
+        EntityRelation relationA1 = new EntityRelation(parentA, childA, EntityRelation.CONTAINS_TYPE);
+        EntityRelation relationA2 = new EntityRelation(parentA, childB, EntityRelation.CONTAINS_TYPE);
 
-        @NotNull EntityRelation relationB1 = new EntityRelation(parentB, childA, EntityRelation.MANAGES_TYPE);
-        @NotNull EntityRelation relationB2 = new EntityRelation(parentB, childB, EntityRelation.MANAGES_TYPE);
+        EntityRelation relationB1 = new EntityRelation(parentB, childA, EntityRelation.MANAGES_TYPE);
+        EntityRelation relationB2 = new EntityRelation(parentB, childB, EntityRelation.MANAGES_TYPE);
 
         saveRelation(relationA1);
         saveRelation(relationA2);
@@ -126,7 +125,7 @@ public abstract class BaseRelationServiceTest extends AbstractServiceTest {
 
         List<EntityRelation> relations = relationService.findByFrom(SYSTEM_TENANT_ID, parentA, RelationTypeGroup.COMMON);
         Assert.assertEquals(2, relations.size());
-        for (@NotNull EntityRelation relation : relations) {
+        for (EntityRelation relation : relations) {
             Assert.assertEquals(EntityRelation.CONTAINS_TYPE, relation.getType());
             Assert.assertEquals(parentA, relation.getFrom());
             Assert.assertTrue(childA.equals(relation.getTo()) || childB.equals(relation.getTo()));
@@ -140,7 +139,7 @@ public abstract class BaseRelationServiceTest extends AbstractServiceTest {
 
         relations = relationService.findByFrom(SYSTEM_TENANT_ID, parentB, RelationTypeGroup.COMMON);
         Assert.assertEquals(2, relations.size());
-        for (@NotNull EntityRelation relation : relations) {
+        for (EntityRelation relation : relations) {
             Assert.assertEquals(EntityRelation.MANAGES_TYPE, relation.getType());
             Assert.assertEquals(parentB, relation.getFrom());
             Assert.assertTrue(childA.equals(relation.getTo()) || childB.equals(relation.getTo()));
@@ -153,23 +152,22 @@ public abstract class BaseRelationServiceTest extends AbstractServiceTest {
         Assert.assertEquals(0, relations.size());
     }
 
-    @NotNull
     private Boolean saveRelation(EntityRelation relationA1) {
         return relationService.saveRelation(SYSTEM_TENANT_ID, relationA1);
     }
 
     @Test
     public void testFindTo() throws ExecutionException, InterruptedException {
-        @NotNull AssetId parentA = new AssetId(Uuids.timeBased());
-        @NotNull AssetId parentB = new AssetId(Uuids.timeBased());
-        @NotNull AssetId childA = new AssetId(Uuids.timeBased());
-        @NotNull AssetId childB = new AssetId(Uuids.timeBased());
+        AssetId parentA = new AssetId(Uuids.timeBased());
+        AssetId parentB = new AssetId(Uuids.timeBased());
+        AssetId childA = new AssetId(Uuids.timeBased());
+        AssetId childB = new AssetId(Uuids.timeBased());
 
-        @NotNull EntityRelation relationA1 = new EntityRelation(parentA, childA, EntityRelation.CONTAINS_TYPE);
-        @NotNull EntityRelation relationA2 = new EntityRelation(parentA, childB, EntityRelation.CONTAINS_TYPE);
+        EntityRelation relationA1 = new EntityRelation(parentA, childA, EntityRelation.CONTAINS_TYPE);
+        EntityRelation relationA2 = new EntityRelation(parentA, childB, EntityRelation.CONTAINS_TYPE);
 
-        @NotNull EntityRelation relationB1 = new EntityRelation(parentB, childA, EntityRelation.MANAGES_TYPE);
-        @NotNull EntityRelation relationB2 = new EntityRelation(parentB, childB, EntityRelation.MANAGES_TYPE);
+        EntityRelation relationB1 = new EntityRelation(parentB, childA, EntityRelation.MANAGES_TYPE);
+        EntityRelation relationB2 = new EntityRelation(parentB, childB, EntityRelation.MANAGES_TYPE);
 
         saveRelation(relationA1);
         saveRelation(relationA2);
@@ -179,7 +177,7 @@ public abstract class BaseRelationServiceTest extends AbstractServiceTest {
 
         List<EntityRelation> relations = relationService.findByTo(SYSTEM_TENANT_ID, childA, RelationTypeGroup.COMMON);
         Assert.assertEquals(2, relations.size());
-        for (@NotNull EntityRelation relation : relations) {
+        for (EntityRelation relation : relations) {
             Assert.assertEquals(childA, relation.getTo());
             Assert.assertTrue(parentA.equals(relation.getFrom()) || parentB.equals(relation.getFrom()));
         }
@@ -198,7 +196,7 @@ public abstract class BaseRelationServiceTest extends AbstractServiceTest {
 
         relations = relationService.findByTo(SYSTEM_TENANT_ID, childB, RelationTypeGroup.COMMON);
         Assert.assertEquals(2, relations.size());
-        for (@NotNull EntityRelation relation : relations) {
+        for (EntityRelation relation : relations) {
             Assert.assertEquals(childB, relation.getTo());
             Assert.assertTrue(parentA.equals(relation.getFrom()) || parentB.equals(relation.getFrom()));
         }
@@ -207,19 +205,19 @@ public abstract class BaseRelationServiceTest extends AbstractServiceTest {
     @Test
     public void testCyclicRecursiveRelation() throws ExecutionException, InterruptedException {
         // A -> B -> C -> A
-        @NotNull AssetId assetA = new AssetId(Uuids.timeBased());
-        @NotNull AssetId assetB = new AssetId(Uuids.timeBased());
-        @NotNull AssetId assetC = new AssetId(Uuids.timeBased());
+        AssetId assetA = new AssetId(Uuids.timeBased());
+        AssetId assetB = new AssetId(Uuids.timeBased());
+        AssetId assetC = new AssetId(Uuids.timeBased());
 
-        @NotNull EntityRelation relationA = new EntityRelation(assetA, assetB, EntityRelation.CONTAINS_TYPE);
-        @NotNull EntityRelation relationB = new EntityRelation(assetB, assetC, EntityRelation.CONTAINS_TYPE);
-        @NotNull EntityRelation relationC = new EntityRelation(assetC, assetA, EntityRelation.CONTAINS_TYPE);
+        EntityRelation relationA = new EntityRelation(assetA, assetB, EntityRelation.CONTAINS_TYPE);
+        EntityRelation relationB = new EntityRelation(assetB, assetC, EntityRelation.CONTAINS_TYPE);
+        EntityRelation relationC = new EntityRelation(assetC, assetA, EntityRelation.CONTAINS_TYPE);
 
         saveRelation(relationA);
         saveRelation(relationB);
         saveRelation(relationC);
 
-        @NotNull EntityRelationsQuery query = new EntityRelationsQuery();
+        EntityRelationsQuery query = new EntityRelationsQuery();
         query.setParameters(new RelationsSearchParameters(assetA, EntitySearchDirection.FROM, -1, false));
         query.setFilters(Collections.singletonList(new RelationEntityTypeFilter(EntityRelation.CONTAINS_TYPE, Collections.singletonList(EntityType.ASSET))));
         List<EntityRelation> relations = relationService.findByQuery(SYSTEM_TENANT_ID, query).get();
@@ -239,21 +237,21 @@ public abstract class BaseRelationServiceTest extends AbstractServiceTest {
     @Test
     public void testRecursiveRelation() throws ExecutionException, InterruptedException {
         // A -> B -> [C,D]
-        @NotNull AssetId assetA = new AssetId(Uuids.timeBased());
-        @NotNull AssetId assetB = new AssetId(Uuids.timeBased());
-        @NotNull AssetId assetC = new AssetId(Uuids.timeBased());
-        @NotNull DeviceId deviceD = new DeviceId(Uuids.timeBased());
+        AssetId assetA = new AssetId(Uuids.timeBased());
+        AssetId assetB = new AssetId(Uuids.timeBased());
+        AssetId assetC = new AssetId(Uuids.timeBased());
+        DeviceId deviceD = new DeviceId(Uuids.timeBased());
 
-        @NotNull EntityRelation relationAB = new EntityRelation(assetA, assetB, EntityRelation.CONTAINS_TYPE);
-        @NotNull EntityRelation relationBC = new EntityRelation(assetB, assetC, EntityRelation.CONTAINS_TYPE);
-        @NotNull EntityRelation relationBD = new EntityRelation(assetB, deviceD, EntityRelation.CONTAINS_TYPE);
+        EntityRelation relationAB = new EntityRelation(assetA, assetB, EntityRelation.CONTAINS_TYPE);
+        EntityRelation relationBC = new EntityRelation(assetB, assetC, EntityRelation.CONTAINS_TYPE);
+        EntityRelation relationBD = new EntityRelation(assetB, deviceD, EntityRelation.CONTAINS_TYPE);
 
 
         saveRelation(relationAB);
         saveRelation(relationBC);
         saveRelation(relationBD);
 
-        @NotNull EntityRelationsQuery query = new EntityRelationsQuery();
+        EntityRelationsQuery query = new EntityRelationsQuery();
         query.setParameters(new RelationsSearchParameters(assetA, EntitySearchDirection.FROM, -1, false));
         query.setFilters(Collections.singletonList(new RelationEntityTypeFilter(EntityRelation.CONTAINS_TYPE, Collections.singletonList(EntityType.ASSET))));
         List<EntityRelation> relations = relationService.findByQuery(SYSTEM_TENANT_ID, query).get();
@@ -271,14 +269,14 @@ public abstract class BaseRelationServiceTest extends AbstractServiceTest {
     @Test
     public void testRecursiveRelationDepth() throws ExecutionException, InterruptedException {
         int maxLevel = 1000;
-        @NotNull AssetId root = new AssetId(Uuids.timeBased());
-        @NotNull AssetId left = new AssetId(Uuids.timeBased());
-        @NotNull AssetId right = new AssetId(Uuids.timeBased());
+        AssetId root = new AssetId(Uuids.timeBased());
+        AssetId left = new AssetId(Uuids.timeBased());
+        AssetId right = new AssetId(Uuids.timeBased());
 
-        @NotNull List<EntityRelation> expected = new ArrayList<>();
+        List<EntityRelation> expected = new ArrayList<>();
 
-        @NotNull EntityRelation relationAB = new EntityRelation(root, left, EntityRelation.CONTAINS_TYPE);
-        @NotNull EntityRelation relationBC = new EntityRelation(root, right, EntityRelation.CONTAINS_TYPE);
+        EntityRelation relationAB = new EntityRelation(root, left, EntityRelation.CONTAINS_TYPE);
+        EntityRelation relationBC = new EntityRelation(root, right, EntityRelation.CONTAINS_TYPE);
         saveRelation(relationAB);
         expected.add(relationAB);
 
@@ -286,10 +284,10 @@ public abstract class BaseRelationServiceTest extends AbstractServiceTest {
         expected.add(relationBC);
 
         for (int i = 0; i < maxLevel; i++) {
-            @NotNull var newLeft = new AssetId(Uuids.timeBased());
-            @NotNull var newRight = new AssetId(Uuids.timeBased());
-            @NotNull EntityRelation relationLeft = new EntityRelation(left, newLeft, EntityRelation.CONTAINS_TYPE);
-            @NotNull EntityRelation relationRight = new EntityRelation(right, newRight, EntityRelation.CONTAINS_TYPE);
+            var newLeft = new AssetId(Uuids.timeBased());
+            var newRight = new AssetId(Uuids.timeBased());
+            EntityRelation relationLeft = new EntityRelation(left, newLeft, EntityRelation.CONTAINS_TYPE);
+            EntityRelation relationRight = new EntityRelation(right, newRight, EntityRelation.CONTAINS_TYPE);
             saveRelation(relationLeft);
             expected.add(relationLeft);
             saveRelation(relationRight);
@@ -299,7 +297,7 @@ public abstract class BaseRelationServiceTest extends AbstractServiceTest {
         }
 
 
-        @NotNull EntityRelationsQuery query = new EntityRelationsQuery();
+        EntityRelationsQuery query = new EntityRelationsQuery();
         query.setParameters(new RelationsSearchParameters(root, EntitySearchDirection.FROM, -1, false));
         query.setFilters(Collections.singletonList(new RelationEntityTypeFilter(EntityRelation.CONTAINS_TYPE, Collections.singletonList(EntityType.ASSET))));
         List<EntityRelation> relations = relationService.findByQuery(SYSTEM_TENANT_ID, query).get();
@@ -318,7 +316,7 @@ public abstract class BaseRelationServiceTest extends AbstractServiceTest {
 
     @Test(expected = DataValidationException.class)
     public void testSaveRelationWithEmptyFrom() throws ExecutionException, InterruptedException {
-        @NotNull EntityRelation relation = new EntityRelation();
+        EntityRelation relation = new EntityRelation();
         relation.setTo(new AssetId(Uuids.timeBased()));
         relation.setType(EntityRelation.CONTAINS_TYPE);
         Assert.assertTrue(saveRelation(relation));
@@ -326,7 +324,7 @@ public abstract class BaseRelationServiceTest extends AbstractServiceTest {
 
     @Test(expected = DataValidationException.class)
     public void testSaveRelationWithEmptyTo() throws ExecutionException, InterruptedException {
-        @NotNull EntityRelation relation = new EntityRelation();
+        EntityRelation relation = new EntityRelation();
         relation.setFrom(new AssetId(Uuids.timeBased()));
         relation.setType(EntityRelation.CONTAINS_TYPE);
         Assert.assertTrue(saveRelation(relation));
@@ -334,7 +332,7 @@ public abstract class BaseRelationServiceTest extends AbstractServiceTest {
 
     @Test(expected = DataValidationException.class)
     public void testSaveRelationWithEmptyType() throws ExecutionException, InterruptedException {
-        @NotNull EntityRelation relation = new EntityRelation();
+        EntityRelation relation = new EntityRelation();
         relation.setFrom(new AssetId(Uuids.timeBased()));
         relation.setTo(new AssetId(Uuids.timeBased()));
         Assert.assertTrue(saveRelation(relation));
@@ -347,23 +345,23 @@ public abstract class BaseRelationServiceTest extends AbstractServiceTest {
         // C -> D
         // C -> E
 
-        @NotNull AssetId assetA = new AssetId(Uuids.timeBased());
-        @NotNull AssetId assetB = new AssetId(Uuids.timeBased());
-        @NotNull AssetId assetC = new AssetId(Uuids.timeBased());
-        @NotNull AssetId assetD = new AssetId(Uuids.timeBased());
-        @NotNull AssetId assetE = new AssetId(Uuids.timeBased());
+        AssetId assetA = new AssetId(Uuids.timeBased());
+        AssetId assetB = new AssetId(Uuids.timeBased());
+        AssetId assetC = new AssetId(Uuids.timeBased());
+        AssetId assetD = new AssetId(Uuids.timeBased());
+        AssetId assetE = new AssetId(Uuids.timeBased());
 
-        @NotNull EntityRelation relationA = new EntityRelation(assetA, assetB, EntityRelation.CONTAINS_TYPE);
-        @NotNull EntityRelation relationB = new EntityRelation(assetA, assetC, EntityRelation.CONTAINS_TYPE);
-        @NotNull EntityRelation relationC = new EntityRelation(assetC, assetD, EntityRelation.CONTAINS_TYPE);
-        @NotNull EntityRelation relationD = new EntityRelation(assetC, assetE, EntityRelation.CONTAINS_TYPE);
+        EntityRelation relationA = new EntityRelation(assetA, assetB, EntityRelation.CONTAINS_TYPE);
+        EntityRelation relationB = new EntityRelation(assetA, assetC, EntityRelation.CONTAINS_TYPE);
+        EntityRelation relationC = new EntityRelation(assetC, assetD, EntityRelation.CONTAINS_TYPE);
+        EntityRelation relationD = new EntityRelation(assetC, assetE, EntityRelation.CONTAINS_TYPE);
 
         saveRelation(relationA);
         saveRelation(relationB);
         saveRelation(relationC);
         saveRelation(relationD);
 
-        @NotNull EntityRelationsQuery query = new EntityRelationsQuery();
+        EntityRelationsQuery query = new EntityRelationsQuery();
         query.setParameters(new RelationsSearchParameters(assetA, EntitySearchDirection.FROM, -1, true));
         query.setFilters(Collections.singletonList(new RelationEntityTypeFilter(EntityRelation.CONTAINS_TYPE, Collections.singletonList(EntityType.ASSET))));
         List<EntityRelation> relations = relationService.findByQuery(SYSTEM_TENANT_ID, query).get();
@@ -385,20 +383,20 @@ public abstract class BaseRelationServiceTest extends AbstractServiceTest {
     public void testFindByQueryFetchLastOnlySingleLinked() throws Exception {
         // A -> B -> C -> D
 
-        @NotNull AssetId assetA = new AssetId(Uuids.timeBased());
-        @NotNull AssetId assetB = new AssetId(Uuids.timeBased());
-        @NotNull AssetId assetC = new AssetId(Uuids.timeBased());
-        @NotNull AssetId assetD = new AssetId(Uuids.timeBased());
+        AssetId assetA = new AssetId(Uuids.timeBased());
+        AssetId assetB = new AssetId(Uuids.timeBased());
+        AssetId assetC = new AssetId(Uuids.timeBased());
+        AssetId assetD = new AssetId(Uuids.timeBased());
 
-        @NotNull EntityRelation relationA = new EntityRelation(assetA, assetB, EntityRelation.CONTAINS_TYPE);
-        @NotNull EntityRelation relationB = new EntityRelation(assetB, assetC, EntityRelation.CONTAINS_TYPE);
-        @NotNull EntityRelation relationC = new EntityRelation(assetC, assetD, EntityRelation.CONTAINS_TYPE);
+        EntityRelation relationA = new EntityRelation(assetA, assetB, EntityRelation.CONTAINS_TYPE);
+        EntityRelation relationB = new EntityRelation(assetB, assetC, EntityRelation.CONTAINS_TYPE);
+        EntityRelation relationC = new EntityRelation(assetC, assetD, EntityRelation.CONTAINS_TYPE);
 
         saveRelation(relationA);
         saveRelation(relationB);
         saveRelation(relationC);
 
-        @NotNull EntityRelationsQuery query = new EntityRelationsQuery();
+        EntityRelationsQuery query = new EntityRelationsQuery();
         query.setParameters(new RelationsSearchParameters(assetA, EntitySearchDirection.FROM, -1, true));
         query.setFilters(Collections.singletonList(new RelationEntityTypeFilter(EntityRelation.CONTAINS_TYPE, Collections.singletonList(EntityType.ASSET))));
         List<EntityRelation> relations = relationService.findByQuery(SYSTEM_TENANT_ID, query).get();
@@ -423,20 +421,20 @@ public abstract class BaseRelationServiceTest extends AbstractServiceTest {
         // D -> F   E
         // D -> G   F
 
-        @NotNull AssetId assetA = new AssetId(Uuids.timeBased());
-        @NotNull AssetId assetB = new AssetId(Uuids.timeBased());
-        @NotNull AssetId assetC = new AssetId(Uuids.timeBased());
-        @NotNull AssetId assetD = new AssetId(Uuids.timeBased());
-        @NotNull AssetId assetE = new AssetId(Uuids.timeBased());
-        @NotNull AssetId assetF = new AssetId(Uuids.timeBased());
-        @NotNull AssetId assetG = new AssetId(Uuids.timeBased());
+        AssetId assetA = new AssetId(Uuids.timeBased());
+        AssetId assetB = new AssetId(Uuids.timeBased());
+        AssetId assetC = new AssetId(Uuids.timeBased());
+        AssetId assetD = new AssetId(Uuids.timeBased());
+        AssetId assetE = new AssetId(Uuids.timeBased());
+        AssetId assetF = new AssetId(Uuids.timeBased());
+        AssetId assetG = new AssetId(Uuids.timeBased());
 
-        @NotNull EntityRelation relationA = new EntityRelation(assetA, assetB, EntityRelation.CONTAINS_TYPE);
-        @NotNull EntityRelation relationB = new EntityRelation(assetA, assetC, EntityRelation.CONTAINS_TYPE);
-        @NotNull EntityRelation relationC = new EntityRelation(assetC, assetD, EntityRelation.CONTAINS_TYPE);
-        @NotNull EntityRelation relationD = new EntityRelation(assetC, assetE, EntityRelation.CONTAINS_TYPE);
-        @NotNull EntityRelation relationE = new EntityRelation(assetD, assetF, EntityRelation.CONTAINS_TYPE);
-        @NotNull EntityRelation relationF = new EntityRelation(assetD, assetG, EntityRelation.CONTAINS_TYPE);
+        EntityRelation relationA = new EntityRelation(assetA, assetB, EntityRelation.CONTAINS_TYPE);
+        EntityRelation relationB = new EntityRelation(assetA, assetC, EntityRelation.CONTAINS_TYPE);
+        EntityRelation relationC = new EntityRelation(assetC, assetD, EntityRelation.CONTAINS_TYPE);
+        EntityRelation relationD = new EntityRelation(assetC, assetE, EntityRelation.CONTAINS_TYPE);
+        EntityRelation relationE = new EntityRelation(assetD, assetF, EntityRelation.CONTAINS_TYPE);
+        EntityRelation relationF = new EntityRelation(assetD, assetG, EntityRelation.CONTAINS_TYPE);
 
         saveRelation(relationA);
         saveRelation(relationB);
@@ -445,7 +443,7 @@ public abstract class BaseRelationServiceTest extends AbstractServiceTest {
         saveRelation(relationE);
         saveRelation(relationF);
 
-        @NotNull EntityRelationsQuery query = new EntityRelationsQuery();
+        EntityRelationsQuery query = new EntityRelationsQuery();
         query.setParameters(new RelationsSearchParameters(assetA, EntitySearchDirection.FROM, 2, true));
         query.setFilters(Collections.singletonList(new RelationEntityTypeFilter(EntityRelation.CONTAINS_TYPE, Collections.singletonList(EntityType.ASSET))));
         List<EntityRelation> relations = relationService.findByQuery(SYSTEM_TENANT_ID, query).get();
@@ -476,20 +474,20 @@ public abstract class BaseRelationServiceTest extends AbstractServiceTest {
         // D -> F   E
         // D -> G   F
 
-        @NotNull AssetId assetA = new AssetId(Uuids.timeBased());
-        @NotNull AssetId assetB = new AssetId(Uuids.timeBased());
-        @NotNull AssetId assetC = new AssetId(Uuids.timeBased());
-        @NotNull AssetId assetD = new AssetId(Uuids.timeBased());
-        @NotNull AssetId assetE = new AssetId(Uuids.timeBased());
-        @NotNull AssetId assetF = new AssetId(Uuids.timeBased());
-        @NotNull AssetId assetG = new AssetId(Uuids.timeBased());
+        AssetId assetA = new AssetId(Uuids.timeBased());
+        AssetId assetB = new AssetId(Uuids.timeBased());
+        AssetId assetC = new AssetId(Uuids.timeBased());
+        AssetId assetD = new AssetId(Uuids.timeBased());
+        AssetId assetE = new AssetId(Uuids.timeBased());
+        AssetId assetF = new AssetId(Uuids.timeBased());
+        AssetId assetG = new AssetId(Uuids.timeBased());
 
-        @NotNull EntityRelation relationA = new EntityRelation(assetA, assetB, EntityRelation.CONTAINS_TYPE);
-        @NotNull EntityRelation relationB = new EntityRelation(assetA, assetC, EntityRelation.CONTAINS_TYPE);
-        @NotNull EntityRelation relationC = new EntityRelation(assetC, assetD, EntityRelation.CONTAINS_TYPE);
-        @NotNull EntityRelation relationD = new EntityRelation(assetC, assetE, EntityRelation.CONTAINS_TYPE);
-        @NotNull EntityRelation relationE = new EntityRelation(assetD, assetF, EntityRelation.CONTAINS_TYPE);
-        @NotNull EntityRelation relationF = new EntityRelation(assetD, assetG, EntityRelation.CONTAINS_TYPE);
+        EntityRelation relationA = new EntityRelation(assetA, assetB, EntityRelation.CONTAINS_TYPE);
+        EntityRelation relationB = new EntityRelation(assetA, assetC, EntityRelation.CONTAINS_TYPE);
+        EntityRelation relationC = new EntityRelation(assetC, assetD, EntityRelation.CONTAINS_TYPE);
+        EntityRelation relationD = new EntityRelation(assetC, assetE, EntityRelation.CONTAINS_TYPE);
+        EntityRelation relationE = new EntityRelation(assetD, assetF, EntityRelation.CONTAINS_TYPE);
+        EntityRelation relationF = new EntityRelation(assetD, assetG, EntityRelation.CONTAINS_TYPE);
 
         saveRelation(relationA);
         saveRelation(relationB);
@@ -498,7 +496,7 @@ public abstract class BaseRelationServiceTest extends AbstractServiceTest {
         saveRelation(relationE);
         saveRelation(relationF);
 
-        @NotNull EntityRelationsQuery query = new EntityRelationsQuery();
+        EntityRelationsQuery query = new EntityRelationsQuery();
         query.setParameters(new RelationsSearchParameters(assetA, EntitySearchDirection.FROM, 2, false));
         query.setFilters(Collections.singletonList(new RelationEntityTypeFilter(EntityRelation.CONTAINS_TYPE, Collections.singletonList(EntityType.ASSET))));
         List<EntityRelation> relations = relationService.findByQuery(SYSTEM_TENANT_ID, query).get();
@@ -529,20 +527,20 @@ public abstract class BaseRelationServiceTest extends AbstractServiceTest {
         // D -> F   E
         // D -> G   F
 
-        @NotNull AssetId assetA = new AssetId(Uuids.timeBased());
-        @NotNull AssetId assetB = new AssetId(Uuids.timeBased());
-        @NotNull AssetId assetC = new AssetId(Uuids.timeBased());
-        @NotNull AssetId assetD = new AssetId(Uuids.timeBased());
-        @NotNull AssetId assetE = new AssetId(Uuids.timeBased());
-        @NotNull AssetId assetF = new AssetId(Uuids.timeBased());
-        @NotNull AssetId assetG = new AssetId(Uuids.timeBased());
+        AssetId assetA = new AssetId(Uuids.timeBased());
+        AssetId assetB = new AssetId(Uuids.timeBased());
+        AssetId assetC = new AssetId(Uuids.timeBased());
+        AssetId assetD = new AssetId(Uuids.timeBased());
+        AssetId assetE = new AssetId(Uuids.timeBased());
+        AssetId assetF = new AssetId(Uuids.timeBased());
+        AssetId assetG = new AssetId(Uuids.timeBased());
 
-        @NotNull EntityRelation relationA = new EntityRelation(assetA, assetB, EntityRelation.CONTAINS_TYPE);
-        @NotNull EntityRelation relationB = new EntityRelation(assetA, assetC, EntityRelation.CONTAINS_TYPE);
-        @NotNull EntityRelation relationC = new EntityRelation(assetC, assetD, EntityRelation.CONTAINS_TYPE);
-        @NotNull EntityRelation relationD = new EntityRelation(assetC, assetE, EntityRelation.CONTAINS_TYPE);
-        @NotNull EntityRelation relationE = new EntityRelation(assetD, assetF, EntityRelation.CONTAINS_TYPE);
-        @NotNull EntityRelation relationF = new EntityRelation(assetD, assetG, EntityRelation.CONTAINS_TYPE);
+        EntityRelation relationA = new EntityRelation(assetA, assetB, EntityRelation.CONTAINS_TYPE);
+        EntityRelation relationB = new EntityRelation(assetA, assetC, EntityRelation.CONTAINS_TYPE);
+        EntityRelation relationC = new EntityRelation(assetC, assetD, EntityRelation.CONTAINS_TYPE);
+        EntityRelation relationD = new EntityRelation(assetC, assetE, EntityRelation.CONTAINS_TYPE);
+        EntityRelation relationE = new EntityRelation(assetD, assetF, EntityRelation.CONTAINS_TYPE);
+        EntityRelation relationF = new EntityRelation(assetD, assetG, EntityRelation.CONTAINS_TYPE);
 
         saveRelation(relationA);
         saveRelation(relationB);
@@ -551,7 +549,7 @@ public abstract class BaseRelationServiceTest extends AbstractServiceTest {
         saveRelation(relationE);
         saveRelation(relationF);
 
-        @NotNull EntityRelationsQuery query = new EntityRelationsQuery();
+        EntityRelationsQuery query = new EntityRelationsQuery();
         query.setParameters(new RelationsSearchParameters(assetA, EntitySearchDirection.FROM, -1, false));
         query.setFilters(Collections.singletonList(new RelationEntityTypeFilter(EntityRelation.CONTAINS_TYPE, Collections.singletonList(EntityType.ASSET))));
         List<EntityRelation> relations = relationService.findByQuery(SYSTEM_TENANT_ID, query).get();
@@ -575,13 +573,13 @@ public abstract class BaseRelationServiceTest extends AbstractServiceTest {
 
     @Test
     public void testFindByQueryLargeHierarchyFetchAllWithUnlimLvl() throws Exception {
-        @NotNull AssetId rootAsset = new AssetId(Uuids.timeBased());
+        AssetId rootAsset = new AssetId(Uuids.timeBased());
         final int hierarchyLvl = 10;
-        @NotNull List<EntityRelation> expectedRelations = new LinkedList<>();
+        List<EntityRelation> expectedRelations = new LinkedList<>();
 
         createAssetRelationsRecursively(rootAsset, hierarchyLvl, expectedRelations, false);
 
-        @NotNull EntityRelationsQuery query = new EntityRelationsQuery();
+        EntityRelationsQuery query = new EntityRelationsQuery();
         query.setParameters(new RelationsSearchParameters(rootAsset, EntitySearchDirection.FROM, -1, false));
         query.setFilters(Collections.singletonList(new RelationEntityTypeFilter(EntityRelation.CONTAINS_TYPE, Collections.singletonList(EntityType.ASSET))));
         List<EntityRelation> relations = relationService.findByQuery(SYSTEM_TENANT_ID, query).get();
@@ -591,13 +589,13 @@ public abstract class BaseRelationServiceTest extends AbstractServiceTest {
 
     @Test
     public void testFindByQueryLargeHierarchyFetchLastOnlyWithUnlimLvl() throws Exception {
-        @NotNull AssetId rootAsset = new AssetId(Uuids.timeBased());
+        AssetId rootAsset = new AssetId(Uuids.timeBased());
         final int hierarchyLvl = 10;
-        @NotNull List<EntityRelation> expectedRelations = new LinkedList<>();
+        List<EntityRelation> expectedRelations = new LinkedList<>();
 
         createAssetRelationsRecursively(rootAsset, hierarchyLvl, expectedRelations, true);
 
-        @NotNull EntityRelationsQuery query = new EntityRelationsQuery();
+        EntityRelationsQuery query = new EntityRelationsQuery();
         query.setParameters(new RelationsSearchParameters(rootAsset, EntitySearchDirection.FROM, -1, true));
         query.setFilters(Collections.singletonList(new RelationEntityTypeFilter(EntityRelation.CONTAINS_TYPE, Collections.singletonList(EntityType.ASSET))));
         List<EntityRelation> relations = relationService.findByQuery(SYSTEM_TENANT_ID, query).get();
@@ -605,14 +603,14 @@ public abstract class BaseRelationServiceTest extends AbstractServiceTest {
         Assert.assertTrue(relations.containsAll(expectedRelations));
     }
 
-    private void createAssetRelationsRecursively(AssetId rootAsset, int lvl, @NotNull List<EntityRelation> entityRelations, boolean lastLvlOnly) throws Exception {
+    private void createAssetRelationsRecursively(AssetId rootAsset, int lvl, List<EntityRelation> entityRelations, boolean lastLvlOnly) throws Exception {
         if (lvl == 0) return;
 
-        @NotNull AssetId firstAsset = new AssetId(Uuids.timeBased());
-        @NotNull AssetId secondAsset = new AssetId(Uuids.timeBased());
+        AssetId firstAsset = new AssetId(Uuids.timeBased());
+        AssetId secondAsset = new AssetId(Uuids.timeBased());
 
-        @NotNull EntityRelation firstRelation = new EntityRelation(rootAsset, firstAsset, EntityRelation.CONTAINS_TYPE);
-        @NotNull EntityRelation secondRelation = new EntityRelation(rootAsset, secondAsset, EntityRelation.CONTAINS_TYPE);
+        EntityRelation firstRelation = new EntityRelation(rootAsset, firstAsset, EntityRelation.CONTAINS_TYPE);
+        EntityRelation secondRelation = new EntityRelation(rootAsset, secondAsset, EntityRelation.CONTAINS_TYPE);
 
         saveRelation(firstRelation);
         saveRelation(secondRelation);

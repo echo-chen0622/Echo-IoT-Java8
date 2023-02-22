@@ -6,7 +6,6 @@ import org.echoiot.server.controller.AbstractControllerTest;
 import org.echoiot.server.dao.service.DaoSqlTest;
 import org.echoiot.server.service.security.model.SecurityUser;
 import org.echoiot.server.service.security.model.token.JwtTokenFactory;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -31,20 +30,20 @@ public class Oauth2AuthenticationSuccessHandlerTest extends AbstractControllerTe
 
     @Before
     public void before() {
-        @NotNull UserId userId = new UserId(UUID.randomUUID());
+        UserId userId = new UserId(UUID.randomUUID());
         securityUser = new SecurityUser(userId);
         when(jwtTokenFactory.createTokenPair(eq(securityUser))).thenReturn(new JwtPair("testAccessToken", "testRefreshToken"));
     }
 
     @Test
     public void testGetRedirectUrl() {
-        @NotNull JwtPair jwtPair = jwtTokenFactory.createTokenPair(securityUser);
+        JwtPair jwtPair = jwtTokenFactory.createTokenPair(securityUser);
 
-        @NotNull String urlWithoutParams = "http://localhost:8080/dashboardGroups/3fa13530-6597-11ed-bd76-8bd591f0ec3e";
-        @NotNull String urlWithParams = "http://localhost:8080/dashboardGroups/3fa13530-6597-11ed-bd76-8bd591f0ec3e?state=someState&page=1";
+        String urlWithoutParams = "http://localhost:8080/dashboardGroups/3fa13530-6597-11ed-bd76-8bd591f0ec3e";
+        String urlWithParams = "http://localhost:8080/dashboardGroups/3fa13530-6597-11ed-bd76-8bd591f0ec3e?state=someState&page=1";
 
-        @NotNull String redirectUrl = oauth2AuthenticationSuccessHandler.getRedirectUrl(urlWithoutParams, jwtPair);
-        @NotNull String expectedUrl = urlWithoutParams + "/?accessToken=" + jwtPair.getToken() + "&refreshToken=" + jwtPair.getRefreshToken();
+        String redirectUrl = oauth2AuthenticationSuccessHandler.getRedirectUrl(urlWithoutParams, jwtPair);
+        String expectedUrl = urlWithoutParams + "/?accessToken=" + jwtPair.getToken() + "&refreshToken=" + jwtPair.getRefreshToken();
         assertEquals(expectedUrl, redirectUrl);
 
         redirectUrl = oauth2AuthenticationSuccessHandler.getRedirectUrl(urlWithParams, jwtPair);

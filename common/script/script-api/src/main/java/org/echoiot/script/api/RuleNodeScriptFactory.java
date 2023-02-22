@@ -1,6 +1,5 @@
 package org.echoiot.script.api;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class RuleNodeScriptFactory {
@@ -19,7 +18,6 @@ public class RuleNodeScriptFactory {
             "\n}";
 
 
-    @NotNull
     public static String generateRuleNodeScript(String functionName, String scriptBody, @Nullable String... argNames) {
         String msgArg;
         String metadataArg;

@@ -5,7 +5,6 @@ import org.echoiot.server.common.transport.TransportService;
 import org.echoiot.server.gen.transport.TransportProtos.GetAllQueueRoutingInfoRequestMsg;
 import org.echoiot.server.queue.discovery.QueueRoutingInfo;
 import org.echoiot.server.queue.discovery.QueueRoutingInfoService;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -24,7 +23,6 @@ public class TransportQueueRoutingInfoService implements QueueRoutingInfoService
         this.transportService = transportService;
     }
 
-    @NotNull
     @Override
     public List<QueueRoutingInfo> getAllQueuesRoutingInfo() {
         GetAllQueueRoutingInfoRequestMsg msg = GetAllQueueRoutingInfoRequestMsg.newBuilder().build();

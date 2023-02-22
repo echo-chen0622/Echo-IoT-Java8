@@ -6,7 +6,6 @@ import org.echoiot.server.transport.lwm2m.server.log.LwM2MTelemetryLogService;
 import org.echoiot.server.transport.lwm2m.server.uplink.LwM2mUplinkMsgHandler;
 import org.eclipse.leshan.core.request.WriteRequest;
 import org.eclipse.leshan.core.response.WriteResponse;
-import org.jetbrains.annotations.NotNull;
 
 @Slf4j
 public class TbLwM2MWriteResponseCallback extends TbLwM2MUplinkTargetedCallback<WriteRequest, WriteResponse> {
@@ -16,7 +15,7 @@ public class TbLwM2MWriteResponseCallback extends TbLwM2MUplinkTargetedCallback<
     }
 
     @Override
-    public void onSuccess(@NotNull WriteRequest request, @NotNull WriteResponse response) {
+    public void onSuccess(WriteRequest request, WriteResponse response) {
         super.onSuccess(request, response);
         handler.onWriteResponseOk(client, versionedId, request, response.getCode().getCode());
     }

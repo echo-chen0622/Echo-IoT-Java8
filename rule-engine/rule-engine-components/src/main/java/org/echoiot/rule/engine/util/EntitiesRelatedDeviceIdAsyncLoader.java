@@ -12,17 +12,15 @@ import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.relation.RelationsSearchParameters;
 import org.echoiot.server.dao.device.DeviceService;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 public class EntitiesRelatedDeviceIdAsyncLoader {
 
-    @NotNull
-    public static ListenableFuture<DeviceId> findDeviceAsync(@NotNull TbContext ctx, @NotNull EntityId originator,
-                                                             @NotNull DeviceRelationsQuery deviceRelationsQuery) {
+    public static ListenableFuture<DeviceId> findDeviceAsync(TbContext ctx, EntityId originator,
+                                                             DeviceRelationsQuery deviceRelationsQuery) {
         DeviceService deviceService = ctx.getDeviceService();
-        @NotNull DeviceSearchQuery query = buildQuery(originator, deviceRelationsQuery);
+        DeviceSearchQuery query = buildQuery(originator, deviceRelationsQuery);
 
         ListenableFuture<List<Device>> asyncDevices = deviceService.findDevicesByQuery(ctx.getTenantId(), query);
 
@@ -30,10 +28,9 @@ public class EntitiesRelatedDeviceIdAsyncLoader {
                 : Futures.immediateFuture(null), MoreExecutors.directExecutor());
     }
 
-    @NotNull
-    private static DeviceSearchQuery buildQuery(@NotNull EntityId originator, @NotNull DeviceRelationsQuery deviceRelationsQuery) {
-        @NotNull DeviceSearchQuery query = new DeviceSearchQuery();
-        @NotNull RelationsSearchParameters parameters = new RelationsSearchParameters(originator,
+    private static DeviceSearchQuery buildQuery(EntityId originator, DeviceRelationsQuery deviceRelationsQuery) {
+        DeviceSearchQuery query = new DeviceSearchQuery();
+        RelationsSearchParameters parameters = new RelationsSearchParameters(originator,
                                                                                       deviceRelationsQuery.getDirection(), deviceRelationsQuery.getMaxLevel(), deviceRelationsQuery.isFetchLastLevelOnly());
         query.setParameters(parameters);
         query.setRelationType(deviceRelationsQuery.getRelationType());

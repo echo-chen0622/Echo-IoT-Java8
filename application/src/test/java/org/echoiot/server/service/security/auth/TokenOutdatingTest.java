@@ -17,7 +17,6 @@ import org.echoiot.server.service.security.model.SecurityUser;
 import org.echoiot.server.service.security.model.UserPrincipal;
 import org.echoiot.server.service.security.model.token.JwtTokenFactory;
 import org.echoiot.server.service.security.model.token.RawAccessJwtToken;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -71,18 +70,18 @@ public class TokenOutdatingTest {
 
     @Before
     public void setUp() {
-        @NotNull UserId userId = new UserId(UUID.randomUUID());
+        UserId userId = new UserId(UUID.randomUUID());
         securityUser = createMockSecurityUser(userId);
 
         UserService userService = mock(UserService.class);
 
-        @NotNull User user = new User();
+        User user = new User();
         user.setId(userId);
         user.setAuthority(Authority.TENANT_ADMIN);
         user.setEmail("email");
         when(userService.findUserById(any(), eq(userId))).thenReturn(user);
 
-        @NotNull UserCredentials userCredentials = new UserCredentials();
+        UserCredentials userCredentials = new UserCredentials();
         userCredentials.setEnabled(true);
         when(userService.findUserCredentialsByUserId(any(), eq(userId))).thenReturn(userCredentials);
 
@@ -92,7 +91,7 @@ public class TokenOutdatingTest {
 
     @Test
     public void testOutdateOldUserTokens() throws Exception {
-        @NotNull JwtToken jwtToken = tokenFactory.createAccessJwtToken(securityUser);
+        JwtToken jwtToken = tokenFactory.createAccessJwtToken(securityUser);
 
         // Token outdatage time is rounded to 1 sec. Need to wait before outdating so that outdatage time is strictly after token issue time
         SECONDS.sleep(1);
@@ -101,13 +100,13 @@ public class TokenOutdatingTest {
 
         SECONDS.sleep(1);
 
-        @NotNull JwtToken newJwtToken = tokenFactory.createAccessJwtToken(securityUser);
+        JwtToken newJwtToken = tokenFactory.createAccessJwtToken(securityUser);
         assertFalse(tokenOutdatingService.isOutdated(newJwtToken, securityUser.getId()));
     }
 
     @Test
     public void testAuthenticateWithOutdatedAccessToken() throws InterruptedException {
-        @NotNull RawAccessJwtToken accessJwtToken = getRawJwtToken(tokenFactory.createAccessJwtToken(securityUser));
+        RawAccessJwtToken accessJwtToken = getRawJwtToken(tokenFactory.createAccessJwtToken(securityUser));
 
         assertDoesNotThrow(() -> {
             accessTokenAuthenticationProvider.authenticate(new JwtAuthenticationToken(accessJwtToken));
@@ -123,7 +122,7 @@ public class TokenOutdatingTest {
 
     @Test
     public void testAuthenticateWithOutdatedRefreshToken() throws InterruptedException {
-        @NotNull RawAccessJwtToken refreshJwtToken = getRawJwtToken(tokenFactory.createRefreshToken(securityUser));
+        RawAccessJwtToken refreshJwtToken = getRawJwtToken(tokenFactory.createRefreshToken(securityUser));
 
         assertDoesNotThrow(() -> {
             refreshTokenAuthenticationProvider.authenticate(new RefreshAuthenticationToken(refreshJwtToken));
@@ -160,10 +159,10 @@ public class TokenOutdatingTest {
 
     @Test
     public void testOnlyOneTokenExpired() throws InterruptedException {
-        @NotNull JwtToken jwtToken = tokenFactory.createAccessJwtToken(securityUser);
+        JwtToken jwtToken = tokenFactory.createAccessJwtToken(securityUser);
 
-        @NotNull SecurityUser anotherSecurityUser = new SecurityUser(securityUser, securityUser.isEnabled(), securityUser.getUserPrincipal());
-        @NotNull JwtToken anotherJwtToken = tokenFactory.createAccessJwtToken(anotherSecurityUser);
+        SecurityUser anotherSecurityUser = new SecurityUser(securityUser, securityUser.isEnabled(), securityUser.getUserPrincipal());
+        JwtToken anotherJwtToken = tokenFactory.createAccessJwtToken(anotherSecurityUser);
 
         assertDoesNotThrow(() -> {
             accessTokenAuthenticationProvider.authenticate(new JwtAuthenticationToken(getRawJwtToken(jwtToken)));
@@ -184,10 +183,10 @@ public class TokenOutdatingTest {
 
     @Test
     public void testResetAllSessions() throws InterruptedException {
-        @NotNull JwtToken jwtToken = tokenFactory.createAccessJwtToken(securityUser);
+        JwtToken jwtToken = tokenFactory.createAccessJwtToken(securityUser);
 
-        @NotNull SecurityUser anotherSecurityUser = new SecurityUser(securityUser, securityUser.isEnabled(), securityUser.getUserPrincipal());
-        @NotNull JwtToken anotherJwtToken = tokenFactory.createAccessJwtToken(anotherSecurityUser);
+        SecurityUser anotherSecurityUser = new SecurityUser(securityUser, securityUser.isEnabled(), securityUser.getUserPrincipal());
+        JwtToken anotherJwtToken = tokenFactory.createAccessJwtToken(anotherSecurityUser);
 
         assertDoesNotThrow(() -> {
             accessTokenAuthenticationProvider.authenticate(new JwtAuthenticationToken(getRawJwtToken(jwtToken)));
@@ -211,14 +210,12 @@ public class TokenOutdatingTest {
     }
 
 
-    @NotNull
-    private RawAccessJwtToken getRawJwtToken(@NotNull JwtToken token) {
+    private RawAccessJwtToken getRawJwtToken(JwtToken token) {
         return new RawAccessJwtToken(token.getToken());
     }
 
-    @NotNull
     private SecurityUser createMockSecurityUser(UserId userId) {
-        @NotNull SecurityUser securityUser = new SecurityUser();
+        SecurityUser securityUser = new SecurityUser();
         securityUser.setEmail("email");
         securityUser.setUserPrincipal(new UserPrincipal(UserPrincipal.Type.USER_NAME, securityUser.getEmail()));
         securityUser.setAuthority(Authority.CUSTOMER_USER);

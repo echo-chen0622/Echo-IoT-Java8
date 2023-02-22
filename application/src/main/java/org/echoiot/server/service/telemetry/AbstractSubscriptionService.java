@@ -12,7 +12,6 @@ import org.echoiot.server.queue.discovery.PartitionService;
 import org.echoiot.server.queue.discovery.TbApplicationEventListener;
 import org.echoiot.server.queue.discovery.event.PartitionChangeEvent;
 import org.echoiot.server.service.subscription.SubscriptionManagerService;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Nullable;
@@ -65,14 +64,14 @@ public abstract class AbstractSubscriptionService extends TbApplicationEventList
     }
 
     @Override
-    protected void onTbApplicationEvent(@NotNull PartitionChangeEvent partitionChangeEvent) {
+    protected void onTbApplicationEvent(PartitionChangeEvent partitionChangeEvent) {
         if (ServiceType.TB_CORE.equals(partitionChangeEvent.getServiceType())) {
             currentPartitions.clear();
             currentPartitions.addAll(partitionChangeEvent.getPartitions());
         }
     }
 
-    protected <T> void addWsCallback(@NotNull ListenableFuture<T> saveFuture, @NotNull Consumer<T> callback) {
+    protected <T> void addWsCallback(ListenableFuture<T> saveFuture, Consumer<T> callback) {
         Futures.addCallback(saveFuture, new FutureCallback<T>() {
             @Override
             public void onSuccess(@Nullable T result) {

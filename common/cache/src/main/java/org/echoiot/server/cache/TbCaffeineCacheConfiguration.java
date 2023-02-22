@@ -5,7 +5,6 @@ import com.github.benmanes.caffeine.cache.RemovalCause;
 import com.github.benmanes.caffeine.cache.Ticker;
 import com.github.benmanes.caffeine.cache.Weigher;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
@@ -36,13 +35,12 @@ public class TbCaffeineCacheConfiguration {
      * Transaction aware CaffeineCache implementation with TransactionAwareCacheManagerProxy
      * to synchronize cache put/evict operations with ongoing Spring-managed transactions.
      */
-    @NotNull
     @Bean
     public CacheManager cacheManager() {
         log.trace("Initializing cache: {} specs {}", Arrays.toString(RemovalCause.values()), configuration.getSpecs());
-        @NotNull SimpleCacheManager manager = new SimpleCacheManager();
+        SimpleCacheManager manager = new SimpleCacheManager();
         if (configuration.getSpecs() != null) {
-            @NotNull List<CaffeineCache> caches =
+            List<CaffeineCache> caches =
                     configuration.getSpecs().entrySet().stream()
                             .map(entry -> buildCache(entry.getKey(),
                                     entry.getValue()))
@@ -56,10 +54,9 @@ public class TbCaffeineCacheConfiguration {
         return manager;
     }
 
-    @NotNull
-    private CaffeineCache buildCache(@NotNull String name, @NotNull CacheSpecs cacheSpec) {
+    private CaffeineCache buildCache(String name, CacheSpecs cacheSpec) {
 
-        @NotNull final Caffeine<Object, Object> caffeineBuilder
+        final Caffeine<Object, Object> caffeineBuilder
                 = Caffeine.newBuilder()
                 .weigher(collectionSafeWeigher())
                 .maximumWeight(cacheSpec.getMaxSize())
@@ -68,13 +65,11 @@ public class TbCaffeineCacheConfiguration {
         return new CaffeineCache(name, caffeineBuilder.build());
     }
 
-    @NotNull
     @Bean
     public Ticker ticker() {
         return Ticker.systemTicker();
     }
 
-    @NotNull
     private Weigher<? super Object, ? super Object> collectionSafeWeigher() {
         return (Weigher<Object, Object>) (key, value) -> {
             if (value instanceof Collection) {

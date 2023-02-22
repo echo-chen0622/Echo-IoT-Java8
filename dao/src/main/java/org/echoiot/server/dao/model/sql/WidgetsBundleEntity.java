@@ -9,7 +9,6 @@ import org.echoiot.server.common.data.widget.WidgetsBundle;
 import org.echoiot.server.dao.model.BaseSqlEntity;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.model.SearchTextEntity;
-import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -47,7 +46,7 @@ public final class WidgetsBundleEntity extends BaseSqlEntity<WidgetsBundle> impl
         super();
     }
 
-    public WidgetsBundleEntity(@NotNull WidgetsBundle widgetsBundle) {
+    public WidgetsBundleEntity(WidgetsBundle widgetsBundle) {
         if (widgetsBundle.getId() != null) {
             this.setUuid(widgetsBundle.getId().getId());
         }
@@ -74,10 +73,9 @@ public final class WidgetsBundleEntity extends BaseSqlEntity<WidgetsBundle> impl
         this.searchText = searchText;
     }
 
-    @NotNull
     @Override
     public WidgetsBundle toData() {
-        @NotNull WidgetsBundle widgetsBundle = new WidgetsBundle(new WidgetsBundleId(id));
+        WidgetsBundle widgetsBundle = new WidgetsBundle(new WidgetsBundleId(id));
         widgetsBundle.setCreatedTime(createdTime);
         if (tenantId != null) {
             widgetsBundle.setTenantId(TenantId.fromUUID(tenantId));

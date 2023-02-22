@@ -2,7 +2,6 @@ package org.echoiot.server.utils;
 
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
-import org.jetbrains.annotations.NotNull;
 
 import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.Charset;
@@ -16,14 +15,12 @@ public class MiscUtils {
 
     public static final Charset UTF8 = StandardCharsets.UTF_8;
 
-    @NotNull
     public static String missingProperty(String propertyName) {
         return "The " + propertyName + " property need to be set!";
     }
 
-    @NotNull
     @SuppressWarnings("deprecation")
-    public static HashFunction forName(@NotNull String name) {
+    public static HashFunction forName(String name) {
         switch (name) {
             case "murmur3_32":
                 return Hashing.murmur3_32();
@@ -38,14 +35,14 @@ public class MiscUtils {
         }
     }
 
-    public static String constructBaseUrl(@NotNull HttpServletRequest request) {
+    public static String constructBaseUrl(HttpServletRequest request) {
         return String.format("%s://%s:%d",
                 getScheme(request),
                 getDomainName(request),
                 getPort(request));
     }
 
-    public static String getScheme(@NotNull HttpServletRequest request){
+    public static String getScheme(HttpServletRequest request){
         String scheme = request.getScheme();
         String forwardedProto = request.getHeader("x-forwarded-proto");
         if (forwardedProto != null) {
@@ -54,11 +51,11 @@ public class MiscUtils {
         return scheme;
     }
 
-    public static String getDomainName(@NotNull HttpServletRequest request){
+    public static String getDomainName(HttpServletRequest request){
         return request.getServerName();
     }
 
-    public static String getDomainNameAndPort(@NotNull HttpServletRequest request){
+    public static String getDomainNameAndPort(HttpServletRequest request){
         String domainName = getDomainName(request);
         String scheme = getScheme(request);
         int port = MiscUtils.getPort(request);
@@ -68,13 +65,13 @@ public class MiscUtils {
         return domainName;
     }
 
-    private static boolean needsPort(@NotNull String scheme, int port) {
+    private static boolean needsPort(String scheme, int port) {
         boolean isHttpDefault = "http".equalsIgnoreCase(scheme) && port == 80;
         boolean isHttpsDefault = "https".equalsIgnoreCase(scheme) && port == 443;
         return !isHttpDefault && !isHttpsDefault;
     }
 
-    public static int getPort(@NotNull HttpServletRequest request){
+    public static int getPort(HttpServletRequest request){
         String forwardedProto = request.getHeader("x-forwarded-proto");
 
         int serverPort = request.getServerPort();

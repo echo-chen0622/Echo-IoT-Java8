@@ -8,7 +8,6 @@ import org.echoiot.server.transport.lwm2m.server.uplink.LwM2mTypeServer;
 import org.eclipse.leshan.core.SecurityMode;
 import org.eclipse.leshan.server.security.NonUniqueSecurityInfoException;
 import org.eclipse.leshan.server.security.SecurityInfo;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -71,7 +70,7 @@ public class TbLwM2mSecurityStore implements TbMainSecurityStore {
 
     @Nullable
     public SecurityInfo fetchAndPutSecurityInfo(String credentialsId) {
-        @NotNull TbLwM2MSecurityInfo securityInfo = validator.getEndpointSecurityInfoByCredentialsId(credentialsId, LwM2mTypeServer.CLIENT);
+        TbLwM2MSecurityInfo securityInfo = validator.getEndpointSecurityInfoByCredentialsId(credentialsId, LwM2mTypeServer.CLIENT);
         doPut(securityInfo);
         return securityInfo != null ? securityInfo.getSecurityInfo() : null;
     }

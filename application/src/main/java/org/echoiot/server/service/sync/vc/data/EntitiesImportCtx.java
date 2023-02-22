@@ -11,7 +11,6 @@ import org.echoiot.server.common.data.sync.ThrowingRunnable;
 import org.echoiot.server.common.data.sync.ie.EntityImportResult;
 import org.echoiot.server.common.data.sync.ie.EntityImportSettings;
 import org.echoiot.server.common.data.sync.vc.EntityTypeLoadResult;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -70,19 +69,19 @@ public class EntitiesImportCtx {
     }
 
     @Nullable
-    public EntityId getInternalId(@NotNull EntityId externalId) {
+    public EntityId getInternalId(EntityId externalId) {
         var result = externalToInternalIdMap.get(externalId);
         log.debug("[{}][{}] Local cache {} for id", externalId.getEntityType(), externalId.getId(), result != null ? "hit" : "miss");
         return result;
     }
 
-    public void putInternalId(@NotNull EntityId externalId, EntityId internalId) {
+    public void putInternalId(EntityId externalId, EntityId internalId) {
         log.debug("[{}][{}] Local cache put: {}", externalId.getEntityType(), externalId.getId(), internalId);
         externalToInternalIdMap.put(externalId, internalId);
     }
 
     public void registerResult(EntityType entityType, boolean created) {
-        @NotNull EntityTypeLoadResult result = results.computeIfAbsent(entityType, EntityTypeLoadResult::new);
+        EntityTypeLoadResult result = results.computeIfAbsent(entityType, EntityTypeLoadResult::new);
         if (created) {
             result.setCreated(result.getCreated() + 1);
         } else {
@@ -91,11 +90,11 @@ public class EntitiesImportCtx {
     }
 
     public void registerDeleted(EntityType entityType) {
-        @NotNull EntityTypeLoadResult result = results.computeIfAbsent(entityType, EntityTypeLoadResult::new);
+        EntityTypeLoadResult result = results.computeIfAbsent(entityType, EntityTypeLoadResult::new);
         result.setDeleted(result.getDeleted() + 1);
     }
 
-    public void addRelations(@NotNull Collection<EntityRelation> values) {
+    public void addRelations(Collection<EntityRelation> values) {
         relations.addAll(values);
     }
 

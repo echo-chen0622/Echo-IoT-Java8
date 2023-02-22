@@ -9,7 +9,6 @@ import org.echoiot.server.dao.service.DaoSqlTest;
 import org.echoiot.server.transport.mqtt.AbstractMqttIntegrationTest;
 import org.echoiot.server.transport.mqtt.MqttTestClient;
 import org.echoiot.server.transport.mqtt.MqttTestConfigProperties;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,37 +36,37 @@ public class MqttAttributesIntegrationTest extends AbstractMqttIntegrationTest {
 
     @Test
     public void testPushAttributes() throws Exception {
-        @NotNull List<String> expectedKeys = Arrays.asList("key1", "key2", "key3", "key4", "key5");
+        List<String> expectedKeys = Arrays.asList("key1", "key2", "key3", "key4", "key5");
         processJsonPayloadAttributesTest(DEVICE_ATTRIBUTES_TOPIC, expectedKeys, PAYLOAD_VALUES_STR.getBytes());
     }
 
     @Test
     public void testPushAttributesOnShortTopic() throws Exception {
-        @NotNull List<String> expectedKeys = Arrays.asList("key1", "key2", "key3", "key4", "key5");
+        List<String> expectedKeys = Arrays.asList("key1", "key2", "key3", "key4", "key5");
         processJsonPayloadAttributesTest(DEVICE_ATTRIBUTES_SHORT_TOPIC, expectedKeys, PAYLOAD_VALUES_STR.getBytes());
     }
 
     @Test
     public void testPushAttributesOnShortJsonTopic() throws Exception {
-        @NotNull List<String> expectedKeys = Arrays.asList("key1", "key2", "key3", "key4", "key5");
+        List<String> expectedKeys = Arrays.asList("key1", "key2", "key3", "key4", "key5");
         processJsonPayloadAttributesTest(DEVICE_ATTRIBUTES_SHORT_JSON_TOPIC, expectedKeys, PAYLOAD_VALUES_STR.getBytes());
     }
 
     @Test
     public void testPushAttributesGateway() throws Exception {
-        @NotNull List<String> expectedKeys = Arrays.asList("key1", "key2", "key3", "key4", "key5");
-        @NotNull String deviceName1 = "Device A";
-        @NotNull String deviceName2 = "Device B";
-        @NotNull String payload = getGatewayAttributesJsonPayload(deviceName1, deviceName2);
+        List<String> expectedKeys = Arrays.asList("key1", "key2", "key3", "key4", "key5");
+        String deviceName1 = "Device A";
+        String deviceName2 = "Device B";
+        String payload = getGatewayAttributesJsonPayload(deviceName1, deviceName2);
         processGatewayAttributesTest(expectedKeys, payload.getBytes(), deviceName1, deviceName2);
     }
 
-    protected void processJsonPayloadAttributesTest(String topic, @NotNull List<String> expectedKeys, byte[] payload) throws Exception {
+    protected void processJsonPayloadAttributesTest(String topic, List<String> expectedKeys, byte[] payload) throws Exception {
         processAttributesTest(topic, expectedKeys, payload, false);
     }
 
-    protected void processAttributesTest(String topic, @NotNull List<String> expectedKeys, byte[] payload, boolean presenceFieldsTest) throws Exception {
-        @NotNull MqttTestClient client = new MqttTestClient();
+    protected void processAttributesTest(String topic, List<String> expectedKeys, byte[] payload, boolean presenceFieldsTest) throws Exception {
+        MqttTestClient client = new MqttTestClient();
         client.connectAndWait(accessToken);
 
         client.publishAndWait(topic, payload);
@@ -89,25 +88,25 @@ public class MqttAttributesIntegrationTest extends AbstractMqttIntegrationTest {
         }
         assertNotNull(actualKeys);
 
-        @NotNull Set<String> actualKeySet = new HashSet<>(actualKeys);
+        Set<String> actualKeySet = new HashSet<>(actualKeys);
 
-        @NotNull Set<String> expectedKeySet = new HashSet<>(expectedKeys);
+        Set<String> expectedKeySet = new HashSet<>(expectedKeys);
 
         assertEquals(expectedKeySet, actualKeySet);
 
-        @NotNull String getAttributesValuesUrl = getAttributesValuesUrl(deviceId, actualKeySet);
+        String getAttributesValuesUrl = getAttributesValuesUrl(deviceId, actualKeySet);
         List<Map<String, Object>> values = doGetAsyncTyped(getAttributesValuesUrl, new TypeReference<>() {});
         if (presenceFieldsTest) {
             assertAttributesProtoValues(values, actualKeySet);
         } else {
             assertAttributesValues(values, actualKeySet);
         }
-        @NotNull String deleteAttributesUrl = "/api/plugins/telemetry/DEVICE/" + deviceId + "/CLIENT_SCOPE?keys=" + String.join(",", actualKeySet);
+        String deleteAttributesUrl = "/api/plugins/telemetry/DEVICE/" + deviceId + "/CLIENT_SCOPE?keys=" + String.join(",", actualKeySet);
         doDelete(deleteAttributesUrl);
     }
 
-    protected void processGatewayAttributesTest(@NotNull List<String> expectedKeys, byte[] payload, String firstDeviceName, String secondDeviceName) throws Exception {
-        @NotNull MqttTestClient client = new MqttTestClient();
+    protected void processGatewayAttributesTest(List<String> expectedKeys, byte[] payload, String firstDeviceName, String secondDeviceName) throws Exception {
+        MqttTestClient client = new MqttTestClient();
         client.connectAndWait(gatewayAccessToken);
 
         client.publishAndWait(GATEWAY_ATTRIBUTES_TOPIC, payload);
@@ -127,19 +126,19 @@ public class MqttAttributesIntegrationTest extends AbstractMqttIntegrationTest {
 
         @Nullable List<String> firstDeviceActualKeys = getActualKeysList(firstDevice.getId(), expectedKeys);
         assertNotNull(firstDeviceActualKeys);
-        @NotNull Set<String> firstDeviceActualKeySet = new HashSet<>(firstDeviceActualKeys);
+        Set<String> firstDeviceActualKeySet = new HashSet<>(firstDeviceActualKeys);
 
         @Nullable List<String> secondDeviceActualKeys = getActualKeysList(secondDevice.getId(), expectedKeys);
         assertNotNull(secondDeviceActualKeys);
-        @NotNull Set<String> secondDeviceActualKeySet = new HashSet<>(secondDeviceActualKeys);
+        Set<String> secondDeviceActualKeySet = new HashSet<>(secondDeviceActualKeys);
 
-        @NotNull Set<String> expectedKeySet = new HashSet<>(expectedKeys);
+        Set<String> expectedKeySet = new HashSet<>(expectedKeys);
 
         assertEquals(expectedKeySet, firstDeviceActualKeySet);
         assertEquals(expectedKeySet, secondDeviceActualKeySet);
 
-        @NotNull String getAttributesValuesUrlFirstDevice = getAttributesValuesUrl(firstDevice.getId(), firstDeviceActualKeySet);
-        @NotNull String getAttributesValuesUrlSecondDevice = getAttributesValuesUrl(firstDevice.getId(), secondDeviceActualKeySet);
+        String getAttributesValuesUrlFirstDevice = getAttributesValuesUrl(firstDevice.getId(), firstDeviceActualKeySet);
+        String getAttributesValuesUrlSecondDevice = getAttributesValuesUrl(firstDevice.getId(), secondDeviceActualKeySet);
 
         List<Map<String, Object>> firstDeviceValues = doGetAsyncTyped(getAttributesValuesUrlFirstDevice, new TypeReference<>() {});
         List<Map<String, Object>> secondDeviceValues = doGetAsyncTyped(getAttributesValuesUrlSecondDevice, new TypeReference<>() {});
@@ -150,7 +149,7 @@ public class MqttAttributesIntegrationTest extends AbstractMqttIntegrationTest {
     }
 
     @Nullable
-    private List<String> getActualKeysList(DeviceId deviceId, @NotNull List<String> expectedKeys) throws Exception {
+    private List<String> getActualKeysList(DeviceId deviceId, List<String> expectedKeys) throws Exception {
         long start = System.currentTimeMillis();
         long end = System.currentTimeMillis() + 3000;
         @Nullable List<String> firstDeviceActualKeys = null;
@@ -166,8 +165,8 @@ public class MqttAttributesIntegrationTest extends AbstractMqttIntegrationTest {
     }
 
     @SuppressWarnings("unchecked")
-    protected void assertAttributesValues(@NotNull List<Map<String, Object>> deviceValues, @NotNull Set<String> keySet) throws JsonProcessingException {
-        for (@NotNull Map<String, Object> map : deviceValues) {
+    protected void assertAttributesValues(List<Map<String, Object>> deviceValues, Set<String> keySet) throws JsonProcessingException {
+        for (Map<String, Object> map : deviceValues) {
             String key = (String) map.get("key");
             Object value = map.get("value");
             assertTrue(keySet.contains(key));
@@ -197,8 +196,8 @@ public class MqttAttributesIntegrationTest extends AbstractMqttIntegrationTest {
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private void assertAttributesProtoValues(@NotNull List<Map<String, Object>> values, @NotNull Set<String> keySet) {
-        for (@NotNull Map<String, Object> map : values) {
+    private void assertAttributesProtoValues(List<Map<String, Object>> values, Set<String> keySet) {
+        for (Map<String, Object> map : values) {
             String key = (String) map.get("key");
             Object value = map.get("value");
             assertTrue(keySet.contains(key));
@@ -217,13 +216,11 @@ public class MqttAttributesIntegrationTest extends AbstractMqttIntegrationTest {
         }
     }
 
-    @NotNull
     protected String getGatewayAttributesJsonPayload(String deviceA, String deviceB) {
         return "{\"" + deviceA + "\": " + PAYLOAD_VALUES_STR + ",  \"" + deviceB + "\": " + PAYLOAD_VALUES_STR + "}";
     }
 
-    @NotNull
-    private String getAttributesValuesUrl(DeviceId deviceId, @NotNull Set<String> actualKeySet) {
+    private String getAttributesValuesUrl(DeviceId deviceId, Set<String> actualKeySet) {
         return "/api/plugins/telemetry/DEVICE/" + deviceId + "/values/attributes/CLIENT_SCOPE?keys=" + String.join(",", actualKeySet);
     }
 }

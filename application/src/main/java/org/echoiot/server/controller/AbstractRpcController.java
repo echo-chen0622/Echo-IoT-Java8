@@ -24,7 +24,6 @@ import org.echoiot.server.service.security.AccessValidator;
 import org.echoiot.server.service.security.model.SecurityUser;
 import org.echoiot.server.service.security.permission.Operation;
 import org.echoiot.server.service.telemetry.exception.ToErrorResponseEntity;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,25 +53,24 @@ public abstract class AbstractRpcController extends BaseController {
     @Value("${server.rest.server_side_rpc.default_timeout:10000}")
     protected long defaultTimeout;
 
-    @NotNull
-    protected DeferredResult<ResponseEntity> handleDeviceRPCRequest(boolean oneWay, @NotNull DeviceId deviceId, String requestBody, @NotNull HttpStatus timeoutStatus, @NotNull HttpStatus noActiveConnectionStatus) throws
+    protected DeferredResult<ResponseEntity> handleDeviceRPCRequest(boolean oneWay, DeviceId deviceId, String requestBody, HttpStatus timeoutStatus, HttpStatus noActiveConnectionStatus) throws
                                                                                                                                                                                           EchoiotException {
         try {
             JsonNode rpcRequestBody = JacksonUtil.toJsonNode(requestBody);
-            @NotNull ToDeviceRpcRequestBody body = new ToDeviceRpcRequestBody(rpcRequestBody.get("method").asText(), JacksonUtil.toString(rpcRequestBody.get("params")));
+            ToDeviceRpcRequestBody body = new ToDeviceRpcRequestBody(rpcRequestBody.get("method").asText(), JacksonUtil.toString(rpcRequestBody.get("params")));
             SecurityUser currentUser = getCurrentUser();
             TenantId tenantId = currentUser.getTenantId();
-            @NotNull final DeferredResult<ResponseEntity> response = new DeferredResult<>();
+            final DeferredResult<ResponseEntity> response = new DeferredResult<>();
             long timeout = rpcRequestBody.has(DataConstants.TIMEOUT) ? rpcRequestBody.get(DataConstants.TIMEOUT).asLong() : defaultTimeout;
             long expTime = rpcRequestBody.has(DataConstants.EXPIRATION_TIME) ? rpcRequestBody.get(DataConstants.EXPIRATION_TIME).asLong() : System.currentTimeMillis() + Math.max(minTimeout, timeout);
-            @NotNull UUID rpcRequestUUID = rpcRequestBody.has("requestUUID") ? UUID.fromString(rpcRequestBody.get("requestUUID").asText()) : UUID.randomUUID();
+            UUID rpcRequestUUID = rpcRequestBody.has("requestUUID") ? UUID.fromString(rpcRequestBody.get("requestUUID").asText()) : UUID.randomUUID();
             boolean persisted = rpcRequestBody.has(DataConstants.PERSISTENT) && rpcRequestBody.get(DataConstants.PERSISTENT).asBoolean();
             @org.jetbrains.annotations.Nullable String additionalInfo =  JacksonUtil.toString(rpcRequestBody.get(DataConstants.ADDITIONAL_INFO));
             Integer retries = rpcRequestBody.has(DataConstants.RETRIES) ? rpcRequestBody.get(DataConstants.RETRIES).asInt() : null;
             accessValidator.validate(currentUser, Operation.RPC_CALL, deviceId, new HttpValidationCallback(response, new FutureCallback<>() {
                 @Override
                 public void onSuccess(@Nullable DeferredResult<ResponseEntity> result) {
-                    @NotNull ToDeviceRpcRequest rpcRequest = new ToDeviceRpcRequest(rpcRequestUUID,
+                    ToDeviceRpcRequest rpcRequest = new ToDeviceRpcRequest(rpcRequestUUID,
                                                                                     tenantId,
                                                                                     deviceId,
                                                                                     oneWay,
@@ -103,12 +101,12 @@ public abstract class AbstractRpcController extends BaseController {
         }
     }
 
-    public void reply(@NotNull LocalRequestMetaData rpcRequest, @NotNull FromDeviceRpcResponse response, @NotNull HttpStatus timeoutStatus, @NotNull HttpStatus noActiveConnectionStatus) {
-        @NotNull Optional<RpcError> rpcError = response.getError();
+    public void reply(LocalRequestMetaData rpcRequest, FromDeviceRpcResponse response, HttpStatus timeoutStatus, HttpStatus noActiveConnectionStatus) {
+        Optional<RpcError> rpcError = response.getError();
         DeferredResult<ResponseEntity> responseWriter = rpcRequest.getResponseWriter();
         if (rpcError.isPresent()) {
             logRpcCall(rpcRequest, rpcError, null);
-            @NotNull RpcError error = rpcError.get();
+            RpcError error = rpcError.get();
             switch (error) {
                 case TIMEOUT:
                     responseWriter.setResult(new ResponseEntity<>(timeoutStatus));
@@ -121,9 +119,9 @@ public abstract class AbstractRpcController extends BaseController {
                     break;
             }
         } else {
-            @NotNull Optional<String> responseData = response.getResponse();
+            Optional<String> responseData = response.getResponse();
             if (responseData.isPresent() && !StringUtils.isEmpty(responseData.get())) {
-                @NotNull String data = responseData.get();
+                String data = responseData.get();
                 try {
                     logRpcCall(rpcRequest, rpcError, null);
                     responseWriter.setResult(new ResponseEntity<>(JacksonUtil.toJsonNode(data), HttpStatus.OK));
@@ -139,13 +137,13 @@ public abstract class AbstractRpcController extends BaseController {
         }
     }
 
-    private void logRpcCall(@NotNull LocalRequestMetaData rpcRequest, @NotNull Optional<RpcError> rpcError, Throwable e) {
+    private void logRpcCall(LocalRequestMetaData rpcRequest, Optional<RpcError> rpcError, Throwable e) {
         logRpcCall(rpcRequest.getUser(), rpcRequest.getRequest().getDeviceId(), rpcRequest.getRequest().getBody(), rpcRequest.getRequest().isOneway(), rpcError, null);
     }
 
 
-    private void logRpcCall(@NotNull SecurityUser user, EntityId entityId, @NotNull ToDeviceRpcRequestBody body, boolean oneWay, @NotNull Optional<RpcError> rpcError, Throwable e) {
-        @NotNull String rpcErrorStr = "";
+    private void logRpcCall(SecurityUser user, EntityId entityId, ToDeviceRpcRequestBody body, boolean oneWay, Optional<RpcError> rpcError, Throwable e) {
+        String rpcErrorStr = "";
         if (rpcError.isPresent()) {
             rpcErrorStr = "RPC Error: " + rpcError.get().name();
         }

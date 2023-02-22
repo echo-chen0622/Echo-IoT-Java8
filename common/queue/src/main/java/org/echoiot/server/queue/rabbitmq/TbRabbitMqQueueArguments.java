@@ -2,7 +2,6 @@ package org.echoiot.server.queue.rabbitmq;
 
 import lombok.Getter;
 import org.echoiot.server.common.data.StringUtils;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
@@ -52,22 +51,20 @@ public class TbRabbitMqQueueArguments {
         vcArgs = getArgs(vcProperties);
     }
 
-    @NotNull
-    private Map<String, Object> getArgs(@NotNull String properties) {
-        @NotNull Map<String, Object> configs = new HashMap<>();
+    private Map<String, Object> getArgs(String properties) {
+        Map<String, Object> configs = new HashMap<>();
         if (StringUtils.isNotEmpty(properties)) {
-            for (@NotNull String property : properties.split(";")) {
+            for (String property : properties.split(";")) {
                 int delimiterPosition = property.indexOf(":");
-                @NotNull String key = property.substring(0, delimiterPosition);
-                @NotNull String strValue = property.substring(delimiterPosition + 1);
+                String key = property.substring(0, delimiterPosition);
+                String strValue = property.substring(delimiterPosition + 1);
                 configs.put(key, getObjectValue(strValue));
             }
         }
         return configs;
     }
 
-    @NotNull
-    private Object getObjectValue(@NotNull String str) {
+    private Object getObjectValue(String str) {
         if (str.equalsIgnoreCase("true") || str.equalsIgnoreCase("false")) {
             return Boolean.valueOf(str);
         } else if (isNumeric(str)) {
@@ -76,8 +73,7 @@ public class TbRabbitMqQueueArguments {
         return str;
     }
 
-    @NotNull
-    private Object getNumericValue(@NotNull String str) {
+    private Object getNumericValue(String str) {
         if (str.contains(".")) {
             return Double.valueOf(str);
         } else {

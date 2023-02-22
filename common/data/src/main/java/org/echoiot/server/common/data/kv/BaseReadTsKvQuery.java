@@ -2,7 +2,6 @@ package org.echoiot.server.common.data.kv;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.jetbrains.annotations.NotNull;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -33,7 +32,7 @@ public class BaseReadTsKvQuery extends BaseTsKvQuery implements ReadTsKvQuery {
         this(key, startTs, endTs, endTs - startTs, limit, Aggregation.NONE, order);
     }
 
-    public BaseReadTsKvQuery(@NotNull ReadTsKvQuery query, long startTs, long endTs) {
+    public BaseReadTsKvQuery(ReadTsKvQuery query, long startTs, long endTs) {
         super(query.getId(), query.getKey(), startTs, endTs);
         this.interval = query.getInterval();
         this.limit = query.getLimit();

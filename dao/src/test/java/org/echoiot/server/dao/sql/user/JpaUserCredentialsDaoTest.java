@@ -6,7 +6,6 @@ import org.echoiot.server.common.data.security.UserCredentials;
 import org.echoiot.server.dao.AbstractJpaDaoTest;
 import org.echoiot.server.dao.service.AbstractServiceTest;
 import org.echoiot.server.dao.user.UserCredentialsDao;
-import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -45,7 +44,7 @@ public class JpaUserCredentialsDaoTest extends AbstractJpaDaoTest {
     }
 
     UserCredentials createUserCredentials(int number) {
-        @NotNull UserCredentials userCredentials = new UserCredentials();
+        UserCredentials userCredentials = new UserCredentials();
         userCredentials.setEnabled(true);
         userCredentials.setUserId(new UserId(UUID.randomUUID()));
         userCredentials.setPassword("password");
@@ -56,7 +55,7 @@ public class JpaUserCredentialsDaoTest extends AbstractJpaDaoTest {
 
     @After
     public void after() {
-        for (@NotNull UserCredentials userCredentials : userCredentialsList) {
+        for (UserCredentials userCredentials : userCredentialsList) {
             userCredentialsDao.removeById(TenantId.SYS_TENANT_ID, userCredentials.getUuidId());
         }
     }

@@ -22,7 +22,6 @@ import org.echoiot.server.dao.service.DataValidator;
 import org.echoiot.server.dao.service.PaginatedRemover;
 import org.echoiot.server.dao.service.Validator;
 import org.hibernate.exception.ConstraintViolationException;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.event.TransactionalEventListener;
@@ -38,26 +37,21 @@ public class BaseOtaPackageService extends AbstractCachedEntityService<OtaPackag
     public static final String INCORRECT_OTA_PACKAGE_ID = "Incorrect otaPackageId ";
     public static final String INCORRECT_TENANT_ID = "Incorrect tenantId ";
 
-    @NotNull
     private final OtaPackageDao otaPackageDao;
-    @NotNull
     private final OtaPackageInfoDao otaPackageInfoDao;
-    @NotNull
     private final OtaPackageDataCache otaPackageDataCache;
-    @NotNull
     private final DataValidator<OtaPackageInfo> otaPackageInfoValidator;
-    @NotNull
     private final DataValidator<OtaPackage> otaPackageValidator;
 
     @TransactionalEventListener(classes = OtaPackageCacheEvictEvent.class)
     @Override
-    public void handleEvictEvent(@NotNull OtaPackageCacheEvictEvent event) {
+    public void handleEvictEvent(OtaPackageCacheEvictEvent event) {
         cache.evict(new OtaPackageCacheKey(event.getId()));
         otaPackageDataCache.evict(event.getId().toString());
     }
 
     @Override
-    public OtaPackageInfo saveOtaPackageInfo(@NotNull OtaPackageInfo otaPackageInfo, boolean isUrl) {
+    public OtaPackageInfo saveOtaPackageInfo(OtaPackageInfo otaPackageInfo, boolean isUrl) {
         log.trace("Executing saveOtaPackageInfo [{}]", otaPackageInfo);
         if (isUrl && (StringUtils.isEmpty(otaPackageInfo.getUrl()) || otaPackageInfo.getUrl().trim().length() == 0)) {
             throw new DataValidationException("Ota package URL should be specified!");
@@ -84,7 +78,7 @@ public class BaseOtaPackageService extends AbstractCachedEntityService<OtaPackag
     }
 
     @Override
-    public OtaPackage saveOtaPackage(@NotNull OtaPackage otaPackage) {
+    public OtaPackage saveOtaPackage(OtaPackage otaPackage) {
         log.trace("Executing saveOtaPackage [{}]", otaPackage);
         otaPackageValidator.validate(otaPackage, OtaPackageInfo::getTenantId);
         OtaPackageId otaPackageId = otaPackage.getId();
@@ -107,9 +101,8 @@ public class BaseOtaPackageService extends AbstractCachedEntityService<OtaPackag
         }
     }
 
-    @NotNull
     @Override
-    public String generateChecksum(@NotNull ChecksumAlgorithm checksumAlgorithm, @NotNull ByteBuffer data) {
+    public String generateChecksum(ChecksumAlgorithm checksumAlgorithm, ByteBuffer data) {
         if (data == null || !data.hasArray() || data.array().length == 0) {
             throw new DataValidationException("OtaPackage data should be specified!");
         }
@@ -117,9 +110,8 @@ public class BaseOtaPackageService extends AbstractCachedEntityService<OtaPackag
         return getHashFunction(checksumAlgorithm).hashBytes(data.array()).toString();
     }
 
-    @NotNull
     @SuppressWarnings("deprecation")
-    private HashFunction getHashFunction(@NotNull ChecksumAlgorithm checksumAlgorithm) {
+    private HashFunction getHashFunction(ChecksumAlgorithm checksumAlgorithm) {
         switch (checksumAlgorithm) {
             case MD5:
                 return Hashing.md5();
@@ -141,14 +133,14 @@ public class BaseOtaPackageService extends AbstractCachedEntityService<OtaPackag
     }
 
     @Override
-    public OtaPackage findOtaPackageById(TenantId tenantId, @NotNull OtaPackageId otaPackageId) {
+    public OtaPackage findOtaPackageById(TenantId tenantId, OtaPackageId otaPackageId) {
         log.trace("Executing findOtaPackageById [{}]", otaPackageId);
         validateId(otaPackageId, INCORRECT_OTA_PACKAGE_ID + otaPackageId);
         return otaPackageDao.findById(tenantId, otaPackageId.getId());
     }
 
     @Override
-    public OtaPackageInfo findOtaPackageInfoById(TenantId tenantId, @NotNull OtaPackageId otaPackageId) {
+    public OtaPackageInfo findOtaPackageInfoById(TenantId tenantId, OtaPackageId otaPackageId) {
         log.trace("Executing findOtaPackageInfoById [{}]", otaPackageId);
         validateId(otaPackageId, INCORRECT_OTA_PACKAGE_ID + otaPackageId);
         return cache.getAndPutInTransaction(new OtaPackageCacheKey(otaPackageId),
@@ -156,7 +148,7 @@ public class BaseOtaPackageService extends AbstractCachedEntityService<OtaPackag
     }
 
     @Override
-    public ListenableFuture<OtaPackageInfo> findOtaPackageInfoByIdAsync(TenantId tenantId, @NotNull OtaPackageId otaPackageId) {
+    public ListenableFuture<OtaPackageInfo> findOtaPackageInfoByIdAsync(TenantId tenantId, OtaPackageId otaPackageId) {
         log.trace("Executing findOtaPackageInfoByIdAsync [{}]", otaPackageId);
         validateId(otaPackageId, INCORRECT_OTA_PACKAGE_ID + otaPackageId);
         return otaPackageInfoDao.findByIdAsync(tenantId, otaPackageId.getId());
@@ -179,7 +171,7 @@ public class BaseOtaPackageService extends AbstractCachedEntityService<OtaPackag
     }
 
     @Override
-    public void deleteOtaPackage(TenantId tenantId, @NotNull OtaPackageId otaPackageId) {
+    public void deleteOtaPackage(TenantId tenantId, OtaPackageId otaPackageId) {
         log.trace("Executing deleteOtaPackage [{}]", otaPackageId);
         validateId(otaPackageId, INCORRECT_OTA_PACKAGE_ID + otaPackageId);
         try {
@@ -222,7 +214,7 @@ public class BaseOtaPackageService extends AbstractCachedEntityService<OtaPackag
                 }
 
                 @Override
-                protected void removeEntity(TenantId tenantId, @NotNull OtaPackageInfo entity) {
+                protected void removeEntity(TenantId tenantId, OtaPackageInfo entity) {
                     deleteOtaPackage(tenantId, entity.getId());
                 }
             };

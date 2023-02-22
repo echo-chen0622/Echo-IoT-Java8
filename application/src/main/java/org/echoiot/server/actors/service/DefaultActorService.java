@@ -11,7 +11,6 @@ import org.echoiot.server.common.msg.queue.PartitionChangeMsg;
 import org.echoiot.server.queue.discovery.TbApplicationEventListener;
 import org.echoiot.server.queue.discovery.event.PartitionChangeEvent;
 import org.echoiot.server.queue.util.AfterStartUp;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.stereotype.Service;
@@ -63,7 +62,7 @@ public class DefaultActorService extends TbApplicationEventListener<PartitionCha
     public void initActorSystem() {
         log.info("Initializing actor system.");
         actorContext.setActorService(this);
-        @NotNull TbActorSystemSettings settings = new TbActorSystemSettings(actorThroughput, schedulerPoolSize, maxActorInitAttempts);
+        TbActorSystemSettings settings = new TbActorSystemSettings(actorThroughput, schedulerPoolSize, maxActorInitAttempts);
         system = new DefaultTbActorSystem(settings);
 
         system.createDispatcher(APP_DISPATCHER_NAME, initDispatcherExecutor(APP_DISPATCHER_NAME, appDispatcherSize));
@@ -82,8 +81,7 @@ public class DefaultActorService extends TbApplicationEventListener<PartitionCha
         log.info("Actor system initialized.");
     }
 
-    @NotNull
-    private ExecutorService initDispatcherExecutor(@NotNull String dispatcherName, int poolSize) {
+    private ExecutorService initDispatcherExecutor(String dispatcherName, int poolSize) {
         if (poolSize == 0) {
             int cores = Runtime.getRuntime().availableProcessors();
             poolSize = Math.max(1, cores / 2);
@@ -102,7 +100,7 @@ public class DefaultActorService extends TbApplicationEventListener<PartitionCha
     }
 
     @Override
-    protected void onTbApplicationEvent(@NotNull PartitionChangeEvent event) {
+    protected void onTbApplicationEvent(PartitionChangeEvent event) {
         log.info("Received partition change event.");
         this.appActor.tellWithHighPriority(new PartitionChangeMsg(event.getQueueKey().getType(), event.getPartitions()));
     }

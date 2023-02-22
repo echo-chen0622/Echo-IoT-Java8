@@ -3,7 +3,6 @@ package org.echoiot.server.dao;
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.net.URL;
@@ -23,13 +22,13 @@ public class TimescaleSqlInitializer {
             "sql/system-test-psql.sql");
     private static final String dropAllTablesSqlFile = "sql/timescale/drop-all-tables.sql";
 
-    public static void initDb(@NotNull Connection conn) {
+    public static void initDb(Connection conn) {
         cleanUpDb(conn);
         log.info("initialize Timescale DB...");
         try {
-            for (@NotNull String sqlFile : sqlFiles) {
-                @NotNull URL sqlFileUrl = Resources.getResource(sqlFile);
-                @NotNull String sql = Resources.toString(sqlFileUrl, Charsets.UTF_8);
+            for (String sqlFile : sqlFiles) {
+                URL sqlFileUrl = Resources.getResource(sqlFile);
+                String sql = Resources.toString(sqlFileUrl, Charsets.UTF_8);
                 conn.createStatement().execute(sql);
             }
         } catch (IOException | SQLException e) {
@@ -38,11 +37,11 @@ public class TimescaleSqlInitializer {
         log.info("Timescale DB is initialized!");
     }
 
-    private static void cleanUpDb(@NotNull Connection conn) {
+    private static void cleanUpDb(Connection conn) {
         log.info("clean up Timescale DB...");
         try {
-            @NotNull URL dropAllTableSqlFileUrl = Resources.getResource(dropAllTablesSqlFile);
-            @NotNull String dropAllTablesSql = Resources.toString(dropAllTableSqlFileUrl, Charsets.UTF_8);
+            URL dropAllTableSqlFileUrl = Resources.getResource(dropAllTablesSqlFile);
+            String dropAllTablesSql = Resources.toString(dropAllTableSqlFileUrl, Charsets.UTF_8);
             conn.createStatement().execute(dropAllTablesSql);
         } catch (IOException | SQLException e) {
             throw new RuntimeException("Unable to clean up the Timescale database. Reason: " + e.getMessage(), e);

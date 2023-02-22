@@ -2,7 +2,6 @@ package org.echoiot.server.common.data;
 
 import com.google.common.base.Splitter;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import static org.apache.commons.lang3.StringUtils.repeat;
@@ -29,7 +28,7 @@ public class StringUtils {
     }
 
     @Nullable
-    public static String removeStart(@NotNull final String str, @NotNull final String remove) {
+    public static String removeStart(final String str, final String remove) {
         if (isEmpty(str) || isEmpty(remove)) {
             return str;
         }
@@ -40,7 +39,7 @@ public class StringUtils {
     }
 
     @Nullable
-    public static String substringBefore(@NotNull final String str, @Nullable final String separator) {
+    public static String substringBefore(final String str, @Nullable final String separator) {
         if (isEmpty(str) || separator == null) {
             return str;
         }
@@ -68,11 +67,10 @@ public class StringUtils {
         return null;
     }
 
-    @NotNull
-    public static String obfuscate(@NotNull String input, int seenMargin, char obfuscationChar,
+    public static String obfuscate(String input, int seenMargin, char obfuscationChar,
                                    int startIndexInclusive, int endIndexExclusive) {
 
-        @NotNull String part = input.substring(startIndexInclusive, endIndexExclusive);
+        String part = input.substring(startIndexInclusive, endIndexExclusive);
         String obfuscatedPart;
         if (part.length() <= seenMargin * 2) {
             obfuscatedPart = repeat(obfuscationChar, part.length());
@@ -84,8 +82,7 @@ public class StringUtils {
         return input.substring(0, startIndexInclusive) + obfuscatedPart + input.substring(endIndexExclusive);
     }
 
-    @NotNull
-    public static Iterable<String> split(@NotNull String value, int maxPartSize) {
+    public static Iterable<String> split(String value, int maxPartSize) {
         return Splitter.fixedLength(maxPartSize).split(value);
     }
 
@@ -137,7 +134,7 @@ public class StringUtils {
         return org.apache.commons.lang3.StringUtils.substringAfterLast(str, sep);
     }
 
-    public static boolean containedByAny(@Nullable String searchString, @NotNull String... strings) {
+    public static boolean containedByAny(@Nullable String searchString, String... strings) {
         if (searchString == null) return false;
         for (@Nullable String string : strings) {
             if (string != null && string.contains(searchString)) {
@@ -151,27 +148,22 @@ public class StringUtils {
         return org.apache.commons.lang3.StringUtils.contains(seq, searchSeq);
     }
 
-    @NotNull
     public static String randomNumeric(int length) {
         return RandomStringUtils.randomNumeric(length);
     }
 
-    @NotNull
     public static String random(int length) {
         return RandomStringUtils.random(length);
     }
 
-    @NotNull
     public static String random(int length, String chars) {
         return RandomStringUtils.random(length, chars);
     }
 
-    @NotNull
     public static String randomAlphanumeric(int count) {
         return RandomStringUtils.randomAlphanumeric(count);
     }
 
-    @NotNull
     public static String randomAlphabetic(int count) {
         return RandomStringUtils.randomAlphabetic(count);
     }

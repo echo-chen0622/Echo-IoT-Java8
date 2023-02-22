@@ -8,7 +8,6 @@ import lombok.Data;
 import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.EntityIdFactory;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
@@ -33,11 +32,11 @@ public class RelationsSearchParameters {
     @ApiModelProperty(position = 6, value = "Fetch entities that match the last level of search. Useful to find Devices that are strictly 'maxLevel' relations away from the root entity.")
     private boolean fetchLastLevelOnly;
 
-    public RelationsSearchParameters(@NotNull EntityId entityId, EntitySearchDirection direction, int maxLevel, boolean fetchLastLevelOnly) {
+    public RelationsSearchParameters(EntityId entityId, EntitySearchDirection direction, int maxLevel, boolean fetchLastLevelOnly) {
         this(entityId, direction, maxLevel, RelationTypeGroup.COMMON, fetchLastLevelOnly);
     }
 
-    public RelationsSearchParameters(@NotNull EntityId entityId, EntitySearchDirection direction, int maxLevel, RelationTypeGroup relationTypeGroup, boolean fetchLastLevelOnly) {
+    public RelationsSearchParameters(EntityId entityId, EntitySearchDirection direction, int maxLevel, RelationTypeGroup relationTypeGroup, boolean fetchLastLevelOnly) {
         this.rootId = entityId.getId();
         this.rootType = entityId.getEntityType();
         this.direction = direction;

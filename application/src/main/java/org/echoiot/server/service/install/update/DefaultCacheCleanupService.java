@@ -2,7 +2,6 @@ package org.echoiot.server.service.install.update;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
@@ -26,9 +25,7 @@ import java.util.Optional;
 @Slf4j
 public class DefaultCacheCleanupService implements CacheCleanupService {
 
-    @NotNull
     private final CacheManager cacheManager;
-    @NotNull
     private final Optional<RedisTemplate<String, Object>> redisTemplate;
 
 
@@ -41,7 +38,7 @@ public class DefaultCacheCleanupService implements CacheCleanupService {
      */
     @Override
     @SuppressWarnings({"AlibabaSwitchStatement", "java:S128"})
-    public void clearCache(@NotNull String fromVersion) {
+    public void clearCache(String fromVersion) {
         //跨多版本升级时，case，来控制版本按顺序逐步升级，所以不要加break，否则会跳过后面的case
         switch (fromVersion) {
             case "1.0.0":
@@ -63,7 +60,7 @@ public class DefaultCacheCleanupService implements CacheCleanupService {
      *
      * @param cacheName
      */
-    void clearCacheByName(@NotNull final String cacheName) {
+    void clearCacheByName(final String cacheName) {
         log.info("Clearing cache [{}]", cacheName);
         @Nullable Cache cache = cacheManager.getCache(cacheName);
         Objects.requireNonNull(cache, "指定缓存不存在：" + cacheName);

@@ -26,7 +26,6 @@ import org.echoiot.server.service.telemetry.TelemetryWebSocketService;
 import org.echoiot.server.service.telemetry.TelemetryWebSocketSessionRef;
 import org.echoiot.server.service.telemetry.cmd.v2.*;
 import org.echoiot.server.service.telemetry.sub.SubscriptionErrorCode;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -102,7 +101,7 @@ public class DefaultTbEntityDataSubscriptionService implements TbEntityDataSubsc
         serviceId = serviceInfoProvider.getServiceId();
         wsCallBackExecutor = Executors.newSingleThreadExecutor(EchoiotThreadFactory.forName("ws-entity-sub-callback"));
         tsInSqlDB = databaseTsType.equalsIgnoreCase("sql") || databaseTsType.equalsIgnoreCase("timescale");
-        @NotNull ThreadFactory tbThreadFactory = EchoiotThreadFactory.forName("ws-entity-sub-scheduler");
+        ThreadFactory tbThreadFactory = EchoiotThreadFactory.forName("ws-entity-sub-scheduler");
         if (dynamicPageLinkRefreshPoolSize == 1) {
             scheduler = Executors.newSingleThreadScheduledExecutor(tbThreadFactory);
         } else {
@@ -121,7 +120,7 @@ public class DefaultTbEntityDataSubscriptionService implements TbEntityDataSubsc
     }
 
     @Override
-    public void handleCmd(@NotNull TelemetryWebSocketSessionRef session, @NotNull EntityDataCmd cmd) {
+    public void handleCmd(TelemetryWebSocketSessionRef session, EntityDataCmd cmd) {
         @org.jetbrains.annotations.Nullable TbEntityDataSubCtx ctx = getSubCtx(session.getSessionId(), cmd.getCmdId());
         if (ctx != null) {
             log.debug("[{}][{}] Updating existing subscriptions using: {}", session.getSessionId(), cmd.getCmdId(), cmd);
@@ -159,8 +158,8 @@ public class DefaultTbEntityDataSubscriptionService implements TbEntityDataSubsc
             ctx.cancelTasks();
             if (ctx.getQuery().getPageLink().isDynamic()) {
                 //TODO: validate number of dynamic page links against rate limits. Ignore dynamic flag if limit is reached.
-                @NotNull TbEntityDataSubCtx finalCtx = ctx;
-                @NotNull ScheduledFuture<?> task = scheduler.scheduleWithFixedDelay(
+                TbEntityDataSubCtx finalCtx = ctx;
+                ScheduledFuture<?> task = scheduler.scheduleWithFixedDelay(
                         () -> refreshDynamicQuery(finalCtx),
                         dynamicPageLinkRefreshInterval, dynamicPageLinkRefreshInterval, TimeUnit.SECONDS);
                 finalCtx.setRefreshTask(task);
@@ -168,7 +167,7 @@ public class DefaultTbEntityDataSubscriptionService implements TbEntityDataSubsc
         }
 
         try {
-            @NotNull List<ListenableFuture<?>> cmdFutures = new ArrayList<>();
+            List<ListenableFuture<?>> cmdFutures = new ArrayList<>();
             if (cmd.getAggHistoryCmd() != null) {
                 cmdFutures.add(handleAggHistoryCmd(ctx, cmd.getAggHistoryCmd()));
             }
@@ -181,7 +180,7 @@ public class DefaultTbEntityDataSubscriptionService implements TbEntityDataSubsc
             if (cmdFutures.isEmpty()) {
                 handleRegularCommands(ctx, cmd);
             } else {
-                @NotNull TbEntityDataSubCtx finalCtx = ctx;
+                TbEntityDataSubCtx finalCtx = ctx;
                 Futures.addCallback(Futures.allAsList(cmdFutures), new FutureCallback<>() {
                     @Override
                     public void onSuccess(@Nullable List<Object> result) {
@@ -199,7 +198,7 @@ public class DefaultTbEntityDataSubscriptionService implements TbEntityDataSubsc
         }
     }
 
-    private void handleRegularCommands(@NotNull TbEntityDataSubCtx ctx, @NotNull EntityDataCmd cmd) {
+    private void handleRegularCommands(TbEntityDataSubCtx ctx, EntityDataCmd cmd) {
         try {
             if (cmd.getLatestCmd() != null || cmd.getTsCmd() != null) {
                 if (cmd.getLatestCmd() != null) {
@@ -218,59 +217,56 @@ public class DefaultTbEntityDataSubscriptionService implements TbEntityDataSubsc
 
     private void checkAndSendInitialData(@Nullable TbEntityDataSubCtx theCtx) {
         if (!theCtx.isInitialDataSent()) {
-            @NotNull EntityDataUpdate update = new EntityDataUpdate(theCtx.getCmdId(), theCtx.getData(), null, theCtx.getMaxEntitiesPerDataSubscription());
+            EntityDataUpdate update = new EntityDataUpdate(theCtx.getCmdId(), theCtx.getData(), null, theCtx.getMaxEntitiesPerDataSubscription());
             theCtx.sendWsMsg(update);
             theCtx.setInitialDataSent(true);
         }
     }
 
-    @NotNull
-    private ListenableFuture<TbEntityDataSubCtx> handleAggHistoryCmd(@NotNull TbEntityDataSubCtx ctx, @NotNull AggHistoryCmd cmd) {
-        @NotNull ConcurrentMap<Integer, ReadTsKvQueryInfo> queries = new ConcurrentHashMap<>();
-        for (@NotNull AggKey key : cmd.getKeys()) {
+    private ListenableFuture<TbEntityDataSubCtx> handleAggHistoryCmd(TbEntityDataSubCtx ctx, AggHistoryCmd cmd) {
+        ConcurrentMap<Integer, ReadTsKvQueryInfo> queries = new ConcurrentHashMap<>();
+        for (AggKey key : cmd.getKeys()) {
             if (key.getPreviousValueOnly() == null || !key.getPreviousValueOnly()) {
-                @NotNull var query = new BaseReadTsKvQuery(key.getKey(), cmd.getStartTs(), cmd.getEndTs(), cmd.getEndTs() - cmd.getStartTs(), 1, key.getAgg());
+                var query = new BaseReadTsKvQuery(key.getKey(), cmd.getStartTs(), cmd.getEndTs(), cmd.getEndTs() - cmd.getStartTs(), 1, key.getAgg());
                 queries.put(query.getId(), new ReadTsKvQueryInfo(key, query, false));
             }
             if (key.getPreviousStartTs() != null && key.getPreviousEndTs() != null && key.getPreviousEndTs() >= key.getPreviousStartTs()) {
-                @NotNull var query = new BaseReadTsKvQuery(key.getKey(), key.getPreviousStartTs(), key.getPreviousEndTs(), key.getPreviousEndTs() - key.getPreviousStartTs(), 1, key.getAgg());
+                var query = new BaseReadTsKvQuery(key.getKey(), key.getPreviousStartTs(), key.getPreviousEndTs(), key.getPreviousEndTs() - key.getPreviousStartTs(), 1, key.getAgg());
                 queries.put(query.getId(), new ReadTsKvQueryInfo(key, query, true));
             }
         }
         return handleAggCmd(ctx, cmd.getKeys(), queries, cmd.getStartTs(), cmd.getEndTs(), false);
     }
 
-    @NotNull
-    private ListenableFuture<TbEntityDataSubCtx> handleAggTsCmd(@NotNull TbEntityDataSubCtx ctx, @NotNull AggTimeSeriesCmd cmd) {
-        @NotNull ConcurrentMap<Integer, ReadTsKvQueryInfo> queries = new ConcurrentHashMap<>();
-        for (@NotNull AggKey key : cmd.getKeys()) {
-            @NotNull var query = new BaseReadTsKvQuery(key.getKey(), cmd.getStartTs(), cmd.getStartTs() + cmd.getTimeWindow(), cmd.getTimeWindow(), 1, key.getAgg());
+    private ListenableFuture<TbEntityDataSubCtx> handleAggTsCmd(TbEntityDataSubCtx ctx, AggTimeSeriesCmd cmd) {
+        ConcurrentMap<Integer, ReadTsKvQueryInfo> queries = new ConcurrentHashMap<>();
+        for (AggKey key : cmd.getKeys()) {
+            var query = new BaseReadTsKvQuery(key.getKey(), cmd.getStartTs(), cmd.getStartTs() + cmd.getTimeWindow(), cmd.getTimeWindow(), 1, key.getAgg());
             queries.put(query.getId(), new ReadTsKvQueryInfo(key, query, false));
         }
         return handleAggCmd(ctx, cmd.getKeys(), queries, cmd.getStartTs(), cmd.getStartTs() + cmd.getTimeWindow(), true);
     }
 
-    @NotNull
-    private ListenableFuture<TbEntityDataSubCtx> handleAggCmd(@NotNull TbEntityDataSubCtx ctx, @NotNull List<AggKey> keys, @NotNull ConcurrentMap<Integer, ReadTsKvQueryInfo> queries,
+    private ListenableFuture<TbEntityDataSubCtx> handleAggCmd(TbEntityDataSubCtx ctx, List<AggKey> keys, ConcurrentMap<Integer, ReadTsKvQueryInfo> queries,
                                                               long startTs, long endTs, boolean subscribe) {
-        @NotNull Map<EntityData, ListenableFuture<List<ReadTsKvQueryResult>>> fetchResultMap = new HashMap<>();
+        Map<EntityData, ListenableFuture<List<ReadTsKvQueryResult>>> fetchResultMap = new HashMap<>();
         List<EntityData> entityDataList = ctx.getData().getData();
-        @NotNull List<ReadTsKvQuery> queryList = queries.values().stream().map(ReadTsKvQueryInfo::getQuery).collect(Collectors.toList());
+        List<ReadTsKvQuery> queryList = queries.values().stream().map(ReadTsKvQueryInfo::getQuery).collect(Collectors.toList());
         entityDataList.forEach(entityData -> fetchResultMap.put(entityData,
                 tsService.findAllByQueries(ctx.getTenantId(), entityData.getEntityId(), queryList)));
         return Futures.transform(Futures.allAsList(fetchResultMap.values()), f -> {
             // Map that holds last ts for each key for each entity.
-            @NotNull Map<EntityData, Map<String, Long>> lastTsEntityMap = new HashMap<>();
+            Map<EntityData, Map<String, Long>> lastTsEntityMap = new HashMap<>();
             fetchResultMap.forEach((entityData, future) -> {
                 try {
-                    @NotNull Map<String, Long> lastTsMap = new HashMap<>();
+                    Map<String, Long> lastTsMap = new HashMap<>();
                     lastTsEntityMap.put(entityData, lastTsMap);
 
                     List<ReadTsKvQueryResult> queryResults = future.get();
                     if (queryResults != null) {
-                        for (@NotNull ReadTsKvQueryResult queryResult : queryResults) {
+                        for (ReadTsKvQueryResult queryResult : queryResults) {
                             ReadTsKvQueryInfo queryInfo = queries.get(queryResult.getQueryId());
-                            @NotNull ComparisonTsValue comparisonTsValue = entityData.getAggLatest().computeIfAbsent(queryInfo.getKey().getId(), agg -> new ComparisonTsValue());
+                            ComparisonTsValue comparisonTsValue = entityData.getAggLatest().computeIfAbsent(queryInfo.getKey().getId(), agg -> new ComparisonTsValue());
                             if (queryInfo.isPrevious()) {
                                 comparisonTsValue.setPrevious(queryResult.toTsValue(queryInfo.getQuery()));
                             } else {
@@ -315,7 +311,7 @@ public class DefaultTbEntityDataSubscriptionService implements TbEntityDataSubsc
     }
 
     @Override
-    public void handleCmd(@NotNull TelemetryWebSocketSessionRef session, @NotNull EntityCountCmd cmd) {
+    public void handleCmd(TelemetryWebSocketSessionRef session, EntityCountCmd cmd) {
         @org.jetbrains.annotations.Nullable TbEntityCountSubCtx ctx = getSubCtx(session.getSessionId(), cmd.getCmdId());
         if (ctx == null) {
             ctx = createSubCtx(session, cmd);
@@ -324,8 +320,8 @@ public class DefaultTbEntityDataSubscriptionService implements TbEntityDataSubsc
             long end = System.currentTimeMillis();
             stats.getRegularQueryInvocationCnt().incrementAndGet();
             stats.getRegularQueryTimeSpent().addAndGet(end - start);
-            @NotNull TbEntityCountSubCtx finalCtx = ctx;
-            @NotNull ScheduledFuture<?> task = scheduler.scheduleWithFixedDelay(
+            TbEntityCountSubCtx finalCtx = ctx;
+            ScheduledFuture<?> task = scheduler.scheduleWithFixedDelay(
                     () -> refreshDynamicQuery(finalCtx),
                     dynamicPageLinkRefreshInterval, dynamicPageLinkRefreshInterval, TimeUnit.SECONDS);
             finalCtx.setRefreshTask(task);
@@ -335,7 +331,7 @@ public class DefaultTbEntityDataSubscriptionService implements TbEntityDataSubsc
     }
 
     @Override
-    public void handleCmd(@NotNull TelemetryWebSocketSessionRef session, @NotNull AlarmDataCmd cmd) {
+    public void handleCmd(TelemetryWebSocketSessionRef session, AlarmDataCmd cmd) {
         @org.jetbrains.annotations.Nullable TbAlarmDataSubCtx ctx = getSubCtx(session.getSessionId(), cmd.getCmdId());
         if (ctx == null) {
             log.debug("[{}][{}] Creating new alarm subscription using: {}", session.getSessionId(), cmd.getCmdId(), cmd);
@@ -352,21 +348,21 @@ public class DefaultTbEntityDataSubscriptionService implements TbEntityDataSubsc
         ctx.cancelTasks();
         ctx.clearEntitySubscriptions();
         if (entities.isEmpty()) {
-            @NotNull AlarmDataUpdate update = new AlarmDataUpdate(cmd.getCmdId(), new PageData<>(), null, 0, 0);
+            AlarmDataUpdate update = new AlarmDataUpdate(cmd.getCmdId(), new PageData<>(), null, 0, 0);
             ctx.sendWsMsg(update);
         } else {
             ctx.fetchAlarms();
             ctx.createLatestValuesSubscriptions(cmd.getQuery().getLatestValues());
             if (adq.getPageLink().getTimeWindow() > 0) {
-                @NotNull TbAlarmDataSubCtx finalCtx = ctx;
-                @NotNull ScheduledFuture<?> task = scheduler.scheduleWithFixedDelay(
+                TbAlarmDataSubCtx finalCtx = ctx;
+                ScheduledFuture<?> task = scheduler.scheduleWithFixedDelay(
                         () -> refreshAlarmQuery(finalCtx), dynamicPageLinkRefreshInterval, dynamicPageLinkRefreshInterval, TimeUnit.SECONDS);
                 finalCtx.setRefreshTask(task);
             }
         }
     }
 
-    private boolean validate(@NotNull TbAbstractSubCtx<?> finalCtx) {
+    private boolean validate(TbAbstractSubCtx<?> finalCtx) {
         if (finalCtx.isStopped()) {
             log.warn("[{}][{}][{}] Received validation task for already stopped context.", finalCtx.getTenantId(), finalCtx.getSessionId(), finalCtx.getCmdId());
             return false;
@@ -382,7 +378,7 @@ public class DefaultTbEntityDataSubscriptionService implements TbEntityDataSubsc
         return true;
     }
 
-    private void refreshDynamicQuery(@NotNull TbAbstractSubCtx<?> finalCtx) {
+    private void refreshDynamicQuery(TbAbstractSubCtx<?> finalCtx) {
         try {
             if (validate(finalCtx)) {
                 long start = System.currentTimeMillis();
@@ -399,7 +395,7 @@ public class DefaultTbEntityDataSubscriptionService implements TbEntityDataSubsc
         }
     }
 
-    private void refreshAlarmQuery(@NotNull TbAlarmDataSubCtx finalCtx) {
+    private void refreshAlarmQuery(TbAlarmDataSubCtx finalCtx) {
         if (validate(finalCtx)) {
             finalCtx.checkAndResetInvocationCounter();
         } else {
@@ -426,10 +422,9 @@ public class DefaultTbEntityDataSubscriptionService implements TbEntityDataSubsc
         }
     }
 
-    @NotNull
-    private TbEntityDataSubCtx createSubCtx(@NotNull TelemetryWebSocketSessionRef sessionRef, @NotNull EntityDataCmd cmd) {
-        @NotNull Map<Integer, TbAbstractSubCtx> sessionSubs = subscriptionsBySessionId.computeIfAbsent(sessionRef.getSessionId(), k -> new HashMap<>());
-        @NotNull TbEntityDataSubCtx ctx = new TbEntityDataSubCtx(serviceId, wsService, entityService, localSubscriptionService,
+    private TbEntityDataSubCtx createSubCtx(TelemetryWebSocketSessionRef sessionRef, EntityDataCmd cmd) {
+        Map<Integer, TbAbstractSubCtx> sessionSubs = subscriptionsBySessionId.computeIfAbsent(sessionRef.getSessionId(), k -> new HashMap<>());
+        TbEntityDataSubCtx ctx = new TbEntityDataSubCtx(serviceId, wsService, entityService, localSubscriptionService,
                                                                  attributesService, stats, sessionRef, cmd.getCmdId(), maxEntitiesPerDataSubscription);
         if (cmd.getQuery() != null) {
             ctx.setAndResolveQuery(cmd.getQuery());
@@ -438,10 +433,9 @@ public class DefaultTbEntityDataSubscriptionService implements TbEntityDataSubsc
         return ctx;
     }
 
-    @NotNull
-    private TbEntityCountSubCtx createSubCtx(@NotNull TelemetryWebSocketSessionRef sessionRef, @NotNull EntityCountCmd cmd) {
-        @NotNull Map<Integer, TbAbstractSubCtx> sessionSubs = subscriptionsBySessionId.computeIfAbsent(sessionRef.getSessionId(), k -> new HashMap<>());
-        @NotNull TbEntityCountSubCtx ctx = new TbEntityCountSubCtx(serviceId, wsService, entityService, localSubscriptionService,
+    private TbEntityCountSubCtx createSubCtx(TelemetryWebSocketSessionRef sessionRef, EntityCountCmd cmd) {
+        Map<Integer, TbAbstractSubCtx> sessionSubs = subscriptionsBySessionId.computeIfAbsent(sessionRef.getSessionId(), k -> new HashMap<>());
+        TbEntityCountSubCtx ctx = new TbEntityCountSubCtx(serviceId, wsService, entityService, localSubscriptionService,
                                                                    attributesService, stats, sessionRef, cmd.getCmdId());
         if (cmd.getQuery() != null) {
             ctx.setAndResolveQuery(cmd.getQuery());
@@ -451,10 +445,9 @@ public class DefaultTbEntityDataSubscriptionService implements TbEntityDataSubsc
     }
 
 
-    @NotNull
-    private TbAlarmDataSubCtx createSubCtx(@NotNull TelemetryWebSocketSessionRef sessionRef, @NotNull AlarmDataCmd cmd) {
-        @NotNull Map<Integer, TbAbstractSubCtx> sessionSubs = subscriptionsBySessionId.computeIfAbsent(sessionRef.getSessionId(), k -> new HashMap<>());
-        @NotNull TbAlarmDataSubCtx ctx = new TbAlarmDataSubCtx(serviceId, wsService, entityService, localSubscriptionService,
+    private TbAlarmDataSubCtx createSubCtx(TelemetryWebSocketSessionRef sessionRef, AlarmDataCmd cmd) {
+        Map<Integer, TbAbstractSubCtx> sessionSubs = subscriptionsBySessionId.computeIfAbsent(sessionRef.getSessionId(), k -> new HashMap<>());
+        TbAlarmDataSubCtx ctx = new TbAlarmDataSubCtx(serviceId, wsService, entityService, localSubscriptionService,
                                                                attributesService, stats, alarmService, sessionRef, cmd.getCmdId(), maxEntitiesPerAlarmSubscription,
                                                                maxAlarmQueriesPerRefreshInterval);
         ctx.setAndResolveQuery(cmd.getQuery());
@@ -473,27 +466,24 @@ public class DefaultTbEntityDataSubscriptionService implements TbEntityDataSubsc
         }
     }
 
-    @NotNull
-    private ListenableFuture<TbEntityDataSubCtx> handleTimeSeriesCmd(@NotNull TbEntityDataSubCtx ctx, @NotNull TimeSeriesCmd cmd) {
+    private ListenableFuture<TbEntityDataSubCtx> handleTimeSeriesCmd(TbEntityDataSubCtx ctx, TimeSeriesCmd cmd) {
         log.debug("[{}][{}] Fetching time-series data for last {} ms for keys: ({})", ctx.getSessionId(), ctx.getCmdId(), cmd.getTimeWindow(), cmd.getKeys());
         return handleGetTsCmd(ctx, cmd, true);
     }
 
 
-    @NotNull
-    private ListenableFuture<TbEntityDataSubCtx> handleHistoryCmd(@NotNull TbEntityDataSubCtx ctx, @NotNull EntityHistoryCmd cmd) {
+    private ListenableFuture<TbEntityDataSubCtx> handleHistoryCmd(TbEntityDataSubCtx ctx, EntityHistoryCmd cmd) {
         log.debug("[{}][{}] Fetching history data for start {} and end {} ms for keys: ({})", ctx.getSessionId(), ctx.getCmdId(), cmd.getStartTs(), cmd.getEndTs(), cmd.getKeys());
         return handleGetTsCmd(ctx, cmd, false);
     }
 
-    @NotNull
-    private ListenableFuture<TbEntityDataSubCtx> handleGetTsCmd(@NotNull TbEntityDataSubCtx ctx, @NotNull GetTsCmd cmd, boolean subscribe) {
-        @NotNull Map<Integer, String> queriesKeys = new ConcurrentHashMap<>();
+    private ListenableFuture<TbEntityDataSubCtx> handleGetTsCmd(TbEntityDataSubCtx ctx, GetTsCmd cmd, boolean subscribe) {
+        Map<Integer, String> queriesKeys = new ConcurrentHashMap<>();
 
         List<String> keys = cmd.getKeys();
         List<ReadTsKvQuery> finalTsKvQueryList;
-        @NotNull List<ReadTsKvQuery> tsKvQueryList = keys.stream().map(key -> {
-            @NotNull var query = new BaseReadTsKvQuery(
+        List<ReadTsKvQuery> tsKvQueryList = keys.stream().map(key -> {
+            var query = new BaseReadTsKvQuery(
                     key, cmd.getStartTs(), cmd.getEndTs(), cmd.getInterval(), getLimit(cmd.getLimit()), cmd.getAgg()
             );
             queriesKeys.put(query.getId(), query.getKey());
@@ -502,7 +492,7 @@ public class DefaultTbEntityDataSubscriptionService implements TbEntityDataSubsc
         if (cmd.isFetchLatestPreviousPoint()) {
             finalTsKvQueryList = new ArrayList<>(tsKvQueryList);
             finalTsKvQueryList.addAll(keys.stream().map(key -> {
-                        @NotNull var query = new BaseReadTsKvQuery(
+                        var query = new BaseReadTsKvQuery(
                                 key, cmd.getStartTs() - TimeUnit.DAYS.toMillis(365), cmd.getStartTs(), cmd.getInterval(), 1, cmd.getAgg());
                         queriesKeys.put(query.getId(), query.getKey());
                         return query;
@@ -511,21 +501,21 @@ public class DefaultTbEntityDataSubscriptionService implements TbEntityDataSubsc
         } else {
             finalTsKvQueryList = tsKvQueryList;
         }
-        @NotNull Map<EntityData, ListenableFuture<List<ReadTsKvQueryResult>>> fetchResultMap = new HashMap<>();
+        Map<EntityData, ListenableFuture<List<ReadTsKvQueryResult>>> fetchResultMap = new HashMap<>();
         List<EntityData> entityDataList = ctx.getData().getData();
         entityDataList.forEach(entityData -> fetchResultMap.put(entityData,
                 tsService.findAllByQueries(ctx.getTenantId(), entityData.getEntityId(), finalTsKvQueryList)));
         return Futures.transform(Futures.allAsList(fetchResultMap.values()), f -> {
             // Map that holds last ts for each key for each entity.
-            @NotNull Map<EntityData, Map<String, Long>> lastTsEntityMap = new HashMap<>();
+            Map<EntityData, Map<String, Long>> lastTsEntityMap = new HashMap<>();
             fetchResultMap.forEach((entityData, future) -> {
                 try {
-                    @NotNull Map<String, Long> lastTsMap = new HashMap<>();
+                    Map<String, Long> lastTsMap = new HashMap<>();
                     lastTsEntityMap.put(entityData, lastTsMap);
 
                     List<ReadTsKvQueryResult> queryResults = future.get();
                     if (queryResults != null) {
-                        for (@NotNull ReadTsKvQueryResult queryResult : queryResults) {
+                        for (ReadTsKvQueryResult queryResult : queryResults) {
                             String queryKey = queriesKeys.get(queryResult.getQueryId());
                             if (queryKey != null) {
                                 entityData.getTimeseries().merge(queryKey, queryResult.toTsValues(), ArrayUtils::addAll);
@@ -572,20 +562,20 @@ public class DefaultTbEntityDataSubscriptionService implements TbEntityDataSubsc
         }, wsCallBackExecutor);
     }
 
-    private void handleLatestCmd(@NotNull TbEntityDataSubCtx ctx, @NotNull LatestValueCmd latestCmd) {
+    private void handleLatestCmd(TbEntityDataSubCtx ctx, LatestValueCmd latestCmd) {
         log.trace("[{}][{}] Going to process latest command: {}", ctx.getSessionId(), ctx.getCmdId(), latestCmd);
         //Fetch the latest values for telemetry keys (in case they are not copied from NoSQL to SQL DB in hybrid mode.
         if (!tsInSqlDB) {
             log.trace("[{}][{}] Going to fetch missing latest values: {}", ctx.getSessionId(), ctx.getCmdId(), latestCmd);
-            @NotNull List<String> allTsKeys = latestCmd.getKeys().stream()
+            List<String> allTsKeys = latestCmd.getKeys().stream()
                                                        .filter(key -> key.getType().equals(EntityKeyType.TIME_SERIES))
                                                        .map(EntityKey::getKey).collect(Collectors.toList());
 
-            @NotNull Map<EntityData, ListenableFuture<Map<String, TsValue>>> missingTelemetryFutures = new HashMap<>();
-            for (@NotNull EntityData entityData : ctx.getData().getData()) {
+            Map<EntityData, ListenableFuture<Map<String, TsValue>>> missingTelemetryFutures = new HashMap<>();
+            for (EntityData entityData : ctx.getData().getData()) {
                 Map<EntityKeyType, Map<String, TsValue>> latestEntityData = entityData.getLatest();
                 Map<String, TsValue> tsEntityData = latestEntityData.get(EntityKeyType.TIME_SERIES);
-                @NotNull Set<String> missingTsKeys = new LinkedHashSet<>(allTsKeys);
+                Set<String> missingTsKeys = new LinkedHashSet<>(allTsKeys);
                 if (tsEntityData != null) {
                     missingTsKeys.removeAll(tsEntityData.keySet());
                 } else {
@@ -639,13 +629,12 @@ public class DefaultTbEntityDataSubscriptionService implements TbEntityDataSubsc
         }
     }
 
-    @NotNull
-    private Map<String, TsValue> toTsValue(@NotNull List<TsKvEntry> data) {
+    private Map<String, TsValue> toTsValue(List<TsKvEntry> data) {
         return data.stream().collect(Collectors.toMap(TsKvEntry::getKey, value -> new TsValue(value.getTs(), value.getValueAsString())));
     }
 
     @Override
-    public void cancelSubscription(String sessionId, @NotNull UnsubscribeCmd cmd) {
+    public void cancelSubscription(String sessionId, UnsubscribeCmd cmd) {
         cleanupAndCancel(getSubCtx(sessionId, cmd.getCmdId()));
     }
 

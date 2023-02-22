@@ -1,7 +1,6 @@
 package org.echoiot.server.common.msg.tools;
 
 import org.awaitility.pollinterval.FixedPollInterval;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
 import java.util.concurrent.TimeUnit;
@@ -19,8 +18,8 @@ public class RateLimitsTest {
     }
 
     private void testRateLimitWithGreedyRefill(int capacity, int period) {
-        @NotNull String rateLimitConfig = capacity + ":" + period;
-        @NotNull TbRateLimits rateLimits = new TbRateLimits(rateLimitConfig);
+        String rateLimitConfig = capacity + ":" + period;
+        TbRateLimits rateLimits = new TbRateLimits(rateLimitConfig);
 
         rateLimits.tryConsume(capacity);
         assertThat(rateLimits.tryConsume()).as("new token is available").isFalse();
@@ -48,8 +47,8 @@ public class RateLimitsTest {
     }
 
     private void testRateLimitWithIntervalRefill(int capacity, int period) {
-        @NotNull String rateLimitConfig = capacity + ":" + period;
-        @NotNull TbRateLimits rateLimits = new TbRateLimits(rateLimitConfig, true);
+        String rateLimitConfig = capacity + ":" + period;
+        TbRateLimits rateLimits = new TbRateLimits(rateLimitConfig, true);
 
         rateLimits.tryConsume(capacity);
         assertThat(rateLimits.tryConsume()).as("new token is available").isFalse();

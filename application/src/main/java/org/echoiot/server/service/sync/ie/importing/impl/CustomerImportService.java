@@ -10,7 +10,6 @@ import org.echoiot.server.dao.customer.CustomerDao;
 import org.echoiot.server.dao.customer.CustomerService;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.sync.vc.data.EntitiesImportCtx;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,19 +17,16 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CustomerImportService extends BaseEntityImportService<CustomerId, Customer, EntityExportData<Customer>> {
 
-    @NotNull
     private final CustomerService customerService;
-    @NotNull
     private final CustomerDao customerDao;
 
     @Override
-    protected void setOwner(TenantId tenantId, @NotNull Customer customer, IdProvider idProvider) {
+    protected void setOwner(TenantId tenantId, Customer customer, IdProvider idProvider) {
         customer.setTenantId(tenantId);
     }
 
-    @NotNull
     @Override
-    protected Customer prepare(@NotNull EntitiesImportCtx ctx, @NotNull Customer customer, Customer old, EntityExportData<Customer> exportData, IdProvider idProvider) {
+    protected Customer prepare(EntitiesImportCtx ctx, Customer customer, Customer old, EntityExportData<Customer> exportData, IdProvider idProvider) {
         if (customer.isPublic()) {
             Customer publicCustomer = customerService.findOrCreatePublicCustomer(ctx.getTenantId());
             publicCustomer.setExternalId(customer.getExternalId());
@@ -41,7 +37,7 @@ public class CustomerImportService extends BaseEntityImportService<CustomerId, C
     }
 
     @Override
-    protected Customer saveOrUpdate(@NotNull EntitiesImportCtx ctx, @NotNull Customer customer, EntityExportData<Customer> exportData, IdProvider idProvider) {
+    protected Customer saveOrUpdate(EntitiesImportCtx ctx, Customer customer, EntityExportData<Customer> exportData, IdProvider idProvider) {
         if (!customer.isPublic()) {
             return customerService.saveCustomer(customer);
         } else {
@@ -49,13 +45,11 @@ public class CustomerImportService extends BaseEntityImportService<CustomerId, C
         }
     }
 
-    @NotNull
     @Override
-    protected Customer deepCopy(@NotNull Customer customer) {
+    protected Customer deepCopy(Customer customer) {
         return new Customer(customer);
     }
 
-    @NotNull
     @Override
     public EntityType getEntityType() {
         return EntityType.CUSTOMER;

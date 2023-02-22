@@ -27,7 +27,6 @@ import org.eclipse.californium.core.observe.ObserveRelation;
 import org.eclipse.californium.core.server.resources.CoapExchange;
 import org.eclipse.californium.core.server.resources.Resource;
 import org.eclipse.californium.core.server.resources.ResourceObserver;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.net.InetSocketAddress;
@@ -55,7 +54,7 @@ public class CoapTransportResource extends AbstractCoapTransportResource {
     private final long piggybackTimeout;
     private final CoapClientContext clients;
 
-    public CoapTransportResource(@NotNull CoapTransportContext ctx, @NotNull CoapServerService coapServerService, String name) {
+    public CoapTransportResource(CoapTransportContext ctx, CoapServerService coapServerService, String name) {
         super(ctx, name);
         this.setObservable(true); // enable observing
         this.addObserver(new CoapResourceObserver());
@@ -71,8 +70,8 @@ public class CoapTransportResource extends AbstractCoapTransportResource {
      * Overwritten method from CoapResource to be able to manage our own observe notification counters.
      */
     @Override
-    public void checkObserveRelation(@NotNull Exchange exchange, @NotNull Response response) {
-        @NotNull String token = getTokenFromRequest(exchange.getRequest());
+    public void checkObserveRelation(Exchange exchange, Response response) {
+        String token = getTokenFromRequest(exchange.getRequest());
         final ObserveRelation relation = exchange.getRelation();
         if (relation == null || relation.isCanceled()) {
             return; // because request did not try to establish a relation
@@ -92,8 +91,8 @@ public class CoapTransportResource extends AbstractCoapTransportResource {
     }
 
     @Override
-    protected void processHandleGet(@NotNull CoapExchange exchange) {
-        @NotNull Optional<FeatureType> featureType = getFeatureType(exchange.advanced().getRequest());
+    protected void processHandleGet(CoapExchange exchange) {
+        Optional<FeatureType> featureType = getFeatureType(exchange.advanced().getRequest());
         if (featureType.isEmpty()) {
             log.trace("Missing feature type parameter");
             exchange.respond(CoAP.ResponseCode.BAD_REQUEST);
@@ -110,7 +109,7 @@ public class CoapTransportResource extends AbstractCoapTransportResource {
         }
     }
 
-    private void processExchangeGetRequest(@NotNull CoapExchange exchange, FeatureType featureType) {
+    private void processExchangeGetRequest(CoapExchange exchange, FeatureType featureType) {
         boolean unsubscribe = exchange.getRequestOptions().getObserve() == 1;
         SessionMsgType sessionMsgType;
         if (featureType == FeatureType.RPC) {
@@ -122,8 +121,8 @@ public class CoapTransportResource extends AbstractCoapTransportResource {
     }
 
     @Override
-    protected void processHandlePost(@NotNull CoapExchange exchange) {
-        @NotNull Optional<FeatureType> featureType = getFeatureType(exchange.advanced().getRequest());
+    protected void processHandlePost(CoapExchange exchange) {
+        Optional<FeatureType> featureType = getFeatureType(exchange.advanced().getRequest());
         if (featureType.isEmpty()) {
             log.trace("Missing feature type parameter");
             exchange.respond(CoAP.ResponseCode.BAD_REQUEST);
@@ -136,7 +135,7 @@ public class CoapTransportResource extends AbstractCoapTransportResource {
                     processRequest(exchange, SessionMsgType.POST_TELEMETRY_REQUEST);
                     break;
                 case RPC:
-                    @NotNull Optional<Integer> requestId = getRequestId(exchange.advanced().getRequest());
+                    Optional<Integer> requestId = getRequestId(exchange.advanced().getRequest());
                     if (requestId.isPresent()) {
                         processRequest(exchange, SessionMsgType.TO_DEVICE_RPC_RESPONSE);
                     } else {
@@ -153,10 +152,10 @@ public class CoapTransportResource extends AbstractCoapTransportResource {
         }
     }
 
-    private void processProvision(@NotNull CoapExchange exchange) {
+    private void processProvision(CoapExchange exchange) {
         deferAccept(exchange);
         try {
-            @NotNull UUID sessionId = UUID.randomUUID();
+            UUID sessionId = UUID.randomUUID();
             log.trace("[{}] Processing provision publish msg [{}]!", sessionId, exchange.advanced().getRequest());
             TransportProtos.ProvisionDeviceRequestMsg provisionRequestMsg;
             TransportPayloadType payloadType;
@@ -178,7 +177,7 @@ public class CoapTransportResource extends AbstractCoapTransportResource {
         }
     }
 
-    private void processRequest(@NotNull CoapExchange exchange, @NotNull SessionMsgType type) {
+    private void processRequest(CoapExchange exchange, SessionMsgType type) {
         log.trace("Processing {}", exchange.advanced().getRequest());
         deferAccept(exchange);
         Exchange advanced = exchange.advanced();
@@ -201,8 +200,8 @@ public class CoapTransportResource extends AbstractCoapTransportResource {
         }
     }
 
-    private void processAccessTokenRequest(@NotNull CoapExchange exchange, @NotNull SessionMsgType type, @NotNull Request request) {
-        @NotNull Optional<DeviceTokenCredentials> credentials = decodeCredentials(request);
+    private void processAccessTokenRequest(CoapExchange exchange, SessionMsgType type, Request request) {
+        Optional<DeviceTokenCredentials> credentials = decodeCredentials(request);
         if (credentials.isEmpty()) {
             exchange.respond(CoAP.ResponseCode.UNAUTHORIZED);
             return;
@@ -211,7 +210,7 @@ public class CoapTransportResource extends AbstractCoapTransportResource {
                                  new CoapDeviceAuthCallback(exchange, (deviceCredentials, deviceProfile) -> processRequest(exchange, type, request, deviceCredentials, deviceProfile)));
     }
 
-    private void processRequest(@NotNull CoapExchange exchange, @NotNull SessionMsgType type, @NotNull Request request, ValidateDeviceCredentialsResponse deviceCredentials, DeviceProfile deviceProfile) {
+    private void processRequest(CoapExchange exchange, SessionMsgType type, Request request, ValidateDeviceCredentialsResponse deviceCredentials, DeviceProfile deviceProfile) {
         @Nullable TbCoapClientState clientState = null;
         try {
             clientState = clients.getOrCreateClient(type, deviceCredentials, deviceProfile);
@@ -256,75 +255,75 @@ public class CoapTransportResource extends AbstractCoapTransportResource {
         }
     }
 
-    private void handlePostAttributesRequest(@NotNull TbCoapClientState clientState, CoapExchange exchange, Request request) throws AdaptorException {
+    private void handlePostAttributesRequest(TbCoapClientState clientState, CoapExchange exchange, Request request) throws AdaptorException {
         TransportProtos.SessionInfoProto sessionInfo = clients.getNewSyncSession(clientState);
-        @NotNull UUID sessionId = toSessionId(sessionInfo);
+        UUID sessionId = toSessionId(sessionInfo);
         transportService.process(sessionInfo, clientState.getAdaptor().convertToPostAttributes(sessionId, request,
                 clientState.getConfiguration().getAttributesMsgDescriptor()),
                 new CoapOkCallback(exchange, CoAP.ResponseCode.CREATED, CoAP.ResponseCode.INTERNAL_SERVER_ERROR));
     }
 
-    private void handlePostTelemetryRequest(@NotNull TbCoapClientState clientState, CoapExchange exchange, Request request) throws AdaptorException {
+    private void handlePostTelemetryRequest(TbCoapClientState clientState, CoapExchange exchange, Request request) throws AdaptorException {
         TransportProtos.SessionInfoProto sessionInfo = clients.getNewSyncSession(clientState);
-        @NotNull UUID sessionId = toSessionId(sessionInfo);
+        UUID sessionId = toSessionId(sessionInfo);
         transportService.process(sessionInfo, clientState.getAdaptor().convertToPostTelemetry(sessionId, request,
                 clientState.getConfiguration().getTelemetryMsgDescriptor()),
                 new CoapOkCallback(exchange, CoAP.ResponseCode.CREATED, CoAP.ResponseCode.INTERNAL_SERVER_ERROR));
     }
 
-    private void handleClaimRequest(@NotNull TbCoapClientState clientState, CoapExchange exchange, Request request) throws AdaptorException {
+    private void handleClaimRequest(TbCoapClientState clientState, CoapExchange exchange, Request request) throws AdaptorException {
         TransportProtos.SessionInfoProto sessionInfo = clients.getNewSyncSession(clientState);
-        @NotNull UUID sessionId = toSessionId(sessionInfo);
+        UUID sessionId = toSessionId(sessionInfo);
         transportService.process(sessionInfo,
                 clientState.getAdaptor().convertToClaimDevice(sessionId, request, sessionInfo),
                 new CoapOkCallback(exchange, CoAP.ResponseCode.CREATED, CoAP.ResponseCode.INTERNAL_SERVER_ERROR));
     }
 
-    private void handleAttributeSubscribeRequest(@NotNull TbCoapClientState clientState, CoapExchange exchange, @NotNull Request request) {
-        @NotNull String attrSubToken = getTokenFromRequest(request);
+    private void handleAttributeSubscribeRequest(TbCoapClientState clientState, CoapExchange exchange, Request request) {
+        String attrSubToken = getTokenFromRequest(request);
         if (!clients.registerAttributeObservation(clientState, attrSubToken, exchange)) {
             log.warn("[{}] Received duplicate attribute subscribe request for token: {}", clientState.getDeviceId(), attrSubToken);
         }
     }
 
-    private void handleAttributeUnsubscribeRequest(TbCoapClientState clientState, CoapExchange exchange, @NotNull Request request) {
+    private void handleAttributeUnsubscribeRequest(TbCoapClientState clientState, CoapExchange exchange, Request request) {
         clients.deregisterAttributeObservation(clientState, getTokenFromRequest(request), exchange);
     }
 
-    private void handleRpcUnsubscribeRequest(TbCoapClientState clientState, CoapExchange exchange, @NotNull Request request) {
+    private void handleRpcUnsubscribeRequest(TbCoapClientState clientState, CoapExchange exchange, Request request) {
         clients.deregisterRpcObservation(clientState, getTokenFromRequest(request), exchange);
     }
 
-    private void handleToDeviceRpcResponse(@NotNull TbCoapClientState clientState, CoapExchange exchange, Request request) throws AdaptorException {
+    private void handleToDeviceRpcResponse(TbCoapClientState clientState, CoapExchange exchange, Request request) throws AdaptorException {
         TransportProtos.SessionInfoProto session = clientState.getSession();
         if (session == null) {
             session = clients.getNewSyncSession(clientState);
         }
-        @NotNull UUID sessionId = toSessionId(session);
+        UUID sessionId = toSessionId(session);
         transportService.process(session,
                 clientState.getAdaptor().convertToDeviceRpcResponse(sessionId, request, clientState.getConfiguration().getRpcResponseMsgDescriptor()),
                 new CoapOkCallback(exchange, CoAP.ResponseCode.CREATED, CoAP.ResponseCode.INTERNAL_SERVER_ERROR));
     }
 
-    private void handleRpcSubscribeRequest(TbCoapClientState clientState, CoapExchange exchange, @NotNull Request request) {
-        @NotNull String rpcSubToken = getTokenFromRequest(request);
+    private void handleRpcSubscribeRequest(TbCoapClientState clientState, CoapExchange exchange, Request request) {
+        String rpcSubToken = getTokenFromRequest(request);
         if (!clients.registerRpcObservation(clientState, rpcSubToken, exchange)) {
             log.warn("[{}] Received duplicate rpc subscribe request.", rpcSubToken);
         }
     }
 
-    private void handleGetAttributesRequest(@NotNull TbCoapClientState clientState, CoapExchange exchange, Request request) throws AdaptorException {
+    private void handleGetAttributesRequest(TbCoapClientState clientState, CoapExchange exchange, Request request) throws AdaptorException {
         TransportProtos.SessionInfoProto sessionInfo = clients.getNewSyncSession(clientState);
-        @NotNull UUID sessionId = toSessionId(sessionInfo);
+        UUID sessionId = toSessionId(sessionInfo);
         transportService.registerSyncSession(sessionInfo, new GetAttributesSyncSessionCallback(clientState, exchange, request), timeout);
         transportService.process(sessionInfo,
                 clientState.getAdaptor().convertToGetAttributes(sessionId, request),
                 new CoapNoOpCallback(exchange));
     }
 
-    private void handleToServerRpcRequest(@NotNull TbCoapClientState clientState, CoapExchange exchange, Request request) throws AdaptorException {
+    private void handleToServerRpcRequest(TbCoapClientState clientState, CoapExchange exchange, Request request) throws AdaptorException {
         TransportProtos.SessionInfoProto sessionInfo = clients.getNewSyncSession(clientState);
-        @NotNull UUID sessionId = toSessionId(sessionInfo);
+        UUID sessionId = toSessionId(sessionInfo);
         transportService.registerSyncSession(sessionInfo, new ToServerRpcSyncSessionCallback(clientState, exchange, request), timeout);
         transportService.process(sessionInfo,
                 clientState.getAdaptor().convertToServerRpcRequest(sessionId, request),
@@ -337,7 +336,7 @@ public class CoapTransportResource extends AbstractCoapTransportResource {
      * If this is triggered the full response will be sent in a separate CON/NON message.
      * Essentially this allows the use of piggybacked responses.
      */
-    private void deferAccept(@NotNull CoapExchange exchange) {
+    private void deferAccept(CoapExchange exchange) {
         if (piggybackTimeout > 0) {
             transportContext.getScheduler().schedule(exchange::accept, piggybackTimeout, TimeUnit.MILLISECONDS);
         } else {
@@ -345,19 +344,16 @@ public class CoapTransportResource extends AbstractCoapTransportResource {
         }
     }
 
-    @NotNull
-    private UUID toSessionId(@NotNull TransportProtos.SessionInfoProto sessionInfoProto) {
+    private UUID toSessionId(TransportProtos.SessionInfoProto sessionInfoProto) {
         return new UUID(sessionInfoProto.getSessionIdMSB(), sessionInfoProto.getSessionIdLSB());
     }
 
-    @NotNull
-    private String getTokenFromRequest(@NotNull Request request) {
+    private String getTokenFromRequest(Request request) {
         return (request.getSourceContext() != null ? request.getSourceContext().getPeerAddress().getAddress().getHostAddress() : "null")
                 + ":" + (request.getSourceContext() != null ? request.getSourceContext().getPeerAddress().getPort() : -1) + ":" + request.getTokenString();
     }
 
-    @NotNull
-    private Optional<DeviceTokenCredentials> decodeCredentials(@NotNull Request request) {
+    private Optional<DeviceTokenCredentials> decodeCredentials(Request request) {
         List<String> uriPath = request.getOptions().getUriPath();
         if (uriPath.size() > ACCESS_TOKEN_POSITION) {
             return Optional.of(new DeviceTokenCredentials(uriPath.get(ACCESS_TOKEN_POSITION - 1)));
@@ -366,8 +362,7 @@ public class CoapTransportResource extends AbstractCoapTransportResource {
         }
     }
 
-    @NotNull
-    private Optional<FeatureType> getFeatureType(@NotNull Request request) {
+    private Optional<FeatureType> getFeatureType(Request request) {
         List<String> uriPath = request.getOptions().getUriPath();
         try {
             if (uriPath.size() >= FEATURE_TYPE_POSITION) {
@@ -384,8 +379,7 @@ public class CoapTransportResource extends AbstractCoapTransportResource {
         return Optional.empty();
     }
 
-    @NotNull
-    public static Optional<Integer> getRequestId(@NotNull Request request) {
+    public static Optional<Integer> getRequestId(Request request) {
         List<String> uriPath = request.getOptions().getUriPath();
         try {
             if (uriPath.size() >= REQUEST_ID_POSITION) {
@@ -399,7 +393,6 @@ public class CoapTransportResource extends AbstractCoapTransportResource {
         return Optional.empty();
     }
 
-    @NotNull
     @Override
     public Resource getChild(String name) {
         return this;
@@ -415,8 +408,8 @@ public class CoapTransportResource extends AbstractCoapTransportResource {
         }
 
         @Override
-        public void onSuccess(@NotNull TransportProtos.ProvisionDeviceResponseMsg msg) {
-            @NotNull CoAP.ResponseCode responseCode = CoAP.ResponseCode.CREATED;
+        public void onSuccess(TransportProtos.ProvisionDeviceResponseMsg msg) {
+            CoAP.ResponseCode responseCode = CoAP.ResponseCode.CREATED;
             if (!msg.getStatus().equals(TransportProtos.ResponseStatus.SUCCESS)) {
                 responseCode = CoAP.ResponseCode.BAD_REQUEST;
             }
@@ -453,17 +446,17 @@ public class CoapTransportResource extends AbstractCoapTransportResource {
         }
 
         @Override
-        public void addedObserveRelation(@NotNull ObserveRelation relation) {
+        public void addedObserveRelation(ObserveRelation relation) {
             Request request = relation.getExchange().getRequest();
-            @NotNull String token = getTokenFromRequest(request);
+            String token = getTokenFromRequest(request);
             clients.registerObserveRelation(token, relation);
             log.trace("Added Observe relation for token: {}", token);
         }
 
         @Override
-        public void removedObserveRelation(@NotNull ObserveRelation relation) {
+        public void removedObserveRelation(ObserveRelation relation) {
             Request request = relation.getExchange().getRequest();
-            @NotNull String token = getTokenFromRequest(request);
+            String token = getTokenFromRequest(request);
             clients.deregisterObserveRelation(token);
             log.trace("Relation removed for token: {}", token);
         }

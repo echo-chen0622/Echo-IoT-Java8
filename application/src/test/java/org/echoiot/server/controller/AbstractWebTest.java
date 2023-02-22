@@ -29,7 +29,6 @@ import org.echoiot.server.service.security.auth.jwt.RefreshTokenRequest;
 import org.echoiot.server.service.security.auth.rest.LoginRequest;
 import org.hamcrest.Matcher;
 import org.hibernate.exception.ConstraintViolationException;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.junit.After;
 import org.junit.Assert;
@@ -73,7 +72,6 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 public abstract class AbstractWebTest extends AbstractInMemoryStorageTest {
     public static final int TIMEOUT = 30;
 
-    @NotNull
     protected ObjectMapper mapper = new ObjectMapper();
 
     protected static final String TEST_TENANT_NAME = "TEST TENANT";
@@ -100,7 +98,6 @@ public abstract class AbstractWebTest extends AbstractInMemoryStorageTest {
      */
     private static final long DEFAULT_TIMEOUT = -1L;
 
-    @NotNull
     protected MediaType contentType = MediaType.APPLICATION_JSON;
 
     protected MockMvc mockMvc;
@@ -132,20 +129,19 @@ public abstract class AbstractWebTest extends AbstractInMemoryStorageTest {
     @Resource
     private TenantProfileService tenantProfileService;
 
-    @NotNull
     @Rule
     public TestRule watcher = new TestWatcher() {
-        protected void starting(@NotNull Description description) {
+        protected void starting(Description description) {
             log.info("Starting test: {}", description.getMethodName());
         }
 
-        protected void finished(@NotNull Description description) {
+        protected void finished(Description description) {
             log.info("Finished test: {}", description.getMethodName());
         }
     };
 
     @Resource
-    void setConverters(@NotNull HttpMessageConverter<?>[] converters) {
+    void setConverters(HttpMessageConverter<?>[] converters) {
 
         this.mappingJackson2HttpMessageConverter = Arrays.stream(converters)
                 .filter(hmc -> hmc instanceof MappingJackson2HttpMessageConverter)
@@ -171,7 +167,7 @@ public abstract class AbstractWebTest extends AbstractInMemoryStorageTest {
         }
         loginSysAdmin();
 
-        @NotNull Tenant tenant = new Tenant();
+        Tenant tenant = new Tenant();
         tenant.setTitle(TEST_TENANT_NAME);
         Tenant savedTenant = doPost("/api/tenant", tenant, Tenant.class);
         Assert.assertNotNull(savedTenant);
@@ -186,7 +182,7 @@ public abstract class AbstractWebTest extends AbstractInMemoryStorageTest {
         tenantAdminUserId = tenantAdmin.getId();
         tenantAdminCustomerId = tenantAdmin.getCustomerId();
 
-        @NotNull Customer customer = new Customer();
+        Customer customer = new Customer();
         customer.setTitle("Customer");
         customer.setTenantId(tenantId);
         Customer savedCustomer = doPost("/api/customer", customer, Customer.class);
@@ -223,7 +219,7 @@ public abstract class AbstractWebTest extends AbstractInMemoryStorageTest {
     }
 
     void verifyNoTenantsLeft() throws Exception {
-        @NotNull List<Tenant> loadedTenants = new ArrayList<>();
+        List<Tenant> loadedTenants = new ArrayList<>();
         PageLink pageLink = new PageLink(10);
         PageData<Tenant> pageData;
         do {
@@ -265,12 +261,12 @@ public abstract class AbstractWebTest extends AbstractInMemoryStorageTest {
         } else {
             loginSysAdmin();
 
-            @NotNull Tenant tenant = new Tenant();
+            Tenant tenant = new Tenant();
             tenant.setTitle(TEST_DIFFERENT_TENANT_NAME);
             savedDifferentTenant = doPost("/api/tenant", tenant, Tenant.class);
             differentTenantId = savedDifferentTenant.getId();
             Assert.assertNotNull(savedDifferentTenant);
-            @NotNull User differentTenantAdmin = new User();
+            User differentTenantAdmin = new User();
             differentTenantAdmin.setAuthority(Authority.TENANT_ADMIN);
             differentTenantAdmin.setTenantId(savedDifferentTenant.getId());
             differentTenantAdmin.setEmail(DIFFERENT_TENANT_ADMIN_EMAIL);
@@ -285,7 +281,7 @@ public abstract class AbstractWebTest extends AbstractInMemoryStorageTest {
             createDifferentCustomer();
 
             loginTenantAdmin();
-            @NotNull User differentCustomerUser = new User();
+            User differentCustomerUser = new User();
             differentCustomerUser.setAuthority(Authority.CUSTOMER_USER);
             differentCustomerUser.setTenantId(tenantId);
             differentCustomerUser.setCustomerId(savedDifferentCustomer.getId());
@@ -298,7 +294,7 @@ public abstract class AbstractWebTest extends AbstractInMemoryStorageTest {
     protected void createDifferentCustomer() throws Exception {
         loginTenantAdmin();
 
-        @NotNull Customer customer = new Customer();
+        Customer customer = new Customer();
         customer.setTitle("Different customer");
         savedDifferentCustomer = doPost("/api/customer", customer, Customer.class);
         Assert.assertNotNull(savedDifferentCustomer);
@@ -316,11 +312,11 @@ public abstract class AbstractWebTest extends AbstractInMemoryStorageTest {
         }
     }
 
-    protected User createUserAndLogin(@NotNull User user, String password) throws Exception {
+    protected User createUserAndLogin(User user, String password) throws Exception {
         User savedUser = doPost("/api/user", user, User.class);
         resetTokens();
         JsonNode activateRequest = getActivateRequest(password);
-        @NotNull JsonNode tokenInfo = readResponse(doPost("/api/noauth/activate", activateRequest).andExpect(status().isOk()), JsonNode.class);
+        JsonNode tokenInfo = readResponse(doPost("/api/noauth/activate", activateRequest).andExpect(status().isOk()), JsonNode.class);
         validateAndSetJwtToken(tokenInfo, user.getEmail());
         return savedUser;
     }
@@ -328,7 +324,7 @@ public abstract class AbstractWebTest extends AbstractInMemoryStorageTest {
     protected User createUser(User user, String password) throws Exception {
         User savedUser = doPost("/api/user", user, User.class);
         JsonNode activateRequest = getActivateRequest(password);
-        @NotNull ResultActions resultActions = doPost("/api/noauth/activate", activateRequest);
+        ResultActions resultActions = doPost("/api/noauth/activate", activateRequest);
         resultActions.andExpect(status().isOk());
         return savedUser;
     }
@@ -344,17 +340,17 @@ public abstract class AbstractWebTest extends AbstractInMemoryStorageTest {
 
     protected void login(String username, String password) throws Exception {
         resetTokens();
-        @NotNull JsonNode tokenInfo = readResponse(doPost("/api/auth/login", new LoginRequest(username, password)).andExpect(status().isOk()), JsonNode.class);
+        JsonNode tokenInfo = readResponse(doPost("/api/auth/login", new LoginRequest(username, password)).andExpect(status().isOk()), JsonNode.class);
         validateAndSetJwtToken(tokenInfo, username);
     }
 
     protected void refreshToken() throws Exception {
         this.token = null;
-        @NotNull JsonNode tokenInfo = readResponse(doPost("/api/auth/token", new RefreshTokenRequest(this.refreshToken)).andExpect(status().isOk()), JsonNode.class);
+        JsonNode tokenInfo = readResponse(doPost("/api/auth/token", new RefreshTokenRequest(this.refreshToken)).andExpect(status().isOk()), JsonNode.class);
         validateAndSetJwtToken(tokenInfo, this.username);
     }
 
-    protected void validateAndSetJwtToken(@NotNull JsonNode tokenInfo, String username) {
+    protected void validateAndSetJwtToken(JsonNode tokenInfo, String username) {
         Assert.assertNotNull(tokenInfo);
         Assert.assertTrue(tokenInfo.has("token"));
         Assert.assertTrue(tokenInfo.has("refreshToken"));
@@ -367,12 +363,12 @@ public abstract class AbstractWebTest extends AbstractInMemoryStorageTest {
         this.username = username;
     }
 
-    protected void validateJwtToken(@NotNull String token, String username) {
+    protected void validateJwtToken(String token, String username) {
         Assert.assertNotNull(token);
         Assert.assertFalse(token.isEmpty());
         int i = token.lastIndexOf('.');
         Assert.assertTrue(i > 0);
-        @NotNull String withoutSignature = token.substring(0, i + 1);
+        String withoutSignature = token.substring(0, i + 1);
         Jwt<Header, Claims> jwsClaims = Jwts.parser().parseClaimsJwt(withoutSignature);
         Claims claims = jwsClaims.getBody();
         String subject = claims.getSubject();
@@ -389,7 +385,7 @@ public abstract class AbstractWebTest extends AbstractInMemoryStorageTest {
         doPost("/api/auth/logout").andExpect(status().isOk());
     }
 
-    protected void setJwtToken(@NotNull MockHttpServletRequestBuilder request) {
+    protected void setJwtToken(MockHttpServletRequestBuilder request) {
         if (this.token != null) {
             request.header(EchoiotSecurityConfiguration.JWT_TOKEN_HEADER_PARAM, "Bearer " + this.token);
         }
@@ -399,14 +395,13 @@ public abstract class AbstractWebTest extends AbstractInMemoryStorageTest {
         return createDeviceProfile(name, null);
     }
 
-    @NotNull
     protected DeviceProfile createDeviceProfile(String name, @Nullable DeviceProfileTransportConfiguration deviceProfileTransportConfiguration) {
-        @NotNull DeviceProfile deviceProfile = new DeviceProfile();
+        DeviceProfile deviceProfile = new DeviceProfile();
         deviceProfile.setName(name);
         deviceProfile.setType(DeviceProfileType.DEFAULT);
         deviceProfile.setDescription(name + " Test");
-        @NotNull DeviceProfileData deviceProfileData = new DeviceProfileData();
-        @NotNull DefaultDeviceProfileConfiguration configuration = new DefaultDeviceProfileConfiguration();
+        DeviceProfileData deviceProfileData = new DeviceProfileData();
+        DefaultDeviceProfileConfiguration configuration = new DefaultDeviceProfileConfiguration();
         deviceProfileData.setConfiguration(configuration);
         if (deviceProfileTransportConfiguration != null) {
             deviceProfile.setTransportType(deviceProfileTransportConfiguration.getType());
@@ -421,9 +416,8 @@ public abstract class AbstractWebTest extends AbstractInMemoryStorageTest {
         return deviceProfile;
     }
 
-    @NotNull
     protected AssetProfile createAssetProfile(String name) {
-        @NotNull AssetProfile assetProfile = new AssetProfile();
+        AssetProfile assetProfile = new AssetProfile();
         assetProfile.setName(name);
         assetProfile.setDescription(name + " Test");
         assetProfile.setDefault(false);
@@ -431,9 +425,8 @@ public abstract class AbstractWebTest extends AbstractInMemoryStorageTest {
         return assetProfile;
     }
 
-    @NotNull
     protected MqttDeviceProfileTransportConfiguration createMqttDeviceProfileTransportConfiguration(TransportPayloadTypeConfiguration transportPayloadTypeConfiguration, boolean sendAckOnValidationException) {
-        @NotNull MqttDeviceProfileTransportConfiguration mqttDeviceProfileTransportConfiguration = new MqttDeviceProfileTransportConfiguration();
+        MqttDeviceProfileTransportConfiguration mqttDeviceProfileTransportConfiguration = new MqttDeviceProfileTransportConfiguration();
         mqttDeviceProfileTransportConfiguration.setDeviceTelemetryTopic(MqttTopics.DEVICE_TELEMETRY_TOPIC);
         mqttDeviceProfileTransportConfiguration.setDeviceTelemetryTopic(MqttTopics.DEVICE_ATTRIBUTES_TOPIC);
         mqttDeviceProfileTransportConfiguration.setSendAckOnValidationException(sendAckOnValidationException);
@@ -441,9 +434,8 @@ public abstract class AbstractWebTest extends AbstractInMemoryStorageTest {
         return mqttDeviceProfileTransportConfiguration;
     }
 
-    @NotNull
     protected ProtoTransportPayloadConfiguration createProtoTransportPayloadConfiguration(String attributesProtoSchema, String telemetryProtoSchema, String rpcRequestProtoSchema, String rpcResponseProtoSchema) {
-        @NotNull ProtoTransportPayloadConfiguration protoTransportPayloadConfiguration = new ProtoTransportPayloadConfiguration();
+        ProtoTransportPayloadConfiguration protoTransportPayloadConfiguration = new ProtoTransportPayloadConfiguration();
         protoTransportPayloadConfiguration.setDeviceAttributesProtoSchema(attributesProtoSchema);
         protoTransportPayloadConfiguration.setDeviceTelemetryProtoSchema(telemetryProtoSchema);
         protoTransportPayloadConfiguration.setDeviceRpcRequestProtoSchema(rpcRequestProtoSchema);
@@ -452,45 +444,43 @@ public abstract class AbstractWebTest extends AbstractInMemoryStorageTest {
     }
 
 
-    @NotNull
-    protected ResultActions doGet(@NotNull String urlTemplate, Object... urlVariables) throws Exception {
-        @NotNull MockHttpServletRequestBuilder getRequest = get(urlTemplate, urlVariables);
+    protected ResultActions doGet(String urlTemplate, Object... urlVariables) throws Exception {
+        MockHttpServletRequestBuilder getRequest = get(urlTemplate, urlVariables);
         setJwtToken(getRequest);
         return mockMvc.perform(getRequest);
     }
 
-    protected <T> T doGet(@NotNull String urlTemplate, @NotNull Class<T> responseClass, Object... urlVariables) throws Exception {
+    protected <T> T doGet(String urlTemplate, Class<T> responseClass, Object... urlVariables) throws Exception {
         return readResponse(doGet(urlTemplate, urlVariables).andExpect(status().isOk()), responseClass);
     }
 
-    protected <T> T doGet(@NotNull String urlTemplate, @NotNull Class<T> responseClass, @NotNull ResultMatcher resultMatcher, Object... urlVariables) throws Exception {
+    protected <T> T doGet(String urlTemplate, Class<T> responseClass, ResultMatcher resultMatcher, Object... urlVariables) throws Exception {
         return readResponse(doGet(urlTemplate, urlVariables).andExpect(resultMatcher), responseClass);
     }
 
-    protected <T> T doGetAsync(@NotNull String urlTemplate, @NotNull Class<T> responseClass, Object... urlVariables) throws Exception {
+    protected <T> T doGetAsync(String urlTemplate, Class<T> responseClass, Object... urlVariables) throws Exception {
         return readResponse(doGetAsync(urlTemplate, urlVariables).andExpect(status().isOk()), responseClass);
     }
 
-    protected <T> T doGetAsyncTyped(@NotNull String urlTemplate, TypeReference<T> responseType, Object... urlVariables) throws Exception {
+    protected <T> T doGetAsyncTyped(String urlTemplate, TypeReference<T> responseType, Object... urlVariables) throws Exception {
         return readResponse(doGetAsync(urlTemplate, urlVariables).andExpect(status().isOk()), responseType);
     }
 
-    @NotNull
-    protected ResultActions doGetAsync(@NotNull String urlTemplate, Object... urlVariables) throws Exception {
+    protected ResultActions doGetAsync(String urlTemplate, Object... urlVariables) throws Exception {
         MockHttpServletRequestBuilder getRequest;
         getRequest = get(urlTemplate, urlVariables);
         setJwtToken(getRequest);
         return mockMvc.perform(asyncDispatch(mockMvc.perform(getRequest).andExpect(request().asyncStarted()).andReturn()));
     }
 
-    protected <T> T doGetTyped(@NotNull String urlTemplate, TypeReference<T> responseType, Object... urlVariables) throws Exception {
+    protected <T> T doGetTyped(String urlTemplate, TypeReference<T> responseType, Object... urlVariables) throws Exception {
         return readResponse(doGet(urlTemplate, urlVariables).andExpect(status().isOk()), responseType);
     }
 
     protected <T> T doGetTypedWithPageLink(String urlTemplate, TypeReference<T> responseType,
-                                           @NotNull PageLink pageLink,
-                                           @NotNull Object... urlVariables) throws Exception {
-        @NotNull List<Object> pageLinkVariables = new ArrayList<>();
+                                           PageLink pageLink,
+                                           Object... urlVariables) throws Exception {
+        List<Object> pageLinkVariables = new ArrayList<>();
         urlTemplate += "pageSize={pageSize}&page={page}";
         pageLinkVariables.add(pageLink.getPageSize());
         pageLinkVariables.add(pageLink.getPage());
@@ -504,7 +494,7 @@ public abstract class AbstractWebTest extends AbstractInMemoryStorageTest {
             pageLinkVariables.add(pageLink.getSortOrder().getDirection().name());
         }
 
-        @NotNull Object[] vars = new Object[urlVariables.length + pageLinkVariables.size()];
+        Object[] vars = new Object[urlVariables.length + pageLinkVariables.size()];
         System.arraycopy(urlVariables, 0, vars, 0, urlVariables.length);
         System.arraycopy(pageLinkVariables.toArray(), 0, vars, urlVariables.length, pageLinkVariables.size());
 
@@ -512,9 +502,9 @@ public abstract class AbstractWebTest extends AbstractInMemoryStorageTest {
     }
 
     protected <T> T doGetTypedWithTimePageLink(String urlTemplate, TypeReference<T> responseType,
-                                               @NotNull TimePageLink pageLink,
-                                               @NotNull Object... urlVariables) throws Exception {
-        @NotNull List<Object> pageLinkVariables = new ArrayList<>();
+                                               TimePageLink pageLink,
+                                               Object... urlVariables) throws Exception {
+        List<Object> pageLinkVariables = new ArrayList<>();
         urlTemplate += "pageSize={pageSize}&page={page}";
         pageLinkVariables.add(pageLink.getPageSize());
         pageLinkVariables.add(pageLink.getPage());
@@ -535,14 +525,14 @@ public abstract class AbstractWebTest extends AbstractInMemoryStorageTest {
             pageLinkVariables.add(pageLink.getSortOrder().getProperty());
             pageLinkVariables.add(pageLink.getSortOrder().getDirection().name());
         }
-        @NotNull Object[] vars = new Object[urlVariables.length + pageLinkVariables.size()];
+        Object[] vars = new Object[urlVariables.length + pageLinkVariables.size()];
         System.arraycopy(urlVariables, 0, vars, 0, urlVariables.length);
         System.arraycopy(pageLinkVariables.toArray(), 0, vars, urlVariables.length, pageLinkVariables.size());
 
         return readResponse(doGet(urlTemplate, vars).andExpect(status().isOk()), responseType);
     }
 
-    protected <T> T doPost(@NotNull String urlTemplate, @NotNull Class<T> responseClass, String... params) {
+    protected <T> T doPost(String urlTemplate, Class<T> responseClass, String... params) {
         try {
             return readResponse(doPost(urlTemplate, params).andExpect(status().isOk()), responseClass);
         } catch (Exception e) {
@@ -550,11 +540,11 @@ public abstract class AbstractWebTest extends AbstractInMemoryStorageTest {
         }
     }
 
-    protected <T> T doPost(@NotNull String urlTemplate, T content, @NotNull Class<T> responseClass, @NotNull ResultMatcher resultMatcher, String... params) throws Exception {
+    protected <T> T doPost(String urlTemplate, T content, Class<T> responseClass, ResultMatcher resultMatcher, String... params) throws Exception {
         return readResponse(doPost(urlTemplate, content, params).andExpect(resultMatcher), responseClass);
     }
 
-    protected <T> T doPost(@NotNull String urlTemplate, T content, @NotNull Class<T> responseClass, String... params) {
+    protected <T> T doPost(String urlTemplate, T content, Class<T> responseClass, String... params) {
         try {
             return readResponse(doPost(urlTemplate, content, params).andExpect(status().isOk()), responseClass);
         } catch (Exception e) {
@@ -562,74 +552,70 @@ public abstract class AbstractWebTest extends AbstractInMemoryStorageTest {
         }
     }
 
-    protected <T, R> R doPostWithResponse(@NotNull String urlTemplate, T content, @NotNull Class<R> responseClass, String... params) throws Exception {
+    protected <T, R> R doPostWithResponse(String urlTemplate, T content, Class<R> responseClass, String... params) throws Exception {
         return readResponse(doPost(urlTemplate, content, params).andExpect(status().isOk()), responseClass);
     }
 
-    protected <T, R> R doPostWithTypedResponse(@NotNull String urlTemplate, T content, TypeReference<R> responseType, String... params) throws Exception {
+    protected <T, R> R doPostWithTypedResponse(String urlTemplate, T content, TypeReference<R> responseType, String... params) throws Exception {
         return readResponse(doPost(urlTemplate, content, params).andExpect(status().isOk()), responseType);
     }
 
-    protected <T, R> R doPostWithTypedResponse(@NotNull String urlTemplate, T content, TypeReference<R> responseType, @NotNull ResultMatcher resultMatcher, String... params) throws Exception {
+    protected <T, R> R doPostWithTypedResponse(String urlTemplate, T content, TypeReference<R> responseType, ResultMatcher resultMatcher, String... params) throws Exception {
         return readResponse(doPost(urlTemplate, content, params).andExpect(resultMatcher), responseType);
     }
 
-    protected <T> T doPostAsync(@NotNull String urlTemplate, T content, @NotNull Class<T> responseClass, @NotNull ResultMatcher resultMatcher, String... params) throws Exception {
+    protected <T> T doPostAsync(String urlTemplate, T content, Class<T> responseClass, ResultMatcher resultMatcher, String... params) throws Exception {
         return readResponse(doPostAsync(urlTemplate, content, DEFAULT_TIMEOUT, params).andExpect(resultMatcher), responseClass);
     }
 
-    protected <T> T doPostAsync(@NotNull String urlTemplate, T content, @NotNull Class<T> responseClass, @NotNull ResultMatcher resultMatcher, Long timeout, String... params) throws Exception {
+    protected <T> T doPostAsync(String urlTemplate, T content, Class<T> responseClass, ResultMatcher resultMatcher, Long timeout, String... params) throws Exception {
         return readResponse(doPostAsync(urlTemplate, content, timeout, params).andExpect(resultMatcher), responseClass);
     }
 
-    protected <T> T doPostClaimAsync(@NotNull String urlTemplate, Object content, @NotNull Class<T> responseClass, @NotNull ResultMatcher resultMatcher, String... params) throws Exception {
+    protected <T> T doPostClaimAsync(String urlTemplate, Object content, Class<T> responseClass, ResultMatcher resultMatcher, String... params) throws Exception {
         return readResponse(doPostAsync(urlTemplate, content, DEFAULT_TIMEOUT, params).andExpect(resultMatcher), responseClass);
     }
 
-    protected <T> T doDelete(@NotNull String urlTemplate, @NotNull Class<T> responseClass, String... params) throws Exception {
+    protected <T> T doDelete(String urlTemplate, Class<T> responseClass, String... params) throws Exception {
         return readResponse(doDelete(urlTemplate, params).andExpect(status().isOk()), responseClass);
     }
 
-    @NotNull
-    protected ResultActions doPost(@NotNull String urlTemplate, String... params) throws Exception {
-        @NotNull MockHttpServletRequestBuilder postRequest = post(urlTemplate);
+    protected ResultActions doPost(String urlTemplate, String... params) throws Exception {
+        MockHttpServletRequestBuilder postRequest = post(urlTemplate);
         setJwtToken(postRequest);
         populateParams(postRequest, params);
         return mockMvc.perform(postRequest);
     }
 
-    @NotNull
-    protected <T> ResultActions doPost(@NotNull String urlTemplate, T content, String... params) throws Exception {
-        @NotNull MockHttpServletRequestBuilder postRequest = post(urlTemplate, params);
+    protected <T> ResultActions doPost(String urlTemplate, T content, String... params) throws Exception {
+        MockHttpServletRequestBuilder postRequest = post(urlTemplate, params);
         setJwtToken(postRequest);
-        @NotNull String json = json(content);
+        String json = json(content);
         postRequest.contentType(contentType).content(json);
         return mockMvc.perform(postRequest);
     }
 
-    @NotNull
-    protected <T> ResultActions doPostAsync(@NotNull String urlTemplate, T content, Long timeout, String... params) throws Exception {
-        @NotNull MockHttpServletRequestBuilder postRequest = post(urlTemplate, params);
+    protected <T> ResultActions doPostAsync(String urlTemplate, T content, Long timeout, String... params) throws Exception {
+        MockHttpServletRequestBuilder postRequest = post(urlTemplate, params);
         setJwtToken(postRequest);
-        @NotNull String json = json(content);
+        String json = json(content);
         postRequest.contentType(contentType).content(json);
-        @NotNull MvcResult result = mockMvc.perform(postRequest).andReturn();
+        MvcResult result = mockMvc.perform(postRequest).andReturn();
         result.getAsyncResult(timeout);
         return mockMvc.perform(asyncDispatch(result));
     }
 
-    @NotNull
-    protected ResultActions doDelete(@NotNull String urlTemplate, String... params) throws Exception {
-        @NotNull MockHttpServletRequestBuilder deleteRequest = delete(urlTemplate);
+    protected ResultActions doDelete(String urlTemplate, String... params) throws Exception {
+        MockHttpServletRequestBuilder deleteRequest = delete(urlTemplate);
         setJwtToken(deleteRequest);
         populateParams(deleteRequest, params);
         return mockMvc.perform(deleteRequest);
     }
 
-    protected void populateParams(@NotNull MockHttpServletRequestBuilder request, @Nullable String... params) {
+    protected void populateParams(MockHttpServletRequestBuilder request, @Nullable String... params) {
         if (params != null && params.length > 0) {
             Assert.assertEquals(0, params.length % 2);
-            @NotNull MultiValueMap<String, String> paramsMap = new LinkedMultiValueMap<>();
+            MultiValueMap<String, String> paramsMap = new LinkedMultiValueMap<>();
             for (int i = 0; i < params.length; i += 2) {
                 paramsMap.add(params[i], params[i + 1]);
             }
@@ -637,47 +623,44 @@ public abstract class AbstractWebTest extends AbstractInMemoryStorageTest {
         }
     }
 
-    @NotNull
     @SuppressWarnings("unchecked")
     protected String json(Object o) throws IOException {
-        @NotNull MockHttpOutputMessage mockHttpOutputMessage = new MockHttpOutputMessage();
+        MockHttpOutputMessage mockHttpOutputMessage = new MockHttpOutputMessage();
 
         HttpMessageConverter converter = o instanceof String ? stringHttpMessageConverter : mappingJackson2HttpMessageConverter;
         converter.write(o, MediaType.APPLICATION_JSON, mockHttpOutputMessage);
         return mockHttpOutputMessage.getBodyAsString();
     }
 
-    @NotNull
     @SuppressWarnings("unchecked")
-    protected <T> T readResponse(@NotNull ResultActions result, @NotNull Class<T> responseClass) throws Exception {
-        @NotNull byte[] content = result.andReturn().getResponse().getContentAsByteArray();
-        @NotNull MockHttpInputMessage mockHttpInputMessage = new MockHttpInputMessage(content);
+    protected <T> T readResponse(ResultActions result, Class<T> responseClass) throws Exception {
+        byte[] content = result.andReturn().getResponse().getContentAsByteArray();
+        MockHttpInputMessage mockHttpInputMessage = new MockHttpInputMessage(content);
         HttpMessageConverter converter = responseClass.equals(String.class) ? stringHttpMessageConverter : mappingJackson2HttpMessageConverter;
         return (T) converter.read(responseClass, mockHttpInputMessage);
     }
 
-    protected <T> T readResponse(@NotNull ResultActions result, TypeReference<T> type) throws Exception {
+    protected <T> T readResponse(ResultActions result, TypeReference<T> type) throws Exception {
         return readResponse(result.andReturn(), type);
     }
 
-    protected <T> T readResponse(@NotNull MvcResult result, TypeReference<T> type) throws Exception {
-        @NotNull byte[] content = result.getResponse().getContentAsByteArray();
+    protected <T> T readResponse(MvcResult result, TypeReference<T> type) throws Exception {
+        byte[] content = result.getResponse().getContentAsByteArray();
         return mapper.readerFor(type).readValue(content);
     }
 
-    protected String getErrorMessage(@NotNull ResultActions result) throws Exception {
+    protected String getErrorMessage(ResultActions result) throws Exception {
         return readResponse(result, JsonNode.class).get("message").asText();
     }
 
     public class IdComparator<D extends HasId> implements Comparator<D> {
         @Override
-        public int compare(@NotNull D o1, @NotNull D o2) {
+        public int compare(D o1, D o2) {
             return o1.getId().getId().compareTo(o2.getId().getId());
         }
     }
 
-    @NotNull
-    protected static <T> ResultMatcher statusReason(@NotNull Matcher<T> matcher) {
+    protected static <T> ResultMatcher statusReason(Matcher<T> matcher) {
         return jsonPath("$.message", matcher);
     }
 
@@ -685,9 +668,8 @@ public abstract class AbstractWebTest extends AbstractInMemoryStorageTest {
         return constructEdge(tenantId, name, type);
     }
 
-    @NotNull
     protected Edge constructEdge(TenantId tenantId, String name, String type) {
-        @NotNull Edge edge = new Edge();
+        Edge edge = new Edge();
         edge.setTenantId(tenantId);
         edge.setName(name);
         edge.setType(type);
@@ -696,10 +678,9 @@ public abstract class AbstractWebTest extends AbstractInMemoryStorageTest {
         return edge;
     }
 
-    @NotNull
-    protected <T extends HasId<? extends UUIDBased>> ListenableFuture<List<ResultActions>> deleteEntitiesAsync(String urlTemplate, @NotNull List<T> entities, @NotNull ListeningExecutorService executor) {
-        @NotNull List<ListenableFuture<ResultActions>> futures = new ArrayList<>(entities.size());
-        for (@NotNull T entity : entities) {
+    protected <T extends HasId<? extends UUIDBased>> ListenableFuture<List<ResultActions>> deleteEntitiesAsync(String urlTemplate, List<T> entities, ListeningExecutorService executor) {
+        List<ListenableFuture<ResultActions>> futures = new ArrayList<>(entities.size());
+        for (T entity : entities) {
             futures.add(executor.submit(() ->
                     doDelete(urlTemplate + entity.getId().getId())
                             .andExpect(status().isOk())));
@@ -707,7 +688,7 @@ public abstract class AbstractWebTest extends AbstractInMemoryStorageTest {
         return Futures.allAsList(futures);
     }
 
-    protected void testEntityDaoWithRelationsOk(EntityId entityIdFrom, @NotNull EntityId entityTo, @NotNull String urlDelete) throws Exception {
+    protected void testEntityDaoWithRelationsOk(EntityId entityIdFrom, EntityId entityTo, String urlDelete) throws Exception {
         createEntityRelation(entityIdFrom, entityTo, "TEST_TYPE");
         assertThat(findRelationsByTo(entityTo)).hasSize(1);
 
@@ -716,8 +697,8 @@ public abstract class AbstractWebTest extends AbstractInMemoryStorageTest {
         assertThat(findRelationsByTo(entityTo)).hasSize(0);
     }
 
-    protected <T> void testEntityDaoWithRelationsTransactionalException(Dao<T> dao, EntityId entityIdFrom, @NotNull EntityId entityTo,
-                                                                        @NotNull String urlDelete) throws Exception {
+    protected <T> void testEntityDaoWithRelationsTransactionalException(Dao<T> dao, EntityId entityIdFrom, EntityId entityTo,
+                                                                        String urlDelete) throws Exception {
         Mockito.doThrow(new ConstraintViolationException("mock message", new SQLException(), "MOCK_CONSTRAINT")).when(dao).removeById(any(), any());
         try {
             createEntityRelation(entityIdFrom, entityTo, "TEST_TRANSACTIONAL_TYPE");
@@ -733,13 +714,13 @@ public abstract class AbstractWebTest extends AbstractInMemoryStorageTest {
     }
 
     protected void createEntityRelation(EntityId entityIdFrom, EntityId entityIdTo, String typeRelation) throws Exception {
-        @NotNull EntityRelation relation = new EntityRelation(entityIdFrom, entityIdTo, typeRelation);
+        EntityRelation relation = new EntityRelation(entityIdFrom, entityIdTo, typeRelation);
         doPost("/api/relation", relation);
     }
 
-    protected List<EntityRelation> findRelationsByTo(@NotNull EntityId entityId) throws Exception {
+    protected List<EntityRelation> findRelationsByTo(EntityId entityId) throws Exception {
         String url = String.format("/api/relations?toId=%s&toType=%s", entityId.getId(), entityId.getEntityType().name());
-        @NotNull MvcResult mvcResult = doGet(url).andReturn();
+        MvcResult mvcResult = doGet(url).andReturn();
 
         switch (mvcResult.getResponse().getStatus()) {
             case 200:
@@ -751,8 +732,8 @@ public abstract class AbstractWebTest extends AbstractInMemoryStorageTest {
         throw new AssertionError("Unexpected status " + mvcResult.getResponse().getStatus());
     }
 
-    protected <T> T getFieldValue(@NotNull Object target, @NotNull String fieldName) throws Exception {
-        @NotNull Field field = target.getClass().getDeclaredField(fieldName);
+    protected <T> T getFieldValue(Object target, String fieldName) throws Exception {
+        Field field = target.getClass().getDeclaredField(fieldName);
         field.setAccessible(true);
         return (T) field.get(target);
     }

@@ -1,21 +1,17 @@
 package org.echoiot.mqtt;
 
 import io.netty.handler.codec.mqtt.MqttQoS;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings({"WeakerAccess", "unused", "SimplifiableIfStatement", "StringBufferReplaceableByString"})
 public final class MqttLastWill {
 
-    @NotNull
     private final String topic;
-    @NotNull
     private final String message;
     private final boolean retain;
-    @NotNull
     private final MqttQoS qos;
 
-    public MqttLastWill(@NotNull String topic, @NotNull String message, boolean retain, @NotNull MqttQoS qos) {
+    public MqttLastWill(String topic, String message, boolean retain, MqttQoS qos) {
         if(topic == null){
             throw new NullPointerException("topic");
         }
@@ -31,12 +27,10 @@ public final class MqttLastWill {
         this.qos = qos;
     }
 
-    @NotNull
     public String getTopic() {
         return topic;
     }
 
-    @NotNull
     public String getMessage() {
         return message;
     }
@@ -45,12 +39,10 @@ public final class MqttLastWill {
         return retain;
     }
 
-    @NotNull
     public MqttQoS getQos() {
         return qos;
     }
 
-    @NotNull
     public static MqttLastWill.Builder builder(){
         return new MqttLastWill.Builder();
     }
@@ -66,8 +58,7 @@ public final class MqttLastWill {
             return topic;
         }
 
-        @NotNull
-        public Builder setTopic(@NotNull String topic) {
+            public Builder setTopic(String topic) {
             if(topic == null){
                 throw new NullPointerException("topic");
             }
@@ -79,8 +70,7 @@ public final class MqttLastWill {
             return message;
         }
 
-        @NotNull
-        public Builder setMessage(@NotNull String message) {
+            public Builder setMessage(String message) {
             if(message == null){
                 throw new NullPointerException("message");
             }
@@ -92,8 +82,7 @@ public final class MqttLastWill {
             return retain;
         }
 
-        @NotNull
-        public Builder setRetain(boolean retain) {
+            public Builder setRetain(boolean retain) {
             this.retain = retain;
             return this;
         }
@@ -102,8 +91,7 @@ public final class MqttLastWill {
             return qos;
         }
 
-        @NotNull
-        public Builder setQos(@NotNull MqttQoS qos) {
+            public Builder setQos(MqttQoS qos) {
             if(qos == null){
                 throw new NullPointerException("qos");
             }
@@ -111,8 +99,7 @@ public final class MqttLastWill {
             return this;
         }
 
-        @NotNull
-        public MqttLastWill build(){
+            public MqttLastWill build(){
             return new MqttLastWill(topic, message, retain, qos);
         }
     }
@@ -122,7 +109,7 @@ public final class MqttLastWill {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        @NotNull MqttLastWill that = (MqttLastWill) o;
+        MqttLastWill that = (MqttLastWill) o;
 
         if (retain != that.retain) return false;
         if (!topic.equals(that.topic)) return false;
@@ -140,10 +127,9 @@ public final class MqttLastWill {
         return result;
     }
 
-    @NotNull
     @Override
     public String toString() {
-        @NotNull final StringBuilder sb = new StringBuilder("MqttLastWill{");
+        final StringBuilder sb = new StringBuilder("MqttLastWill{");
         sb.append("topic='").append(topic).append('\'');
         sb.append(", message='").append(message).append('\'');
         sb.append(", retain=").append(retain);

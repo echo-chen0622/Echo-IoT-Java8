@@ -8,14 +8,12 @@ import org.echoiot.rule.engine.api.TbNodeException;
 import org.echoiot.server.common.data.BaseData;
 import org.echoiot.server.common.data.EntityFieldsData;
 import org.echoiot.server.common.data.id.*;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
 
 public class EntitiesFieldsAsyncLoader {
 
-    @NotNull
-    public static ListenableFuture<EntityFieldsData> findAsync(@NotNull TbContext ctx, @NotNull EntityId original) {
+    public static ListenableFuture<EntityFieldsData> findAsync(TbContext ctx, EntityId original) {
         switch (original.getEntityType()) {
             case TENANT:
                 return getAsync(ctx.getTenantService().findTenantByIdAsync(ctx.getTenantId(), (TenantId) original),
@@ -46,9 +44,8 @@ public class EntitiesFieldsAsyncLoader {
         }
     }
 
-    @NotNull
     private static <T extends BaseData> ListenableFuture<EntityFieldsData> getAsync(
-            @NotNull ListenableFuture<T> future, @NotNull Function<T, EntityFieldsData> converter) {
+            ListenableFuture<T> future, Function<T, EntityFieldsData> converter) {
         return Futures.transformAsync(future, in -> in != null ?
                 Futures.immediateFuture(converter.apply(in))
                 : Futures.immediateFailedFuture(new RuntimeException("Entity not found!")), MoreExecutors.directExecutor());

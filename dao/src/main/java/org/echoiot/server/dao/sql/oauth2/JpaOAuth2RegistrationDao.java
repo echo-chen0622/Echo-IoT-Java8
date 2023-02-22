@@ -9,7 +9,6 @@ import org.echoiot.server.dao.model.sql.OAuth2RegistrationEntity;
 import org.echoiot.server.dao.oauth2.OAuth2RegistrationDao;
 import org.echoiot.server.dao.sql.JpaAbstractDao;
 import org.echoiot.server.dao.util.SqlDao;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
@@ -22,10 +21,8 @@ import java.util.UUID;
 @SqlDao
 public class JpaOAuth2RegistrationDao extends JpaAbstractDao<OAuth2RegistrationEntity, OAuth2Registration> implements OAuth2RegistrationDao {
 
-    @NotNull
     private final OAuth2RegistrationRepository repository;
 
-    @NotNull
     @Override
     protected Class<OAuth2RegistrationEntity> getEntityClass() {
         return OAuth2RegistrationEntity.class;

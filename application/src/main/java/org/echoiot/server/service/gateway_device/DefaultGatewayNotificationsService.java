@@ -13,7 +13,6 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.rpc.ToDeviceRpcRequestBody;
 import org.echoiot.server.common.msg.rpc.ToDeviceRpcRequest;
 import org.echoiot.server.service.rpc.TbCoreDeviceRpcService;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -35,12 +34,12 @@ public class DefaultGatewayNotificationsService implements GatewayNotificationsS
     private TbCoreDeviceRpcService deviceRpcService;
 
     @Override
-    public void onDeviceUpdated(@NotNull Device device, @NotNull Device oldDevice) {
-        @NotNull Optional<DeviceId> gatewayDeviceId = getGatewayDeviceIdFromAdditionalInfoInDevice(device);
+    public void onDeviceUpdated(Device device, Device oldDevice) {
+        Optional<DeviceId> gatewayDeviceId = getGatewayDeviceIdFromAdditionalInfoInDevice(device);
         if (gatewayDeviceId.isPresent()) {
             ObjectNode renamedDeviceNode = JacksonUtil.newObjectNode();
             renamedDeviceNode.put(oldDevice.getName(), device.getName());
-            @NotNull ToDeviceRpcRequest rpcRequest = formDeviceToGatewayRPCRequest(device.getTenantId(), gatewayDeviceId.get(), renamedDeviceNode, DEVICE_RENAMED_METHOD_NAME);
+            ToDeviceRpcRequest rpcRequest = formDeviceToGatewayRPCRequest(device.getTenantId(), gatewayDeviceId.get(), renamedDeviceNode, DEVICE_RENAMED_METHOD_NAME);
             deviceRpcService.processRestApiRpcRequest(rpcRequest, fromDeviceRpcResponse -> {
                 log.trace("Device renamed RPC with id: [{}] processed to gateway device with id: [{}], old device name: [{}], new device name: [{}]",
                         rpcRequest.getId(), gatewayDeviceId, oldDevice.getName(), device.getName());
@@ -49,11 +48,11 @@ public class DefaultGatewayNotificationsService implements GatewayNotificationsS
     }
 
     @Override
-    public void onDeviceDeleted(@NotNull Device device) {
-        @NotNull Optional<DeviceId> gatewayDeviceId = getGatewayDeviceIdFromAdditionalInfoInDevice(device);
+    public void onDeviceDeleted(Device device) {
+        Optional<DeviceId> gatewayDeviceId = getGatewayDeviceIdFromAdditionalInfoInDevice(device);
         if (gatewayDeviceId.isPresent()) {
-            @NotNull TextNode deletedDeviceNode = new TextNode(device.getName());
-            @NotNull ToDeviceRpcRequest rpcRequest = formDeviceToGatewayRPCRequest(device.getTenantId(), gatewayDeviceId.get(), deletedDeviceNode, DEVICE_DELETED_METHOD_NAME);
+            TextNode deletedDeviceNode = new TextNode(device.getName());
+            ToDeviceRpcRequest rpcRequest = formDeviceToGatewayRPCRequest(device.getTenantId(), gatewayDeviceId.get(), deletedDeviceNode, DEVICE_DELETED_METHOD_NAME);
             deviceRpcService.processRestApiRpcRequest(rpcRequest, fromDeviceRpcResponse -> {
                 log.trace("Device deleted RPC with id: [{}] processed to gateway device with id: [{}], deleted device name: [{}]",
                         rpcRequest.getId(), gatewayDeviceId, device.getName());
@@ -61,11 +60,10 @@ public class DefaultGatewayNotificationsService implements GatewayNotificationsS
         }
     }
 
-    @NotNull
     private ToDeviceRpcRequest formDeviceToGatewayRPCRequest(TenantId tenantId, DeviceId gatewayDeviceId, JsonNode deviceDataNode, String method) {
-        @NotNull ToDeviceRpcRequestBody body = new ToDeviceRpcRequestBody(method, JacksonUtil.toString(deviceDataNode));
+        ToDeviceRpcRequestBody body = new ToDeviceRpcRequestBody(method, JacksonUtil.toString(deviceDataNode));
         long expTime = System.currentTimeMillis() + rpcTimeout;
-        @NotNull UUID rpcRequestUUID = UUID.randomUUID();
+        UUID rpcRequestUUID = UUID.randomUUID();
         return new ToDeviceRpcRequest(rpcRequestUUID,
                 tenantId,
                 gatewayDeviceId,
@@ -78,8 +76,7 @@ public class DefaultGatewayNotificationsService implements GatewayNotificationsS
         );
     }
 
-    @NotNull
-    private Optional<DeviceId> getGatewayDeviceIdFromAdditionalInfoInDevice(@NotNull Device device) {
+    private Optional<DeviceId> getGatewayDeviceIdFromAdditionalInfoInDevice(Device device) {
         JsonNode deviceAdditionalInfo = device.getAdditionalInfo();
         if (deviceAdditionalInfo != null && deviceAdditionalInfo.has(DataConstants.LAST_CONNECTED_GATEWAY)) {
             try {

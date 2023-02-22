@@ -14,7 +14,6 @@ import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.common.data.rule.RuleChain;
 import org.echoiot.server.dao.rule.RuleChainService;
-import org.jetbrains.annotations.NotNull;
 
 import static org.echoiot.server.service.edge.DefaultEdgeNotificationService.EDGE_IS_ROOT_BODY_KEY;
 
@@ -22,17 +21,15 @@ import static org.echoiot.server.service.edge.DefaultEdgeNotificationService.EDG
 @AllArgsConstructor
 public class RuleChainsEdgeEventFetcher extends BasePageableEdgeEventFetcher<RuleChain> {
 
-    @NotNull
     private final RuleChainService ruleChainService;
 
     @Override
-    PageData<RuleChain> fetchPageData(TenantId tenantId, @NotNull Edge edge, PageLink pageLink) {
+    PageData<RuleChain> fetchPageData(TenantId tenantId, Edge edge, PageLink pageLink) {
         return ruleChainService.findRuleChainsByTenantIdAndEdgeId(tenantId, edge.getId(), pageLink);
     }
 
-    @NotNull
     @Override
-    EdgeEvent constructEdgeEvent(TenantId tenantId, @NotNull Edge edge, @NotNull RuleChain ruleChain) {
+    EdgeEvent constructEdgeEvent(TenantId tenantId, Edge edge, RuleChain ruleChain) {
         ObjectNode isRootBody = JacksonUtil.OBJECT_MAPPER.createObjectNode();
         boolean isRoot = false;
         try {

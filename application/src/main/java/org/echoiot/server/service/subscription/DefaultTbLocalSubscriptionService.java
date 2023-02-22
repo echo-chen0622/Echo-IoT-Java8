@@ -14,7 +14,6 @@ import org.echoiot.server.queue.discovery.event.PartitionChangeEvent;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.telemetry.sub.AlarmSubscriptionUpdate;
 import org.echoiot.server.service.telemetry.sub.TelemetrySubscriptionUpdate;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
@@ -51,7 +50,7 @@ public class DefaultTbLocalSubscriptionService implements TbLocalSubscriptionSer
 
     private final TbApplicationEventListener<PartitionChangeEvent> partitionChangeListener = new TbApplicationEventListener<>() {
         @Override
-        protected void onTbApplicationEvent(@NotNull PartitionChangeEvent event) {
+        protected void onTbApplicationEvent(PartitionChangeEvent event) {
             if (ServiceType.TB_CORE.equals(event.getServiceType())) {
                 currentPartitions.clear();
                 currentPartitions.addAll(event.getPartitions());
@@ -61,7 +60,7 @@ public class DefaultTbLocalSubscriptionService implements TbLocalSubscriptionSer
 
     private final TbApplicationEventListener<ClusterTopologyChangeEvent> clusterTopologyChangeListener = new TbApplicationEventListener<>() {
         @Override
-        protected void onTbApplicationEvent(@NotNull ClusterTopologyChangeEvent event) {
+        protected void onTbApplicationEvent(ClusterTopologyChangeEvent event) {
             if (event.getQueueKeys().stream().anyMatch(key -> ServiceType.TB_CORE.equals(key.getType()))) {
                 /*
                  * If the cluster topology has changed, we need to push all current subscriptions to SubscriptionManagerService again.
@@ -91,24 +90,24 @@ public class DefaultTbLocalSubscriptionService implements TbLocalSubscriptionSer
 
     @Override
     @EventListener(PartitionChangeEvent.class)
-    public void onApplicationEvent(@NotNull PartitionChangeEvent event) {
+    public void onApplicationEvent(PartitionChangeEvent event) {
         partitionChangeListener.onApplicationEvent(event);
     }
 
     @Override
     @EventListener(ClusterTopologyChangeEvent.class)
-    public void onApplicationEvent(@NotNull ClusterTopologyChangeEvent event) {
+    public void onApplicationEvent(ClusterTopologyChangeEvent event) {
         clusterTopologyChangeListener.onApplicationEvent(event);
     }
 
     //TODO 3.1: replace null callbacks with callbacks from websocket service.
     @Override
-    public void addSubscription(@NotNull TbSubscription subscription) {
+    public void addSubscription(TbSubscription subscription) {
         pushSubscriptionToManagerService(subscription, true);
         registerSubscription(subscription);
     }
 
-    private void pushSubscriptionToManagerService(@NotNull TbSubscription subscription, boolean pushToLocalService) {
+    private void pushSubscriptionToManagerService(TbSubscription subscription, boolean pushToLocalService) {
         TopicPartitionInfo tpi = partitionService.resolve(ServiceType.TB_CORE, subscription.getTenantId(), subscription.getEntityId());
         if (currentPartitions.contains(tpi)) {
             // Subscription is managed on the same server;
@@ -124,17 +123,17 @@ public class DefaultTbLocalSubscriptionService implements TbLocalSubscriptionSer
 
     @Override
     @SuppressWarnings("unchecked")
-    public void onSubscriptionUpdate(String sessionId, @NotNull TelemetrySubscriptionUpdate update, @NotNull TbCallback callback) {
+    public void onSubscriptionUpdate(String sessionId, TelemetrySubscriptionUpdate update, TbCallback callback) {
         TbSubscription subscription = subscriptionsBySessionId
                 .getOrDefault(sessionId, Collections.emptyMap()).get(update.getSubscriptionId());
         if (subscription != null) {
             switch (subscription.getType()) {
                 case TIMESERIES:
-                    @NotNull TbTimeseriesSubscription tsSub = (TbTimeseriesSubscription) subscription;
+                    TbTimeseriesSubscription tsSub = (TbTimeseriesSubscription) subscription;
                     update.getLatestValues().forEach((key, value) -> tsSub.getKeyStates().put(key, value));
                     break;
                 case ATTRIBUTES:
-                    @NotNull TbAttributeSubscription attrSub = (TbAttributeSubscription) subscription;
+                    TbAttributeSubscription attrSub = (TbAttributeSubscription) subscription;
                     update.getLatestValues().forEach((key, value) -> attrSub.getKeyStates().put(key, value));
                     break;
             }
@@ -145,7 +144,7 @@ public class DefaultTbLocalSubscriptionService implements TbLocalSubscriptionSer
 
     @Override
     @SuppressWarnings("unchecked")
-    public void onSubscriptionUpdate(String sessionId, @NotNull AlarmSubscriptionUpdate update, @NotNull TbCallback callback) {
+    public void onSubscriptionUpdate(String sessionId, AlarmSubscriptionUpdate update, TbCallback callback) {
         TbSubscription subscription = subscriptionsBySessionId
                 .getOrDefault(sessionId, Collections.emptyMap()).get(update.getSubscriptionId());
         if (subscription != null && subscription.getType() == TbSubscriptionType.ALARMS) {
@@ -185,13 +184,13 @@ public class DefaultTbLocalSubscriptionService implements TbLocalSubscriptionSer
     public void cancelAllSessionSubscriptions(String sessionId) {
         Map<Integer, TbSubscription> subscriptions = subscriptionsBySessionId.get(sessionId);
         if (subscriptions != null) {
-            @NotNull Set<Integer> toRemove = new HashSet<>(subscriptions.keySet());
+            Set<Integer> toRemove = new HashSet<>(subscriptions.keySet());
             toRemove.forEach(id -> cancelSubscription(sessionId, id));
         }
     }
 
-    private void registerSubscription(@NotNull TbSubscription subscription) {
-        @NotNull Map<Integer, TbSubscription> sessionSubscriptions = subscriptionsBySessionId.computeIfAbsent(subscription.getSessionId(), k -> new ConcurrentHashMap<>());
+    private void registerSubscription(TbSubscription subscription) {
+        Map<Integer, TbSubscription> sessionSubscriptions = subscriptionsBySessionId.computeIfAbsent(subscription.getSessionId(), k -> new ConcurrentHashMap<>());
         sessionSubscriptions.put(subscription.getSubscriptionId(), subscription);
     }
 

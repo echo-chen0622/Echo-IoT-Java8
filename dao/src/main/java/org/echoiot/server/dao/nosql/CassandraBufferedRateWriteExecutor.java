@@ -9,7 +9,6 @@ import org.echoiot.server.dao.tenant.TbTenantProfileCache;
 import org.echoiot.server.dao.util.AbstractBufferedRateExecutor;
 import org.echoiot.server.dao.util.AsyncTaskContext;
 import org.echoiot.server.dao.util.NoSqlAnyDao;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -36,7 +35,7 @@ public class CassandraBufferedRateWriteExecutor extends AbstractBufferedRateExec
             @Value("${cassandra.query.poll_ms:50}") long pollMs,
             @Value("${cassandra.query.tenant_rate_limits.print_tenant_names}") boolean printTenantNames,
             @Value("${cassandra.query.print_queries_freq:0}") int printQueriesFreq,
-            @NotNull @Autowired StatsFactory statsFactory,
+            @Autowired StatsFactory statsFactory,
             @Autowired EntityService entityService,
             @Autowired TbTenantProfileCache tenantProfileCache) {
         super(queueLimit, concurrencyLimit, maxWaitTime, dispatcherThreads, callbackThreads, pollMs, printQueriesFreq, statsFactory,
@@ -54,26 +53,23 @@ public class CassandraBufferedRateWriteExecutor extends AbstractBufferedRateExec
         super.stop();
     }
 
-    @NotNull
     @Override
     public String getBufferName() {
         return BUFFER_NAME;
     }
 
-    @NotNull
     @Override
     protected SettableFuture<TbResultSet> create() {
         return SettableFuture.create();
     }
 
-    @NotNull
     @Override
     protected TbResultSetFuture wrap(CassandraStatementTask task, SettableFuture<TbResultSet> future) {
         return new TbResultSetFuture(future);
     }
 
     @Override
-    protected ListenableFuture<TbResultSet> execute(@NotNull AsyncTaskContext<CassandraStatementTask, TbResultSet> taskCtx) {
+    protected ListenableFuture<TbResultSet> execute(AsyncTaskContext<CassandraStatementTask, TbResultSet> taskCtx) {
         CassandraStatementTask task = taskCtx.getTask();
         return task.executeAsync(
                 statement ->

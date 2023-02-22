@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.ota.OtaPackageType;
 import org.echoiot.server.common.data.ota.OtaPackageUpdateStatus;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -44,7 +43,7 @@ public abstract class LwM2MClientOtaInfo<Strategy, State, Result> {
         this.strategy = strategy;
     }
 
-    public void updateTarget(String targetName, String targetVersion, @NotNull Optional<String> newTargetUrl, @NotNull Optional<String> newTargetTag) {
+    public void updateTarget(String targetName, String targetVersion, Optional<String> newTargetUrl, Optional<String> newTargetTag) {
         this.targetName = targetName;
         this.targetVersion = targetVersion;
         this.targetUrl = newTargetUrl.orElse(null);
@@ -56,8 +55,8 @@ public abstract class LwM2MClientOtaInfo<Strategy, State, Result> {
         if (StringUtils.isEmpty(targetName) || StringUtils.isEmpty(targetVersion) || !isSupported()) {
             return false;
         } else {
-            @NotNull String targetPackageId = getPackageId(targetName, targetVersion);
-            @NotNull String currentPackageId = getPackageId(currentName, currentVersion);
+            String targetPackageId = getPackageId(targetName, targetVersion);
+            String currentPackageId = getPackageId(currentName, currentVersion);
             if (StringUtils.isNotEmpty(failedPackageId) && failedPackageId.equals(targetPackageId)) {
                 return false;
             } else {
@@ -89,14 +88,12 @@ public abstract class LwM2MClientOtaInfo<Strategy, State, Result> {
 
     public abstract void update(Result result);
 
-    @NotNull
     protected static String getPackageId(String name, String version) {
         return (StringUtils.isNotEmpty(name) ? name : "") + (StringUtils.isNotEmpty(version) ? version : "");
     }
 
     public abstract OtaPackageType getType();
 
-    @NotNull
     @JsonIgnore
     public String getTargetPackageId() {
         return getPackageId(targetName, targetVersion);

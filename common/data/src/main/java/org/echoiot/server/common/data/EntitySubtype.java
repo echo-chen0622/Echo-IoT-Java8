@@ -1,7 +1,6 @@
 package org.echoiot.server.common.data;
 
 import org.echoiot.server.common.data.id.TenantId;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -54,7 +53,7 @@ public class EntitySubtype {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        @NotNull EntitySubtype that = (EntitySubtype) o;
+        EntitySubtype that = (EntitySubtype) o;
 
         if (!Objects.equals(tenantId, that.tenantId)) return false;
         if (entityType != that.entityType) return false;
@@ -70,7 +69,6 @@ public class EntitySubtype {
         return result;
     }
 
-    @NotNull
     @Override
     public String toString() {
         String sb = "EntitySubtype{" + "tenantId=" + tenantId + ", entityType=" + entityType + ", type='" + type + '\'' + '}';

@@ -7,7 +7,6 @@ import org.eclipse.californium.core.Utils;
 import org.eclipse.californium.elements.DtlsEndpointContext;
 import org.eclipse.californium.elements.EndpointContext;
 import org.eclipse.californium.elements.exception.ConnectorException;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
@@ -23,7 +22,7 @@ public class NoSecClient {
     private final CoapClient coapClient;
 
     public NoSecClient(String host, int port, String accessToken, String clientKeys, String sharedKeys) throws URISyntaxException {
-        @NotNull URI uri = new URI(getFutureUrl(host, port, accessToken, clientKeys, sharedKeys));
+        URI uri = new URI(getFutureUrl(host, port, accessToken, clientKeys, sharedKeys));
         this.coapClient = new CoapClient(uri);
     }
 
@@ -65,12 +64,11 @@ public class NoSecClient {
         });
     }
 
-    @NotNull
     private String getFutureUrl(String host, Integer port, String accessToken, String clientKeys, String sharedKeys) {
         return "coap://" + host + ":" + port + "/api/v1/" + accessToken + "/attributes?clientKeys=" + clientKeys + "&sharedKeys=" + sharedKeys;
     }
 
-    public static void main(@NotNull String[] args) throws URISyntaxException {
+    public static void main(String[] args) throws URISyntaxException {
         System.out.println("Usage: java -cp ... client.coap.transport.org.echoiot.server.NoSecClient " +
                 "host port accessToken clientKeys sharedKeys");
 
@@ -80,7 +78,7 @@ public class NoSecClient {
         String clientKeys = args[3];
         String sharedKeys = args[4];
 
-        @NotNull NoSecClient client = new NoSecClient(host, port, accessToken, clientKeys, sharedKeys);
+        NoSecClient client = new NoSecClient(host, port, accessToken, clientKeys, sharedKeys);
         client.test();
     }
 }

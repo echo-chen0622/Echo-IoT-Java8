@@ -5,7 +5,6 @@ import lombok.Getter;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.service.telemetry.TelemetryFeature;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
@@ -17,19 +16,13 @@ import java.util.Objects;
 @AllArgsConstructor
 public class SubscriptionState {
 
-    @NotNull
     @Getter private final String wsSessionId;
     @Getter private final int subscriptionId;
-    @NotNull
     @Getter private final TenantId tenantId;
-    @NotNull
     @Getter private final EntityId entityId;
-    @NotNull
     @Getter private final TelemetryFeature type;
     @Getter private final boolean allKeys;
-    @NotNull
     @Getter private final Map<String, Long> keyStates;
-    @NotNull
     @Getter private final String scope;
 
     @Override
@@ -37,7 +30,7 @@ public class SubscriptionState {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        @NotNull SubscriptionState that = (SubscriptionState) o;
+        SubscriptionState that = (SubscriptionState) o;
 
         if (subscriptionId != that.subscriptionId) return false;
         if (!Objects.equals(wsSessionId, that.wsSessionId)) return false;
@@ -54,7 +47,6 @@ public class SubscriptionState {
         return result;
     }
 
-    @NotNull
     @Override
     public String toString() {
         return "SubscriptionState{" +

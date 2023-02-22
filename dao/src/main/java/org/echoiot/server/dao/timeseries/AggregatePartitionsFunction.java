@@ -6,7 +6,6 @@ import com.google.common.util.concurrent.ListenableFuture;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.kv.*;
 import org.echoiot.server.dao.nosql.TbResultSet;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -45,7 +44,6 @@ public class AggregatePartitionsFunction implements com.google.common.util.concu
         this.executor = executor;
     }
 
-    @NotNull
     @Override
     public ListenableFuture<Optional<TsKvEntryAggWrapper>> apply(@Nullable List<TbResultSet> rsList) {
         log.trace("[{}][{}][{}] Going to aggregate data", key, ts, aggregation);
@@ -58,9 +56,9 @@ public class AggregatePartitionsFunction implements com.google.common.util.concu
                                 .collect(Collectors.toList())),
                 rowsList -> {
                     try {
-                        @NotNull AggregationResult aggResult = new AggregationResult();
-                        for (@NotNull List<Row> rs : rowsList) {
-                            for (@NotNull Row row : rs) {
+                        AggregationResult aggResult = new AggregationResult();
+                        for (List<Row> rs : rowsList) {
+                            for (Row row : rs) {
                                 processResultSetRow(row, aggResult);
                             }
                         }
@@ -72,7 +70,7 @@ public class AggregatePartitionsFunction implements com.google.common.util.concu
                 }, this.executor);
     }
 
-    private void processResultSetRow(@NotNull Row row, @NotNull AggregationResult aggResult) {
+    private void processResultSetRow(Row row, AggregationResult aggResult) {
         long curCount = 0L;
 
         @org.jetbrains.annotations.Nullable Long curLValue = null;
@@ -129,7 +127,7 @@ public class AggregatePartitionsFunction implements com.google.common.util.concu
         }
     }
 
-    private void processAvgOrSumAggregation(@NotNull AggregationResult aggResult, long curCount, @org.jetbrains.annotations.Nullable Long curLValue, @org.jetbrains.annotations.Nullable Double curDValue) {
+    private void processAvgOrSumAggregation(AggregationResult aggResult, long curCount, @org.jetbrains.annotations.Nullable Long curLValue, @org.jetbrains.annotations.Nullable Double curDValue) {
         aggResult.count += curCount;
         if (curDValue != null) {
             aggResult.dValue = aggResult.dValue == null ? curDValue : aggResult.dValue + curDValue;
@@ -139,7 +137,7 @@ public class AggregatePartitionsFunction implements com.google.common.util.concu
         }
     }
 
-    private void processMinAggregation(@NotNull AggregationResult aggResult, @org.jetbrains.annotations.Nullable Long curLValue, @org.jetbrains.annotations.Nullable Double curDValue, @org.jetbrains.annotations.Nullable Boolean curBValue, @org.jetbrains.annotations.Nullable String curSValue, @org.jetbrains.annotations.Nullable String curJValue) {
+    private void processMinAggregation(AggregationResult aggResult, @org.jetbrains.annotations.Nullable Long curLValue, @org.jetbrains.annotations.Nullable Double curDValue, @org.jetbrains.annotations.Nullable Boolean curBValue, @org.jetbrains.annotations.Nullable String curSValue, @org.jetbrains.annotations.Nullable String curJValue) {
         if (curDValue != null || curLValue != null) {
             if (curDValue != null) {
                 aggResult.dValue = aggResult.dValue == null ? curDValue : Math.min(aggResult.dValue, curDValue);
@@ -156,7 +154,7 @@ public class AggregatePartitionsFunction implements com.google.common.util.concu
         }
     }
 
-    private void processMaxAggregation(@NotNull AggregationResult aggResult, @org.jetbrains.annotations.Nullable Long curLValue, @org.jetbrains.annotations.Nullable Double curDValue, @org.jetbrains.annotations.Nullable Boolean curBValue, @org.jetbrains.annotations.Nullable String curSValue, @org.jetbrains.annotations.Nullable String curJValue) {
+    private void processMaxAggregation(AggregationResult aggResult, @org.jetbrains.annotations.Nullable Long curLValue, @org.jetbrains.annotations.Nullable Double curDValue, @org.jetbrains.annotations.Nullable Boolean curBValue, @org.jetbrains.annotations.Nullable String curSValue, @org.jetbrains.annotations.Nullable String curJValue) {
         if (curDValue != null || curLValue != null) {
             if (curDValue != null) {
                 aggResult.dValue = aggResult.dValue == null ? curDValue : Math.max(aggResult.dValue, curDValue);
@@ -174,7 +172,7 @@ public class AggregatePartitionsFunction implements com.google.common.util.concu
     }
 
     @org.jetbrains.annotations.Nullable
-    private Boolean getBooleanValue(@NotNull Row row) {
+    private Boolean getBooleanValue(Row row) {
         if (aggregation == Aggregation.MIN || aggregation == Aggregation.MAX) {
             return row.getBoolean(BOOL_POS);
         } else {
@@ -183,7 +181,7 @@ public class AggregatePartitionsFunction implements com.google.common.util.concu
     }
 
     @org.jetbrains.annotations.Nullable
-    private String getStringValue(@NotNull Row row) {
+    private String getStringValue(Row row) {
         if (aggregation == Aggregation.MIN || aggregation == Aggregation.MAX) {
             return row.getString(STR_POS);
         } else {
@@ -192,7 +190,7 @@ public class AggregatePartitionsFunction implements com.google.common.util.concu
     }
 
     @org.jetbrains.annotations.Nullable
-    private String getJsonValue(@NotNull Row row) {
+    private String getJsonValue(Row row) {
         if (aggregation == Aggregation.MIN || aggregation == Aggregation.MAX) {
             return row.getString(JSON_POS);
         } else {
@@ -201,7 +199,7 @@ public class AggregatePartitionsFunction implements com.google.common.util.concu
     }
 
     @org.jetbrains.annotations.Nullable
-    private Long getLongValue(@NotNull Row row) {
+    private Long getLongValue(Row row) {
         if (aggregation == Aggregation.MIN || aggregation == Aggregation.MAX
                 || aggregation == Aggregation.SUM || aggregation == Aggregation.AVG) {
             return row.getLong(LONG_POS);
@@ -211,7 +209,7 @@ public class AggregatePartitionsFunction implements com.google.common.util.concu
     }
 
     @org.jetbrains.annotations.Nullable
-    private Double getDoubleValue(@NotNull Row row) {
+    private Double getDoubleValue(Row row) {
         if (aggregation == Aggregation.MIN || aggregation == Aggregation.MAX
                 || aggregation == Aggregation.SUM || aggregation == Aggregation.AVG) {
             return row.getDouble(DOUBLE_POS);
@@ -220,8 +218,7 @@ public class AggregatePartitionsFunction implements com.google.common.util.concu
         }
     }
 
-    @NotNull
-    private Optional<TsKvEntryAggWrapper> processAggregationResult(@NotNull AggregationResult aggResult) {
+    private Optional<TsKvEntryAggWrapper> processAggregationResult(AggregationResult aggResult) {
         Optional<TsKvEntry> result;
         if (aggResult.dataType == null) {
             result = Optional.empty();
@@ -240,26 +237,24 @@ public class AggregatePartitionsFunction implements com.google.common.util.concu
         return result.map(tsKvEntry -> new TsKvEntryAggWrapper(tsKvEntry, aggResult.aggValuesLastTs));
     }
 
-    @NotNull
-    private Optional<TsKvEntry> processAvgOrSumResult(Aggregation aggregation, @NotNull AggregationResult aggResult) {
+    private Optional<TsKvEntry> processAvgOrSumResult(Aggregation aggregation, AggregationResult aggResult) {
         if (aggResult.count == 0 || (aggResult.dataType == DataType.DOUBLE && aggResult.dValue == null) || (aggResult.dataType == DataType.LONG && aggResult.lValue == null)) {
             return Optional.empty();
         } else if (aggResult.dataType == DataType.DOUBLE || aggResult.dataType == DataType.LONG) {
             if (aggregation == Aggregation.AVG || aggResult.hasDouble) {
                 double sum = Optional.ofNullable(aggResult.dValue).orElse(0.0d) + Optional.ofNullable(aggResult.lValue).orElse(0L);
-                @NotNull DoubleDataEntry doubleDataEntry = new DoubleDataEntry(key, aggregation == Aggregation.SUM ? sum : (sum / aggResult.count));
-                @NotNull TsKvEntry result = aggregation == Aggregation.AVG ? new AggTsKvEntry(ts, doubleDataEntry, aggResult.count) : new BasicTsKvEntry(ts, doubleDataEntry);
+                DoubleDataEntry doubleDataEntry = new DoubleDataEntry(key, aggregation == Aggregation.SUM ? sum : (sum / aggResult.count));
+                TsKvEntry result = aggregation == Aggregation.AVG ? new AggTsKvEntry(ts, doubleDataEntry, aggResult.count) : new BasicTsKvEntry(ts, doubleDataEntry);
                 return Optional.of(result);
             } else {
-                @NotNull LongDataEntry longDataEntry = new LongDataEntry(key, aggregation == Aggregation.SUM ? aggResult.lValue : (aggResult.lValue / aggResult.count));
+                LongDataEntry longDataEntry = new LongDataEntry(key, aggregation == Aggregation.SUM ? aggResult.lValue : (aggResult.lValue / aggResult.count));
                 return Optional.of(new BasicTsKvEntry(ts, longDataEntry));
             }
         }
         return Optional.empty();
     }
 
-    @NotNull
-    private Optional<TsKvEntry> processMinOrMaxResult(@NotNull AggregationResult aggResult) {
+    private Optional<TsKvEntry> processMinOrMaxResult(AggregationResult aggResult) {
         if (aggResult.dataType == DataType.DOUBLE || aggResult.dataType == DataType.LONG) {
             if (aggResult.hasDouble) {
                 double currentD = aggregation == Aggregation.MIN ? Optional.ofNullable(aggResult.dValue).orElse(Double.MAX_VALUE) : Optional.ofNullable(aggResult.dValue).orElse(Double.MIN_VALUE);

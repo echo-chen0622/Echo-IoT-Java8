@@ -4,7 +4,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 import org.echoiot.server.common.data.id.TenantId;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -37,7 +36,6 @@ public class TopicPartitionInfo {
         this.fullTopicName = tmp;
     }
 
-    @NotNull
     public TopicPartitionInfo newByTopic(String topic) {
         return new TopicPartitionInfo(topic, this.tenantId, this.partition, this.myPartition);
     }
@@ -46,12 +44,10 @@ public class TopicPartitionInfo {
         return topic;
     }
 
-    @NotNull
     public Optional<TenantId> getTenantId() {
         return Optional.ofNullable(tenantId);
     }
 
-    @NotNull
     public Optional<Integer> getPartition() {
         return Optional.ofNullable(partition);
     }
@@ -60,7 +56,7 @@ public class TopicPartitionInfo {
     public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        @NotNull TopicPartitionInfo that = (TopicPartitionInfo) o;
+        TopicPartitionInfo that = (TopicPartitionInfo) o;
         return topic.equals(that.topic) &&
                 Objects.equals(tenantId, that.tenantId) &&
                 Objects.equals(partition, that.partition) &&

@@ -1,6 +1,5 @@
 package org.echoiot.server.common.data.alarm;
 
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by Echo on 11.05.17.
@@ -17,12 +16,10 @@ public enum AlarmStatus {
         return this == CLEARED_ACK || this == CLEARED_UNACK;
     }
 
-    @NotNull
     public AlarmSearchStatus getClearSearchStatus() {
         return this.isCleared() ? AlarmSearchStatus.CLEARED : AlarmSearchStatus.ACTIVE;
     }
 
-    @NotNull
     public AlarmSearchStatus getAckSearchStatus() {
         return this.isAck() ? AlarmSearchStatus.ACK : AlarmSearchStatus.UNACK;
     }

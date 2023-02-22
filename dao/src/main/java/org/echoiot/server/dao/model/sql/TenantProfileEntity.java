@@ -14,7 +14,6 @@ import org.echoiot.server.dao.model.SearchTextEntity;
 import org.echoiot.server.dao.util.mapping.JsonBinaryType;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.persistence.Column;
@@ -52,7 +51,7 @@ public final class TenantProfileEntity extends BaseSqlEntity<TenantProfile> impl
         super();
     }
 
-    public TenantProfileEntity(@NotNull TenantProfile tenantProfile) {
+    public TenantProfileEntity(TenantProfile tenantProfile) {
         if (tenantProfile.getId() != null) {
             this.setUuid(tenantProfile.getId().getId());
         }
@@ -78,10 +77,9 @@ public final class TenantProfileEntity extends BaseSqlEntity<TenantProfile> impl
         return searchText;
     }
 
-    @NotNull
     @Override
     public TenantProfile toData() {
-        @NotNull TenantProfile tenantProfile = new TenantProfile(new TenantProfileId(this.getUuid()));
+        TenantProfile tenantProfile = new TenantProfile(new TenantProfileId(this.getUuid()));
         tenantProfile.setCreatedTime(createdTime);
         tenantProfile.setName(name);
         tenantProfile.setDescription(description);

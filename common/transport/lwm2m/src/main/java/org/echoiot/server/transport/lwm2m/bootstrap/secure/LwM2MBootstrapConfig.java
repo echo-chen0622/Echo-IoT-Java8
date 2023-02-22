@@ -14,7 +14,6 @@ import org.eclipse.leshan.core.SecurityMode;
 import org.eclipse.leshan.core.request.BindingMode;
 import org.eclipse.leshan.core.util.Hex;
 import org.eclipse.leshan.server.bootstrap.BootstrapConfig;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 import java.util.List;
@@ -57,16 +56,15 @@ public class LwM2MBootstrapConfig implements Serializable {
 
     }
 
-    @NotNull
     @JsonIgnore
     public BootstrapConfig getLwM2MBootstrapConfig() {
-        @NotNull BootstrapConfig configBs = new BootstrapConfig();
+        BootstrapConfig configBs = new BootstrapConfig();
         configBs.autoIdForSecurityObject = true;
         int id = 0;
-        for (@NotNull LwM2MBootstrapServerCredential serverCredential : serverConfiguration) {
-            @NotNull BootstrapConfig.ServerConfig serverConfig = setServerConfig((AbstractLwM2MBootstrapServerCredential) serverCredential);
+        for (LwM2MBootstrapServerCredential serverCredential : serverConfiguration) {
+            BootstrapConfig.ServerConfig serverConfig = setServerConfig((AbstractLwM2MBootstrapServerCredential) serverCredential);
             configBs.servers.put(id, serverConfig);
-            @NotNull BootstrapConfig.ServerSecurity serverSecurity = setServerSecurity((AbstractLwM2MBootstrapServerCredential) serverCredential, serverCredential.getSecurityMode());
+            BootstrapConfig.ServerSecurity serverSecurity = setServerSecurity((AbstractLwM2MBootstrapServerCredential) serverCredential, serverCredential.getSecurityMode());
             configBs.security.put(id, serverSecurity);
             id++;
         }
@@ -77,10 +75,9 @@ public class LwM2MBootstrapConfig implements Serializable {
         return configBs;
     }
 
-    @NotNull
-    private BootstrapConfig.ServerSecurity setServerSecurity(@NotNull AbstractLwM2MBootstrapServerCredential serverCredential, @NotNull LwM2MSecurityMode securityMode) {
-        @NotNull BootstrapConfig.ServerSecurity serverSecurity = new BootstrapConfig.ServerSecurity();
-        @NotNull String serverUri = "coap://";
+    private BootstrapConfig.ServerSecurity setServerSecurity(AbstractLwM2MBootstrapServerCredential serverCredential, LwM2MSecurityMode securityMode) {
+        BootstrapConfig.ServerSecurity serverSecurity = new BootstrapConfig.ServerSecurity();
+        String serverUri = "coap://";
         byte[] publicKeyOrId = new byte[]{};
         byte[] secretKey = new byte[]{};
         byte[] serverPublicKey = new byte[]{};
@@ -113,9 +110,8 @@ public class LwM2MBootstrapConfig implements Serializable {
         return serverSecurity;
     }
 
-    @NotNull
-    private BootstrapConfig.ServerConfig setServerConfig(@NotNull AbstractLwM2MBootstrapServerCredential serverCredential) {
-        @NotNull BootstrapConfig.ServerConfig serverConfig = new BootstrapConfig.ServerConfig();
+    private BootstrapConfig.ServerConfig setServerConfig(AbstractLwM2MBootstrapServerCredential serverCredential) {
+        BootstrapConfig.ServerConfig serverConfig = new BootstrapConfig.ServerConfig();
         serverConfig.shortId = serverCredential.getShortServerId();
         serverConfig.lifetime = serverCredential.getLifetime();
         serverConfig.defaultMinPeriod = serverCredential.getDefaultMinPeriod();

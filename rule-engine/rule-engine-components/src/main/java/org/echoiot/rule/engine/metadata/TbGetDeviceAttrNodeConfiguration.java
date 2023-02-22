@@ -4,7 +4,6 @@ import lombok.Data;
 import org.echoiot.rule.engine.data.DeviceRelationsQuery;
 import org.echoiot.server.common.data.relation.EntityRelation;
 import org.echoiot.server.common.data.relation.EntitySearchDirection;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 
@@ -13,10 +12,9 @@ public class TbGetDeviceAttrNodeConfiguration extends TbGetAttributesNodeConfigu
 
     private DeviceRelationsQuery deviceRelationsQuery;
 
-    @NotNull
     @Override
     public TbGetDeviceAttrNodeConfiguration defaultConfiguration() {
-        @NotNull TbGetDeviceAttrNodeConfiguration configuration = new TbGetDeviceAttrNodeConfiguration();
+        TbGetDeviceAttrNodeConfiguration configuration = new TbGetDeviceAttrNodeConfiguration();
         configuration.setClientAttributeNames(Collections.emptyList());
         configuration.setSharedAttributeNames(Collections.emptyList());
         configuration.setServerAttributeNames(Collections.emptyList());
@@ -25,7 +23,7 @@ public class TbGetDeviceAttrNodeConfiguration extends TbGetAttributesNodeConfigu
         configuration.setGetLatestValueWithTs(false);
         configuration.setFetchToData(false);
 
-        @NotNull DeviceRelationsQuery deviceRelationsQuery = new DeviceRelationsQuery();
+        DeviceRelationsQuery deviceRelationsQuery = new DeviceRelationsQuery();
         deviceRelationsQuery.setDirection(EntitySearchDirection.FROM);
         deviceRelationsQuery.setMaxLevel(1);
         deviceRelationsQuery.setRelationType(EntityRelation.CONTAINS_TYPE);

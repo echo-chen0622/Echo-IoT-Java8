@@ -14,7 +14,6 @@ import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.data.relation.EntityRelation;
 import org.echoiot.server.common.data.relation.RelationTypeGroup;
 import org.echoiot.server.common.msg.TbMsg;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
@@ -39,7 +38,7 @@ import java.util.List;
 public class TbCreateRelationNode extends TbAbstractRelationActionNode<TbCreateRelationNodeConfiguration> {
 
     @Override
-    protected TbCreateRelationNodeConfiguration loadEntityNodeActionConfig(@NotNull TbNodeConfiguration configuration) throws TbNodeException {
+    protected TbCreateRelationNodeConfiguration loadEntityNodeActionConfig(TbNodeConfiguration configuration) throws TbNodeException {
         return TbNodeUtils.convert(configuration, TbCreateRelationNodeConfiguration.class);
     }
 
@@ -48,10 +47,9 @@ public class TbCreateRelationNode extends TbAbstractRelationActionNode<TbCreateR
         return config.isCreateEntityIfNotExists();
     }
 
-    @NotNull
     @Override
-    protected ListenableFuture<RelationContainer> doProcessEntityRelationAction(@NotNull TbContext ctx, @NotNull TbMsg msg, @NotNull EntityContainer entity, String relationType) {
-        @NotNull ListenableFuture<Boolean> future = createRelationIfAbsent(ctx, msg, entity, relationType);
+    protected ListenableFuture<RelationContainer> doProcessEntityRelationAction(TbContext ctx, TbMsg msg, EntityContainer entity, String relationType) {
+        ListenableFuture<Boolean> future = createRelationIfAbsent(ctx, msg, entity, relationType);
         return Futures.transform(future, result -> {
             if (result && config.isChangeOriginatorToRelatedEntity()) {
                 TbMsg tbMsg = ctx.transformMsg(msg, msg.getType(), entity.getEntityId(), msg.getMetaData(), msg.getData());
@@ -61,23 +59,21 @@ public class TbCreateRelationNode extends TbAbstractRelationActionNode<TbCreateR
         }, ctx.getDbCallbackExecutor());
     }
 
-    @NotNull
-    private ListenableFuture<Boolean> createRelationIfAbsent(@NotNull TbContext ctx, @NotNull TbMsg msg, @NotNull EntityContainer entityContainer, String relationType) {
+    private ListenableFuture<Boolean> createRelationIfAbsent(TbContext ctx, TbMsg msg, EntityContainer entityContainer, String relationType) {
         SearchDirectionIds sdId = processSingleSearchDirection(msg, entityContainer);
         return Futures.transformAsync(deleteCurrentRelationsIfNeeded(ctx, msg, sdId, relationType), v ->
                         checkRelationAndCreateIfAbsent(ctx, entityContainer, relationType, sdId),
                 ctx.getDbCallbackExecutor());
     }
 
-    @NotNull
-    private ListenableFuture<Void> deleteCurrentRelationsIfNeeded(@NotNull TbContext ctx, @NotNull TbMsg msg, @NotNull SearchDirectionIds sdId, String relationType) {
+    private ListenableFuture<Void> deleteCurrentRelationsIfNeeded(TbContext ctx, TbMsg msg, SearchDirectionIds sdId, String relationType) {
         if (config.isRemoveCurrentRelations()) {
             return deleteOriginatorRelations(ctx, findOriginatorRelations(ctx, msg, sdId, relationType));
         }
         return Futures.immediateFuture(null);
     }
 
-    private ListenableFuture<List<EntityRelation>> findOriginatorRelations(@NotNull TbContext ctx, @NotNull TbMsg msg, @NotNull SearchDirectionIds sdId, String relationType) {
+    private ListenableFuture<List<EntityRelation>> findOriginatorRelations(TbContext ctx, TbMsg msg, SearchDirectionIds sdId, String relationType) {
         if (sdId.isOriginatorDirectionFrom()) {
             return ctx.getRelationService().findByFromAndTypeAsync(ctx.getTenantId(), msg.getOriginator(), relationType, RelationTypeGroup.COMMON);
         } else {
@@ -85,10 +81,9 @@ public class TbCreateRelationNode extends TbAbstractRelationActionNode<TbCreateR
         }
     }
 
-    @NotNull
-    private ListenableFuture<Void> deleteOriginatorRelations(@NotNull TbContext ctx, @NotNull ListenableFuture<List<EntityRelation>> originatorRelationsFuture) {
+    private ListenableFuture<Void> deleteOriginatorRelations(TbContext ctx, ListenableFuture<List<EntityRelation>> originatorRelationsFuture) {
         return Futures.transformAsync(originatorRelationsFuture, originatorRelations -> {
-            @NotNull List<ListenableFuture<Boolean>> list = new ArrayList<>();
+            List<ListenableFuture<Boolean>> list = new ArrayList<>();
             if (!CollectionUtils.isEmpty(originatorRelations)) {
                 for (EntityRelation relation : originatorRelations) {
                     list.add(ctx.getRelationService().deleteRelationAsync(ctx.getTenantId(), relation));
@@ -98,8 +93,7 @@ public class TbCreateRelationNode extends TbAbstractRelationActionNode<TbCreateR
         }, ctx.getDbCallbackExecutor());
     }
 
-    @NotNull
-    private ListenableFuture<Boolean> checkRelationAndCreateIfAbsent(@NotNull TbContext ctx, @NotNull EntityContainer entityContainer, String relationType, @NotNull SearchDirectionIds sdId) {
+    private ListenableFuture<Boolean> checkRelationAndCreateIfAbsent(TbContext ctx, EntityContainer entityContainer, String relationType, SearchDirectionIds sdId) {
         return Futures.transformAsync(checkRelation(ctx, sdId, relationType), relationPresent -> {
             if (relationPresent) {
                 return Futures.immediateFuture(true);
@@ -108,12 +102,11 @@ public class TbCreateRelationNode extends TbAbstractRelationActionNode<TbCreateR
         }, ctx.getDbCallbackExecutor());
     }
 
-    private ListenableFuture<Boolean> checkRelation(@NotNull TbContext ctx, @NotNull SearchDirectionIds sdId, String relationType) {
+    private ListenableFuture<Boolean> checkRelation(TbContext ctx, SearchDirectionIds sdId, String relationType) {
         return ctx.getRelationService().checkRelationAsync(ctx.getTenantId(), sdId.getFromId(), sdId.getToId(), relationType, RelationTypeGroup.COMMON);
     }
 
-    @NotNull
-    private ListenableFuture<Boolean> processCreateRelation(@NotNull TbContext ctx, @NotNull EntityContainer entityContainer, @NotNull SearchDirectionIds sdId, String relationType) {
+    private ListenableFuture<Boolean> processCreateRelation(TbContext ctx, EntityContainer entityContainer, SearchDirectionIds sdId, String relationType) {
         switch (entityContainer.getEntityType()) {
             case ASSET:
                 return processAsset(ctx, entityContainer, sdId, relationType);
@@ -135,8 +128,7 @@ public class TbCreateRelationNode extends TbAbstractRelationActionNode<TbCreateR
         return Futures.immediateFuture(true);
     }
 
-    @NotNull
-    private ListenableFuture<Boolean> processView(@NotNull TbContext ctx, @NotNull EntityContainer entityContainer, @NotNull SearchDirectionIds sdId, String relationType) {
+    private ListenableFuture<Boolean> processView(TbContext ctx, EntityContainer entityContainer, SearchDirectionIds sdId, String relationType) {
         return Futures.transformAsync(ctx.getEntityViewService().findEntityViewByIdAsync(ctx.getTenantId(), new EntityViewId(entityContainer.getEntityId().getId())), entityView -> {
             if (entityView != null) {
                 return processSave(ctx, sdId, relationType);
@@ -146,8 +138,7 @@ public class TbCreateRelationNode extends TbAbstractRelationActionNode<TbCreateR
         }, ctx.getDbCallbackExecutor());
     }
 
-    @NotNull
-    private ListenableFuture<Boolean> processEdge(@NotNull TbContext ctx, @NotNull EntityContainer entityContainer, @NotNull SearchDirectionIds sdId, String relationType) {
+    private ListenableFuture<Boolean> processEdge(TbContext ctx, EntityContainer entityContainer, SearchDirectionIds sdId, String relationType) {
         return Futures.transformAsync(ctx.getEdgeService().findEdgeByIdAsync(ctx.getTenantId(), new EdgeId(entityContainer.getEntityId().getId())), edge -> {
             if (edge != null) {
                 return processSave(ctx, sdId, relationType);
@@ -157,8 +148,7 @@ public class TbCreateRelationNode extends TbAbstractRelationActionNode<TbCreateR
         }, ctx.getDbCallbackExecutor());
     }
 
-    @NotNull
-    private ListenableFuture<Boolean> processDevice(@NotNull TbContext ctx, @NotNull EntityContainer entityContainer, @NotNull SearchDirectionIds sdId, String relationType) {
+    private ListenableFuture<Boolean> processDevice(TbContext ctx, EntityContainer entityContainer, SearchDirectionIds sdId, String relationType) {
         return Futures.transformAsync(ctx.getDeviceService().findDeviceByIdAsync(ctx.getTenantId(), new DeviceId(entityContainer.getEntityId().getId())), device -> {
             if (device != null) {
                 return processSave(ctx, sdId, relationType);
@@ -168,8 +158,7 @@ public class TbCreateRelationNode extends TbAbstractRelationActionNode<TbCreateR
         }, ctx.getDbCallbackExecutor());
     }
 
-    @NotNull
-    private ListenableFuture<Boolean> processAsset(@NotNull TbContext ctx, @NotNull EntityContainer entityContainer, @NotNull SearchDirectionIds sdId, String relationType) {
+    private ListenableFuture<Boolean> processAsset(TbContext ctx, EntityContainer entityContainer, SearchDirectionIds sdId, String relationType) {
         return Futures.transformAsync(ctx.getAssetService().findAssetByIdAsync(ctx.getTenantId(), new AssetId(entityContainer.getEntityId().getId())), asset -> {
             if (asset != null) {
                 return processSave(ctx, sdId, relationType);
@@ -179,8 +168,7 @@ public class TbCreateRelationNode extends TbAbstractRelationActionNode<TbCreateR
         }, ctx.getDbCallbackExecutor());
     }
 
-    @NotNull
-    private ListenableFuture<Boolean> processCustomer(@NotNull TbContext ctx, @NotNull EntityContainer entityContainer, @NotNull SearchDirectionIds sdId, String relationType) {
+    private ListenableFuture<Boolean> processCustomer(TbContext ctx, EntityContainer entityContainer, SearchDirectionIds sdId, String relationType) {
         return Futures.transformAsync(ctx.getCustomerService().findCustomerByIdAsync(ctx.getTenantId(), new CustomerId(entityContainer.getEntityId().getId())), customer -> {
             if (customer != null) {
                 return processSave(ctx, sdId, relationType);
@@ -190,8 +178,7 @@ public class TbCreateRelationNode extends TbAbstractRelationActionNode<TbCreateR
         }, ctx.getDbCallbackExecutor());
     }
 
-    @NotNull
-    private ListenableFuture<Boolean> processDashboard(@NotNull TbContext ctx, @NotNull EntityContainer entityContainer, @NotNull SearchDirectionIds sdId, String relationType) {
+    private ListenableFuture<Boolean> processDashboard(TbContext ctx, EntityContainer entityContainer, SearchDirectionIds sdId, String relationType) {
         return Futures.transformAsync(ctx.getDashboardService().findDashboardByIdAsync(ctx.getTenantId(), new DashboardId(entityContainer.getEntityId().getId())), dashboard -> {
             if (dashboard != null) {
                 return processSave(ctx, sdId, relationType);
@@ -201,8 +188,7 @@ public class TbCreateRelationNode extends TbAbstractRelationActionNode<TbCreateR
         }, ctx.getDbCallbackExecutor());
     }
 
-    @NotNull
-    private ListenableFuture<Boolean> processTenant(@NotNull TbContext ctx, @NotNull EntityContainer entityContainer, @NotNull SearchDirectionIds sdId, String relationType) {
+    private ListenableFuture<Boolean> processTenant(TbContext ctx, EntityContainer entityContainer, SearchDirectionIds sdId, String relationType) {
         return Futures.transformAsync(ctx.getTenantService().findTenantByIdAsync(ctx.getTenantId(), TenantId.fromUUID(entityContainer.getEntityId().getId())), tenant -> {
             if (tenant != null) {
                 return processSave(ctx, sdId, relationType);
@@ -212,8 +198,7 @@ public class TbCreateRelationNode extends TbAbstractRelationActionNode<TbCreateR
         }, ctx.getDbCallbackExecutor());
     }
 
-    @NotNull
-    private ListenableFuture<Boolean> processUser(@NotNull TbContext ctx, @NotNull EntityContainer entityContainer, @NotNull SearchDirectionIds sdId, String relationType) {
+    private ListenableFuture<Boolean> processUser(TbContext ctx, EntityContainer entityContainer, SearchDirectionIds sdId, String relationType) {
         return Futures.transformAsync(ctx.getUserService().findUserByIdAsync(ctx.getTenantId(), new UserId(entityContainer.getEntityId().getId())), user -> {
             if (user != null) {
                 return processSave(ctx, sdId, relationType);
@@ -223,7 +208,7 @@ public class TbCreateRelationNode extends TbAbstractRelationActionNode<TbCreateR
         }, ctx.getDbCallbackExecutor());
     }
 
-    private ListenableFuture<Boolean> processSave(@NotNull TbContext ctx, @NotNull SearchDirectionIds sdId, String relationType) {
+    private ListenableFuture<Boolean> processSave(TbContext ctx, SearchDirectionIds sdId, String relationType) {
         return ctx.getRelationService().saveRelationAsync(ctx.getTenantId(), new EntityRelation(sdId.getFromId(), sdId.getToId(), relationType, RelationTypeGroup.COMMON));
     }
 

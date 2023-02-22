@@ -16,7 +16,6 @@ import org.echoiot.server.common.data.id.RuleNodeId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.validation.Length;
 import org.echoiot.server.common.data.validation.NoXss;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @ApiModel
@@ -57,7 +56,7 @@ public class RuleChain extends SearchTextBasedWithAdditionalInfo<RuleChainId> im
         super(id);
     }
 
-    public RuleChain(@NotNull RuleChain ruleChain) {
+    public RuleChain(RuleChain ruleChain) {
         super(ruleChain);
         this.tenantId = ruleChain.getTenantId();
         this.name = ruleChain.getName();

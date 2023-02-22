@@ -10,7 +10,6 @@ import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.util.mapping.JsonStringType;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
-import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
 import java.util.Arrays;
@@ -74,7 +73,7 @@ public class OAuth2ClientRegistrationTemplateEntity extends BaseSqlEntity<OAuth2
     public OAuth2ClientRegistrationTemplateEntity() {
     }
 
-    public OAuth2ClientRegistrationTemplateEntity(@NotNull OAuth2ClientRegistrationTemplate clientRegistrationTemplate) {
+    public OAuth2ClientRegistrationTemplateEntity(OAuth2ClientRegistrationTemplate clientRegistrationTemplate) {
         if (clientRegistrationTemplate.getId() != null) {
             this.setUuid(clientRegistrationTemplate.getId().getId());
         }
@@ -109,10 +108,9 @@ public class OAuth2ClientRegistrationTemplateEntity extends BaseSqlEntity<OAuth2
         }
     }
 
-    @NotNull
     @Override
     public OAuth2ClientRegistrationTemplate toData() {
-        @NotNull OAuth2ClientRegistrationTemplate clientRegistrationTemplate = new OAuth2ClientRegistrationTemplate();
+        OAuth2ClientRegistrationTemplate clientRegistrationTemplate = new OAuth2ClientRegistrationTemplate();
         clientRegistrationTemplate.setId(new OAuth2ClientRegistrationTemplateId(id));
         clientRegistrationTemplate.setCreatedTime(createdTime);
         clientRegistrationTemplate.setAdditionalInfo(additionalInfo);

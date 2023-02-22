@@ -11,7 +11,6 @@ import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.id.DashboardId;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.EntityIdFactory;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -43,7 +42,7 @@ public class AssetProfileInfo extends EntityInfo {
         this.defaultDashboardId = defaultDashboardId != null ? new DashboardId(defaultDashboardId) : null;
     }
 
-    public AssetProfileInfo(@NotNull AssetProfile profile) {
+    public AssetProfileInfo(AssetProfile profile) {
         this(profile.getId(), profile.getName(), profile.getImage(), profile.getDefaultDashboardId());
     }
 

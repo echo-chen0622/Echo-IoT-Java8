@@ -14,7 +14,6 @@ import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.entitiy.entity.relation.TbEntityRelationService;
 import org.echoiot.server.service.security.model.SecurityUser;
 import org.echoiot.server.service.security.permission.Operation;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -30,7 +29,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class EntityRelationController extends BaseController {
 
-    @NotNull
     private final TbEntityRelationService tbEntityRelationService;
 
     public static final String TO_TYPE = "toType";
@@ -54,7 +52,7 @@ public class EntityRelationController extends BaseController {
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/relation", method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.OK)
-    public void saveRelation(@NotNull @ApiParam(value = "A JSON value representing the relation.", required = true)
+    public void saveRelation(@ApiParam(value = "A JSON value representing the relation.", required = true)
                              @RequestBody EntityRelation relation) throws EchoiotException {
         checkNotNull(relation);
         checkCanCreateRelation(relation.getFrom());
@@ -71,11 +69,11 @@ public class EntityRelationController extends BaseController {
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/relation", method = RequestMethod.DELETE, params = {FROM_ID, FROM_TYPE, RELATION_TYPE, TO_ID, TO_TYPE})
     @ResponseStatus(value = HttpStatus.OK)
-    public void deleteRelation(@NotNull @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @RequestParam(FROM_ID) String strFromId,
+    public void deleteRelation(@ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @RequestParam(FROM_ID) String strFromId,
                                @ApiParam(value = ControllerConstants.ENTITY_TYPE_PARAM_DESCRIPTION, required = true) @RequestParam(FROM_TYPE) String strFromType,
                                @ApiParam(value = ControllerConstants.RELATION_TYPE_PARAM_DESCRIPTION, required = true) @RequestParam(RELATION_TYPE) String strRelationType,
                                @ApiParam(value = ControllerConstants.RELATION_TYPE_GROUP_PARAM_DESCRIPTION) @RequestParam(value = "relationTypeGroup", required = false) String strRelationTypeGroup,
-                               @NotNull @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @RequestParam(TO_ID) String strToId,
+                               @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @RequestParam(TO_ID) String strToId,
                                @ApiParam(value = ControllerConstants.ENTITY_TYPE_PARAM_DESCRIPTION, required = true) @RequestParam(TO_TYPE) String strToType) throws EchoiotException {
         checkParameter(FROM_ID, strFromId);
         checkParameter(FROM_TYPE, strFromType);
@@ -88,7 +86,7 @@ public class EntityRelationController extends BaseController {
         checkCanCreateRelation(toId);
 
         RelationTypeGroup relationTypeGroup = parseRelationTypeGroup(strRelationTypeGroup, RelationTypeGroup.COMMON);
-        @NotNull EntityRelation relation = new EntityRelation(fromId, toId, strRelationType, relationTypeGroup);
+        EntityRelation relation = new EntityRelation(fromId, toId, strRelationType, relationTypeGroup);
         tbEntityRelationService.delete(getTenantId(), getCurrentUser().getCustomerId(), relation, getCurrentUser());
     }
 
@@ -98,7 +96,7 @@ public class EntityRelationController extends BaseController {
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN','TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/relations", method = RequestMethod.DELETE, params = {"entityId", "entityType"})
     @ResponseStatus(value = HttpStatus.OK)
-    public void deleteRelations(@NotNull @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @RequestParam("entityId") String strId,
+    public void deleteRelations(@ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @RequestParam("entityId") String strId,
                                 @ApiParam(value = ControllerConstants.ENTITY_TYPE_PARAM_DESCRIPTION, required = true) @RequestParam("entityType") String strType) throws EchoiotException {
         checkParameter("entityId", strId);
         checkParameter("entityType", strType);
@@ -113,11 +111,11 @@ public class EntityRelationController extends BaseController {
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/relation", method = RequestMethod.GET, params = {FROM_ID, FROM_TYPE, RELATION_TYPE, TO_ID, TO_TYPE})
     @ResponseBody
-    public EntityRelation getRelation(@NotNull @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @RequestParam(FROM_ID) String strFromId,
+    public EntityRelation getRelation(@ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @RequestParam(FROM_ID) String strFromId,
                                       @ApiParam(value = ControllerConstants.ENTITY_TYPE_PARAM_DESCRIPTION, required = true) @RequestParam(FROM_TYPE) String strFromType,
                                       @ApiParam(value = ControllerConstants.RELATION_TYPE_PARAM_DESCRIPTION, required = true) @RequestParam(RELATION_TYPE) String strRelationType,
                                       @ApiParam(value = ControllerConstants.RELATION_TYPE_GROUP_PARAM_DESCRIPTION) @RequestParam(value = "relationTypeGroup", required = false) String strRelationTypeGroup,
-                                      @NotNull @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @RequestParam(TO_ID) String strToId,
+                                      @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @RequestParam(TO_ID) String strToId,
                                       @ApiParam(value = ControllerConstants.ENTITY_TYPE_PARAM_DESCRIPTION, required = true) @RequestParam(TO_TYPE) String strToType) throws EchoiotException {
         try {
             checkParameter(FROM_ID, strFromId);
@@ -143,7 +141,7 @@ public class EntityRelationController extends BaseController {
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/relations", method = RequestMethod.GET, params = {FROM_ID, FROM_TYPE})
     @ResponseBody
-    public List<EntityRelation> findByFrom(@NotNull @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @RequestParam(FROM_ID) String strFromId,
+    public List<EntityRelation> findByFrom(@ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @RequestParam(FROM_ID) String strFromId,
                                            @ApiParam(value = ControllerConstants.ENTITY_TYPE_PARAM_DESCRIPTION, required = true) @RequestParam(FROM_TYPE) String strFromType,
                                            @ApiParam(value = ControllerConstants.RELATION_TYPE_GROUP_PARAM_DESCRIPTION)
                                            @RequestParam(value = "relationTypeGroup", required = false) String strRelationTypeGroup) throws EchoiotException {
@@ -166,7 +164,7 @@ public class EntityRelationController extends BaseController {
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/relations/info", method = RequestMethod.GET, params = {FROM_ID, FROM_TYPE})
     @ResponseBody
-    public List<EntityRelationInfo> findInfoByFrom(@NotNull @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @RequestParam(FROM_ID) String strFromId,
+    public List<EntityRelationInfo> findInfoByFrom(@ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @RequestParam(FROM_ID) String strFromId,
                                                    @ApiParam(value = ControllerConstants.ENTITY_TYPE_PARAM_DESCRIPTION, required = true) @RequestParam(FROM_TYPE) String strFromType,
                                                    @ApiParam(value = ControllerConstants.RELATION_TYPE_GROUP_PARAM_DESCRIPTION)
                                                    @RequestParam(value = "relationTypeGroup", required = false) String strRelationTypeGroup) throws EchoiotException {
@@ -189,7 +187,7 @@ public class EntityRelationController extends BaseController {
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/relations", method = RequestMethod.GET, params = {FROM_ID, FROM_TYPE, RELATION_TYPE})
     @ResponseBody
-    public List<EntityRelation> findByFrom(@NotNull @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @RequestParam(FROM_ID) String strFromId,
+    public List<EntityRelation> findByFrom(@ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @RequestParam(FROM_ID) String strFromId,
                                            @ApiParam(value = ControllerConstants.ENTITY_TYPE_PARAM_DESCRIPTION, required = true) @RequestParam(FROM_TYPE) String strFromType,
                                            @ApiParam(value = ControllerConstants.RELATION_TYPE_PARAM_DESCRIPTION, required = true) @RequestParam(RELATION_TYPE) String strRelationType,
                                            @ApiParam(value = ControllerConstants.RELATION_TYPE_GROUP_PARAM_DESCRIPTION)
@@ -214,7 +212,7 @@ public class EntityRelationController extends BaseController {
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/relations", method = RequestMethod.GET, params = {TO_ID, TO_TYPE})
     @ResponseBody
-    public List<EntityRelation> findByTo(@NotNull @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @RequestParam(TO_ID) String strToId,
+    public List<EntityRelation> findByTo(@ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @RequestParam(TO_ID) String strToId,
                                          @ApiParam(value = ControllerConstants.ENTITY_TYPE_PARAM_DESCRIPTION, required = true) @RequestParam(TO_TYPE) String strToType,
                                          @ApiParam(value = ControllerConstants.RELATION_TYPE_GROUP_PARAM_DESCRIPTION)
                                          @RequestParam(value = "relationTypeGroup", required = false) String strRelationTypeGroup) throws EchoiotException {
@@ -237,7 +235,7 @@ public class EntityRelationController extends BaseController {
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/relations/info", method = RequestMethod.GET, params = {TO_ID, TO_TYPE})
     @ResponseBody
-    public List<EntityRelationInfo> findInfoByTo(@NotNull @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @RequestParam(TO_ID) String strToId,
+    public List<EntityRelationInfo> findInfoByTo(@ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @RequestParam(TO_ID) String strToId,
                                                  @ApiParam(value = ControllerConstants.ENTITY_TYPE_PARAM_DESCRIPTION, required = true) @RequestParam(TO_TYPE) String strToType,
                                                  @ApiParam(value = ControllerConstants.RELATION_TYPE_GROUP_PARAM_DESCRIPTION)
                                                  @RequestParam(value = "relationTypeGroup", required = false) String strRelationTypeGroup) throws EchoiotException {
@@ -260,7 +258,7 @@ public class EntityRelationController extends BaseController {
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/relations", method = RequestMethod.GET, params = {TO_ID, TO_TYPE, RELATION_TYPE})
     @ResponseBody
-    public List<EntityRelation> findByTo(@NotNull @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @RequestParam(TO_ID) String strToId,
+    public List<EntityRelation> findByTo(@ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @RequestParam(TO_ID) String strToId,
                                          @ApiParam(value = ControllerConstants.ENTITY_TYPE_PARAM_DESCRIPTION, required = true) @RequestParam(TO_TYPE) String strToType,
                                          @ApiParam(value = ControllerConstants.RELATION_TYPE_PARAM_DESCRIPTION, required = true) @RequestParam(RELATION_TYPE) String strRelationType,
                                          @ApiParam(value = ControllerConstants.RELATION_TYPE_GROUP_PARAM_DESCRIPTION)
@@ -285,7 +283,7 @@ public class EntityRelationController extends BaseController {
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/relations", method = RequestMethod.POST)
     @ResponseBody
-    public List<EntityRelation> findByQuery(@NotNull @ApiParam(value = "A JSON value representing the entity relations query object.", required = true)
+    public List<EntityRelation> findByQuery(@ApiParam(value = "A JSON value representing the entity relations query object.", required = true)
                                             @RequestBody EntityRelationsQuery query) throws EchoiotException {
         checkNotNull(query);
         checkNotNull(query.getParameters());
@@ -305,7 +303,7 @@ public class EntityRelationController extends BaseController {
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/relations/info", method = RequestMethod.POST)
     @ResponseBody
-    public List<EntityRelationInfo> findInfoByQuery(@NotNull @ApiParam(value = "A JSON value representing the entity relations query object.", required = true)
+    public List<EntityRelationInfo> findInfoByQuery(@ApiParam(value = "A JSON value representing the entity relations query object.", required = true)
                                                     @RequestBody EntityRelationsQuery query) throws EchoiotException {
         checkNotNull(query);
         checkNotNull(query.getParameters());
@@ -318,7 +316,7 @@ public class EntityRelationController extends BaseController {
         }
     }
 
-    private void checkCanCreateRelation(@NotNull EntityId entityId) throws EchoiotException {
+    private void checkCanCreateRelation(EntityId entityId) throws EchoiotException {
         SecurityUser currentUser = getCurrentUser();
         var isTenantAdminAndRelateToSelf = currentUser.isTenantAdmin() && currentUser.getTenantId().equals(entityId);
         if (!isTenantAdminAndRelateToSelf) {
@@ -326,8 +324,7 @@ public class EntityRelationController extends BaseController {
         }
     }
 
-    @NotNull
-    private <T extends EntityRelation> List<T> filterRelationsByReadPermission(@NotNull List<T> relationsByQuery) {
+    private <T extends EntityRelation> List<T> filterRelationsByReadPermission(List<T> relationsByQuery) {
         return relationsByQuery.stream().filter(relationByQuery -> {
             try {
                 checkEntityId(relationByQuery.getTo(), Operation.READ);

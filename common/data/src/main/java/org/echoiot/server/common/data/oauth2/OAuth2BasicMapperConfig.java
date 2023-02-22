@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.echoiot.server.common.data.validation.Length;
-import org.jetbrains.annotations.NotNull;
 
 @Builder(toBuilder = true)
 @EqualsAndHashCode
@@ -15,33 +14,26 @@ import org.jetbrains.annotations.NotNull;
 @ToString
 @ApiModel
 public class OAuth2BasicMapperConfig {
-    @NotNull
     @Length(fieldName = "emailAttributeKey", max = 31)
     @ApiModelProperty(value = "Email attribute key of OAuth2 principal attributes. " +
             "Must be specified for BASIC mapper type and cannot be specified for GITHUB type")
     private final String emailAttributeKey;
-    @NotNull
     @Length(fieldName = "firstNameAttributeKey", max = 31)
     @ApiModelProperty(value = "First name attribute key")
     private final String firstNameAttributeKey;
-    @NotNull
     @Length(fieldName = "lastNameAttributeKey", max = 31)
     @ApiModelProperty(value = "Last name attribute key")
     private final String lastNameAttributeKey;
-    @NotNull
     @ApiModelProperty(value = "Tenant naming strategy. For DOMAIN type, domain for tenant name will be taken from the email (substring before '@')", required = true)
     private final TenantNameStrategyType tenantNameStrategy;
-    @NotNull
     @Length(fieldName = "tenantNamePattern")
     @ApiModelProperty(value = "Tenant name pattern for CUSTOM naming strategy. " +
             "OAuth2 attributes in the pattern can be used by enclosing attribute key in '%{' and '}'", example = "%{email}")
     private final String tenantNamePattern;
-    @NotNull
     @Length(fieldName = "customerNamePattern")
     @ApiModelProperty(value = "Customer name pattern. When creating a user on the first OAuth2 log in, if specified, " +
             "customer name will be used to create or find existing customer in the platform and assign customerId to the user")
     private final String customerNamePattern;
-    @NotNull
     @Length(fieldName = "defaultDashboardName")
     @ApiModelProperty(value = "Name of the tenant's dashboard to set as default dashboard for newly created user")
     private final String defaultDashboardName;

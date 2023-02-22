@@ -1,7 +1,6 @@
 package org.echoiot.server.common.data.relation;
 
 import io.swagger.annotations.ApiModelProperty;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -17,7 +16,7 @@ public class EntityRelationInfo extends EntityRelation {
         super();
     }
 
-    public EntityRelationInfo(@NotNull EntityRelation entityRelation) {
+    public EntityRelationInfo(EntityRelation entityRelation) {
         super(entityRelation);
     }
 
@@ -45,7 +44,7 @@ public class EntityRelationInfo extends EntityRelation {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
 
-        @NotNull EntityRelationInfo that = (EntityRelationInfo) o;
+        EntityRelationInfo that = (EntityRelationInfo) o;
 
         return Objects.equals(toName, that.toName);
 

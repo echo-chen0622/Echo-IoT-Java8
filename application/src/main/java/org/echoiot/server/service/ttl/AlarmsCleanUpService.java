@@ -18,7 +18,6 @@ import org.echoiot.server.dao.tenant.TenantService;
 import org.echoiot.server.queue.discovery.PartitionService;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.action.EntityActionService;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -36,25 +35,18 @@ public class AlarmsCleanUpService {
     @Value("${sql.ttl.alarms.removal_batch_size}")
     private Integer removalBatchSize;
 
-    @NotNull
     private final TenantService tenantService;
-    @NotNull
     private final AlarmDao alarmDao;
-    @NotNull
     private final AlarmService alarmService;
-    @NotNull
     private final RelationService relationService;
-    @NotNull
     private final EntityActionService entityActionService;
-    @NotNull
     private final PartitionService partitionService;
-    @NotNull
     private final TbTenantProfileCache tenantProfileCache;
 
     @Scheduled(initialDelayString = "#{T(org.apache.commons.lang3.RandomUtils).nextLong(0, ${sql.ttl.alarms.checking_interval})}", fixedDelayString = "${sql.ttl.alarms.checking_interval}")
     public void cleanUp() {
         PageLink tenantsBatchRequest = new PageLink(10_000, 0);
-        @NotNull PageLink removalBatchRequest = new PageLink(removalBatchSize, 0 );
+        PageLink removalBatchRequest = new PageLink(removalBatchSize, 0 );
         PageData<TenantId> tenantsIds;
         do {
             tenantsIds = tenantService.findTenantsIds(tenantsBatchRequest);
@@ -63,7 +55,7 @@ public class AlarmsCleanUpService {
                     continue;
                 }
 
-                @NotNull Optional<DefaultTenantProfileConfiguration> tenantProfileConfiguration = tenantProfileCache.get(tenantId).getProfileConfiguration();
+                Optional<DefaultTenantProfileConfiguration> tenantProfileConfiguration = tenantProfileCache.get(tenantId).getProfileConfiguration();
                 if (tenantProfileConfiguration.isEmpty() || tenantProfileConfiguration.get().getAlarmsTtlDays() == 0) {
                     continue;
                 }

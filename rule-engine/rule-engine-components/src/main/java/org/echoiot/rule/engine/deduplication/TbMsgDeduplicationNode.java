@@ -11,7 +11,6 @@ import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.data.util.TbPair;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.TbMsgMetaData;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -41,7 +40,6 @@ public class TbMsgDeduplicationNode implements TbNode {
 
     private TbMsgDeduplicationNodeConfiguration config;
 
-    @NotNull
     private final Map<EntityId, DeduplicationData> deduplicationMap;
     private long deduplicationInterval;
 
@@ -50,13 +48,13 @@ public class TbMsgDeduplicationNode implements TbNode {
     }
 
     @Override
-    public void init(TbContext ctx, @NotNull TbNodeConfiguration configuration) throws TbNodeException {
+    public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
         this.config = TbNodeUtils.convert(configuration, TbMsgDeduplicationNodeConfiguration.class);
         this.deduplicationInterval = TimeUnit.SECONDS.toMillis(config.getInterval());
     }
 
     @Override
-    public void onMsg(@NotNull TbContext ctx, @NotNull TbMsg msg) throws ExecutionException, InterruptedException, TbNodeException {
+    public void onMsg(TbContext ctx, TbMsg msg) throws ExecutionException, InterruptedException, TbNodeException {
         if (TB_MSG_DEDUPLICATION_TIMEOUT_MSG.equals(msg.getType())) {
             processDeduplication(ctx, msg.getOriginator());
         } else {
@@ -69,9 +67,9 @@ public class TbMsgDeduplicationNode implements TbNode {
         deduplicationMap.clear();
     }
 
-    private void processOnRegularMsg(@NotNull TbContext ctx, @NotNull TbMsg msg) {
+    private void processOnRegularMsg(TbContext ctx, TbMsg msg) {
         EntityId id = msg.getOriginator();
-        @NotNull DeduplicationData deduplicationMsgs = deduplicationMap.computeIfAbsent(id, k -> new DeduplicationData());
+        DeduplicationData deduplicationMsgs = deduplicationMap.computeIfAbsent(id, k -> new DeduplicationData());
         if (deduplicationMsgs.size() < config.getMaxPendingMsgs()) {
             log.trace("[{}][{}] Adding msg: [{}][{}] to the pending msgs map ...", ctx.getSelfId(), id, msg.getId(), msg.getMetaDataTs());
             deduplicationMsgs.add(msg);
@@ -83,7 +81,7 @@ public class TbMsgDeduplicationNode implements TbNode {
         }
     }
 
-    private void processDeduplication(@NotNull TbContext ctx, EntityId deduplicationId) {
+    private void processDeduplication(TbContext ctx, EntityId deduplicationId) {
         DeduplicationData data = deduplicationMap.get(deduplicationId);
         if (data == null) {
             return;
@@ -94,14 +92,14 @@ public class TbMsgDeduplicationNode implements TbNode {
         }
         long deduplicationTimeoutMs = System.currentTimeMillis();
         try {
-            @NotNull List<TbMsg> deduplicationResults = new ArrayList<>();
+            List<TbMsg> deduplicationResults = new ArrayList<>();
             List<TbMsg> msgList = data.getMsgList();
-            @NotNull Optional<TbPair<Long, Long>> packBoundsOpt = findValidPack(msgList, deduplicationTimeoutMs);
+            Optional<TbPair<Long, Long>> packBoundsOpt = findValidPack(msgList, deduplicationTimeoutMs);
             while (packBoundsOpt.isPresent()) {
-                @NotNull TbPair<Long, Long> packBounds = packBoundsOpt.get();
+                TbPair<Long, Long> packBounds = packBoundsOpt.get();
                 if (DeduplicationStrategy.ALL.equals(config.getStrategy())) {
-                    @NotNull List<TbMsg> pack = new ArrayList<>();
-                    for (@NotNull Iterator<TbMsg> iterator = msgList.iterator(); iterator.hasNext(); ) {
+                    List<TbMsg> pack = new ArrayList<>();
+                    for (Iterator<TbMsg> iterator = msgList.iterator(); iterator.hasNext(); ) {
                         TbMsg msg = iterator.next();
                         long msgTs = msg.getMetaDataTs();
                         if (msgTs >= packBounds.getFirst() && msgTs < packBounds.getSecond()) {
@@ -118,7 +116,7 @@ public class TbMsgDeduplicationNode implements TbNode {
                 } else {
                     @Nullable TbMsg resultMsg = null;
                     boolean searchMin = DeduplicationStrategy.FIRST.equals(config.getStrategy());
-                    for (@NotNull Iterator<TbMsg> iterator = msgList.iterator(); iterator.hasNext(); ) {
+                    for (Iterator<TbMsg> iterator = msgList.iterator(); iterator.hasNext(); ) {
                         TbMsg msg = iterator.next();
                         long msgTs = msg.getMetaDataTs();
                         if (msgTs >= packBounds.getFirst() && msgTs < packBounds.getSecond()) {
@@ -142,16 +140,15 @@ public class TbMsgDeduplicationNode implements TbNode {
         }
     }
 
-    private void scheduleTickMsg(@NotNull TbContext ctx, EntityId deduplicationId, @NotNull DeduplicationData data) {
+    private void scheduleTickMsg(TbContext ctx, EntityId deduplicationId, DeduplicationData data) {
         if (!data.isTickScheduled()) {
             scheduleTickMsg(ctx, deduplicationId);
             data.setTickScheduled(true);
         }
     }
 
-    @NotNull
-    private Optional<TbPair<Long, Long>> findValidPack(@NotNull List<TbMsg> msgs, long deduplicationTimeoutMs) {
-        @NotNull Optional<TbMsg> min = msgs.stream().min(Comparator.comparing(TbMsg::getMetaDataTs));
+    private Optional<TbPair<Long, Long>> findValidPack(List<TbMsg> msgs, long deduplicationTimeoutMs) {
+        Optional<TbMsg> min = msgs.stream().min(Comparator.comparing(TbMsg::getMetaDataTs));
         return min.map(minTsMsg -> {
             long packStartTs = minTsMsg.getMetaDataTs();
             long packEndTs = packStartTs + deduplicationInterval;
@@ -162,7 +159,7 @@ public class TbMsgDeduplicationNode implements TbNode {
         });
     }
 
-    private void enqueueForTellNextWithRetry(@NotNull TbContext ctx, @NotNull TbMsg msg, int retryAttempt) {
+    private void enqueueForTellNextWithRetry(TbContext ctx, TbMsg msg, int retryAttempt) {
         if (config.getMaxRetries() > retryAttempt) {
             ctx.enqueueForTellNext(msg, TbRelationTypes.SUCCESS,
                     () -> {
@@ -177,12 +174,12 @@ public class TbMsgDeduplicationNode implements TbNode {
         }
     }
 
-    private void scheduleTickMsg(@NotNull TbContext ctx, EntityId deduplicationId) {
+    private void scheduleTickMsg(TbContext ctx, EntityId deduplicationId) {
         ctx.tellSelf(ctx.newMsg(null, TB_MSG_DEDUPLICATION_TIMEOUT_MSG, deduplicationId, EMPTY_META_DATA, EMPTY_DATA), deduplicationInterval + 1);
     }
 
     @Nullable
-    private String getMergedData(@NotNull List<TbMsg> msgs) {
+    private String getMergedData(List<TbMsg> msgs) {
         ArrayNode mergedData = JacksonUtil.OBJECT_MAPPER.createArrayNode();
         msgs.forEach(msg -> {
             ObjectNode msgNode = JacksonUtil.newObjectNode();
@@ -193,9 +190,8 @@ public class TbMsgDeduplicationNode implements TbNode {
         return JacksonUtil.toString(mergedData);
     }
 
-    @NotNull
     private TbMsgMetaData getMetadata() {
-        @NotNull TbMsgMetaData metaData = new TbMsgMetaData();
+        TbMsgMetaData metaData = new TbMsgMetaData();
         metaData.putValue("ts", String.valueOf(System.currentTimeMillis()));
         return metaData;
     }

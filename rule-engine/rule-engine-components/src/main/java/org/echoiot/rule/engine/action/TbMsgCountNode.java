@@ -9,7 +9,6 @@ import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.TbMsgMetaData;
 import org.echoiot.server.common.msg.session.SessionMsgType;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -33,7 +32,6 @@ public class TbMsgCountNode implements TbNode {
 
     private static final String TB_MSG_COUNT_NODE_MSG = "TbMsgCountNodeMsg";
 
-    @NotNull
     private AtomicLong messagesProcessed = new AtomicLong(0);
     private final Gson gson = new Gson();
     private UUID nextTickId;
@@ -42,7 +40,7 @@ public class TbMsgCountNode implements TbNode {
     private long lastScheduledTs;
 
     @Override
-    public void init(@NotNull TbContext ctx, @NotNull TbNodeConfiguration configuration) throws TbNodeException {
+    public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
         TbMsgCountNodeConfiguration config = TbNodeUtils.convert(configuration, TbMsgCountNodeConfiguration.class);
         this.delay = TimeUnit.SECONDS.toMillis(config.getInterval());
         this.telemetryPrefix = config.getTelemetryPrefix();
@@ -51,17 +49,17 @@ public class TbMsgCountNode implements TbNode {
     }
 
     @Override
-    public void onMsg(@NotNull TbContext ctx, @NotNull TbMsg msg) {
+    public void onMsg(TbContext ctx, TbMsg msg) {
         if (msg.getType().equals(TB_MSG_COUNT_NODE_MSG) && msg.getId().equals(nextTickId)) {
-            @NotNull JsonObject telemetryJson = new JsonObject();
+            JsonObject telemetryJson = new JsonObject();
             telemetryJson.addProperty(this.telemetryPrefix + "_" + ctx.getServiceId(), messagesProcessed.longValue());
 
             messagesProcessed = new AtomicLong(0);
 
-            @NotNull TbMsgMetaData metaData = new TbMsgMetaData();
+            TbMsgMetaData metaData = new TbMsgMetaData();
             metaData.putValue("delta", Long.toString(System.currentTimeMillis() - lastScheduledTs + delay));
 
-            @NotNull TbMsg tbMsg = TbMsg.newMsg(msg.getQueueName(), SessionMsgType.POST_TELEMETRY_REQUEST.name(), ctx.getTenantId(), msg.getCustomerId(), metaData, gson.toJson(telemetryJson));
+            TbMsg tbMsg = TbMsg.newMsg(msg.getQueueName(), SessionMsgType.POST_TELEMETRY_REQUEST.name(), ctx.getTenantId(), msg.getCustomerId(), metaData, gson.toJson(telemetryJson));
             ctx.enqueueForTellNext(tbMsg, SUCCESS);
             scheduleTickMsg(ctx, tbMsg);
         } else {
@@ -70,7 +68,7 @@ public class TbMsgCountNode implements TbNode {
         }
     }
 
-    private void scheduleTickMsg(@NotNull TbContext ctx, @Nullable TbMsg msg) {
+    private void scheduleTickMsg(TbContext ctx, @Nullable TbMsg msg) {
         long curTs = System.currentTimeMillis();
         if (lastScheduledTs == 0L) {
             lastScheduledTs = curTs;

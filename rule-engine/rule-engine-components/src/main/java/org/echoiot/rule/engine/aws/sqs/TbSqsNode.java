@@ -16,7 +16,6 @@ import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.TbMsgMetaData;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -50,10 +49,10 @@ public class TbSqsNode implements TbNode {
     private AmazonSQS sqsClient;
 
     @Override
-    public void init(TbContext ctx, @NotNull TbNodeConfiguration configuration) throws TbNodeException {
+    public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
         this.config = TbNodeUtils.convert(configuration, TbSqsNodeConfiguration.class);
-        @NotNull AWSCredentials awsCredentials = new BasicAWSCredentials(this.config.getAccessKeyId(), this.config.getSecretAccessKey());
-        @NotNull AWSStaticCredentialsProvider credProvider = new AWSStaticCredentialsProvider(awsCredentials);
+        AWSCredentials awsCredentials = new BasicAWSCredentials(this.config.getAccessKeyId(), this.config.getSecretAccessKey());
+        AWSStaticCredentialsProvider credProvider = new AWSStaticCredentialsProvider(awsCredentials);
         try {
             this.sqsClient = AmazonSQSClientBuilder.standard()
                     .withCredentials(credProvider)
@@ -65,22 +64,22 @@ public class TbSqsNode implements TbNode {
     }
 
     @Override
-    public void onMsg(@NotNull TbContext ctx, @NotNull TbMsg msg) {
+    public void onMsg(TbContext ctx, TbMsg msg) {
         withCallback(publishMessageAsync(ctx, msg),
                 ctx::tellSuccess,
                 t -> ctx.tellFailure(processException(ctx, msg, t), t));
     }
 
-    private ListenableFuture<TbMsg> publishMessageAsync(@NotNull TbContext ctx, @NotNull TbMsg msg) {
+    private ListenableFuture<TbMsg> publishMessageAsync(TbContext ctx, TbMsg msg) {
         return ctx.getExternalCallExecutor().executeAsync(() -> publishMessage(ctx, msg));
     }
 
-    private TbMsg publishMessage(@NotNull TbContext ctx, @NotNull TbMsg msg) {
+    private TbMsg publishMessage(TbContext ctx, TbMsg msg) {
         String queueUrl = TbNodeUtils.processPattern(this.config.getQueueUrlPattern(), msg);
-        @NotNull SendMessageRequest sendMsgRequest =  new SendMessageRequest();
+        SendMessageRequest sendMsgRequest =  new SendMessageRequest();
         sendMsgRequest.withQueueUrl(queueUrl);
         sendMsgRequest.withMessageBody(msg.getData());
-        @NotNull Map<String, MessageAttributeValue> messageAttributes = new HashMap<>();
+        Map<String, MessageAttributeValue> messageAttributes = new HashMap<>();
         this.config.getMessageAttributes().forEach((k,v) -> {
             String name = TbNodeUtils.processPattern(k, msg);
             String val = TbNodeUtils.processPattern(v, msg);
@@ -97,8 +96,8 @@ public class TbSqsNode implements TbNode {
         return processSendMessageResult(ctx, msg, result);
     }
 
-    private TbMsg processSendMessageResult(@NotNull TbContext ctx, @NotNull TbMsg origMsg, @NotNull SendMessageResult result) {
-        @NotNull TbMsgMetaData metaData = origMsg.getMetaData().copy();
+    private TbMsg processSendMessageResult(TbContext ctx, TbMsg origMsg, SendMessageResult result) {
+        TbMsgMetaData metaData = origMsg.getMetaData().copy();
         metaData.putValue(MESSAGE_ID, result.getMessageId());
         metaData.putValue(REQUEST_ID, result.getSdkResponseMetadata().getRequestId());
         if (!StringUtils.isEmpty(result.getMD5OfMessageBody())) {
@@ -113,8 +112,8 @@ public class TbSqsNode implements TbNode {
         return ctx.transformMsg(origMsg, origMsg.getType(), origMsg.getOriginator(), metaData, origMsg.getData());
     }
 
-    private TbMsg processException(@NotNull TbContext ctx, @NotNull TbMsg origMsg, @NotNull Throwable t) {
-        @NotNull TbMsgMetaData metaData = origMsg.getMetaData().copy();
+    private TbMsg processException(TbContext ctx, TbMsg origMsg, Throwable t) {
+        TbMsgMetaData metaData = origMsg.getMetaData().copy();
         metaData.putValue(ERROR, t.getClass() + ": " + t.getMessage());
         return ctx.transformMsg(origMsg, origMsg.getType(), origMsg.getOriginator(), metaData, origMsg.getData());
     }

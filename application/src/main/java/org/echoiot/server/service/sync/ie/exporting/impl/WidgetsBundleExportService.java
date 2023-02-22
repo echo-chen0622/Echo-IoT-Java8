@@ -9,7 +9,6 @@ import org.echoiot.server.common.data.widget.WidgetsBundle;
 import org.echoiot.server.dao.widget.WidgetTypeService;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.sync.vc.data.EntitiesExportCtx;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,11 +19,10 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class WidgetsBundleExportService extends BaseEntityExportService<WidgetsBundleId, WidgetsBundle, WidgetsBundleExportData> {
 
-    @NotNull
     private final WidgetTypeService widgetTypeService;
 
     @Override
-    protected void setRelatedEntities(@NotNull EntitiesExportCtx<?> ctx, @NotNull WidgetsBundle widgetsBundle, @NotNull WidgetsBundleExportData exportData) {
+    protected void setRelatedEntities(EntitiesExportCtx<?> ctx, WidgetsBundle widgetsBundle, WidgetsBundleExportData exportData) {
         if (widgetsBundle.getTenantId() == null || widgetsBundle.getTenantId().isNullUid()) {
             throw new IllegalArgumentException("Export of system Widget Bundles is not allowed");
         }
@@ -33,13 +31,11 @@ public class WidgetsBundleExportService extends BaseEntityExportService<WidgetsB
         exportData.setWidgets(widgets);
     }
 
-    @NotNull
     @Override
     protected WidgetsBundleExportData newExportData() {
         return new WidgetsBundleExportData();
     }
 
-    @NotNull
     @Override
     public Set<EntityType> getSupportedEntityTypes() {
         return Set.of(EntityType.WIDGETS_BUNDLE);

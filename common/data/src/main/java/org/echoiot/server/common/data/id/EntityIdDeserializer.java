@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
@@ -15,7 +14,7 @@ import java.io.IOException;
 public class EntityIdDeserializer extends JsonDeserializer<EntityId> {
 
     @Override
-    public EntityId deserialize(@NotNull JsonParser jsonParser, DeserializationContext ctx) throws IOException {
+    public EntityId deserialize(JsonParser jsonParser, DeserializationContext ctx) throws IOException {
         ObjectCodec oc = jsonParser.getCodec();
         ObjectNode node = oc.readTree(jsonParser);
         if (node.has("entityType") && node.has("id")) {

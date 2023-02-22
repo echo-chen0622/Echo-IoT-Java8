@@ -3,7 +3,7 @@ package org.echoiot.server.cache;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.cache.Cache;
 
@@ -11,7 +11,6 @@ import org.springframework.cache.Cache;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class SimpleTbCacheValueWrapper<T> implements TbCacheValueWrapper<T> {
 
-    @NotNull
     private final T value;
 
     @Override
@@ -19,16 +18,17 @@ public class SimpleTbCacheValueWrapper<T> implements TbCacheValueWrapper<T> {
         return value;
     }
 
-    @NotNull
+    @Contract(" -> new")
     public static <T> SimpleTbCacheValueWrapper<T> empty() {
         return new SimpleTbCacheValueWrapper<>(null);
     }
 
-    @NotNull
+    @Contract("_ -> new")
     public static <T> SimpleTbCacheValueWrapper<T> wrap(T value) {
         return new SimpleTbCacheValueWrapper<>(value);
     }
 
+    @Contract("null -> null; !null -> new")
     @SuppressWarnings("unchecked")
     public static <T> SimpleTbCacheValueWrapper<T> wrap(@Nullable Cache.ValueWrapper source) {
         return source == null ? null : new SimpleTbCacheValueWrapper<>((T) source.get());

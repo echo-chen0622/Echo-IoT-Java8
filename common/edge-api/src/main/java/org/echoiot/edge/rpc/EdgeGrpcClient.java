@@ -10,7 +10,6 @@ import org.echoiot.edge.exception.EdgeConnectionException;
 import org.echoiot.server.common.data.ResourceUtils;
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.gen.edge.v1.*;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -45,15 +44,15 @@ public class EdgeGrpcClient implements EdgeRpcClient {
     @Override
     public void connect(String edgeKey,
                         String edgeSecret,
-                        @NotNull Consumer<UplinkResponseMsg> onUplinkResponse,
-                        @NotNull Consumer<EdgeConfiguration> onEdgeUpdate,
-                        @NotNull Consumer<DownlinkMsg> onDownlink,
-                        @NotNull Consumer<Exception> onError) {
-        @NotNull NettyChannelBuilder builder = NettyChannelBuilder.forAddress(rpcHost, rpcPort)
+                        Consumer<UplinkResponseMsg> onUplinkResponse,
+                        Consumer<EdgeConfiguration> onEdgeUpdate,
+                        Consumer<DownlinkMsg> onDownlink,
+                        Consumer<Exception> onError) {
+        NettyChannelBuilder builder = NettyChannelBuilder.forAddress(rpcHost, rpcPort)
                                                                   .keepAliveTime(keepAliveTimeSec, TimeUnit.SECONDS);
         if (sslEnabled) {
             try {
-                @NotNull SslContextBuilder sslContextBuilder = GrpcSslContexts.forClient();
+                SslContextBuilder sslContextBuilder = GrpcSslContexts.forClient();
                 if (StringUtils.isNotEmpty(certResource)) {
                     sslContextBuilder.trustManager(ResourceUtils.getInputStream(this, certResource));
                 }
@@ -79,17 +78,16 @@ public class EdgeGrpcClient implements EdgeRpcClient {
                 .build());
     }
 
-    @NotNull
     private StreamObserver<ResponseMsg> initOutputStream(String edgeKey,
-                                                         @NotNull Consumer<UplinkResponseMsg> onUplinkResponse,
-                                                         @NotNull Consumer<EdgeConfiguration> onEdgeUpdate,
-                                                         @NotNull Consumer<DownlinkMsg> onDownlink,
-                                                         @NotNull Consumer<Exception> onError) {
+                                                         Consumer<UplinkResponseMsg> onUplinkResponse,
+                                                         Consumer<EdgeConfiguration> onEdgeUpdate,
+                                                         Consumer<DownlinkMsg> onDownlink,
+                                                         Consumer<Exception> onError) {
         return new StreamObserver<>() {
             @Override
-            public void onNext(@NotNull ResponseMsg responseMsg) {
+            public void onNext(ResponseMsg responseMsg) {
                 if (responseMsg.hasConnectResponseMsg()) {
-                    @NotNull ConnectResponseMsg connectResponseMsg = responseMsg.getConnectResponseMsg();
+                    ConnectResponseMsg connectResponseMsg = responseMsg.getConnectResponseMsg();
                     if (connectResponseMsg.getResponseCode().equals(ConnectResponseCode.ACCEPTED)) {
                         log.info("[{}] Configuration received: {}", edgeKey, connectResponseMsg.getConfiguration());
                         onEdgeUpdate.accept(connectResponseMsg.getConfiguration());
@@ -188,7 +186,7 @@ public class EdgeGrpcClient implements EdgeRpcClient {
     public void sendSyncRequestMsg(boolean syncRequired, boolean fullSync) {
         uplinkMsgLock.lock();
         try {
-            @NotNull SyncRequestMsg syncRequestMsg = SyncRequestMsg.newBuilder()
+            SyncRequestMsg syncRequestMsg = SyncRequestMsg.newBuilder()
                                                                    .setSyncRequired(syncRequired)
                                                                    .setFullSync(fullSync)
                                                                    .build();

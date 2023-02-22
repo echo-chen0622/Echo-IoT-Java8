@@ -5,7 +5,6 @@ import com.google.protobuf.util.JsonFormat;
 import org.echoiot.server.gen.js.JsInvokeProtos;
 import org.echoiot.server.queue.common.TbProtoQueueMsg;
 import org.echoiot.server.queue.kafka.TbKafkaEncoder;
-import org.jetbrains.annotations.NotNull;
 
 import java.nio.charset.StandardCharsets;
 
@@ -14,7 +13,7 @@ import java.nio.charset.StandardCharsets;
  */
 public class RemoteJsRequestEncoder implements TbKafkaEncoder<TbProtoQueueMsg<JsInvokeProtos.RemoteJsRequest>> {
     @Override
-    public byte[] encode(@NotNull TbProtoQueueMsg<JsInvokeProtos.RemoteJsRequest> value) {
+    public byte[] encode(TbProtoQueueMsg<JsInvokeProtos.RemoteJsRequest> value) {
         try {
             return JsonFormat.printer().print(value.getValue()).getBytes(StandardCharsets.UTF_8);
         } catch (InvalidProtocolBufferException e) {

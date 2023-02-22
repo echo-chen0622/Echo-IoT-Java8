@@ -9,7 +9,6 @@ import lombok.ToString;
 import org.echoiot.server.common.data.SearchTextBased;
 import org.echoiot.server.common.data.id.ComponentDescriptorId;
 import org.echoiot.server.common.data.validation.Length;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -46,7 +45,7 @@ public class ComponentDescriptor extends SearchTextBased<ComponentDescriptorId> 
         super(id);
     }
 
-    public ComponentDescriptor(@NotNull ComponentDescriptor plugin) {
+    public ComponentDescriptor(ComponentDescriptor plugin) {
         super(plugin);
         this.type = plugin.getType();
         this.scope = plugin.getScope();
@@ -81,7 +80,7 @@ public class ComponentDescriptor extends SearchTextBased<ComponentDescriptorId> 
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        @NotNull ComponentDescriptor that = (ComponentDescriptor) o;
+        ComponentDescriptor that = (ComponentDescriptor) o;
 
         if (type != that.type) return false;
         if (scope != that.scope) return false;

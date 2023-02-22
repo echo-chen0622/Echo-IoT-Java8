@@ -10,7 +10,6 @@ import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.dao.AbstractJpaDaoTest;
 import org.echoiot.server.dao.component.ComponentDescriptorDao;
 import org.echoiot.server.dao.service.AbstractServiceTest;
-import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,7 +41,7 @@ public class JpaBaseComponentDescriptorDaoTest extends AbstractJpaDaoTest {
         for (ComponentType componentType : componentTypes) {
             List<ComponentDescriptor> byTypeAndPageLink = componentDescriptorDao.findByTypeAndPageLink(AbstractServiceTest.SYSTEM_TENANT_ID,
                                                                                                        componentType, new PageLink(20)).getData();
-            for (@NotNull ComponentDescriptor descriptor : byTypeAndPageLink) {
+            for (ComponentDescriptor descriptor : byTypeAndPageLink) {
                 componentDescriptorDao.deleteById(AbstractServiceTest.SYSTEM_TENANT_ID, descriptor.getId());
             }
         }
@@ -73,7 +72,7 @@ public class JpaBaseComponentDescriptorDaoTest extends AbstractJpaDaoTest {
     }
 
     private void createComponentDescriptor(ComponentType type, ComponentScope scope, int index) {
-        @NotNull ComponentDescriptor component = new ComponentDescriptor();
+        ComponentDescriptor component = new ComponentDescriptor();
         component.setId(new ComponentDescriptorId(Uuids.timeBased()));
         component.setType(type);
         component.setScope(scope);

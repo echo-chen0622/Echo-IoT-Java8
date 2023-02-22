@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.transport.lwm2m.server.model.LwM2MModelConfig;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.data.redis.connection.RedisClusterConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -18,16 +17,14 @@ import java.util.List;
 @AllArgsConstructor
 public class TbRedisLwM2MModelConfigStore implements TbLwM2MModelConfigStore {
     private static final String MODEL_EP = "MODEL#EP#";
-    @NotNull
     private final RedisConnectionFactory connectionFactory;
 
-    @NotNull
     @Override
     public List<LwM2MModelConfig> getAll() {
-        try (@NotNull var connection = connectionFactory.getConnection()) {
-            @NotNull List<LwM2MModelConfig> configs = new ArrayList<>();
-            @NotNull ScanOptions scanOptions = ScanOptions.scanOptions().count(100).match(MODEL_EP + "*").build();
-            @NotNull List<Cursor<byte[]>> scans = new ArrayList<>();
+        try (var connection = connectionFactory.getConnection()) {
+            List<LwM2MModelConfig> configs = new ArrayList<>();
+            ScanOptions scanOptions = ScanOptions.scanOptions().count(100).match(MODEL_EP + "*").build();
+            List<Cursor<byte[]>> scans = new ArrayList<>();
             if (connection instanceof RedisClusterConnection) {
                 ((RedisClusterConnection) connection).clusterGetNodes().forEach(node -> {
                     scans.add(((RedisClusterConnection) connection).scan(node, scanOptions));
@@ -47,16 +44,16 @@ public class TbRedisLwM2MModelConfigStore implements TbLwM2MModelConfigStore {
     }
 
     @Override
-    public void put(@NotNull LwM2MModelConfig modelConfig) {
+    public void put(LwM2MModelConfig modelConfig) {
         byte[] clientSerialized = JacksonUtil.writeValueAsBytes(modelConfig);
-        try (@NotNull var connection = connectionFactory.getConnection()) {
+        try (var connection = connectionFactory.getConnection()) {
             connection.getSet(getKey(modelConfig.getEndpoint()), clientSerialized);
         }
     }
 
     @Override
     public void remove(String endpoint) {
-        try (@NotNull var connection = connectionFactory.getConnection()) {
+        try (var connection = connectionFactory.getConnection()) {
             connection.del(getKey(endpoint));
         }
     }

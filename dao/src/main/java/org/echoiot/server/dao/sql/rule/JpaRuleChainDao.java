@@ -13,7 +13,6 @@ import org.echoiot.server.dao.model.sql.RuleChainEntity;
 import org.echoiot.server.dao.rule.RuleChainDao;
 import org.echoiot.server.dao.sql.JpaAbstractSearchTextDao;
 import org.echoiot.server.dao.util.SqlDao;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
@@ -32,7 +31,6 @@ public class JpaRuleChainDao extends JpaAbstractSearchTextDao<RuleChainEntity, R
     @Resource
     private RuleChainRepository ruleChainRepository;
 
-    @NotNull
     @Override
     protected Class<RuleChainEntity> getEntityClass() {
         return RuleChainEntity.class;
@@ -43,9 +41,8 @@ public class JpaRuleChainDao extends JpaAbstractSearchTextDao<RuleChainEntity, R
         return ruleChainRepository;
     }
 
-    @NotNull
     @Override
-    public PageData<RuleChain> findRuleChainsByTenantId(UUID tenantId, @NotNull PageLink pageLink) {
+    public PageData<RuleChain> findRuleChainsByTenantId(UUID tenantId, PageLink pageLink) {
         log.debug("Try to find rule chains by tenantId [{}] and pageLink [{}]", tenantId, pageLink);
         return DaoUtil.toPageData(ruleChainRepository
                 .findByTenantId(
@@ -54,9 +51,8 @@ public class JpaRuleChainDao extends JpaAbstractSearchTextDao<RuleChainEntity, R
                         DaoUtil.toPageable(pageLink)));
     }
 
-    @NotNull
     @Override
-    public PageData<RuleChain> findRuleChainsByTenantIdAndType(UUID tenantId, RuleChainType type, @NotNull PageLink pageLink) {
+    public PageData<RuleChain> findRuleChainsByTenantIdAndType(UUID tenantId, RuleChainType type, PageLink pageLink) {
         log.debug("Try to find rule chains by tenantId [{}], type [{}] and pageLink [{}]", tenantId, type, pageLink);
         return DaoUtil.toPageData(ruleChainRepository
                 .findByTenantIdAndType(
@@ -72,9 +68,8 @@ public class JpaRuleChainDao extends JpaAbstractSearchTextDao<RuleChainEntity, R
         return DaoUtil.getData(ruleChainRepository.findByTenantIdAndTypeAndRootIsTrue(tenantId, type));
     }
 
-    @NotNull
     @Override
-    public PageData<RuleChain> findRuleChainsByTenantIdAndEdgeId(UUID tenantId, UUID edgeId, @NotNull PageLink pageLink) {
+    public PageData<RuleChain> findRuleChainsByTenantIdAndEdgeId(UUID tenantId, UUID edgeId, PageLink pageLink) {
         log.debug("Try to find rule chains by tenantId [{}], edgeId [{}] and pageLink [{}]", tenantId, edgeId, pageLink);
         return DaoUtil.toPageData(ruleChainRepository
                 .findByTenantIdAndEdgeId(
@@ -84,9 +79,8 @@ public class JpaRuleChainDao extends JpaAbstractSearchTextDao<RuleChainEntity, R
                         DaoUtil.toPageable(pageLink)));
     }
 
-    @NotNull
     @Override
-    public PageData<RuleChain> findAutoAssignToEdgeRuleChainsByTenantId(UUID tenantId, @NotNull PageLink pageLink) {
+    public PageData<RuleChain> findAutoAssignToEdgeRuleChainsByTenantId(UUID tenantId, PageLink pageLink) {
         log.debug("Try to find auto assign to edge rule chains by tenantId [{}]", tenantId);
         return DaoUtil.toPageData(ruleChainRepository
                 .findAutoAssignByTenantId(
@@ -96,12 +90,12 @@ public class JpaRuleChainDao extends JpaAbstractSearchTextDao<RuleChainEntity, R
     }
 
     @Override
-    public Collection<RuleChain> findByTenantIdAndTypeAndName(@NotNull TenantId tenantId, RuleChainType type, String name) {
+    public Collection<RuleChain> findByTenantIdAndTypeAndName(TenantId tenantId, RuleChainType type, String name) {
         return DaoUtil.convertDataList(ruleChainRepository.findByTenantIdAndTypeAndName(tenantId.getId(), type, name));
     }
 
     @Override
-    public Long countByTenantId(@NotNull TenantId tenantId) {
+    public Long countByTenantId(TenantId tenantId) {
         return ruleChainRepository.countByTenantId(tenantId.getId());
     }
 
@@ -111,18 +105,17 @@ public class JpaRuleChainDao extends JpaAbstractSearchTextDao<RuleChainEntity, R
     }
 
     @Override
-    public PageData<RuleChain> findByTenantId(UUID tenantId, @NotNull PageLink pageLink) {
+    public PageData<RuleChain> findByTenantId(UUID tenantId, PageLink pageLink) {
         return findRuleChainsByTenantId(tenantId, pageLink);
     }
 
     @Nullable
     @Override
-    public RuleChainId getExternalIdByInternal(@NotNull RuleChainId internalId) {
+    public RuleChainId getExternalIdByInternal(RuleChainId internalId) {
         return Optional.ofNullable(ruleChainRepository.getExternalIdById(internalId.getId()))
                 .map(RuleChainId::new).orElse(null);
     }
 
-    @NotNull
     @Override
     public EntityType getEntityType() {
         return EntityType.RULE_CHAIN;

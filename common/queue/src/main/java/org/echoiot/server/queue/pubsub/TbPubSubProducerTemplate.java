@@ -15,7 +15,6 @@ import org.echoiot.server.queue.TbQueueCallback;
 import org.echoiot.server.queue.TbQueueMsg;
 import org.echoiot.server.queue.TbQueueProducer;
 import org.echoiot.server.queue.common.DefaultTbQueueMsg;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
@@ -55,8 +54,8 @@ public class TbPubSubProducerTemplate<T extends TbQueueMsg> implements TbQueuePr
     }
 
     @Override
-    public void send(@NotNull TopicPartitionInfo tpi, @NotNull T msg, @Nullable TbQueueCallback callback) {
-        @NotNull PubsubMessage.Builder pubsubMessageBuilder = PubsubMessage.newBuilder();
+    public void send(TopicPartitionInfo tpi, T msg, @Nullable TbQueueCallback callback) {
+        PubsubMessage.Builder pubsubMessageBuilder = PubsubMessage.newBuilder();
         pubsubMessageBuilder.setData(getMsg(msg));
 
         Publisher publisher = getOrCreatePublisher(tpi.getFullTopicName());
@@ -95,8 +94,7 @@ public class TbPubSubProducerTemplate<T extends TbQueueMsg> implements TbQueuePr
         }
     }
 
-    @NotNull
-    private ByteString getMsg(@NotNull T msg) {
+    private ByteString getMsg(T msg) {
         String json = gson.toJson(new DefaultTbQueueMsg(msg));
         return ByteString.copyFrom(json.getBytes());
     }
@@ -108,7 +106,7 @@ public class TbPubSubProducerTemplate<T extends TbQueueMsg> implements TbQueuePr
             try {
                 admin.createTopicIfNotExists(topic);
                 ProjectTopicName topicName = ProjectTopicName.of(pubSubSettings.getProjectId(), topic);
-                @NotNull Publisher publisher = Publisher.newBuilder(topicName).setCredentialsProvider(pubSubSettings.getCredentialsProvider()).build();
+                Publisher publisher = Publisher.newBuilder(topicName).setCredentialsProvider(pubSubSettings.getCredentialsProvider()).build();
                 publisherMap.put(topic, publisher);
                 return publisher;
             } catch (IOException e) {

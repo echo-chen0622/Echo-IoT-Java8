@@ -19,7 +19,6 @@ import org.echoiot.rule.engine.util.EntityDetails;
 import org.echoiot.server.common.data.ContactBased;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.TbMsgMetaData;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Type;
@@ -43,7 +42,7 @@ public abstract class TbAbstractGetEntityDetailsNode<C extends TbAbstractGetEnti
     }
 
     @Override
-    public void onMsg(@NotNull TbContext ctx, TbMsg msg) {
+    public void onMsg(TbContext ctx, TbMsg msg) {
         withCallback(getDetails(ctx, msg),
                 ctx::tellSuccess,
                 t -> ctx.tellFailure(msg, t), ctx.getDbCallbackExecutor());
@@ -55,8 +54,7 @@ public abstract class TbAbstractGetEntityDetailsNode<C extends TbAbstractGetEnti
 
     protected abstract ListenableFuture<ContactBased> getContactBasedListenableFuture(TbContext ctx, TbMsg msg);
 
-    @NotNull
-    protected MessageData getDataAsJson(@NotNull TbMsg msg) {
+    protected MessageData getDataAsJson(TbMsg msg) {
         if (this.config.isAddToMetadata()) {
             return new MessageData(gson.toJsonTree(msg.getMetaData().getData(), TYPE), "metadata");
         } else {
@@ -64,19 +62,17 @@ public abstract class TbAbstractGetEntityDetailsNode<C extends TbAbstractGetEnti
         }
     }
 
-    @NotNull
-    protected ListenableFuture<TbMsg> getTbMsgListenableFuture(@NotNull TbContext ctx, @NotNull TbMsg msg, @NotNull MessageData messageData, String prefix) {
+    protected ListenableFuture<TbMsg> getTbMsgListenableFuture(TbContext ctx, TbMsg msg, MessageData messageData, String prefix) {
         if (!this.config.getDetailsList().isEmpty()) {
             ListenableFuture<ContactBased> contactBasedListenableFuture = getContactBasedListenableFuture(ctx, msg);
-            @NotNull ListenableFuture<JsonElement> resultObject = addContactProperties(messageData.getData(), contactBasedListenableFuture, prefix);
+            ListenableFuture<JsonElement> resultObject = addContactProperties(messageData.getData(), contactBasedListenableFuture, prefix);
             return transformMsg(ctx, msg, resultObject, messageData);
         } else {
             return Futures.immediateFuture(msg);
         }
     }
 
-    @NotNull
-    private ListenableFuture<TbMsg> transformMsg(@NotNull TbContext ctx, @NotNull TbMsg msg, @NotNull ListenableFuture<JsonElement> propertiesFuture, @NotNull MessageData messageData) {
+    private ListenableFuture<TbMsg> transformMsg(TbContext ctx, TbMsg msg, ListenableFuture<JsonElement> propertiesFuture, MessageData messageData) {
         return Futures.transformAsync(propertiesFuture, jsonElement -> {
             if (jsonElement != null) {
                 if (messageData.getDataType().equals("metadata")) {
@@ -91,12 +87,11 @@ public abstract class TbAbstractGetEntityDetailsNode<C extends TbAbstractGetEnti
         }, MoreExecutors.directExecutor());
     }
 
-    @NotNull
-    private ListenableFuture<JsonElement> addContactProperties(@NotNull JsonElement data, @NotNull ListenableFuture<ContactBased> entityFuture, String prefix) {
+    private ListenableFuture<JsonElement> addContactProperties(JsonElement data, ListenableFuture<ContactBased> entityFuture, String prefix) {
         return Futures.transformAsync(entityFuture, contactBased -> {
             if (contactBased != null) {
                 @Nullable JsonElement jsonElement = null;
-                for (@NotNull EntityDetails entityDetails : this.config.getDetailsList()) {
+                for (EntityDetails entityDetails : this.config.getDetailsList()) {
                     jsonElement = setProperties(contactBased, data, entityDetails, prefix);
                 }
                 return Futures.immediateFuture(jsonElement);
@@ -106,7 +101,7 @@ public abstract class TbAbstractGetEntityDetailsNode<C extends TbAbstractGetEnti
         }, MoreExecutors.directExecutor());
     }
 
-    private JsonElement setProperties(@NotNull ContactBased entity, @NotNull JsonElement data, @NotNull EntityDetails entityDetails, String prefix) {
+    private JsonElement setProperties(ContactBased entity, JsonElement data, EntityDetails entityDetails, String prefix) {
         JsonObject dataAsObject = data.getAsJsonObject();
         switch (entityDetails) {
             case ID:

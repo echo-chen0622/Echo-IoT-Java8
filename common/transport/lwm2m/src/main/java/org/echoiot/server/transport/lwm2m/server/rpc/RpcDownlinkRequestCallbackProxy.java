@@ -11,7 +11,6 @@ import org.echoiot.server.transport.lwm2m.server.client.LwM2mClient;
 import org.echoiot.server.transport.lwm2m.server.downlink.DownlinkRequestCallback;
 import org.eclipse.leshan.core.ResponseCode;
 import org.eclipse.leshan.core.request.exception.ClientSleepingException;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -37,7 +36,7 @@ public abstract class RpcDownlinkRequestCallbackProxy<R, T> implements DownlinkR
     public boolean onSent(R request) {
         client.lock();
         try {
-            @NotNull UUID rpcId = new UUID(this.request.getRequestIdMSB(), this.request.getRequestIdLSB());
+            UUID rpcId = new UUID(this.request.getRequestIdMSB(), this.request.getRequestIdLSB());
             if (rpcId.equals(client.getLastSentRpcId())) {
                 log.debug("[{}]][{}] Rpc has already sent!", client.getEndpoint(), rpcId);
                 return false;
@@ -80,7 +79,7 @@ public abstract class RpcDownlinkRequestCallbackProxy<R, T> implements DownlinkR
         }
     }
 
-    protected void reply(@NotNull LwM2MRpcResponseBody response) {
+    protected void reply(LwM2MRpcResponseBody response) {
         TransportProtos.ToDeviceRpcResponseMsg.Builder msg = TransportProtos.ToDeviceRpcResponseMsg.newBuilder().setRequestId(request.getRequestId());
         @Nullable String responseAsString = JacksonUtil.toString(response);
         if (StringUtils.isEmpty(response.getError())) {
@@ -97,7 +96,7 @@ public abstract class RpcDownlinkRequestCallbackProxy<R, T> implements DownlinkR
         reply(LwM2MRpcResponseBody.builder().result(ResponseCode.BAD_REQUEST.getName()).error(msg).build());
     }
 
-    protected void sendRpcReplyOnError(@NotNull Exception e) {
+    protected void sendRpcReplyOnError(Exception e) {
         String error = e.getMessage();
         if (error == null) {
             error = e.toString();

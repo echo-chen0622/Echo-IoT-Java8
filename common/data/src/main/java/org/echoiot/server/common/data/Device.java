@@ -13,7 +13,6 @@ import org.echoiot.server.common.data.device.data.DeviceData;
 import org.echoiot.server.common.data.id.*;
 import org.echoiot.server.common.data.validation.Length;
 import org.echoiot.server.common.data.validation.NoXss;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.ByteArrayInputStream;
@@ -57,7 +56,7 @@ public class Device extends SearchTextBasedWithAdditionalInfo<DeviceId> implemen
         super(id);
     }
 
-    public Device(@NotNull Device device) {
+    public Device(Device device) {
         super(device);
         this.tenantId = device.getTenantId();
         this.customerId = device.getCustomerId();
@@ -71,8 +70,7 @@ public class Device extends SearchTextBasedWithAdditionalInfo<DeviceId> implemen
         this.externalId = device.getExternalId();
     }
 
-    @NotNull
-    public Device updateDevice(@NotNull Device device) {
+    public Device updateDevice(Device device) {
         this.tenantId = device.getTenantId();
         this.customerId = device.getCustomerId();
         this.name = device.getName();

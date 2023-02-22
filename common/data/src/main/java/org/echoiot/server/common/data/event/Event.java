@@ -10,7 +10,6 @@ import org.echoiot.server.common.data.EventInfo;
 import org.echoiot.server.common.data.id.EntityIdFactory;
 import org.echoiot.server.common.data.id.EventId;
 import org.echoiot.server.common.data.id.TenantId;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -38,8 +37,8 @@ public abstract class Event extends BaseData<EventId> {
 
     public abstract EventType getType();
 
-    public EventInfo toInfo(@NotNull EntityType entityType) {
-        @NotNull EventInfo eventInfo = new EventInfo();
+    public EventInfo toInfo(EntityType entityType) {
+        EventInfo eventInfo = new EventInfo();
         eventInfo.setTenantId(tenantId);
         eventInfo.setEntityId(EntityIdFactory.getByTypeAndUuid(entityType, entityId));
         eventInfo.setType(getType().getOldName());
@@ -50,7 +49,7 @@ public abstract class Event extends BaseData<EventId> {
         return eventInfo;
     }
 
-    protected static void putNotNull(@NotNull ObjectNode json, String key, @Nullable String value) {
+    protected static void putNotNull(ObjectNode json, String key, @Nullable String value) {
         if (value != null) {
             json.put(key, value);
         }

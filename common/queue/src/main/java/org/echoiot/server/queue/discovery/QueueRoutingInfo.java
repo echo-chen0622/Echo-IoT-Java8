@@ -6,7 +6,6 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.queue.Queue;
 import org.echoiot.server.gen.transport.TransportProtos.GetQueueRoutingInfoResponseMsg;
 import org.echoiot.server.gen.transport.TransportProtos.QueueUpdateMsg;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
@@ -20,7 +19,7 @@ public class QueueRoutingInfo {
     private final String queueTopic;
     private final int partitions;
 
-    public QueueRoutingInfo(@NotNull Queue queue) {
+    public QueueRoutingInfo(Queue queue) {
         this.tenantId = queue.getTenantId();
         this.queueId = queue.getId();
         this.queueName = queue.getName();
@@ -28,7 +27,7 @@ public class QueueRoutingInfo {
         this.partitions = queue.getPartitions();
     }
 
-    public QueueRoutingInfo(@NotNull GetQueueRoutingInfoResponseMsg routingInfo) {
+    public QueueRoutingInfo(GetQueueRoutingInfoResponseMsg routingInfo) {
         this.tenantId = new TenantId(new UUID(routingInfo.getTenantIdMSB(), routingInfo.getTenantIdLSB()));
         this.queueId = new QueueId(new UUID(routingInfo.getQueueIdMSB(), routingInfo.getQueueIdLSB()));
         this.queueName = routingInfo.getQueueName();
@@ -36,7 +35,7 @@ public class QueueRoutingInfo {
         this.partitions = routingInfo.getPartitions();
     }
 
-    public QueueRoutingInfo(@NotNull QueueUpdateMsg queueUpdateMsg) {
+    public QueueRoutingInfo(QueueUpdateMsg queueUpdateMsg) {
         this.tenantId = new TenantId(new UUID(queueUpdateMsg.getTenantIdMSB(), queueUpdateMsg.getTenantIdLSB()));
         this.queueId = new QueueId(new UUID(queueUpdateMsg.getQueueIdMSB(), queueUpdateMsg.getQueueIdLSB()));
         this.queueName = queueUpdateMsg.getQueueName();

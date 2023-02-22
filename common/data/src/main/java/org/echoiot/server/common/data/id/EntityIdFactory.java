@@ -2,7 +2,6 @@ package org.echoiot.server.common.data.id;
 
 import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.edge.EdgeEventType;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
@@ -11,7 +10,7 @@ import java.util.UUID;
  */
 public class EntityIdFactory {
 
-    public static EntityId getByTypeAndId(String type, @NotNull String uuid) {
+    public static EntityId getByTypeAndId(String type, String uuid) {
         return getByTypeAndUuid(EntityType.valueOf(type), UUID.fromString(uuid));
     }
 
@@ -19,11 +18,11 @@ public class EntityIdFactory {
         return getByTypeAndUuid(EntityType.valueOf(type), uuid);
     }
 
-    public static EntityId getByTypeAndUuid(@NotNull EntityType type, @NotNull String uuid) {
+    public static EntityId getByTypeAndUuid(EntityType type, String uuid) {
         return getByTypeAndUuid(type, UUID.fromString(uuid));
     }
 
-    public static EntityId getByTypeAndUuid(@NotNull EntityType type, UUID uuid) {
+    public static EntityId getByTypeAndUuid(EntityType type, UUID uuid) {
         switch (type) {
             case TENANT:
                 return TenantId.fromUUID(uuid);
@@ -71,8 +70,7 @@ public class EntityIdFactory {
         throw new IllegalArgumentException("EntityType " + type + " is not supported!");
     }
 
-    @NotNull
-    public static EntityId getByEdgeEventTypeAndUuid(@NotNull EdgeEventType edgeEventType, UUID uuid) {
+    public static EntityId getByEdgeEventTypeAndUuid(EdgeEventType edgeEventType, UUID uuid) {
         switch (edgeEventType) {
             case TENANT:
                 return new TenantId(uuid);

@@ -7,7 +7,6 @@ import org.echoiot.server.common.data.sync.vc.RepositorySettings;
 import org.echoiot.server.dao.settings.AdminSettingsService;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.sync.vc.TbAbstractVersionControlSettingsService;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +21,7 @@ public class DefaultTbRepositorySettingsService extends TbAbstractVersionControl
     }
 
     @Override
-    public RepositorySettings restore(TenantId tenantId, @NotNull RepositorySettings settings) {
+    public RepositorySettings restore(TenantId tenantId, RepositorySettings settings) {
         @Nullable RepositorySettings storedSettings = get(tenantId);
         if (storedSettings != null) {
             RepositoryAuthMethod authMethod = settings.getAuthMethod();

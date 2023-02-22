@@ -12,7 +12,6 @@ import org.echoiot.server.common.data.exception.EchoiotKafkaClientError;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.TbMsgMetaData;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.util.ReflectionUtils;
 
@@ -57,10 +56,10 @@ public class TbKafkaNode implements TbNode {
     private Throwable initError;
 
     @Override
-    public void init(@NotNull TbContext ctx, @NotNull TbNodeConfiguration configuration) throws TbNodeException {
+    public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
         this.config = TbNodeUtils.convert(configuration, TbKafkaNodeConfiguration.class);
         this.initError = null;
-        @NotNull Properties properties = new Properties();
+        Properties properties = new Properties();
         properties.put(ProducerConfig.CLIENT_ID_CONFIG, "producer-tb-kafka-node-" + ctx.getSelfId().getId().toString() + "-" + ctx.getServiceId());
         properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, config.getBootstrapServers());
         properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, config.getValueSerializer());
@@ -90,7 +89,7 @@ public class TbKafkaNode implements TbNode {
     }
 
     @Override
-    public void onMsg(@NotNull TbContext ctx, @NotNull TbMsg msg) {
+    public void onMsg(TbContext ctx, TbMsg msg) {
         String topic = TbNodeUtils.processPattern(config.getTopicPattern(), msg);
         String keyPattern = config.getKeyPattern();
         try {
@@ -114,14 +113,14 @@ public class TbKafkaNode implements TbNode {
         }
     }
 
-    protected void publish(@NotNull TbContext ctx, @NotNull TbMsg msg, @NotNull String topic, String key) {
+    protected void publish(TbContext ctx, TbMsg msg, String topic, String key) {
         try {
             if (!addMetadataKeyValuesAsKafkaHeaders) {
                 //TODO: external system executor
                 producer.send(new ProducerRecord<>(topic, key, msg.getData()),
                         (metadata, e) -> processRecord(ctx, msg, metadata, e));
             } else {
-                @NotNull Headers headers = new RecordHeaders();
+                Headers headers = new RecordHeaders();
                 msg.getMetaData().values().forEach((k, v) -> headers.add(new RecordHeader(TB_MSG_MD_PREFIX + k, v.getBytes(toBytesCharset))));
                 producer.send(new ProducerRecord<>(topic, null, null, key, msg.getData(), headers),
                         (metadata, e) -> processRecord(ctx, msg, metadata, e));
@@ -142,7 +141,7 @@ public class TbKafkaNode implements TbNode {
         }
     }
 
-    private void processRecord(@NotNull TbContext ctx, @NotNull TbMsg msg, @NotNull RecordMetadata metadata, @Nullable Exception e) {
+    private void processRecord(TbContext ctx, TbMsg msg, RecordMetadata metadata, @Nullable Exception e) {
         if (e == null) {
             TbMsg next = processResponse(ctx, msg, metadata);
             ctx.tellNext(next, TbRelationTypes.SUCCESS);
@@ -152,16 +151,16 @@ public class TbKafkaNode implements TbNode {
         }
     }
 
-    private TbMsg processResponse(@NotNull TbContext ctx, @NotNull TbMsg origMsg, @NotNull RecordMetadata recordMetadata) {
-        @NotNull TbMsgMetaData metaData = origMsg.getMetaData().copy();
+    private TbMsg processResponse(TbContext ctx, TbMsg origMsg, RecordMetadata recordMetadata) {
+        TbMsgMetaData metaData = origMsg.getMetaData().copy();
         metaData.putValue(OFFSET, String.valueOf(recordMetadata.offset()));
         metaData.putValue(PARTITION, String.valueOf(recordMetadata.partition()));
         metaData.putValue(TOPIC, recordMetadata.topic());
         return ctx.transformMsg(origMsg, origMsg.getType(), origMsg.getOriginator(), metaData, origMsg.getData());
     }
 
-    private TbMsg processException(@NotNull TbContext ctx, @NotNull TbMsg origMsg, @NotNull Exception e) {
-        @NotNull TbMsgMetaData metaData = origMsg.getMetaData().copy();
+    private TbMsg processException(TbContext ctx, TbMsg origMsg, Exception e) {
+        TbMsgMetaData metaData = origMsg.getMetaData().copy();
         metaData.putValue(ERROR, e.getClass() + ": " + e.getMessage());
         return ctx.transformMsg(origMsg, origMsg.getType(), origMsg.getOriginator(), metaData, origMsg.getData());
     }

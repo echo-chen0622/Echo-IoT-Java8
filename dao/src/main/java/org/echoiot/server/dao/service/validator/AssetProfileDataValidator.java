@@ -14,7 +14,6 @@ import org.echoiot.server.dao.queue.QueueService;
 import org.echoiot.server.dao.rule.RuleChainService;
 import org.echoiot.server.dao.service.DataValidator;
 import org.echoiot.server.dao.tenant.TenantService;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
@@ -39,7 +38,7 @@ public class AssetProfileDataValidator extends DataValidator<AssetProfile> {
     private DashboardService dashboardService;
 
     @Override
-    protected void validateDataImpl(TenantId tenantId, @NotNull AssetProfile assetProfile) {
+    protected void validateDataImpl(TenantId tenantId, AssetProfile assetProfile) {
         if (StringUtils.isEmpty(assetProfile.getName())) {
             throw new DataValidationException("Asset profile name should be specified!");
         }
@@ -84,9 +83,8 @@ public class AssetProfileDataValidator extends DataValidator<AssetProfile> {
         }
     }
 
-    @NotNull
     @Override
-    protected AssetProfile validateUpdate(TenantId tenantId, @NotNull AssetProfile assetProfile) {
+    protected AssetProfile validateUpdate(TenantId tenantId, AssetProfile assetProfile) {
         AssetProfile old = assetProfileDao.findById(assetProfile.getTenantId(), assetProfile.getId().getId());
         if (old == null) {
             throw new DataValidationException("Can't update non existing asset profile!");

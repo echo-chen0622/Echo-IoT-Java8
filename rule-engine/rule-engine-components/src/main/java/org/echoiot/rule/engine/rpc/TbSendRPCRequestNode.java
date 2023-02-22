@@ -14,7 +14,6 @@ import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.msg.TbMsg;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
@@ -41,12 +40,12 @@ public class TbSendRPCRequestNode implements TbNode {
     private TbSendRpcRequestNodeConfiguration config;
 
     @Override
-    public void init(TbContext ctx, @NotNull TbNodeConfiguration configuration) throws TbNodeException {
+    public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
         this.config = TbNodeUtils.convert(configuration, TbSendRpcRequestNodeConfiguration.class);
     }
 
     @Override
-    public void onMsg(@NotNull TbContext ctx, @NotNull TbMsg msg) {
+    public void onMsg(TbContext ctx, TbMsg msg) {
         JsonObject json = jsonParser.parse(msg.getData()).getAsJsonObject();
         String tmp;
         if (msg.getOriginator().getEntityType() != EntityType.DEVICE) {
@@ -66,7 +65,7 @@ public class TbSendRPCRequestNode implements TbNode {
             boolean persisted = !StringUtils.isEmpty(tmp) && Boolean.parseBoolean(tmp);
 
             tmp = msg.getMetaData().getValue("requestUUID");
-            @NotNull UUID requestUUID = !StringUtils.isEmpty(tmp) ? UUID.fromString(tmp) : Uuids.timeBased();
+            UUID requestUUID = !StringUtils.isEmpty(tmp) ? UUID.fromString(tmp) : Uuids.timeBased();
             tmp = msg.getMetaData().getValue("originServiceId");
             @Nullable String originServiceId = !StringUtils.isEmpty(tmp) ? tmp : null;
 
@@ -108,8 +107,8 @@ public class TbSendRPCRequestNode implements TbNode {
         }
     }
 
-    private String wrap(@NotNull String name, String body) {
-        @NotNull JsonObject json = new JsonObject();
+    private String wrap(String name, String body) {
+        JsonObject json = new JsonObject();
         json.addProperty(name, body);
         return gson.toJson(json);
     }

@@ -9,7 +9,6 @@ import org.echoiot.server.dao.model.sql.RuleNodeStateEntity;
 import org.echoiot.server.dao.rule.RuleNodeStateDao;
 import org.echoiot.server.dao.sql.JpaAbstractDao;
 import org.echoiot.server.dao.util.SqlDao;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +24,6 @@ public class JpaRuleNodeStateDao extends JpaAbstractDao<RuleNodeStateEntity, Rul
     @Resource
     private RuleNodeStateRepository ruleNodeStateRepository;
 
-    @NotNull
     @Override
     protected Class<RuleNodeStateEntity> getEntityClass() {
         return RuleNodeStateEntity.class;
@@ -36,7 +34,6 @@ public class JpaRuleNodeStateDao extends JpaAbstractDao<RuleNodeStateEntity, Rul
         return ruleNodeStateRepository;
     }
 
-    @NotNull
     @Override
     public PageData<RuleNodeState> findByRuleNodeId(UUID ruleNodeId, PageLink pageLink) {
         return DaoUtil.toPageData(ruleNodeStateRepository.findByRuleNodeId(ruleNodeId, DaoUtil.toPageable(pageLink)));

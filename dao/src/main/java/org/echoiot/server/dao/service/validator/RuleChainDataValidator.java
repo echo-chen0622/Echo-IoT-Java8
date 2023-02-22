@@ -17,7 +17,6 @@ import org.echoiot.server.dao.service.ConstraintValidator;
 import org.echoiot.server.dao.service.DataValidator;
 import org.echoiot.server.dao.tenant.TbTenantProfileCache;
 import org.echoiot.server.dao.tenant.TenantService;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -52,7 +51,7 @@ public class RuleChainDataValidator extends DataValidator<RuleChain> {
     }
 
     @Override
-    protected void validateDataImpl(TenantId tenantId, @NotNull RuleChain ruleChain) {
+    protected void validateDataImpl(TenantId tenantId, RuleChain ruleChain) {
         if (StringUtils.isEmpty(ruleChain.getName())) {
             throw new DataValidationException("Rule chain name should be specified!");
         }
@@ -79,7 +78,7 @@ public class RuleChainDataValidator extends DataValidator<RuleChain> {
         }
     }
 
-    public static void validateMetaData(@NotNull RuleChainMetaData ruleChainMetaData) {
+    public static void validateMetaData(RuleChainMetaData ruleChainMetaData) {
         ConstraintValidator.validateFields(ruleChainMetaData);
         ruleChainMetaData.getNodes().forEach(RuleChainDataValidator::validateRuleNode);
         if (CollectionUtils.isNotEmpty(ruleChainMetaData.getConnections())) {
@@ -87,8 +86,8 @@ public class RuleChainDataValidator extends DataValidator<RuleChain> {
         }
     }
 
-    public static void validateRuleNode(@NotNull RuleNode ruleNode) {
-        @NotNull String errorPrefix = "'" + ruleNode.getName() + "' node configuration is invalid: ";
+    public static void validateRuleNode(RuleNode ruleNode) {
+        String errorPrefix = "'" + ruleNode.getName() + "' node configuration is invalid: ";
         ConstraintValidator.validateFields(ruleNode, errorPrefix);
         Object nodeConfig;
         try {
@@ -102,9 +101,9 @@ public class RuleChainDataValidator extends DataValidator<RuleChain> {
         ConstraintValidator.validateFields(nodeConfig, errorPrefix);
     }
 
-    private static void validateCircles(@NotNull List<NodeConnectionInfo> connectionInfos) {
-        @NotNull Map<Integer, Set<Integer>> connectionsMap = new HashMap<>();
-        for (@NotNull NodeConnectionInfo nodeConnection : connectionInfos) {
+    private static void validateCircles(List<NodeConnectionInfo> connectionInfos) {
+        Map<Integer, Set<Integer>> connectionsMap = new HashMap<>();
+        for (NodeConnectionInfo nodeConnection : connectionInfos) {
             if (nodeConnection.getFromIndex() == nodeConnection.getToIndex()) {
                 throw new DataValidationException("Can't create the relation to yourself.");
             }
@@ -115,7 +114,7 @@ public class RuleChainDataValidator extends DataValidator<RuleChain> {
         connectionsMap.keySet().forEach(key -> validateCircles(key, connectionsMap.get(key), connectionsMap));
     }
 
-    private static void validateCircles(int from, @Nullable Set<Integer> toList, @NotNull Map<Integer, Set<Integer>> connectionsMap) {
+    private static void validateCircles(int from, @Nullable Set<Integer> toList, Map<Integer, Set<Integer>> connectionsMap) {
         if (toList == null) {
             return;
         }

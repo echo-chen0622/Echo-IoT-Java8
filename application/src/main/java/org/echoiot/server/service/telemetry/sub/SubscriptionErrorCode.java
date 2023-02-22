@@ -1,6 +1,5 @@
 package org.echoiot.server.service.telemetry.sub;
 
-import org.jetbrains.annotations.NotNull;
 
 public enum SubscriptionErrorCode {
 
@@ -18,9 +17,8 @@ public enum SubscriptionErrorCode {
         this.defaultMsg = defaultMsg;
     }
 
-    @NotNull
     public static SubscriptionErrorCode forCode(int code) {
-        for (@NotNull SubscriptionErrorCode errorCode : SubscriptionErrorCode.values()) {
+        for (SubscriptionErrorCode errorCode : SubscriptionErrorCode.values()) {
             if (errorCode.getCode() == code) {
                 return errorCode;
             }

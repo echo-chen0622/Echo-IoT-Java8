@@ -8,7 +8,6 @@ import org.eclipse.californium.core.CoapObserveRelation;
 import org.eclipse.californium.core.CoapResponse;
 import org.eclipse.californium.core.coap.CoAP;
 import org.eclipse.californium.core.coap.Request;
-import org.jetbrains.annotations.NotNull;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -27,7 +26,7 @@ public class NoSecObserveClient {
     private final CountDownLatch latch;
 
     public NoSecObserveClient(String host, int port, String accessToken) throws URISyntaxException {
-        @NotNull URI uri = new URI(getFutureUrl(host, port, accessToken));
+        URI uri = new URI(getFutureUrl(host, port, accessToken));
         this.coapClient = new CoapClient(uri);
         coapClient.setTimeout(INFINIT_EXCHANGE_LIFETIME);
         this.latch = new CountDownLatch(5);
@@ -36,11 +35,11 @@ public class NoSecObserveClient {
     public void start() {
         executor.submit(() -> {
             try {
-                @NotNull Request request = Request.newGet();
+                Request request = Request.newGet();
                 request.setObserve();
                 observeRelation = coapClient.observe(request, new CoapHandler() {
                     @Override
-                    public void onLoad(@NotNull CoapResponse response) {
+                    public void onLoad(CoapResponse response) {
                         String responseText = response.getResponseText();
                         CoAP.ResponseCode code = response.getCode();
                         Integer observe = response.getOptions().getObserve();
@@ -72,12 +71,11 @@ public class NoSecObserveClient {
         }
     }
 
-    @NotNull
     private String getFutureUrl(String host, Integer port, String accessToken) {
         return "coap://" + host + ":" + port + "/api/v1/" + accessToken + "/attributes";
     }
 
-    public static void main(@NotNull String[] args) throws URISyntaxException {
+    public static void main(String[] args) throws URISyntaxException {
         log.info("Usage: java -cp ... client.coap.transport.org.echoiot.server.NoSecObserveClient " +
                 "host port accessToken");
 
@@ -85,7 +83,7 @@ public class NoSecObserveClient {
         int port = Integer.parseInt(args[1]);
         String accessToken = args[2];
 
-        @NotNull final NoSecObserveClient client = new NoSecObserveClient(host, port, accessToken);
+        final NoSecObserveClient client = new NoSecObserveClient(host, port, accessToken);
         client.start();
     }
 }

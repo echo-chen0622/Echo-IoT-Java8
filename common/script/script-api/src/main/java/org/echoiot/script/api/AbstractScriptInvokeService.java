@@ -12,7 +12,6 @@ import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.stats.TbApiUsageReportClient;
 import org.echoiot.server.common.stats.TbApiUsageStateClient;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
@@ -102,14 +101,13 @@ public abstract class AbstractScriptInvokeService implements ScriptInvokeService
         }
     }
 
-    @NotNull
     @Override
-    public ListenableFuture<UUID> eval(TenantId tenantId, ScriptType scriptType, @NotNull String scriptBody, String... argNames) {
+    public ListenableFuture<UUID> eval(TenantId tenantId, ScriptType scriptType, String scriptBody, String... argNames) {
         if (!apiUsageStateClient.isPresent() || apiUsageStateClient.get().getApiUsageState(tenantId).isJsExecEnabled()) {
             if (scriptBodySizeExceeded(scriptBody)) {
                 return error(format("Script body exceeds maximum allowed size of %s symbols", getMaxScriptBodySize()));
             }
-            @NotNull UUID scriptId = UUID.randomUUID();
+            UUID scriptId = UUID.randomUUID();
             pushedMsgs.incrementAndGet();
             return withTimeoutAndStatsCallback(scriptId, null,
                     doEvalScript(tenantId, scriptType, scriptBody, scriptId, argNames), evalCallback, getMaxEvalRequestsTimeout());
@@ -118,16 +116,15 @@ public abstract class AbstractScriptInvokeService implements ScriptInvokeService
         }
     }
 
-    @NotNull
     @Override
-    public ListenableFuture<Object> invokeScript(TenantId tenantId, CustomerId customerId, UUID scriptId, @NotNull Object... args) {
+    public ListenableFuture<Object> invokeScript(TenantId tenantId, CustomerId customerId, UUID scriptId, Object... args) {
         if (!apiUsageStateClient.isPresent() || apiUsageStateClient.get().getApiUsageState(tenantId).isJsExecEnabled()) {
             if (!isScriptPresent(scriptId)) {
                 return error("No compiled script found for scriptId: [" + scriptId + "]!");
             }
             if (!isDisabled(scriptId)) {
                 if (argsSizeExceeded(args)) {
-                    @NotNull TbScriptException t = new TbScriptException(scriptId, TbScriptException.ErrorCode.OTHER, null, new IllegalArgumentException(
+                    TbScriptException t = new TbScriptException(scriptId, TbScriptException.ErrorCode.OTHER, null, new IllegalArgumentException(
                             format("Script input arguments exceed maximum allowed total args size of %s symbols", getMaxTotalArgsSize())
                     ));
                     return Futures.immediateFailedFuture(handleScriptException(scriptId, null, t));
@@ -137,7 +134,7 @@ public abstract class AbstractScriptInvokeService implements ScriptInvokeService
                 log.trace("InvokeScript uuid {} with timeout {}ms", scriptId, getMaxInvokeRequestsTimeout());
                 var task = doInvokeFunction(scriptId, args);
 
-                @NotNull var resultFuture = Futures.transformAsync(task.getResultFuture(), output -> {
+                var resultFuture = Futures.transformAsync(task.getResultFuture(), output -> {
                     @Nullable String result = JacksonUtil.toString(output);
                     if (resultSizeExceeded(result)) {
                         throw new TbScriptException(scriptId, TbScriptException.ErrorCode.OTHER, null, new RuntimeException(
@@ -149,7 +146,7 @@ public abstract class AbstractScriptInvokeService implements ScriptInvokeService
 
                 return withTimeoutAndStatsCallback(scriptId, task, resultFuture, invokeCallback, getMaxInvokeRequestsTimeout());
             } else {
-                @NotNull String message = "Script invocation is blocked due to maximum error count "
+                String message = "Script invocation is blocked due to maximum error count "
                                           + getMaxErrors() + ", scriptId " + scriptId + "!";
                 log.warn(message);
                 return error(message);
@@ -159,8 +156,7 @@ public abstract class AbstractScriptInvokeService implements ScriptInvokeService
         }
     }
 
-    @NotNull
-    private <T extends V, V> ListenableFuture<T> withTimeoutAndStatsCallback(UUID scriptId, TbScriptExecutionTask task, ListenableFuture<T> future, @NotNull FutureCallback<V> statsCallback, long timeout) {
+    private <T extends V, V> ListenableFuture<T> withTimeoutAndStatsCallback(UUID scriptId, TbScriptExecutionTask task, ListenableFuture<T> future, FutureCallback<V> statsCallback, long timeout) {
         if (timeout > 0) {
             future = Futures.withTimeout(future, timeout, TimeUnit.MILLISECONDS, timeoutExecutorService);
         }
@@ -170,7 +166,6 @@ public abstract class AbstractScriptInvokeService implements ScriptInvokeService
                 MoreExecutors.directExecutor());
     }
 
-    @NotNull
     private Throwable handleScriptException(UUID scriptId, @Nullable TbScriptExecutionTask task, Throwable t) {
         boolean timeout = t instanceof TimeoutException || (t.getCause() != null && t.getCause() instanceof TimeoutException);
         if (timeout && task != null) {
@@ -179,7 +174,7 @@ public abstract class AbstractScriptInvokeService implements ScriptInvokeService
         boolean blockList = timeout;
         @Nullable String scriptBody = null;
         if (t instanceof TbScriptException) {
-            @NotNull var scriptException = (TbScriptException) t;
+            var scriptException = (TbScriptException) t;
             scriptBody = scriptException.getBody();
             var cause = scriptException.getCause();
             switch (scriptException.getErrorCode()) {
@@ -197,7 +192,7 @@ public abstract class AbstractScriptInvokeService implements ScriptInvokeService
             blockList = timeout || scriptException.getErrorCode() != TbScriptException.ErrorCode.RUNTIME;
         }
         if (blockList) {
-            @NotNull BlockedScriptInfo disableListInfo = disabledScripts.computeIfAbsent(scriptId, key -> new BlockedScriptInfo(getMaxBlackListDurationSec()));
+            BlockedScriptInfo disableListInfo = disabledScripts.computeIfAbsent(scriptId, key -> new BlockedScriptInfo(getMaxBlackListDurationSec()));
             int counter = disableListInfo.incrementAndGet();
             if (log.isDebugEnabled()) {
                 log.debug("Script has exception counter {} on disabledFunctions for id {}, exception {}, cause {}, scriptBody {}",
@@ -214,7 +209,6 @@ public abstract class AbstractScriptInvokeService implements ScriptInvokeService
         }
     }
 
-    @NotNull
     @Override
     public ListenableFuture<Void> release(UUID scriptId) {
         if (isScriptPresent(scriptId)) {
@@ -242,12 +236,12 @@ public abstract class AbstractScriptInvokeService implements ScriptInvokeService
         }
     }
 
-    private boolean scriptBodySizeExceeded(@NotNull String scriptBody) {
+    private boolean scriptBodySizeExceeded(String scriptBody) {
         if (getMaxScriptBodySize() <= 0) return false;
         return scriptBody.length() > getMaxScriptBodySize();
     }
 
-    private boolean argsSizeExceeded(@NotNull Object[] args) {
+    private boolean argsSizeExceeded(Object[] args) {
         if (getMaxTotalArgsSize() <= 0) return false;
         long totalArgsSize = 0;
         for (Object arg : args) {
@@ -268,7 +262,6 @@ public abstract class AbstractScriptInvokeService implements ScriptInvokeService
         return result != null && result.length() > getMaxResultSize();
     }
 
-    @NotNull
     private <T> ListenableFuture<T> error(String message) {
         return Futures.immediateFailedFuture(new RuntimeException(message));
     }

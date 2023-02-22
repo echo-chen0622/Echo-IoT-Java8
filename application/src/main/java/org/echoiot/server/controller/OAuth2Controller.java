@@ -13,7 +13,6 @@ import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.security.permission.Operation;
 import org.echoiot.server.service.security.permission.PerResource;
 import org.echoiot.server.utils.MiscUtils;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -39,7 +38,7 @@ public class OAuth2Controller extends BaseController {
             "the scheme is known from it) and domain name and port (port may be known from x-forwarded-port header)")
     @RequestMapping(value = "/noauth/oauth2Clients", method = RequestMethod.POST)
     @ResponseBody
-    public List<OAuth2ClientInfo> getOAuth2Clients(@NotNull HttpServletRequest request,
+    public List<OAuth2ClientInfo> getOAuth2Clients(HttpServletRequest request,
                                                    @ApiParam(value = "Mobile application package name, to find OAuth2 clients " +
                                                            "where there is configured mobile application with such package name")
                                                    @RequestParam(required = false) String pkgName,
@@ -96,7 +95,6 @@ public class OAuth2Controller extends BaseController {
         }
     }
 
-    @NotNull
     @ApiOperation(value = "Get OAuth2 log in processing URL (getLoginProcessingUrl)", notes = "Returns the URL enclosed in " +
                                                                                               "double quotes. After successful authentication with OAuth2 provider, it makes a redirect to this path so that the platform can do " +
                                                                                               "further log in processing. This URL may be configured as 'security.oauth2.loginProcessingUrl' property in yml configuration file, or " +

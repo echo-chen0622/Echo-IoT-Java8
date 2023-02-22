@@ -1,7 +1,6 @@
 package org.echoiot.server.dao.sql.query;
 
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.SqlParameter;
@@ -24,26 +23,25 @@ public class DefaultQueryLogComponent implements QueryLogComponent {
     private long logQueriesThreshold;
 
     @Override
-    public void logQuery(@NotNull QueryContext ctx, @NotNull String query, long duration) {
+    public void logQuery(QueryContext ctx, String query, long duration) {
         if (logSqlQueries && duration > logQueriesThreshold) {
 
-            @NotNull String sqlToUse = substituteParametersInSqlString(query, ctx);
+            String sqlToUse = substituteParametersInSqlString(query, ctx);
             log.warn("SLOW QUERY took {} ms: {}", duration, sqlToUse);
 
         }
     }
 
-    @NotNull
-    String substituteParametersInSqlString(@NotNull String sql, @NotNull SqlParameterSource paramSource) {
+    String substituteParametersInSqlString(String sql, SqlParameterSource paramSource) {
 
-        @NotNull ParsedSql parsedSql = NamedParameterUtils.parseSqlStatement(sql);
-        @NotNull List<SqlParameter> declaredParams = NamedParameterUtils.buildSqlParameterList(parsedSql, paramSource);
+        ParsedSql parsedSql = NamedParameterUtils.parseSqlStatement(sql);
+        List<SqlParameter> declaredParams = NamedParameterUtils.buildSqlParameterList(parsedSql, paramSource);
 
         if (declaredParams.isEmpty()) {
             return sql;
         }
 
-        for (@NotNull SqlParameter parSQL: declaredParams) {
+        for (SqlParameter parSQL: declaredParams) {
             @Nullable String paramName = parSQL.getName();
             if (!paramSource.hasValue(paramName)) {
                 continue;

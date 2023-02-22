@@ -10,7 +10,6 @@ import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.plugin.ComponentType;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Slf4j
@@ -27,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
 public class TbDeviceTypeSwitchNode extends TbAbstractTypeSwitchNode {
 
     @Override
-    protected String getRelationType(@NotNull TbContext ctx, @NotNull EntityId originator) throws TbNodeException {
+    protected String getRelationType(TbContext ctx, EntityId originator) throws TbNodeException {
         if (!EntityType.DEVICE.equals(originator.getEntityType())) {
             throw new TbNodeException("Unsupported originator type: " + originator.getEntityType() + "! Only 'DEVICE' type is allowed.");
         }

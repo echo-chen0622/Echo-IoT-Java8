@@ -2,7 +2,6 @@ package org.echoiot.server.common.data.id;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
@@ -15,8 +14,7 @@ public class EdgeEventId extends UUIDBased {
         super(id);
     }
 
-    @NotNull
-    public static EdgeEventId fromString(@NotNull String edgeEventId) {
+    public static EdgeEventId fromString(String edgeEventId) {
         return new EdgeEventId(UUID.fromString(edgeEventId));
     }
 }

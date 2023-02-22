@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.eclipse.californium.core.coap.MessageObserver;
 import org.eclipse.californium.core.coap.Response;
 import org.eclipse.californium.elements.EndpointContext;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
@@ -12,9 +11,7 @@ import java.util.function.Consumer;
 public class TbCoapMessageObserver implements MessageObserver {
 
     private final int msgId;
-    @NotNull
     private final Consumer<Integer> onAcknowledge;
-    @NotNull
     private final Consumer<Integer> onTimeout;
 
     @Override

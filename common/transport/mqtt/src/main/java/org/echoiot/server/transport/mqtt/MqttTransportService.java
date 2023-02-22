@@ -11,7 +11,6 @@ import io.netty.util.ResourceLeakDetector;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.DataConstants;
 import org.echoiot.server.common.data.TbTransportService;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Service;
@@ -69,7 +68,7 @@ public class MqttTransportService implements TbTransportService {
         log.info("Starting MQTT transport...");
         bossGroup = new NioEventLoopGroup(bossGroupThreadCount);
         workerGroup = new NioEventLoopGroup(workerGroupThreadCount);
-        @NotNull ServerBootstrap b = new ServerBootstrap();
+        ServerBootstrap b = new ServerBootstrap();
         b.group(bossGroup, workerGroup)
                 .channel(NioServerSocketChannel.class)
                 .childHandler(new MqttTransportServerInitializer(context, false))
@@ -102,7 +101,6 @@ public class MqttTransportService implements TbTransportService {
         log.info("MQTT transport stopped!");
     }
 
-    @NotNull
     @Override
     public String getName() {
         return DataConstants.MQTT_TRANSPORT_NAME;

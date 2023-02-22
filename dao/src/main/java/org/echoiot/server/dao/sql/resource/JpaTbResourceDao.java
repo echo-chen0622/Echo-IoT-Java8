@@ -12,7 +12,6 @@ import org.echoiot.server.dao.model.sql.TbResourceEntity;
 import org.echoiot.server.dao.resource.TbResourceDao;
 import org.echoiot.server.dao.sql.JpaAbstractSearchTextDao;
 import org.echoiot.server.dao.util.SqlDao;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
@@ -32,7 +31,6 @@ public class JpaTbResourceDao extends JpaAbstractSearchTextDao<TbResourceEntity,
         this.resourceRepository = resourceRepository;
     }
 
-    @NotNull
     @Override
     protected Class<TbResourceEntity> getEntityClass() {
         return TbResourceEntity.class;
@@ -44,22 +42,20 @@ public class JpaTbResourceDao extends JpaAbstractSearchTextDao<TbResourceEntity,
     }
 
     @Override
-    public TbResource getResource(@NotNull TenantId tenantId, @NotNull ResourceType resourceType, String resourceKey) {
+    public TbResource getResource(TenantId tenantId, ResourceType resourceType, String resourceKey) {
 
         return DaoUtil.getData(resourceRepository.findByTenantIdAndResourceTypeAndResourceKey(tenantId.getId(), resourceType.name(), resourceKey));
     }
 
-    @NotNull
     @Override
-    public PageData<TbResource> findAllByTenantId(@NotNull TenantId tenantId, PageLink pageLink) {
+    public PageData<TbResource> findAllByTenantId(TenantId tenantId, PageLink pageLink) {
         return DaoUtil.toPageData(resourceRepository.findAllByTenantId(tenantId.getId(), DaoUtil.toPageable(pageLink)));
     }
 
-    @NotNull
     @Override
-    public PageData<TbResource> findResourcesByTenantIdAndResourceType(@NotNull TenantId tenantId,
-                                                                       @NotNull ResourceType resourceType,
-                                                                       @NotNull PageLink pageLink) {
+    public PageData<TbResource> findResourcesByTenantIdAndResourceType(TenantId tenantId,
+                                                                       ResourceType resourceType,
+                                                                       PageLink pageLink) {
         return DaoUtil.toPageData(resourceRepository.findResourcesPage(
                 tenantId.getId(),
                 TenantId.SYS_TENANT_ID.getId(),
@@ -70,7 +66,7 @@ public class JpaTbResourceDao extends JpaAbstractSearchTextDao<TbResourceEntity,
     }
 
     @Override
-    public List<TbResource> findResourcesByTenantIdAndResourceType(@NotNull TenantId tenantId, @NotNull ResourceType resourceType,
+    public List<TbResource> findResourcesByTenantIdAndResourceType(TenantId tenantId, ResourceType resourceType,
                                                                    @Nullable String[] objectIds,
                                                                    String searchText) {
         return objectIds == null ?
@@ -86,11 +82,10 @@ public class JpaTbResourceDao extends JpaAbstractSearchTextDao<TbResourceEntity,
     }
 
     @Override
-    public Long sumDataSizeByTenantId(@NotNull TenantId tenantId) {
+    public Long sumDataSizeByTenantId(TenantId tenantId) {
         return resourceRepository.sumDataSizeByTenantId(tenantId.getId());
     }
 
-    @NotNull
     @Override
     public EntityType getEntityType() {
         return EntityType.TB_RESOURCE;

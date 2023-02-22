@@ -9,7 +9,6 @@ import org.echoiot.server.common.data.ota.OtaPackageType;
 import org.echoiot.server.common.transport.adaptor.AdaptorException;
 import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.transport.mqtt.session.MqttDeviceAwareSessionContext;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
@@ -22,7 +21,7 @@ public class BackwardCompatibilityAdaptor implements MqttTransportAdaptor {
     private MqttTransportAdaptor jsonAdaptor;
 
     @Override
-    public TransportProtos.PostTelemetryMsg convertToPostTelemetry(@NotNull MqttDeviceAwareSessionContext ctx, MqttPublishMessage inbound) throws AdaptorException {
+    public TransportProtos.PostTelemetryMsg convertToPostTelemetry(MqttDeviceAwareSessionContext ctx, MqttPublishMessage inbound) throws AdaptorException {
         try {
             return protoAdaptor.convertToPostTelemetry(ctx, inbound);
         } catch (AdaptorException e) {
@@ -32,7 +31,7 @@ public class BackwardCompatibilityAdaptor implements MqttTransportAdaptor {
     }
 
     @Override
-    public TransportProtos.PostAttributeMsg convertToPostAttributes(@NotNull MqttDeviceAwareSessionContext ctx, MqttPublishMessage inbound) throws AdaptorException {
+    public TransportProtos.PostAttributeMsg convertToPostAttributes(MqttDeviceAwareSessionContext ctx, MqttPublishMessage inbound) throws AdaptorException {
         try {
             return protoAdaptor.convertToPostAttributes(ctx, inbound);
         } catch (AdaptorException e) {
@@ -42,7 +41,7 @@ public class BackwardCompatibilityAdaptor implements MqttTransportAdaptor {
     }
 
     @Override
-    public TransportProtos.GetAttributeRequestMsg convertToGetAttributes(@NotNull MqttDeviceAwareSessionContext ctx, MqttPublishMessage inbound, String topicBase) throws AdaptorException {
+    public TransportProtos.GetAttributeRequestMsg convertToGetAttributes(MqttDeviceAwareSessionContext ctx, MqttPublishMessage inbound, String topicBase) throws AdaptorException {
         try {
             return protoAdaptor.convertToGetAttributes(ctx, inbound, topicBase);
         } catch (AdaptorException e) {
@@ -52,7 +51,7 @@ public class BackwardCompatibilityAdaptor implements MqttTransportAdaptor {
     }
 
     @Override
-    public TransportProtos.ToDeviceRpcResponseMsg convertToDeviceRpcResponse(@NotNull MqttDeviceAwareSessionContext ctx, MqttPublishMessage mqttMsg, String topicBase) throws AdaptorException {
+    public TransportProtos.ToDeviceRpcResponseMsg convertToDeviceRpcResponse(MqttDeviceAwareSessionContext ctx, MqttPublishMessage mqttMsg, String topicBase) throws AdaptorException {
         try {
             return protoAdaptor.convertToDeviceRpcResponse(ctx, mqttMsg, topicBase);
         } catch (AdaptorException e) {
@@ -62,7 +61,7 @@ public class BackwardCompatibilityAdaptor implements MqttTransportAdaptor {
     }
 
     @Override
-    public TransportProtos.ToServerRpcRequestMsg convertToServerRpcRequest(@NotNull MqttDeviceAwareSessionContext ctx, MqttPublishMessage mqttMsg, String topicBase) throws AdaptorException {
+    public TransportProtos.ToServerRpcRequestMsg convertToServerRpcRequest(MqttDeviceAwareSessionContext ctx, MqttPublishMessage mqttMsg, String topicBase) throws AdaptorException {
         try {
             return protoAdaptor.convertToServerRpcRequest(ctx, mqttMsg, topicBase);
         } catch (AdaptorException e) {
@@ -72,7 +71,7 @@ public class BackwardCompatibilityAdaptor implements MqttTransportAdaptor {
     }
 
     @Override
-    public TransportProtos.ClaimDeviceMsg convertToClaimDevice(@NotNull MqttDeviceAwareSessionContext ctx, MqttPublishMessage inbound) throws AdaptorException {
+    public TransportProtos.ClaimDeviceMsg convertToClaimDevice(MqttDeviceAwareSessionContext ctx, MqttPublishMessage inbound) throws AdaptorException {
         try {
             return protoAdaptor.convertToClaimDevice(ctx, inbound);
         } catch (AdaptorException e) {
@@ -81,9 +80,8 @@ public class BackwardCompatibilityAdaptor implements MqttTransportAdaptor {
         }
     }
 
-    @NotNull
     @Override
-    public Optional<MqttMessage> convertToPublish(@NotNull MqttDeviceAwareSessionContext ctx, TransportProtos.GetAttributeResponseMsg responseMsg, String topicBase) throws AdaptorException {
+    public Optional<MqttMessage> convertToPublish(MqttDeviceAwareSessionContext ctx, TransportProtos.GetAttributeResponseMsg responseMsg, String topicBase) throws AdaptorException {
         log.warn("[{}] invoked not implemented adaptor method! GetAttributeResponseMsg: {} TopicBase: {}", ctx.getSessionId(), responseMsg, topicBase);
         return Optional.empty();
     }
@@ -93,9 +91,8 @@ public class BackwardCompatibilityAdaptor implements MqttTransportAdaptor {
         return protoAdaptor.convertToGatewayPublish(ctx, deviceName, responseMsg);
     }
 
-    @NotNull
     @Override
-    public Optional<MqttMessage> convertToPublish(@NotNull MqttDeviceAwareSessionContext ctx, TransportProtos.AttributeUpdateNotificationMsg notificationMsg, String topic) throws AdaptorException {
+    public Optional<MqttMessage> convertToPublish(MqttDeviceAwareSessionContext ctx, TransportProtos.AttributeUpdateNotificationMsg notificationMsg, String topic) throws AdaptorException {
         log.warn("[{}] invoked not implemented adaptor method! AttributeUpdateNotificationMsg: {} Topic: {}", ctx.getSessionId(), notificationMsg, topic);
         return Optional.empty();
     }
@@ -105,9 +102,8 @@ public class BackwardCompatibilityAdaptor implements MqttTransportAdaptor {
         return protoAdaptor.convertToGatewayPublish(ctx, deviceName, notificationMsg);
     }
 
-    @NotNull
     @Override
-    public Optional<MqttMessage> convertToPublish(@NotNull MqttDeviceAwareSessionContext ctx, TransportProtos.ToDeviceRpcRequestMsg rpcRequest, String topicBase) throws AdaptorException {
+    public Optional<MqttMessage> convertToPublish(MqttDeviceAwareSessionContext ctx, TransportProtos.ToDeviceRpcRequestMsg rpcRequest, String topicBase) throws AdaptorException {
         log.warn("[{}] invoked not implemented adaptor method! ToDeviceRpcRequestMsg: {} TopicBase: {}", ctx.getSessionId(), rpcRequest, topicBase);
         return Optional.empty();
     }
@@ -117,22 +113,20 @@ public class BackwardCompatibilityAdaptor implements MqttTransportAdaptor {
         return protoAdaptor.convertToGatewayPublish(ctx, deviceName, rpcRequest);
     }
 
-    @NotNull
     @Override
-    public Optional<MqttMessage> convertToPublish(@NotNull MqttDeviceAwareSessionContext ctx, TransportProtos.ToServerRpcResponseMsg rpcResponse, String topicBase) throws AdaptorException {
+    public Optional<MqttMessage> convertToPublish(MqttDeviceAwareSessionContext ctx, TransportProtos.ToServerRpcResponseMsg rpcResponse, String topicBase) throws AdaptorException {
         log.warn("[{}] invoked not implemented adaptor method! ToServerRpcResponseMsg: {} TopicBase: {}", ctx.getSessionId(), rpcResponse, topicBase);
         return Optional.empty();
     }
 
     @Override
-    public TransportProtos.ProvisionDeviceRequestMsg convertToProvisionRequestMsg(@NotNull MqttDeviceAwareSessionContext ctx, MqttPublishMessage inbound) throws AdaptorException {
+    public TransportProtos.ProvisionDeviceRequestMsg convertToProvisionRequestMsg(MqttDeviceAwareSessionContext ctx, MqttPublishMessage inbound) throws AdaptorException {
         log.warn("[{}] invoked not implemented adaptor method! MqttPublishMessage: {}", ctx.getSessionId(), inbound);
         return null;
     }
 
-    @NotNull
     @Override
-    public Optional<MqttMessage> convertToPublish(@NotNull MqttDeviceAwareSessionContext ctx, TransportProtos.ProvisionDeviceResponseMsg provisionResponse) throws AdaptorException {
+    public Optional<MqttMessage> convertToPublish(MqttDeviceAwareSessionContext ctx, TransportProtos.ProvisionDeviceResponseMsg provisionResponse) throws AdaptorException {
         log.warn("[{}] invoked not implemented adaptor method! ProvisionDeviceResponseMsg: {}", ctx.getSessionId(), provisionResponse);
         return Optional.empty();
     }

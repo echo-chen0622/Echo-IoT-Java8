@@ -8,7 +8,6 @@ import org.eclipse.californium.core.network.CoapEndpoint;
 import org.eclipse.californium.elements.config.Configuration;
 import org.eclipse.californium.scandium.DTLSConnector;
 import org.eclipse.californium.scandium.config.DtlsConnectorConfig;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -81,7 +80,7 @@ public class DefaultCoapServerService implements CoapServerService {
     }
 
     private CoapServer createCoapServer() throws UnknownHostException {
-        @NotNull Configuration networkConfig = new Configuration();
+        Configuration networkConfig = new Configuration();
         networkConfig.set(CoapConfig.BLOCKWISE_STRICT_BLOCK2_OPTION, true);
         networkConfig.set(CoapConfig.BLOCKWISE_ENTITY_TOO_LARGE_AUTO_FAILOVER, true);
         networkConfig.set(CoapConfig.BLOCKWISE_STATUS_LIFETIME, DEFAULT_BLOCKWISE_STATUS_LIFETIME_IN_SECONDS, TimeUnit.SECONDS);
@@ -93,21 +92,21 @@ public class DefaultCoapServerService implements CoapServerService {
         networkConfig.set(CoapConfig.COAP_PORT, coapServerContext.getPort());
         server = new CoapServer(networkConfig);
 
-        @NotNull CoapEndpoint.Builder noSecCoapEndpointBuilder = new CoapEndpoint.Builder();
+        CoapEndpoint.Builder noSecCoapEndpointBuilder = new CoapEndpoint.Builder();
         InetAddress addr = InetAddress.getByName(coapServerContext.getHost());
-        @NotNull InetSocketAddress sockAddr = new InetSocketAddress(addr, coapServerContext.getPort());
+        InetSocketAddress sockAddr = new InetSocketAddress(addr, coapServerContext.getPort());
         noSecCoapEndpointBuilder.setInetSocketAddress(sockAddr);
 
         noSecCoapEndpointBuilder.setConfiguration(networkConfig);
         CoapEndpoint noSecCoapEndpoint = noSecCoapEndpointBuilder.build();
         server.addEndpoint(noSecCoapEndpoint);
         if (isDtlsEnabled()) {
-            @NotNull CoapEndpoint.Builder dtlsCoapEndpointBuilder = new CoapEndpoint.Builder();
+            CoapEndpoint.Builder dtlsCoapEndpointBuilder = new CoapEndpoint.Builder();
             TbCoapDtlsSettings dtlsSettings = coapServerContext.getDtlsSettings();
             DtlsConnectorConfig dtlsConnectorConfig = dtlsSettings.dtlsConnectorConfig(networkConfig);
             networkConfig.set(CoapConfig.COAP_SECURE_PORT, dtlsConnectorConfig.getAddress().getPort());
             dtlsCoapEndpointBuilder.setConfiguration(networkConfig);
-            @NotNull DTLSConnector connector = new DTLSConnector(dtlsConnectorConfig);
+            DTLSConnector connector = new DTLSConnector(dtlsConnectorConfig);
             dtlsCoapEndpointBuilder.setConnector(connector);
             CoapEndpoint dtlsCoapEndpoint = dtlsCoapEndpointBuilder.build();
             server.addEndpoint(dtlsCoapEndpoint);
@@ -116,7 +115,7 @@ public class DefaultCoapServerService implements CoapServerService {
             dtlsSessionsExecutor.scheduleAtFixedRate(this::evictTimeoutSessions, new Random().nextInt((int) getDtlsSessionReportTimeout()), getDtlsSessionReportTimeout(), TimeUnit.MILLISECONDS);
         }
         org.eclipse.californium.core.server.resources.Resource root = server.getRoot();
-        @NotNull TbCoapServerMessageDeliverer messageDeliverer = new TbCoapServerMessageDeliverer(root);
+        TbCoapServerMessageDeliverer messageDeliverer = new TbCoapServerMessageDeliverer(root);
         server.setMessageDeliverer(messageDeliverer);
 
         server.start();

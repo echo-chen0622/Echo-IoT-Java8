@@ -9,7 +9,6 @@ import io.netty.handler.codec.mqtt.MqttEncoder;
 import io.netty.handler.ssl.SslHandler;
 import org.echoiot.server.transport.mqtt.limits.IpFilter;
 import org.echoiot.server.transport.mqtt.limits.ProxyIpFilter;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -26,7 +25,7 @@ public class MqttTransportServerInitializer extends ChannelInitializer<SocketCha
     }
 
     @Override
-    public void initChannel(@NotNull SocketChannel ch) {
+    public void initChannel(SocketChannel ch) {
         ChannelPipeline pipeline = ch.pipeline();
         @Nullable SslHandler sslHandler = null;
         if (context.isProxyEnabled()) {
@@ -42,7 +41,7 @@ public class MqttTransportServerInitializer extends ChannelInitializer<SocketCha
         pipeline.addLast("decoder", new MqttDecoder(context.getMaxPayloadSize()));
         pipeline.addLast("encoder", MqttEncoder.INSTANCE);
 
-        @NotNull MqttTransportHandler handler = new MqttTransportHandler(context, sslHandler);
+        MqttTransportHandler handler = new MqttTransportHandler(context, sslHandler);
 
         pipeline.addLast(handler);
         ch.closeFuture().addListener(handler);

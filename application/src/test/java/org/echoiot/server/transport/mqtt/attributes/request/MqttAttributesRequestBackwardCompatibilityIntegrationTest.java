@@ -7,7 +7,6 @@ import org.echoiot.server.dao.service.DaoSqlTest;
 import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.transport.mqtt.MqttTestConfigProperties;
 import org.echoiot.server.transport.mqtt.attributes.AbstractMqttAttributesIntegrationTest;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -93,9 +92,8 @@ public class MqttAttributesRequestBackwardCompatibilityIntegrationTest extends A
     }
 
 
-    @NotNull
-    protected List<TransportProtos.KeyValueProto> getKvProtos(@NotNull List<String> expectedKeys) {
-        @NotNull List<TransportProtos.KeyValueProto> keyValueProtos = new ArrayList<>();
+    protected List<TransportProtos.KeyValueProto> getKvProtos(List<String> expectedKeys) {
+        List<TransportProtos.KeyValueProto> keyValueProtos = new ArrayList<>();
         TransportProtos.KeyValueProto strKeyValueProto = getKeyValueProto(expectedKeys.get(0), "value1", TransportProtos.KeyValueType.STRING_V);
         TransportProtos.KeyValueProto boolKeyValueProto = getKeyValueProto(expectedKeys.get(1), "true", TransportProtos.KeyValueType.BOOLEAN_V);
         TransportProtos.KeyValueProto dblKeyValueProto = getKeyValueProto(expectedKeys.get(2), "42.0", TransportProtos.KeyValueType.DOUBLE_V);

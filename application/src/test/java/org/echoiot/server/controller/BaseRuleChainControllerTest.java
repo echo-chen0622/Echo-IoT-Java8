@@ -18,7 +18,6 @@ import org.echoiot.server.common.data.rule.RuleNode;
 import org.echoiot.server.common.data.security.Authority;
 import org.echoiot.server.dao.exception.DataValidationException;
 import org.echoiot.server.dao.rule.RuleChainDao;
-import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -61,7 +60,7 @@ public abstract class BaseRuleChainControllerTest extends AbstractControllerTest
     public void beforeTest() throws Exception {
         loginSysAdmin();
 
-        @NotNull Tenant tenant = new Tenant();
+        Tenant tenant = new Tenant();
         tenant.setTitle("My tenant");
         savedTenant = doPost("/api/tenant", tenant, Tenant.class);
         Assert.assertNotNull(savedTenant);
@@ -86,7 +85,7 @@ public abstract class BaseRuleChainControllerTest extends AbstractControllerTest
 
     @Test
     public void testSaveRuleChain() throws Exception {
-        @NotNull RuleChain ruleChain = new RuleChain();
+        RuleChain ruleChain = new RuleChain();
         ruleChain.setName("RuleChain");
 
         Mockito.reset(tbClusterService, auditLogService);
@@ -116,9 +115,9 @@ public abstract class BaseRuleChainControllerTest extends AbstractControllerTest
 
         Mockito.reset(tbClusterService, auditLogService);
 
-        @NotNull RuleChain ruleChain = new RuleChain();
+        RuleChain ruleChain = new RuleChain();
         ruleChain.setName(StringUtils.randomAlphabetic(300));
-        @NotNull String msgError = msgErrorFieldLength("name");
+        String msgError = msgErrorFieldLength("name");
         doPost("/api/ruleChain", ruleChain)
                 .andExpect(status().isBadRequest())
                 .andExpect(statusReason(containsString(msgError)));
@@ -131,7 +130,7 @@ public abstract class BaseRuleChainControllerTest extends AbstractControllerTest
 
     @Test
     public void testFindRuleChainById() throws Exception {
-        @NotNull RuleChain ruleChain = new RuleChain();
+        RuleChain ruleChain = new RuleChain();
         ruleChain.setName("RuleChain");
         RuleChain savedRuleChain = doPost("/api/ruleChain", ruleChain, RuleChain.class);
         RuleChain foundRuleChain = doGet("/api/ruleChain/" + savedRuleChain.getId().getId().toString(), RuleChain.class);
@@ -141,7 +140,7 @@ public abstract class BaseRuleChainControllerTest extends AbstractControllerTest
 
     @Test
     public void testDeleteRuleChain() throws Exception {
-        @NotNull RuleChain ruleChain = new RuleChain();
+        RuleChain ruleChain = new RuleChain();
         ruleChain.setName("RuleChain");
         RuleChain savedRuleChain = doPost("/api/ruleChain", ruleChain, RuleChain.class);
 
@@ -166,7 +165,7 @@ public abstract class BaseRuleChainControllerTest extends AbstractControllerTest
         Edge savedEdge = doPost("/api/edge", edge, Edge.class);
 
 
-        @NotNull List<RuleChain> edgeRuleChains = new ArrayList<>();
+        List<RuleChain> edgeRuleChains = new ArrayList<>();
         PageLink pageLink = new PageLink(17);
         PageData<RuleChain> pageData = doGetTypedWithPageLink("/api/edge/" + savedEdge.getId().getId() + "/ruleChains?",
                 new TypeReference<>() {
@@ -179,7 +178,7 @@ public abstract class BaseRuleChainControllerTest extends AbstractControllerTest
 
         int cntEntity = 28;
         for (int i = 0; i < cntEntity; i++) {
-            @NotNull RuleChain ruleChain = new RuleChain();
+            RuleChain ruleChain = new RuleChain();
             ruleChain.setName("RuleChain " + i);
             ruleChain.setType(RuleChainType.EDGE);
             RuleChain savedRuleChain = doPost("/api/ruleChain", ruleChain, RuleChain.class);
@@ -197,7 +196,7 @@ public abstract class BaseRuleChainControllerTest extends AbstractControllerTest
                                                                );
         Mockito.reset(tbClusterService, auditLogService);
 
-        @NotNull List<RuleChain> loadedEdgeRuleChains = new ArrayList<>();
+        List<RuleChain> loadedEdgeRuleChains = new ArrayList<>();
         pageLink = new PageLink(17);
         do {
             pageData = doGetTypedWithPageLink("/api/edge/" + savedEdge.getId().getId() + "/ruleChains?",
@@ -214,7 +213,7 @@ public abstract class BaseRuleChainControllerTest extends AbstractControllerTest
 
         Assert.assertEquals(edgeRuleChains, loadedEdgeRuleChains);
 
-        for (@NotNull RuleChain ruleChain : loadedEdgeRuleChains) {
+        for (RuleChain ruleChain : loadedEdgeRuleChains) {
             if (!ruleChain.isRoot()) {
                 doDelete("/api/edge/" + savedEdge.getId().getId().toString()
                         + "/ruleChain/" + ruleChain.getId().getId().toString(), RuleChain.class);
@@ -248,18 +247,18 @@ public abstract class BaseRuleChainControllerTest extends AbstractControllerTest
     @Test
     public void givenRuleNodeWithInvalidConfiguration_thenReturnError() throws Exception {
         RuleChain ruleChain = createRuleChain("Rule chain with invalid nodes");
-        @NotNull RuleChainMetaData ruleChainMetaData = new RuleChainMetaData();
+        RuleChainMetaData ruleChainMetaData = new RuleChainMetaData();
         ruleChainMetaData.setRuleChainId(ruleChain.getId());
 
-        @NotNull RuleNode createAlarmNode = new RuleNode();
+        RuleNode createAlarmNode = new RuleNode();
         createAlarmNode.setName("Create alarm");
         createAlarmNode.setType(TbCreateAlarmNode.class.getName());
-        @NotNull TbCreateAlarmNodeConfiguration invalidCreateAlarmNodeConfiguration = new TbCreateAlarmNodeConfiguration();
+        TbCreateAlarmNodeConfiguration invalidCreateAlarmNodeConfiguration = new TbCreateAlarmNodeConfiguration();
         invalidCreateAlarmNodeConfiguration.setSeverity("<script/>");
         invalidCreateAlarmNodeConfiguration.setAlarmType("<script/>");
         createAlarmNode.setConfiguration(mapper.valueToTree(invalidCreateAlarmNodeConfiguration));
 
-        @NotNull List<RuleNode> ruleNodes = new ArrayList<>();
+        List<RuleNode> ruleNodes = new ArrayList<>();
         ruleNodes.add(createAlarmNode);
         ruleChainMetaData.setFirstNodeIndex(0);
         ruleChainMetaData.setNodes(ruleNodes);
@@ -271,7 +270,7 @@ public abstract class BaseRuleChainControllerTest extends AbstractControllerTest
     }
 
     private RuleChain createRuleChain(String name) {
-        @NotNull RuleChain ruleChain = new RuleChain();
+        RuleChain ruleChain = new RuleChain();
         ruleChain.setName(name);
         return doPost("/api/ruleChain", ruleChain, RuleChain.class);
     }

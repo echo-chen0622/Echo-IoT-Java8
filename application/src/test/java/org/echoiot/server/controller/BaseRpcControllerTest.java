@@ -11,7 +11,6 @@ import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.rpc.Rpc;
 import org.echoiot.server.common.data.rpc.RpcStatus;
 import org.echoiot.server.common.data.security.Authority;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.junit.After;
 import org.junit.Assert;
@@ -32,7 +31,7 @@ public abstract class BaseRpcControllerTest extends AbstractControllerTest {
     public void beforeTest() throws Exception {
         loginSysAdmin();
 
-        @NotNull Tenant tenant = new Tenant();
+        Tenant tenant = new Tenant();
         tenant.setTitle("My tenant");
         savedTenant = doPost("/api/tenant", tenant, Tenant.class);
         Assert.assertNotNull(savedTenant);
@@ -55,16 +54,14 @@ public abstract class BaseRpcControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @NotNull
     private Device createDefaultDevice() {
-        @NotNull Device device = new Device();
+        Device device = new Device();
         device.setName("My device");
         device.setType("default");
 
         return device;
     }
 
-    @NotNull
     private ObjectNode createDefaultRpc() {
         ObjectNode rpc = JacksonUtil.newObjectNode();
         rpc.put("method", "setGpio");
@@ -85,17 +82,16 @@ public abstract class BaseRpcControllerTest extends AbstractControllerTest {
         return doGet("/api/rpc/persistent/" + rpcId, Rpc.class);
     }
 
-    @NotNull
     private MvcResult removeRpcById(String rpcId) throws Exception {
         return doDelete("/api/rpc/persistent/" + rpcId).andReturn();
     }
 
     @Test
     public void testSaveRpc() throws Exception {
-        @NotNull Device device = createDefaultDevice();
+        Device device = createDefaultDevice();
         Device savedDevice = doPost("/api/device", device, Device.class);
 
-        @NotNull ObjectNode rpc = createDefaultRpc();
+        ObjectNode rpc = createDefaultRpc();
         String result = doPostAsync(
                 "/api/rpc/oneway/" + savedDevice.getId().getId().toString(),
                 JacksonUtil.toString(rpc),
@@ -113,10 +109,10 @@ public abstract class BaseRpcControllerTest extends AbstractControllerTest {
 
     @Test
     public void testDeleteRpc() throws Exception {
-        @NotNull Device device = createDefaultDevice();
+        Device device = createDefaultDevice();
         Device savedDevice = doPost("/api/device", device, Device.class);
 
-        @NotNull ObjectNode rpc = createDefaultRpc();
+        ObjectNode rpc = createDefaultRpc();
         String result = doPostAsync(
                 "/api/rpc/oneway/" + savedDevice.getId().getId().toString(),
                 JacksonUtil.toString(rpc),
@@ -128,19 +124,19 @@ public abstract class BaseRpcControllerTest extends AbstractControllerTest {
                 .asText();
         Rpc savedRpc = getRpcById(rpcId);
 
-        @NotNull MvcResult mvcResult = removeRpcById(savedRpc.getId().getId().toString());
-        @NotNull MvcResult res = doGet("/api/rpc/persistent/" + rpcId)
+        MvcResult mvcResult = removeRpcById(savedRpc.getId().getId().toString());
+        MvcResult res = doGet("/api/rpc/persistent/" + rpcId)
                 .andExpect(status().isNotFound())
                 .andReturn();
 
         @Nullable JsonNode deleteResponse = JacksonUtil.fromString(res.getResponse().getContentAsString(), JsonNode.class);
         Assert.assertEquals(404, deleteResponse.get("status").asInt());
 
-        @NotNull String url = "/api/rpc/persistent/device/" + savedDevice.getUuidId().toString()
+        String url = "/api/rpc/persistent/device/" + savedDevice.getUuidId().toString()
                               + "?" + "page=0" + "&" +
                               "pageSize=" + Integer.MAX_VALUE + "&" +
                               "rpcStatus=" + RpcStatus.DELETED.name();
-        @NotNull MvcResult byDeviceResult = doGet(url).andReturn();
+        MvcResult byDeviceResult = doGet(url).andReturn();
         @Nullable JsonNode byDeviceResponse = JacksonUtil.fromString(byDeviceResult.getResponse().getContentAsString(), JsonNode.class);
 
         Assert.assertEquals(500, byDeviceResponse.get("status").asInt());
@@ -148,10 +144,10 @@ public abstract class BaseRpcControllerTest extends AbstractControllerTest {
 
     @Test
     public void testGetRpcsByDeviceId() throws Exception {
-        @NotNull Device device = createDefaultDevice();
+        Device device = createDefaultDevice();
         Device savedDevice = doPost("/api/device", device, Device.class);
 
-        @NotNull ObjectNode rpc = createDefaultRpc();
+        ObjectNode rpc = createDefaultRpc();
 
         String result = doPostAsync(
                 "/api/rpc/oneway/" + savedDevice.getId().getId().toString(),
@@ -163,12 +159,12 @@ public abstract class BaseRpcControllerTest extends AbstractControllerTest {
                 .get("rpcId")
                 .asText();
 
-        @NotNull String url = "/api/rpc/persistent/device/" + savedDevice.getId().getId()
+        String url = "/api/rpc/persistent/device/" + savedDevice.getId().getId()
                               + "?" + "page=0" + "&" +
                               "pageSize=" + Integer.MAX_VALUE + "&" +
                               "rpcStatus=" + RpcStatus.QUEUED;
 
-        @NotNull MvcResult byDeviceResult = doGetAsync(url).andReturn();
+        MvcResult byDeviceResult = doGetAsync(url).andReturn();
 
         List<Rpc> byDeviceRpcs = JacksonUtil.fromString(
                 byDeviceResult

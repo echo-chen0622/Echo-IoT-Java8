@@ -13,7 +13,6 @@ import org.eclipse.leshan.core.model.ObjectModel;
 import org.eclipse.leshan.core.model.ResourceModel;
 import org.eclipse.leshan.server.model.LwM2mModelProvider;
 import org.eclipse.leshan.server.registration.Registration;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -32,7 +31,6 @@ public class LwM2mVersionedModelProvider implements LwM2mModelProvider {
     private final LwM2mClientContext lwM2mClientContext;
     private final LwM2mTransportServerHelper helper;
     private final LwM2mTransportContext context;
-    @NotNull
     private final ConcurrentMap<TenantId, ConcurrentMap<String, ObjectModel>> models;
 
     public LwM2mVersionedModelProvider(@Lazy LwM2mClientContext lwM2mClientContext, LwM2mTransportServerHelper helper, LwM2mTransportContext context) {
@@ -46,13 +44,12 @@ public class LwM2mVersionedModelProvider implements LwM2mModelProvider {
         return objectId != null ? objectId + LwM2mConstants.LWM2M_SEPARATOR_KEY + ((version == null || version.isEmpty()) ? ObjectModel.DEFAULT_VERSION : version) : null;
     }
 
-    @NotNull
     @Override
-    public LwM2mModel getObjectModel(@NotNull Registration registration) {
+    public LwM2mModel getObjectModel(Registration registration) {
         return new DynamicModel(registration);
     }
 
-    public void evict(@NotNull TenantId tenantId, String key) {
+    public void evict(TenantId tenantId, String key) {
         if (tenantId.isNullUid()) {
             models.values().forEach(m -> m.remove(key));
         } else {
@@ -63,10 +60,9 @@ public class LwM2mVersionedModelProvider implements LwM2mModelProvider {
     private class DynamicModel implements LwM2mModel {
         private final Registration registration;
         private final TenantId tenantId;
-        @NotNull
-        private final Lock modelsLock;
+            private final Lock modelsLock;
 
-        public DynamicModel(@NotNull Registration registration) {
+        public DynamicModel(Registration registration) {
             this.registration = registration;
             this.tenantId = lwM2mClientContext.getClientByEndpoint(registration.getEndpoint()).getTenantId();
             this.modelsLock = new ReentrantLock();
@@ -101,12 +97,11 @@ public class LwM2mVersionedModelProvider implements LwM2mModelProvider {
             return null;
         }
 
-        @NotNull
-        @Override
+            @Override
         public Collection<ObjectModel> getObjectModels() {
             Map<Integer, String> supportedObjects = this.registration.getSupportedObject();
-            @NotNull Collection<ObjectModel> result = new ArrayList<>(supportedObjects.size());
-            for (@NotNull Map.Entry<Integer, String> supportedObject : supportedObjects.entrySet()) {
+            Collection<ObjectModel> result = new ArrayList<>(supportedObjects.size());
+            for (Map.Entry<Integer, String> supportedObject : supportedObjects.entrySet()) {
                 @Nullable ObjectModel objectModel = this.getObjectModelDynamic(supportedObject.getKey(), supportedObject.getValue());
                 if (objectModel != null) {
                     result.add(objectModel);

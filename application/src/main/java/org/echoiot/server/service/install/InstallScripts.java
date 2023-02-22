@@ -1,5 +1,6 @@
 package org.echoiot.server.service.install;
 
+import cn.hutool.core.text.CharSequenceUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.Dashboard;
@@ -17,7 +18,6 @@ import org.echoiot.server.dao.resource.ResourceService;
 import org.echoiot.server.dao.rule.RuleChainService;
 import org.echoiot.server.dao.widget.WidgetTypeService;
 import org.echoiot.server.dao.widget.WidgetsBundleService;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -35,6 +35,7 @@ import static org.echoiot.server.service.install.DatabaseHelper.objectMapper;
 /**
  * 安装脚本
  */
+@SuppressWarnings("AlibabaUndefineMagicConstant")
 @Component
 @Slf4j
 public class InstallScripts {
@@ -60,6 +61,9 @@ public class InstallScripts {
     public static final String JSON_EXT = ".json";
     public static final String XML_EXT = ".xml";
 
+    /**
+     * sql 所在目录
+     */
     @Value("${install.data_dir:}")
     private String dataDir;
 
@@ -81,64 +85,66 @@ public class InstallScripts {
     @Resource
     private ResourceService resourceService;
 
-    @NotNull
     private Path getTenantRuleChainsDir() {
         return Paths.get(getDataDir(), JSON_DIR, TENANT_DIR, RULE_CHAINS_DIR);
     }
 
-    @NotNull
     private Path getDeviceProfileDefaultRuleChainTemplateFilePath() {
         return Paths.get(getDataDir(), JSON_DIR, TENANT_DIR, DEVICE_PROFILE_DIR, "rule_chain_template.json");
     }
 
-    @NotNull
     private Path getEdgeRuleChainsDir() {
         return Paths.get(getDataDir(), JSON_DIR, TENANT_DIR, EDGE_MANAGEMENT, RULE_CHAINS_DIR);
     }
 
+    /**
+     * 获取 sql 文件所在目录
+     */
     public String getDataDir() {
-        if (!StringUtils.isEmpty(dataDir)) {
-            if (!Paths.get(this.dataDir).toFile().isDirectory()) {
-                throw new RuntimeException("'install.data_dir' property value is not a valid directory!");
+        if (CharSequenceUtil.isNotEmpty(dataDir)) {
+            //如果配置文件配置了 dataDir 不为空，检查是否是一个目录
+            if (!Paths.get(dataDir).toFile().isDirectory()) {
+                throw new RuntimeException("'install.data_dir' 配置的值 " + dataDir + " 不是有效的目录!");
             }
             return dataDir;
         } else {
+            //如果配置文件没有配置 dataDir，检查当前目录是否是 application 模块目录
             String workDir = System.getProperty("user.dir");
             if (workDir.endsWith("application")) {
+                //如果是 application 模块目录，直接返回 src/main/data 目录
                 return Paths.get(workDir, SRC_DIR, MAIN_DIR, DATA_DIR).toString();
             } else {
-                @NotNull Path dataDirPath = Paths.get(workDir, APP_DIR, SRC_DIR, MAIN_DIR, DATA_DIR);
+                //如果不是 application 模块目录，默认返回 application 模块的 src/main/data 目录
+                Path dataDirPath = Paths.get(workDir, APP_DIR, SRC_DIR, MAIN_DIR, DATA_DIR);
                 if (Files.exists(dataDirPath)) {
                     return dataDirPath.toString();
                 } else {
-                    throw new RuntimeException("Not valid working directory: " + workDir + ". Please use either root project directory, application module directory or specify valid \"install.data_dir\" ENV variable to avoid automatic data directory lookup!");
+                    throw new RuntimeException("无效的工作目录: " + workDir + ". 请使用任一根项目目录, application 模块目录 或 指定有效 \"install.data_dir\" ENV 环境变量来避免自动数据目录查找!");
                 }
             }
         }
     }
 
     public void createDefaultRuleChains(TenantId tenantId) throws IOException {
-        @NotNull Path tenantChainsDir = getTenantRuleChainsDir();
+        Path tenantChainsDir = getTenantRuleChainsDir();
         loadRuleChainsFromPath(tenantId, tenantChainsDir);
     }
 
     public void createDefaultEdgeRuleChains(TenantId tenantId) throws IOException {
-        @NotNull Path edgeChainsDir = getEdgeRuleChainsDir();
+        Path edgeChainsDir = getEdgeRuleChainsDir();
         loadRuleChainsFromPath(tenantId, edgeChainsDir);
     }
 
-    private void loadRuleChainsFromPath(TenantId tenantId, @NotNull Path ruleChainsPath) throws IOException {
+    private void loadRuleChainsFromPath(TenantId tenantId, Path ruleChainsPath) throws IOException {
         try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(ruleChainsPath, path -> path.toString().endsWith(InstallScripts.JSON_EXT))) {
-            dirStream.forEach(
-                    path -> {
-                        try {
-                            createRuleChainFromFile(tenantId, path, null);
-                        } catch (Exception e) {
-                            log.error("Unable to load rule chain from json: [{}]", path.toString());
-                            throw new RuntimeException("Unable to load rule chain from json", e);
-                        }
-                    }
-            );
+            dirStream.forEach(path -> {
+                try {
+                    createRuleChainFromFile(tenantId, path, null);
+                } catch (Exception e) {
+                    log.error("Unable to load rule chain from json: [{}]", path.toString());
+                    throw new RuntimeException("Unable to load rule chain from json", e);
+                }
+            });
         }
     }
 
@@ -146,8 +152,7 @@ public class InstallScripts {
         return createRuleChainFromFile(tenantId, getDeviceProfileDefaultRuleChainTemplateFilePath(), ruleChainName);
     }
 
-    @NotNull
-    public RuleChain createRuleChainFromFile(TenantId tenantId, @NotNull Path templateFilePath, String newRuleChainName) throws IOException {
+    public RuleChain createRuleChainFromFile(TenantId tenantId, Path templateFilePath, String newRuleChainName) throws IOException {
         JsonNode ruleChainJson = objectMapper.readTree(templateFilePath.toFile());
         RuleChain ruleChain = objectMapper.treeToValue(ruleChainJson.get("ruleChain"), RuleChain.class);
         RuleChainMetaData ruleChainMetaData = objectMapper.treeToValue(ruleChainJson.get("metadata"), RuleChainMetaData.class);
@@ -165,7 +170,7 @@ public class InstallScripts {
     }
 
     public void loadSystemWidgets() throws Exception {
-        @NotNull Path widgetBundlesDir = Paths.get(getDataDir(), JSON_DIR, SYSTEM_DIR, WIDGET_BUNDLES_DIR);
+        Path widgetBundlesDir = Paths.get(getDataDir(), JSON_DIR, SYSTEM_DIR, WIDGET_BUNDLES_DIR);
         try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(widgetBundlesDir, path -> path.toString().endsWith(JSON_EXT))) {
             dirStream.forEach(
                     path -> {
@@ -197,7 +202,7 @@ public class InstallScripts {
     }
 
     public void loadDashboards(TenantId tenantId, @Nullable CustomerId customerId) throws Exception {
-        @NotNull Path dashboardsDir = Paths.get(getDataDir(), JSON_DIR, DEMO_DIR, DASHBOARDS_DIR);
+        Path dashboardsDir = Paths.get(getDataDir(), JSON_DIR, DEMO_DIR, DASHBOARDS_DIR);
         try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(dashboardsDir, path -> path.toString().endsWith(JSON_EXT))) {
             dirStream.forEach(
                     path -> {
@@ -230,7 +235,7 @@ public class InstallScripts {
     }
 
     public void createOAuth2Templates() throws Exception {
-        @NotNull Path oauth2ConfigTemplatesDir = Paths.get(getDataDir(), JSON_DIR, SYSTEM_DIR, OAUTH2_CONFIG_TEMPLATES_DIR);
+        Path oauth2ConfigTemplatesDir = Paths.get(getDataDir(), JSON_DIR, SYSTEM_DIR, OAUTH2_CONFIG_TEMPLATES_DIR);
         try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(oauth2ConfigTemplatesDir, path -> path.toString().endsWith(JSON_EXT))) {
             dirStream.forEach(
                     path -> {

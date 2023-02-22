@@ -13,7 +13,6 @@ import org.echoiot.server.common.data.id.UserId;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.TimePageLink;
 import org.echoiot.server.queue.util.TbCoreComponent;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -50,7 +49,7 @@ public class AuditLogController extends BaseController {
     @RequestMapping(value = "/audit/logs/customer/{customerId}", params = {"pageSize", "page"}, method = RequestMethod.GET)
     @ResponseBody
     public PageData<AuditLog> getAuditLogsByCustomerId(
-            @NotNull @ApiParam(value = CUSTOMER_ID_PARAM_DESCRIPTION)
+            @ApiParam(value = CUSTOMER_ID_PARAM_DESCRIPTION)
             @PathVariable("customerId") String strCustomerId,
             @ApiParam(value = PAGE_SIZE_DESCRIPTION)
             @RequestParam int pageSize,
@@ -60,18 +59,18 @@ public class AuditLogController extends BaseController {
             @RequestParam(required = false) String textSearch,
             @ApiParam(value = AUDIT_LOG_SORT_PROPERTY_DESCRIPTION, allowableValues = AUDIT_LOG_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
-            @NotNull @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
+            @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortOrder,
             @ApiParam(value = AUDIT_LOG_QUERY_START_TIME_DESCRIPTION)
             @RequestParam(required = false) Long startTime,
             @ApiParam(value = AUDIT_LOG_QUERY_END_TIME_DESCRIPTION)
             @RequestParam(required = false) Long endTime,
-            @NotNull @ApiParam(value = AUDIT_LOG_QUERY_ACTION_TYPES_DESCRIPTION)
+            @ApiParam(value = AUDIT_LOG_QUERY_ACTION_TYPES_DESCRIPTION)
             @RequestParam(name = "actionTypes", required = false) String actionTypesStr) throws EchoiotException {
         try {
             checkParameter("CustomerId", strCustomerId);
             TenantId tenantId = getCurrentUser().getTenantId();
-            @NotNull TimePageLink pageLink = createTimePageLink(pageSize, page, textSearch, sortProperty, sortOrder, startTime, endTime);
+            TimePageLink pageLink = createTimePageLink(pageSize, page, textSearch, sortProperty, sortOrder, startTime, endTime);
             @Nullable List<ActionType> actionTypes = parseActionTypesStr(actionTypesStr);
             return checkNotNull(auditLogService.findAuditLogsByTenantIdAndCustomerId(tenantId, new CustomerId(UUID.fromString(strCustomerId)), actionTypes, pageLink));
         } catch (Exception e) {
@@ -88,7 +87,7 @@ public class AuditLogController extends BaseController {
     @RequestMapping(value = "/audit/logs/user/{userId}", params = {"pageSize", "page"}, method = RequestMethod.GET)
     @ResponseBody
     public PageData<AuditLog> getAuditLogsByUserId(
-            @NotNull @ApiParam(value = USER_ID_PARAM_DESCRIPTION)
+            @ApiParam(value = USER_ID_PARAM_DESCRIPTION)
             @PathVariable("userId") String strUserId,
             @ApiParam(value = PAGE_SIZE_DESCRIPTION)
             @RequestParam int pageSize,
@@ -98,18 +97,18 @@ public class AuditLogController extends BaseController {
             @RequestParam(required = false) String textSearch,
             @ApiParam(value = AUDIT_LOG_SORT_PROPERTY_DESCRIPTION, allowableValues = AUDIT_LOG_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
-            @NotNull @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
+            @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortOrder,
             @ApiParam(value = AUDIT_LOG_QUERY_START_TIME_DESCRIPTION)
             @RequestParam(required = false) Long startTime,
             @ApiParam(value = AUDIT_LOG_QUERY_END_TIME_DESCRIPTION)
             @RequestParam(required = false) Long endTime,
-            @NotNull @ApiParam(value = AUDIT_LOG_QUERY_ACTION_TYPES_DESCRIPTION)
+            @ApiParam(value = AUDIT_LOG_QUERY_ACTION_TYPES_DESCRIPTION)
             @RequestParam(name = "actionTypes", required = false) String actionTypesStr) throws EchoiotException {
         try {
             checkParameter("UserId", strUserId);
             TenantId tenantId = getCurrentUser().getTenantId();
-            @NotNull TimePageLink pageLink = createTimePageLink(pageSize, page, textSearch, sortProperty, sortOrder, startTime, endTime);
+            TimePageLink pageLink = createTimePageLink(pageSize, page, textSearch, sortProperty, sortOrder, startTime, endTime);
             @Nullable List<ActionType> actionTypes = parseActionTypesStr(actionTypesStr);
             return checkNotNull(auditLogService.findAuditLogsByTenantIdAndUserId(tenantId, new UserId(UUID.fromString(strUserId)), actionTypes, pageLink));
         } catch (Exception e) {
@@ -129,7 +128,7 @@ public class AuditLogController extends BaseController {
     public PageData<AuditLog> getAuditLogsByEntityId(
             @ApiParam(value = ENTITY_TYPE_PARAM_DESCRIPTION, required = true, defaultValue = "DEVICE")
             @PathVariable("entityType") String strEntityType,
-            @NotNull @ApiParam(value = ENTITY_ID_PARAM_DESCRIPTION, required = true)
+            @ApiParam(value = ENTITY_ID_PARAM_DESCRIPTION, required = true)
             @PathVariable("entityId") String strEntityId,
             @ApiParam(value = PAGE_SIZE_DESCRIPTION, required = true)
             @RequestParam int pageSize,
@@ -139,19 +138,19 @@ public class AuditLogController extends BaseController {
             @RequestParam(required = false) String textSearch,
             @ApiParam(value = AUDIT_LOG_SORT_PROPERTY_DESCRIPTION, allowableValues = AUDIT_LOG_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
-            @NotNull @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
+            @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortOrder,
             @ApiParam(value = AUDIT_LOG_QUERY_START_TIME_DESCRIPTION)
             @RequestParam(required = false) Long startTime,
             @ApiParam(value = AUDIT_LOG_QUERY_END_TIME_DESCRIPTION)
             @RequestParam(required = false) Long endTime,
-            @NotNull @ApiParam(value = AUDIT_LOG_QUERY_ACTION_TYPES_DESCRIPTION)
+            @ApiParam(value = AUDIT_LOG_QUERY_ACTION_TYPES_DESCRIPTION)
             @RequestParam(name = "actionTypes", required = false) String actionTypesStr) throws EchoiotException {
         try {
             checkParameter("EntityId", strEntityId);
             checkParameter("EntityType", strEntityType);
             TenantId tenantId = getCurrentUser().getTenantId();
-            @NotNull TimePageLink pageLink = createTimePageLink(pageSize, page, textSearch, sortProperty, sortOrder, startTime, endTime);
+            TimePageLink pageLink = createTimePageLink(pageSize, page, textSearch, sortProperty, sortOrder, startTime, endTime);
             @Nullable List<ActionType> actionTypes = parseActionTypesStr(actionTypesStr);
             return checkNotNull(auditLogService.findAuditLogsByTenantIdAndEntityId(tenantId, EntityIdFactory.getByTypeAndId(strEntityType, strEntityId), actionTypes, pageLink));
         } catch (Exception e) {
@@ -175,18 +174,18 @@ public class AuditLogController extends BaseController {
             @RequestParam(required = false) String textSearch,
             @ApiParam(value = AUDIT_LOG_SORT_PROPERTY_DESCRIPTION, allowableValues = AUDIT_LOG_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
-            @NotNull @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
+            @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortOrder,
             @ApiParam(value = AUDIT_LOG_QUERY_START_TIME_DESCRIPTION)
             @RequestParam(required = false) Long startTime,
             @ApiParam(value = AUDIT_LOG_QUERY_END_TIME_DESCRIPTION)
             @RequestParam(required = false) Long endTime,
-            @NotNull @ApiParam(value = AUDIT_LOG_QUERY_ACTION_TYPES_DESCRIPTION)
+            @ApiParam(value = AUDIT_LOG_QUERY_ACTION_TYPES_DESCRIPTION)
             @RequestParam(name = "actionTypes", required = false) String actionTypesStr) throws EchoiotException {
         try {
             TenantId tenantId = getCurrentUser().getTenantId();
             @Nullable List<ActionType> actionTypes = parseActionTypesStr(actionTypesStr);
-            @NotNull TimePageLink pageLink = createTimePageLink(pageSize, page, textSearch, sortProperty, sortOrder, startTime, endTime);
+            TimePageLink pageLink = createTimePageLink(pageSize, page, textSearch, sortProperty, sortOrder, startTime, endTime);
             return checkNotNull(auditLogService.findAuditLogsByTenantId(tenantId, actionTypes, pageLink));
         } catch (Exception e) {
             throw handleException(e);
@@ -194,10 +193,10 @@ public class AuditLogController extends BaseController {
     }
 
     @Nullable
-    private List<ActionType> parseActionTypesStr(@NotNull String actionTypesStr) {
+    private List<ActionType> parseActionTypesStr(String actionTypesStr) {
         @Nullable List<ActionType> result = null;
         if (StringUtils.isNoneBlank(actionTypesStr)) {
-            @NotNull String[] tmp = actionTypesStr.split(",");
+            String[] tmp = actionTypesStr.split(",");
             result = Arrays.stream(tmp).map(at -> ActionType.valueOf(at.toUpperCase())).collect(Collectors.toList());
         }
         return result;

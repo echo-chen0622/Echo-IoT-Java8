@@ -19,7 +19,6 @@ import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.TbMsgMetaData;
 import org.echoiot.server.dao.attributes.AttributesService;
 import org.echoiot.server.dao.timeseries.TimeseriesService;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.junit.After;
 import org.junit.Assert;
@@ -112,12 +111,12 @@ public class TbAbstractGetAttributesNodeTest {
 
     @Test
     public void fetchToMetadata_whenOnMsg_then_success() throws Exception {
-        @NotNull TbGetAttributesNode node = initNode(false, false, false);
-        @NotNull TbMsg msg = getTbMsg(originator);
+        TbGetAttributesNode node = initNode(false, false, false);
+        TbMsg msg = getTbMsg(originator);
         node.onMsg(ctx, msg);
 
         // check msg
-        @NotNull TbMsg resultMsg = checkMsg(true);
+        TbMsg resultMsg = checkMsg(true);
 
         //check attributes
         checkAttributes(resultMsg, false, "cs_", clientAttributes);
@@ -130,12 +129,12 @@ public class TbAbstractGetAttributesNodeTest {
 
     @Test
     public void fetchToMetadata_latestWithTs_whenOnMsg_then_success() throws Exception {
-        @NotNull TbGetAttributesNode node = initNode(false, true, false);
-        @NotNull TbMsg msg = getTbMsg(originator);
+        TbGetAttributesNode node = initNode(false, true, false);
+        TbMsg msg = getTbMsg(originator);
         node.onMsg(ctx, msg);
 
         // check msg
-        @NotNull TbMsg resultMsg = checkMsg(true);
+        TbMsg resultMsg = checkMsg(true);
 
         //check attributes
         checkAttributes(resultMsg, false, "cs_", clientAttributes);
@@ -148,12 +147,12 @@ public class TbAbstractGetAttributesNodeTest {
 
     @Test
     public void fetchToData_whenOnMsg_then_success() throws Exception {
-        @NotNull TbGetAttributesNode node = initNode(true, false, false);
-        @NotNull TbMsg msg = getTbMsg(originator);
+        TbGetAttributesNode node = initNode(true, false, false);
+        TbMsg msg = getTbMsg(originator);
         node.onMsg(ctx, msg);
 
         // check msg
-        @NotNull TbMsg resultMsg = checkMsg(true);
+        TbMsg resultMsg = checkMsg(true);
 
         //check attributes
         checkAttributes(resultMsg, true, "cs_", clientAttributes);
@@ -166,12 +165,12 @@ public class TbAbstractGetAttributesNodeTest {
 
     @Test
     public void fetchToData_latestWithTs_whenOnMsg_then_success() throws Exception {
-        @NotNull TbGetAttributesNode node = initNode(true, true, false);
-        @NotNull TbMsg msg = getTbMsg(originator);
+        TbGetAttributesNode node = initNode(true, true, false);
+        TbMsg msg = getTbMsg(originator);
         node.onMsg(ctx, msg);
 
         // check msg
-        @NotNull TbMsg resultMsg = checkMsg(true);
+        TbMsg resultMsg = checkMsg(true);
 
         //check attributes
         checkAttributes(resultMsg, true, "cs_", clientAttributes);
@@ -184,12 +183,12 @@ public class TbAbstractGetAttributesNodeTest {
 
     @Test
     public void fetchToMetadata_whenOnMsg_then_failure() throws Exception {
-        @NotNull TbGetAttributesNode node = initNode(false, false, true);
-        @NotNull TbMsg msg = getTbMsg(originator);
+        TbGetAttributesNode node = initNode(false, false, true);
+        TbMsg msg = getTbMsg(originator);
         node.onMsg(ctx, msg);
 
         // check msg
-        @NotNull TbMsg actualMsg = checkMsg(false);
+        TbMsg actualMsg = checkMsg(false);
 
         //check attributes
         checkAttributes(actualMsg, false, "cs_", clientAttributes);
@@ -202,12 +201,12 @@ public class TbAbstractGetAttributesNodeTest {
 
     @Test
     public void fetchToData_whenOnMsg_then_failure() throws Exception {
-        @NotNull TbGetAttributesNode node = initNode(true, true, true);
-        @NotNull TbMsg msg = getTbMsg(originator);
+        TbGetAttributesNode node = initNode(true, true, true);
+        TbMsg msg = getTbMsg(originator);
         node.onMsg(ctx, msg);
 
         // check msg
-        @NotNull TbMsg actualMsg = checkMsg(false);
+        TbMsg actualMsg = checkMsg(false);
 
         //check attributes
         checkAttributes(actualMsg, true, "cs_", clientAttributes);
@@ -220,12 +219,12 @@ public class TbAbstractGetAttributesNodeTest {
 
     @Test
     public void fetchToData_whenOnMsg_and_data_is_not_object_then_failure() throws Exception {
-        @NotNull TbGetAttributesNode node = initNode(true, true, true);
-        @NotNull TbMsg msg = TbMsg.newMsg("TEST", originator, new TbMsgMetaData(), "[]");
+        TbGetAttributesNode node = initNode(true, true, true);
+        TbMsg msg = TbMsg.newMsg("TEST", originator, new TbMsgMetaData(), "[]");
         node.onMsg(ctx, msg);
 
-        @NotNull ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
-        @NotNull ArgumentCaptor<Exception> exceptionCaptor = ArgumentCaptor.forClass(IllegalArgumentException.class);
+        ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        ArgumentCaptor<Exception> exceptionCaptor = ArgumentCaptor.forClass(IllegalArgumentException.class);
         Mockito.verify(ctx, never()).tellSuccess(any());
         Mockito.verify(ctx, Mockito.timeout(5000)).tellFailure(newMsgCaptor.capture(), exceptionCaptor.capture());
 
@@ -233,13 +232,12 @@ public class TbAbstractGetAttributesNodeTest {
         Assert.assertNotNull(exceptionCaptor.getValue());
     }
 
-    @NotNull
     private TbMsg checkMsg(boolean checkSuccess) {
-        @NotNull ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
         if (checkSuccess) {
             Mockito.verify(ctx, Mockito.timeout(5000)).tellSuccess(msgCaptor.capture());
         } else {
-            @NotNull ArgumentCaptor<RuntimeException> exceptionCaptor = ArgumentCaptor.forClass(RuntimeException.class);
+            ArgumentCaptor<RuntimeException> exceptionCaptor = ArgumentCaptor.forClass(RuntimeException.class);
             Mockito.verify(ctx, never()).tellSuccess(any());
             Mockito.verify(ctx, Mockito.timeout(5000)).tellFailure(msgCaptor.capture(), exceptionCaptor.capture());
             RuntimeException exception = exceptionCaptor.getValue();
@@ -255,7 +253,7 @@ public class TbAbstractGetAttributesNodeTest {
         return resultMsg;
     }
 
-    private void checkAttributes(@NotNull TbMsg actualMsg, boolean fetchToData, String prefix, @NotNull List<String> attributes) {
+    private void checkAttributes(TbMsg actualMsg, boolean fetchToData, String prefix, List<String> attributes) {
         JsonNode msgData = JacksonUtil.toJsonNode(actualMsg.getData());
         attributes.stream()
                 .filter(attribute -> !attribute.equals("unknown"))
@@ -271,10 +269,10 @@ public class TbAbstractGetAttributesNodeTest {
                 });
     }
 
-    private void checkTs(@NotNull TbMsg actualMsg, boolean fetchToData, boolean getLatestValueWithTs, @NotNull List<String> tsKeys) {
+    private void checkTs(TbMsg actualMsg, boolean fetchToData, boolean getLatestValueWithTs, List<String> tsKeys) {
         JsonNode msgData = JacksonUtil.toJsonNode(actualMsg.getData());
         long value = 1L;
-        for (@NotNull String key : tsKeys) {
+        for (String key : tsKeys) {
             if (key.equals("unknown")) {
                 continue;
             }
@@ -296,9 +294,8 @@ public class TbAbstractGetAttributesNodeTest {
         }
     }
 
-    @NotNull
     private TbGetAttributesNode initNode(boolean fetchToData, boolean getLatestValueWithTs, boolean isTellFailureIfAbsent) throws TbNodeException {
-        @NotNull TbGetAttributesNodeConfiguration config = new TbGetAttributesNodeConfiguration();
+        TbGetAttributesNodeConfiguration config = new TbGetAttributesNodeConfiguration();
         config.setClientAttributeNames(List.of("client_attr_1", "client_attr_2", "${client_attr_metadata}", "unknown"));
         config.setServerAttributeNames(List.of("server_attr_1", "server_attr_2", "${server_attr_metadata}", "unknown"));
         config.setSharedAttributeNames(List.of("shared_attr_1", "shared_attr_2", "$[shared_attr_data]", "unknown"));
@@ -306,51 +303,46 @@ public class TbAbstractGetAttributesNodeTest {
         config.setFetchToData(fetchToData);
         config.setGetLatestValueWithTs(getLatestValueWithTs);
         config.setTellFailureIfAbsent(isTellFailureIfAbsent);
-        @NotNull TbNodeConfiguration nodeConfiguration = new TbNodeConfiguration(mapper.valueToTree(config));
-        @NotNull TbGetAttributesNode node = new TbGetAttributesNode();
+        TbNodeConfiguration nodeConfiguration = new TbNodeConfiguration(mapper.valueToTree(config));
+        TbGetAttributesNode node = new TbGetAttributesNode();
         node.init(ctx, nodeConfiguration);
         return node;
     }
 
-    @NotNull
     private TbMsg getTbMsg(EntityId entityId) {
         ObjectNode msgData = JacksonUtil.newObjectNode();
         msgData.put("shared_attr_data", "shared_attr_3");
 
-        @NotNull TbMsgMetaData msgMetaData = new TbMsgMetaData();
+        TbMsgMetaData msgMetaData = new TbMsgMetaData();
         msgMetaData.putValue("client_attr_metadata", "client_attr_3");
         msgMetaData.putValue("server_attr_metadata", "server_attr_3");
 
         return TbMsg.newMsg("TEST", entityId, msgMetaData, JacksonUtil.toString(msgData));
     }
 
-    @NotNull
     private List<String> getAttributeNames(String prefix) {
         return List.of(prefix + "_attr_1", prefix + "_attr_2", prefix + "_attr_3", "unknown");
     }
 
-    @NotNull
-    private List<AttributeKvEntry> getListAttributeKvEntry(@NotNull List<String> attributes, long ts) {
+    private List<AttributeKvEntry> getListAttributeKvEntry(List<String> attributes, long ts) {
         return attributes.stream()
                 .filter(attribute -> !attribute.equals("unknown"))
                 .map(attribute -> toAttributeKvEntry(ts, attribute))
                 .collect(Collectors.toList());
     }
 
-    @NotNull
     private BaseAttributeKvEntry toAttributeKvEntry(long ts, String attribute) {
         return new BaseAttributeKvEntry(ts, new StringDataEntry(attribute, attribute + "_value"));
     }
 
-    @NotNull
-    private List<TsKvEntry> getListTsKvEntry(@NotNull List<String> keys, long ts) {
+    private List<TsKvEntry> getListTsKvEntry(List<String> keys, long ts) {
         long value = 1L;
-        @NotNull List<TsKvEntry> kvEntries = new ArrayList<>();
-        for (@NotNull String key : keys) {
+        List<TsKvEntry> kvEntries = new ArrayList<>();
+        for (String key : keys) {
             if (key.equals("unknown")) {
                 continue;
             }
-            @NotNull String dataValue = "{\"data\":" + value + "}";
+            String dataValue = "{\"data\":" + value + "}";
             kvEntries.add(new BasicTsKvEntry(ts, new JsonDataEntry(key, dataValue)));
             value++;
         }

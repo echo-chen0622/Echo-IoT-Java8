@@ -14,7 +14,6 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.id.WidgetsBundleId;
 import org.echoiot.server.common.data.validation.Length;
 import org.echoiot.server.common.data.validation.NoXss;
-import org.jetbrains.annotations.NotNull;
 
 @ApiModel
 @EqualsAndHashCode(callSuper = true)
@@ -66,7 +65,7 @@ public class WidgetsBundle extends SearchTextBased<WidgetsBundleId> implements H
         super(id);
     }
 
-    public WidgetsBundle(@NotNull WidgetsBundle widgetsBundle) {
+    public WidgetsBundle(WidgetsBundle widgetsBundle) {
         super(widgetsBundle);
         this.tenantId = widgetsBundle.getTenantId();
         this.alias = widgetsBundle.getAlias();
@@ -103,7 +102,6 @@ public class WidgetsBundle extends SearchTextBased<WidgetsBundleId> implements H
         return title;
     }
 
-    @NotNull
     @Override
     public String toString() {
         String sb = "WidgetsBundle{" + "tenantId=" + tenantId + ", alias='" + alias + '\'' + ", title='" + title + '\'' + ", description='" + description + '\'' + '}';

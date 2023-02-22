@@ -2,7 +2,6 @@ package org.echoiot.rule.engine.metadata;
 
 import lombok.Data;
 import org.echoiot.rule.engine.api.NodeConfiguration;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
@@ -25,7 +24,7 @@ public class TbGetAttributesNodeConfiguration implements NodeConfiguration<TbGet
 
     @Override
     public TbGetAttributesNodeConfiguration defaultConfiguration() {
-        @NotNull TbGetAttributesNodeConfiguration configuration = new TbGetAttributesNodeConfiguration();
+        TbGetAttributesNodeConfiguration configuration = new TbGetAttributesNodeConfiguration();
         configuration.setClientAttributeNames(Collections.emptyList());
         configuration.setSharedAttributeNames(Collections.emptyList());
         configuration.setServerAttributeNames(Collections.emptyList());

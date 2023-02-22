@@ -16,7 +16,6 @@ import org.echoiot.server.dao.model.sql.AuditLogEntity;
 import org.echoiot.server.dao.sql.JpaAbstractDao;
 import org.echoiot.server.dao.sqlts.insert.sql.SqlPartitioningRepository;
 import org.echoiot.server.dao.util.SqlDao;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -33,11 +32,8 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class JpaAuditLogDao extends JpaAbstractDao<AuditLogEntity, AuditLog> implements AuditLogDao {
 
-    @NotNull
     private final AuditLogRepository auditLogRepository;
-    @NotNull
     private final SqlPartitioningRepository partitioningRepository;
-    @NotNull
     private final JdbcTemplate jdbcTemplate;
 
     @Value("${sql.audit_logs.partition_size:168}")
@@ -47,7 +43,6 @@ public class JpaAuditLogDao extends JpaAbstractDao<AuditLogEntity, AuditLog> imp
 
     private static final String TABLE_NAME = ModelConstants.AUDIT_LOG_COLUMN_FAMILY_NAME;
 
-    @NotNull
     @Override
     protected Class<AuditLogEntity> getEntityClass() {
         return AuditLogEntity.class;
@@ -59,7 +54,7 @@ public class JpaAuditLogDao extends JpaAbstractDao<AuditLogEntity, AuditLog> imp
     }
 
     @Override
-    public ListenableFuture<Void> saveByTenantId(@NotNull AuditLog auditLog) {
+    public ListenableFuture<Void> saveByTenantId(AuditLog auditLog) {
         return service.submit(() -> {
             save(auditLog.getTenantId(), auditLog);
             return null;
@@ -67,9 +62,9 @@ public class JpaAuditLogDao extends JpaAbstractDao<AuditLogEntity, AuditLog> imp
     }
 
     @Override
-    public AuditLog save(TenantId tenantId, @NotNull AuditLog auditLog) {
+    public AuditLog save(TenantId tenantId, AuditLog auditLog) {
         if (auditLog.getId() == null) {
-            @NotNull UUID uuid = Uuids.timeBased();
+            UUID uuid = Uuids.timeBased();
             auditLog.setId(new AuditLogId(uuid));
             auditLog.setCreatedTime(Uuids.unixTimestamp(uuid));
         }
@@ -77,9 +72,8 @@ public class JpaAuditLogDao extends JpaAbstractDao<AuditLogEntity, AuditLog> imp
         return super.save(tenantId, auditLog);
     }
 
-    @NotNull
     @Override
-    public PageData<AuditLog> findAuditLogsByTenantIdAndEntityId(UUID tenantId, @NotNull EntityId entityId, List<ActionType> actionTypes, @NotNull TimePageLink pageLink) {
+    public PageData<AuditLog> findAuditLogsByTenantIdAndEntityId(UUID tenantId, EntityId entityId, List<ActionType> actionTypes, TimePageLink pageLink) {
         return DaoUtil.toPageData(
                 auditLogRepository
                         .findAuditLogsByTenantIdAndEntityId(
@@ -93,9 +87,8 @@ public class JpaAuditLogDao extends JpaAbstractDao<AuditLogEntity, AuditLog> imp
                                 DaoUtil.toPageable(pageLink)));
     }
 
-    @NotNull
     @Override
-    public PageData<AuditLog> findAuditLogsByTenantIdAndCustomerId(UUID tenantId, @NotNull CustomerId customerId, List<ActionType> actionTypes, @NotNull TimePageLink pageLink) {
+    public PageData<AuditLog> findAuditLogsByTenantIdAndCustomerId(UUID tenantId, CustomerId customerId, List<ActionType> actionTypes, TimePageLink pageLink) {
         return DaoUtil.toPageData(
                 auditLogRepository
                         .findAuditLogsByTenantIdAndCustomerId(
@@ -108,9 +101,8 @@ public class JpaAuditLogDao extends JpaAbstractDao<AuditLogEntity, AuditLog> imp
                                 DaoUtil.toPageable(pageLink)));
     }
 
-    @NotNull
     @Override
-    public PageData<AuditLog> findAuditLogsByTenantIdAndUserId(UUID tenantId, @NotNull UserId userId, List<ActionType> actionTypes, @NotNull TimePageLink pageLink) {
+    public PageData<AuditLog> findAuditLogsByTenantIdAndUserId(UUID tenantId, UserId userId, List<ActionType> actionTypes, TimePageLink pageLink) {
         return DaoUtil.toPageData(
                 auditLogRepository
                         .findAuditLogsByTenantIdAndUserId(
@@ -123,9 +115,8 @@ public class JpaAuditLogDao extends JpaAbstractDao<AuditLogEntity, AuditLog> imp
                                 DaoUtil.toPageable(pageLink)));
     }
 
-    @NotNull
     @Override
-    public PageData<AuditLog> findAuditLogsByTenantId(UUID tenantId, List<ActionType> actionTypes, @NotNull TimePageLink pageLink) {
+    public PageData<AuditLog> findAuditLogsByTenantId(UUID tenantId, List<ActionType> actionTypes, TimePageLink pageLink) {
         return DaoUtil.toPageData(
                 auditLogRepository.findByTenantId(
                         tenantId,
@@ -150,7 +141,7 @@ public class JpaAuditLogDao extends JpaAbstractDao<AuditLogEntity, AuditLog> imp
         long numberOfPartitions = (currentTime - startTime) / partitionStepInMs;
 
         if (numberOfPartitions > 1000) {
-            @NotNull String error = "Please adjust your audit logs partitioning configuration. Configuration with partition size " +
+            String error = "Please adjust your audit logs partitioning configuration. Configuration with partition size " +
                                     "of " + partitionSizeInHours + " hours and corresponding TTL will use " + numberOfPartitions + " " +
                                     "(> 1000) partitions which is not recommended!";
             log.error(error);

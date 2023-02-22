@@ -9,7 +9,6 @@ import org.echoiot.server.common.data.HasName;
 import org.echoiot.server.common.data.SearchTextBasedWithAdditionalInfo;
 import org.echoiot.server.common.data.id.OAuth2ParamsId;
 import org.echoiot.server.common.data.id.OAuth2RegistrationId;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -34,7 +33,7 @@ public class OAuth2Registration extends SearchTextBasedWithAdditionalInfo<OAuth2
     private String loginButtonIcon;
     private List<PlatformType> platforms;
 
-    public OAuth2Registration(@NotNull OAuth2Registration registration) {
+    public OAuth2Registration(OAuth2Registration registration) {
         super(registration);
         this.oauth2ParamsId = registration.oauth2ParamsId;
         this.mapperConfig = registration.mapperConfig;

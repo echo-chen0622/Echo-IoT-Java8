@@ -1,6 +1,5 @@
 package org.echoiot.server.common.data.security;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public enum Authority {
@@ -25,7 +24,7 @@ public enum Authority {
     public static Authority parse(@Nullable String value) {
         @Nullable Authority authority = null;
         if (value != null && value.length() != 0) {
-            for (@NotNull Authority current : Authority.values()) {
+            for (Authority current : Authority.values()) {
                 if (current.name().equalsIgnoreCase(value)) {
                     authority = current;
                     break;

@@ -2,7 +2,6 @@ package org.echoiot.server.service.telemetry;
 
 import lombok.Getter;
 import org.echoiot.server.service.security.model.SecurityUser;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.net.InetSocketAddress;
@@ -24,7 +23,6 @@ public class TelemetryWebSocketSessionRef {
     private final InetSocketAddress localAddress;
     @Getter
     private final InetSocketAddress remoteAddress;
-    @NotNull
     @Getter
     private final AtomicInteger sessionSubIdSeq;
 
@@ -40,7 +38,7 @@ public class TelemetryWebSocketSessionRef {
     public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        @NotNull TelemetryWebSocketSessionRef that = (TelemetryWebSocketSessionRef) o;
+        TelemetryWebSocketSessionRef that = (TelemetryWebSocketSessionRef) o;
         return Objects.equals(sessionId, that.sessionId);
     }
 
@@ -49,7 +47,6 @@ public class TelemetryWebSocketSessionRef {
         return Objects.hash(sessionId);
     }
 
-    @NotNull
     @Override
     public String toString() {
         return "TelemetryWebSocketSessionRef{" +

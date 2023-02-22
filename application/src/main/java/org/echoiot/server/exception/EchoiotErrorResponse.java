@@ -3,7 +3,6 @@ package org.echoiot.server.exception;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.echoiot.server.common.data.exception.EchoiotErrorCode;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 
 import java.util.Date;
@@ -19,7 +18,6 @@ public class EchoiotErrorResponse {
     // Error code
     private final EchoiotErrorCode errorCode;
 
-    @NotNull
     private final Date timestamp;
 
     protected EchoiotErrorResponse(final String message, final EchoiotErrorCode errorCode, HttpStatus status) {
@@ -29,12 +27,10 @@ public class EchoiotErrorResponse {
         this.timestamp = new java.util.Date();
     }
 
-    @NotNull
     public static EchoiotErrorResponse of(final String message, final EchoiotErrorCode errorCode, HttpStatus status) {
         return new EchoiotErrorResponse(message, errorCode, status);
     }
 
-    @NotNull
     @ApiModelProperty(position = 1, value = "HTTP Response Status Code", example = "401", accessMode = ApiModelProperty.AccessMode.READ_ONLY)
     public Integer getStatus() {
         return status.value();
@@ -63,7 +59,6 @@ public class EchoiotErrorResponse {
         return errorCode;
     }
 
-    @NotNull
     @ApiModelProperty(position = 4, value = "Timestamp", accessMode = ApiModelProperty.AccessMode.READ_ONLY)
     public Date getTimestamp() {
         return timestamp;

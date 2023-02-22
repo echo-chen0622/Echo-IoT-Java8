@@ -18,7 +18,6 @@ import org.echoiot.server.transport.mqtt.AbstractMqttIntegrationTest;
 import org.echoiot.server.transport.mqtt.MqttTestCallback;
 import org.echoiot.server.transport.mqtt.MqttTestClient;
 import org.echoiot.server.transport.mqtt.MqttTestConfigProperties;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -124,7 +123,7 @@ public class MqttProvisionJsonDeviceTest extends AbstractMqttIntegrationTest {
                 .provisionSecret("testProvisionSecret")
                 .build();
         super.processBeforeTest(configProperties);
-        @NotNull String requestCredentials = ",\"credentialsType\": \"ACCESS_TOKEN\",\"token\": \"test_token\"";
+        String requestCredentials = ",\"credentialsType\": \"ACCESS_TOKEN\",\"token\": \"test_token\"";
         byte[] result = createMqttClientAndPublish(requestCredentials);
         JsonNode response = JacksonUtil.fromBytes(result);
         Assert.assertTrue(response.hasNonNull("credentialsType"));
@@ -152,7 +151,7 @@ public class MqttProvisionJsonDeviceTest extends AbstractMqttIntegrationTest {
                 .provisionSecret("testProvisionSecret")
                 .build();
         super.processBeforeTest(configProperties);
-        @NotNull String requestCredentials = ",\"credentialsType\": \"X509_CERTIFICATE\",\"hash\": \"testHash\"";
+        String requestCredentials = ",\"credentialsType\": \"X509_CERTIFICATE\",\"hash\": \"testHash\"";
         byte[] result = createMqttClientAndPublish(requestCredentials);
         JsonNode response = JacksonUtil.fromBytes(result);
         Assert.assertTrue(response.hasNonNull("credentialsType"));
@@ -167,7 +166,7 @@ public class MqttProvisionJsonDeviceTest extends AbstractMqttIntegrationTest {
         Assert.assertEquals(deviceCredentials.getCredentialsType().name(), response.get("credentialsType").asText());
         Assert.assertEquals(deviceCredentials.getCredentialsType().name(), "X509_CERTIFICATE");
 
-        @NotNull String cert = EncryptionUtil.certTrimNewLines(deviceCredentials.getCredentialsValue());
+        String cert = EncryptionUtil.certTrimNewLines(deviceCredentials.getCredentialsValue());
         String sha3Hash = EncryptionUtil.getSha3Hash(cert);
 
         Assert.assertEquals(deviceCredentials.getCredentialsId(), sha3Hash);
@@ -186,7 +185,7 @@ public class MqttProvisionJsonDeviceTest extends AbstractMqttIntegrationTest {
                 .provisionSecret("testProvisionSecret")
                 .build();
         super.processBeforeTest(configProperties);
-        @NotNull String requestCredentials = ",\"credentialsType\": \"MQTT_BASIC\",\"clientId\": \"test_clientId\",\"username\": \"test_username\",\"password\": \"test_password\"";
+        String requestCredentials = ",\"credentialsType\": \"MQTT_BASIC\",\"clientId\": \"test_clientId\",\"username\": \"test_username\",\"password\": \"test_password\"";
         byte[] result = createMqttClientAndPublish(requestCredentials);
         JsonNode response = JacksonUtil.fromBytes(result);
         Assert.assertTrue(response.hasNonNull("credentialsType"));
@@ -202,7 +201,7 @@ public class MqttProvisionJsonDeviceTest extends AbstractMqttIntegrationTest {
         Assert.assertEquals(deviceCredentials.getCredentialsType().name(), "MQTT_BASIC");
         Assert.assertEquals(deviceCredentials.getCredentialsId(), EncryptionUtil.getSha3Hash("|", "test_clientId", "test_username"));
 
-        @NotNull BasicMqttCredentials mqttCredentials = new BasicMqttCredentials();
+        BasicMqttCredentials mqttCredentials = new BasicMqttCredentials();
         mqttCredentials.setClientId("test_clientId");
         mqttCredentials.setUserName("test_username");
         mqttCredentials.setPassword("test_password");
@@ -253,10 +252,10 @@ public class MqttProvisionJsonDeviceTest extends AbstractMqttIntegrationTest {
     }
 
     protected byte[] createMqttClientAndPublish(String deviceCredentials) throws Exception {
-        @NotNull String provisionRequestMsg = createTestProvisionMessage(deviceCredentials);
-        @NotNull MqttTestClient client = new MqttTestClient();
+        String provisionRequestMsg = createTestProvisionMessage(deviceCredentials);
+        MqttTestClient client = new MqttTestClient();
         client.connectAndWait("provision");
-        @NotNull MqttTestCallback onProvisionCallback = new MqttTestCallback(DEVICE_PROVISION_RESPONSE_TOPIC);
+        MqttTestCallback onProvisionCallback = new MqttTestCallback(DEVICE_PROVISION_RESPONSE_TOPIC);
         client.setCallback(onProvisionCallback);
         client.subscribe(DEVICE_PROVISION_RESPONSE_TOPIC, MqttQoS.AT_MOST_ONCE);
         client.publishAndWait(DEVICE_PROVISION_REQUEST_TOPIC, provisionRequestMsg.getBytes());
@@ -265,7 +264,6 @@ public class MqttProvisionJsonDeviceTest extends AbstractMqttIntegrationTest {
         return onProvisionCallback.getPayloadBytes();
     }
 
-    @NotNull
     protected String createTestProvisionMessage(String deviceCredentials) {
         return "{\"deviceName\":\"Test Provision device\",\"provisionDeviceKey\":\"testProvisionKey\", \"provisionDeviceSecret\":\"testProvisionSecret\"" + deviceCredentials + "}";
     }

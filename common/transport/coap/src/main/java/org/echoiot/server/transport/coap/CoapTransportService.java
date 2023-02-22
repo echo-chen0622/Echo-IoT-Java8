@@ -9,7 +9,6 @@ import org.echoiot.server.common.data.ota.OtaPackageType;
 import org.echoiot.server.transport.coap.efento.CoapEfentoTransportResource;
 import org.eclipse.californium.core.CoapResource;
 import org.eclipse.californium.core.CoapServer;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -42,10 +41,10 @@ public class CoapTransportService implements TbTransportService {
     public void init() throws UnknownHostException {
         log.info("Starting CoAP transport...");
         coapServer = coapServerService.getCoapServer();
-        @NotNull CoapResource api = new CoapResource(API);
+        CoapResource api = new CoapResource(API);
         api.add(new CoapTransportResource(coapTransportContext, coapServerService, V1));
 
-        @NotNull CoapEfentoTransportResource efento = new CoapEfentoTransportResource(coapTransportContext, EFENTO);
+        CoapEfentoTransportResource efento = new CoapEfentoTransportResource(coapTransportContext, EFENTO);
         efento.add(new CoapResource(MEASUREMENTS));
         efento.add(new CoapResource(DEVICE_INFO));
         efento.add(new CoapResource(CONFIGURATION));
@@ -62,7 +61,6 @@ public class CoapTransportService implements TbTransportService {
         log.info("CoAP transport stopped!");
     }
 
-    @NotNull
     @Override
     public String getName() {
         return DataConstants.COAP_TRANSPORT_NAME;

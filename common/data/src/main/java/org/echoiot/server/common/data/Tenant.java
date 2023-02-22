@@ -10,7 +10,6 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.id.TenantProfileId;
 import org.echoiot.server.common.data.validation.Length;
 import org.echoiot.server.common.data.validation.NoXss;
-import org.jetbrains.annotations.NotNull;
 
 @ApiModel
 @EqualsAndHashCode(callSuper = true)
@@ -38,7 +37,7 @@ public class Tenant extends ContactBased<TenantId> implements HasTenantId {
         super(id);
     }
 
-    public Tenant(@NotNull Tenant tenant) {
+    public Tenant(Tenant tenant) {
         super(tenant);
         this.title = tenant.getTitle();
         this.region = tenant.getRegion();

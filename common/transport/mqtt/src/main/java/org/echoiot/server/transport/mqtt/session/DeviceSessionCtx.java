@@ -22,7 +22,6 @@ import org.echoiot.server.transport.mqtt.adaptors.BackwardCompatibilityAdaptor;
 import org.echoiot.server.transport.mqtt.adaptors.MqttTransportAdaptor;
 import org.echoiot.server.transport.mqtt.util.MqttTopicFilter;
 import org.echoiot.server.transport.mqtt.util.MqttTopicFilterFactory;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
@@ -80,7 +79,7 @@ public class DeviceSessionCtx extends MqttDeviceAwareSessionContext {
     @Setter
     private TransportPayloadType provisionPayloadType = payloadType;
 
-    public DeviceSessionCtx(UUID sessionId, ConcurrentMap<MqttTopicMatcher, Integer> mqttQoSMap, @NotNull MqttTransportContext context) {
+    public DeviceSessionCtx(UUID sessionId, ConcurrentMap<MqttTopicMatcher, Integer> mqttQoSMap, MqttTransportContext context) {
         super(sessionId, mqttQoSMap);
         this.context = context;
         this.adaptor = context.getJsonMqttAdaptor();
@@ -127,29 +126,29 @@ public class DeviceSessionCtx extends MqttDeviceAwareSessionContext {
     }
 
     @Override
-    public void setDeviceProfile(@NotNull DeviceProfile deviceProfile) {
+    public void setDeviceProfile(DeviceProfile deviceProfile) {
         super.setDeviceProfile(deviceProfile);
         updateDeviceSessionConfiguration(deviceProfile);
     }
 
     @Override
-    public void onDeviceProfileUpdate(TransportProtos.SessionInfoProto sessionInfo, @NotNull DeviceProfile deviceProfile) {
+    public void onDeviceProfileUpdate(TransportProtos.SessionInfoProto sessionInfo, DeviceProfile deviceProfile) {
         super.onDeviceProfileUpdate(sessionInfo, deviceProfile);
         updateDeviceSessionConfiguration(deviceProfile);
     }
 
-    private void updateDeviceSessionConfiguration(@NotNull DeviceProfile deviceProfile) {
+    private void updateDeviceSessionConfiguration(DeviceProfile deviceProfile) {
         DeviceProfileTransportConfiguration transportConfiguration = deviceProfile.getProfileData().getTransportConfiguration();
         if (transportConfiguration.getType().equals(DeviceTransportType.MQTT) &&
             transportConfiguration instanceof MqttDeviceProfileTransportConfiguration) {
-            @NotNull MqttDeviceProfileTransportConfiguration mqttConfig = (MqttDeviceProfileTransportConfiguration) transportConfiguration;
-            @NotNull TransportPayloadTypeConfiguration transportPayloadTypeConfiguration = mqttConfig.getTransportPayloadTypeConfiguration();
+            MqttDeviceProfileTransportConfiguration mqttConfig = (MqttDeviceProfileTransportConfiguration) transportConfiguration;
+            TransportPayloadTypeConfiguration transportPayloadTypeConfiguration = mqttConfig.getTransportPayloadTypeConfiguration();
             payloadType = transportPayloadTypeConfiguration.getTransportPayloadType();
             telemetryTopicFilter = MqttTopicFilterFactory.toFilter(mqttConfig.getDeviceTelemetryTopic());
             attributesTopicFilter = MqttTopicFilterFactory.toFilter(mqttConfig.getDeviceAttributesTopic());
             sendAckOnValidationException = mqttConfig.isSendAckOnValidationException();
             if (TransportPayloadType.PROTOBUF.equals(payloadType)) {
-                @NotNull ProtoTransportPayloadConfiguration protoTransportPayloadConfig = (ProtoTransportPayloadConfiguration) transportPayloadTypeConfiguration;
+                ProtoTransportPayloadConfiguration protoTransportPayloadConfig = (ProtoTransportPayloadConfiguration) transportPayloadTypeConfiguration;
                 updateDynamicMessageDescriptors(protoTransportPayloadConfig);
                 jsonPayloadFormatCompatibilityEnabled = protoTransportPayloadConfig.isEnableCompatibilityWithJsonPayloadFormat();
                 useJsonPayloadFormatForDefaultDownlinkTopics = jsonPayloadFormatCompatibilityEnabled && protoTransportPayloadConfig.isUseJsonPayloadFormatForDefaultDownlinkTopics();
@@ -163,14 +162,14 @@ public class DeviceSessionCtx extends MqttDeviceAwareSessionContext {
         updateAdaptor();
     }
 
-    private void updateDynamicMessageDescriptors(@NotNull ProtoTransportPayloadConfiguration protoTransportPayloadConfig) {
+    private void updateDynamicMessageDescriptors(ProtoTransportPayloadConfiguration protoTransportPayloadConfig) {
         telemetryDynamicMessageDescriptor = protoTransportPayloadConfig.getTelemetryDynamicMessageDescriptor(protoTransportPayloadConfig.getDeviceTelemetryProtoSchema());
         attributesDynamicMessageDescriptor = protoTransportPayloadConfig.getAttributesDynamicMessageDescriptor(protoTransportPayloadConfig.getDeviceAttributesProtoSchema());
         rpcResponseDynamicMessageDescriptor = protoTransportPayloadConfig.getRpcResponseDynamicMessageDescriptor(protoTransportPayloadConfig.getDeviceRpcResponseProtoSchema());
         rpcRequestDynamicMessageBuilder = protoTransportPayloadConfig.getRpcRequestDynamicMessageBuilder(protoTransportPayloadConfig.getDeviceRpcRequestProtoSchema());
     }
 
-    public MqttTransportAdaptor getAdaptor(@NotNull TopicType topicType) {
+    public MqttTransportAdaptor getAdaptor(TopicType topicType) {
         switch (topicType) {
             case V2:
                 return getDefaultAdaptor();
@@ -207,7 +206,7 @@ public class DeviceSessionCtx extends MqttDeviceAwareSessionContext {
         msgQueue.add(msg);
     }
 
-    public void tryProcessQueuedMsgs(@NotNull Consumer<MqttMessage> msgProcessor) {
+    public void tryProcessQueuedMsgs(Consumer<MqttMessage> msgProcessor) {
         while (!msgQueue.isEmpty()) {
             if (msgQueueProcessorLock.tryLock()) {
                 try {
@@ -241,7 +240,6 @@ public class DeviceSessionCtx extends MqttDeviceAwareSessionContext {
         }
     }
 
-    @NotNull
     public Collection<MqttMessage> getMsgQueueSnapshot(){
         return Collections.unmodifiableCollection(msgQueue);
     }

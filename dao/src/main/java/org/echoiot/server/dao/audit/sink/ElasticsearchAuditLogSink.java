@@ -18,7 +18,6 @@ import org.elasticsearch.client.Response;
 import org.elasticsearch.client.ResponseListener;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -63,13 +62,13 @@ public class ElasticsearchAuditLogSink implements AuditLogSink {
         try {
             log.trace("Adding elastic rest endpoint... host [{}], port [{}], scheme name [{}]",
                     host, port, schemeName);
-            @NotNull RestClientBuilder builder = RestClient.builder(
+            RestClientBuilder builder = RestClient.builder(
                     new HttpHost(host, port, schemeName));
 
             if (StringUtils.isNotEmpty(userName) &&
                     StringUtils.isNotEmpty(password)) {
                 log.trace("...using username [{}] and password ***", userName);
-                @NotNull final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+                final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
                 credentialsProvider.setCredentials(AuthScope.ANY,
                         new UsernamePasswordCredentials(userName, password));
                 builder.setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider));
@@ -83,10 +82,10 @@ public class ElasticsearchAuditLogSink implements AuditLogSink {
     }
 
     @Override
-    public void logAction(@NotNull AuditLog auditLogEntry) {
+    public void logAction(AuditLog auditLogEntry) {
         String jsonContent = createElasticJsonRecord(auditLogEntry);
 
-        @NotNull HttpEntity entity = new NStringEntity(
+        HttpEntity entity = new NStringEntity(
                 jsonContent,
                 ContentType.APPLICATION_JSON);
 
@@ -98,7 +97,7 @@ public class ElasticsearchAuditLogSink implements AuditLogSink {
                 responseListener);
     }
 
-    private String createElasticJsonRecord(@NotNull AuditLog auditLog) {
+    private String createElasticJsonRecord(AuditLog auditLog) {
         ObjectNode auditLogNode = mapper.createObjectNode();
         auditLogNode.put("postDate", LocalDateTime.now().toString());
         auditLogNode.put("id", auditLog.getId().getId().toString());
@@ -132,15 +131,14 @@ public class ElasticsearchAuditLogSink implements AuditLogSink {
         }
     };
 
-    @NotNull
     private String getIndexName(@Nullable TenantId tenantId) {
         String indexName = indexPattern;
         if (indexName.contains(TENANT_PLACEHOLDER) && tenantId != null) {
             indexName = indexName.replace(TENANT_PLACEHOLDER, tenantId.getId().toString());
         }
         if (indexName.contains(DATE_PLACEHOLDER)) {
-            @NotNull LocalDateTime now = LocalDateTime.now();
-            @NotNull DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateFormat);
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateFormat);
             indexName = indexName.replace(DATE_PLACEHOLDER, now.format(formatter));
         }
         return indexName.toLowerCase();

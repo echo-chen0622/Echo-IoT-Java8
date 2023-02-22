@@ -7,7 +7,6 @@ import org.echoiot.server.queue.discovery.PartitionService;
 import org.echoiot.server.queue.discovery.event.ServiceListChangedEvent;
 import org.echoiot.server.queue.util.TbSnmpTransportComponent;
 import org.echoiot.server.transport.snmp.event.SnmpTransportListChangedEvent;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
@@ -22,18 +21,14 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 @Slf4j
 public class SnmpTransportBalancingService {
-    @NotNull
     private final PartitionService partitionService;
-    @NotNull
     private final ApplicationEventPublisher eventPublisher;
-    @NotNull
     private final SnmpTransportService snmpTransportService;
 
     private int snmpTransportsCount = 1;
-    @NotNull
     private Integer currentTransportPartitionIndex = 0;
 
-    public void onServiceListChanged(@NotNull ServiceListChangedEvent event) {
+    public void onServiceListChanged(ServiceListChangedEvent event) {
         log.trace("Got service list changed event: {}", event);
         recalculatePartitions(event.getOtherServices(), event.getCurrentService());
     }
@@ -50,9 +45,9 @@ public class SnmpTransportBalancingService {
         return partitionService.resolvePartitionIndex(entityId, snmpTransportsCount);
     }
 
-    private void recalculatePartitions(@NotNull List<ServiceInfo> otherServices, ServiceInfo currentService) {
+    private void recalculatePartitions(List<ServiceInfo> otherServices, ServiceInfo currentService) {
         log.info("Recalculating partitions for SNMP transports");
-        @NotNull List<ServiceInfo> snmpTransports = Stream.concat(otherServices.stream(), Stream.of(currentService))
+        List<ServiceInfo> snmpTransports = Stream.concat(otherServices.stream(), Stream.of(currentService))
                                                           .filter(service -> service.getTransportsList().contains(snmpTransportService.getName()))
                                                           .sorted(Comparator.comparing(ServiceInfo::getServiceId))
                                                           .collect(Collectors.toList());

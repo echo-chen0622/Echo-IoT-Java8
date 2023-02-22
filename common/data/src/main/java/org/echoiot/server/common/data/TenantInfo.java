@@ -4,7 +4,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.echoiot.server.common.data.id.TenantId;
-import org.jetbrains.annotations.NotNull;
 
 @ApiModel
 @Data
@@ -20,7 +19,7 @@ public class TenantInfo extends Tenant {
         super(tenantId);
     }
 
-    public TenantInfo(@NotNull Tenant tenant, String tenantProfileName) {
+    public TenantInfo(Tenant tenant, String tenantProfileName) {
         super(tenant);
         this.tenantProfileName = tenantProfileName;
     }

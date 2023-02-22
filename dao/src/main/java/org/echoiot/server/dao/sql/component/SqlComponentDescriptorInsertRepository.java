@@ -1,7 +1,6 @@
 package org.echoiot.server.dao.sql.component;
 
 import org.echoiot.server.dao.model.sql.ComponentDescriptorEntity;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -25,16 +24,14 @@ public class SqlComponentDescriptorInsertRepository extends AbstractComponentDes
     }
 
     @Override
-    protected ComponentDescriptorEntity doProcessSaveOrUpdate(@NotNull ComponentDescriptorEntity entity, String query) {
+    protected ComponentDescriptorEntity doProcessSaveOrUpdate(ComponentDescriptorEntity entity, String query) {
         return (ComponentDescriptorEntity) getQuery(entity, query).getSingleResult();
     }
 
-    @NotNull
     private static String getInsertOrUpdateStatement(String conflictKeyStatement, String updateKeyStatement) {
         return "INSERT INTO component_descriptor (id, created_time, actions, clazz, configuration_descriptor, name, scope, search_text, type) VALUES (:id, :created_time, :actions, :clazz, :configuration_descriptor, :name, :scope, :search_text, :type) ON CONFLICT " + conflictKeyStatement + " DO UPDATE SET " + updateKeyStatement + " returning *";
     }
 
-    @NotNull
     private static String getUpdateStatement(String id) {
         return "actions = :actions, " + id + ",created_time = :created_time, configuration_descriptor = :configuration_descriptor, name = :name, scope = :scope, search_text = :search_text, type = :type";
     }

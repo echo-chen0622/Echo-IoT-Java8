@@ -1,6 +1,5 @@
 package org.echoiot.server.transport.mqtt.util;
 
-import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -22,7 +21,7 @@ public class MqttTopicFilterFactoryTest {
 
     @Test
     public void metadataCanBeUpdated() throws ScriptException {
-        @NotNull MqttTopicFilter filter = MqttTopicFilterFactory.toFilter("Sensor/Temperature/House/+");
+        MqttTopicFilter filter = MqttTopicFilterFactory.toFilter("Sensor/Temperature/House/+");
         assertTrue(filter.filter(TEST_STR_1));
         assertFalse(filter.filter(TEST_STR_2));
 

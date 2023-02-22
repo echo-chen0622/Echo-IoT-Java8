@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.Getter;
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.msg.TbMsgMetaData;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -19,12 +18,10 @@ public class TbMathArgumentValue {
         this.value = value;
     }
 
-    @NotNull
-    public static TbMathArgumentValue constant(@NotNull TbMathArgument arg) {
+    public static TbMathArgumentValue constant(TbMathArgument arg) {
         return fromString(arg.getKey());
     }
 
-    @NotNull
     private static TbMathArgumentValue defaultOrThrow(@Nullable Double defaultValue, String error) {
         if (defaultValue != null) {
             return new TbMathArgumentValue(defaultValue);
@@ -32,14 +29,13 @@ public class TbMathArgumentValue {
         throw new RuntimeException(error);
     }
 
-    @NotNull
-    public static TbMathArgumentValue fromMessageBody(@NotNull TbMathArgument arg, @NotNull Optional<ObjectNode> jsonNodeOpt) {
+    public static TbMathArgumentValue fromMessageBody(TbMathArgument arg, Optional<ObjectNode> jsonNodeOpt) {
         String key = arg.getKey();
         Double defaultValue = arg.getDefaultValue();
         if (jsonNodeOpt.isEmpty()) {
             return defaultOrThrow(defaultValue, "Message body is empty!");
         }
-        @NotNull var json = jsonNodeOpt.get();
+        var json = jsonNodeOpt.get();
         if (!json.has(key)) {
             return defaultOrThrow(defaultValue, "Message body has no '" + key + "'!");
         }
@@ -67,8 +63,7 @@ public class TbMathArgumentValue {
         return new TbMathArgumentValue(value);
     }
 
-    @NotNull
-    public static TbMathArgumentValue fromMessageMetadata(@NotNull TbMathArgument arg, @Nullable TbMsgMetaData metaData) {
+    public static TbMathArgumentValue fromMessageMetadata(TbMathArgument arg, @Nullable TbMsgMetaData metaData) {
         String key = arg.getKey();
         Double defaultValue = arg.getDefaultValue();
         if (metaData == null) {
@@ -81,18 +76,15 @@ public class TbMathArgumentValue {
         return fromString(value);
     }
 
-    @NotNull
     public static TbMathArgumentValue fromLong(long value) {
         return new TbMathArgumentValue(value);
     }
 
-    @NotNull
     public static TbMathArgumentValue fromDouble(double value) {
         return new TbMathArgumentValue(value);
     }
 
-    @NotNull
-    public static TbMathArgumentValue fromString(@NotNull String value) {
+    public static TbMathArgumentValue fromString(String value) {
         try {
             return new TbMathArgumentValue(Double.parseDouble(value));
         } catch (NumberFormatException ne) {

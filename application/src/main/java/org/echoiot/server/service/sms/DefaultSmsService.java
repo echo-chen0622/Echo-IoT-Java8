@@ -17,7 +17,6 @@ import org.echoiot.server.common.data.sms.config.TestSmsRequest;
 import org.echoiot.server.common.stats.TbApiUsageReportClient;
 import org.echoiot.server.dao.settings.AdminSettingsService;
 import org.echoiot.server.service.apiusage.TbApiUsageStateService;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.core.NestedRuntimeException;
 import org.springframework.stereotype.Service;
@@ -81,7 +80,7 @@ public class DefaultSmsService implements SmsService {
     }
 
     @Override
-    public void sendSms(TenantId tenantId, CustomerId customerId, @NotNull String[] numbersTo, String message) throws EchoiotException {
+    public void sendSms(TenantId tenantId, CustomerId customerId, String[] numbersTo, String message) throws EchoiotException {
         if (apiUsageStateService.getApiUsageState(tenantId).isSmsSendEnabled()) {
             int smsCount = 0;
             try {
@@ -99,7 +98,7 @@ public class DefaultSmsService implements SmsService {
     }
 
     @Override
-    public void sendTestSms(@NotNull TestSmsRequest testSmsRequest) throws EchoiotException {
+    public void sendTestSms(TestSmsRequest testSmsRequest) throws EchoiotException {
         SmsSender testSmsSender;
         try {
             testSmsSender = this.smsSenderFactory.createSmsSender(testSmsRequest.getProviderConfiguration());
@@ -115,7 +114,7 @@ public class DefaultSmsService implements SmsService {
         return smsSender != null;
     }
 
-    private int sendSms(@NotNull SmsSender smsSender, String numberTo, String message) throws EchoiotException {
+    private int sendSms(SmsSender smsSender, String numberTo, String message) throws EchoiotException {
         try {
             return smsSender.sendSms(numberTo, message);
         } catch (Exception e) {
@@ -123,7 +122,6 @@ public class DefaultSmsService implements SmsService {
         }
     }
 
-    @NotNull
     private EchoiotException handleException(Exception exception) {
         String message;
         if (exception instanceof NestedRuntimeException) {

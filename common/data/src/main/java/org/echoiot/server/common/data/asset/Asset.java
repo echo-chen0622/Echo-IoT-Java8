@@ -13,7 +13,6 @@ import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.validation.Length;
 import org.echoiot.server.common.data.validation.NoXss;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
@@ -48,7 +47,7 @@ public class Asset extends SearchTextBasedWithAdditionalInfo<AssetId> implements
         super(id);
     }
 
-    public Asset(@NotNull Asset asset) {
+    public Asset(Asset asset) {
         super(asset);
         this.tenantId = asset.getTenantId();
         this.customerId = asset.getCustomerId();
@@ -59,7 +58,7 @@ public class Asset extends SearchTextBasedWithAdditionalInfo<AssetId> implements
         this.externalId = asset.getExternalId();
     }
 
-    public void update(@NotNull Asset asset) {
+    public void update(Asset asset) {
         this.tenantId = asset.getTenantId();
         this.customerId = asset.getCustomerId();
         this.name = asset.getName();

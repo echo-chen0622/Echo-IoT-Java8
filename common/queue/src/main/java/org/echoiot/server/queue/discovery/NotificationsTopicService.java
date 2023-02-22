@@ -2,7 +2,6 @@ package org.echoiot.server.queue.discovery;
 
 import org.echoiot.server.common.msg.queue.ServiceType;
 import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -21,8 +20,7 @@ public class NotificationsTopicService {
      * @param serviceId
      * @return
      */
-    @NotNull
-    public TopicPartitionInfo getNotificationsTopic(@NotNull ServiceType serviceType, String serviceId) {
+    public TopicPartitionInfo getNotificationsTopic(ServiceType serviceType, String serviceId) {
         switch (serviceType) {
             case TB_CORE:
                 return tbCoreNotificationTopics.computeIfAbsent(serviceId,
@@ -35,8 +33,7 @@ public class NotificationsTopicService {
         }
     }
 
-    @NotNull
-    private TopicPartitionInfo buildNotificationsTopicPartitionInfo(@NotNull ServiceType serviceType, String serviceId) {
+    private TopicPartitionInfo buildNotificationsTopicPartitionInfo(ServiceType serviceType, String serviceId) {
         return new TopicPartitionInfo(serviceType.name().toLowerCase() + ".notifications." + serviceId, null, null, false);
     }
 }

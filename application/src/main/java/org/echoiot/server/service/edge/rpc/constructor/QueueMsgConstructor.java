@@ -9,16 +9,14 @@ import org.echoiot.server.gen.edge.v1.QueueUpdateMsg;
 import org.echoiot.server.gen.edge.v1.SubmitStrategyProto;
 import org.echoiot.server.gen.edge.v1.UpdateMsgType;
 import org.echoiot.server.queue.util.TbCoreComponent;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 @Component
 @TbCoreComponent
 public class QueueMsgConstructor {
 
-    @NotNull
-    public QueueUpdateMsg constructQueueUpdatedMsg(UpdateMsgType msgType, @NotNull Queue queue) {
-        @NotNull QueueUpdateMsg.Builder builder = QueueUpdateMsg.newBuilder()
+    public QueueUpdateMsg constructQueueUpdatedMsg(UpdateMsgType msgType, Queue queue) {
+        QueueUpdateMsg.Builder builder = QueueUpdateMsg.newBuilder()
                                                                 .setMsgType(msgType)
                                                                 .setIdMSB(queue.getId().getId().getMostSignificantBits())
                                                                 .setIdLSB(queue.getId().getId().getLeastSignificantBits())
@@ -35,8 +33,7 @@ public class QueueMsgConstructor {
         return builder.build();
     }
 
-    @NotNull
-    private ProcessingStrategyProto createProcessingStrategyProto(@NotNull ProcessingStrategy processingStrategy) {
+    private ProcessingStrategyProto createProcessingStrategyProto(ProcessingStrategy processingStrategy) {
         return ProcessingStrategyProto.newBuilder()
                 .setType(processingStrategy.getType().name())
                 .setRetries(processingStrategy.getRetries())
@@ -46,16 +43,14 @@ public class QueueMsgConstructor {
                 .build();
     }
 
-    @NotNull
-    private SubmitStrategyProto createSubmitStrategyProto(@NotNull SubmitStrategy submitStrategy) {
+    private SubmitStrategyProto createSubmitStrategyProto(SubmitStrategy submitStrategy) {
         return SubmitStrategyProto.newBuilder()
                 .setType(submitStrategy.getType().name())
                 .setBatchSize(submitStrategy.getBatchSize())
                 .build();
     }
 
-    @NotNull
-    public QueueUpdateMsg constructQueueDeleteMsg(@NotNull QueueId queueId) {
+    public QueueUpdateMsg constructQueueDeleteMsg(QueueId queueId) {
         return QueueUpdateMsg.newBuilder()
                 .setMsgType(UpdateMsgType.ENTITY_DELETED_RPC_MESSAGE)
                 .setIdMSB(queueId.getId().getMostSignificantBits())

@@ -1,7 +1,6 @@
 package org.echoiot.server.common.msg;
 
 import lombok.Data;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
@@ -18,14 +17,13 @@ public final class TbMsgMetaData implements Serializable {
 
     public static final TbMsgMetaData EMPTY = new TbMsgMetaData(0);
 
-    @NotNull
     private final Map<String, String> data;
 
     public TbMsgMetaData() {
         this.data = new ConcurrentHashMap<>();
     }
 
-    public TbMsgMetaData(@NotNull Map<String, String> data) {
+    public TbMsgMetaData(Map<String, String> data) {
         this.data = new ConcurrentHashMap<>();
         data.forEach(this::putValue);
     }
@@ -47,12 +45,10 @@ public final class TbMsgMetaData implements Serializable {
         }
     }
 
-    @NotNull
     public Map<String, String> values() {
         return new HashMap<>(this.data);
     }
 
-    @NotNull
     public TbMsgMetaData copy() {
         return new TbMsgMetaData(this.data);
     }

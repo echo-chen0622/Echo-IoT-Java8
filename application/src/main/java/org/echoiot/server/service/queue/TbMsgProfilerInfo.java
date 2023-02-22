@@ -2,7 +2,6 @@ package org.echoiot.server.service.queue;
 
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.id.RuleNodeId;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.AbstractMap;
@@ -36,7 +35,7 @@ public class TbMsgProfilerInfo {
         }
     }
 
-    public long onEnd(@NotNull RuleNodeId ruleNodeId) {
+    public long onEnd(RuleNodeId ruleNodeId) {
         long currentTime = System.currentTimeMillis();
         stateLock.lock();
         try {

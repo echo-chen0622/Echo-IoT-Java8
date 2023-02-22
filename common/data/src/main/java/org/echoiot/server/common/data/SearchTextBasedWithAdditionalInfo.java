@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.id.UUIDBased;
 import org.echoiot.server.common.data.validation.NoXss;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.ByteArrayInputStream;
@@ -37,7 +36,7 @@ public abstract class SearchTextBasedWithAdditionalInfo<I extends UUIDBased> ext
         super(id);
     }
 
-    public SearchTextBasedWithAdditionalInfo(@NotNull SearchTextBasedWithAdditionalInfo<I> searchTextBased) {
+    public SearchTextBasedWithAdditionalInfo(SearchTextBasedWithAdditionalInfo<I> searchTextBased) {
         super(searchTextBased);
         setAdditionalInfo(searchTextBased.getAdditionalInfo());
     }
@@ -57,7 +56,7 @@ public abstract class SearchTextBasedWithAdditionalInfo<I extends UUIDBased> ext
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-        @NotNull SearchTextBasedWithAdditionalInfo<?> that = (SearchTextBasedWithAdditionalInfo<?>) o;
+        SearchTextBasedWithAdditionalInfo<?> that = (SearchTextBasedWithAdditionalInfo<?>) o;
         return Arrays.equals(additionalInfoBytes, that.additionalInfoBytes);
     }
 
@@ -67,7 +66,7 @@ public abstract class SearchTextBasedWithAdditionalInfo<I extends UUIDBased> ext
     }
 
     @Nullable
-    public static JsonNode getJson(@NotNull Supplier<JsonNode> jsonData, @NotNull Supplier<byte[]> binaryData) {
+    public static JsonNode getJson(Supplier<JsonNode> jsonData, Supplier<byte[]> binaryData) {
         JsonNode json = jsonData.get();
         if (json != null) {
             return json;
@@ -86,7 +85,7 @@ public abstract class SearchTextBasedWithAdditionalInfo<I extends UUIDBased> ext
         }
     }
 
-    public static void setJson(JsonNode json, @NotNull Consumer<JsonNode> jsonConsumer, @NotNull Consumer<byte[]> bytesConsumer) {
+    public static void setJson(JsonNode json, Consumer<JsonNode> jsonConsumer, Consumer<byte[]> bytesConsumer) {
         jsonConsumer.accept(json);
         try {
             bytesConsumer.accept(mapper.writeValueAsBytes(json));

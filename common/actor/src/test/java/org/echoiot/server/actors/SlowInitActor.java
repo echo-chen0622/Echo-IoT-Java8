@@ -1,7 +1,6 @@
 package org.echoiot.server.actors;
 
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 
 @Slf4j
 public class SlowInitActor extends TestRootActor {
@@ -35,8 +34,7 @@ public class SlowInitActor extends TestRootActor {
             return actorId;
         }
 
-        @NotNull
-        @Override
+            @Override
         public TbActor createActor() {
             return new SlowInitActor(actorId, testCtx);
         }

@@ -33,7 +33,6 @@ import org.echoiot.server.queue.scheduler.SchedulerComponent;
 import org.echoiot.server.queue.util.DataDecodingEncodingService;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.sync.vc.data.*;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
@@ -78,33 +77,31 @@ public class DefaultGitVersionControlQueueService implements GitVersionControlQu
         this.scheduler = scheduler;
     }
 
-    @NotNull
     @Override
-    public ListenableFuture<CommitGitRequest> prepareCommit(@NotNull User user, @NotNull VersionCreateRequest request) {
-        @NotNull SettableFuture<CommitGitRequest> future = SettableFuture.create();
+    public ListenableFuture<CommitGitRequest> prepareCommit(User user, VersionCreateRequest request) {
+        SettableFuture<CommitGitRequest> future = SettableFuture.create();
 
-        @NotNull CommitGitRequest commit = new CommitGitRequest(user.getTenantId(), request);
+        CommitGitRequest commit = new CommitGitRequest(user.getTenantId(), request);
         registerAndSend(commit, builder -> builder.setCommitRequest(
                 buildCommitRequest(commit).setPrepareMsg(getCommitPrepareMsg(user, request)).build()
         ).build(), wrap(future, commit));
         return future;
     }
 
-    @NotNull
     @SuppressWarnings("UnstableApiUsage")
     @Override
-    public ListenableFuture<Void> addToCommit(@NotNull CommitGitRequest commit, @NotNull EntityExportData<ExportableEntity<EntityId>> entityData) {
-        @NotNull String path = getRelativePath(entityData.getEntityType(), entityData.getExternalId());
+    public ListenableFuture<Void> addToCommit(CommitGitRequest commit, EntityExportData<ExportableEntity<EntityId>> entityData) {
+        String path = getRelativePath(entityData.getEntityType(), entityData.getExternalId());
         String entityDataJson = JacksonUtil.toPrettyString(entityData.sort());
 
-        @NotNull Iterable<String> entityDataChunks = StringUtils.split(entityDataJson, msgChunkSize);
+        Iterable<String> entityDataChunks = StringUtils.split(entityDataJson, msgChunkSize);
         String chunkedMsgId = UUID.randomUUID().toString();
         int chunksCount = Iterables.size(entityDataChunks);
 
-        @NotNull AtomicInteger chunkIndex = new AtomicInteger();
-        @NotNull List<ListenableFuture<Void>> futures = new ArrayList<>();
+        AtomicInteger chunkIndex = new AtomicInteger();
+        List<ListenableFuture<Void>> futures = new ArrayList<>();
         entityDataChunks.forEach(chunk -> {
-            @NotNull SettableFuture<Void> chunkFuture = SettableFuture.create();
+            SettableFuture<Void> chunkFuture = SettableFuture.create();
             log.trace("[{}] sending chunk {} for 'addToCommit'", chunkedMsgId, chunkIndex.get());
             registerAndSend(commit, builder -> builder.setCommitRequest(
                     buildCommitRequest(commit).setAddMsg(
@@ -122,12 +119,11 @@ public class DefaultGitVersionControlQueueService implements GitVersionControlQu
         }, MoreExecutors.directExecutor());
     }
 
-    @NotNull
     @Override
-    public ListenableFuture<Void> deleteAll(@NotNull CommitGitRequest commit, @NotNull EntityType entityType) {
-        @NotNull SettableFuture<Void> future = SettableFuture.create();
+    public ListenableFuture<Void> deleteAll(CommitGitRequest commit, EntityType entityType) {
+        SettableFuture<Void> future = SettableFuture.create();
 
-        @NotNull String path = getRelativePath(entityType, null);
+        String path = getRelativePath(entityType, null);
 
         registerAndSend(commit, builder -> builder.setCommitRequest(
                 buildCommitRequest(commit).setDeleteMsg(
@@ -139,7 +135,7 @@ public class DefaultGitVersionControlQueueService implements GitVersionControlQu
     }
 
     @Override
-    public ListenableFuture<VersionCreationResult> push(@NotNull CommitGitRequest commit) {
+    public ListenableFuture<VersionCreationResult> push(CommitGitRequest commit) {
         registerAndSend(commit, builder -> builder.setCommitRequest(
                 buildCommitRequest(commit).setPushMsg(
                         TransportProtos.PushMsg.newBuilder().build()
@@ -150,7 +146,7 @@ public class DefaultGitVersionControlQueueService implements GitVersionControlQu
     }
 
     @Override
-    public ListenableFuture<PageData<EntityVersion>> listVersions(TenantId tenantId, String branch, @NotNull PageLink pageLink) {
+    public ListenableFuture<PageData<EntityVersion>> listVersions(TenantId tenantId, String branch, PageLink pageLink) {
 
         return listVersions(tenantId,
                 applyPageLinkParameters(
@@ -161,7 +157,7 @@ public class DefaultGitVersionControlQueueService implements GitVersionControlQu
     }
 
     @Override
-    public ListenableFuture<PageData<EntityVersion>> listVersions(TenantId tenantId, String branch, @NotNull EntityType entityType, @NotNull PageLink pageLink) {
+    public ListenableFuture<PageData<EntityVersion>> listVersions(TenantId tenantId, String branch, EntityType entityType, PageLink pageLink) {
         return listVersions(tenantId,
                 applyPageLinkParameters(
                         ListVersionsRequestMsg.newBuilder()
@@ -172,7 +168,7 @@ public class DefaultGitVersionControlQueueService implements GitVersionControlQu
     }
 
     @Override
-    public ListenableFuture<PageData<EntityVersion>> listVersions(TenantId tenantId, String branch, @NotNull EntityId entityId, @NotNull PageLink pageLink) {
+    public ListenableFuture<PageData<EntityVersion>> listVersions(TenantId tenantId, String branch, EntityId entityId, PageLink pageLink) {
         return listVersions(tenantId,
                 applyPageLinkParameters(
                         ListVersionsRequestMsg.newBuilder()
@@ -184,7 +180,7 @@ public class DefaultGitVersionControlQueueService implements GitVersionControlQu
                 ).build());
     }
 
-    private ListVersionsRequestMsg.Builder applyPageLinkParameters(@NotNull ListVersionsRequestMsg.Builder builder, @NotNull PageLink pageLink) {
+    private ListVersionsRequestMsg.Builder applyPageLinkParameters(ListVersionsRequestMsg.Builder builder, PageLink pageLink) {
         builder.setPageSize(pageLink.getPageSize())
                 .setPage(pageLink.getPage());
         if (pageLink.getTextSearch() != null) {
@@ -202,12 +198,12 @@ public class DefaultGitVersionControlQueueService implements GitVersionControlQu
     }
 
     private ListenableFuture<PageData<EntityVersion>> listVersions(TenantId tenantId, ListVersionsRequestMsg requestMsg) {
-        @NotNull ListVersionsGitRequest request = new ListVersionsGitRequest(tenantId);
+        ListVersionsGitRequest request = new ListVersionsGitRequest(tenantId);
         return sendRequest(request, builder -> builder.setListVersionRequest(requestMsg));
     }
 
     @Override
-    public ListenableFuture<List<VersionedEntityInfo>> listEntitiesAtVersion(TenantId tenantId, String versionId, @NotNull EntityType entityType) {
+    public ListenableFuture<List<VersionedEntityInfo>> listEntitiesAtVersion(TenantId tenantId, String versionId, EntityType entityType) {
         return listEntitiesAtVersion(tenantId, ListEntitiesRequestMsg.newBuilder()
                 .setVersionId(versionId)
                 .setEntityType(entityType.name())
@@ -222,20 +218,20 @@ public class DefaultGitVersionControlQueueService implements GitVersionControlQu
     }
 
     private ListenableFuture<List<VersionedEntityInfo>> listEntitiesAtVersion(TenantId tenantId, TransportProtos.ListEntitiesRequestMsg requestMsg) {
-        @NotNull ListEntitiesGitRequest request = new ListEntitiesGitRequest(tenantId);
+        ListEntitiesGitRequest request = new ListEntitiesGitRequest(tenantId);
         return sendRequest(request, builder -> builder.setListEntitiesRequest(requestMsg));
     }
 
     @Override
     public ListenableFuture<List<BranchInfo>> listBranches(TenantId tenantId) {
-        @NotNull ListBranchesGitRequest request = new ListBranchesGitRequest(tenantId);
+        ListBranchesGitRequest request = new ListBranchesGitRequest(tenantId);
         return sendRequest(request, builder -> builder.setListBranchesRequest(TransportProtos.ListBranchesRequestMsg.newBuilder().build()));
     }
 
     @Override
     public ListenableFuture<List<EntityVersionsDiff>> getVersionsDiff(TenantId tenantId, @Nullable EntityType entityType, EntityId externalId, String versionId1, String versionId2) {
         String path = entityType != null ? getRelativePath(entityType, externalId) : "";
-        @NotNull VersionsDiffGitRequest request = new VersionsDiffGitRequest(tenantId, path, versionId1, versionId2);
+        VersionsDiffGitRequest request = new VersionsDiffGitRequest(tenantId, path, versionId1, versionId2);
         return sendRequest(request, builder -> builder.setVersionsDiffRequest(TransportProtos.VersionsDiffRequestMsg.newBuilder()
                 .setPath(request.getPath())
                 .setVersionId1(request.getVersionId1())
@@ -245,8 +241,8 @@ public class DefaultGitVersionControlQueueService implements GitVersionControlQu
 
     @Override
     @SuppressWarnings("rawtypes")
-    public ListenableFuture<EntityExportData> getEntity(TenantId tenantId, String versionId, @NotNull EntityId entityId) {
-        @NotNull EntityContentGitRequest request = new EntityContentGitRequest(tenantId, versionId, entityId);
+    public ListenableFuture<EntityExportData> getEntity(TenantId tenantId, String versionId, EntityId entityId) {
+        EntityContentGitRequest request = new EntityContentGitRequest(tenantId, versionId, entityId);
         chunkedMsgs.put(request.getRequestId(), new HashMap<>());
         registerAndSend(request, builder -> builder.setEntityContentRequest(EntityContentRequestMsg.newBuilder()
                         .setVersionId(versionId)
@@ -257,13 +253,13 @@ public class DefaultGitVersionControlQueueService implements GitVersionControlQu
         return request.getFuture();
     }
 
-    private <T> void registerAndSend(@NotNull PendingGitRequest<T> request,
-                                     @NotNull Function<ToVersionControlServiceMsg.Builder, ToVersionControlServiceMsg> enrichFunction, TbQueueCallback callback) {
+    private <T> void registerAndSend(PendingGitRequest<T> request,
+                                     Function<ToVersionControlServiceMsg.Builder, ToVersionControlServiceMsg> enrichFunction, TbQueueCallback callback) {
         registerAndSend(request, enrichFunction, null, callback);
     }
 
-    private <T> void registerAndSend(@NotNull PendingGitRequest<T> request,
-                                     @NotNull Function<ToVersionControlServiceMsg.Builder, ToVersionControlServiceMsg> enrichFunction, RepositorySettings settings, TbQueueCallback callback) {
+    private <T> void registerAndSend(PendingGitRequest<T> request,
+                                     Function<ToVersionControlServiceMsg.Builder, ToVersionControlServiceMsg> enrichFunction, RepositorySettings settings, TbQueueCallback callback) {
         if (!request.getFuture().isDone()) {
             pendingRequestMap.putIfAbsent(request.getRequestId(), request);
             var requestBody = enrichFunction.apply(newRequestProto(request, settings));
@@ -277,7 +273,7 @@ public class DefaultGitVersionControlQueueService implements GitVersionControlQu
         }
     }
 
-    private <T> ListenableFuture<T> sendRequest(@NotNull PendingGitRequest<T> request, @NotNull Consumer<ToVersionControlServiceMsg.Builder> enrichFunction) {
+    private <T> ListenableFuture<T> sendRequest(PendingGitRequest<T> request, Consumer<ToVersionControlServiceMsg.Builder> enrichFunction) {
         registerAndSend(request, builder -> {
             enrichFunction.accept(builder);
             return builder.build();
@@ -287,8 +283,8 @@ public class DefaultGitVersionControlQueueService implements GitVersionControlQu
 
     @Override
     @SuppressWarnings("rawtypes")
-    public ListenableFuture<List<EntityExportData>> getEntities(TenantId tenantId, String versionId, @NotNull EntityType entityType, int offset, int limit) {
-        @NotNull EntitiesContentGitRequest request = new EntitiesContentGitRequest(tenantId, versionId, entityType);
+    public ListenableFuture<List<EntityExportData>> getEntities(TenantId tenantId, String versionId, EntityType entityType, int offset, int limit) {
+        EntitiesContentGitRequest request = new EntitiesContentGitRequest(tenantId, versionId, entityType);
         chunkedMsgs.put(request.getRequestId(), new HashMap<>());
         registerAndSend(request, builder -> builder.setEntitiesContentRequest(EntitiesContentRequestMsg.newBuilder()
                         .setVersionId(versionId)
@@ -303,7 +299,7 @@ public class DefaultGitVersionControlQueueService implements GitVersionControlQu
 
     @Override
     public ListenableFuture<Void> initRepository(TenantId tenantId, RepositorySettings settings) {
-        @NotNull VoidGitRequest request = new VoidGitRequest(tenantId);
+        VoidGitRequest request = new VoidGitRequest(tenantId);
 
         registerAndSend(request, builder -> builder.setInitRepositoryRequest(GenericRepositoryRequestMsg.newBuilder().build()).build()
                 , settings, wrap(request.getFuture()));
@@ -313,7 +309,7 @@ public class DefaultGitVersionControlQueueService implements GitVersionControlQu
 
     @Override
     public ListenableFuture<Void> testRepository(TenantId tenantId, RepositorySettings settings) {
-        @NotNull VoidGitRequest request = new VoidGitRequest(tenantId);
+        VoidGitRequest request = new VoidGitRequest(tenantId);
 
         registerAndSend(request, builder -> builder
                         .setTestRepositoryRequest(GenericRepositoryRequestMsg.newBuilder().build()).build()
@@ -324,7 +320,7 @@ public class DefaultGitVersionControlQueueService implements GitVersionControlQu
 
     @Override
     public ListenableFuture<Void> clearRepository(TenantId tenantId) {
-        @NotNull ClearRepositoryGitRequest request = new ClearRepositoryGitRequest(tenantId);
+        ClearRepositoryGitRequest request = new ClearRepositoryGitRequest(tenantId);
 
         registerAndSend(request, builder -> builder.setClearRepositoryRequest(GenericRepositoryRequestMsg.newBuilder().build()).build()
                 , wrap(request.getFuture()));
@@ -333,8 +329,8 @@ public class DefaultGitVersionControlQueueService implements GitVersionControlQu
     }
 
     @Override
-    public void processResponse(@NotNull VersionControlResponseMsg vcResponseMsg) {
-        @NotNull UUID requestId = new UUID(vcResponseMsg.getRequestIdMSB(), vcResponseMsg.getRequestIdLSB());
+    public void processResponse(VersionControlResponseMsg vcResponseMsg) {
+        UUID requestId = new UUID(vcResponseMsg.getRequestIdMSB(), vcResponseMsg.getRequestIdLSB());
         PendingGitRequest<?> request = pendingRequestMap.get(requestId);
         if (request == null) {
             log.debug("[{}] received stale response: {}", requestId, vcResponseMsg);
@@ -352,7 +348,7 @@ public class DefaultGitVersionControlQueueService implements GitVersionControlQu
                     future.set(null);
                 } else if (vcResponseMsg.hasCommitResponse()) {
                     var commitResponse = vcResponseMsg.getCommitResponse();
-                    @NotNull var commitResult = new VersionCreationResult();
+                    var commitResult = new VersionCreationResult();
                     if (commitResponse.getTs() > 0) {
                         commitResult.setVersion(new EntityVersion(commitResponse.getTs(), commitResponse.getCommitId(), commitResponse.getName(), commitResponse.getAuthor()));
                     }
@@ -374,7 +370,7 @@ public class DefaultGitVersionControlQueueService implements GitVersionControlQu
                 } else if (vcResponseMsg.hasEntityContentResponse()) {
                     TransportProtos.EntityContentResponseMsg responseMsg = vcResponseMsg.getEntityContentResponse();
                     log.trace("Received chunk {} for 'getEntity'", responseMsg.getChunkIndex());
-                    @NotNull var joined = joinChunks(requestId, responseMsg, 0, 1);
+                    var joined = joinChunks(requestId, responseMsg, 0, 1);
                     if (joined.isPresent()) {
                         log.trace("Collected all chunks for 'getEntity'");
                         ((EntityContentGitRequest) request).getFuture().set(joined.get().get(0));
@@ -385,7 +381,7 @@ public class DefaultGitVersionControlQueueService implements GitVersionControlQu
                     TransportProtos.EntitiesContentResponseMsg responseMsg = vcResponseMsg.getEntitiesContentResponse();
                     TransportProtos.EntityContentResponseMsg item = responseMsg.getItem();
                     if (responseMsg.getItemsCount() > 0) {
-                        @NotNull var joined = joinChunks(requestId, item, responseMsg.getItemIdx(), responseMsg.getItemsCount());
+                        var joined = joinChunks(requestId, item, responseMsg.getItemIdx(), responseMsg.getItemsCount());
                         if (joined.isPresent()) {
                             ((EntitiesContentGitRequest) request).getFuture().set(joined.get());
                         } else {
@@ -419,14 +415,13 @@ public class DefaultGitVersionControlQueueService implements GitVersionControlQu
         }
     }
 
-    @NotNull
     @SuppressWarnings("rawtypes")
-    private Optional<List<EntityExportData>> joinChunks(UUID requestId, @NotNull TransportProtos.EntityContentResponseMsg responseMsg, int itemIdx, int expectedMsgCount) {
+    private Optional<List<EntityExportData>> joinChunks(UUID requestId, TransportProtos.EntityContentResponseMsg responseMsg, int itemIdx, int expectedMsgCount) {
         var chunksMap = chunkedMsgs.get(requestId);
         if (chunksMap == null) {
             return Optional.empty();
         }
-        @NotNull String[] msgChunks = chunksMap.computeIfAbsent(itemIdx, id -> new String[responseMsg.getChunksCount()]);
+        String[] msgChunks = chunksMap.computeIfAbsent(itemIdx, id -> new String[responseMsg.getChunksCount()]);
         msgChunks[responseMsg.getChunkIndex()] = responseMsg.getData();
         if (chunksMap.size() == expectedMsgCount && chunksMap.values().stream()
                 .allMatch(chunks -> CollectionsUtil.countNonNull(chunks) == chunks.length)) {
@@ -459,24 +454,20 @@ public class DefaultGitVersionControlQueueService implements GitVersionControlQu
         return pendingRequest;
     }
 
-    @NotNull
-    private PageData<EntityVersion> toPageData(@NotNull TransportProtos.ListVersionsResponseMsg listVersionsResponse) {
+    private PageData<EntityVersion> toPageData(TransportProtos.ListVersionsResponseMsg listVersionsResponse) {
         var listVersions = listVersionsResponse.getVersionsList().stream().map(this::getEntityVersion).collect(Collectors.toList());
         return new PageData<>(listVersions, listVersionsResponse.getTotalPages(), listVersionsResponse.getTotalElements(), listVersionsResponse.getHasNext());
     }
 
-    @NotNull
-    private EntityVersion getEntityVersion(@NotNull TransportProtos.EntityVersionProto proto) {
+    private EntityVersion getEntityVersion(TransportProtos.EntityVersionProto proto) {
         return new EntityVersion(proto.getTs(), proto.getId(), proto.getName(), proto.getAuthor());
     }
 
-    @NotNull
-    private VersionedEntityInfo getVersionedEntityInfo(@NotNull TransportProtos.VersionedEntityInfoProto proto) {
+    private VersionedEntityInfo getVersionedEntityInfo(TransportProtos.VersionedEntityInfoProto proto) {
         return new VersionedEntityInfo(EntityIdFactory.getByTypeAndUuid(proto.getEntityType(), new UUID(proto.getEntityIdMSB(), proto.getEntityIdLSB())));
     }
 
-    @NotNull
-    private BranchInfo getBranchInfo(@NotNull TransportProtos.BranchInfoProto proto) {
+    private BranchInfo getBranchInfo(TransportProtos.BranchInfoProto proto) {
         return new BranchInfo(proto.getName(), proto.getIsDefault());
     }
 
@@ -488,23 +479,21 @@ public class DefaultGitVersionControlQueueService implements GitVersionControlQu
     }
 
     //The future will be completed when the corresponding result arrives from kafka
-    @NotNull
-    private static <T> TbQueueCallback wrap(@NotNull SettableFuture<T> future) {
+    private static <T> TbQueueCallback wrap(SettableFuture<T> future) {
         return new TbQueueCallback() {
             @Override
             public void onSuccess(TbQueueMsgMetadata metadata) {
             }
 
             @Override
-            public void onFailure(@NotNull Throwable t) {
+            public void onFailure(Throwable t) {
                 future.setException(t);
             }
         };
     }
 
     //The future will be completed when the request is successfully sent to kafka
-    @NotNull
-    private <T> TbQueueCallback wrap(@NotNull SettableFuture<T> future, T value) {
+    private <T> TbQueueCallback wrap(SettableFuture<T> future, T value) {
         return new TbQueueCallback() {
             @Override
             public void onSuccess(TbQueueMsgMetadata metadata) {
@@ -512,29 +501,27 @@ public class DefaultGitVersionControlQueueService implements GitVersionControlQu
             }
 
             @Override
-            public void onFailure(@NotNull Throwable t) {
+            public void onFailure(Throwable t) {
                 future.setException(t);
             }
         };
     }
 
-    @NotNull
-    private static String getRelativePath(@NotNull EntityType entityType, @Nullable EntityId entityId) {
-        @NotNull String path = entityType.name().toLowerCase();
+    private static String getRelativePath(EntityType entityType, @Nullable EntityId entityId) {
+        String path = entityType.name().toLowerCase();
         if (entityId != null) {
             path += "/" + entityId + ".json";
         }
         return path;
     }
 
-    private static PrepareMsg getCommitPrepareMsg(@NotNull User user, @NotNull VersionCreateRequest request) {
+    private static PrepareMsg getCommitPrepareMsg(User user, VersionCreateRequest request) {
         return PrepareMsg.newBuilder().setCommitMsg(request.getVersionName())
                 .setBranchName(request.getBranch()).setAuthorName(getAuthorName(user)).setAuthorEmail(user.getEmail()).build();
     }
 
-    @NotNull
-    private static String getAuthorName(@NotNull User user) {
-        @NotNull List<String> parts = new ArrayList<>();
+    private static String getAuthorName(User user) {
+        List<String> parts = new ArrayList<>();
         if (StringUtils.isNotBlank(user.getFirstName())) {
             parts.add(user.getFirstName());
         }
@@ -547,7 +534,7 @@ public class DefaultGitVersionControlQueueService implements GitVersionControlQu
         return String.join(" ", parts);
     }
 
-    private ToVersionControlServiceMsg.Builder newRequestProto(@NotNull PendingGitRequest<?> request, RepositorySettings settings) {
+    private ToVersionControlServiceMsg.Builder newRequestProto(PendingGitRequest<?> request, RepositorySettings settings) {
         var tenantId = request.getTenantId();
         var requestId = request.getRequestId();
         var builder = ToVersionControlServiceMsg.newBuilder()
@@ -568,7 +555,7 @@ public class DefaultGitVersionControlQueueService implements GitVersionControlQu
         return builder;
     }
 
-    private CommitRequestMsg.Builder buildCommitRequest(@NotNull CommitGitRequest commit) {
+    private CommitRequestMsg.Builder buildCommitRequest(CommitGitRequest commit) {
         return CommitRequestMsg.newBuilder().setTxId(commit.getTxId().toString());
     }
 }

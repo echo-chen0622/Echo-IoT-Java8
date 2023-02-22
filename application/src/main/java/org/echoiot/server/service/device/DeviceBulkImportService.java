@@ -31,7 +31,6 @@ import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.entitiy.device.TbDeviceService;
 import org.echoiot.server.service.security.model.SecurityUser;
 import org.echoiot.server.service.sync.ie.importing.csv.AbstractBulkImportService;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
@@ -43,19 +42,15 @@ import java.util.concurrent.locks.ReentrantLock;
 @TbCoreComponent
 @RequiredArgsConstructor
 public class DeviceBulkImportService extends AbstractBulkImportService<Device> {
-    @NotNull
     protected final DeviceService deviceService;
-    @NotNull
     protected final TbDeviceService tbDeviceService;
-    @NotNull
     protected final DeviceCredentialsService deviceCredentialsService;
-    @NotNull
     protected final DeviceProfileService deviceProfileService;
 
     private final Lock findOrCreateDeviceProfileLock = new ReentrantLock();
 
     @Override
-    protected void setEntityFields(@NotNull Device entity, @NotNull Map<BulkImportColumnType, String> fields) {
+    protected void setEntityFields(Device entity, Map<BulkImportColumnType, String> fields) {
         ObjectNode additionalInfo = getOrCreateAdditionalInfoObj(entity);
         fields.forEach((columnType, value) -> {
             switch (columnType) {
@@ -81,7 +76,7 @@ public class DeviceBulkImportService extends AbstractBulkImportService<Device> {
 
     @Override
     @SneakyThrows
-    protected Device saveEntity(SecurityUser user, @NotNull Device entity, @NotNull Map<BulkImportColumnType, String> fields) {
+    protected Device saveEntity(SecurityUser user, Device entity, Map<BulkImportColumnType, String> fields) {
         DeviceCredentials deviceCredentials;
         try {
             deviceCredentials = createDeviceCredentials(entity.getTenantId(), entity.getId(), fields);
@@ -103,7 +98,6 @@ public class DeviceBulkImportService extends AbstractBulkImportService<Device> {
         return tbDeviceService.saveDeviceWithCredentials(entity, deviceCredentials, user);
     }
 
-    @NotNull
     @Override
     protected Device findOrCreateEntity(TenantId tenantId, String name) {
         return Optional.ofNullable(deviceService.findDeviceByTenantIdAndName(tenantId, name))
@@ -111,13 +105,13 @@ public class DeviceBulkImportService extends AbstractBulkImportService<Device> {
     }
 
     @Override
-    protected void setOwners(@NotNull Device entity, @NotNull SecurityUser user) {
+    protected void setOwners(Device entity, SecurityUser user) {
         entity.setTenantId(user.getTenantId());
         entity.setCustomerId(user.getCustomerId());
     }
 
     @SneakyThrows
-    private DeviceCredentials createDeviceCredentials(TenantId tenantId, @Nullable DeviceId deviceId, @NotNull Map<BulkImportColumnType, String> fields) {
+    private DeviceCredentials createDeviceCredentials(TenantId tenantId, @Nullable DeviceId deviceId, Map<BulkImportColumnType, String> fields) {
         DeviceCredentials credentials = new DeviceCredentials();
         if (fields.containsKey(BulkImportColumnType.LWM2M_CLIENT_ENDPOINT)) {
             credentials.setCredentialsType(DeviceCredentialsType.LWM2M_CREDENTIALS);
@@ -137,24 +131,24 @@ public class DeviceBulkImportService extends AbstractBulkImportService<Device> {
         return credentials;
     }
 
-    private void setUpAccessTokenCredentials(@NotNull Map<BulkImportColumnType, String> fields, @NotNull DeviceCredentials credentials) {
+    private void setUpAccessTokenCredentials(Map<BulkImportColumnType, String> fields, DeviceCredentials credentials) {
         credentials.setCredentialsId(Optional.ofNullable(fields.get(BulkImportColumnType.ACCESS_TOKEN))
                 .orElseGet(() -> StringUtils.randomAlphanumeric(20)));
     }
 
-    private void setUpBasicMqttCredentials(@NotNull Map<BulkImportColumnType, String> fields, @NotNull DeviceCredentials credentials) {
-        @NotNull BasicMqttCredentials basicMqttCredentials = new BasicMqttCredentials();
+    private void setUpBasicMqttCredentials(Map<BulkImportColumnType, String> fields, DeviceCredentials credentials) {
+        BasicMqttCredentials basicMqttCredentials = new BasicMqttCredentials();
         basicMqttCredentials.setClientId(fields.get(BulkImportColumnType.MQTT_CLIENT_ID));
         basicMqttCredentials.setUserName(fields.get(BulkImportColumnType.MQTT_USER_NAME));
         basicMqttCredentials.setPassword(fields.get(BulkImportColumnType.MQTT_PASSWORD));
         credentials.setCredentialsValue(JacksonUtil.toString(basicMqttCredentials));
     }
 
-    private void setUpX509CertificateCredentials(@NotNull Map<BulkImportColumnType, String> fields, @NotNull DeviceCredentials credentials) {
+    private void setUpX509CertificateCredentials(Map<BulkImportColumnType, String> fields, DeviceCredentials credentials) {
         credentials.setCredentialsValue(fields.get(BulkImportColumnType.X509));
     }
 
-    private void setUpLwm2mCredentials(@NotNull Map<BulkImportColumnType, String> fields, @NotNull DeviceCredentials credentials) throws com.fasterxml.jackson.core.JsonProcessingException {
+    private void setUpLwm2mCredentials(Map<BulkImportColumnType, String> fields, DeviceCredentials credentials) throws com.fasterxml.jackson.core.JsonProcessingException {
         ObjectNode lwm2mCredentials = JacksonUtil.newObjectNode();
 
         Set.of(BulkImportColumnType.LWM2M_CLIENT_SECURITY_CONFIG_MODE, BulkImportColumnType.LWM2M_BOOTSTRAP_SERVER_SECURITY_MODE,
@@ -193,7 +187,7 @@ public class DeviceBulkImportService extends AbstractBulkImportService<Device> {
         credentials.setCredentialsValue(lwm2mCredentials.toString());
     }
 
-    private DeviceProfile setUpLwM2mDeviceProfile(TenantId tenantId, @NotNull Device device) {
+    private DeviceProfile setUpLwM2mDeviceProfile(TenantId tenantId, Device device) {
         DeviceProfile deviceProfile = deviceProfileService.findDeviceProfileByName(tenantId, device.getType());
         if (deviceProfile != null) {
             if (deviceProfile.getTransportType() != DeviceTransportType.LWM2M) {
@@ -213,14 +207,14 @@ public class DeviceBulkImportService extends AbstractBulkImportService<Device> {
                     deviceProfile.setTransportType(DeviceTransportType.LWM2M);
                     deviceProfile.setProvisionType(DeviceProfileProvisionType.DISABLED);
 
-                    @NotNull Lwm2mDeviceProfileTransportConfiguration transportConfiguration = new Lwm2mDeviceProfileTransportConfiguration();
+                    Lwm2mDeviceProfileTransportConfiguration transportConfiguration = new Lwm2mDeviceProfileTransportConfiguration();
                     transportConfiguration.setBootstrap(Collections.emptyList());
                     transportConfiguration.setClientLwM2mSettings(new OtherConfiguration(1, 1, 1, PowerMode.DRX, null, null, null, null, null));
                     transportConfiguration.setObserveAttr(new TelemetryMappingConfiguration(Collections.emptyMap(), Collections.emptySet(), Collections.emptySet(), Collections.emptySet(), Collections.emptyMap()));
 
-                    @NotNull DeviceProfileData deviceProfileData = new DeviceProfileData();
-                    @NotNull DefaultDeviceProfileConfiguration configuration = new DefaultDeviceProfileConfiguration();
-                    @NotNull DisabledDeviceProfileProvisionConfiguration provisionConfiguration = new DisabledDeviceProfileProvisionConfiguration(null);
+                    DeviceProfileData deviceProfileData = new DeviceProfileData();
+                    DefaultDeviceProfileConfiguration configuration = new DefaultDeviceProfileConfiguration();
+                    DisabledDeviceProfileProvisionConfiguration provisionConfiguration = new DisabledDeviceProfileProvisionConfiguration(null);
                     deviceProfileData.setConfiguration(configuration);
                     deviceProfileData.setTransportConfiguration(transportConfiguration);
                     deviceProfileData.setProvisionConfiguration(provisionConfiguration);
@@ -235,8 +229,8 @@ public class DeviceBulkImportService extends AbstractBulkImportService<Device> {
         return deviceProfile;
     }
 
-    private void setValues(@NotNull ObjectNode objectNode, @NotNull Map<BulkImportColumnType, String> data, @NotNull Collection<BulkImportColumnType> columns) {
-        for (@NotNull BulkImportColumnType column : columns) {
+    private void setValues(ObjectNode objectNode, Map<BulkImportColumnType, String> data, Collection<BulkImportColumnType> columns) {
+        for (BulkImportColumnType column : columns) {
             String value = StringUtils.defaultString(data.get(column), column.getDefaultValue());
             if (value != null && column.getKey() != null) {
                 objectNode.set(column.getKey(), new TextNode(value));
@@ -244,7 +238,6 @@ public class DeviceBulkImportService extends AbstractBulkImportService<Device> {
         }
     }
 
-    @NotNull
     @Override
     protected EntityType getEntityType() {
         return EntityType.DEVICE;

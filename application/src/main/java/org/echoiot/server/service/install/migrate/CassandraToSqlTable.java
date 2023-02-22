@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.UUIDConverter;
 import org.echoiot.server.dao.cassandra.guava.GuavaSession;
 import org.hibernate.internal.util.JdbcExceptionHelper;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.postgresql.util.PSQLException;
 
@@ -46,7 +45,7 @@ public class CassandraToSqlTable {
         this(tableName, tableName, batchSize, columns);
     }
 
-    public CassandraToSqlTable(String cassandraCf, String sqlTableName, int batchSize, @NotNull CassandraToSqlColumn... columns) {
+    public CassandraToSqlTable(String cassandraCf, String sqlTableName, int batchSize, CassandraToSqlColumn... columns) {
         this.cassandraCf = cassandraCf;
         this.sqlTableName = sqlTableName;
         this.batchSize = batchSize;
@@ -57,7 +56,7 @@ public class CassandraToSqlTable {
         }
     }
 
-    public void migrateToSql(@NotNull GuavaSession session, @NotNull Connection conn) throws SQLException {
+    public void migrateToSql(GuavaSession session, Connection conn) throws SQLException {
         log.info("[{}] Migrating data from cassandra '{}' Column Family to '{}' SQL table...", this.sqlTableName, this.cassandraCf, this.sqlTableName);
         DatabaseMetaData metadata = conn.getMetaData();
         java.sql.ResultSet resultSet = metadata.getColumns(null, null, this.sqlTableName, null);
@@ -65,15 +64,15 @@ public class CassandraToSqlTable {
             String name = resultSet.getString("COLUMN_NAME");
             int sqlType = resultSet.getInt("DATA_TYPE");
             int size = resultSet.getInt("COLUMN_SIZE");
-            @NotNull CassandraToSqlColumn column = this.getColumn(name);
+            CassandraToSqlColumn column = this.getColumn(name);
             column.setSize(size);
             column.setSqlType(sqlType);
         }
         this.sqlInsertStatement = createSqlInsertStatement(conn);
-        @NotNull Statement cassandraSelectStatement = createCassandraSelectStatement();
+        Statement cassandraSelectStatement = createCassandraSelectStatement();
         cassandraSelectStatement.setPageSize(100);
-        @NotNull ResultSet rs = session.execute(cassandraSelectStatement);
-        @NotNull Iterator<Row> iter = rs.iterator();
+        ResultSet rs = session.execute(cassandraSelectStatement);
+        Iterator<Row> iter = rs.iterator();
         int rowCounter = 0;
         List<CassandraToSqlColumnData[]> batchData;
         boolean hasNext;
@@ -90,9 +89,8 @@ public class CassandraToSqlTable {
                 this.sqlTableName, this.cassandraCf, this.sqlTableName);
     }
 
-    @NotNull
-    private List<CassandraToSqlColumnData[]> extractBatchData(@NotNull Iterator<Row> iter) {
-        @NotNull List<CassandraToSqlColumnData[]> batchData = new ArrayList<>();
+    private List<CassandraToSqlColumnData[]> extractBatchData(Iterator<Row> iter) {
+        List<CassandraToSqlColumnData[]> batchData = new ArrayList<>();
         while (iter.hasNext() && batchData.size() < this.batchSize) {
             Row row = iter.next();
             if (row != null) {
@@ -103,16 +101,16 @@ public class CassandraToSqlTable {
         return batchData;
     }
 
-    private CassandraToSqlColumnData[] extractRowData(@NotNull Row row) {
-        @NotNull CassandraToSqlColumnData[] data = new CassandraToSqlColumnData[this.columns.size()];
-        for (@NotNull CassandraToSqlColumn column: this.columns) {
+    private CassandraToSqlColumnData[] extractRowData(Row row) {
+        CassandraToSqlColumnData[] data = new CassandraToSqlColumnData[this.columns.size()];
+        for (CassandraToSqlColumn column: this.columns) {
             String value = column.getColumnValue(row);
             data[column.getIndex()] = new CassandraToSqlColumnData(value);
         }
         return this.validateColumnData(data);
     }
 
-    protected CassandraToSqlColumnData[] validateColumnData(@NotNull CassandraToSqlColumnData[] data) {
+    protected CassandraToSqlColumnData[] validateColumnData(CassandraToSqlColumnData[] data) {
         for (int i=0;i<data.length;i++) {
             CassandraToSqlColumn column = this.columns.get(i);
             if (column.getType() == CassandraToSqlColumnType.STRING) {
@@ -132,10 +130,10 @@ public class CassandraToSqlTable {
         return data;
     }
 
-    protected void batchInsert(@NotNull List<CassandraToSqlColumnData[]> batchData, @NotNull Connection conn) throws SQLException {
+    protected void batchInsert(List<CassandraToSqlColumnData[]> batchData, Connection conn) throws SQLException {
         boolean retry = false;
-        for (@NotNull CassandraToSqlColumnData[] data : batchData) {
-            for (@NotNull CassandraToSqlColumn column: this.columns) {
+        for (CassandraToSqlColumnData[] data : batchData) {
+            for (CassandraToSqlColumn column: this.columns) {
                 column.setColumnValue(this.sqlInsertStatement, data[column.getIndex()].getValue());
             }
             try {
@@ -157,8 +155,8 @@ public class CassandraToSqlTable {
     }
 
     private boolean handleInsertException(List<CassandraToSqlColumnData[]> batchData,
-                                          @NotNull CassandraToSqlColumnData[] data,
-                                          @NotNull Connection conn, @NotNull SQLException ex) throws SQLException {
+                                          CassandraToSqlColumnData[] data,
+                                          Connection conn, SQLException ex) throws SQLException {
         conn.commit();
         @Nullable String constraint = extractConstraintName(ex).orElse(null);
         if (constraint != null) {
@@ -175,9 +173,8 @@ public class CassandraToSqlTable {
         return false;
     }
 
-    @NotNull
-    private String dataToString(@NotNull CassandraToSqlColumnData[] data) {
-        @NotNull StringBuffer stringData = new StringBuffer("{\n");
+    private String dataToString(CassandraToSqlColumnData[] data) {
+        StringBuffer stringData = new StringBuffer("{\n");
         for (int i=0;i<data.length;i++) {
             String columnName = this.columns.get(i).getSqlColumnName();
             String value = data[i].getLogValue();
@@ -192,9 +189,9 @@ public class CassandraToSqlTable {
         return false;
     }
 
-    protected void handleUniqueNameViolation(@NotNull CassandraToSqlColumnData[] data, String entityType) {
-        @NotNull CassandraToSqlColumn nameColumn = this.getColumn("name");
-        @NotNull CassandraToSqlColumn searchTextColumn = this.getColumn("search_text");
+    protected void handleUniqueNameViolation(CassandraToSqlColumnData[] data, String entityType) {
+        CassandraToSqlColumn nameColumn = this.getColumn("name");
+        CassandraToSqlColumn searchTextColumn = this.getColumn("search_text");
         CassandraToSqlColumnData nameColumnData = data[nameColumn.getIndex()];
         CassandraToSqlColumnData searchTextColumnData = data[searchTextColumn.getIndex()];
         String prevName = nameColumnData.getValue();
@@ -205,9 +202,9 @@ public class CassandraToSqlTable {
         log.warn("Found {} with duplicate name [id:[{}]]. Attempting to rename {} from '{}' to '{}'...", entityType, id, entityType, prevName, newName);
     }
 
-    protected void handleUniqueEmailViolation(@NotNull CassandraToSqlColumnData[] data) {
-        @NotNull CassandraToSqlColumn emailColumn = this.getColumn("email");
-        @NotNull CassandraToSqlColumn searchTextColumn = this.getColumn("search_text");
+    protected void handleUniqueEmailViolation(CassandraToSqlColumnData[] data) {
+        CassandraToSqlColumn emailColumn = this.getColumn("email");
+        CassandraToSqlColumn searchTextColumn = this.getColumn("search_text");
         CassandraToSqlColumnData emailColumnData = data[emailColumn.getIndex()];
         CassandraToSqlColumnData searchTextColumnData = data[searchTextColumn.getIndex()];
         String prevEmail = emailColumnData.getValue();
@@ -218,7 +215,7 @@ public class CassandraToSqlTable {
         log.warn("Found user with duplicate email [id:[{}]]. Attempting to rename email from '{}' to '{}'...", id, prevEmail, newEmail);
     }
 
-    protected void ignoreRecord(@NotNull List<CassandraToSqlColumnData[]> batchData, @NotNull CassandraToSqlColumnData[] data) {
+    protected void ignoreRecord(List<CassandraToSqlColumnData[]> batchData, CassandraToSqlColumnData[] data) {
         log.warn("[{}] Affected data:\n{}", this.sqlTableName, this.dataToString(data));
         int index = batchData.indexOf(data);
         if (index > 0) {
@@ -226,21 +223,19 @@ public class CassandraToSqlTable {
         }
     }
 
-    @NotNull
     protected CassandraToSqlColumn getColumn(String sqlColumnName) {
         return this.columns.stream().filter(col -> col.getSqlColumnName().equals(sqlColumnName)).findFirst().get();
     }
 
-    protected CassandraToSqlColumnData getColumnData(@NotNull CassandraToSqlColumnData[] data, String sqlColumnName) {
-        @NotNull CassandraToSqlColumn column = this.getColumn(sqlColumnName);
+    protected CassandraToSqlColumnData getColumnData(CassandraToSqlColumnData[] data, String sqlColumnName) {
+        CassandraToSqlColumn column = this.getColumn(sqlColumnName);
         return data[column.getIndex()];
     }
 
-    @NotNull
-    private Optional<String> extractConstraintName(@NotNull SQLException ex) {
+    private Optional<String> extractConstraintName(SQLException ex) {
         final String sqlState = JdbcExceptionHelper.extractSqlState( ex );
         if (sqlState != null) {
-            @NotNull String sqlStateClassCode = JdbcExceptionHelper.determineSqlStateClassCode(sqlState);
+            String sqlStateClassCode = JdbcExceptionHelper.determineSqlStateClassCode(sqlState);
             if ( sqlStateClassCode != null ) {
                 if (Arrays.asList(
                         "23",	// "integrity constraint violation"
@@ -256,11 +251,10 @@ public class CassandraToSqlTable {
         return Optional.empty();
     }
 
-    @NotNull
     protected Statement createCassandraSelectStatement() {
-        @NotNull StringBuilder selectStatementBuilder = new StringBuilder();
+        StringBuilder selectStatementBuilder = new StringBuilder();
         selectStatementBuilder.append("SELECT ");
-        for (@NotNull CassandraToSqlColumn column : columns) {
+        for (CassandraToSqlColumn column : columns) {
             selectStatementBuilder.append(column.getCassandraColumnName()).append(",");
         }
         selectStatementBuilder.deleteCharAt(selectStatementBuilder.length() - 1);
@@ -268,15 +262,15 @@ public class CassandraToSqlTable {
         return SimpleStatement.newInstance(selectStatementBuilder.toString());
     }
 
-    private PreparedStatement createSqlInsertStatement(@NotNull Connection conn) throws SQLException {
-        @NotNull StringBuilder insertStatementBuilder = new StringBuilder();
+    private PreparedStatement createSqlInsertStatement(Connection conn) throws SQLException {
+        StringBuilder insertStatementBuilder = new StringBuilder();
         insertStatementBuilder.append("INSERT INTO ").append(this.sqlTableName).append(" (");
-        for (@NotNull CassandraToSqlColumn column : columns) {
+        for (CassandraToSqlColumn column : columns) {
             insertStatementBuilder.append(column.getSqlColumnName()).append(",");
         }
         insertStatementBuilder.deleteCharAt(insertStatementBuilder.length() - 1);
         insertStatementBuilder.append(") VALUES (");
-        for (@NotNull CassandraToSqlColumn column : columns) {
+        for (CassandraToSqlColumn column : columns) {
             if (column.getType() == CassandraToSqlColumnType.JSON) {
                 insertStatementBuilder.append("cast(? AS json)");
             } else {

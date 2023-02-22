@@ -3,7 +3,6 @@ package org.echoiot.mqtt;
 import io.netty.channel.EventLoop;
 import io.netty.handler.codec.mqtt.MqttSubscribeMessage;
 import io.netty.util.concurrent.Promise;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -16,7 +15,6 @@ final class MqttPendingSubscription {
     private final Set<MqttPendingHandler> handlers = new HashSet<>();
     private final MqttSubscribeMessage subscribeMessage;
 
-    @NotNull
     private final RetransmissionHandler<MqttSubscribeMessage> retransmissionHandler;
 
     private boolean sent = false;
@@ -54,12 +52,11 @@ final class MqttPendingSubscription {
         this.handlers.add(new MqttPendingHandler(handler, once));
     }
 
-    @NotNull
     Set<MqttPendingHandler> getHandlers() {
         return handlers;
     }
 
-    void startRetransmitTimer(@NotNull EventLoop eventLoop, @NotNull Consumer<Object> sendPacket) {
+    void startRetransmitTimer(EventLoop eventLoop, Consumer<Object> sendPacket) {
         if (this.sent) { //If the packet is sent, we can start the retransmit timer
             this.retransmissionHandler.setHandle((fixedHeader, originalMessage) ->
                     sendPacket.accept(new MqttSubscribeMessage(fixedHeader, originalMessage.variableHeader(), originalMessage.payload())));

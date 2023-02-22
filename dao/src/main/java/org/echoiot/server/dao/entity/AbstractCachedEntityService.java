@@ -1,7 +1,6 @@
 package org.echoiot.server.dao.entity;
 
 import org.echoiot.server.cache.TbTransactionalCache;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
@@ -17,7 +16,7 @@ public abstract class AbstractCachedEntityService<K extends Serializable, V exte
     @Resource
     private ApplicationEventPublisher eventPublisher;
 
-    protected void publishEvictEvent(@NotNull E event) {
+    protected void publishEvictEvent(E event) {
         if (TransactionSynchronizationManager.isActualTransactionActive()) {
             eventPublisher.publishEvent(event);
         } else {

@@ -3,7 +3,6 @@ package org.echoiot.server.dao.model.sql;
 import lombok.Data;
 import org.echoiot.server.common.data.kv.*;
 import org.echoiot.server.dao.model.ToData;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.persistence.Column;
@@ -67,7 +66,7 @@ public abstract class AbstractTsKvEntity implements ToData<TsKvEntry> {
 
     public abstract boolean isNotEmpty();
 
-    protected static boolean isAllNull(@NotNull Object... args) {
+    protected static boolean isAllNull(Object... args) {
         for (@Nullable Object arg : args) {
             if (arg != null) {
                 return false;
@@ -76,7 +75,6 @@ public abstract class AbstractTsKvEntity implements ToData<TsKvEntry> {
         return true;
     }
 
-    @NotNull
     @Override
     public TsKvEntry toData() {
         @Nullable KvEntry kvEntry = null;

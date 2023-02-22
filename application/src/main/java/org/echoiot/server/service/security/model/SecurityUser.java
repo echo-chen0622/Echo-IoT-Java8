@@ -2,7 +2,6 @@ package org.echoiot.server.service.security.model;
 
 import org.echoiot.server.common.data.User;
 import org.echoiot.server.common.data.id.UserId;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -28,14 +27,13 @@ public class SecurityUser extends User {
         super(id);
     }
 
-    public SecurityUser(@NotNull User user, boolean enabled, UserPrincipal userPrincipal) {
+    public SecurityUser(User user, boolean enabled, UserPrincipal userPrincipal) {
         super(user);
         this.enabled = enabled;
         this.userPrincipal = userPrincipal;
         this.sessionId = UUID.randomUUID().toString();
     }
 
-    @NotNull
     public Collection<GrantedAuthority> getAuthorities() {
         if (authorities == null) {
             authorities = Stream.of(SecurityUser.this.getAuthority())

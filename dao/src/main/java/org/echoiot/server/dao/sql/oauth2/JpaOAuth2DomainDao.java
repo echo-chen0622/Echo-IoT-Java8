@@ -7,7 +7,6 @@ import org.echoiot.server.dao.model.sql.OAuth2DomainEntity;
 import org.echoiot.server.dao.oauth2.OAuth2DomainDao;
 import org.echoiot.server.dao.sql.JpaAbstractDao;
 import org.echoiot.server.dao.util.SqlDao;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
@@ -19,10 +18,8 @@ import java.util.UUID;
 @SqlDao
 public class JpaOAuth2DomainDao extends JpaAbstractDao<OAuth2DomainEntity, OAuth2Domain> implements OAuth2DomainDao {
 
-    @NotNull
     private final OAuth2DomainRepository repository;
 
-    @NotNull
     @Override
     protected Class<OAuth2DomainEntity> getEntityClass() {
         return OAuth2DomainEntity.class;

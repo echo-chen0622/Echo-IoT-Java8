@@ -21,7 +21,6 @@ import org.echoiot.server.transport.lwm2m.server.client.LwM2MAuthException;
 import org.echoiot.server.transport.lwm2m.server.uplink.LwM2mTypeServer;
 import org.eclipse.leshan.core.util.SecurityUtil;
 import org.eclipse.leshan.server.security.SecurityInfo;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -39,20 +38,17 @@ import static org.eclipse.leshan.core.SecurityMode.*;
 @RequiredArgsConstructor
 public class LwM2mCredentialsSecurityInfoValidator {
 
-    @NotNull
     private final LwM2mTransportContext context;
-    @NotNull
     private final LwM2MTransportServerConfig config;
 
-    @NotNull
-    public TbLwM2MSecurityInfo getEndpointSecurityInfoByCredentialsId(String credentialsId, @NotNull LwM2mTypeServer keyValue) {
-        @NotNull CountDownLatch latch = new CountDownLatch(1);
-        @NotNull final TbLwM2MSecurityInfo[] resultSecurityStore = new TbLwM2MSecurityInfo[1];
+    public TbLwM2MSecurityInfo getEndpointSecurityInfoByCredentialsId(String credentialsId, LwM2mTypeServer keyValue) {
+        CountDownLatch latch = new CountDownLatch(1);
+        final TbLwM2MSecurityInfo[] resultSecurityStore = new TbLwM2MSecurityInfo[1];
         log.trace("Validating credentials [{}]", credentialsId);
         context.getTransportService().process(ValidateDeviceLwM2MCredentialsRequestMsg.newBuilder().setCredentialsId(credentialsId).build(),
                 new TransportServiceCallback<>() {
                     @Override
-                    public void onSuccess(@NotNull ValidateDeviceCredentialsResponse msg) {
+                    public void onSuccess(ValidateDeviceCredentialsResponse msg) {
                         log.trace("Validated credentials: [{}] [{}]", credentialsId, msg);
                         resultSecurityStore[0] = createSecurityInfo(credentialsId, msg, keyValue);
                         latch.countDown();
@@ -61,7 +57,7 @@ public class LwM2mCredentialsSecurityInfoValidator {
                     @Override
                     public void onError(Throwable e) {
                         log.trace("[{}] [{}] Failed to process credentials ", credentialsId, e);
-                        @NotNull TbLwM2MSecurityInfo result = new TbLwM2MSecurityInfo();
+                        TbLwM2MSecurityInfo result = new TbLwM2MSecurityInfo();
                         result.setEndpoint(credentialsId);
                         resultSecurityStore[0] = result;
                         latch.countDown();
@@ -85,9 +81,8 @@ public class LwM2mCredentialsSecurityInfoValidator {
      *
      * @return SecurityInfo
      */
-    @NotNull
-    private TbLwM2MSecurityInfo createSecurityInfo(String endpoint, @NotNull ValidateDeviceCredentialsResponse msg, @NotNull LwM2mTypeServer keyValue) {
-        @NotNull TbLwM2MSecurityInfo result = new TbLwM2MSecurityInfo();
+    private TbLwM2MSecurityInfo createSecurityInfo(String endpoint, ValidateDeviceCredentialsResponse msg, LwM2mTypeServer keyValue) {
+        TbLwM2MSecurityInfo result = new TbLwM2MSecurityInfo();
         @Nullable LwM2MClientCredentials credentials = JacksonUtil.fromString(msg.getCredentials(), LwM2MClientCredentials.class);
         if (credentials != null) {
             result.setMsg(msg);
@@ -111,7 +106,7 @@ public class LwM2mCredentialsSecurityInfoValidator {
                     break;
             }
             if (keyValue.equals(LwM2mTypeServer.BOOTSTRAP)) {
-                @NotNull LwM2MBootstrapConfig bootstrapCredentialConfig = new LwM2MBootstrapConfig(((Lwm2mDeviceProfileTransportConfiguration) msg.getDeviceProfile().getProfileData().getTransportConfiguration()).getBootstrap(),
+                LwM2MBootstrapConfig bootstrapCredentialConfig = new LwM2MBootstrapConfig(((Lwm2mDeviceProfileTransportConfiguration) msg.getDeviceProfile().getProfileData().getTransportConfiguration()).getBootstrap(),
                                                                                                    credentials.getBootstrap().getBootstrapServer(), credentials.getBootstrap().getLwm2mServer());
                 result.setBootstrapCredentialConfig(bootstrapCredentialConfig);
             }
@@ -119,12 +114,12 @@ public class LwM2mCredentialsSecurityInfoValidator {
         return result;
     }
 
-    private void createClientSecurityInfoNoSec(@NotNull TbLwM2MSecurityInfo result) {
+    private void createClientSecurityInfoNoSec(TbLwM2MSecurityInfo result) {
         result.setSecurityInfo(null);
         result.setSecurityMode(NO_SEC);
     }
 
-    private void createClientSecurityInfoPSK(@NotNull TbLwM2MSecurityInfo result, String endpoint, LwM2MClientCredential clientCredentialsConfig) {
+    private void createClientSecurityInfoPSK(TbLwM2MSecurityInfo result, String endpoint, LwM2MClientCredential clientCredentialsConfig) {
         PSKClientCredential pskConfig = (PSKClientCredential) clientCredentialsConfig;
         if (StringUtils.isNotEmpty(pskConfig.getIdentity())) {
             try {
@@ -143,7 +138,7 @@ public class LwM2mCredentialsSecurityInfoValidator {
         }
     }
 
-    private void createClientSecurityInfoRPK(@NotNull TbLwM2MSecurityInfo result, String endpoint, LwM2MClientCredential clientCredentialsConfig) {
+    private void createClientSecurityInfoRPK(TbLwM2MSecurityInfo result, String endpoint, LwM2MClientCredential clientCredentialsConfig) {
         RPKClientCredential rpkConfig = (RPKClientCredential) clientCredentialsConfig;
         try {
             if (rpkConfig.getDecoded() != null) {
@@ -158,7 +153,7 @@ public class LwM2mCredentialsSecurityInfoValidator {
         }
     }
 
-    private void createClientSecurityInfoX509(@NotNull TbLwM2MSecurityInfo result, String endpoint) {
+    private void createClientSecurityInfoX509(TbLwM2MSecurityInfo result, String endpoint) {
         result.setSecurityInfo(SecurityInfo.newX509CertInfo(endpoint));
         result.setSecurityMode(X509);
     }

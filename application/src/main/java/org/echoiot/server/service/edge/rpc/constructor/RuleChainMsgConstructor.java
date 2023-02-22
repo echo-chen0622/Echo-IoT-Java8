@@ -13,7 +13,6 @@ import org.echoiot.server.gen.edge.v1.UpdateMsgType;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.edge.rpc.constructor.rule.RuleChainMetadataConstructor;
 import org.echoiot.server.service.edge.rpc.constructor.rule.RuleChainMetadataConstructorFactory;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -21,8 +20,7 @@ import org.springframework.stereotype.Component;
 @TbCoreComponent
 public class RuleChainMsgConstructor {
 
-    @NotNull
-    public RuleChainUpdateMsg constructRuleChainUpdatedMsg(UpdateMsgType msgType, @NotNull RuleChain ruleChain, boolean isRoot) {
+    public RuleChainUpdateMsg constructRuleChainUpdatedMsg(UpdateMsgType msgType, RuleChain ruleChain, boolean isRoot) {
         RuleChainUpdateMsg.Builder builder = RuleChainUpdateMsg.newBuilder()
                 .setMsgType(msgType)
                 .setIdMSB(ruleChain.getId().getId().getMostSignificantBits())
@@ -41,14 +39,13 @@ public class RuleChainMsgConstructor {
     public RuleChainMetadataUpdateMsg constructRuleChainMetadataUpdatedMsg(TenantId tenantId,
                                                                            UpdateMsgType msgType,
                                                                            RuleChainMetaData ruleChainMetaData,
-                                                                           @NotNull EdgeVersion edgeVersion) {
-        @NotNull RuleChainMetadataConstructor ruleChainMetadataConstructor
+                                                                           EdgeVersion edgeVersion) {
+        RuleChainMetadataConstructor ruleChainMetadataConstructor
                 = RuleChainMetadataConstructorFactory.getByEdgeVersion(edgeVersion);
         return ruleChainMetadataConstructor.constructRuleChainMetadataUpdatedMsg(tenantId, msgType, ruleChainMetaData);
     }
 
-    @NotNull
-    public RuleChainUpdateMsg constructRuleChainDeleteMsg(@NotNull RuleChainId ruleChainId) {
+    public RuleChainUpdateMsg constructRuleChainDeleteMsg(RuleChainId ruleChainId) {
         return RuleChainUpdateMsg.newBuilder()
                 .setMsgType(UpdateMsgType.ENTITY_DELETED_RPC_MESSAGE)
                 .setIdMSB(ruleChainId.getId().getMostSignificantBits())

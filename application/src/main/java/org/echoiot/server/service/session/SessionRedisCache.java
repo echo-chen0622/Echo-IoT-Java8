@@ -8,7 +8,6 @@ import org.echoiot.server.cache.TbRedisSerializer;
 import org.echoiot.server.common.data.CacheConstants;
 import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.gen.transport.TransportProtos;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.serializer.SerializationException;
@@ -18,10 +17,10 @@ import org.springframework.stereotype.Service;
 @Service("SessionCache")
 public class SessionRedisCache extends RedisTbTransactionalCache<DeviceId, TransportProtos.DeviceSessionsCacheEntry> {
 
-    public SessionRedisCache(@NotNull TBRedisCacheConfiguration configuration, CacheSpecsMap cacheSpecsMap, RedisConnectionFactory connectionFactory) {
+    public SessionRedisCache(TBRedisCacheConfiguration configuration, CacheSpecsMap cacheSpecsMap, RedisConnectionFactory connectionFactory) {
         super(CacheConstants.SESSIONS_CACHE, cacheSpecsMap, connectionFactory, configuration, new TbRedisSerializer<>() {
             @Override
-            public byte[] serialize(@NotNull TransportProtos.DeviceSessionsCacheEntry deviceSessionsCacheEntry) throws SerializationException {
+            public byte[] serialize(TransportProtos.DeviceSessionsCacheEntry deviceSessionsCacheEntry) throws SerializationException {
                 return deviceSessionsCacheEntry.toByteArray();
             }
 

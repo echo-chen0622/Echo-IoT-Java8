@@ -13,7 +13,6 @@ import org.echoiot.server.common.data.queue.SubmitStrategyType;
 import org.echoiot.server.common.data.tenant.profile.DefaultTenantProfileConfiguration;
 import org.echoiot.server.common.data.tenant.profile.TenantProfileData;
 import org.echoiot.server.common.data.tenant.profile.TenantProfileQueueConfiguration;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.ArgumentMatcher;
@@ -40,7 +39,7 @@ public abstract class BaseTenantProfileControllerTest extends AbstractController
 
         Mockito.reset(tbClusterService);
 
-        @NotNull TenantProfile tenantProfile = this.createTenantProfile("Tenant Profile");
+        TenantProfile tenantProfile = this.createTenantProfile("Tenant Profile");
         TenantProfile savedTenantProfile = doPost("/api/tenantProfile", tenantProfile, TenantProfile.class);
         Assert.assertNotNull(savedTenantProfile);
         Assert.assertNotNull(savedTenantProfile.getId());
@@ -67,7 +66,7 @@ public abstract class BaseTenantProfileControllerTest extends AbstractController
 
         Mockito.reset(tbClusterService);
 
-        @NotNull TenantProfile tenantProfile = this.createTenantProfile(StringUtils.randomAlphabetic(300));
+        TenantProfile tenantProfile = this.createTenantProfile(StringUtils.randomAlphabetic(300));
         doPost("/api/tenantProfile", tenantProfile)
                 .andExpect(status().isBadRequest())
                 .andExpect(statusReason(containsString(msgErrorFieldLength("name"))));
@@ -78,7 +77,7 @@ public abstract class BaseTenantProfileControllerTest extends AbstractController
     @Test
     public void testFindTenantProfileById() throws Exception {
         loginSysAdmin();
-        @NotNull TenantProfile tenantProfile = this.createTenantProfile("Tenant Profile");
+        TenantProfile tenantProfile = this.createTenantProfile("Tenant Profile");
         TenantProfile savedTenantProfile = doPost("/api/tenantProfile", tenantProfile, TenantProfile.class);
         TenantProfile foundTenantProfile = doGet("/api/tenantProfile/"+savedTenantProfile.getId().getId().toString(), TenantProfile.class);
         Assert.assertNotNull(foundTenantProfile);
@@ -88,7 +87,7 @@ public abstract class BaseTenantProfileControllerTest extends AbstractController
     @Test
     public void testFindTenantProfileInfoById() throws Exception {
         loginSysAdmin();
-        @NotNull TenantProfile tenantProfile = this.createTenantProfile("Tenant Profile");
+        TenantProfile tenantProfile = this.createTenantProfile("Tenant Profile");
         TenantProfile savedTenantProfile = doPost("/api/tenantProfile", tenantProfile, TenantProfile.class);
         EntityInfo foundTenantProfileInfo = doGet("/api/tenantProfileInfo/"+savedTenantProfile.getId().getId().toString(), EntityInfo.class);
         Assert.assertNotNull(foundTenantProfileInfo);
@@ -107,7 +106,7 @@ public abstract class BaseTenantProfileControllerTest extends AbstractController
     @Test
     public void testSetDefaultTenantProfile() throws Exception {
         loginSysAdmin();
-        @NotNull TenantProfile tenantProfile = this.createTenantProfile("Tenant Profile 1");
+        TenantProfile tenantProfile = this.createTenantProfile("Tenant Profile 1");
         TenantProfile savedTenantProfile = doPost("/api/tenantProfile", tenantProfile, TenantProfile.class);
         TenantProfile defaultTenantProfile = doPost("/api/tenantProfile/"+savedTenantProfile.getId().getId().toString()+"/default", TenantProfile.class);
         Assert.assertNotNull(defaultTenantProfile);
@@ -123,7 +122,7 @@ public abstract class BaseTenantProfileControllerTest extends AbstractController
 
         Mockito.reset(tbClusterService);
 
-        @NotNull TenantProfile tenantProfile = new TenantProfile();
+        TenantProfile tenantProfile = new TenantProfile();
         doPost("/api/tenantProfile", tenantProfile).andExpect(status().isBadRequest())
                 .andExpect(status().isBadRequest())
                 .andExpect(statusReason(containsString("Tenant profile name " + msgErrorShouldBeSpecified)));
@@ -134,12 +133,12 @@ public abstract class BaseTenantProfileControllerTest extends AbstractController
     @Test
     public void testSaveTenantProfileWithSameName() throws Exception {
         loginSysAdmin();
-        @NotNull TenantProfile tenantProfile = this.createTenantProfile("Tenant Profile");
+        TenantProfile tenantProfile = this.createTenantProfile("Tenant Profile");
         doPost("/api/tenantProfile", tenantProfile).andExpect(status().isOk());
 
         Mockito.reset(tbClusterService);
 
-        @NotNull TenantProfile tenantProfile2 = this.createTenantProfile("Tenant Profile");
+        TenantProfile tenantProfile2 = this.createTenantProfile("Tenant Profile");
         doPost("/api/tenantProfile", tenantProfile2)
                 .andExpect(status().isBadRequest())
                 .andExpect(statusReason(containsString("Tenant profile with such name already exists")));
@@ -150,7 +149,7 @@ public abstract class BaseTenantProfileControllerTest extends AbstractController
     @Test
     public void testSaveSameTenantProfileWithDifferentIsolatedTbRuleEngine() throws Exception {
         loginSysAdmin();
-        @NotNull TenantProfile tenantProfile = this.createTenantProfile("Tenant Profile");
+        TenantProfile tenantProfile = this.createTenantProfile("Tenant Profile");
         TenantProfile savedTenantProfile = doPost("/api/tenantProfile", tenantProfile, TenantProfile.class);
         savedTenantProfile.setIsolatedTbRuleEngine(true);
         addMainQueueConfig(savedTenantProfile);
@@ -167,10 +166,10 @@ public abstract class BaseTenantProfileControllerTest extends AbstractController
     @Test
     public void testDeleteTenantProfileWithExistingTenant() throws Exception {
         loginSysAdmin();
-        @NotNull TenantProfile tenantProfile = this.createTenantProfile("Tenant Profile");
+        TenantProfile tenantProfile = this.createTenantProfile("Tenant Profile");
         TenantProfile savedTenantProfile = doPost("/api/tenantProfile", tenantProfile, TenantProfile.class);
 
-        @NotNull Tenant tenant = new Tenant();
+        Tenant tenant = new Tenant();
         tenant.setTitle("My tenant with tenant profile");
         tenant.setTenantProfileId(savedTenantProfile.getId());
         Tenant savedTenant = doPost("/api/tenant", tenant, Tenant.class);
@@ -190,7 +189,7 @@ public abstract class BaseTenantProfileControllerTest extends AbstractController
     @Test
     public void testDeleteTenantProfile() throws Exception {
         loginSysAdmin();
-        @NotNull TenantProfile tenantProfile = this.createTenantProfile("Tenant Profile");
+        TenantProfile tenantProfile = this.createTenantProfile("Tenant Profile");
         TenantProfile savedTenantProfile = doPost("/api/tenantProfile", tenantProfile, TenantProfile.class);
 
         Mockito.reset(tbClusterService);
@@ -208,7 +207,7 @@ public abstract class BaseTenantProfileControllerTest extends AbstractController
     @Test
     public void testFindTenantProfiles() throws Exception {
         loginSysAdmin();
-        @NotNull List<TenantProfile> tenantProfiles = new ArrayList<>();
+        List<TenantProfile> tenantProfiles = new ArrayList<>();
         PageLink pageLink = new PageLink(17);
         PageData<TenantProfile> pageData = doGetTypedWithPageLink("/api/tenantProfiles?",
                 new TypeReference<>(){}, pageLink);
@@ -220,13 +219,13 @@ public abstract class BaseTenantProfileControllerTest extends AbstractController
 
         int cntEntity = 28;
         for (int i=0;i<28;i++) {
-            @NotNull TenantProfile tenantProfile = this.createTenantProfile("Tenant Profile" + i);
+            TenantProfile tenantProfile = this.createTenantProfile("Tenant Profile" + i);
             tenantProfiles.add(doPost("/api/tenantProfile", tenantProfile, TenantProfile.class));
         }
 
         testBroadcastEntityStateChangeEventTimeManyTimeTenantProfile(new TenantProfile(), ComponentLifecycleEvent.CREATED, cntEntity);
 
-        @NotNull List<TenantProfile> loadedTenantProfiles = new ArrayList<>();
+        List<TenantProfile> loadedTenantProfiles = new ArrayList<>();
         pageLink = new PageLink(17);
         do {
             pageData = doGetTypedWithPageLink("/api/tenantProfiles?",
@@ -244,7 +243,7 @@ public abstract class BaseTenantProfileControllerTest extends AbstractController
 
         Mockito.reset(tbClusterService);
 
-        for (@NotNull TenantProfile tenantProfile : loadedTenantProfiles) {
+        for (TenantProfile tenantProfile : loadedTenantProfiles) {
             if (!tenantProfile.isDefault()) {
                 doDelete("/api/tenantProfile/" + tenantProfile.getId().getId().toString())
                         .andExpect(status().isOk());
@@ -263,7 +262,7 @@ public abstract class BaseTenantProfileControllerTest extends AbstractController
     @Test
     public void testFindTenantProfileInfos() throws Exception {
         loginSysAdmin();
-        @NotNull List<TenantProfile> tenantProfiles = new ArrayList<>();
+        List<TenantProfile> tenantProfiles = new ArrayList<>();
         PageLink pageLink = new PageLink(17);
         PageData<TenantProfile> tenantProfilePageData = doGetTypedWithPageLink("/api/tenantProfiles?",
                 new TypeReference<>(){}, pageLink);
@@ -272,11 +271,11 @@ public abstract class BaseTenantProfileControllerTest extends AbstractController
         tenantProfiles.addAll(tenantProfilePageData.getData());
 
         for (int i=0;i<28;i++) {
-            @NotNull TenantProfile tenantProfile = this.createTenantProfile("Tenant Profile" + i);
+            TenantProfile tenantProfile = this.createTenantProfile("Tenant Profile" + i);
             tenantProfiles.add(doPost("/api/tenantProfile", tenantProfile, TenantProfile.class));
         }
 
-        @NotNull List<EntityInfo> loadedTenantProfileInfos = new ArrayList<>();
+        List<EntityInfo> loadedTenantProfileInfos = new ArrayList<>();
         pageLink = new PageLink(17);
         PageData<EntityInfo> pageData;
         do {
@@ -291,12 +290,12 @@ public abstract class BaseTenantProfileControllerTest extends AbstractController
         Collections.sort(tenantProfiles, idComparator);
         Collections.sort(loadedTenantProfileInfos, tenantProfileInfoIdComparator);
 
-        @NotNull List<EntityInfo> tenantProfileInfos = tenantProfiles.stream().map(tenantProfile -> new EntityInfo(tenantProfile.getId(),
+        List<EntityInfo> tenantProfileInfos = tenantProfiles.stream().map(tenantProfile -> new EntityInfo(tenantProfile.getId(),
                                                                                                                    tenantProfile.getName())).collect(Collectors.toList());
 
         Assert.assertEquals(tenantProfileInfos, loadedTenantProfileInfos);
 
-        for (@NotNull TenantProfile tenantProfile : tenantProfiles) {
+        for (TenantProfile tenantProfile : tenantProfiles) {
             if (!tenantProfile.isDefault()) {
                 doDelete("/api/tenantProfile/" + tenantProfile.getId().getId().toString())
                         .andExpect(status().isOk());
@@ -310,12 +309,11 @@ public abstract class BaseTenantProfileControllerTest extends AbstractController
         Assert.assertEquals(1, pageData.getTotalElements());
     }
 
-    @NotNull
     private TenantProfile createTenantProfile(String name) {
-        @NotNull TenantProfile tenantProfile = new TenantProfile();
+        TenantProfile tenantProfile = new TenantProfile();
         tenantProfile.setName(name);
         tenantProfile.setDescription(name + " Test");
-        @NotNull TenantProfileData tenantProfileData = new TenantProfileData();
+        TenantProfileData tenantProfileData = new TenantProfileData();
         tenantProfileData.setConfiguration(new DefaultTenantProfileConfiguration());
         tenantProfile.setProfileData(tenantProfileData);
         tenantProfile.setDefault(false);
@@ -323,19 +321,19 @@ public abstract class BaseTenantProfileControllerTest extends AbstractController
         return tenantProfile;
     }
 
-    private void addMainQueueConfig(@NotNull TenantProfile tenantProfile) {
-        @NotNull TenantProfileQueueConfiguration mainQueueConfiguration = new TenantProfileQueueConfiguration();
+    private void addMainQueueConfig(TenantProfile tenantProfile) {
+        TenantProfileQueueConfiguration mainQueueConfiguration = new TenantProfileQueueConfiguration();
         mainQueueConfiguration.setName(DataConstants.MAIN_QUEUE_NAME);
         mainQueueConfiguration.setTopic(DataConstants.MAIN_QUEUE_TOPIC);
         mainQueueConfiguration.setPollInterval(25);
         mainQueueConfiguration.setPartitions(10);
         mainQueueConfiguration.setConsumerPerPartition(true);
         mainQueueConfiguration.setPackProcessingTimeout(2000);
-        @NotNull SubmitStrategy mainQueueSubmitStrategy = new SubmitStrategy();
+        SubmitStrategy mainQueueSubmitStrategy = new SubmitStrategy();
         mainQueueSubmitStrategy.setType(SubmitStrategyType.BURST);
         mainQueueSubmitStrategy.setBatchSize(1000);
         mainQueueConfiguration.setSubmitStrategy(mainQueueSubmitStrategy);
-        @NotNull ProcessingStrategy mainQueueProcessingStrategy = new ProcessingStrategy();
+        ProcessingStrategy mainQueueProcessingStrategy = new ProcessingStrategy();
         mainQueueProcessingStrategy.setType(ProcessingStrategyType.SKIP_ALL_FAILURES);
         mainQueueProcessingStrategy.setRetries(3);
         mainQueueProcessingStrategy.setFailurePercentage(0);
@@ -348,8 +346,8 @@ public abstract class BaseTenantProfileControllerTest extends AbstractController
     }
 
 
-    private void testBroadcastEntityStateChangeEventTimeManyTimeTenantProfile(@NotNull TenantProfile tenantProfile, ComponentLifecycleEvent event, int cntTime) {
-        @NotNull ArgumentMatcher<TenantProfile> matcherTenantProfile = cntTime == 1 ? argument -> argument.equals(tenantProfile) :
+    private void testBroadcastEntityStateChangeEventTimeManyTimeTenantProfile(TenantProfile tenantProfile, ComponentLifecycleEvent event, int cntTime) {
+        ArgumentMatcher<TenantProfile> matcherTenantProfile = cntTime == 1 ? argument -> argument.equals(tenantProfile) :
                 argument -> argument.getClass().equals(TenantProfile.class);
         if (ComponentLifecycleEvent.DELETED.equals(event)) {
             Mockito.verify(tbClusterService, times( cntTime)).onTenantProfileDelete(Mockito.argThat( matcherTenantProfile),

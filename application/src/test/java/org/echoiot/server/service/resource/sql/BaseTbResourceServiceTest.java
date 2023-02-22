@@ -11,7 +11,6 @@ import org.echoiot.server.controller.AbstractControllerTest;
 import org.echoiot.server.dao.exception.DataValidationException;
 import org.echoiot.server.dao.service.DaoSqlTest;
 import org.echoiot.server.service.resource.TbResourceService;
-import org.jetbrains.annotations.NotNull;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
 
@@ -67,7 +66,7 @@ public class BaseTbResourceServiceTest extends AbstractControllerTest {
     public void beforeTest() throws Exception {
         loginSysAdmin();
 
-        @NotNull Tenant tenant = new Tenant();
+        Tenant tenant = new Tenant();
         tenant.setTitle("My tenant");
         savedTenant = doPost("/api/tenant", tenant, Tenant.class);
         tenantId = savedTenant.getId();
@@ -91,7 +90,6 @@ public class BaseTbResourceServiceTest extends AbstractControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @NotNull
     @SuppressWarnings("deprecation")
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -142,7 +140,7 @@ public class BaseTbResourceServiceTest extends AbstractControllerTest {
     }
 
     private TbResource createResource(String title, String filename) throws Exception {
-        @NotNull TbResource resource = new TbResource();
+        TbResource resource = new TbResource();
         resource.setTenantId(tenantId);
         resource.setTitle(title);
         resource.setResourceType(ResourceType.JKS);
@@ -153,7 +151,7 @@ public class BaseTbResourceServiceTest extends AbstractControllerTest {
 
     @Test
     public void testSaveTbResource() throws Exception {
-        @NotNull TbResource resource = new TbResource();
+        TbResource resource = new TbResource();
         resource.setTenantId(tenantId);
         resource.setResourceType(ResourceType.JKS);
         resource.setTitle("My first resource");
@@ -181,7 +179,7 @@ public class BaseTbResourceServiceTest extends AbstractControllerTest {
 
     @Test
     public void testSaveLwm2mTbResource() throws Exception {
-        @NotNull TbResource resource = new TbResource();
+        TbResource resource = new TbResource();
         resource.setTenantId(tenantId);
         resource.setResourceType(ResourceType.LWM2M_MODEL);
         resource.setFileName("test_model.xml");
@@ -202,7 +200,7 @@ public class BaseTbResourceServiceTest extends AbstractControllerTest {
 
     @Test
     public void testSaveTbResourceWithEmptyTenant() throws Exception {
-        @NotNull TbResource resource = new TbResource();
+        TbResource resource = new TbResource();
         resource.setResourceType(ResourceType.JKS);
         resource.setTitle("My resource");
         resource.setFileName(DEFAULT_FILE_NAME);
@@ -216,7 +214,7 @@ public class BaseTbResourceServiceTest extends AbstractControllerTest {
 
     @Test(expected = DataValidationException.class)
     public void testSaveTbResourceWithExistsFileName() throws Exception {
-        @NotNull TbResource resource = new TbResource();
+        TbResource resource = new TbResource();
         resource.setTenantId(tenantId);
         resource.setResourceType(ResourceType.JKS);
         resource.setTitle("My resource");
@@ -225,7 +223,7 @@ public class BaseTbResourceServiceTest extends AbstractControllerTest {
 
         TbResource savedResource = resourceService.save(resource);
 
-        @NotNull TbResource resource2 = new TbResource();
+        TbResource resource2 = new TbResource();
         resource.setTenantId(tenantId);
         resource.setResourceType(ResourceType.JKS);
         resource.setTitle("My resource");
@@ -241,7 +239,7 @@ public class BaseTbResourceServiceTest extends AbstractControllerTest {
 
     @Test(expected = DataValidationException.class)
     public void testSaveTbResourceWithEmptyTitle() throws Exception {
-        @NotNull TbResource resource = new TbResource();
+        TbResource resource = new TbResource();
         resource.setTenantId(tenantId);
         resource.setResourceType(ResourceType.JKS);
         resource.setFileName(DEFAULT_FILE_NAME);
@@ -251,7 +249,7 @@ public class BaseTbResourceServiceTest extends AbstractControllerTest {
 
     @Test(expected = DataValidationException.class)
     public void testSaveTbResourceWithInvalidTenant() throws Exception {
-        @NotNull TbResource resource = new TbResource();
+        TbResource resource = new TbResource();
         resource.setTenantId(TenantId.fromUUID(Uuids.timeBased()));
         resource.setResourceType(ResourceType.JKS);
         resource.setTitle("My resource");
@@ -262,7 +260,7 @@ public class BaseTbResourceServiceTest extends AbstractControllerTest {
 
     @Test
     public void testFindResourceById() throws Exception {
-        @NotNull TbResource resource = new TbResource();
+        TbResource resource = new TbResource();
         resource.setResourceType(ResourceType.JKS);
         resource.setTitle("My resource");
         resource.setFileName(DEFAULT_FILE_NAME);
@@ -277,7 +275,7 @@ public class BaseTbResourceServiceTest extends AbstractControllerTest {
 
     @Test
     public void testFindResourceByTenantIdAndResourceTypeAndResourceKey() throws Exception {
-        @NotNull TbResource resource = new TbResource();
+        TbResource resource = new TbResource();
         resource.setResourceType(ResourceType.JKS);
         resource.setTenantId(tenantId);
         resource.setTitle("My resource");
@@ -293,7 +291,7 @@ public class BaseTbResourceServiceTest extends AbstractControllerTest {
 
     @Test
     public void testDeleteResource() throws Exception {
-        @NotNull TbResource resource = new TbResource();
+        TbResource resource = new TbResource();
         resource.setResourceType(ResourceType.JKS);
         resource.setTitle("My resource");
         resource.setFileName(DEFAULT_FILE_NAME);
@@ -316,9 +314,9 @@ public class BaseTbResourceServiceTest extends AbstractControllerTest {
 
         TenantId tenantId = tenant.getId();
 
-        @NotNull List<TbResourceInfo> resources = new ArrayList<>();
+        List<TbResourceInfo> resources = new ArrayList<>();
         for (int i = 0; i < 165; i++) {
-            @NotNull TbResource resource = new TbResource();
+            TbResource resource = new TbResource();
             resource.setTenantId(tenantId);
             resource.setTitle("Resource" + i);
             resource.setResourceType(ResourceType.JKS);
@@ -327,7 +325,7 @@ public class BaseTbResourceServiceTest extends AbstractControllerTest {
             resources.add(new TbResourceInfo(resourceService.save(resource)));
         }
 
-        @NotNull List<TbResourceInfo> loadedResources = new ArrayList<>();
+        List<TbResourceInfo> loadedResources = new ArrayList<>();
         PageLink pageLink = new PageLink(16);
         PageData<TbResourceInfo> pageData;
         do {
@@ -364,22 +362,22 @@ public class BaseTbResourceServiceTest extends AbstractControllerTest {
 
         TenantId tenantId = tenant.getId();
 
-        @NotNull List<TbResourceInfo> resources = new ArrayList<>();
+        List<TbResourceInfo> resources = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
-            @NotNull TbResource resource = new TbResource();
+            TbResource resource = new TbResource();
             resource.setTenantId(TenantId.SYS_TENANT_ID);
             resource.setTitle("System Resource" + i);
             resource.setResourceType(ResourceType.JKS);
             resource.setFileName(i + DEFAULT_FILE_NAME);
             resource.setData("Test Data");
-            @NotNull TbResourceInfo tbResourceInfo = new TbResourceInfo(resourceService.save(resource));
+            TbResourceInfo tbResourceInfo = new TbResourceInfo(resourceService.save(resource));
             if (i >= 50) {
                 resources.add(tbResourceInfo);
             }
         }
 
         for (int i = 0; i < 50; i++) {
-            @NotNull TbResource resource = new TbResource();
+            TbResource resource = new TbResource();
             resource.setTenantId(tenantId);
             resource.setTitle("Tenant Resource" + i);
             resource.setResourceType(ResourceType.JKS);
@@ -388,7 +386,7 @@ public class BaseTbResourceServiceTest extends AbstractControllerTest {
             resources.add(new TbResourceInfo(resourceService.save(resource)));
         }
 
-        @NotNull List<TbResourceInfo> loadedResources = new ArrayList<>();
+        List<TbResourceInfo> loadedResources = new ArrayList<>();
         PageLink pageLink = new PageLink(10);
         PageData<TbResourceInfo> pageData;
         do {

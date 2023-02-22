@@ -7,7 +7,6 @@ import org.echoiot.server.dao.oauth2.OAuth2Service;
 import org.echoiot.server.service.security.auth.oauth2.TbOAuth2ParameterNames;
 import org.echoiot.server.service.security.model.token.OAuth2AppTokenFactory;
 import org.echoiot.server.utils.MiscUtils;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.keygen.Base64StringKeyGenerator;
@@ -67,7 +66,7 @@ public class CustomOAuth2AuthorizationRequestResolver implements OAuth2Authoriza
 
     @Nullable
     @Override
-    public OAuth2AuthorizationRequest resolve(@NotNull HttpServletRequest request) {
+    public OAuth2AuthorizationRequest resolve(HttpServletRequest request) {
         @Nullable String registrationId = this.resolveRegistrationId(request);
         String redirectUriAction = getAction(request, "login");
         String appPackage = getAppPackage(request);
@@ -77,7 +76,7 @@ public class CustomOAuth2AuthorizationRequestResolver implements OAuth2Authoriza
 
     @Nullable
     @Override
-    public OAuth2AuthorizationRequest resolve(@NotNull HttpServletRequest request, @Nullable String registrationId) {
+    public OAuth2AuthorizationRequest resolve(HttpServletRequest request, @Nullable String registrationId) {
         if (registrationId == null) {
             return null;
         }
@@ -87,7 +86,7 @@ public class CustomOAuth2AuthorizationRequestResolver implements OAuth2Authoriza
         return resolve(request, registrationId, redirectUriAction, appPackage, appToken);
     }
 
-    private String getAction(@NotNull HttpServletRequest request, String defaultAction) {
+    private String getAction(HttpServletRequest request, String defaultAction) {
         String action = request.getParameter("action");
         if (action == null) {
             return defaultAction;
@@ -95,16 +94,16 @@ public class CustomOAuth2AuthorizationRequestResolver implements OAuth2Authoriza
         return action;
     }
 
-    private String getAppPackage(@NotNull HttpServletRequest request) {
+    private String getAppPackage(HttpServletRequest request) {
         return request.getParameter("pkg");
     }
 
-    private String getAppToken(@NotNull HttpServletRequest request) {
+    private String getAppToken(HttpServletRequest request) {
         return request.getParameter("appToken");
     }
 
     @SuppressWarnings("deprecation")
-    private OAuth2AuthorizationRequest resolve(@NotNull HttpServletRequest request, @Nullable String registrationId, String redirectUriAction, String appPackage, String appToken) {
+    private OAuth2AuthorizationRequest resolve(HttpServletRequest request, @Nullable String registrationId, String redirectUriAction, String appPackage, String appToken) {
         if (registrationId == null) {
             return null;
         }
@@ -114,7 +113,7 @@ public class CustomOAuth2AuthorizationRequestResolver implements OAuth2Authoriza
             throw new IllegalArgumentException("Invalid Client Registration with Id: " + registrationId);
         }
 
-        @NotNull Map<String, Object> attributes = new HashMap<>();
+        Map<String, Object> attributes = new HashMap<>();
         attributes.put(OAuth2ParameterNames.REGISTRATION_ID, clientRegistration.getRegistrationId());
         if (!StringUtils.isEmpty(appPackage)) {
             if (StringUtils.isEmpty(appToken)) {
@@ -132,7 +131,7 @@ public class CustomOAuth2AuthorizationRequestResolver implements OAuth2Authoriza
         OAuth2AuthorizationRequest.Builder builder;
         if (AuthorizationGrantType.AUTHORIZATION_CODE.equals(clientRegistration.getAuthorizationGrantType())) {
             builder = OAuth2AuthorizationRequest.authorizationCode();
-            @NotNull Map<String, Object> additionalParameters = new HashMap<>();
+            Map<String, Object> additionalParameters = new HashMap<>();
             if (!CollectionUtils.isEmpty(clientRegistration.getScopes()) &&
                     clientRegistration.getScopes().contains(OidcScopes.OPENID)) {
                 // Section 3.1.2.1 Authentication Request - https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest
@@ -152,7 +151,7 @@ public class CustomOAuth2AuthorizationRequestResolver implements OAuth2Authoriza
                     ") for Client Registration with Id: " + clientRegistration.getRegistrationId());
         }
 
-        @NotNull String redirectUriStr = expandRedirectUri(request, clientRegistration, redirectUriAction);
+        String redirectUriStr = expandRedirectUri(request, clientRegistration, redirectUriAction);
 
         return builder
                 .clientId(clientRegistration.getClientId())
@@ -189,12 +188,11 @@ public class CustomOAuth2AuthorizationRequestResolver implements OAuth2Authoriza
      *
      * @return expanded URI
      */
-    @NotNull
-    private String expandRedirectUri(@NotNull HttpServletRequest request, @NotNull ClientRegistration clientRegistration, @Nullable String action) {
-        @NotNull Map<String, String> uriVariables = new HashMap<>();
+    private String expandRedirectUri(HttpServletRequest request, ClientRegistration clientRegistration, @Nullable String action) {
+        Map<String, String> uriVariables = new HashMap<>();
         uriVariables.put("registrationId", clientRegistration.getRegistrationId());
 
-        @NotNull UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl(UrlUtils.buildFullRequestUrl(request))
+        UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl(UrlUtils.buildFullRequestUrl(request))
                                                                    .replacePath(request.getContextPath())
                                                                    .replaceQuery(null)
                                                                    .fragment(null)
@@ -217,7 +215,7 @@ public class CustomOAuth2AuthorizationRequestResolver implements OAuth2Authoriza
 
         uriVariables.put("action", action == null ? "" : action);
 
-        @NotNull String redirectUri = getRedirectUri(request);
+        String redirectUri = getRedirectUri(request);
         log.trace("Redirect URI - {}.", redirectUri);
 
         return UriComponentsBuilder.fromUriString(redirectUri)
@@ -225,21 +223,20 @@ public class CustomOAuth2AuthorizationRequestResolver implements OAuth2Authoriza
                 .toUriString();
     }
 
-    @NotNull
-    private String getRedirectUri(@NotNull HttpServletRequest request) {
+    private String getRedirectUri(HttpServletRequest request) {
         String loginProcessingUri = oauth2Configuration != null ? oauth2Configuration.getLoginProcessingUrl() : DEFAULT_LOGIN_PROCESSING_URI;
 
         String scheme = MiscUtils.getScheme(request);
         String domainName = MiscUtils.getDomainName(request);
         int port = MiscUtils.getPort(request);
-        @NotNull String baseUrl = scheme + "://" + domainName;
+        String baseUrl = scheme + "://" + domainName;
         if (needsPort(scheme, port)){
             baseUrl += ":" + port;
         }
         return baseUrl + loginProcessingUri;
     }
 
-    private boolean needsPort(@NotNull String scheme, int port) {
+    private boolean needsPort(String scheme, int port) {
         boolean isHttpDefault = "http".equalsIgnoreCase(scheme) && port == 80;
         boolean isHttpsDefault = "https".equalsIgnoreCase(scheme) && port == 443;
         return !isHttpDefault && !isHttpsDefault;
@@ -254,7 +251,7 @@ public class CustomOAuth2AuthorizationRequestResolver implements OAuth2Authoriza
      * @since 5.2
      * @see <a target="_blank" href="https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest">3.1.2.1.  Authentication Request</a>
      */
-    private void addNonceParameters(@NotNull Map<String, Object> attributes, @NotNull Map<String, Object> additionalParameters) {
+    private void addNonceParameters(Map<String, Object> attributes, Map<String, Object> additionalParameters) {
         try {
             String nonce = this.secureKeyGenerator.generateKey();
             String nonceHash = createHash(nonce);
@@ -275,7 +272,7 @@ public class CustomOAuth2AuthorizationRequestResolver implements OAuth2Authoriza
      * @see <a target="_blank" href="https://tools.ietf.org/html/rfc7636#section-4.1">4.1.  Client Creates a Code Verifier</a>
      * @see <a target="_blank" href="https://tools.ietf.org/html/rfc7636#section-4.2">4.2.  Client Creates the Code Challenge</a>
      */
-    private void addPkceParameters(@NotNull Map<String, Object> attributes, @NotNull Map<String, Object> additionalParameters) {
+    private void addPkceParameters(Map<String, Object> attributes, Map<String, Object> additionalParameters) {
         String codeVerifier = this.secureKeyGenerator.generateKey();
         attributes.put(PkceParameterNames.CODE_VERIFIER, codeVerifier);
         try {
@@ -287,7 +284,7 @@ public class CustomOAuth2AuthorizationRequestResolver implements OAuth2Authoriza
         }
     }
 
-    private static String createHash(@NotNull String value) throws NoSuchAlgorithmException {
+    private static String createHash(String value) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         byte[] digest = md.digest(value.getBytes(StandardCharsets.US_ASCII));
         return Base64.getUrlEncoder().withoutPadding().encodeToString(digest);

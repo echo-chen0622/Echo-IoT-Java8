@@ -25,7 +25,6 @@ import org.echoiot.server.service.executors.DbCallbackExecutorService;
 import org.echoiot.server.service.security.AccessValidator;
 import org.echoiot.server.service.security.model.SecurityUser;
 import org.echoiot.server.service.subscription.TbAttributeSubscriptionScope;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -63,12 +62,12 @@ public class DefaultEntityQueryService implements EntityQueryService {
     private AttributesService attributesService;
 
     @Override
-    public long countEntitiesByQuery(@NotNull SecurityUser securityUser, EntityCountQuery query) {
+    public long countEntitiesByQuery(SecurityUser securityUser, EntityCountQuery query) {
         return entityService.countEntitiesByQuery(securityUser.getTenantId(), securityUser.getCustomerId(), query);
     }
 
     @Override
-    public PageData<EntityData> findEntityDataByQuery(@NotNull SecurityUser securityUser, @NotNull EntityDataQuery query) {
+    public PageData<EntityData> findEntityDataByQuery(SecurityUser securityUser, EntityDataQuery query) {
         if (query.getKeyFilters() != null) {
             resolveDynamicValuesInPredicates(
                     query.getKeyFilters().stream()
@@ -80,7 +79,7 @@ public class DefaultEntityQueryService implements EntityQueryService {
         return entityService.findEntityDataByQuery(securityUser.getTenantId(), securityUser.getCustomerId(), query);
     }
 
-    private void resolveDynamicValuesInPredicates(@NotNull List<KeyFilterPredicate> predicates, @NotNull SecurityUser user) {
+    private void resolveDynamicValuesInPredicates(List<KeyFilterPredicate> predicates, SecurityUser user) {
         predicates.forEach(predicate -> {
             if (predicate.getType() == FilterPredicateType.COMPLEX) {
                 resolveDynamicValuesInPredicates(
@@ -93,14 +92,14 @@ public class DefaultEntityQueryService implements EntityQueryService {
         });
     }
 
-    private void setResolvedValue(@NotNull SecurityUser user, @NotNull SimpleKeyFilterPredicate<?> predicate) {
+    private void setResolvedValue(SecurityUser user, SimpleKeyFilterPredicate<?> predicate) {
         DynamicValue<?> dynamicValue = predicate.getValue().getDynamicValue();
         if (dynamicValue != null && dynamicValue.getResolvedValue() == null) {
             resolveDynamicValue(dynamicValue, user, predicate.getType());
         }
     }
 
-    private <T> void resolveDynamicValue(@NotNull DynamicValue<T> dynamicValue, @NotNull SecurityUser user, @NotNull FilterPredicateType predicateType) {
+    private <T> void resolveDynamicValue(DynamicValue<T> dynamicValue, SecurityUser user, FilterPredicateType predicateType) {
         EntityId entityId;
         switch (dynamicValue.getSourceType()) {
             case CURRENT_TENANT:
@@ -121,7 +120,7 @@ public class DefaultEntityQueryService implements EntityQueryService {
                                                                          TbAttributeSubscriptionScope.SERVER_SCOPE.name(), dynamicValue.getSourceAttribute()).get();
 
             if (valueOpt.isPresent()) {
-                @NotNull AttributeKvEntry entry = valueOpt.get();
+                AttributeKvEntry entry = valueOpt.get();
                 @org.jetbrains.annotations.Nullable Object resolved = null;
                 switch (predicateType) {
                     case STRING:
@@ -144,19 +143,18 @@ public class DefaultEntityQueryService implements EntityQueryService {
         }
     }
 
-    @NotNull
     @Override
-    public PageData<AlarmData> findAlarmDataByQuery(@NotNull SecurityUser securityUser, @NotNull AlarmDataQuery query) {
-        @NotNull EntityDataQuery entityDataQuery = this.buildEntityDataQuery(query);
+    public PageData<AlarmData> findAlarmDataByQuery(SecurityUser securityUser, AlarmDataQuery query) {
+        EntityDataQuery entityDataQuery = this.buildEntityDataQuery(query);
         PageData<EntityData> entities = entityService.findEntityDataByQuery(securityUser.getTenantId(),
                 securityUser.getCustomerId(), entityDataQuery);
         if (entities.getTotalElements() > 0) {
-            @NotNull LinkedHashMap<EntityId, EntityData> entitiesMap = new LinkedHashMap<>();
-            for (@NotNull EntityData entityData : entities.getData()) {
+            LinkedHashMap<EntityId, EntityData> entitiesMap = new LinkedHashMap<>();
+            for (EntityData entityData : entities.getData()) {
                 entitiesMap.put(entityData.getEntityId(), entityData);
             }
             PageData<AlarmData> alarms = alarmService.findAlarmDataByQueryForEntities(securityUser.getTenantId(), query, entitiesMap.keySet());
-            for (@NotNull AlarmData alarmData : alarms.getData()) {
+            for (AlarmData alarmData : alarms.getData()) {
                 EntityId entityId = alarmData.getEntityId();
                 if (entityId != null) {
                     EntityData entityData = entitiesMap.get(entityId);
@@ -171,8 +169,7 @@ public class DefaultEntityQueryService implements EntityQueryService {
         }
     }
 
-    @NotNull
-    private EntityDataQuery buildEntityDataQuery(@NotNull AlarmDataQuery query) {
+    private EntityDataQuery buildEntityDataQuery(AlarmDataQuery query) {
         EntityDataSortOrder sortOrder = query.getPageLink().getSortOrder();
         EntityDataSortOrder entitiesSortOrder;
         if (sortOrder == null || sortOrder.getKey().getType().equals(EntityKeyType.ALARM_FIELD)) {
@@ -180,21 +177,20 @@ public class DefaultEntityQueryService implements EntityQueryService {
         } else {
             entitiesSortOrder = sortOrder;
         }
-        @NotNull EntityDataPageLink edpl = new EntityDataPageLink(maxEntitiesPerAlarmSubscription, 0, null, entitiesSortOrder);
+        EntityDataPageLink edpl = new EntityDataPageLink(maxEntitiesPerAlarmSubscription, 0, null, entitiesSortOrder);
         return new EntityDataQuery(query.getEntityFilter(), edpl, query.getEntityFields(), query.getLatestValues(), query.getKeyFilters());
     }
 
-    @NotNull
     @Override
-    public DeferredResult<ResponseEntity> getKeysByQuery(@NotNull SecurityUser securityUser, TenantId tenantId, @NotNull EntityDataQuery query,
+    public DeferredResult<ResponseEntity> getKeysByQuery(SecurityUser securityUser, TenantId tenantId, EntityDataQuery query,
                                                          boolean isTimeseries, boolean isAttributes) {
-        @NotNull final DeferredResult<ResponseEntity> response = new DeferredResult<>();
+        final DeferredResult<ResponseEntity> response = new DeferredResult<>();
         if (!isAttributes && !isTimeseries) {
             replyWithEmptyResponse(response);
             return response;
         }
 
-        @NotNull List<EntityId> ids = this.findEntityDataByQuery(securityUser, query).getData().stream()
+        List<EntityId> ids = this.findEntityDataByQuery(securityUser, query).getData().stream()
                                           .map(EntityData::getEntityId)
                                           .collect(Collectors.toList());
         if (ids.isEmpty()) {
@@ -202,7 +198,7 @@ public class DefaultEntityQueryService implements EntityQueryService {
             return response;
         }
 
-        @NotNull Set<EntityType> types = ids.stream().map(EntityId::getEntityType).collect(Collectors.toSet());
+        Set<EntityType> types = ids.stream().map(EntityId::getEntityType).collect(Collectors.toSet());
         @org.jetbrains.annotations.Nullable final ListenableFuture<List<String>> timeseriesKeysFuture;
         @org.jetbrains.annotations.Nullable final ListenableFuture<List<String>> attributesKeysFuture;
 
@@ -213,8 +209,8 @@ public class DefaultEntityQueryService implements EntityQueryService {
         }
 
         if (isAttributes) {
-            @NotNull Map<EntityType, List<EntityId>> typesMap = ids.stream().collect(Collectors.groupingBy(EntityId::getEntityType));
-            @NotNull List<ListenableFuture<List<String>>> futures = new ArrayList<>(typesMap.size());
+            Map<EntityType, List<EntityId>> typesMap = ids.stream().collect(Collectors.groupingBy(EntityId::getEntityType));
+            List<ListenableFuture<List<String>>> futures = new ArrayList<>(typesMap.size());
             typesMap.forEach((type, entityIds) -> futures.add(dbCallbackExecutor.submit(() -> attributesService.findAllKeysByEntityIds(tenantId, type, entityIds))));
             attributesKeysFuture = Futures.transform(Futures.allAsList(futures), lists -> {
                 if (CollectionUtils.isEmpty(lists)) {
@@ -251,7 +247,7 @@ public class DefaultEntityQueryService implements EntityQueryService {
         return response;
     }
 
-    private void replyWithResponse(@NotNull DeferredResult<ResponseEntity> response, @NotNull Set<EntityType> types, @NotNull List<String> timeseriesKeys, @NotNull List<String> attributesKeys) {
+    private void replyWithResponse(DeferredResult<ResponseEntity> response, Set<EntityType> types, List<String> timeseriesKeys, List<String> attributesKeys) {
         ObjectNode json = JacksonUtil.newObjectNode();
         addItemsToArrayNode(json.putArray("entityTypes"), types);
         addItemsToArrayNode(json.putArray("timeseries"), timeseriesKeys);
@@ -259,17 +255,17 @@ public class DefaultEntityQueryService implements EntityQueryService {
         response.setResult(new ResponseEntity<>(json, HttpStatus.OK));
     }
 
-    private void replyWithEmptyResponse(@NotNull DeferredResult<ResponseEntity> response) {
+    private void replyWithEmptyResponse(DeferredResult<ResponseEntity> response) {
         replyWithResponse(response, Collections.emptySet(), Collections.emptyList(), Collections.emptyList());
     }
 
-    private void addItemsToArrayNode(@NotNull ArrayNode arrayNode, @NotNull Collection<?> collection) {
+    private void addItemsToArrayNode(ArrayNode arrayNode, Collection<?> collection) {
         if (!CollectionUtils.isEmpty(collection)) {
             collection.forEach(item -> arrayNode.add(item.toString()));
         }
     }
 
-    private void addCallback(@NotNull ListenableFuture<List<String>> future, @NotNull Consumer<List<String>> success, @NotNull Consumer<Throwable> error) {
+    private void addCallback(ListenableFuture<List<String>> future, Consumer<List<String>> success, Consumer<Throwable> error) {
         Futures.addCallback(future, new FutureCallback<List<String>>() {
             @Override
             public void onSuccess(@Nullable List<String> keys) {

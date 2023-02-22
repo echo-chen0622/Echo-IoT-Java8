@@ -10,7 +10,6 @@ import com.datastax.oss.driver.api.core.metrics.DefaultSessionMetric;
 import lombok.Data;
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.dao.util.NoSqlAnyDao;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
@@ -104,7 +103,7 @@ public class CassandraDriverOptions {
 
     @PostConstruct
     public void initLoader() {
-        @NotNull ProgrammaticDriverConfigLoaderBuilder driverConfigBuilder =
+        ProgrammaticDriverConfigLoaderBuilder driverConfigBuilder =
                 DriverConfigLoader.programmaticBuilder();
 
         driverConfigBuilder
@@ -165,7 +164,6 @@ public class CassandraDriverOptions {
         this.loader = driverConfigBuilder.build();
     }
 
-    @NotNull
     protected ConsistencyLevel getDefaultReadConsistencyLevel() {
         if (defaultReadConsistencyLevel == null) {
             if (readConsistencyLevel != null) {
@@ -177,7 +175,6 @@ public class CassandraDriverOptions {
         return defaultReadConsistencyLevel;
     }
 
-    @NotNull
     protected ConsistencyLevel getDefaultWriteConsistencyLevel() {
         if (defaultWriteConsistencyLevel == null) {
             if (writeConsistencyLevel != null) {
@@ -189,7 +186,7 @@ public class CassandraDriverOptions {
         return defaultWriteConsistencyLevel;
     }
 
-    private void initSocketOptions(@NotNull ProgrammaticDriverConfigLoaderBuilder driverConfigBuilder) {
+    private void initSocketOptions(ProgrammaticDriverConfigLoaderBuilder driverConfigBuilder) {
         driverConfigBuilder.withDuration(DefaultDriverOption.CONNECTION_CONNECT_TIMEOUT,
                 Duration.ofMillis(this.connectTimeoutMillis));
         driverConfigBuilder.withDuration(DefaultDriverOption.REQUEST_TIMEOUT,
@@ -220,18 +217,17 @@ public class CassandraDriverOptions {
         }
     }
 
-    private void initPoolingOptions(@NotNull ProgrammaticDriverConfigLoaderBuilder driverConfigBuilder) {
+    private void initPoolingOptions(ProgrammaticDriverConfigLoaderBuilder driverConfigBuilder) {
         driverConfigBuilder.withInt(DefaultDriverOption.CONNECTION_MAX_REQUESTS,
                 this.max_requests_local);
     }
 
-    private void initQueryOptions(@NotNull ProgrammaticDriverConfigLoaderBuilder driverConfigBuilder) {
+    private void initQueryOptions(ProgrammaticDriverConfigLoaderBuilder driverConfigBuilder) {
         driverConfigBuilder.withInt(DefaultDriverOption.REQUEST_PAGE_SIZE,
                 this.defaultFetchSize);
     }
 
-    @NotNull
-    private List<String> getContactPoints(@NotNull String url) {
+    private List<String> getContactPoints(String url) {
         List<String> result;
         if (StringUtils.isBlank(url)) {
             result = Collections.emptyList();

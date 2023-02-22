@@ -1,7 +1,6 @@
 package org.echoiot.common.util;
 
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -24,7 +23,6 @@ public final class AzureIotHubUtil {
     private static final String AZURE_DIR = "azure";
     private static final String FILE_NAME = "BaltimoreCyberTrustRoot.crt.pem";
 
-    @NotNull
     private static final Path FULL_FILE_PATH;
 
     static {
@@ -51,14 +49,14 @@ public final class AzureIotHubUtil {
         return String.format(USERNAME_FORMAT, host, deviceId);
     }
 
-    public static String buildSasToken(@NotNull String host, @NotNull String sasKey) {
+    public static String buildSasToken(String host, String sasKey) {
         try {
             final String targetUri = URLEncoder.encode(host.toLowerCase(), StandardCharsets.UTF_8);
             final long expiryTime = buildExpiresOn();
-            @NotNull String toSign = targetUri + "\n" + expiryTime;
+            String toSign = targetUri + "\n" + expiryTime;
             byte[] keyBytes = Base64.getDecoder().decode(sasKey.getBytes(StandardCharsets.UTF_8));
-            @NotNull SecretKeySpec signingKey = new SecretKeySpec(keyBytes, "HmacSHA256");
-            @NotNull Mac mac = Mac.getInstance("HmacSHA256");
+            SecretKeySpec signingKey = new SecretKeySpec(keyBytes, "HmacSHA256");
+            Mac mac = Mac.getInstance("HmacSHA256");
             mac.init(signingKey);
             byte[] rawHmac = mac.doFinal(toSign.getBytes(StandardCharsets.UTF_8));
             String signature = URLEncoder.encode(Base64.getEncoder().encodeToString(rawHmac), StandardCharsets.UTF_8);
@@ -74,7 +72,6 @@ public final class AzureIotHubUtil {
         return expiresOnDate / ONE_SECOND_IN_MILLISECONDS;
     }
 
-    @NotNull
     public static String getDefaultCaCert() {
         try {
             return new String(Files.readAllBytes(FULL_FILE_PATH));

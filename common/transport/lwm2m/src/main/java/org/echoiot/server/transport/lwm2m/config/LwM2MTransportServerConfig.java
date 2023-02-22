@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.TbProperty;
 import org.echoiot.server.common.transport.config.ssl.SslCredentials;
 import org.echoiot.server.common.transport.config.ssl.SslCredentialsConfig;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -90,7 +89,6 @@ public class LwM2MTransportServerConfig implements LwM2MSecureServerConfig {
     @Setter
     private List<TbProperty> networkConfig;
 
-    @NotNull
     @Bean
     @ConfigurationProperties(prefix = "transport.lwm2m.server.security.credentials")
     public SslCredentialsConfig lwm2mServerCredentials() {
@@ -100,7 +98,6 @@ public class LwM2MTransportServerConfig implements LwM2MSecureServerConfig {
     @Resource(name = "lwm2mServerCredentials")
     private SslCredentialsConfig credentialsConfig;
 
-    @NotNull
     @Bean
     @ConfigurationProperties(prefix = "transport.lwm2m.security.trust-credentials")
     public SslCredentialsConfig lwm2mTrustCredentials() {

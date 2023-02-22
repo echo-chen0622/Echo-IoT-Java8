@@ -6,7 +6,6 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.transport.TransportTenantProfileCache;
 import org.echoiot.server.queue.discovery.TenantRoutingInfo;
 import org.echoiot.server.queue.discovery.TenantRoutingInfoService;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +20,6 @@ public class TransportTenantRoutingInfoService implements TenantRoutingInfoServi
         this.tenantProfileCache = tenantProfileCache;
     }
 
-    @NotNull
     @Override
     public TenantRoutingInfo getRoutingInfo(TenantId tenantId) {
         TenantProfile profile = tenantProfileCache.get(tenantId);

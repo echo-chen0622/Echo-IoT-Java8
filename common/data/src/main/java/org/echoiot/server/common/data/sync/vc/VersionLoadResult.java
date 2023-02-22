@@ -3,7 +3,6 @@ package org.echoiot.server.common.data.sync.vc;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Data;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 import java.util.Collections;
@@ -28,7 +27,7 @@ public class VersionLoadResult implements Serializable {
         return VersionLoadResult.builder().result(result).build();
     }
 
-    public static VersionLoadResult success(@NotNull EntityTypeLoadResult result) {
+    public static VersionLoadResult success(EntityTypeLoadResult result) {
         return VersionLoadResult.builder().result(List.of(result)).build();
     }
 

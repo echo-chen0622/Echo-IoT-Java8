@@ -1,6 +1,5 @@
 package org.echoiot.server.common.data.transport.snmp;
 
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -22,7 +21,6 @@ public enum PrivacyProtocol {
         return oid;
     }
 
-    @NotNull
     public static Optional<PrivacyProtocol> forName(String name) {
         return Arrays.stream(values())
                 .filter(protocol -> protocol.name().equalsIgnoreCase(name))

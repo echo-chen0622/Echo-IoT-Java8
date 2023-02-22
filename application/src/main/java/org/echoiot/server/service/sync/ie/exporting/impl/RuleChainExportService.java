@@ -9,7 +9,6 @@ import org.echoiot.server.common.data.sync.ie.RuleChainExportData;
 import org.echoiot.server.dao.rule.RuleChainService;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.sync.vc.data.EntitiesExportCtx;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
@@ -22,11 +21,10 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class RuleChainExportService extends BaseEntityExportService<RuleChainId, RuleChain, RuleChainExportData> {
 
-    @NotNull
     private final RuleChainService ruleChainService;
 
     @Override
-    protected void setRelatedEntities(@NotNull EntitiesExportCtx<?> ctx, @NotNull RuleChain ruleChain, @NotNull RuleChainExportData exportData) {
+    protected void setRelatedEntities(EntitiesExportCtx<?> ctx, RuleChain ruleChain, RuleChainExportData exportData) {
         @Nullable RuleChainMetaData metaData = ruleChainService.loadRuleChainMetaData(ctx.getTenantId(), ruleChain.getId());
         Optional.ofNullable(metaData.getNodes()).orElse(Collections.emptyList())
                 .forEach(ruleNode -> {
@@ -47,13 +45,11 @@ public class RuleChainExportService extends BaseEntityExportService<RuleChainId,
         }
     }
 
-    @NotNull
     @Override
     protected RuleChainExportData newExportData() {
         return new RuleChainExportData();
     }
 
-    @NotNull
     @Override
     public Set<EntityType> getSupportedEntityTypes() {
         return Set.of(EntityType.RULE_CHAIN);

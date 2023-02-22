@@ -3,7 +3,6 @@ package org.echoiot.server.dao.timeseries;
 import lombok.Getter;
 import org.echoiot.server.common.data.kv.ReadTsKvQuery;
 import org.echoiot.server.common.data.kv.TsKvEntry;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +15,6 @@ import static org.echoiot.server.dao.timeseries.CassandraBaseTimeseriesDao.DESC_
  */
 public class TsKvQueryCursor extends QueryCursor {
 
-    @NotNull
     @Getter
     private final List<TsKvEntry> data;
     @Getter
@@ -25,7 +23,7 @@ public class TsKvQueryCursor extends QueryCursor {
     private int partitionIndex;
     private int currentLimit;
 
-    public TsKvQueryCursor(String entityType, UUID entityId, @NotNull ReadTsKvQuery baseQuery, @NotNull List<Long> partitions) {
+    public TsKvQueryCursor(String entityType, UUID entityId, ReadTsKvQuery baseQuery, List<Long> partitions) {
         super(entityType, entityId, baseQuery, partitions);
         this.orderBy = baseQuery.getOrder();
         this.partitionIndex = isDesc() ? partitions.size() - 1 : 0;
@@ -57,7 +55,7 @@ public class TsKvQueryCursor extends QueryCursor {
         return currentLimit;
     }
 
-    public void addData(@NotNull List<TsKvEntry> newData) {
+    public void addData(List<TsKvEntry> newData) {
         currentLimit -= newData.size();
         data.addAll(newData);
     }

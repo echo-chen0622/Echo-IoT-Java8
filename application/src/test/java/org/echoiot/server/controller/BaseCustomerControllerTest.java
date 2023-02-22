@@ -18,7 +18,6 @@ import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.common.data.security.Authority;
 import org.echoiot.server.dao.customer.CustomerDao;
 import org.echoiot.server.dao.exception.DataValidationException;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.junit.After;
 import org.junit.Assert;
@@ -67,7 +66,7 @@ public abstract class BaseCustomerControllerTest extends AbstractControllerTest 
 
         loginSysAdmin();
 
-        @NotNull Tenant tenant = new Tenant();
+        Tenant tenant = new Tenant();
         tenant.setTitle("My tenant");
         savedTenant = doPost("/api/tenant", tenant, Tenant.class);
         Assert.assertNotNull(savedTenant);
@@ -94,7 +93,7 @@ public abstract class BaseCustomerControllerTest extends AbstractControllerTest 
 
     @Test
     public void testSaveCustomer() throws Exception {
-        @NotNull Customer customer = new Customer();
+        Customer customer = new Customer();
         customer.setTitle("My customer");
 
         Mockito.reset(tbClusterService, auditLogService);
@@ -127,12 +126,12 @@ public abstract class BaseCustomerControllerTest extends AbstractControllerTest 
 
     @Test
     public void testSaveCustomerWithViolationOfValidation() throws Exception {
-        @NotNull Customer customer = new Customer();
+        Customer customer = new Customer();
         customer.setTitle(StringUtils.randomAlphabetic(300));
 
         Mockito.reset(tbClusterService, auditLogService);
 
-        @NotNull String msgError = msgErrorFieldLength("title");
+        String msgError = msgErrorFieldLength("title");
         doPost("/api/customer", customer)
                 .andExpect(status().isBadRequest())
                 .andExpect(statusReason(containsString(msgError)));
@@ -199,7 +198,7 @@ public abstract class BaseCustomerControllerTest extends AbstractControllerTest 
 
     @Test
     public void testUpdateCustomerFromDifferentTenant() throws Exception {
-        @NotNull Customer customer = new Customer();
+        Customer customer = new Customer();
         customer.setTitle("My customer");
         Customer savedCustomer = doPost("/api/customer", customer, Customer.class);
         doPost("/api/customer", savedCustomer, Customer.class);
@@ -233,7 +232,7 @@ public abstract class BaseCustomerControllerTest extends AbstractControllerTest 
 
     @Test
     public void testFindCustomerById() throws Exception {
-        @NotNull Customer customer = new Customer();
+        Customer customer = new Customer();
         customer.setTitle("My customer");
         Customer savedCustomer = doPost("/api/customer", customer, Customer.class);
 
@@ -247,7 +246,7 @@ public abstract class BaseCustomerControllerTest extends AbstractControllerTest 
 
     @Test
     public void testDeleteCustomer() throws Exception {
-        @NotNull Customer customer = new Customer();
+        Customer customer = new Customer();
         customer.setTitle("My customer");
         Customer savedCustomer = doPost("/api/customer", customer, Customer.class);
 
@@ -268,8 +267,8 @@ public abstract class BaseCustomerControllerTest extends AbstractControllerTest 
 
     @Test
     public void testSaveCustomerWithEmptyTitle() throws Exception {
-        @NotNull Customer customer = new Customer();
-        @NotNull String msgError = "Customer title " + msgErrorShouldBeSpecified;
+        Customer customer = new Customer();
+        String msgError = "Customer title " + msgErrorShouldBeSpecified;
 
         Mockito.reset(tbClusterService, auditLogService);
 
@@ -283,8 +282,8 @@ public abstract class BaseCustomerControllerTest extends AbstractControllerTest 
 
     @Test
     public void testSaveCustomerWithInvalidEmail() throws Exception {
-        @NotNull Customer customer = new Customer();
-        @NotNull String msgError = "Invalid email address format 'invalid@mail'";
+        Customer customer = new Customer();
+        String msgError = "Invalid email address format 'invalid@mail'";
         customer.setTitle("My customer");
         customer.setEmail("invalid@mail");
 
@@ -306,9 +305,9 @@ public abstract class BaseCustomerControllerTest extends AbstractControllerTest 
 
         Mockito.reset(tbClusterService, auditLogService);
 
-        @NotNull List<ListenableFuture<Customer>> futures = new ArrayList<>(cntEntity);
+        List<ListenableFuture<Customer>> futures = new ArrayList<>(cntEntity);
         for (int i = 0; i < cntEntity; i++) {
-            @NotNull Customer customer = new Customer();
+            Customer customer = new Customer();
             customer.setTenantId(tenantId);
             customer.setTitle("Customer" + i);
             futures.add(executor.submit(() ->
@@ -320,7 +319,7 @@ public abstract class BaseCustomerControllerTest extends AbstractControllerTest 
                 tenantId, tenantAdmin.getCustomerId(), tenantAdmin.getId(), tenantAdmin.getEmail(),
                 ActionType.ADDED, cntEntity);
 
-        @NotNull List<Customer> loadedCustomers = new ArrayList<>(135);
+        List<Customer> loadedCustomers = new ArrayList<>(135);
         PageLink pageLink = new PageLink(23);
         @Nullable PageData<Customer> pageData = null;
         do {
@@ -340,13 +339,13 @@ public abstract class BaseCustomerControllerTest extends AbstractControllerTest 
     public void testFindCustomersByTitle() throws Exception {
         TenantId tenantId = savedTenant.getId();
 
-        @NotNull String title1 = "Customer title 1";
-        @NotNull List<ListenableFuture<Customer>> futures = new ArrayList<>(143);
+        String title1 = "Customer title 1";
+        List<ListenableFuture<Customer>> futures = new ArrayList<>(143);
         for (int i = 0; i < 143; i++) {
-            @NotNull Customer customer = new Customer();
+            Customer customer = new Customer();
             customer.setTenantId(tenantId);
-            @NotNull String suffix = StringUtils.randomAlphanumeric((int) (5 + Math.random() * 10));
-            @NotNull String title = title1 + suffix;
+            String suffix = StringUtils.randomAlphanumeric((int) (5 + Math.random() * 10));
+            String title = title1 + suffix;
             title = i % 2 == 0 ? title.toLowerCase() : title.toUpperCase();
             customer.setTitle(title);
             futures.add(executor.submit(() ->
@@ -354,13 +353,13 @@ public abstract class BaseCustomerControllerTest extends AbstractControllerTest 
         }
         List<Customer> customersTitle1 = Futures.allAsList(futures).get(TIMEOUT, TimeUnit.SECONDS);
 
-        @NotNull String title2 = "Customer title 2";
+        String title2 = "Customer title 2";
         futures = new ArrayList<>(175);
         for (int i = 0; i < 175; i++) {
-            @NotNull Customer customer = new Customer();
+            Customer customer = new Customer();
             customer.setTenantId(tenantId);
-            @NotNull String suffix = StringUtils.randomAlphanumeric((int) (5 + Math.random() * 10));
-            @NotNull String title = title2 + suffix;
+            String suffix = StringUtils.randomAlphanumeric((int) (5 + Math.random() * 10));
+            String title = title2 + suffix;
             title = i % 2 == 0 ? title.toLowerCase() : title.toUpperCase();
             customer.setTitle(title);
             futures.add(executor.submit(() ->
@@ -369,7 +368,7 @@ public abstract class BaseCustomerControllerTest extends AbstractControllerTest 
 
         List<Customer> customersTitle2 = Futures.allAsList(futures).get(TIMEOUT, TimeUnit.SECONDS);
 
-        @NotNull List<Customer> loadedCustomersTitle1 = new ArrayList<>();
+        List<Customer> loadedCustomersTitle1 = new ArrayList<>();
         PageLink pageLink = new PageLink(15, 0, title1);
         @Nullable PageData<Customer> pageData = null;
         do {
@@ -382,7 +381,7 @@ public abstract class BaseCustomerControllerTest extends AbstractControllerTest 
 
         assertThat(customersTitle1).as(title1).containsExactlyInAnyOrderElementsOf(loadedCustomersTitle1);
 
-        @NotNull List<Customer> loadedCustomersTitle2 = new ArrayList<>();
+        List<Customer> loadedCustomersTitle2 = new ArrayList<>();
         pageLink = new PageLink(4, 0, title2);
         do {
             pageData = doGetTypedWithPageLink("/api/customers?", PAGE_DATA_CUSTOMER_TYPE_REFERENCE, pageLink);
@@ -422,7 +421,7 @@ public abstract class BaseCustomerControllerTest extends AbstractControllerTest 
     }
 
     private Customer createCustomer(String title) {
-        @NotNull Customer customer = new Customer();
+        Customer customer = new Customer();
         customer.setTitle(title);
         return doPost("/api/customer", customer, Customer.class);
     }

@@ -20,7 +20,6 @@ import org.echoiot.server.dao.rule.RuleChainService;
 import org.echoiot.server.dao.rule.RuleNodeDao;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.sync.vc.data.EntitiesImportCtx;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
@@ -35,19 +34,17 @@ public class RuleChainImportService extends BaseEntityImportService<RuleChainId,
 
     private static final LinkedHashSet<EntityType> HINTS = new LinkedHashSet<>(Arrays.asList(EntityType.RULE_CHAIN, EntityType.DEVICE, EntityType.ASSET));
 
-    @NotNull
     private final RuleChainService ruleChainService;
-    @NotNull
     private final RuleNodeDao ruleNodeDao;
 
     @Override
-    protected void setOwner(TenantId tenantId, @NotNull RuleChain ruleChain, IdProvider idProvider) {
+    protected void setOwner(TenantId tenantId, RuleChain ruleChain, IdProvider idProvider) {
         ruleChain.setTenantId(tenantId);
     }
 
     @Nullable
     @Override
-    protected RuleChain findExistingEntity(@NotNull EntitiesImportCtx ctx, @NotNull RuleChain ruleChain, IdProvider idProvider) {
+    protected RuleChain findExistingEntity(EntitiesImportCtx ctx, RuleChain ruleChain, IdProvider idProvider) {
         @Nullable RuleChain existingRuleChain = super.findExistingEntity(ctx, ruleChain, idProvider);
         if (existingRuleChain == null && ctx.isFindExistingByName()) {
             existingRuleChain = ruleChainService.findTenantRuleChainsByTypeAndName(ctx.getTenantId(), ruleChain.getType(), ruleChain.getName()).stream().findFirst().orElse(null);
@@ -55,13 +52,12 @@ public class RuleChainImportService extends BaseEntityImportService<RuleChainId,
         return existingRuleChain;
     }
 
-    @NotNull
     @Override
-    protected RuleChain prepare(@NotNull EntitiesImportCtx ctx, @NotNull RuleChain ruleChain, @Nullable RuleChain old, @NotNull RuleChainExportData exportData, @NotNull IdProvider idProvider) {
+    protected RuleChain prepare(EntitiesImportCtx ctx, RuleChain ruleChain, @Nullable RuleChain old, RuleChainExportData exportData, IdProvider idProvider) {
         RuleChainMetaData metaData = exportData.getMetaData();
-        @NotNull List<RuleNode> ruleNodes = Optional.ofNullable(metaData.getNodes()).orElse(Collections.emptyList());
+        List<RuleNode> ruleNodes = Optional.ofNullable(metaData.getNodes()).orElse(Collections.emptyList());
         if (old != null) {
-            @NotNull List<RuleNodeId> nodeIds = ruleNodes.stream().map(RuleNode::getId).collect(Collectors.toList());
+            List<RuleNodeId> nodeIds = ruleNodes.stream().map(RuleNode::getId).collect(Collectors.toList());
             List<RuleNode> existing = ruleNodeDao.findByExternalIds(old.getId(), nodeIds);
             existing.forEach(node -> ctx.putInternalId(node.getExternalId(), node.getId()));
             ruleNodes.forEach(node -> {
@@ -89,7 +85,7 @@ public class RuleChainImportService extends BaseEntityImportService<RuleChainId,
     }
 
     @Override
-    protected RuleChain saveOrUpdate(@NotNull EntitiesImportCtx ctx, RuleChain ruleChain, @NotNull RuleChainExportData exportData, IdProvider idProvider) {
+    protected RuleChain saveOrUpdate(EntitiesImportCtx ctx, RuleChain ruleChain, RuleChainExportData exportData, IdProvider idProvider) {
         ruleChain = ruleChainService.saveRuleChain(ruleChain);
         if (ctx.isFinalImportAttempt() || ctx.getCurrentImportResult().isUpdatedAllExternalIds()) {
             exportData.getMetaData().setRuleChainId(ruleChain.getId());
@@ -101,7 +97,7 @@ public class RuleChainImportService extends BaseEntityImportService<RuleChainId,
     }
 
     @Override
-    protected boolean compare(@NotNull EntitiesImportCtx ctx, @NotNull RuleChainExportData exportData, @NotNull RuleChain prepared, RuleChain existing) {
+    protected boolean compare(EntitiesImportCtx ctx, RuleChainExportData exportData, RuleChain prepared, RuleChain existing) {
         boolean different = super.compare(ctx, exportData, prepared, existing);
         if (!different) {
             RuleChainMetaData newMD = exportData.getMetaData();
@@ -113,7 +109,7 @@ public class RuleChainImportService extends BaseEntityImportService<RuleChainId,
     }
 
     @Override
-    protected void onEntitySaved(@NotNull User user, @NotNull RuleChain savedRuleChain, @Nullable RuleChain oldRuleChain) throws EchoiotException {
+    protected void onEntitySaved(User user, RuleChain savedRuleChain, @Nullable RuleChain oldRuleChain) throws EchoiotException {
         entityActionService.logEntityAction(user, savedRuleChain.getId(), savedRuleChain, null,
                 oldRuleChain == null ? ActionType.ADDED : ActionType.UPDATED, null);
         if (savedRuleChain.getType() == RuleChainType.CORE) {
@@ -124,13 +120,11 @@ public class RuleChainImportService extends BaseEntityImportService<RuleChainId,
         }
     }
 
-    @NotNull
     @Override
-    protected RuleChain deepCopy(@NotNull RuleChain ruleChain) {
+    protected RuleChain deepCopy(RuleChain ruleChain) {
         return new RuleChain(ruleChain);
     }
 
-    @NotNull
     @Override
     public EntityType getEntityType() {
         return EntityType.RULE_CHAIN;

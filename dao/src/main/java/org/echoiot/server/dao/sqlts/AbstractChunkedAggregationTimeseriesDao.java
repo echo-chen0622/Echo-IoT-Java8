@@ -15,7 +15,6 @@ import org.echoiot.server.dao.sql.TbSqlBlockingQueueWrapper;
 import org.echoiot.server.dao.sqlts.insert.InsertTsRepository;
 import org.echoiot.server.dao.sqlts.ts.TsKvRepository;
 import org.echoiot.server.dao.timeseries.TimeseriesDao;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 
@@ -50,7 +49,7 @@ public abstract class AbstractChunkedAggregationTimeseriesDao extends AbstractSq
                 .batchSortEnabled(batchSortEnabled)
                 .build();
 
-        @NotNull Function<TsKvEntity, Integer> hashcodeFunction = entity -> entity.getEntityId().hashCode();
+        Function<TsKvEntity, Integer> hashcodeFunction = entity -> entity.getEntityId().hashCode();
         tsQueue = new TbSqlBlockingQueueWrapper<>(tsParams, hashcodeFunction, tsBatchThreads, statsFactory);
         tsQueue.init(logExecutor, v -> insertRepository.saveOrUpdate(v),
                 Comparator.comparing((Function<TsKvEntity, UUID>) AbstractTsKvEntity::getEntityId)
@@ -67,7 +66,7 @@ public abstract class AbstractChunkedAggregationTimeseriesDao extends AbstractSq
     }
 
     @Override
-    public ListenableFuture<Void> remove(TenantId tenantId, @NotNull EntityId entityId, @NotNull DeleteTsKvQuery query) {
+    public ListenableFuture<Void> remove(TenantId tenantId, EntityId entityId, DeleteTsKvQuery query) {
         return service.submit(() -> {
             tsKvRepository.delete(
                     entityId.getId(),
@@ -78,23 +77,22 @@ public abstract class AbstractChunkedAggregationTimeseriesDao extends AbstractSq
         });
     }
 
-    @NotNull
     @Override
     public ListenableFuture<Integer> savePartition(TenantId tenantId, EntityId entityId, long tsKvEntryTs, String key) {
         return Futures.immediateFuture(null);
     }
 
     @Override
-    public ListenableFuture<List<ReadTsKvQueryResult>> findAllAsync(TenantId tenantId, EntityId entityId, @NotNull List<ReadTsKvQuery> queries) {
+    public ListenableFuture<List<ReadTsKvQueryResult>> findAllAsync(TenantId tenantId, EntityId entityId, List<ReadTsKvQuery> queries) {
         return processFindAllAsync(tenantId, entityId, queries);
     }
 
     @Override
-    public ListenableFuture<ReadTsKvQueryResult> findAllAsync(TenantId tenantId, @NotNull EntityId entityId, @NotNull ReadTsKvQuery query) {
+    public ListenableFuture<ReadTsKvQueryResult> findAllAsync(TenantId tenantId, EntityId entityId, ReadTsKvQuery query) {
         if (query.getAggregation() == Aggregation.NONE) {
             return Futures.immediateFuture(findAllAsyncWithLimit(entityId, query));
         } else {
-            @NotNull List<ListenableFuture<Optional<TsKvEntity>>> futures = new ArrayList<>();
+            List<ListenableFuture<Optional<TsKvEntity>>> futures = new ArrayList<>();
             long startPeriod = query.getStartTs();
             long endPeriod = Math.max(query.getStartTs() + 1, query.getEndTs());
             long step = query.getInterval();
@@ -110,9 +108,8 @@ public abstract class AbstractChunkedAggregationTimeseriesDao extends AbstractSq
         }
     }
 
-    @NotNull
-    private ReadTsKvQueryResult findAllAsyncWithLimit(@NotNull EntityId entityId, @NotNull ReadTsKvQuery query) {
-        @NotNull Integer keyId = getOrSaveKeyId(query.getKey());
+    private ReadTsKvQueryResult findAllAsyncWithLimit(EntityId entityId, ReadTsKvQuery query) {
+        Integer keyId = getOrSaveKeyId(query.getKey());
         List<TsKvEntity> tsKvEntities = tsKvRepository.findAllWithLimit(
                 entityId.getId(),
                 keyId,
@@ -125,7 +122,7 @@ public abstract class AbstractChunkedAggregationTimeseriesDao extends AbstractSq
         return new ReadTsKvQueryResult(query.getId(), tsKvEntries, lastTs);
     }
 
-    ListenableFuture<Optional<TsKvEntity>> findAndAggregateAsync(@NotNull EntityId entityId, String key, long startTs, long endTs, long ts, @NotNull Aggregation aggregation) {
+    ListenableFuture<Optional<TsKvEntity>> findAndAggregateAsync(EntityId entityId, String key, long startTs, long endTs, long ts, Aggregation aggregation) {
         return service.submit(() -> {
             TsKvEntity entity = switchAggregation(entityId, key, startTs, endTs, aggregation);
             if (entity != null && entity.isNotEmpty()) {
@@ -139,8 +136,8 @@ public abstract class AbstractChunkedAggregationTimeseriesDao extends AbstractSq
         });
     }
 
-    protected TsKvEntity switchAggregation(@NotNull EntityId entityId, String key, long startTs, long endTs, @NotNull Aggregation aggregation) {
-        @NotNull var keyId = getOrSaveKeyId(key);
+    protected TsKvEntity switchAggregation(EntityId entityId, String key, long startTs, long endTs, Aggregation aggregation) {
+        var keyId = getOrSaveKeyId(key);
         switch (aggregation) {
             case AVG:
                 return tsKvRepository.findAvg(entityId.getId(), keyId, startTs, endTs);

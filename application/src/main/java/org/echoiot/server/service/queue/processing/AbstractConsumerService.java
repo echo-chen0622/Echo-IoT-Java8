@@ -25,7 +25,6 @@ import org.echoiot.server.service.profile.TbDeviceProfileCache;
 import org.echoiot.server.service.queue.TbPackCallback;
 import org.echoiot.server.service.queue.TbPackProcessingContext;
 import org.echoiot.server.service.security.auth.jwt.settings.JwtSettingsService;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 
 import javax.annotation.PreDestroy;
@@ -101,14 +100,14 @@ public abstract class AbstractConsumerService<N extends com.google.protobuf.Gene
                     if (msgs.isEmpty()) {
                         continue;
                     }
-                    @NotNull ConcurrentMap<UUID, TbProtoQueueMsg<N>> pendingMap = msgs.stream().collect(
+                    ConcurrentMap<UUID, TbProtoQueueMsg<N>> pendingMap = msgs.stream().collect(
                             Collectors.toConcurrentMap(s -> UUID.randomUUID(), Function.identity()));
-                    @NotNull CountDownLatch processingTimeoutLatch = new CountDownLatch(1);
-                    @NotNull TbPackProcessingContext<TbProtoQueueMsg<N>> ctx = new TbPackProcessingContext<>(
+                    CountDownLatch processingTimeoutLatch = new CountDownLatch(1);
+                    TbPackProcessingContext<TbProtoQueueMsg<N>> ctx = new TbPackProcessingContext<>(
                             processingTimeoutLatch, pendingMap, new ConcurrentHashMap<>());
                     pendingMap.forEach((id, msg) -> {
                         log.trace("[{}] Creating notification callback for message: {}", id, msg.getValue());
-                        @NotNull TbCallback callback = new TbPackCallback<>(id, ctx);
+                        TbCallback callback = new TbPackCallback<>(id, ctx);
                         try {
                             handleNotification(id, msg, callback);
                         } catch (Throwable e) {
@@ -136,16 +135,16 @@ public abstract class AbstractConsumerService<N extends com.google.protobuf.Gene
         });
     }
 
-    protected void handleComponentLifecycleMsg(UUID id, @NotNull ByteString nfMsg) {
+    protected void handleComponentLifecycleMsg(UUID id, ByteString nfMsg) {
         Optional<TbActorMsg> actorMsgOpt = encodingService.decode(nfMsg.toByteArray());
         if (actorMsgOpt.isPresent()) {
-            @NotNull TbActorMsg actorMsg = actorMsgOpt.get();
+            TbActorMsg actorMsg = actorMsgOpt.get();
             if (actorMsg instanceof ComponentLifecycleMsg) {
-                @NotNull ComponentLifecycleMsg componentLifecycleMsg = (ComponentLifecycleMsg) actorMsg;
+                ComponentLifecycleMsg componentLifecycleMsg = (ComponentLifecycleMsg) actorMsg;
                 log.debug("[{}][{}][{}] Received Lifecycle event: {}", componentLifecycleMsg.getTenantId(), componentLifecycleMsg.getEntityId().getEntityType(),
                         componentLifecycleMsg.getEntityId(), componentLifecycleMsg.getEvent());
                 if (EntityType.TENANT_PROFILE.equals(componentLifecycleMsg.getEntityId().getEntityType())) {
-                    @NotNull TenantProfileId tenantProfileId = new TenantProfileId(componentLifecycleMsg.getEntityId().getId());
+                    TenantProfileId tenantProfileId = new TenantProfileId(componentLifecycleMsg.getEntityId().getId());
                     tenantProfileCache.evict(tenantProfileId);
                     if (componentLifecycleMsg.getEvent().equals(ComponentLifecycleEvent.UPDATED)) {
                         apiUsageStateService.onTenantProfileUpdate(tenantProfileId);

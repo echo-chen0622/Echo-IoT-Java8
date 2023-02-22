@@ -7,7 +7,6 @@ import lombok.ToString;
 import org.echoiot.server.common.data.BaseData;
 import org.echoiot.server.common.data.id.OAuth2DomainId;
 import org.echoiot.server.common.data.id.OAuth2ParamsId;
-import org.jetbrains.annotations.NotNull;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -19,7 +18,7 @@ public class OAuth2Domain extends BaseData<OAuth2DomainId> {
     private String domainName;
     private SchemeType domainScheme;
 
-    public OAuth2Domain(@NotNull OAuth2Domain domain) {
+    public OAuth2Domain(OAuth2Domain domain) {
         super(domain);
         this.oauth2ParamsId = domain.oauth2ParamsId;
         this.domainName = domain.domainName;

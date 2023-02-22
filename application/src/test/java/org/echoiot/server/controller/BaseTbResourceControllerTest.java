@@ -7,7 +7,6 @@ import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.common.data.security.Authority;
 import org.echoiot.server.dao.exception.DataValidationException;
-import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -34,7 +33,7 @@ public abstract class BaseTbResourceControllerTest extends AbstractControllerTes
     public void beforeTest() throws Exception {
         loginSysAdmin();
 
-        @NotNull Tenant tenant = new Tenant();
+        Tenant tenant = new Tenant();
         tenant.setTitle("My tenant");
         savedTenant = doPost("/api/tenant", tenant, Tenant.class);
         Assert.assertNotNull(savedTenant);
@@ -62,7 +61,7 @@ public abstract class BaseTbResourceControllerTest extends AbstractControllerTes
 
         Mockito.reset(tbClusterService, auditLogService);
 
-        @NotNull TbResource resource = new TbResource();
+        TbResource resource = new TbResource();
         resource.setResourceType(ResourceType.JKS);
         resource.setTitle("My first resource");
         resource.setFileName(DEFAULT_FILE_NAME);
@@ -97,7 +96,7 @@ public abstract class BaseTbResourceControllerTest extends AbstractControllerTes
 
     @Test
     public void saveResourceInfoWithViolationOfLengthValidation() throws Exception {
-        @NotNull TbResource resource = new TbResource();
+        TbResource resource = new TbResource();
         resource.setResourceType(ResourceType.JKS);
         resource.setTitle(StringUtils.randomAlphabetic(300));
         resource.setFileName(DEFAULT_FILE_NAME);
@@ -105,7 +104,7 @@ public abstract class BaseTbResourceControllerTest extends AbstractControllerTes
 
         Mockito.reset(tbClusterService, auditLogService);
 
-        @NotNull String msgError = msgErrorFieldLength("title");
+        String msgError = msgErrorFieldLength("title");
         doPost("/api/resource", resource)
                 .andExpect(status().isBadRequest())
                 .andExpect(statusReason(containsString(msgError)));
@@ -116,7 +115,7 @@ public abstract class BaseTbResourceControllerTest extends AbstractControllerTes
 
     @Test
     public void testUpdateTbResourceFromDifferentTenant() throws Exception {
-        @NotNull TbResource resource = new TbResource();
+        TbResource resource = new TbResource();
         resource.setResourceType(ResourceType.JKS);
         resource.setTitle("My first resource");
         resource.setFileName(DEFAULT_FILE_NAME);
@@ -145,7 +144,7 @@ public abstract class BaseTbResourceControllerTest extends AbstractControllerTes
 
     @Test
     public void testFindTbResourceById() throws Exception {
-        @NotNull TbResource resource = new TbResource();
+        TbResource resource = new TbResource();
         resource.setResourceType(ResourceType.JKS);
         resource.setTitle("My first resource");
         resource.setFileName(DEFAULT_FILE_NAME);
@@ -160,7 +159,7 @@ public abstract class BaseTbResourceControllerTest extends AbstractControllerTes
 
     @Test
     public void testDeleteTbResource() throws Exception {
-        @NotNull TbResource resource = new TbResource();
+        TbResource resource = new TbResource();
         resource.setResourceType(ResourceType.JKS);
         resource.setTitle("My first resource");
         resource.setFileName(DEFAULT_FILE_NAME);
@@ -188,17 +187,17 @@ public abstract class BaseTbResourceControllerTest extends AbstractControllerTes
 
         Mockito.reset(tbClusterService, auditLogService);
 
-        @NotNull List<TbResourceInfo> resources = new ArrayList<>();
+        List<TbResourceInfo> resources = new ArrayList<>();
         int cntEntity = 173;
         for (int i = 0; i < cntEntity; i++) {
-            @NotNull TbResource resource = new TbResource();
+            TbResource resource = new TbResource();
             resource.setTitle("Resource" + i);
             resource.setResourceType(ResourceType.JKS);
             resource.setFileName(i + DEFAULT_FILE_NAME);
             resource.setData("Test Data");
             resources.add(new TbResourceInfo(save(resource)));
         }
-        @NotNull List<TbResourceInfo> loadedResources = new ArrayList<>();
+        List<TbResourceInfo> loadedResources = new ArrayList<>();
         PageLink pageLink = new PageLink(24);
         PageData<TbResourceInfo> pageData;
         do {
@@ -225,16 +224,16 @@ public abstract class BaseTbResourceControllerTest extends AbstractControllerTes
     public void testFindSystemTbResources() throws Exception {
         loginSysAdmin();
 
-        @NotNull List<TbResourceInfo> resources = new ArrayList<>();
+        List<TbResourceInfo> resources = new ArrayList<>();
         for (int i = 0; i < 173; i++) {
-            @NotNull TbResource resource = new TbResource();
+            TbResource resource = new TbResource();
             resource.setTitle("Resource" + i);
             resource.setResourceType(ResourceType.JKS);
             resource.setFileName(i + DEFAULT_FILE_NAME);
             resource.setData("Test Data");
             resources.add(new TbResourceInfo(save(resource)));
         }
-        @NotNull List<TbResourceInfo> loadedResources = new ArrayList<>();
+        List<TbResourceInfo> loadedResources = new ArrayList<>();
         PageLink pageLink = new PageLink(24);
         PageData<TbResourceInfo> pageData;
         do {
@@ -255,7 +254,7 @@ public abstract class BaseTbResourceControllerTest extends AbstractControllerTes
         Mockito.reset(tbClusterService, auditLogService);
 
         int cntEntity = resources.size();
-        for (@NotNull TbResourceInfo resource : resources) {
+        for (TbResourceInfo resource : resources) {
             doDelete("/api/resource/" + resource.getId().getId().toString())
                     .andExpect(status().isOk());
         }
@@ -281,10 +280,10 @@ public abstract class BaseTbResourceControllerTest extends AbstractControllerTes
 
     @Test
     public void testFindSystemAndTenantTbResources() throws Exception {
-        @NotNull List<TbResourceInfo> systemResources = new ArrayList<>();
-        @NotNull List<TbResourceInfo> expectedResources = new ArrayList<>();
+        List<TbResourceInfo> systemResources = new ArrayList<>();
+        List<TbResourceInfo> expectedResources = new ArrayList<>();
         for (int i = 0; i < 73; i++) {
-            @NotNull TbResource resource = new TbResource();
+            TbResource resource = new TbResource();
             resource.setTitle("Resource" + i);
             resource.setResourceType(ResourceType.JKS);
             resource.setFileName(i + DEFAULT_FILE_NAME);
@@ -295,12 +294,12 @@ public abstract class BaseTbResourceControllerTest extends AbstractControllerTes
         loginSysAdmin();
 
         for (int i = 0; i < 173; i++) {
-            @NotNull TbResource resource = new TbResource();
+            TbResource resource = new TbResource();
             resource.setTitle("Resource" + i);
             resource.setResourceType(ResourceType.JKS);
             resource.setFileName(i + DEFAULT_FILE_NAME);
             resource.setData("Test Data");
-            @NotNull TbResourceInfo savedResource = new TbResourceInfo(save(resource));
+            TbResourceInfo savedResource = new TbResourceInfo(save(resource));
             systemResources.add(savedResource);
             if (i >= 73) {
                 expectedResources.add(savedResource);
@@ -309,7 +308,7 @@ public abstract class BaseTbResourceControllerTest extends AbstractControllerTes
 
         login(tenantAdmin.getEmail(), "testPassword1");
 
-        @NotNull List<TbResourceInfo> loadedResources = new ArrayList<>();
+        List<TbResourceInfo> loadedResources = new ArrayList<>();
         PageLink pageLink = new PageLink(24);
         PageData<TbResourceInfo> pageData;
         do {
@@ -329,7 +328,7 @@ public abstract class BaseTbResourceControllerTest extends AbstractControllerTes
 
         loginSysAdmin();
 
-        for (@NotNull TbResourceInfo resource : systemResources) {
+        for (TbResourceInfo resource : systemResources) {
             doDelete("/api/resource/" + resource.getId().getId().toString())
                     .andExpect(status().isOk());
         }

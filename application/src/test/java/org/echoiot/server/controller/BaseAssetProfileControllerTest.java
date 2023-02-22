@@ -13,7 +13,6 @@ import org.echoiot.server.common.data.rule.RuleChain;
 import org.echoiot.server.common.data.security.Authority;
 import org.echoiot.server.dao.asset.AssetProfileDao;
 import org.echoiot.server.dao.exception.DataValidationException;
-import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -57,7 +56,7 @@ public abstract class BaseAssetProfileControllerTest extends AbstractControllerT
     public void beforeTest() throws Exception {
         loginSysAdmin();
 
-        @NotNull Tenant tenant = new Tenant();
+        Tenant tenant = new Tenant();
         tenant.setTitle("My tenant");
         savedTenant = doPost("/api/tenant", tenant, Tenant.class);
         Assert.assertNotNull(savedTenant);
@@ -82,7 +81,7 @@ public abstract class BaseAssetProfileControllerTest extends AbstractControllerT
 
     @Test
     public void testSaveAssetProfile() throws Exception {
-        @NotNull AssetProfile assetProfile = this.createAssetProfile("Asset Profile");
+        AssetProfile assetProfile = this.createAssetProfile("Asset Profile");
 
         Mockito.reset(tbClusterService, auditLogService);
 
@@ -111,11 +110,11 @@ public abstract class BaseAssetProfileControllerTest extends AbstractControllerT
 
     @Test
     public void saveAssetProfileWithViolationOfValidation() throws Exception {
-        @NotNull String msgError = msgErrorFieldLength("name");
+        String msgError = msgErrorFieldLength("name");
 
         Mockito.reset(tbClusterService, auditLogService);
 
-        @NotNull AssetProfile createAssetProfile = this.createAssetProfile(StringUtils.randomAlphabetic(300));
+        AssetProfile createAssetProfile = this.createAssetProfile(StringUtils.randomAlphabetic(300));
         doPost("/api/assetProfile", createAssetProfile)
                 .andExpect(status().isBadRequest())
                 .andExpect(statusReason(containsString(msgError)));
@@ -126,7 +125,7 @@ public abstract class BaseAssetProfileControllerTest extends AbstractControllerT
 
     @Test
     public void testFindAssetProfileById() throws Exception {
-        @NotNull AssetProfile assetProfile = this.createAssetProfile("Asset Profile");
+        AssetProfile assetProfile = this.createAssetProfile("Asset Profile");
         AssetProfile savedAssetProfile = doPost("/api/assetProfile", assetProfile, AssetProfile.class);
         AssetProfile foundAssetProfile = doGet("/api/assetProfile/" + savedAssetProfile.getId().getId().toString(), AssetProfile.class);
         Assert.assertNotNull(foundAssetProfile);
@@ -147,19 +146,19 @@ public abstract class BaseAssetProfileControllerTest extends AbstractControllerT
 
     @Test
     public void testFindAssetProfileInfoById() throws Exception {
-        @NotNull AssetProfile assetProfile = this.createAssetProfile("Asset Profile");
+        AssetProfile assetProfile = this.createAssetProfile("Asset Profile");
         AssetProfile savedAssetProfile = doPost("/api/assetProfile", assetProfile, AssetProfile.class);
         AssetProfileInfo foundAssetProfileInfo = doGet("/api/assetProfileInfo/" + savedAssetProfile.getId().getId().toString(), AssetProfileInfo.class);
         Assert.assertNotNull(foundAssetProfileInfo);
         Assert.assertEquals(savedAssetProfile.getId(), foundAssetProfileInfo.getId());
         Assert.assertEquals(savedAssetProfile.getName(), foundAssetProfileInfo.getName());
 
-        @NotNull Customer customer = new Customer();
+        Customer customer = new Customer();
         customer.setTitle("Customer");
         customer.setTenantId(savedTenant.getId());
         Customer savedCustomer = doPost("/api/customer", customer, Customer.class);
 
-        @NotNull User customerUser = new User();
+        User customerUser = new User();
         customerUser.setAuthority(Authority.CUSTOMER_USER);
         customerUser.setTenantId(savedTenant.getId());
         customerUser.setCustomerId(savedCustomer.getId());
@@ -195,7 +194,7 @@ public abstract class BaseAssetProfileControllerTest extends AbstractControllerT
 
     @Test
     public void testSetDefaultAssetProfile() throws Exception {
-        @NotNull AssetProfile assetProfile = this.createAssetProfile("Asset Profile 1");
+        AssetProfile assetProfile = this.createAssetProfile("Asset Profile 1");
         AssetProfile savedAssetProfile = doPost("/api/assetProfile", assetProfile, AssetProfile.class);
 
         Mockito.reset(tbClusterService, auditLogService);
@@ -214,11 +213,11 @@ public abstract class BaseAssetProfileControllerTest extends AbstractControllerT
 
     @Test
     public void testSaveAssetProfileWithEmptyName() throws Exception {
-        @NotNull AssetProfile assetProfile = new AssetProfile();
+        AssetProfile assetProfile = new AssetProfile();
 
         Mockito.reset(tbClusterService, auditLogService);
 
-        @NotNull String msgError = "Asset profile name " + msgErrorShouldBeSpecified;
+        String msgError = "Asset profile name " + msgErrorShouldBeSpecified;
         doPost("/api/assetProfile", assetProfile)
                 .andExpect(status().isBadRequest())
                 .andExpect(statusReason(containsString(msgError)));
@@ -229,13 +228,13 @@ public abstract class BaseAssetProfileControllerTest extends AbstractControllerT
 
     @Test
     public void testSaveAssetProfileWithSameName() throws Exception {
-        @NotNull AssetProfile assetProfile = this.createAssetProfile("Asset Profile");
+        AssetProfile assetProfile = this.createAssetProfile("Asset Profile");
         doPost("/api/assetProfile", assetProfile).andExpect(status().isOk());
-        @NotNull AssetProfile assetProfile2 = this.createAssetProfile("Asset Profile");
+        AssetProfile assetProfile2 = this.createAssetProfile("Asset Profile");
 
         Mockito.reset(tbClusterService, auditLogService);
 
-        @NotNull String msgError = "Asset profile with such name already exists";
+        String msgError = "Asset profile with such name already exists";
         doPost("/api/assetProfile", assetProfile2)
                 .andExpect(status().isBadRequest())
                 .andExpect(statusReason(containsString(msgError)));
@@ -246,10 +245,10 @@ public abstract class BaseAssetProfileControllerTest extends AbstractControllerT
 
     @Test
     public void testDeleteAssetProfileWithExistingAsset() throws Exception {
-        @NotNull AssetProfile assetProfile = this.createAssetProfile("Asset Profile");
+        AssetProfile assetProfile = this.createAssetProfile("Asset Profile");
         AssetProfile savedAssetProfile = doPost("/api/assetProfile", assetProfile, AssetProfile.class);
 
-        @NotNull Asset asset = new Asset();
+        Asset asset = new Asset();
         asset.setName("Test asset");
         asset.setAssetProfileId(savedAssetProfile.getId());
 
@@ -267,13 +266,13 @@ public abstract class BaseAssetProfileControllerTest extends AbstractControllerT
     @Test
     public void testSaveAssetProfileWithRuleChainFromDifferentTenant() throws Exception {
         loginDifferentTenant();
-        @NotNull RuleChain ruleChain = new RuleChain();
+        RuleChain ruleChain = new RuleChain();
         ruleChain.setName("Different rule chain");
         RuleChain savedRuleChain = doPost("/api/ruleChain", ruleChain, RuleChain.class);
 
         loginTenantAdmin();
 
-        @NotNull AssetProfile assetProfile = this.createAssetProfile("Asset Profile");
+        AssetProfile assetProfile = this.createAssetProfile("Asset Profile");
         assetProfile.setDefaultRuleChainId(savedRuleChain.getId());
         doPost("/api/assetProfile", assetProfile).andExpect(status().isBadRequest())
                 .andExpect(statusReason(containsString("Can't assign rule chain from different tenant!")));
@@ -282,13 +281,13 @@ public abstract class BaseAssetProfileControllerTest extends AbstractControllerT
     @Test
     public void testSaveAssetProfileWithDashboardFromDifferentTenant() throws Exception {
         loginDifferentTenant();
-        @NotNull Dashboard dashboard = new Dashboard();
+        Dashboard dashboard = new Dashboard();
         dashboard.setTitle("Different dashboard");
         Dashboard savedDashboard = doPost("/api/dashboard", dashboard, Dashboard.class);
 
         loginTenantAdmin();
 
-        @NotNull AssetProfile assetProfile = this.createAssetProfile("Asset Profile");
+        AssetProfile assetProfile = this.createAssetProfile("Asset Profile");
         assetProfile.setDefaultDashboardId(savedDashboard.getId());
         doPost("/api/assetProfile", assetProfile).andExpect(status().isBadRequest())
                 .andExpect(statusReason(containsString("Can't assign dashboard from different tenant!")));
@@ -296,7 +295,7 @@ public abstract class BaseAssetProfileControllerTest extends AbstractControllerT
 
     @Test
     public void testDeleteAssetProfile() throws Exception {
-        @NotNull AssetProfile assetProfile = this.createAssetProfile("Asset Profile");
+        AssetProfile assetProfile = this.createAssetProfile("Asset Profile");
         AssetProfile savedAssetProfile = doPost("/api/assetProfile", assetProfile, AssetProfile.class);
 
         Mockito.reset(tbClusterService, auditLogService);
@@ -316,7 +315,7 @@ public abstract class BaseAssetProfileControllerTest extends AbstractControllerT
 
     @Test
     public void testFindAssetProfiles() throws Exception {
-        @NotNull List<AssetProfile> assetProfiles = new ArrayList<>();
+        List<AssetProfile> assetProfiles = new ArrayList<>();
         PageLink pageLink = new PageLink(17);
         PageData<AssetProfile> pageData = doGetTypedWithPageLink("/api/assetProfiles?",
                 new TypeReference<>() {
@@ -329,7 +328,7 @@ public abstract class BaseAssetProfileControllerTest extends AbstractControllerT
 
         int cntEntity = 28;
         for (int i = 0; i < cntEntity; i++) {
-            @NotNull AssetProfile assetProfile = this.createAssetProfile("Asset Profile" + i);
+            AssetProfile assetProfile = this.createAssetProfile("Asset Profile" + i);
             assetProfiles.add(doPost("/api/assetProfile", assetProfile, AssetProfile.class));
         }
 
@@ -338,7 +337,7 @@ public abstract class BaseAssetProfileControllerTest extends AbstractControllerT
                 ActionType.ADDED, ActionType.ADDED, cntEntity, cntEntity, cntEntity);
         Mockito.reset(tbClusterService, auditLogService);
 
-        @NotNull List<AssetProfile> loadedAssetProfiles = new ArrayList<>();
+        List<AssetProfile> loadedAssetProfiles = new ArrayList<>();
         pageLink = new PageLink(17);
         do {
             pageData = doGetTypedWithPageLink("/api/assetProfiles?",
@@ -355,7 +354,7 @@ public abstract class BaseAssetProfileControllerTest extends AbstractControllerT
 
         Assert.assertEquals(assetProfiles, loadedAssetProfiles);
 
-        for (@NotNull AssetProfile assetProfile : loadedAssetProfiles) {
+        for (AssetProfile assetProfile : loadedAssetProfiles) {
             if (!assetProfile.isDefault()) {
                 doDelete("/api/assetProfile/" + assetProfile.getId().getId().toString())
                         .andExpect(status().isOk());
@@ -376,7 +375,7 @@ public abstract class BaseAssetProfileControllerTest extends AbstractControllerT
 
     @Test
     public void testFindAssetProfileInfos() throws Exception {
-        @NotNull List<AssetProfile> assetProfiles = new ArrayList<>();
+        List<AssetProfile> assetProfiles = new ArrayList<>();
         PageLink pageLink = new PageLink(17);
         PageData<AssetProfile> assetProfilePageData = doGetTypedWithPageLink("/api/assetProfiles?",
                 new TypeReference<PageData<AssetProfile>>() {
@@ -386,11 +385,11 @@ public abstract class BaseAssetProfileControllerTest extends AbstractControllerT
         assetProfiles.addAll(assetProfilePageData.getData());
 
         for (int i = 0; i < 28; i++) {
-            @NotNull AssetProfile assetProfile = this.createAssetProfile("Asset Profile" + i);
+            AssetProfile assetProfile = this.createAssetProfile("Asset Profile" + i);
             assetProfiles.add(doPost("/api/assetProfile", assetProfile, AssetProfile.class));
         }
 
-        @NotNull List<AssetProfileInfo> loadedAssetProfileInfos = new ArrayList<>();
+        List<AssetProfileInfo> loadedAssetProfileInfos = new ArrayList<>();
         pageLink = new PageLink(17);
         PageData<AssetProfileInfo> pageData;
         do {
@@ -406,12 +405,12 @@ public abstract class BaseAssetProfileControllerTest extends AbstractControllerT
         Collections.sort(assetProfiles, idComparator);
         Collections.sort(loadedAssetProfileInfos, assetProfileInfoIdComparator);
 
-        @NotNull List<AssetProfileInfo> assetProfileInfos = assetProfiles.stream().map(assetProfile -> new AssetProfileInfo(assetProfile.getId(),
+        List<AssetProfileInfo> assetProfileInfos = assetProfiles.stream().map(assetProfile -> new AssetProfileInfo(assetProfile.getId(),
                                                                                                                             assetProfile.getName(), assetProfile.getImage(), assetProfile.getDefaultDashboardId())).collect(Collectors.toList());
 
         Assert.assertEquals(assetProfileInfos, loadedAssetProfileInfos);
 
-        for (@NotNull AssetProfile assetProfile : assetProfiles) {
+        for (AssetProfile assetProfile : assetProfiles) {
             if (!assetProfile.isDefault()) {
                 doDelete("/api/assetProfile/" + assetProfile.getId().getId().toString())
                         .andExpect(status().isOk());
@@ -439,7 +438,7 @@ public abstract class BaseAssetProfileControllerTest extends AbstractControllerT
     }
 
     private AssetProfile savedAssetProfile(String name) {
-        @NotNull AssetProfile assetProfile = createAssetProfile(name);
+        AssetProfile assetProfile = createAssetProfile(name);
         return doPost("/api/assetProfile", assetProfile, AssetProfile.class);
     }
 }

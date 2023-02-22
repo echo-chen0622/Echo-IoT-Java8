@@ -11,7 +11,6 @@ import org.echoiot.rule.engine.api.TbNodeException;
 import org.echoiot.rule.engine.api.util.TbNodeUtils;
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.msg.TbMsg;
-import org.jetbrains.annotations.NotNull;
 import org.locationtech.spatial4j.context.jts.JtsSpatialContext;
 import org.locationtech.spatial4j.context.jts.JtsSpatialContextFactory;
 
@@ -24,16 +23,16 @@ public abstract class AbstractGeofencingNode<T extends TbGpsGeofencingFilterNode
     protected JtsSpatialContext jtsCtx;
 
     @Override
-    public void init(TbContext ctx, @NotNull TbNodeConfiguration configuration) throws TbNodeException {
+    public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
         this.config = TbNodeUtils.convert(configuration, getConfigClazz());
-        @NotNull JtsSpatialContextFactory factory = new JtsSpatialContextFactory();
+        JtsSpatialContextFactory factory = new JtsSpatialContextFactory();
         factory.normWrapLongitude = true;
         jtsCtx = factory.newSpatialContext();
     }
 
     abstract protected Class<T> getConfigClazz();
 
-    protected boolean checkMatches(@NotNull TbMsg msg) throws TbNodeException {
+    protected boolean checkMatches(TbMsg msg) throws TbNodeException {
         JsonElement msgDataElement = new JsonParser().parse(msg.getData());
         if (!msgDataElement.isJsonObject()) {
             throw new TbNodeException("Incoming Message is not a valid JSON object");
@@ -41,9 +40,9 @@ public abstract class AbstractGeofencingNode<T extends TbGpsGeofencingFilterNode
         JsonObject msgDataObj = msgDataElement.getAsJsonObject();
         double latitude = getValueFromMessageByName(msg, msgDataObj, config.getLatitudeKeyName());
         double longitude = getValueFromMessageByName(msg, msgDataObj, config.getLongitudeKeyName());
-        @NotNull List<Perimeter> perimeters = getPerimeters(msg, msgDataObj);
+        List<Perimeter> perimeters = getPerimeters(msg, msgDataObj);
         boolean matches = false;
-        for (@NotNull Perimeter perimeter : perimeters) {
+        for (Perimeter perimeter : perimeters) {
             if (checkMatches(perimeter, latitude, longitude)) {
                 matches = true;
                 break;
@@ -52,10 +51,10 @@ public abstract class AbstractGeofencingNode<T extends TbGpsGeofencingFilterNode
         return matches;
     }
 
-    protected boolean checkMatches(@NotNull Perimeter perimeter, double latitude, double longitude) throws TbNodeException {
+    protected boolean checkMatches(Perimeter perimeter, double latitude, double longitude) throws TbNodeException {
         if (perimeter.getPerimeterType() == PerimeterType.CIRCLE) {
-            @NotNull Coordinates entityCoordinates = new Coordinates(latitude, longitude);
-            @NotNull Coordinates perimeterCoordinates = new Coordinates(perimeter.getCenterLatitude(), perimeter.getCenterLongitude());
+            Coordinates entityCoordinates = new Coordinates(latitude, longitude);
+            Coordinates perimeterCoordinates = new Coordinates(perimeter.getCenterLatitude(), perimeter.getCenterLongitude());
             return perimeter.getRange() > GeoUtil.distance(entityCoordinates, perimeterCoordinates, perimeter.getRangeUnit());
         } else if (perimeter.getPerimeterType() == PerimeterType.POLYGON) {
             return GeoUtil.contains(perimeter.getPolygonsDefinition(), new Coordinates(latitude, longitude));
@@ -64,19 +63,18 @@ public abstract class AbstractGeofencingNode<T extends TbGpsGeofencingFilterNode
         }
     }
 
-    @NotNull
-    protected List<Perimeter> getPerimeters(@NotNull TbMsg msg, JsonObject msgDataObj) throws TbNodeException {
+    protected List<Perimeter> getPerimeters(TbMsg msg, JsonObject msgDataObj) throws TbNodeException {
         if (config.isFetchPerimeterInfoFromMessageMetadata()) {
             if (StringUtils.isEmpty(config.getPerimeterKeyName())) {
                 // Old configuration before "perimeterKeyName" was introduced
                 String perimeterValue = msg.getMetaData().getValue("perimeter");
                 if (!StringUtils.isEmpty(perimeterValue)) {
-                    @NotNull Perimeter perimeter = new Perimeter();
+                    Perimeter perimeter = new Perimeter();
                     perimeter.setPerimeterType(PerimeterType.POLYGON);
                     perimeter.setPolygonsDefinition(perimeterValue);
                     return Collections.singletonList(perimeter);
                 } else if (!StringUtils.isEmpty(msg.getMetaData().getValue("centerLatitude"))) {
-                    @NotNull Perimeter perimeter = new Perimeter();
+                    Perimeter perimeter = new Perimeter();
                     perimeter.setPerimeterType(PerimeterType.CIRCLE);
                     perimeter.setCenterLatitude(Double.parseDouble(msg.getMetaData().getValue("centerLatitude")));
                     perimeter.setCenterLongitude(Double.parseDouble(msg.getMetaData().getValue("centerLongitude")));
@@ -90,13 +88,13 @@ public abstract class AbstractGeofencingNode<T extends TbGpsGeofencingFilterNode
                 String perimeterValue = msg.getMetaData().getValue(config.getPerimeterKeyName());
                 if (!StringUtils.isEmpty(perimeterValue)) {
                     if (config.getPerimeterType().equals(PerimeterType.POLYGON)) {
-                        @NotNull Perimeter perimeter = new Perimeter();
+                        Perimeter perimeter = new Perimeter();
                         perimeter.setPerimeterType(PerimeterType.POLYGON);
                         perimeter.setPolygonsDefinition(perimeterValue);
                         return Collections.singletonList(perimeter);
                     } else {
                         var circleDef = JacksonUtil.toJsonNode(perimeterValue);
-                        @NotNull Perimeter perimeter = new Perimeter();
+                        Perimeter perimeter = new Perimeter();
                         perimeter.setPerimeterType(PerimeterType.CIRCLE);
                         perimeter.setCenterLatitude(circleDef.get("latitude").asDouble());
                         perimeter.setCenterLongitude(circleDef.get("longitude").asDouble());
@@ -109,7 +107,7 @@ public abstract class AbstractGeofencingNode<T extends TbGpsGeofencingFilterNode
                 }
             }
         } else {
-            @NotNull Perimeter perimeter = new Perimeter();
+            Perimeter perimeter = new Perimeter();
             perimeter.setPerimeterType(config.getPerimeterType());
             perimeter.setCenterLatitude(config.getCenterLatitude());
             perimeter.setCenterLongitude(config.getCenterLongitude());
@@ -120,8 +118,7 @@ public abstract class AbstractGeofencingNode<T extends TbGpsGeofencingFilterNode
         }
     }
 
-    @NotNull
-    protected Double getValueFromMessageByName(@NotNull TbMsg msg, @NotNull JsonObject msgDataObj, String keyName) throws TbNodeException {
+    protected Double getValueFromMessageByName(TbMsg msg, JsonObject msgDataObj, String keyName) throws TbNodeException {
         double value;
         if (msgDataObj.has(keyName) && msgDataObj.get(keyName).isJsonPrimitive()) {
             value = msgDataObj.get(keyName).getAsDouble();

@@ -3,7 +3,6 @@ package org.echoiot.server.dao.model.sql;
 import lombok.Data;
 import org.echoiot.server.common.data.kv.*;
 import org.echoiot.server.dao.model.ToData;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.persistence.Column;
@@ -40,7 +39,6 @@ public class AttributeKvEntity implements ToData<AttributeKvEntry>, Serializable
     @Column(name = LAST_UPDATE_TS_COLUMN)
     private Long lastUpdateTs;
 
-    @NotNull
     @Override
     public AttributeKvEntry toData() {
         @Nullable KvEntry kvEntry = null;

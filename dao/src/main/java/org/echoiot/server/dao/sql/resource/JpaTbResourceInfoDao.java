@@ -10,7 +10,6 @@ import org.echoiot.server.dao.model.sql.TbResourceInfoEntity;
 import org.echoiot.server.dao.resource.TbResourceInfoDao;
 import org.echoiot.server.dao.sql.JpaAbstractSearchTextDao;
 import org.echoiot.server.dao.util.SqlDao;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +25,6 @@ public class JpaTbResourceInfoDao extends JpaAbstractSearchTextDao<TbResourceInf
     @Resource
     private TbResourceInfoRepository resourceInfoRepository;
 
-    @NotNull
     @Override
     protected Class<TbResourceInfoEntity> getEntityClass() {
         return TbResourceInfoEntity.class;
@@ -37,9 +35,8 @@ public class JpaTbResourceInfoDao extends JpaAbstractSearchTextDao<TbResourceInf
         return resourceInfoRepository;
     }
 
-    @NotNull
     @Override
-    public PageData<TbResourceInfo> findAllTenantResourcesByTenantId(UUID tenantId, @NotNull PageLink pageLink) {
+    public PageData<TbResourceInfo> findAllTenantResourcesByTenantId(UUID tenantId, PageLink pageLink) {
         return DaoUtil.toPageData(resourceInfoRepository
                 .findAllTenantResourcesByTenantId(
                         tenantId,
@@ -48,9 +45,8 @@ public class JpaTbResourceInfoDao extends JpaAbstractSearchTextDao<TbResourceInf
                         DaoUtil.toPageable(pageLink)));
     }
 
-    @NotNull
     @Override
-    public PageData<TbResourceInfo> findTenantResourcesByTenantId(UUID tenantId, @NotNull PageLink pageLink) {
+    public PageData<TbResourceInfo> findTenantResourcesByTenantId(UUID tenantId, PageLink pageLink) {
         return DaoUtil.toPageData(resourceInfoRepository
                 .findTenantResourcesByTenantId(
                         tenantId,

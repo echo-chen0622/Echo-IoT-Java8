@@ -9,7 +9,6 @@ import org.echoiot.server.dao.model.sql.ApiUsageStateEntity;
 import org.echoiot.server.dao.sql.JpaAbstractDao;
 import org.echoiot.server.dao.usagerecord.ApiUsageStateDao;
 import org.echoiot.server.dao.util.SqlDao;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
@@ -28,7 +27,6 @@ public class JpaApiUsageStateDao extends JpaAbstractDao<ApiUsageStateEntity, Api
         this.apiUsageStateRepository = apiUsageStateRepository;
     }
 
-    @NotNull
     @Override
     protected Class<ApiUsageStateEntity> getEntityClass() {
         return ApiUsageStateEntity.class;
@@ -45,21 +43,20 @@ public class JpaApiUsageStateDao extends JpaAbstractDao<ApiUsageStateEntity, Api
     }
 
     @Override
-    public ApiUsageState findApiUsageStateByEntityId(@NotNull EntityId entityId) {
+    public ApiUsageState findApiUsageStateByEntityId(EntityId entityId) {
         return DaoUtil.getData(apiUsageStateRepository.findByEntityIdAndEntityType(entityId.getId(), entityId.getEntityType().name()));
     }
 
     @Override
-    public void deleteApiUsageStateByTenantId(@NotNull TenantId tenantId) {
+    public void deleteApiUsageStateByTenantId(TenantId tenantId) {
         apiUsageStateRepository.deleteApiUsageStateByTenantId(tenantId.getId());
     }
 
     @Override
-    public void deleteApiUsageStateByEntityId(@NotNull EntityId entityId) {
+    public void deleteApiUsageStateByEntityId(EntityId entityId) {
         apiUsageStateRepository.deleteByEntityIdAndEntityType(entityId.getId(), entityId.getEntityType().name());
     }
 
-    @NotNull
     @Override
     public EntityType getEntityType() {
         return EntityType.API_USAGE_STATE;

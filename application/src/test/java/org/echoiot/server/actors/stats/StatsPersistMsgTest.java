@@ -1,7 +1,6 @@
 package org.echoiot.server.actors.stats;
 
 import org.echoiot.server.common.data.id.TenantId;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -10,7 +9,7 @@ class StatsPersistMsgTest {
 
     @Test
     void testIsEmpty() {
-        @NotNull StatsPersistMsg emptyStats = new StatsPersistMsg(0, 0, TenantId.SYS_TENANT_ID, TenantId.SYS_TENANT_ID);
+        StatsPersistMsg emptyStats = new StatsPersistMsg(0, 0, TenantId.SYS_TENANT_ID, TenantId.SYS_TENANT_ID);
         assertThat(emptyStats.isEmpty()).isTrue();
     }
 

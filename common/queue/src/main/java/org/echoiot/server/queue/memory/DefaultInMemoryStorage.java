@@ -2,7 +2,6 @@ package org.echoiot.server.queue.memory;
 
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.queue.TbQueueMsg;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -34,11 +33,10 @@ public final class DefaultInMemoryStorage implements InMemoryStorage {
     }
 
     @Override
-    public boolean put(String topic, @NotNull TbQueueMsg msg) {
+    public boolean put(String topic, TbQueueMsg msg) {
         return storage.computeIfAbsent(topic, (t) -> new LinkedBlockingQueue<>()).add(msg);
     }
 
-    @NotNull
     @SuppressWarnings("unchecked")
     @Override
     public <T extends TbQueueMsg> List<T> get(String topic) throws InterruptedException {
@@ -48,7 +46,7 @@ public final class DefaultInMemoryStorage implements InMemoryStorage {
             if (firstMsg != null) {
                 final int queueSize = queue.size();
                 if (queueSize > 0) {
-                    @NotNull final List<TbQueueMsg> entities = new ArrayList<>(Math.min(queueSize, 999) + 1);
+                    final List<TbQueueMsg> entities = new ArrayList<>(Math.min(queueSize, 999) + 1);
                     entities.add(firstMsg);
                     queue.drainTo(entities, 999);
                     return (List<T>) entities;

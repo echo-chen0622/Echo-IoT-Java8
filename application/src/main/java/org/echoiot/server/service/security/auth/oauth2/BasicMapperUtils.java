@@ -5,7 +5,6 @@ import org.apache.commons.lang3.text.StrSubstitutor;
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.oauth2.OAuth2MapperConfig;
 import org.echoiot.server.dao.oauth2.OAuth2User;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
@@ -15,9 +14,8 @@ public class BasicMapperUtils {
     private static final String START_PLACEHOLDER_PREFIX = "%{";
     private static final String END_PLACEHOLDER_PREFIX = "}";
 
-    @NotNull
-    public static OAuth2User getOAuth2User(@NotNull String email, @NotNull Map<String, Object> attributes, @NotNull OAuth2MapperConfig config) {
-        @NotNull OAuth2User oauth2User = new OAuth2User();
+    public static OAuth2User getOAuth2User(String email, Map<String, Object> attributes, OAuth2MapperConfig config) {
+        OAuth2User oauth2User = new OAuth2User();
         oauth2User.setEmail(email);
         oauth2User.setTenantName(getTenantName(email, attributes, config));
         if (!StringUtils.isEmpty(config.getBasic().getLastNameAttributeKey())) {
@@ -29,7 +27,7 @@ public class BasicMapperUtils {
             oauth2User.setFirstName(firstName);
         }
         if (!StringUtils.isEmpty(config.getBasic().getCustomerNamePattern())) {
-            @NotNull StrSubstitutor sub = new StrSubstitutor(attributes, START_PLACEHOLDER_PREFIX, END_PLACEHOLDER_PREFIX);
+            StrSubstitutor sub = new StrSubstitutor(attributes, START_PLACEHOLDER_PREFIX, END_PLACEHOLDER_PREFIX);
             String customerName = sub.replace(config.getBasic().getCustomerNamePattern());
             oauth2User.setCustomerName(customerName);
         }
@@ -40,14 +38,14 @@ public class BasicMapperUtils {
         return oauth2User;
     }
 
-    public static String getTenantName(@NotNull String email, Map<String, Object> attributes, @NotNull OAuth2MapperConfig config) {
+    public static String getTenantName(String email, Map<String, Object> attributes, OAuth2MapperConfig config) {
         switch (config.getBasic().getTenantNameStrategy()) {
             case EMAIL:
                 return email;
             case DOMAIN:
                 return email.substring(email .indexOf("@") + 1);
             case CUSTOM:
-                @NotNull StrSubstitutor sub = new StrSubstitutor(attributes, START_PLACEHOLDER_PREFIX, END_PLACEHOLDER_PREFIX);
+                StrSubstitutor sub = new StrSubstitutor(attributes, START_PLACEHOLDER_PREFIX, END_PLACEHOLDER_PREFIX);
                 return sub.replace(config.getBasic().getTenantNamePattern());
             default:
                 throw new RuntimeException("Tenant Name Strategy with type " + config.getBasic().getTenantNameStrategy() + " is not supported!");
@@ -55,7 +53,7 @@ public class BasicMapperUtils {
     }
 
     @Nullable
-    public static String getStringAttributeByKey(@NotNull Map<String, Object> attributes, String key) {
+    public static String getStringAttributeByKey(Map<String, Object> attributes, String key) {
         @Nullable String result = null;
         try {
             result = (String) attributes.get(key);

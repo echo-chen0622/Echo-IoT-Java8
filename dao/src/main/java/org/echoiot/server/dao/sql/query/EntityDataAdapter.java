@@ -6,7 +6,6 @@ import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.EntityIdFactory;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.query.*;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -17,32 +16,29 @@ import java.util.stream.Collectors;
 
 public class EntityDataAdapter {
 
-    @NotNull
-    public static PageData<EntityData> createEntityData(@NotNull EntityDataPageLink pageLink,
-                                                        @NotNull List<EntityKeyMapping> selectionMapping,
-                                                        @NotNull List<Map<String, Object>> rows,
+    public static PageData<EntityData> createEntityData(EntityDataPageLink pageLink,
+                                                        List<EntityKeyMapping> selectionMapping,
+                                                        List<Map<String, Object>> rows,
                                                         int totalElements) {
         int totalPages = pageLink.getPageSize() > 0 ? (int) Math.ceil((float) totalElements / pageLink.getPageSize()) : 1;
         int startIndex = pageLink.getPageSize() * pageLink.getPage();
         boolean hasNext = pageLink.getPageSize() > 0 && totalElements > startIndex + rows.size();
-        @NotNull List<EntityData> entitiesData = convertListToEntityData(rows, selectionMapping);
+        List<EntityData> entitiesData = convertListToEntityData(rows, selectionMapping);
         return new PageData<>(entitiesData, totalPages, totalElements, hasNext);
     }
 
-    @NotNull
-    private static List<EntityData> convertListToEntityData(@NotNull List<Map<String, Object>> result, @NotNull List<EntityKeyMapping> selectionMapping) {
+    private static List<EntityData> convertListToEntityData(List<Map<String, Object>> result, List<EntityKeyMapping> selectionMapping) {
         return result.stream().map(row -> toEntityData(row, selectionMapping)).collect(Collectors.toList());
     }
 
-    @NotNull
-    private static EntityData toEntityData(@NotNull Map<String, Object> row, @NotNull List<EntityKeyMapping> selectionMapping) {
+    private static EntityData toEntityData(Map<String, Object> row, List<EntityKeyMapping> selectionMapping) {
         UUID id = (UUID)row.get("id");
-        @NotNull EntityType entityType = EntityType.valueOf((String) row.get("entity_type"));
+        EntityType entityType = EntityType.valueOf((String) row.get("entity_type"));
         EntityId entityId = EntityIdFactory.getByTypeAndUuid(entityType, id);
-        @NotNull Map<EntityKeyType, Map<String, TsValue>> latest = new HashMap<>();
+        Map<EntityKeyType, Map<String, TsValue>> latest = new HashMap<>();
         //Maybe avoid empty hashmaps?
-        @NotNull EntityData entityData = new EntityData(entityId, latest, new HashMap<>(), new HashMap<>());
-        for (@NotNull EntityKeyMapping mapping : selectionMapping) {
+        EntityData entityData = new EntityData(entityId, latest, new HashMap<>(), new HashMap<>());
+        for (EntityKeyMapping mapping : selectionMapping) {
             if (!mapping.isIgnore()) {
                 EntityKey entityKey = mapping.getEntityKey();
                 Object value = row.get(mapping.getValueAlias());
@@ -56,7 +52,7 @@ public class EntityDataAdapter {
                     Object tsObject = row.get(mapping.getTsAlias());
                     ts = tsObject != null ? Long.parseLong(tsObject.toString()) : 0;
                 }
-                @NotNull TsValue tsValue = new TsValue(ts, strValue);
+                TsValue tsValue = new TsValue(ts, strValue);
                 latest.computeIfAbsent(entityKey.getType(), entityKeyType -> new HashMap<>()).put(entityKey.getKey(), tsValue);
             }
         }
@@ -91,7 +87,7 @@ public class EntityDataAdapter {
         }
     }
 
-    private static boolean isSimpleDouble(@NotNull String valueAsString) {
+    private static boolean isSimpleDouble(String valueAsString) {
         return valueAsString.contains(".") && !valueAsString.contains("E") && !valueAsString.contains("e");
     }
 

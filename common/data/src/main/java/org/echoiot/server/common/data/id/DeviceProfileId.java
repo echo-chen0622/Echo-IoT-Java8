@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import org.echoiot.server.common.data.EntityType;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
@@ -17,12 +16,10 @@ public class DeviceProfileId extends UUIDBased implements EntityId {
         super(id);
     }
 
-    @NotNull
-    public static DeviceProfileId fromString(@NotNull String deviceProfileId) {
+    public static DeviceProfileId fromString(String deviceProfileId) {
         return new DeviceProfileId(UUID.fromString(deviceProfileId));
     }
 
-    @NotNull
     @ApiModelProperty(position = 2, required = true, value = "string", example = "DEVICE_PROFILE", allowableValues = "DEVICE_PROFILE")
     @Override
     public EntityType getEntityType() {

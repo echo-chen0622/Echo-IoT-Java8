@@ -5,7 +5,6 @@ import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.UUIDConverter;
 import org.echoiot.server.dao.cassandra.CassandraCluster;
 import org.echoiot.server.dao.util.NoSqlAnyDao;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -65,7 +64,7 @@ public class CassandraEntitiesToSqlMigrateService {
                 stringColumn("additional_info")) {
             @Override
             protected boolean onConstraintViolation(List<CassandraToSqlColumnData[]> batchData,
-                                                    @NotNull CassandraToSqlColumnData[] data, @NotNull String constraint) {
+                                                    CassandraToSqlColumnData[] data, String constraint) {
                 if (constraint.equalsIgnoreCase("asset_name_unq_key")) {
                     this.handleUniqueNameViolation(data, "asset");
                     return true;
@@ -107,8 +106,8 @@ public class CassandraEntitiesToSqlMigrateService {
                 stringColumn("configuration_descriptor"),
                 stringColumn("actions")) {
             @Override
-            protected boolean onConstraintViolation(@NotNull List<CassandraToSqlColumnData[]> batchData,
-                                                    @NotNull CassandraToSqlColumnData[] data, @NotNull String constraint) {
+            protected boolean onConstraintViolation(List<CassandraToSqlColumnData[]> batchData,
+                                                    CassandraToSqlColumnData[] data, String constraint) {
                 if (constraint.equalsIgnoreCase("component_descriptor_clazz_key")) {
                     String clazz = this.getColumnData(data, "clazz").getValue();
                     log.warn("Found component_descriptor record with duplicate clazz [{}]. Record will be ignored!", clazz);
@@ -150,7 +149,7 @@ public class CassandraEntitiesToSqlMigrateService {
                 stringColumn("additional_info")) {
             @Override
             protected boolean onConstraintViolation(List<CassandraToSqlColumnData[]> batchData,
-                                                    @NotNull CassandraToSqlColumnData[] data, @NotNull String constraint) {
+                                                    CassandraToSqlColumnData[] data, String constraint) {
                 if (constraint.equalsIgnoreCase("device_name_unq_key")) {
                     this.handleUniqueNameViolation(data, "device");
                     return true;
@@ -193,7 +192,7 @@ public class CassandraEntitiesToSqlMigrateService {
                 stringColumn("additional_info")) {
             @Override
             protected boolean onConstraintViolation(List<CassandraToSqlColumnData[]> batchData,
-                                                    @NotNull CassandraToSqlColumnData[] data, @NotNull String constraint) {
+                                                    CassandraToSqlColumnData[] data, String constraint) {
                 if (constraint.equalsIgnoreCase("tb_user_email_key")) {
                     this.handleUniqueEmailViolation(data);
                     return true;
@@ -225,8 +224,8 @@ public class CassandraEntitiesToSqlMigrateService {
                 stringColumn("activate_token"),
                 stringColumn("reset_token")) {
             @Override
-            protected boolean onConstraintViolation(@NotNull List<CassandraToSqlColumnData[]> batchData,
-                                                    @NotNull CassandraToSqlColumnData[] data, @NotNull String constraint) {
+            protected boolean onConstraintViolation(List<CassandraToSqlColumnData[]> batchData,
+                                                    CassandraToSqlColumnData[] data, String constraint) {
                 if (constraint.equalsIgnoreCase("user_credentials_user_id_key")) {
                     String id = UUIDConverter.fromString(this.getColumnData(data, "id").getValue()).toString();
                     log.warn("Found user credentials record with duplicate user_id [id:[{}]]. Record will be ignored!", id);

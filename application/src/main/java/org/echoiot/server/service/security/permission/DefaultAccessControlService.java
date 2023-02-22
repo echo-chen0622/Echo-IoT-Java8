@@ -7,7 +7,6 @@ import org.echoiot.server.common.data.exception.EchoiotException;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.security.Authority;
 import org.echoiot.server.service.security.model.SecurityUser;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -34,8 +33,8 @@ public class DefaultAccessControlService implements AccessControlService {
     }
 
     @Override
-    public void checkPermission(@NotNull SecurityUser user, PerResource perResource, Operation operation) throws EchoiotException {
-        @NotNull PermissionChecker permissionChecker = getPermissionChecker(user.getAuthority(), perResource);
+    public void checkPermission(SecurityUser user, PerResource perResource, Operation operation) throws EchoiotException {
+        PermissionChecker permissionChecker = getPermissionChecker(user.getAuthority(), perResource);
         if (!permissionChecker.hasPermission(user, operation)) {
             permissionDenied();
         }
@@ -43,15 +42,14 @@ public class DefaultAccessControlService implements AccessControlService {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <I extends EntityId, T extends HasTenantId> void checkPermission(@NotNull SecurityUser user, PerResource perResource,
+    public <I extends EntityId, T extends HasTenantId> void checkPermission(SecurityUser user, PerResource perResource,
                                                                             Operation operation, I entityId, T entity) throws EchoiotException {
-        @NotNull PermissionChecker permissionChecker = getPermissionChecker(user.getAuthority(), perResource);
+        PermissionChecker permissionChecker = getPermissionChecker(user.getAuthority(), perResource);
         if (!permissionChecker.hasPermission(user, operation, entityId, entity)) {
             permissionDenied();
         }
     }
 
-    @NotNull
     private PermissionChecker getPermissionChecker(Authority authority, PerResource perResource) throws EchoiotException {
         Permissions permissions = authorityPermissions.get(authority);
         if (permissions == null) {

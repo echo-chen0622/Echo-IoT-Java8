@@ -9,7 +9,6 @@ import org.echoiot.server.common.data.security.DeviceCredentials;
 import org.echoiot.server.gen.edge.v1.*;
 import org.echoiot.server.queue.util.DataDecodingEncodingService;
 import org.echoiot.server.queue.util.TbCoreComponent;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -23,8 +22,7 @@ public class DeviceMsgConstructor {
     @Resource
     private DataDecodingEncodingService dataDecodingEncodingService;
 
-    @NotNull
-    public DeviceUpdateMsg constructDeviceUpdatedMsg(UpdateMsgType msgType, @NotNull Device device, @Nullable String conflictName) {
+    public DeviceUpdateMsg constructDeviceUpdatedMsg(UpdateMsgType msgType, Device device, @Nullable String conflictName) {
         DeviceUpdateMsg.Builder builder = DeviceUpdateMsg.newBuilder()
                 .setMsgType(msgType)
                 .setIdMSB(device.getId().getId().getMostSignificantBits())
@@ -58,9 +56,8 @@ public class DeviceMsgConstructor {
         return builder.build();
     }
 
-    @NotNull
-    public DeviceCredentialsUpdateMsg constructDeviceCredentialsUpdatedMsg(@NotNull DeviceCredentials deviceCredentials) {
-        @NotNull DeviceCredentialsUpdateMsg.Builder builder = DeviceCredentialsUpdateMsg.newBuilder()
+    public DeviceCredentialsUpdateMsg constructDeviceCredentialsUpdatedMsg(DeviceCredentials deviceCredentials) {
+        DeviceCredentialsUpdateMsg.Builder builder = DeviceCredentialsUpdateMsg.newBuilder()
                                                                                         .setDeviceIdMSB(deviceCredentials.getDeviceId().getId().getMostSignificantBits())
                                                                                         .setDeviceIdLSB(deviceCredentials.getDeviceId().getId().getLeastSignificantBits());
         if (deviceCredentials.getCredentialsType() != null) {
@@ -73,17 +70,15 @@ public class DeviceMsgConstructor {
         return builder.build();
     }
 
-    @NotNull
-    public DeviceUpdateMsg constructDeviceDeleteMsg(@NotNull DeviceId deviceId) {
+    public DeviceUpdateMsg constructDeviceDeleteMsg(DeviceId deviceId) {
         return DeviceUpdateMsg.newBuilder()
                 .setMsgType(UpdateMsgType.ENTITY_DELETED_RPC_MESSAGE)
                 .setIdMSB(deviceId.getId().getMostSignificantBits())
                 .setIdLSB(deviceId.getId().getLeastSignificantBits()).build();
     }
 
-    @NotNull
-    public DeviceRpcCallMsg constructDeviceRpcCallMsg(@NotNull UUID deviceId, @NotNull JsonNode body) {
-        @NotNull DeviceRpcCallMsg.Builder builder = constructDeviceRpcMsg(deviceId, body);
+    public DeviceRpcCallMsg constructDeviceRpcCallMsg(UUID deviceId, JsonNode body) {
+        DeviceRpcCallMsg.Builder builder = constructDeviceRpcMsg(deviceId, body);
         if (body.has("error") || body.has("response")) {
             RpcResponseMsg.Builder responseBuilder = RpcResponseMsg.newBuilder();
             if (body.has("error")) {
@@ -101,9 +96,8 @@ public class DeviceMsgConstructor {
         return builder.build();
     }
 
-    @NotNull
-    private DeviceRpcCallMsg.Builder constructDeviceRpcMsg(@NotNull UUID deviceId, @NotNull JsonNode body) {
-        @NotNull DeviceRpcCallMsg.Builder builder = DeviceRpcCallMsg.newBuilder()
+    private DeviceRpcCallMsg.Builder constructDeviceRpcMsg(UUID deviceId, JsonNode body) {
+        DeviceRpcCallMsg.Builder builder = DeviceRpcCallMsg.newBuilder()
                                                                     .setDeviceIdMSB(deviceId.getMostSignificantBits())
                                                                     .setDeviceIdLSB(deviceId.getLeastSignificantBits())
                                                                     .setRequestId(body.get("requestId").asInt());
@@ -111,7 +105,7 @@ public class DeviceMsgConstructor {
             builder.setOneway(body.get("oneway").asBoolean());
         }
         if (body.get("requestUUID") != null) {
-            @NotNull UUID requestUUID = UUID.fromString(body.get("requestUUID").asText());
+            UUID requestUUID = UUID.fromString(body.get("requestUUID").asText());
             builder.setRequestUuidMSB(requestUUID.getMostSignificantBits())
                     .setRequestUuidLSB(requestUUID.getLeastSignificantBits());
         }

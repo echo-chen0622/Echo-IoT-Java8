@@ -6,7 +6,6 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.handler.codec.mqtt.MqttQoS;
 import io.netty.util.concurrent.Future;
-import org.jetbrains.annotations.NotNull;
 
 public interface MqttClient {
 
@@ -166,7 +165,6 @@ public interface MqttClient {
      * @param config The config object to use while looking for settings
      * @param defaultHandler The handler for incoming messages that do not match any topic subscriptions
      */
-    @NotNull
     static MqttClient create(MqttClientConfig config, MqttHandler defaultHandler){
         return new MqttClientImpl(config, defaultHandler);
     }

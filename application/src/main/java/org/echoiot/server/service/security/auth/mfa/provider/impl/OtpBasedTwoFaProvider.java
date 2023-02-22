@@ -8,7 +8,6 @@ import org.echoiot.server.common.data.security.model.mfa.account.OtpBasedTwoFaAc
 import org.echoiot.server.common.data.security.model.mfa.provider.OtpBasedTwoFaProviderConfig;
 import org.echoiot.server.service.security.auth.mfa.provider.TwoFaProvider;
 import org.echoiot.server.service.security.model.SecurityUser;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
@@ -21,14 +20,14 @@ public abstract class OtpBasedTwoFaProvider<C extends OtpBasedTwoFaProviderConfi
     @Nullable
     private final Cache verificationCodesCache;
 
-    protected OtpBasedTwoFaProvider(@NotNull CacheManager cacheManager) {
+    protected OtpBasedTwoFaProvider(CacheManager cacheManager) {
         this.verificationCodesCache = cacheManager.getCache(CacheConstants.TWO_FA_VERIFICATION_CODES_CACHE);
     }
 
 
     @Override
-    public final void prepareVerificationCode(@NotNull SecurityUser user, C providerConfig, A accountConfig) throws EchoiotException {
-        @NotNull String verificationCode = StringUtils.randomNumeric(6);
+    public final void prepareVerificationCode(SecurityUser user, C providerConfig, A accountConfig) throws EchoiotException {
+        String verificationCode = StringUtils.randomNumeric(6);
         sendVerificationCode(user, verificationCode, providerConfig, accountConfig);
         verificationCodesCache.put(user.getId(), new Otp(System.currentTimeMillis(), verificationCode, accountConfig));
     }
@@ -37,7 +36,7 @@ public abstract class OtpBasedTwoFaProvider<C extends OtpBasedTwoFaProviderConfi
 
 
     @Override
-    public final boolean checkVerificationCode(@NotNull SecurityUser user, @NotNull String code, @NotNull C providerConfig, @NotNull A accountConfig) {
+    public final boolean checkVerificationCode(SecurityUser user, String code, C providerConfig, A accountConfig) {
         @Nullable Otp correctVerificationCode = verificationCodesCache.get(user.getId(), Otp.class);
         if (correctVerificationCode != null) {
             if (System.currentTimeMillis() - correctVerificationCode.getTimestamp()
@@ -58,10 +57,8 @@ public abstract class OtpBasedTwoFaProvider<C extends OtpBasedTwoFaProviderConfi
     @Data
     public static class Otp implements Serializable {
         private final long timestamp;
-        @NotNull
-        private final String value;
-        @NotNull
-        private final OtpBasedTwoFaAccountConfig accountConfig;
+            private final String value;
+            private final OtpBasedTwoFaAccountConfig accountConfig;
     }
 
 }

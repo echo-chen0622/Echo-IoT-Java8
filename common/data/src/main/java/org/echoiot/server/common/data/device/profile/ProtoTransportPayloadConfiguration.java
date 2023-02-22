@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.DynamicProtoUtils;
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.TransportPayloadType;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Slf4j
@@ -30,7 +29,6 @@ public class ProtoTransportPayloadConfiguration implements TransportPayloadTypeC
     private boolean enableCompatibilityWithJsonPayloadFormat;
     private boolean useJsonPayloadFormatForDefaultDownlinkTopics;
 
-    @NotNull
     @Override
     public TransportPayloadType getTransportPayloadType() {
         return TransportPayloadType.PROTOBUF;
@@ -55,7 +53,6 @@ public class ProtoTransportPayloadConfiguration implements TransportPayloadTypeC
         return DynamicProtoUtils.getDynamicMessageBuilder(deviceRpcRequestProtoSchema, RPC_REQUEST_PROTO_SCHEMA);
     }
 
-    @NotNull
     public String getDeviceRpcResponseProtoSchema() {
         if (StringUtils.isNotEmpty(deviceRpcResponseProtoSchema)) {
             return deviceRpcResponseProtoSchema;
@@ -69,7 +66,6 @@ public class ProtoTransportPayloadConfiguration implements TransportPayloadTypeC
         }
     }
 
-    @NotNull
     public String getDeviceRpcRequestProtoSchema() {
         if (StringUtils.isNotEmpty(deviceRpcRequestProtoSchema)) {
             return deviceRpcRequestProtoSchema;

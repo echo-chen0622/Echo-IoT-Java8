@@ -12,7 +12,6 @@ import org.echoiot.server.gen.edge.v1.EntityViewUpdateMsg;
 import org.echoiot.server.gen.edge.v1.UpdateMsgType;
 import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.queue.util.TbCoreComponent;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -22,8 +21,8 @@ import org.springframework.stereotype.Component;
 public class EntityViewEdgeProcessor extends BaseEdgeProcessor {
 
     @Nullable
-    public DownlinkMsg convertEntityViewEventToDownlink(@NotNull EdgeEvent edgeEvent) {
-        @NotNull EntityViewId entityViewId = new EntityViewId(edgeEvent.getEntityId());
+    public DownlinkMsg convertEntityViewEventToDownlink(EdgeEvent edgeEvent) {
+        EntityViewId entityViewId = new EntityViewId(edgeEvent.getEntityId());
         @Nullable DownlinkMsg downlinkMsg = null;
         switch (edgeEvent.getAction()) {
             case ADDED:
@@ -33,7 +32,7 @@ public class EntityViewEdgeProcessor extends BaseEdgeProcessor {
             case UNASSIGNED_FROM_CUSTOMER:
                 EntityView entityView = entityViewService.findEntityViewById(edgeEvent.getTenantId(), entityViewId);
                 if (entityView != null) {
-                    @NotNull UpdateMsgType msgType = getUpdateMsgType(edgeEvent.getAction());
+                    UpdateMsgType msgType = getUpdateMsgType(edgeEvent.getAction());
                     EntityViewUpdateMsg entityViewUpdateMsg =
                             entityViewMsgConstructor.constructEntityViewUpdatedMsg(msgType, entityView);
                     downlinkMsg = DownlinkMsg.newBuilder()
@@ -55,7 +54,7 @@ public class EntityViewEdgeProcessor extends BaseEdgeProcessor {
         return downlinkMsg;
     }
 
-    public ListenableFuture<Void> processEntityViewNotification(TenantId tenantId, @NotNull TransportProtos.EdgeNotificationMsgProto edgeNotificationMsg) {
+    public ListenableFuture<Void> processEntityViewNotification(TenantId tenantId, TransportProtos.EdgeNotificationMsgProto edgeNotificationMsg) {
         return processEntityNotification(tenantId, edgeNotificationMsg);
     }
 }

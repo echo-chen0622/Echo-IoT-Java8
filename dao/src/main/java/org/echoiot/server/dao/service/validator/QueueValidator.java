@@ -10,7 +10,6 @@ import org.echoiot.server.dao.exception.DataValidationException;
 import org.echoiot.server.dao.queue.QueueDao;
 import org.echoiot.server.dao.service.DataValidator;
 import org.echoiot.server.dao.tenant.TbTenantProfileCache;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -25,7 +24,7 @@ public class QueueValidator extends DataValidator<Queue> {
     private TbTenantProfileCache tenantProfileCache;
 
     @Override
-    protected void validateCreate(TenantId tenantId, @NotNull Queue queue) {
+    protected void validateCreate(TenantId tenantId, Queue queue) {
         if (queueDao.findQueueByTenantIdAndName(tenantId, queue.getName()) != null) {
             throw new DataValidationException(String.format("Queue with name: %s already exists!", queue.getName()));
         }
@@ -34,9 +33,8 @@ public class QueueValidator extends DataValidator<Queue> {
         }
     }
 
-    @NotNull
     @Override
-    protected Queue validateUpdate(TenantId tenantId, @NotNull Queue queue) {
+    protected Queue validateUpdate(TenantId tenantId, Queue queue) {
         Queue foundQueue = queueDao.findById(tenantId, queue.getUuidId());
         if (queueDao.findById(tenantId, queue.getUuidId()) == null) {
             throw new DataValidationException(String.format("Queue with id: %s does not exists!", queue.getId()));
@@ -51,7 +49,7 @@ public class QueueValidator extends DataValidator<Queue> {
     }
 
     @Override
-    protected void validateDataImpl(@NotNull TenantId tenantId, @NotNull Queue queue) {
+    protected void validateDataImpl(TenantId tenantId, Queue queue) {
         if (!tenantId.equals(TenantId.SYS_TENANT_ID)) {
             TenantProfile tenantProfile = tenantProfileCache.get(tenantId);
 

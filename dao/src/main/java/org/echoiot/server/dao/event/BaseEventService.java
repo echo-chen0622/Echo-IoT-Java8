@@ -11,7 +11,6 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.TimePageLink;
 import org.echoiot.server.dao.service.DataValidator;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -41,37 +40,37 @@ public class BaseEventService implements EventService {
     private DataValidator<Event> eventValidator;
 
     @Override
-    public ListenableFuture<Void> saveAsync(@NotNull Event event) {
+    public ListenableFuture<Void> saveAsync(Event event) {
         eventValidator.validate(event, Event::getTenantId);
         checkAndTruncateDebugEvent(event);
         return eventDao.saveAsync(event);
     }
 
-    private void checkAndTruncateDebugEvent(@NotNull Event event) {
+    private void checkAndTruncateDebugEvent(Event event) {
         switch (event.getType()) {
             case DEBUG_RULE_NODE:
-                @NotNull RuleNodeDebugEvent rnEvent = (RuleNodeDebugEvent) event;
+                RuleNodeDebugEvent rnEvent = (RuleNodeDebugEvent) event;
                 truncateField(rnEvent, RuleNodeDebugEvent::getData, RuleNodeDebugEvent::setData);
                 truncateField(rnEvent, RuleNodeDebugEvent::getMetadata, RuleNodeDebugEvent::setMetadata);
                 truncateField(rnEvent, RuleNodeDebugEvent::getError, RuleNodeDebugEvent::setError);
                 break;
             case DEBUG_RULE_CHAIN:
-                @NotNull RuleChainDebugEvent rcEvent = (RuleChainDebugEvent) event;
+                RuleChainDebugEvent rcEvent = (RuleChainDebugEvent) event;
                 truncateField(rcEvent, RuleChainDebugEvent::getMessage, RuleChainDebugEvent::setMessage);
                 truncateField(rcEvent, RuleChainDebugEvent::getError, RuleChainDebugEvent::setError);
                 break;
             case LC_EVENT:
-                @NotNull LifecycleEvent lcEvent = (LifecycleEvent) event;
+                LifecycleEvent lcEvent = (LifecycleEvent) event;
                 truncateField(lcEvent, LifecycleEvent::getError, LifecycleEvent::setError);
                 break;
             case ERROR:
-                @NotNull ErrorEvent eEvent = (ErrorEvent) event;
+                ErrorEvent eEvent = (ErrorEvent) event;
                 truncateField(eEvent, ErrorEvent::getError, ErrorEvent::setError);
                 break;
         }
     }
 
-    private <T extends Event> void truncateField(T event, @NotNull Function<T, String> getter, @NotNull BiConsumer<T, String> setter) {
+    private <T extends Event> void truncateField(T event, Function<T, String> getter, BiConsumer<T, String> setter) {
         var str = getter.apply(event);
         if (StringUtils.isNotEmpty(str)) {
             var length = str.length();
@@ -81,31 +80,29 @@ public class BaseEventService implements EventService {
         }
     }
 
-    @NotNull
     @Override
-    public PageData<EventInfo> findEvents(@NotNull TenantId tenantId, @NotNull EntityId entityId, EventType eventType, TimePageLink pageLink) {
+    public PageData<EventInfo> findEvents(TenantId tenantId, EntityId entityId, EventType eventType, TimePageLink pageLink) {
         return convert(entityId.getEntityType(), eventDao.findEvents(tenantId.getId(), entityId.getId(), eventType, pageLink));
     }
 
     @Nullable
     @Override
-    public List<EventInfo> findLatestEvents(@NotNull TenantId tenantId, @NotNull EntityId entityId, EventType eventType, int limit) {
+    public List<EventInfo> findLatestEvents(TenantId tenantId, EntityId entityId, EventType eventType, int limit) {
         return convert(entityId.getEntityType(), eventDao.findLatestEvents(tenantId.getId(), entityId.getId(), eventType, limit));
     }
 
-    @NotNull
     @Override
-    public PageData<EventInfo> findEventsByFilter(@NotNull TenantId tenantId, @NotNull EntityId entityId, EventFilter eventFilter, TimePageLink pageLink) {
+    public PageData<EventInfo> findEventsByFilter(TenantId tenantId, EntityId entityId, EventFilter eventFilter, TimePageLink pageLink) {
         return convert(entityId.getEntityType(), eventDao.findEventByFilter(tenantId.getId(), entityId.getId(), eventFilter, pageLink));
     }
 
     @Override
-    public void removeEvents(@NotNull TenantId tenantId, @NotNull EntityId entityId) {
+    public void removeEvents(TenantId tenantId, EntityId entityId) {
         removeEvents(tenantId, entityId, null, null, null);
     }
 
     @Override
-    public void removeEvents(@NotNull TenantId tenantId, @NotNull EntityId entityId, @Nullable EventFilter eventFilter, Long startTime, Long endTime) {
+    public void removeEvents(TenantId tenantId, EntityId entityId, @Nullable EventFilter eventFilter, Long startTime, Long endTime) {
         if (eventFilter == null) {
             eventDao.removeEvents(tenantId.getId(), entityId.getId(), startTime, endTime);
         } else {
@@ -123,8 +120,7 @@ public class BaseEventService implements EventService {
         eventDao.migrateEvents(ttlInSec > 0 ? (System.currentTimeMillis() - ttlInSec * 1000) : 0, debugTtlInSec > 0 ? (System.currentTimeMillis() - debugTtlInSec * 1000) : 0);
     }
 
-    @NotNull
-    private PageData<EventInfo> convert(EntityType entityType, @NotNull PageData<? extends Event> pd) {
+    private PageData<EventInfo> convert(EntityType entityType, PageData<? extends Event> pd) {
         return new PageData<>(pd.getData() == null ? null :
                 pd.getData().stream().map(e -> e.toInfo(entityType)).collect(Collectors.toList())
                 , pd.getTotalPages(), pd.getTotalElements(), pd.hasNext());

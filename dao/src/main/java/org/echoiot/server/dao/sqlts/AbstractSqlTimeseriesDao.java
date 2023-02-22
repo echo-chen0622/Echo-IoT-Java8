@@ -11,7 +11,6 @@ import org.echoiot.server.common.data.kv.ReadTsKvQueryResult;
 import org.echoiot.server.common.data.kv.TsKvEntry;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.sql.ScheduledLogExecutorComponent;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.annotation.Nullable;
@@ -74,9 +73,8 @@ public abstract class AbstractSqlTimeseriesDao extends BaseAbstractSqlTimeseries
         }
     }
 
-    @NotNull
-    protected ListenableFuture<List<ReadTsKvQueryResult>> processFindAllAsync(TenantId tenantId, EntityId entityId, @NotNull List<ReadTsKvQuery> queries) {
-        @NotNull List<ListenableFuture<ReadTsKvQueryResult>> futures = queries
+    protected ListenableFuture<List<ReadTsKvQueryResult>> processFindAllAsync(TenantId tenantId, EntityId entityId, List<ReadTsKvQuery> queries) {
+        List<ListenableFuture<ReadTsKvQueryResult>> futures = queries
                 .stream()
                 .map(query -> findAllAsync(tenantId, entityId, query))
                 .collect(Collectors.toList());
@@ -103,7 +101,7 @@ public abstract class AbstractSqlTimeseriesDao extends BaseAbstractSqlTimeseries
         return ttl;
     }
 
-    protected int getDataPointDays(@NotNull TsKvEntry tsKvEntry, long ttl) {
+    protected int getDataPointDays(TsKvEntry tsKvEntry, long ttl) {
         return tsKvEntry.getDataPoints() * Math.max(1, (int) (ttl / SECONDS_IN_DAY));
     }
 }

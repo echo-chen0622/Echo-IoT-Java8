@@ -4,7 +4,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.echoiot.server.common.data.id.DeviceId;
-import org.jetbrains.annotations.NotNull;
 
 @ApiModel
 @Data
@@ -25,7 +24,7 @@ public class DeviceInfo extends Device {
         super(deviceId);
     }
 
-    public DeviceInfo(@NotNull Device device, String customerTitle, boolean customerIsPublic, String deviceProfileName) {
+    public DeviceInfo(Device device, String customerTitle, boolean customerIsPublic, String deviceProfileName) {
         super(device);
         this.customerTitle = customerTitle;
         this.customerIsPublic = customerIsPublic;

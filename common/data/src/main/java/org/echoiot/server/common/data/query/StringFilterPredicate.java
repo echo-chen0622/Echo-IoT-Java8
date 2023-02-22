@@ -1,7 +1,6 @@
 package org.echoiot.server.common.data.query;
 
 import lombok.Data;
-import org.jetbrains.annotations.NotNull;
 
 import javax.validation.Valid;
 
@@ -13,7 +12,6 @@ public class StringFilterPredicate implements SimpleKeyFilterPredicate<String> {
     private FilterPredicateValue<String> value;
     private boolean ignoreCase;
 
-    @NotNull
     @Override
     public FilterPredicateType getType() {
         return FilterPredicateType.STRING;

@@ -2,7 +2,6 @@ package org.echoiot.server.common.data;
 
 import org.echoiot.server.common.data.id.IdBased;
 import org.echoiot.server.common.data.id.UUIDBased;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 
@@ -20,7 +19,7 @@ public abstract class BaseData<I extends UUIDBased> extends IdBased<I> implement
         super(id);
     }
 
-    public BaseData(@NotNull BaseData<I> data) {
+    public BaseData(BaseData<I> data) {
         super(data.getId());
         this.createdTime = data.getCreatedTime();
     }
@@ -43,14 +42,14 @@ public abstract class BaseData<I extends UUIDBased> extends IdBased<I> implement
 
     @SuppressWarnings("rawtypes")
     @Override
-    public boolean equals(@NotNull Object obj) {
+    public boolean equals(Object obj) {
         if (this == obj)
             return true;
         if (!super.equals(obj))
             return false;
         if (getClass() != obj.getClass())
             return false;
-        @NotNull BaseData other = (BaseData) obj;
+        BaseData other = (BaseData) obj;
         return createdTime == other.createdTime;
     }
 

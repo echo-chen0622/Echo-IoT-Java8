@@ -3,7 +3,6 @@ package org.echoiot.server.common.transport.service;
 import org.echoiot.server.gen.transport.TransportProtos.ToTransportMsg;
 import org.echoiot.server.queue.TbQueueMsg;
 import org.echoiot.server.queue.kafka.TbKafkaDecoder;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
@@ -13,7 +12,7 @@ import java.io.IOException;
 public class ToTransportMsgResponseDecoder implements TbKafkaDecoder<ToTransportMsg> {
 
     @Override
-    public ToTransportMsg decode(@NotNull TbQueueMsg msg) throws IOException {
+    public ToTransportMsg decode(TbQueueMsg msg) throws IOException {
         return ToTransportMsg.parseFrom(msg.getData());
     }
 }

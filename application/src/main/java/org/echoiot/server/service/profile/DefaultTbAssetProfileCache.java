@@ -9,7 +9,6 @@ import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.dao.asset.AssetProfileService;
 import org.echoiot.server.dao.asset.AssetService;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
@@ -132,7 +131,7 @@ public class DefaultTbAssetProfileCache implements TbAssetProfileCache {
         }
     }
 
-    private void notifyProfileListeners(@NotNull AssetProfile profile) {
+    private void notifyProfileListeners(AssetProfile profile) {
         ConcurrentMap<EntityId, Consumer<AssetProfile>> tenantListeners = profileListeners.get(profile.getTenantId());
         if (tenantListeners != null) {
             tenantListeners.forEach((id, listener) -> listener.accept(profile));

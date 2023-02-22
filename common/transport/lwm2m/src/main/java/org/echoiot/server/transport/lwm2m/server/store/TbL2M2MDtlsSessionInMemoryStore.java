@@ -1,7 +1,6 @@
 package org.echoiot.server.transport.lwm2m.server.store;
 
 import org.echoiot.server.transport.lwm2m.secure.TbX509DtlsSessionInfo;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -10,7 +9,7 @@ public class TbL2M2MDtlsSessionInMemoryStore implements TbLwM2MDtlsSessionStore 
     private final ConcurrentHashMap<String, TbX509DtlsSessionInfo> store = new ConcurrentHashMap<>();
 
     @Override
-    public void put(@NotNull String endpoint, @NotNull TbX509DtlsSessionInfo msg) {
+    public void put(String endpoint, TbX509DtlsSessionInfo msg) {
         store.put(endpoint, msg);
     }
 
@@ -20,7 +19,7 @@ public class TbL2M2MDtlsSessionInMemoryStore implements TbLwM2MDtlsSessionStore 
     }
 
     @Override
-    public void remove(@NotNull String endpoint) {
+    public void remove(String endpoint) {
         store.remove(endpoint);
     }
 }

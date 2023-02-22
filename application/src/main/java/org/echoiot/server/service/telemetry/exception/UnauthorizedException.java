@@ -1,6 +1,5 @@
 package org.echoiot.server.service.telemetry.exception;
 
-import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -13,7 +12,6 @@ public class UnauthorizedException extends Exception implements ToErrorResponseE
         super(message);
     }
 
-    @NotNull
     @Override
     public ResponseEntity<String> toErrorResponseEntity() {
         return new ResponseEntity<>(getMessage(), HttpStatus.UNAUTHORIZED);

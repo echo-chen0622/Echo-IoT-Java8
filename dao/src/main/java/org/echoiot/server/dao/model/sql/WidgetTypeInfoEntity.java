@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.echoiot.server.common.data.widget.BaseWidgetType;
 import org.echoiot.server.common.data.widget.WidgetTypeInfo;
-import org.jetbrains.annotations.NotNull;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -18,7 +17,7 @@ public final class WidgetTypeInfoEntity extends AbstractWidgetTypeEntity<WidgetT
         super();
     }
 
-    public WidgetTypeInfoEntity(@NotNull WidgetTypeDetailsEntity widgetTypeDetailsEntity) {
+    public WidgetTypeInfoEntity(WidgetTypeDetailsEntity widgetTypeDetailsEntity) {
         super(widgetTypeDetailsEntity);
         this.image = widgetTypeDetailsEntity.getImage();
         this.description = widgetTypeDetailsEntity.getDescription();
@@ -29,11 +28,10 @@ public final class WidgetTypeInfoEntity extends AbstractWidgetTypeEntity<WidgetT
         }
     }
 
-    @NotNull
     @Override
     public WidgetTypeInfo toData() {
         BaseWidgetType baseWidgetType = super.toBaseWidgetType();
-        @NotNull WidgetTypeInfo widgetTypeInfo = new WidgetTypeInfo(baseWidgetType);
+        WidgetTypeInfo widgetTypeInfo = new WidgetTypeInfo(baseWidgetType);
         widgetTypeInfo.setImage(image);
         widgetTypeInfo.setDescription(description);
         widgetTypeInfo.setWidgetType(widgetType);

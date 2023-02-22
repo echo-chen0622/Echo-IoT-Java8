@@ -1,18 +1,15 @@
 package org.echoiot.server.transport.mqtt.session;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.regex.Pattern;
 
 public class MqttTopicMatcher {
 
-    @NotNull
     private final String topic;
-    @NotNull
     private final Pattern topicRegex;
 
-    public MqttTopicMatcher(@NotNull String topic) {
+    public MqttTopicMatcher(String topic) {
         if(topic == null){
             throw new NullPointerException("topic");
         }
@@ -24,7 +21,7 @@ public class MqttTopicMatcher {
         return topic;
     }
 
-    public boolean matches(@NotNull String topic){
+    public boolean matches(String topic){
         return this.topicRegex.matcher(topic).matches();
     }
 
@@ -33,7 +30,7 @@ public class MqttTopicMatcher {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        @NotNull MqttTopicMatcher that = (MqttTopicMatcher) o;
+        MqttTopicMatcher that = (MqttTopicMatcher) o;
 
         return topic.equals(that.topic);
     }

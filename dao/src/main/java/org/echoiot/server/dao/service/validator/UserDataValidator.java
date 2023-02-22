@@ -16,7 +16,6 @@ import org.echoiot.server.dao.tenant.TbTenantProfileCache;
 import org.echoiot.server.dao.tenant.TenantService;
 import org.echoiot.server.dao.user.UserDao;
 import org.echoiot.server.dao.user.UserService;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
@@ -44,7 +43,7 @@ public class UserDataValidator extends DataValidator<User> {
     private TenantService tenantService;
 
     @Override
-    protected void validateCreate(TenantId tenantId, @NotNull User user) {
+    protected void validateCreate(TenantId tenantId, User user) {
         if (!user.getTenantId().getId().equals(ModelConstants.NULL_UUID)) {
             DefaultTenantProfileConfiguration profileConfiguration =
                     (DefaultTenantProfileConfiguration) tenantProfileCache.get(tenantId).getProfileData().getConfiguration();
@@ -53,9 +52,8 @@ public class UserDataValidator extends DataValidator<User> {
         }
     }
 
-    @NotNull
     @Override
-    protected User validateUpdate(TenantId tenantId, @NotNull User user) {
+    protected User validateUpdate(TenantId tenantId, User user) {
         User old = userDao.findById(user.getTenantId(), user.getId().getId());
         if (old == null) {
             throw new DataValidationException("Can't update non existing user!");
@@ -73,7 +71,7 @@ public class UserDataValidator extends DataValidator<User> {
     }
 
     @Override
-    protected void validateDataImpl(TenantId requestTenantId, @NotNull User user) {
+    protected void validateDataImpl(TenantId requestTenantId, User user) {
         if (StringUtils.isEmpty(user.getEmail())) {
             throw new DataValidationException("User email should be specified!");
         }

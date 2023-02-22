@@ -1,6 +1,5 @@
 package org.echoiot.server.lwm2m;
 
-import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -20,7 +19,7 @@ public class EchoiotLwm2mTransportApplication {
 
     private static final String DEFAULT_SPRING_CONFIG_PARAM = SPRING_CONFIG_NAME_KEY + "=" + "tb-lwm2m-transport";
 
-    public static void main(@NotNull String[] args) {
+    public static void main(String[] args) {
         SpringApplication.run(EchoiotLwm2mTransportApplication.class, updateArguments(args, DEFAULT_SPRING_CONFIG_PARAM));
     }
 

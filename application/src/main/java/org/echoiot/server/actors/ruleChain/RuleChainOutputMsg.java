@@ -7,7 +7,6 @@ import org.echoiot.server.common.data.id.RuleChainId;
 import org.echoiot.server.common.data.id.RuleNodeId;
 import org.echoiot.server.common.msg.MsgType;
 import org.echoiot.server.common.msg.TbMsg;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by Echo on 19.03.18.
@@ -28,7 +27,6 @@ public final class RuleChainOutputMsg extends TbToRuleChainActorMsg {
         this.relationType = relationType;
     }
 
-    @NotNull
     @Override
     public MsgType getMsgType() {
         return MsgType.RULE_CHAIN_OUTPUT_MSG;

@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.SearchTextBasedWithAdditionalInfo;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.validation.Length;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
@@ -54,7 +53,7 @@ public class EntityRelation implements Serializable {
         this.additionalInfo = additionalInfo;
     }
 
-    public EntityRelation(@NotNull EntityRelation entityRelation) {
+    public EntityRelation(EntityRelation entityRelation) {
         this.from = entityRelation.getFrom();
         this.to = entityRelation.getTo();
         this.type = entityRelation.getType();
@@ -113,7 +112,7 @@ public class EntityRelation implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        @NotNull EntityRelation that = (EntityRelation) o;
+        EntityRelation that = (EntityRelation) o;
 
         if (!Objects.equals(from, that.from)) return false;
         if (!Objects.equals(to, that.to)) return false;

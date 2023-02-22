@@ -13,7 +13,6 @@ import org.echoiot.server.common.data.tenant.profile.DefaultTenantProfileConfigu
 import org.echoiot.server.common.data.tenant.profile.TenantProfileData;
 import org.echoiot.server.common.data.validation.Length;
 import org.echoiot.server.common.data.validation.NoXss;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.ByteArrayInputStream;
@@ -54,7 +53,7 @@ public class TenantProfile extends SearchTextBased<TenantProfileId> implements H
         super(tenantProfileId);
     }
 
-    public TenantProfile(@NotNull TenantProfile tenantProfile) {
+    public TenantProfile(TenantProfile tenantProfile) {
         super(tenantProfile);
         this.name = tenantProfile.getName();
         this.description = tenantProfile.getDescription();
@@ -106,7 +105,6 @@ public class TenantProfile extends SearchTextBased<TenantProfileId> implements H
         }
     }
 
-    @NotNull
     @JsonIgnore
     public Optional<DefaultTenantProfileConfiguration> getProfileConfiguration() {
         return Optional.ofNullable(getProfileData().getConfiguration())
@@ -120,9 +118,8 @@ public class TenantProfile extends SearchTextBased<TenantProfileId> implements H
         return getProfileConfiguration().orElse(null);
     }
 
-    @NotNull
     public TenantProfileData createDefaultTenantProfileData() {
-        @NotNull TenantProfileData tpd = new TenantProfileData();
+        TenantProfileData tpd = new TenantProfileData();
         tpd.setConfiguration(new DefaultTenantProfileConfiguration());
         this.profileData = tpd;
         return tpd;

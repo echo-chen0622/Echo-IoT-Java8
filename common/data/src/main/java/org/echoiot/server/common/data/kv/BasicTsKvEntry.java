@@ -1,6 +1,5 @@
 package org.echoiot.server.common.data.kv;
 
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -64,7 +63,7 @@ public class BasicTsKvEntry implements TsKvEntry {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof BasicTsKvEntry)) return false;
-        @NotNull BasicTsKvEntry that = (BasicTsKvEntry) o;
+        BasicTsKvEntry that = (BasicTsKvEntry) o;
         return getTs() == that.getTs() &&
                 Objects.equals(kv, that.kv);
     }

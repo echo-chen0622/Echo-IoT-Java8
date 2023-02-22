@@ -10,7 +10,6 @@ import org.echoiot.server.common.data.id.TbResourceId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.validation.Length;
 import org.echoiot.server.common.data.validation.NoXss;
-import org.jetbrains.annotations.NotNull;
 
 @ApiModel
 @Slf4j
@@ -43,7 +42,7 @@ public class TbResourceInfo extends SearchTextBased<TbResourceId> implements Has
         super(id);
     }
 
-    public TbResourceInfo(@NotNull TbResourceInfo resourceInfo) {
+    public TbResourceInfo(TbResourceInfo resourceInfo) {
         super(resourceInfo);
         this.tenantId = resourceInfo.getTenantId();
         this.title = resourceInfo.getTitle();
@@ -78,7 +77,6 @@ public class TbResourceInfo extends SearchTextBased<TbResourceId> implements Has
         return searchText != null ? searchText : title;
     }
 
-    @NotNull
     @Override
     public String toString() {
         String builder = "ResourceInfo [tenantId=" +

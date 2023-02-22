@@ -2,7 +2,6 @@ package org.echoiot.server.queue.discovery;
 
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.queue.discovery.event.TbApplicationEvent;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.context.ApplicationListener;
 
 import java.util.concurrent.locks.Lock;
@@ -15,7 +14,7 @@ public abstract class TbApplicationEventListener<T extends TbApplicationEvent> i
     private final Lock seqNumberLock = new ReentrantLock();
 
     @Override
-    public void onApplicationEvent(@NotNull T event) {
+    public void onApplicationEvent(T event) {
         boolean validUpdate = false;
         seqNumberLock.lock();
         try {

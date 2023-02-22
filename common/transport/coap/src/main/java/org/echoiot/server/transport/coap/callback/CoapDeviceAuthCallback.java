@@ -6,7 +6,6 @@ import org.echoiot.server.common.transport.TransportServiceCallback;
 import org.echoiot.server.common.transport.auth.ValidateDeviceCredentialsResponse;
 import org.eclipse.californium.core.coap.CoAP;
 import org.eclipse.californium.core.server.resources.CoapExchange;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.function.BiConsumer;
 
@@ -21,7 +20,7 @@ public class CoapDeviceAuthCallback implements TransportServiceCallback<Validate
     }
 
     @Override
-    public void onSuccess(@NotNull ValidateDeviceCredentialsResponse msg) {
+    public void onSuccess(ValidateDeviceCredentialsResponse msg) {
         DeviceProfile deviceProfile = msg.getDeviceProfile();
         if (msg.hasDeviceInfo() && deviceProfile != null) {
             onSuccess.accept(msg, deviceProfile);

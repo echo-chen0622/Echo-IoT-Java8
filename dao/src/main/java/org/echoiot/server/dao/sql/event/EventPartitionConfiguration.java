@@ -2,7 +2,6 @@ package org.echoiot.server.dao.sql.event;
 
 import lombok.Getter;
 import org.echoiot.server.common.data.event.EventType;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -28,7 +27,7 @@ public class EventPartitionConfiguration {
         debugPartitionSizeInMs = TimeUnit.HOURS.toMillis(debugPartitionSizeInHours);
     }
 
-    public long getPartitionSizeInMs(@NotNull EventType eventType) {
+    public long getPartitionSizeInMs(EventType eventType) {
         return eventType.isDebug() ? debugPartitionSizeInMs : regularPartitionSizeInMs;
     }
 }

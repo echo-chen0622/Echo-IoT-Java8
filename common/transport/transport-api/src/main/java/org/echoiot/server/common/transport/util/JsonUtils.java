@@ -5,7 +5,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.echoiot.server.gen.transport.TransportProtos.KeyValueProto;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -14,10 +13,9 @@ public class JsonUtils {
     private static final JsonParser jsonParser = new JsonParser();
     private static final ObjectMapper json = new ObjectMapper();
 
-    @NotNull
-    public static JsonObject getJsonObject(@NotNull List<KeyValueProto> tsKv) {
-        @NotNull JsonObject json = new JsonObject();
-        for (@NotNull KeyValueProto kv : tsKv) {
+    public static JsonObject getJsonObject(List<KeyValueProto> tsKv) {
+        JsonObject json = new JsonObject();
+        for (KeyValueProto kv : tsKv) {
             switch (kv.getType()) {
                 case BOOLEAN_V:
                     json.addProperty(kv.getKey(), kv.getBoolV());
@@ -39,7 +37,7 @@ public class JsonUtils {
         return json;
     }
 
-    public static JsonElement parse(@NotNull String params) {
+    public static JsonElement parse(String params) {
         return jsonParser.parse(params);
     }
 

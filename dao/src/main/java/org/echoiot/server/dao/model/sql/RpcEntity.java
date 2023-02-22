@@ -13,7 +13,6 @@ import org.echoiot.server.dao.model.BaseSqlEntity;
 import org.echoiot.server.dao.util.mapping.JsonStringType;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
-import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
 import java.util.UUID;
@@ -56,7 +55,7 @@ public class RpcEntity extends BaseSqlEntity<Rpc> implements BaseEntity<Rpc> {
         super();
     }
 
-    public RpcEntity(@NotNull Rpc rpc) {
+    public RpcEntity(Rpc rpc) {
         this.setUuid(rpc.getUuidId());
         this.createdTime = rpc.getCreatedTime();
         this.tenantId = rpc.getTenantId().getId();
@@ -68,10 +67,9 @@ public class RpcEntity extends BaseSqlEntity<Rpc> implements BaseEntity<Rpc> {
         this.additionalInfo = rpc.getAdditionalInfo();
     }
 
-    @NotNull
     @Override
     public Rpc toData() {
-        @NotNull Rpc rpc = new Rpc(new RpcId(id));
+        Rpc rpc = new Rpc(new RpcId(id));
         rpc.setCreatedTime(createdTime);
         rpc.setTenantId(TenantId.fromUUID(tenantId));
         rpc.setDeviceId(new DeviceId(deviceId));

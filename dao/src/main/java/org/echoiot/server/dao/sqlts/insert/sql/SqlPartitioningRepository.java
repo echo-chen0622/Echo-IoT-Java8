@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.echoiot.server.dao.timeseries.SqlPartition;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -36,16 +35,16 @@ public class SqlPartitioningRepository {
     private final ReentrantLock partitionCreationLock = new ReentrantLock();
 
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    public void save(@NotNull SqlPartition partition) {
+    public void save(SqlPartition partition) {
         jdbcTemplate.execute(partition.getQuery());
     }
 
     @Transactional(propagation = Propagation.NOT_SUPPORTED) // executing non-transactionally, so that parent transaction is not aborted on partition save error
     public void createPartitionIfNotExists(String table, long entityTs, long partitionDurationMs) {
         long partitionStartTs = calculatePartitionStartTime(entityTs, partitionDurationMs);
-        @NotNull Map<Long, SqlPartition> partitions = tablesPartitions.computeIfAbsent(table, t -> new ConcurrentHashMap<>());
+        Map<Long, SqlPartition> partitions = tablesPartitions.computeIfAbsent(table, t -> new ConcurrentHashMap<>());
         if (!partitions.containsKey(partitionStartTs)) {
-            @NotNull SqlPartition partition = new SqlPartition(table, partitionStartTs, partitionStartTs + partitionDurationMs, Long.toString(partitionStartTs));
+            SqlPartition partition = new SqlPartition(table, partitionStartTs, partitionStartTs + partitionDurationMs, Long.toString(partitionStartTs));
             partitionCreationLock.lock();
             try {
                 if (partitions.containsKey(partitionStartTs)) return;
@@ -54,7 +53,7 @@ public class SqlPartitioningRepository {
                 log.trace("Adding partition to map: {}", partition);
                 partitions.put(partition.getStart(), partition);
             } catch (Exception e) {
-                @NotNull String error = ExceptionUtils.getRootCauseMessage(e);
+                String error = ExceptionUtils.getRootCauseMessage(e);
                 if (StringUtils.containsAny(error, "would overlap partition", "already exists")) {
                     partitions.put(partition.getStart(), partition);
                     log.debug("Couldn't save partition {}-{} for table {}: {}", partition.getStart(), partition.getEnd(), table, error);
@@ -67,8 +66,8 @@ public class SqlPartitioningRepository {
         }
     }
 
-    public void dropPartitionsBefore(@NotNull String table, long ts, long partitionDurationMs) {
-        @NotNull List<Long> partitions = fetchPartitions(table);
+    public void dropPartitionsBefore(String table, long ts, long partitionDurationMs) {
+        List<Long> partitions = fetchPartitions(table);
         for (Long partitionStartTime : partitions) {
             long partitionEndTime = partitionStartTime + partitionDurationMs;
             if (partitionEndTime < ts) {
@@ -93,13 +92,13 @@ public class SqlPartitioningRepository {
         Map<Long, SqlPartition> cachedPartitions = tablesPartitions.get(table);
         if (cachedPartitions != null) cachedPartitions.remove(partitionTs);
 
-        @NotNull String tablePartition = table + "_" + partitionTs;
-        @NotNull String detachPsqlStmtStr = "ALTER TABLE " + table + " DETACH PARTITION " + tablePartition;
+        String tablePartition = table + "_" + partitionTs;
+        String detachPsqlStmtStr = "ALTER TABLE " + table + " DETACH PARTITION " + tablePartition;
         if (getCurrentServerVersion() >= PSQL_VERSION_14) {
             detachPsqlStmtStr += " CONCURRENTLY";
         }
 
-        @NotNull String dropStmtStr = "DROP TABLE " + tablePartition;
+        String dropStmtStr = "DROP TABLE " + tablePartition;
         try {
             jdbcTemplate.execute(detachPsqlStmtStr);
             jdbcTemplate.execute(dropStmtStr);
@@ -110,12 +109,11 @@ public class SqlPartitioningRepository {
         return false;
     }
 
-    @NotNull
-    public List<Long> fetchPartitions(@NotNull String table) {
-        @NotNull List<Long> partitions = new ArrayList<>();
-        @NotNull List<String> partitionsTables = jdbcTemplate.queryForList(SELECT_PARTITIONS_STMT, String.class, table);
-        for (@NotNull String partitionTableName : partitionsTables) {
-            @NotNull String partitionTsStr = partitionTableName.substring(table.length() + 1);
+    public List<Long> fetchPartitions(String table) {
+        List<Long> partitions = new ArrayList<>();
+        List<String> partitionsTables = jdbcTemplate.queryForList(SELECT_PARTITIONS_STMT, String.class, table);
+        for (String partitionTableName : partitionsTables) {
+            String partitionTsStr = partitionTableName.substring(table.length() + 1);
             try {
                 partitions.add(Long.parseLong(partitionTsStr));
             } catch (NumberFormatException nfe) {

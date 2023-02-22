@@ -2,15 +2,13 @@ package org.echoiot.server.service.queue.processing;
 
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.queue.SubmitStrategy;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
 public class TbRuleEngineSubmitStrategyFactory {
 
-    @NotNull
-    public TbRuleEngineSubmitStrategy newInstance(String name, @NotNull SubmitStrategy submitStrategy) {
+    public TbRuleEngineSubmitStrategy newInstance(String name, SubmitStrategy submitStrategy) {
         switch (submitStrategy.getType()) {
             case BURST:
                 return new BurstTbRuleEngineSubmitStrategy(name);

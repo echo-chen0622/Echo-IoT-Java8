@@ -23,7 +23,6 @@ import org.echoiot.server.dao.rule.RuleChainService;
 import org.echoiot.server.dao.service.Validator;
 import org.echoiot.server.dao.tenant.TenantService;
 import org.echoiot.server.dao.user.UserService;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -80,7 +79,7 @@ public class BaseEntityService extends AbstractEntityService implements EntitySe
     private OtaPackageService otaPackageService;
 
     @Override
-    public long countEntitiesByQuery(TenantId tenantId, CustomerId customerId, @NotNull EntityCountQuery query) {
+    public long countEntitiesByQuery(TenantId tenantId, CustomerId customerId, EntityCountQuery query) {
         log.trace("Executing countEntitiesByQuery, tenantId [{}], customerId [{}], query [{}]", tenantId, customerId, query);
         validateId(tenantId, INCORRECT_TENANT_ID + tenantId);
         validateId(customerId, INCORRECT_CUSTOMER_ID + customerId);
@@ -89,7 +88,7 @@ public class BaseEntityService extends AbstractEntityService implements EntitySe
     }
 
     @Override
-    public PageData<EntityData> findEntityDataByQuery(TenantId tenantId, CustomerId customerId, @NotNull EntityDataQuery query) {
+    public PageData<EntityData> findEntityDataByQuery(TenantId tenantId, CustomerId customerId, EntityDataQuery query) {
         log.trace("Executing findEntityDataByQuery, tenantId [{}], customerId [{}], query [{}]", tenantId, customerId, query);
         validateId(tenantId, INCORRECT_TENANT_ID + tenantId);
         validateId(customerId, INCORRECT_CUSTOMER_ID + customerId);
@@ -98,9 +97,8 @@ public class BaseEntityService extends AbstractEntityService implements EntitySe
     }
 
     //TODO: 3.1 Remove this from project.
-    @NotNull
     @Override
-    public ListenableFuture<String> fetchEntityNameAsync(TenantId tenantId, @NotNull EntityId entityId) {
+    public ListenableFuture<String> fetchEntityNameAsync(TenantId tenantId, EntityId entityId) {
         log.trace("Executing fetchEntityNameAsync [{}]", entityId);
         ListenableFuture<String> entityName;
         ListenableFuture<? extends HasName> hasName;
@@ -149,7 +147,7 @@ public class BaseEntityService extends AbstractEntityService implements EntitySe
     }
 
     @Override
-    public CustomerId fetchEntityCustomerId(TenantId tenantId, @NotNull EntityId entityId) {
+    public CustomerId fetchEntityCustomerId(TenantId tenantId, EntityId entityId) {
         log.trace("Executing fetchEntityCustomerId [{}]", entityId);
         @Nullable HasCustomerId hasCustomerId = null;
         switch (entityId.getEntityType()) {
@@ -194,7 +192,7 @@ public class BaseEntityService extends AbstractEntityService implements EntitySe
         return hasCustomerId != null ? hasCustomerId.getCustomerId() : new CustomerId(NULL_UUID);
     }
 
-    private static void validateEntityCountQuery(@NotNull EntityCountQuery query) {
+    private static void validateEntityCountQuery(EntityCountQuery query) {
         if (query == null) {
             throw new IncorrectParameterException("Query must be specified.");
         } else if (query.getEntityFilter() == null) {
@@ -206,12 +204,12 @@ public class BaseEntityService extends AbstractEntityService implements EntitySe
         }
     }
 
-    private static void validateEntityDataQuery(@NotNull EntityDataQuery query) {
+    private static void validateEntityDataQuery(EntityDataQuery query) {
         validateEntityCountQuery(query);
         Validator.validateEntityDataPageLink(query.getPageLink());
     }
 
-    private static void validateRelationQuery(@NotNull RelationsQueryFilter queryFilter) {
+    private static void validateRelationQuery(RelationsQueryFilter queryFilter) {
         if (queryFilter.isMultiRoot() && queryFilter.getMultiRootEntitiesType() ==null){
             throw new IncorrectParameterException("Multi-root relation query filter should contain 'multiRootEntitiesType'");
         }

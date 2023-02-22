@@ -2,7 +2,6 @@ package org.echoiot.server.common.data;
 
 import com.google.common.io.Resources;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -16,11 +15,11 @@ public class ResourceUtils {
 
     public static final String CLASSPATH_URL_PREFIX = "classpath:";
 
-    public static boolean resourceExists(@NotNull Object classLoaderSource, String filePath) {
+    public static boolean resourceExists(Object classLoaderSource, String filePath) {
         return resourceExists(classLoaderSource.getClass().getClassLoader(), filePath);
     }
 
-    public static boolean resourceExists(@NotNull ClassLoader classLoader, String filePath) {
+    public static boolean resourceExists(ClassLoader classLoader, String filePath) {
         boolean classPathResource = false;
         String path = filePath;
         if (path.startsWith(CLASSPATH_URL_PREFIX)) {
@@ -28,7 +27,7 @@ public class ResourceUtils {
             classPathResource = true;
         }
         if (!classPathResource) {
-            @NotNull File resourceFile = new File(path);
+            File resourceFile = new File(path);
             if (resourceFile.exists()) {
                 return true;
             }
@@ -38,7 +37,7 @@ public class ResourceUtils {
             return true;
         } else {
             try {
-                @NotNull URL url = Resources.getResource(path);
+                URL url = Resources.getResource(path);
                 if (url != null) {
                     return true;
                 }
@@ -47,13 +46,11 @@ public class ResourceUtils {
         return false;
     }
 
-    @NotNull
-    public static InputStream getInputStream(@NotNull Object classLoaderSource, String filePath) {
+    public static InputStream getInputStream(Object classLoaderSource, String filePath) {
         return getInputStream(classLoaderSource.getClass().getClassLoader(), filePath);
     }
 
-    @NotNull
-    public static InputStream getInputStream(@NotNull ClassLoader classLoader, String filePath) {
+    public static InputStream getInputStream(ClassLoader classLoader, String filePath) {
         boolean classPathResource = false;
         String path = filePath;
         if (path.startsWith(CLASSPATH_URL_PREFIX)) {
@@ -62,7 +59,7 @@ public class ResourceUtils {
         }
         try {
             if (!classPathResource) {
-                @NotNull File resourceFile = new File(path);
+                File resourceFile = new File(path);
                 if (resourceFile.exists()) {
                     log.info("Reading resource data from file {}", filePath);
                     return new FileInputStream(resourceFile);
@@ -73,9 +70,9 @@ public class ResourceUtils {
                 log.info("Reading resource data from class path {}", filePath);
                 return classPathStream;
             } else {
-                @NotNull URL url = Resources.getResource(path);
+                URL url = Resources.getResource(path);
                 if (url != null) {
-                    @NotNull URI uri = url.toURI();
+                    URI uri = url.toURI();
                     log.info("Reading resource data from URI {}", filePath);
                     return new FileInputStream(new File(uri));
                 }
@@ -90,13 +87,13 @@ public class ResourceUtils {
         throw new RuntimeException("Unable to find resource: " + filePath);
     }
 
-    public static String getUri(@NotNull Object classLoaderSource, @NotNull String filePath) {
+    public static String getUri(Object classLoaderSource, String filePath) {
         return getUri(classLoaderSource.getClass().getClassLoader(), filePath);
     }
 
-    public static String getUri(@NotNull ClassLoader classLoader, @NotNull String filePath) {
+    public static String getUri(ClassLoader classLoader, String filePath) {
         try {
-            @NotNull File resourceFile = new File(filePath);
+            File resourceFile = new File(filePath);
             if (resourceFile.exists()) {
                 log.info("Reading resource data from file {}", filePath);
                 return resourceFile.getAbsolutePath();

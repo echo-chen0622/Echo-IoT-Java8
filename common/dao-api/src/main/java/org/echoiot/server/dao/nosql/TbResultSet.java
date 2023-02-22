@@ -5,7 +5,6 @@ import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.*;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.jetbrains.annotations.NotNull;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -66,23 +65,22 @@ public class TbResultSet implements AsyncResultSet {
         return delegate.wasApplied();
     }
 
-    @NotNull
     public ListenableFuture<List<Row>> allRows(Executor executor) {
-        @NotNull List<Row> allRows = new ArrayList<>();
-        @NotNull SettableFuture<List<Row>> resultFuture = SettableFuture.create();
+        List<Row> allRows = new ArrayList<>();
+        SettableFuture<List<Row>> resultFuture = SettableFuture.create();
         this.processRows(originalStatement, delegate, allRows, resultFuture, executor);
         return resultFuture;
     }
 
-    private void processRows(@NotNull Statement statement,
-                             @NotNull AsyncResultSet resultSet,
-                             @NotNull List<Row> allRows,
-                             @NotNull SettableFuture<List<Row>> resultFuture,
+    private void processRows(Statement statement,
+                             AsyncResultSet resultSet,
+                             List<Row> allRows,
+                             SettableFuture<List<Row>> resultFuture,
                              @org.jetbrains.annotations.Nullable Executor executor) {
         allRows.addAll(loadRows(resultSet));
         if (resultSet.hasMorePages()) {
             @org.jetbrains.annotations.Nullable ByteBuffer nextPagingState = resultSet.getExecutionInfo().getPagingState();
-            @NotNull Statement<?> nextStatement = statement.setPagingState(nextPagingState);
+            Statement<?> nextStatement = statement.setPagingState(nextPagingState);
             TbResultSetFuture resultSetFuture = executeAsyncFunction.apply(nextStatement);
             Futures.addCallback(resultSetFuture,
                     new FutureCallback<TbResultSet>() {
@@ -103,8 +101,7 @@ public class TbResultSet implements AsyncResultSet {
         }
     }
 
-    @NotNull
-    List<Row> loadRows(@NotNull AsyncResultSet resultSet) {
+    List<Row> loadRows(AsyncResultSet resultSet) {
         return Lists.newArrayList(resultSet.currentPage());
     }
 

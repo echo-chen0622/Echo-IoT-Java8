@@ -9,7 +9,6 @@ import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.dao.AbstractJpaDaoTest;
 import org.echoiot.server.dao.dashboard.DashboardInfoDao;
 import org.echoiot.server.dao.service.AbstractServiceTest;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -26,15 +25,15 @@ public class JpaDashboardInfoDaoTest extends AbstractJpaDaoTest {
 
     @Test
     public void testFindDashboardsByTenantId() {
-        @NotNull UUID tenantId1 = Uuids.timeBased();
-        @NotNull UUID tenantId2 = Uuids.timeBased();
+        UUID tenantId1 = Uuids.timeBased();
+        UUID tenantId2 = Uuids.timeBased();
 
         for (int i = 0; i < 20; i++) {
             createDashboard(tenantId1, i);
             createDashboard(tenantId2, i * 2);
         }
 
-        @NotNull PageLink pageLink = new PageLink(15, 0, "DASHBOARD");
+        PageLink pageLink = new PageLink(15, 0, "DASHBOARD");
         PageData<DashboardInfo> dashboardInfos1 = dashboardInfoDao.findDashboardsByTenantId(tenantId1, pageLink);
         Assert.assertEquals(15, dashboardInfos1.getData().size());
 
@@ -43,7 +42,7 @@ public class JpaDashboardInfoDaoTest extends AbstractJpaDaoTest {
     }
 
     private void createDashboard(UUID tenantId, int index) {
-        @NotNull DashboardInfo dashboardInfo = new DashboardInfo();
+        DashboardInfo dashboardInfo = new DashboardInfo();
         dashboardInfo.setId(new DashboardId(Uuids.timeBased()));
         dashboardInfo.setTenantId(TenantId.fromUUID(tenantId));
         dashboardInfo.setTitle("DASHBOARD_" + index);

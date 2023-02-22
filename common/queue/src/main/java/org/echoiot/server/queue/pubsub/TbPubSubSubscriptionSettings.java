@@ -2,7 +2,6 @@ package org.echoiot.server.queue.pubsub;
 
 import lombok.Getter;
 import org.echoiot.server.common.data.StringUtils;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Component;
@@ -50,14 +49,13 @@ public class TbPubSubSubscriptionSettings {
         vcSettings = getSettings(vcProperties);
     }
 
-    @NotNull
-    private Map<String, String> getSettings(@NotNull String properties) {
-        @NotNull Map<String, String> configs = new HashMap<>();
+    private Map<String, String> getSettings(String properties) {
+        Map<String, String> configs = new HashMap<>();
         if (StringUtils.isNotEmpty(properties)) {
-            for (@NotNull String property : properties.split(";")) {
+            for (String property : properties.split(";")) {
                 int delimiterPosition = property.indexOf(":");
-                @NotNull String key = property.substring(0, delimiterPosition);
-                @NotNull String value = property.substring(delimiterPosition + 1);
+                String key = property.substring(0, delimiterPosition);
+                String value = property.substring(delimiterPosition + 1);
                 configs.put(key, value);
             }
         }

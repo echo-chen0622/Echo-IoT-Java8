@@ -17,7 +17,6 @@ import org.echoiot.server.service.security.model.SecurityUser;
 import org.echoiot.server.service.security.model.UserPrincipal;
 import org.echoiot.server.service.security.model.token.JwtTokenFactory;
 import org.echoiot.server.service.security.model.token.RawAccessJwtToken;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -30,18 +29,13 @@ import java.util.UUID;
 @Component
 @RequiredArgsConstructor
 public class RefreshTokenAuthenticationProvider implements AuthenticationProvider {
-    @NotNull
     private final JwtTokenFactory tokenFactory;
-    @NotNull
     private final UserService userService;
-    @NotNull
     private final CustomerService customerService;
-    @NotNull
     private final TokenOutdatingService tokenOutdatingService;
 
-    @NotNull
     @Override
-    public Authentication authenticate(@NotNull Authentication authentication) throws AuthenticationException {
+    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         Assert.notNull(authentication, "No authentication data provided");
         RawAccessJwtToken rawAccessToken = (RawAccessJwtToken) authentication.getCredentials();
         SecurityUser unsafeUser = tokenFactory.parseRefreshToken(rawAccessToken);
@@ -61,7 +55,6 @@ public class RefreshTokenAuthenticationProvider implements AuthenticationProvide
         return new RefreshAuthenticationToken(securityUser);
     }
 
-    @NotNull
     private SecurityUser authenticateByUserId(UserId userId) {
         TenantId systemId = TenantId.SYS_TENANT_ID;
         User user = userService.findUserById(systemId, userId);
@@ -80,14 +73,13 @@ public class RefreshTokenAuthenticationProvider implements AuthenticationProvide
 
         if (user.getAuthority() == null) throw new InsufficientAuthenticationException("User has no authority assigned");
 
-        @NotNull UserPrincipal userPrincipal = new UserPrincipal(UserPrincipal.Type.USER_NAME, user.getEmail());
-        @NotNull SecurityUser securityUser = new SecurityUser(user, userCredentials.isEnabled(), userPrincipal);
+        UserPrincipal userPrincipal = new UserPrincipal(UserPrincipal.Type.USER_NAME, user.getEmail());
+        SecurityUser securityUser = new SecurityUser(user, userCredentials.isEnabled(), userPrincipal);
 
         return securityUser;
     }
 
-    @NotNull
-    private SecurityUser authenticateByPublicId(@NotNull String publicId) {
+    private SecurityUser authenticateByPublicId(String publicId) {
         TenantId systemId = TenantId.SYS_TENANT_ID;
         CustomerId customerId;
         try {
@@ -104,7 +96,7 @@ public class RefreshTokenAuthenticationProvider implements AuthenticationProvide
             throw new BadCredentialsException("Refresh token is not valid");
         }
 
-        @NotNull User user = new User(new UserId(EntityId.NULL_UUID));
+        User user = new User(new UserId(EntityId.NULL_UUID));
         user.setTenantId(publicCustomer.getTenantId());
         user.setCustomerId(publicCustomer.getId());
         user.setEmail(publicId);
@@ -112,15 +104,15 @@ public class RefreshTokenAuthenticationProvider implements AuthenticationProvide
         user.setFirstName("Public");
         user.setLastName("Public");
 
-        @NotNull UserPrincipal userPrincipal = new UserPrincipal(UserPrincipal.Type.PUBLIC_ID, publicId);
+        UserPrincipal userPrincipal = new UserPrincipal(UserPrincipal.Type.PUBLIC_ID, publicId);
 
-        @NotNull SecurityUser securityUser = new SecurityUser(user, true, userPrincipal);
+        SecurityUser securityUser = new SecurityUser(user, true, userPrincipal);
 
         return securityUser;
     }
 
     @Override
-    public boolean supports(@NotNull Class<?> authentication) {
+    public boolean supports(Class<?> authentication) {
         return (RefreshAuthenticationToken.class.isAssignableFrom(authentication));
     }
 }

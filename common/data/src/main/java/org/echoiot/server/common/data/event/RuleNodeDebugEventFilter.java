@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.echoiot.server.common.data.StringUtils;
-import org.jetbrains.annotations.NotNull;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -29,7 +28,6 @@ public class RuleNodeDebugEventFilter extends DebugEventFilter {
     @ApiModelProperty(position = 9, value = "The case insensitive 'contains' filter based on metadata (key and value) for the message.", example = "deviceName")
     protected String metadataSearch;
 
-    @NotNull
     @Override
     public EventType getEventType() {
         return EventType.DEBUG_RULE_NODE;

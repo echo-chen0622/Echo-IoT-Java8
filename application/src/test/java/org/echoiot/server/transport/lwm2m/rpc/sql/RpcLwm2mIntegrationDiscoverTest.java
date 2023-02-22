@@ -6,7 +6,6 @@ import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.transport.lwm2m.rpc.AbstractRpcLwM2MIntegrationTest;
 import org.eclipse.leshan.core.ResponseCode;
 import org.eclipse.leshan.core.node.LwM2mPath;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.junit.Test;
 
@@ -31,16 +30,16 @@ public class RpcLwm2mIntegrationDiscoverTest extends AbstractRpcLwM2MIntegration
      */
     @Test
     public void testDiscoverAll_Return_CONTENT_LinksAllObjectsAllInstancesOfClient() throws Exception {
-        @NotNull String setRpcRequest = "{\"method\":\"DiscoverAll\"}";
+        String setRpcRequest = "{\"method\":\"DiscoverAll\"}";
         String actualResult = doPostAsync("/api/plugins/rpc/twoway/" + deviceId, setRpcRequest, String.class, status().isOk());
         @Nullable ObjectNode rpcActualResult = JacksonUtil.fromString(actualResult, ObjectNode.class);
         assertEquals(ResponseCode.CONTENT.getName(), rpcActualResult.get("result").asText());
         JsonNode rpcActualValue = JacksonUtil.toJsonNode(rpcActualResult.get("value").asText());
-        @NotNull Set actualObjects = ConcurrentHashMap.newKeySet();
-        @NotNull Set actualInstances = ConcurrentHashMap.newKeySet();
+        Set actualObjects = ConcurrentHashMap.newKeySet();
+        Set actualInstances = ConcurrentHashMap.newKeySet();
         rpcActualValue.forEach(node -> {
             if (!node.get("uriReference").asText().equals("/")) {
-                @NotNull LwM2mPath path = new LwM2mPath(node.get("uriReference").asText());
+                LwM2mPath path = new LwM2mPath(node.get("uriReference").asText());
                 actualObjects.add("/" + path.getObjectId());
                 if (path.isObjectInstance()) {
                     actualInstances.add("/" + path.getObjectId() + "/" + path.getObjectInstanceId());
@@ -64,7 +63,7 @@ public class RpcLwm2mIntegrationDiscoverTest extends AbstractRpcLwM2MIntegration
                 String expectedObjectId = pathIdVerToObjectId((String) expected);
                 @Nullable ObjectNode rpcActualResult = JacksonUtil.fromString(actualResult, ObjectNode.class);
                 assertEquals(ResponseCode.CONTENT.getName(), rpcActualResult.get("result").asText());
-                @NotNull String[] actualValues = rpcActualResult.get("value").asText().split(",");
+                String[] actualValues = rpcActualResult.get("value").asText().split(",");
                 assertTrue(actualValues.length > 0);
                 assertEquals(0, Arrays.stream(actualValues).filter(path -> !path.contains(expectedObjectId)).collect(Collectors.toList()).size());
             } catch (Exception e) {
@@ -84,12 +83,12 @@ public class RpcLwm2mIntegrationDiscoverTest extends AbstractRpcLwM2MIntegration
      */
     @Test
     public void testDiscoverInstance_Return_CONTENT_LinksResourcesOnLyExpectedInstance() throws Exception {
-        @NotNull String expected = (String) expectedObjectIdVerInstances.stream().findAny().get();
+        String expected = (String) expectedObjectIdVerInstances.stream().findAny().get();
         String actualResult = sendDiscover(expected);
         @Nullable ObjectNode rpcActualResult = JacksonUtil.fromString(actualResult, ObjectNode.class);
         assertEquals(ResponseCode.CONTENT.getName(), rpcActualResult.get("result").asText());
         String expectedObjectInstanceId = pathIdVerToObjectId(expected);
-        @NotNull String[] actualValues = rpcActualResult.get("value").asText().split(",");
+        String[] actualValues = rpcActualResult.get("value").asText().split(",");
         assertTrue(actualValues.length > 0);
         assertEquals(0, Arrays.stream(actualValues).filter(path -> !path.contains(expectedObjectInstanceId)).collect(Collectors.toList()).size());
     }
@@ -108,15 +107,15 @@ public class RpcLwm2mIntegrationDiscoverTest extends AbstractRpcLwM2MIntegration
      */
     @Test
     public void testDiscoverResource_Return_CONTENT_LinksResourceOnLyExpectedResource() throws Exception {
-        @NotNull String expectedInstance = (String) expectedInstances.stream().findFirst().get();
+        String expectedInstance = (String) expectedInstances.stream().findFirst().get();
         String expectedObjectInstanceId = pathIdVerToObjectId(expectedInstance);
-        @NotNull LwM2mPath expectedPath = new LwM2mPath(expectedObjectInstanceId);
+        LwM2mPath expectedPath = new LwM2mPath(expectedObjectInstanceId);
         int expectedResource = lwM2MTestClient.getLeshanClient().getObjectTree().getObjectEnablers().get(expectedPath.getObjectId()).getObjectModel().resources.entrySet().stream().findAny().get().getKey();
-        @NotNull String expected = expectedInstance + "/" + expectedResource;
+        String expected = expectedInstance + "/" + expectedResource;
         String actualResult = sendDiscover(expected);
         @Nullable ObjectNode rpcActualResult = JacksonUtil.fromString(actualResult, ObjectNode.class);
         assertEquals(ResponseCode.CONTENT.getName(), rpcActualResult.get("result").asText());
-        @NotNull String expectedResourceId = "<" + expectedObjectInstanceId + "/" + expectedResource + ">";
+        String expectedResourceId = "<" + expectedObjectInstanceId + "/" + expectedResource + ">";
         String actualValue = rpcActualResult.get("value").asText();
         assertEquals(expectedResourceId, actualValue );
 
@@ -128,7 +127,7 @@ public class RpcLwm2mIntegrationDiscoverTest extends AbstractRpcLwM2MIntegration
      */
     @Test
     public void testDiscoverObjectInstanceAbsentInObject_Return_NOT_FOUND() throws Exception {
-        @NotNull String expected = objectIdVer_2 + "/" + OBJECT_INSTANCE_ID_0;
+        String expected = objectIdVer_2 + "/" + OBJECT_INSTANCE_ID_0;
         String actualResult = sendDiscover(expected);
         @Nullable ObjectNode rpcActualResult = JacksonUtil.fromString(actualResult, ObjectNode.class);
         assertEquals(ResponseCode.NOT_FOUND.getName(), rpcActualResult.get("result").asText());
@@ -139,14 +138,14 @@ public class RpcLwm2mIntegrationDiscoverTest extends AbstractRpcLwM2MIntegration
      */
     @Test
     public void testDiscoverResourceAbsentInObject_Return_NOT_FOUND() throws Exception {
-         @NotNull String expected = objectIdVer_2 + "/" + OBJECT_INSTANCE_ID_0 + "/" + RESOURCE_ID_2;
+         String expected = objectIdVer_2 + "/" + OBJECT_INSTANCE_ID_0 + "/" + RESOURCE_ID_2;
         String actualResult = sendDiscover(expected);
         @Nullable ObjectNode rpcActualResult = JacksonUtil.fromString(actualResult, ObjectNode.class);
         assertEquals(ResponseCode.NOT_FOUND.getName(), rpcActualResult.get("result").asText());
     }
 
     private String sendDiscover(String path) throws Exception {
-        @NotNull String setRpcRequest = "{\"method\": \"Discover\", \"params\": {\"id\": \"" + path + "\"}}";
+        String setRpcRequest = "{\"method\": \"Discover\", \"params\": {\"id\": \"" + path + "\"}}";
         return doPostAsync("/api/plugins/rpc/twoway/" + deviceId, setRpcRequest, String.class, status().isOk());
     }
 }

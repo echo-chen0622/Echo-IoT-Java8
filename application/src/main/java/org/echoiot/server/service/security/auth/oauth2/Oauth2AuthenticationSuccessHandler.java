@@ -14,7 +14,6 @@ import org.echoiot.server.service.security.auth.rest.RestAuthenticationDetails;
 import org.echoiot.server.service.security.model.SecurityUser;
 import org.echoiot.server.service.security.model.token.JwtTokenFactory;
 import org.echoiot.server.service.security.system.SystemSecurityService;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
@@ -63,8 +62,8 @@ public class Oauth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     }
 
     @Override
-    public void onAuthenticationSuccess(@NotNull HttpServletRequest request,
-                                        @NotNull HttpServletResponse response,
+    public void onAuthenticationSuccess(HttpServletRequest request,
+                                        HttpServletResponse response,
                                         Authentication authentication) throws IOException {
         OAuth2AuthorizationRequest authorizationRequest = httpCookieOAuth2AuthorizationRequestRepository.loadAuthorizationRequest(request);
         String callbackUrlScheme = authorizationRequest.getAttribute(TbOAuth2ParameterNames.CALLBACK_URL_SCHEME);
@@ -73,7 +72,7 @@ public class Oauth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             baseUrl = callbackUrlScheme + ":";
         } else {
             baseUrl = this.systemSecurityService.getBaseUrl(TenantId.SYS_TENANT_ID, new CustomerId(EntityId.NULL_UUID), request);
-            @NotNull Optional<Cookie> prevUrlOpt = CookieUtils.getCookie(request, PREV_URI_COOKIE_NAME);
+            Optional<Cookie> prevUrlOpt = CookieUtils.getCookie(request, PREV_URI_COOKIE_NAME);
             if (prevUrlOpt.isPresent()) {
                 baseUrl += prevUrlOpt.get().getValue();
                 CookieUtils.deleteCookie(request, response, PREV_URI_COOKIE_NAME);
@@ -110,13 +109,12 @@ public class Oauth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         }
     }
 
-    protected void clearAuthenticationAttributes(@NotNull HttpServletRequest request, HttpServletResponse response) {
+    protected void clearAuthenticationAttributes(HttpServletRequest request, HttpServletResponse response) {
         super.clearAuthenticationAttributes(request);
         httpCookieOAuth2AuthorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
     }
 
-    @NotNull
-    String getRedirectUrl(@NotNull String baseUrl, @NotNull JwtPair tokenPair) {
+    String getRedirectUrl(String baseUrl, JwtPair tokenPair) {
         if (baseUrl.indexOf("?") > 0) {
             baseUrl += "&";
         } else {

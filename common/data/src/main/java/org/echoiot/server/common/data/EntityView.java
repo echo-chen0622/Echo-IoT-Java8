@@ -12,7 +12,6 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.objects.TelemetryEntityView;
 import org.echoiot.server.common.data.validation.Length;
 import org.echoiot.server.common.data.validation.NoXss;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by Victor Basanets on 8/27/2017.
@@ -55,7 +54,7 @@ public class EntityView extends SearchTextBasedWithAdditionalInfo<EntityViewId>
         super(id);
     }
 
-    public EntityView(@NotNull EntityView entityView) {
+    public EntityView(EntityView entityView) {
         super(entityView);
         this.entityId = entityView.getEntityId();
         this.tenantId = entityView.getTenantId();

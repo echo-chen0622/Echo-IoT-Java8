@@ -20,7 +20,6 @@ import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.TbMsgDataType;
 import org.echoiot.server.common.msg.TbMsgMetaData;
 import org.echoiot.server.dao.audit.AuditLogService;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
@@ -32,15 +31,13 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class EntityActionService {
-    @NotNull
     private final TbClusterService tbClusterService;
-    @NotNull
     private final AuditLogService auditLogService;
 
     private static final ObjectMapper json = new ObjectMapper();
 
-    public void pushEntityActionToRuleEngine(@NotNull EntityId entityId, @Nullable HasName entity, @Nullable TenantId tenantId, @Nullable CustomerId customerId,
-                                             @NotNull ActionType actionType, @Nullable User user, Object... additionalInfo) {
+    public void pushEntityActionToRuleEngine(EntityId entityId, @Nullable HasName entity, @Nullable TenantId tenantId, @Nullable CustomerId customerId,
+                                             ActionType actionType, @Nullable User user, Object... additionalInfo) {
         @Nullable String msgType = null;
         switch (actionType) {
             case ADDED:
@@ -109,7 +106,7 @@ public class EntityActionService {
         }
         if (!StringUtils.isEmpty(msgType)) {
             try {
-                @NotNull TbMsgMetaData metaData = new TbMsgMetaData();
+                TbMsgMetaData metaData = new TbMsgMetaData();
                 if (user != null) {
                     metaData.putValue("userId", user.getId().toString());
                     metaData.putValue("userName", user.getName());
@@ -162,7 +159,7 @@ public class EntityActionService {
                         List<AttributeKvEntry> attributes = extractParameter(List.class, 1, additionalInfo);
                         metaData.putValue(DataConstants.SCOPE, scope);
                         if (attributes != null) {
-                            for (@NotNull AttributeKvEntry attr : attributes) {
+                            for (AttributeKvEntry attr : attributes) {
                                 JacksonUtil.addKvEntry(entityNode, attr);
                             }
                         }
@@ -192,7 +189,7 @@ public class EntityActionService {
                         entityNode = json.valueToTree(extractParameter(EntityRelation.class, 0, additionalInfo));
                     }
                 }
-                @NotNull TbMsg tbMsg = TbMsg.newMsg(msgType, entityId, customerId, metaData, TbMsgDataType.JSON, json.writeValueAsString(entityNode));
+                TbMsg tbMsg = TbMsg.newMsg(msgType, entityId, customerId, metaData, TbMsgDataType.JSON, json.writeValueAsString(entityNode));
                 if (tenantId == null || tenantId.isNullUid()) {
                     if (entity instanceof HasTenantId) {
                         tenantId = ((HasTenantId) entity).getTenantId();
@@ -205,8 +202,8 @@ public class EntityActionService {
         }
     }
 
-    public <E extends HasName, I extends EntityId> void logEntityAction(@NotNull User user, @NotNull I entityId, E entity, @Nullable CustomerId customerId,
-                                                                        @NotNull ActionType actionType, @Nullable Exception e, Object... additionalInfo) {
+    public <E extends HasName, I extends EntityId> void logEntityAction(User user, I entityId, E entity, @Nullable CustomerId customerId,
+                                                                        ActionType actionType, @Nullable Exception e, Object... additionalInfo) {
         if (customerId == null || customerId.isNullUid()) {
             customerId = user.getCustomerId();
         }
@@ -221,7 +218,7 @@ public class EntityActionService {
     }
 
     @Nullable
-    private <T> T extractParameter(@NotNull Class<T> clazz, int index, @Nullable Object... additionalInfo) {
+    private <T> T extractParameter(Class<T> clazz, int index, @Nullable Object... additionalInfo) {
         @Nullable T result = null;
         if (additionalInfo != null && additionalInfo.length > index) {
             Object paramObject = additionalInfo[index];
@@ -232,16 +229,16 @@ public class EntityActionService {
         return result;
     }
 
-    private void addTimeseries(@NotNull ObjectNode entityNode, @Nullable List<TsKvEntry> timeseries) throws Exception {
+    private void addTimeseries(ObjectNode entityNode, @Nullable List<TsKvEntry> timeseries) throws Exception {
         if (timeseries != null && !timeseries.isEmpty()) {
             ArrayNode result = entityNode.putArray("timeseries");
-            @NotNull Map<Long, List<TsKvEntry>> groupedTelemetry = timeseries.stream()
+            Map<Long, List<TsKvEntry>> groupedTelemetry = timeseries.stream()
                                                                              .collect(Collectors.groupingBy(TsKvEntry::getTs));
-            for (@NotNull Map.Entry<Long, List<TsKvEntry>> entry : groupedTelemetry.entrySet()) {
+            for (Map.Entry<Long, List<TsKvEntry>> entry : groupedTelemetry.entrySet()) {
                 ObjectNode element = json.createObjectNode();
                 element.put("ts", entry.getKey());
                 ObjectNode values = element.putObject("values");
-                for (@NotNull TsKvEntry tsKvEntry : entry.getValue()) {
+                for (TsKvEntry tsKvEntry : entry.getValue()) {
                     JacksonUtil.addKvEntry(values, tsKvEntry);
                 }
                 result.add(element);

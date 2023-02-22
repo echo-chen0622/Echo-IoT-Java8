@@ -17,7 +17,6 @@ import org.echoiot.server.dao.rule.RuleChainService;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.edge.EdgeNotificationService;
 import org.echoiot.server.service.entitiy.AbstractTbEntityService;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 @AllArgsConstructor
@@ -26,15 +25,12 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class DefaultTbEdgeService extends AbstractTbEntityService implements TbEdgeService {
 
-    @NotNull
     private final EdgeNotificationService edgeNotificationService;
-    @NotNull
     private final RuleChainService ruleChainService;
 
-    @NotNull
     @Override
-    public Edge save(@NotNull Edge edge, @NotNull RuleChain edgeTemplateRootRuleChain, User user) throws Exception {
-        @NotNull ActionType actionType = edge.getId() == null ? ActionType.ADDED : ActionType.UPDATED;
+    public Edge save(Edge edge, RuleChain edgeTemplateRootRuleChain, User user) throws Exception {
+        ActionType actionType = edge.getId() == null ? ActionType.ADDED : ActionType.UPDATED;
         TenantId tenantId = edge.getTenantId();
         try {
             if (actionType == ActionType.ADDED && edge.getRootRuleChainId() == null) {
@@ -59,7 +55,7 @@ public class DefaultTbEdgeService extends AbstractTbEntityService implements TbE
     }
 
     @Override
-    public void delete(@NotNull Edge edge, User user) {
+    public void delete(Edge edge, User user) {
         EdgeId edgeId = edge.getId();
         TenantId tenantId = edge.getTenantId();
         try {
@@ -73,8 +69,8 @@ public class DefaultTbEdgeService extends AbstractTbEntityService implements TbE
     }
 
     @Override
-    public Edge assignEdgeToCustomer(TenantId tenantId, @NotNull EdgeId edgeId, @NotNull Customer customer, User user) throws EchoiotException {
-        @NotNull ActionType actionType = ActionType.ASSIGNED_TO_CUSTOMER;
+    public Edge assignEdgeToCustomer(TenantId tenantId, EdgeId edgeId, Customer customer, User user) throws EchoiotException {
+        ActionType actionType = ActionType.ASSIGNED_TO_CUSTOMER;
         CustomerId customerId = customer.getId();
         try {
             Edge savedEdge = checkNotNull(edgeService.assignEdgeToCustomer(tenantId, edgeId, customerId));
@@ -90,8 +86,8 @@ public class DefaultTbEdgeService extends AbstractTbEntityService implements TbE
     }
 
     @Override
-    public Edge unassignEdgeFromCustomer(@NotNull Edge edge, @NotNull Customer customer, User user) throws EchoiotException {
-        @NotNull ActionType actionType = ActionType.UNASSIGNED_FROM_CUSTOMER;
+    public Edge unassignEdgeFromCustomer(Edge edge, Customer customer, User user) throws EchoiotException {
+        ActionType actionType = ActionType.UNASSIGNED_FROM_CUSTOMER;
         TenantId tenantId = edge.getTenantId();
         EdgeId edgeId = edge.getId();
         CustomerId customerId = customer.getId();
@@ -108,7 +104,7 @@ public class DefaultTbEdgeService extends AbstractTbEntityService implements TbE
     }
 
     @Override
-    public Edge assignEdgeToPublicCustomer(TenantId tenantId, @NotNull EdgeId edgeId, User user) throws EchoiotException {
+    public Edge assignEdgeToPublicCustomer(TenantId tenantId, EdgeId edgeId, User user) throws EchoiotException {
         Customer publicCustomer = customerService.findOrCreatePublicCustomer(tenantId);
         CustomerId customerId = publicCustomer.getId();
         try {
@@ -126,7 +122,7 @@ public class DefaultTbEdgeService extends AbstractTbEntityService implements TbE
     }
 
     @Override
-    public Edge setEdgeRootRuleChain(@NotNull Edge edge, RuleChainId ruleChainId, User user) throws Exception {
+    public Edge setEdgeRootRuleChain(Edge edge, RuleChainId ruleChainId, User user) throws Exception {
         TenantId tenantId = edge.getTenantId();
         EdgeId edgeId = edge.getId();
         try {

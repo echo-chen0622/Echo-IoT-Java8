@@ -6,7 +6,6 @@ import io.netty.handler.codec.mqtt.MqttMessage;
 import io.netty.handler.codec.mqtt.MqttPublishMessage;
 import io.netty.handler.codec.mqtt.MqttQoS;
 import io.netty.util.concurrent.Promise;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
@@ -18,9 +17,7 @@ final class MqttPendingPublish {
     private final MqttPublishMessage message;
     private final MqttQoS qos;
 
-    @NotNull
     private final RetransmissionHandler<MqttPublishMessage> publishRetransmissionHandler;
-    @NotNull
     private final RetransmissionHandler<MqttMessage> pubrelRetransmissionHandler;
 
     private boolean sent = false;
@@ -65,7 +62,7 @@ final class MqttPendingPublish {
         return qos;
     }
 
-    void startPublishRetransmissionTimer(EventLoop eventLoop, @NotNull Consumer<Object> sendPacket) {
+    void startPublishRetransmissionTimer(EventLoop eventLoop, Consumer<Object> sendPacket) {
         this.publishRetransmissionHandler.setHandle(((fixedHeader, originalMessage) ->
                 sendPacket.accept(new MqttPublishMessage(fixedHeader, originalMessage.variableHeader(), this.payload.retain()))));
         this.publishRetransmissionHandler.start(eventLoop);
@@ -79,7 +76,7 @@ final class MqttPendingPublish {
         this.pubrelRetransmissionHandler.setOriginalMessage(pubrelMessage);
     }
 
-    void startPubrelRetransmissionTimer(EventLoop eventLoop, @NotNull Consumer<Object> sendPacket) {
+    void startPubrelRetransmissionTimer(EventLoop eventLoop, Consumer<Object> sendPacket) {
         this.pubrelRetransmissionHandler.setHandle((fixedHeader, originalMessage) ->
                 sendPacket.accept(new MqttMessage(fixedHeader, originalMessage.variableHeader())));
         this.pubrelRetransmissionHandler.start(eventLoop);

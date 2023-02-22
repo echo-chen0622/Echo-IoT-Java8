@@ -5,7 +5,6 @@ import org.echoiot.server.common.data.device.credentials.lwm2m.X509ClientCredent
 import org.echoiot.server.common.data.device.profile.Lwm2mDeviceProfileTransportConfiguration;
 import org.echoiot.server.transport.lwm2m.security.AbstractSecurityLwM2MIntegrationTest;
 import org.eclipse.leshan.client.object.Security;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
 import java.security.PrivateKey;
@@ -23,13 +22,13 @@ public class X509_TrustLwM2MIntegrationTest extends AbstractSecurityLwM2MIntegra
     //Lwm2m only
     @Test
     public void testWithX509TrustConnectLwm2mSuccess() throws Exception {
-        @NotNull String clientEndpoint = CLIENT_ENDPOINT_X509_TRUST;
+        String clientEndpoint = CLIENT_ENDPOINT_X509_TRUST;
         X509Certificate certificate = clientX509CertTrust;
         PrivateKey privateKey = clientPrivateKeyFromCertTrust;
-        @NotNull X509ClientCredential clientCredentials = new X509ClientCredential();
+        X509ClientCredential clientCredentials = new X509ClientCredential();
         clientCredentials.setEndpoint(clientEndpoint);
         clientCredentials.setCert("");
-        @NotNull Security security = x509(SECURE_URI,
+        Security security = x509(SECURE_URI,
                                           shortServerId,
                                           certificate.getEncoded(),
                                           privateKey.getEncoded(),
@@ -51,13 +50,13 @@ public class X509_TrustLwM2MIntegrationTest extends AbstractSecurityLwM2MIntegra
     // Bootstrap + Lwm2m
     @Test
     public void testWithX509TrustConnectBsSuccess_UpdateTwoSectionsBootstrapAndLm2m_ConnectLwm2mSuccess() throws Exception {
-        @NotNull String clientEndpoint = CLIENT_ENDPOINT_X509_TRUST;
+        String clientEndpoint = CLIENT_ENDPOINT_X509_TRUST;
         X509Certificate certificate = clientX509CertTrust;
         PrivateKey privateKey = clientPrivateKeyFromCertTrust;
-        @NotNull X509ClientCredential clientCredentials = new X509ClientCredential();
+        X509ClientCredential clientCredentials = new X509ClientCredential();
         clientCredentials.setEndpoint(clientEndpoint);
         clientCredentials.setCert("");
-        @NotNull Security security = x509Bootstrap(SECURE_URI_BS,
+        Security security = x509Bootstrap(SECURE_URI_BS,
                                                    certificate.getEncoded(),
                                                    privateKey.getEncoded(),
                                                    serverX509CertBs.getEncoded());

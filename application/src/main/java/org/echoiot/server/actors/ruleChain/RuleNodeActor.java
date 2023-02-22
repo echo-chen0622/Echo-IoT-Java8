@@ -11,7 +11,6 @@ import org.echoiot.server.common.msg.TbActorMsg;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.plugin.ComponentLifecycleMsg;
 import org.echoiot.server.common.msg.queue.PartitionChangeMsg;
-import org.jetbrains.annotations.NotNull;
 
 @Slf4j
 public class RuleNodeActor extends ComponentActor<RuleNodeId, RuleNodeActorMessageProcessor> {
@@ -27,14 +26,13 @@ public class RuleNodeActor extends ComponentActor<RuleNodeId, RuleNodeActorMessa
         this.ruleNodeId = ruleNodeId;
     }
 
-    @NotNull
     @Override
-    protected RuleNodeActorMessageProcessor createProcessor(@NotNull TbActorCtx ctx) {
+    protected RuleNodeActorMessageProcessor createProcessor(TbActorCtx ctx) {
         return new RuleNodeActorMessageProcessor(tenantId, this.ruleChainName, ruleNodeId, systemContext, ctx.getParentRef(), ctx);
     }
 
     @Override
-    protected boolean doProcess(@NotNull TbActorMsg msg) {
+    protected boolean doProcess(TbActorMsg msg) {
         switch (msg.getMsgType()) {
             case COMPONENT_LIFE_CYCLE_MSG:
             case RULE_NODE_UPDATED_MSG:
@@ -58,7 +56,7 @@ public class RuleNodeActor extends ComponentActor<RuleNodeId, RuleNodeActorMessa
         return true;
     }
 
-    private void onRuleNodeToSelfMsg(@NotNull RuleNodeToSelfMsg msg) {
+    private void onRuleNodeToSelfMsg(RuleNodeToSelfMsg msg) {
         if (log.isDebugEnabled()) {
             log.debug("[{}][{}][{}] Going to process rule msg: {}", ruleChainId, id, processor.getComponentName(), msg.getMsg());
         }
@@ -70,7 +68,7 @@ public class RuleNodeActor extends ComponentActor<RuleNodeId, RuleNodeActorMessa
         }
     }
 
-    private void onRuleChainToRuleNodeMsg(@NotNull RuleChainToRuleNodeMsg envelope) {
+    private void onRuleChainToRuleNodeMsg(RuleChainToRuleNodeMsg envelope) {
         TbMsg msg = envelope.getMsg();
         if (!msg.isValid()) {
             if (log.isTraceEnabled()) {
@@ -105,14 +103,12 @@ public class RuleNodeActor extends ComponentActor<RuleNodeId, RuleNodeActorMessa
 
         }
 
-        @NotNull
-        @Override
+            @Override
         public TbActorId createActorId() {
             return new TbEntityActorId(ruleNodeId);
         }
 
-        @NotNull
-        @Override
+            @Override
         public TbActor createActor() {
             return new RuleNodeActor(context, tenantId, ruleChainId, ruleChainName, ruleNodeId);
         }

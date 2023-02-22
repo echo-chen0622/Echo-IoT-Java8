@@ -3,7 +3,6 @@ package org.echoiot.server.common.data.query;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -12,7 +11,6 @@ import java.util.List;
 @ToString(callSuper = true)
 public class AssetSearchQueryFilter extends EntitySearchQueryFilter {
 
-    @NotNull
     @Override
     public EntityFilterType getType() {
         return EntityFilterType.ASSET_SEARCH_QUERY;

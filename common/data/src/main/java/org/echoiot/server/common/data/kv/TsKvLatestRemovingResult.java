@@ -1,7 +1,6 @@
 package org.echoiot.server.common.data.kv;
 
 import lombok.Data;
-import org.jetbrains.annotations.NotNull;
 
 @Data
 public class TsKvLatestRemovingResult {
@@ -9,7 +8,7 @@ public class TsKvLatestRemovingResult {
     private TsKvEntry data;
     private boolean removed;
 
-    public TsKvLatestRemovingResult(@NotNull TsKvEntry data) {
+    public TsKvLatestRemovingResult(TsKvEntry data) {
         this.key = data.getKey();
         this.data = data;
         this.removed = true;

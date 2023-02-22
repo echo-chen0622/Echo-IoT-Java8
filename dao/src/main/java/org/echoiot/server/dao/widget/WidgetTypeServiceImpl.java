@@ -8,7 +8,6 @@ import org.echoiot.server.common.data.widget.WidgetTypeDetails;
 import org.echoiot.server.common.data.widget.WidgetTypeInfo;
 import org.echoiot.server.dao.service.DataValidator;
 import org.echoiot.server.dao.service.Validator;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -27,35 +26,35 @@ public class WidgetTypeServiceImpl implements WidgetTypeService {
     private DataValidator<WidgetTypeDetails> widgetTypeValidator;
 
     @Override
-    public WidgetType findWidgetTypeById(TenantId tenantId, @NotNull WidgetTypeId widgetTypeId) {
+    public WidgetType findWidgetTypeById(TenantId tenantId, WidgetTypeId widgetTypeId) {
         log.trace("Executing findWidgetTypeById [{}]", widgetTypeId);
         Validator.validateId(widgetTypeId, "Incorrect widgetTypeId " + widgetTypeId);
         return widgetTypeDao.findWidgetTypeById(tenantId, widgetTypeId.getId());
     }
 
     @Override
-    public WidgetTypeDetails findWidgetTypeDetailsById(TenantId tenantId, @NotNull WidgetTypeId widgetTypeId) {
+    public WidgetTypeDetails findWidgetTypeDetailsById(TenantId tenantId, WidgetTypeId widgetTypeId) {
         log.trace("Executing findWidgetTypeDetailsById [{}]", widgetTypeId);
         Validator.validateId(widgetTypeId, "Incorrect widgetTypeId " + widgetTypeId);
         return widgetTypeDao.findById(tenantId, widgetTypeId.getId());
     }
 
     @Override
-    public WidgetTypeDetails saveWidgetType(@NotNull WidgetTypeDetails widgetTypeDetails) {
+    public WidgetTypeDetails saveWidgetType(WidgetTypeDetails widgetTypeDetails) {
         log.trace("Executing saveWidgetType [{}]", widgetTypeDetails);
         widgetTypeValidator.validate(widgetTypeDetails, WidgetType::getTenantId);
         return widgetTypeDao.save(widgetTypeDetails.getTenantId(), widgetTypeDetails);
     }
 
     @Override
-    public void deleteWidgetType(TenantId tenantId, @NotNull WidgetTypeId widgetTypeId) {
+    public void deleteWidgetType(TenantId tenantId, WidgetTypeId widgetTypeId) {
         log.trace("Executing deleteWidgetType [{}]", widgetTypeId);
         Validator.validateId(widgetTypeId, "Incorrect widgetTypeId " + widgetTypeId);
         widgetTypeDao.removeById(tenantId, widgetTypeId.getId());
     }
 
     @Override
-    public List<WidgetType> findWidgetTypesByTenantIdAndBundleAlias(@NotNull TenantId tenantId, String bundleAlias) {
+    public List<WidgetType> findWidgetTypesByTenantIdAndBundleAlias(TenantId tenantId, String bundleAlias) {
         log.trace("Executing findWidgetTypesByTenantIdAndBundleAlias, tenantId [{}], bundleAlias [{}]", tenantId, bundleAlias);
         Validator.validateId(tenantId, INCORRECT_TENANT_ID + tenantId);
         Validator.validateString(bundleAlias, INCORRECT_BUNDLE_ALIAS + bundleAlias);
@@ -63,7 +62,7 @@ public class WidgetTypeServiceImpl implements WidgetTypeService {
     }
 
     @Override
-    public List<WidgetTypeDetails> findWidgetTypesDetailsByTenantIdAndBundleAlias(@NotNull TenantId tenantId, String bundleAlias) {
+    public List<WidgetTypeDetails> findWidgetTypesDetailsByTenantIdAndBundleAlias(TenantId tenantId, String bundleAlias) {
         log.trace("Executing findWidgetTypesDetailsByTenantIdAndBundleAlias, tenantId [{}], bundleAlias [{}]", tenantId, bundleAlias);
         Validator.validateId(tenantId, INCORRECT_TENANT_ID + tenantId);
         Validator.validateString(bundleAlias, INCORRECT_BUNDLE_ALIAS + bundleAlias);
@@ -71,7 +70,7 @@ public class WidgetTypeServiceImpl implements WidgetTypeService {
     }
 
     @Override
-    public List<WidgetTypeInfo> findWidgetTypesInfosByTenantIdAndBundleAlias(@NotNull TenantId tenantId, String bundleAlias) {
+    public List<WidgetTypeInfo> findWidgetTypesInfosByTenantIdAndBundleAlias(TenantId tenantId, String bundleAlias) {
         log.trace("Executing findWidgetTypesInfosByTenantIdAndBundleAlias, tenantId [{}], bundleAlias [{}]", tenantId, bundleAlias);
         Validator.validateId(tenantId, INCORRECT_TENANT_ID + tenantId);
         Validator.validateString(bundleAlias, INCORRECT_BUNDLE_ALIAS + bundleAlias);
@@ -79,7 +78,7 @@ public class WidgetTypeServiceImpl implements WidgetTypeService {
     }
 
     @Override
-    public WidgetType findWidgetTypeByTenantIdBundleAliasAndAlias(@NotNull TenantId tenantId, String bundleAlias, String alias) {
+    public WidgetType findWidgetTypeByTenantIdBundleAliasAndAlias(TenantId tenantId, String bundleAlias, String alias) {
         log.trace("Executing findWidgetTypeByTenantIdBundleAliasAndAlias, tenantId [{}], bundleAlias [{}], alias [{}]", tenantId, bundleAlias, alias);
         Validator.validateId(tenantId, INCORRECT_TENANT_ID + tenantId);
         Validator.validateString(bundleAlias, INCORRECT_BUNDLE_ALIAS + bundleAlias);
@@ -88,12 +87,12 @@ public class WidgetTypeServiceImpl implements WidgetTypeService {
     }
 
     @Override
-    public void deleteWidgetTypesByTenantIdAndBundleAlias(@NotNull TenantId tenantId, String bundleAlias) {
+    public void deleteWidgetTypesByTenantIdAndBundleAlias(TenantId tenantId, String bundleAlias) {
         log.trace("Executing deleteWidgetTypesByTenantIdAndBundleAlias, tenantId [{}], bundleAlias [{}]", tenantId, bundleAlias);
         Validator.validateId(tenantId, INCORRECT_TENANT_ID + tenantId);
         Validator.validateString(bundleAlias, INCORRECT_BUNDLE_ALIAS + bundleAlias);
         List<WidgetType> widgetTypes = widgetTypeDao.findWidgetTypesByTenantIdAndBundleAlias(tenantId.getId(), bundleAlias);
-        for (@NotNull WidgetType widgetType : widgetTypes) {
+        for (WidgetType widgetType : widgetTypes) {
             deleteWidgetType(tenantId, new WidgetTypeId(widgetType.getUuidId()));
         }
     }

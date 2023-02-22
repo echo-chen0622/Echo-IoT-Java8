@@ -12,7 +12,6 @@ import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.TbMsgMetaData;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.script.ScriptException;
@@ -27,17 +26,16 @@ public class RuleNodeJsScriptEngine extends RuleNodeScriptEngine<JsInvokeService
     }
 
     @Override
-    public ListenableFuture<JsonNode> executeJsonAsync(@NotNull TbMsg msg) {
+    public ListenableFuture<JsonNode> executeJsonAsync(TbMsg msg) {
         return executeScriptAsync(msg);
     }
 
-    @NotNull
     @Override
-    protected ListenableFuture<List<TbMsg>> executeUpdateTransform(@NotNull TbMsg msg, @NotNull JsonNode json) {
+    protected ListenableFuture<List<TbMsg>> executeUpdateTransform(TbMsg msg, JsonNode json) {
         if (json.isObject()) {
             return Futures.immediateFuture(Collections.singletonList(unbindMsg(json, msg)));
         } else if (json.isArray()) {
-            @NotNull List<TbMsg> res = new ArrayList<>(json.size());
+            List<TbMsg> res = new ArrayList<>(json.size());
             json.forEach(jsonObject -> res.add(unbindMsg(jsonObject, msg)));
             return Futures.immediateFuture(res);
         }
@@ -45,9 +43,8 @@ public class RuleNodeJsScriptEngine extends RuleNodeScriptEngine<JsInvokeService
         return Futures.immediateFailedFuture(new ScriptException("Wrong result type: " + json.getNodeType()));
     }
 
-    @NotNull
     @Override
-    protected ListenableFuture<TbMsg> executeGenerateTransform(@NotNull TbMsg prevMsg, @NotNull JsonNode result) {
+    protected ListenableFuture<TbMsg> executeGenerateTransform(TbMsg prevMsg, JsonNode result) {
         if (!result.isObject()) {
             log.warn("Wrong result type: {}", result.getNodeType());
             Futures.immediateFailedFuture(new ScriptException("Wrong result type: " + result.getNodeType()));
@@ -61,9 +58,8 @@ public class RuleNodeJsScriptEngine extends RuleNodeScriptEngine<JsInvokeService
         return JacksonUtil.toJsonNode(result != null ? result.toString() : null);
     }
 
-    @NotNull
     @Override
-    protected ListenableFuture<String> executeToStringTransform(@NotNull JsonNode result) {
+    protected ListenableFuture<String> executeToStringTransform(JsonNode result) {
         if (result.isTextual()) {
             return Futures.immediateFuture(result.asText());
         }
@@ -71,9 +67,8 @@ public class RuleNodeJsScriptEngine extends RuleNodeScriptEngine<JsInvokeService
         return Futures.immediateFailedFuture(new ScriptException("Wrong result type: " + result.getNodeType()));
     }
 
-    @NotNull
     @Override
-    protected ListenableFuture<Boolean> executeFilterTransform(@NotNull JsonNode json) {
+    protected ListenableFuture<Boolean> executeFilterTransform(JsonNode json) {
         if (json.isBoolean()) {
             return Futures.immediateFuture(json.asBoolean());
         }
@@ -81,15 +76,14 @@ public class RuleNodeJsScriptEngine extends RuleNodeScriptEngine<JsInvokeService
         return Futures.immediateFailedFuture(new ScriptException("Wrong result type: " + json.getNodeType()));
     }
 
-    @NotNull
     @Override
-    protected ListenableFuture<Set<String>> executeSwitchTransform(@NotNull JsonNode result) {
+    protected ListenableFuture<Set<String>> executeSwitchTransform(JsonNode result) {
         if (result.isTextual()) {
             return Futures.immediateFuture(Collections.singleton(result.asText()));
         }
         if (result.isArray()) {
-            @NotNull Set<String> nextStates = new HashSet<>();
-            for (@NotNull JsonNode val : result) {
+            Set<String> nextStates = new HashSet<>();
+            for (JsonNode val : result) {
                 if (!val.isTextual()) {
                     log.warn("Wrong result type: {}", val.getNodeType());
                     return Futures.immediateFailedFuture(new ScriptException("Wrong result type: " + val.getNodeType()));
@@ -103,10 +97,9 @@ public class RuleNodeJsScriptEngine extends RuleNodeScriptEngine<JsInvokeService
         return Futures.immediateFailedFuture(new ScriptException("Wrong result type: " + result.getNodeType()));
     }
 
-    @NotNull
     @Override
-    protected Object[] prepareArgs(@NotNull TbMsg msg) {
-        @NotNull String[] args = new String[3];
+    protected Object[] prepareArgs(TbMsg msg) {
+        String[] args = new String[3];
         if (msg.getData() != null) {
             args[0] = msg.getData();
         } else {
@@ -117,8 +110,7 @@ public class RuleNodeJsScriptEngine extends RuleNodeScriptEngine<JsInvokeService
         return args;
     }
 
-    @NotNull
-    private static TbMsg unbindMsg(@NotNull JsonNode msgData, @NotNull TbMsg msg) {
+    private static TbMsg unbindMsg(JsonNode msgData, TbMsg msg) {
         @Nullable String data = null;
         @Nullable Map<String, String> metadata = null;
         @Nullable String messageType = null;
@@ -135,7 +127,7 @@ public class RuleNodeJsScriptEngine extends RuleNodeScriptEngine<JsInvokeService
             messageType = msgData.get(RuleNodeScriptFactory.MSG_TYPE).asText();
         }
         String newData = data != null ? data : msg.getData();
-        @NotNull TbMsgMetaData newMetadata = metadata != null ? new TbMsgMetaData(metadata) : msg.getMetaData().copy();
+        TbMsgMetaData newMetadata = metadata != null ? new TbMsgMetaData(metadata) : msg.getMetaData().copy();
         String newMessageType = !StringUtils.isEmpty(messageType) ? messageType : msg.getType();
         return TbMsg.transformMsg(msg, newMessageType, msg.getOriginator(), newMetadata, newData);
     }

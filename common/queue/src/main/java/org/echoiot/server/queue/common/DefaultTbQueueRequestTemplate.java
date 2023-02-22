@@ -11,7 +11,6 @@ import org.echoiot.common.util.TbStopWatch;
 import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
 import org.echoiot.server.common.stats.MessagesStats;
 import org.echoiot.server.queue.*;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -60,7 +59,6 @@ public class DefaultTbQueueRequestTemplate<Request extends TbQueueMsg, Response 
         this.executor = internalExecutor ? createExecutor() : executor;
     }
 
-    @NotNull
     ExecutorService createExecutor() {
         return Executors.newSingleThreadExecutor(EchoiotThreadFactory.forName("tb-queue-request-template-" + responseTemplate.getTopic()));
     }
@@ -75,7 +73,7 @@ public class DefaultTbQueueRequestTemplate<Request extends TbQueueMsg, Response 
 
     void mainLoop() {
         while (!stopped) {
-            @NotNull TbStopWatch sw = TbStopWatch.create();
+            TbStopWatch sw = TbStopWatch.create();
             try {
                 fetchAndProcessResponses();
             } catch (Throwable e) {
@@ -133,7 +131,7 @@ public class DefaultTbQueueRequestTemplate<Request extends TbQueueMsg, Response 
         LockSupport.parkNanos(nanos);
     }
 
-    void setTimeoutException(UUID key, @NotNull ResponseMetaData<Response> staleRequest, long currentNs) {
+    void setTimeoutException(UUID key, ResponseMetaData<Response> staleRequest, long currentNs) {
         if (currentNs >= staleRequest.getSubmitTime() + staleRequest.getTimeout()) {
             log.debug("Request timeout detected, currentNs [{}], {}, key [{}]", currentNs, staleRequest, key);
         } else {
@@ -142,7 +140,7 @@ public class DefaultTbQueueRequestTemplate<Request extends TbQueueMsg, Response 
         staleRequest.future.setException(new TimeoutException());
     }
 
-    void processResponse(@NotNull Response response) {
+    void processResponse(Response response) {
         byte[] requestIdHeader = response.getHeaders().get(REQUEST_ID_HEADER);
         UUID requestId;
         if (requestIdHeader == null) {
@@ -182,24 +180,23 @@ public class DefaultTbQueueRequestTemplate<Request extends TbQueueMsg, Response 
     }
 
     @Override
-    public ListenableFuture<Response> send(@NotNull Request request) {
+    public ListenableFuture<Response> send(Request request) {
         return send(request, this.maxRequestTimeoutNs);
     }
 
-    @NotNull
     @Override
-    public ListenableFuture<Response> send(@NotNull Request request, long requestTimeoutNs) {
+    public ListenableFuture<Response> send(Request request, long requestTimeoutNs) {
         if (pendingRequests.mappingCount() >= maxPendingRequests) {
             log.warn("Pending request map is full [{}]! Consider to increase maxPendingRequests or increase processing performance. Request is {}", maxPendingRequests, request);
             return Futures.immediateFailedFuture(new RuntimeException("Pending request map is full!"));
         }
-        @NotNull UUID requestId = UUID.randomUUID();
+        UUID requestId = UUID.randomUUID();
         request.getHeaders().put(REQUEST_ID_HEADER, uuidToBytes(requestId));
         request.getHeaders().put(RESPONSE_TOPIC_HEADER, stringToBytes(responseTemplate.getTopic()));
         request.getHeaders().put(EXPIRE_TS_HEADER, longToBytes(getCurrentTimeMs() + maxRequestTimeout));
         long currentClockNs = getCurrentClockNs();
-        @NotNull SettableFuture<Response> future = SettableFuture.create();
-        @NotNull ResponseMetaData<Response> responseMetaData = new ResponseMetaData<>(currentClockNs + requestTimeoutNs, future, currentClockNs, requestTimeoutNs);
+        SettableFuture<Response> future = SettableFuture.create();
+        ResponseMetaData<Response> responseMetaData = new ResponseMetaData<>(currentClockNs + requestTimeoutNs, future, currentClockNs, requestTimeoutNs);
         log.trace("pending {}", responseMetaData);
         if (pendingRequests.putIfAbsent(requestId, responseMetaData) != null) {
             log.warn("Pending request already exists [{}]!", maxPendingRequests);
@@ -224,7 +221,7 @@ public class DefaultTbQueueRequestTemplate<Request extends TbQueueMsg, Response 
         return System.currentTimeMillis();
     }
 
-    void sendToRequestTemplate(@NotNull Request request, @NotNull UUID requestId, @NotNull SettableFuture<Response> future, @NotNull ResponseMetaData<Response> responseMetaData) {
+    void sendToRequestTemplate(Request request, UUID requestId, SettableFuture<Response> future, ResponseMetaData<Response> responseMetaData) {
         log.trace("[{}] Sending request, key [{}], expTime [{}], request {}", requestId, request.getKey(), responseMetaData.expTime, request);
         if (messagesStats != null) {
             messagesStats.incrementTotal();
@@ -239,7 +236,7 @@ public class DefaultTbQueueRequestTemplate<Request extends TbQueueMsg, Response 
             }
 
             @Override
-            public void onFailure(@NotNull Throwable t) {
+            public void onFailure(Throwable t) {
                 if (messagesStats != null) {
                     messagesStats.incrementFailed();
                 }
@@ -263,8 +260,7 @@ public class DefaultTbQueueRequestTemplate<Request extends TbQueueMsg, Response 
             this.future = future;
         }
 
-        @NotNull
-        @Override
+            @Override
         public String toString() {
             return "ResponseMetaData{" +
                     "submitTime=" + submitTime +

@@ -1,6 +1,5 @@
 package org.echoiot.server.common.data.kv;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.validation.Valid;
@@ -81,7 +80,7 @@ public class BaseAttributeKvEntry implements AttributeKvEntry {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        @NotNull BaseAttributeKvEntry that = (BaseAttributeKvEntry) o;
+        BaseAttributeKvEntry that = (BaseAttributeKvEntry) o;
 
         if (lastUpdateTs != that.lastUpdateTs) return false;
         return kv.equals(that.kv);
@@ -95,7 +94,6 @@ public class BaseAttributeKvEntry implements AttributeKvEntry {
         return result;
     }
 
-    @NotNull
     @Override
     public String toString() {
         return "BaseAttributeKvEntry{" +

@@ -11,7 +11,6 @@ import org.echoiot.server.dao.dashboard.DashboardDao;
 import org.echoiot.server.dao.model.sql.DashboardEntity;
 import org.echoiot.server.dao.sql.JpaAbstractSearchTextDao;
 import org.echoiot.server.dao.util.SqlDao;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
@@ -31,7 +30,6 @@ public class JpaDashboardDao extends JpaAbstractSearchTextDao<DashboardEntity, D
     @Resource
     DashboardRepository dashboardRepository;
 
-    @NotNull
     @Override
     protected Class<DashboardEntity> getEntityClass() {
         return DashboardEntity.class;
@@ -43,7 +41,7 @@ public class JpaDashboardDao extends JpaAbstractSearchTextDao<DashboardEntity, D
     }
 
     @Override
-    public Long countByTenantId(@NotNull TenantId tenantId) {
+    public Long countByTenantId(TenantId tenantId) {
         return dashboardRepository.countByTenantId(tenantId.getId());
     }
 
@@ -52,7 +50,6 @@ public class JpaDashboardDao extends JpaAbstractSearchTextDao<DashboardEntity, D
         return DaoUtil.getData(dashboardRepository.findByTenantIdAndExternalId(tenantId, externalId));
     }
 
-    @NotNull
     @Override
     public PageData<Dashboard> findByTenantId(UUID tenantId, PageLink pageLink) {
         return DaoUtil.toPageData(dashboardRepository.findByTenantId(tenantId, DaoUtil.toPageable(pageLink)));
@@ -60,7 +57,7 @@ public class JpaDashboardDao extends JpaAbstractSearchTextDao<DashboardEntity, D
 
     @Nullable
     @Override
-    public DashboardId getExternalIdByInternal(@NotNull DashboardId internalId) {
+    public DashboardId getExternalIdByInternal(DashboardId internalId) {
         return Optional.ofNullable(dashboardRepository.getExternalIdById(internalId.getId()))
                 .map(DashboardId::new).orElse(null);
     }
@@ -70,7 +67,6 @@ public class JpaDashboardDao extends JpaAbstractSearchTextDao<DashboardEntity, D
         return DaoUtil.convertDataList(dashboardRepository.findByTenantIdAndTitle(tenantId, title));
     }
 
-    @NotNull
     @Override
     public EntityType getEntityType() {
         return EntityType.DASHBOARD;

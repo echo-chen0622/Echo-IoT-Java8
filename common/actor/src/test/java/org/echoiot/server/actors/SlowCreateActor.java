@@ -1,7 +1,6 @@
 package org.echoiot.server.actors;
 
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -11,7 +10,7 @@ public class SlowCreateActor extends TestRootActor {
 
     public static final int TIMEOUT_AWAIT_MAX_MS = 5000;
 
-    public SlowCreateActor(TbActorId actorId, @NotNull ActorTestCtx testCtx, @NotNull CountDownLatch initLatch) {
+    public SlowCreateActor(TbActorId actorId, ActorTestCtx testCtx, CountDownLatch initLatch) {
         super(actorId, testCtx);
         try {
             initLatch.await(TIMEOUT_AWAIT_MAX_MS, TimeUnit.MILLISECONDS);
@@ -38,8 +37,7 @@ public class SlowCreateActor extends TestRootActor {
             return actorId;
         }
 
-        @NotNull
-        @Override
+            @Override
         public TbActor createActor() {
             return new SlowCreateActor(actorId, testCtx, initLatch);
         }

@@ -2,7 +2,6 @@ package org.echoiot.server.common.data.id;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
@@ -45,7 +44,7 @@ public abstract class UUIDBased implements HasUUID, Serializable {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        @NotNull UUIDBased other = (UUIDBased) obj;
+        UUIDBased other = (UUIDBased) obj;
         if (id == null) {
             return other.id == null;
         } else return id.equals(other.id);

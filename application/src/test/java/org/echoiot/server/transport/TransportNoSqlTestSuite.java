@@ -2,7 +2,6 @@ package org.echoiot.server.transport;
 
 import org.cassandraunit.dataset.cql.ClassPathCQLDataSet;
 import org.echoiot.server.dao.CustomCassandraCQLUnit;
-import org.jetbrains.annotations.NotNull;
 import org.junit.ClassRule;
 import org.junit.extensions.cpsuite.ClasspathSuite;
 import org.junit.runner.RunWith;
@@ -15,7 +14,6 @@ import java.util.Arrays;
 })
 public class TransportNoSqlTestSuite {
 
-    @NotNull
     @ClassRule
     public static CustomCassandraCQLUnit cassandraUnit =
             new CustomCassandraCQLUnit(

@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Base64;
-import org.jetbrains.annotations.NotNull;
 
 @Getter
 @Setter
@@ -12,7 +11,6 @@ public class X509ClientCredential extends AbstractLwM2MClientSecurityCredential 
 
     private String cert;
 
-    @NotNull
     @Override
     public LwM2MSecurityMode getSecurityConfigClientMode() {
         return LwM2MSecurityMode.X509;

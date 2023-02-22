@@ -2,7 +2,6 @@ package org.echoiot.server.queue.discovery.event;
 
 import lombok.Getter;
 import lombok.ToString;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.context.ApplicationEvent;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -17,7 +16,7 @@ public class TbApplicationEvent extends ApplicationEvent {
     @Getter
     private final int sequenceNumber;
 
-    public TbApplicationEvent(@NotNull Object source) {
+    public TbApplicationEvent(Object source) {
         super(source);
         sequenceNumber = sequence.incrementAndGet();
     }

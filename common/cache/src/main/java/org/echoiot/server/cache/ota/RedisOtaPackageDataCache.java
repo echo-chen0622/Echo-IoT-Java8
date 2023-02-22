@@ -2,7 +2,6 @@ package org.echoiot.server.cache.ota;
 
 import lombok.RequiredArgsConstructor;
 import org.echoiot.server.common.data.CacheConstants;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class RedisOtaPackageDataCache implements OtaPackageDataCache {
 
-    @NotNull
     private final RedisConnectionFactory redisConnectionFactory;
 
     @Override
@@ -23,7 +21,7 @@ public class RedisOtaPackageDataCache implements OtaPackageDataCache {
 
     @Override
     public byte[] get(String key, int chunkSize, int chunk) {
-        try (@NotNull RedisConnection connection = redisConnectionFactory.getConnection()) {
+        try (RedisConnection connection = redisConnectionFactory.getConnection()) {
             if (chunkSize == 0) {
                 return connection.get(toOtaPackageCacheKey(key));
             }
@@ -35,15 +33,15 @@ public class RedisOtaPackageDataCache implements OtaPackageDataCache {
     }
 
     @Override
-    public void put(String key, @NotNull byte[] value) {
-        try (@NotNull RedisConnection connection = redisConnectionFactory.getConnection()) {
+    public void put(String key, byte[] value) {
+        try (RedisConnection connection = redisConnectionFactory.getConnection()) {
             connection.set(toOtaPackageCacheKey(key), value);
         }
     }
 
     @Override
     public void evict(String key) {
-        try (@NotNull RedisConnection connection = redisConnectionFactory.getConnection()) {
+        try (RedisConnection connection = redisConnectionFactory.getConnection()) {
             connection.del(toOtaPackageCacheKey(key));
         }
     }

@@ -4,7 +4,6 @@ import lombok.EqualsAndHashCode;
 import org.echoiot.server.common.data.BaseData;
 import org.echoiot.server.common.data.id.UserCredentialsId;
 import org.echoiot.server.common.data.id.UserId;
-import org.jetbrains.annotations.NotNull;
 
 @EqualsAndHashCode(callSuper = true)
 public class UserCredentials extends BaseData<UserCredentialsId> {
@@ -25,7 +24,7 @@ public class UserCredentials extends BaseData<UserCredentialsId> {
         super(id);
     }
 
-    public UserCredentials(@NotNull UserCredentials userCredentials) {
+    public UserCredentials(UserCredentials userCredentials) {
         super(userCredentials);
         this.userId = userCredentials.getUserId();
         this.password = userCredentials.getPassword();
@@ -74,7 +73,6 @@ public class UserCredentials extends BaseData<UserCredentialsId> {
         this.resetToken = resetToken;
     }
 
-    @NotNull
     @Override
     public String toString() {
         String builder = "UserCredentials [userId=" +

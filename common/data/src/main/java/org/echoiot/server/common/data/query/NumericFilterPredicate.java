@@ -1,7 +1,6 @@
 package org.echoiot.server.common.data.query;
 
 import lombok.Data;
-import org.jetbrains.annotations.NotNull;
 
 @Data
 public class NumericFilterPredicate implements SimpleKeyFilterPredicate<Double>  {
@@ -9,7 +8,6 @@ public class NumericFilterPredicate implements SimpleKeyFilterPredicate<Double> 
     private NumericOperation operation;
     private FilterPredicateValue<Double> value;
 
-    @NotNull
     @Override
     public FilterPredicateType getType() {
         return FilterPredicateType.NUMERIC;

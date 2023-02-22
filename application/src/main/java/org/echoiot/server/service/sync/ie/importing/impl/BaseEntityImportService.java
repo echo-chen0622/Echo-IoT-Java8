@@ -31,7 +31,6 @@ import org.echoiot.server.service.sync.ie.exporting.ExportableEntitiesService;
 import org.echoiot.server.service.sync.ie.importing.EntityImportService;
 import org.echoiot.server.service.sync.vc.data.EntitiesImportCtx;
 import org.echoiot.server.service.telemetry.TelemetrySubscriptionService;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,14 +58,13 @@ public abstract class BaseEntityImportService<I extends EntityId, E extends Expo
     @Resource
     protected TbNotificationEntityService entityNotificationService;
 
-    @NotNull
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public EntityImportResult<E> importEntity(@NotNull EntitiesImportCtx ctx, @NotNull D exportData) throws EchoiotException {
-        @NotNull EntityImportResult<E> importResult = new EntityImportResult<>();
+    public EntityImportResult<E> importEntity(EntitiesImportCtx ctx, D exportData) throws EchoiotException {
+        EntityImportResult<E> importResult = new EntityImportResult<>();
         ctx.setCurrentImportResult(importResult);
         importResult.setEntityType(getEntityType());
-        @NotNull IdProvider idProvider = new IdProvider(ctx, importResult);
+        IdProvider idProvider = new IdProvider(ctx, importResult);
 
         E entity = exportData.getEntity();
         entity.setExternalId(entity.getId());
@@ -115,7 +113,7 @@ public abstract class BaseEntityImportService<I extends EntityId, E extends Expo
 
     protected abstract E prepare(EntitiesImportCtx ctx, E entity, E oldEntity, D exportData, IdProvider idProvider);
 
-    protected boolean compare(EntitiesImportCtx ctx, D exportData, @NotNull E prepared, E existing) {
+    protected boolean compare(EntitiesImportCtx ctx, D exportData, E prepared, E existing) {
         var newCopy = deepCopy(prepared);
         var existingCopy = deepCopy(existing);
         cleanupForComparison(newCopy);
@@ -131,7 +129,7 @@ public abstract class BaseEntityImportService<I extends EntityId, E extends Expo
 
     protected abstract E deepCopy(E e);
 
-    protected void cleanupForComparison(@NotNull E e) {
+    protected void cleanupForComparison(E e) {
         e.setTenantId(null);
         e.setCreatedTime(0);
     }
@@ -139,7 +137,7 @@ public abstract class BaseEntityImportService<I extends EntityId, E extends Expo
     protected abstract E saveOrUpdate(EntitiesImportCtx ctx, E entity, D exportData, IdProvider idProvider);
 
 
-    protected void processAfterSaved(@NotNull EntitiesImportCtx ctx, @NotNull EntityImportResult<E> importResult, @NotNull D exportData, @NotNull IdProvider idProvider) throws EchoiotException {
+    protected void processAfterSaved(EntitiesImportCtx ctx, EntityImportResult<E> importResult, D exportData, IdProvider idProvider) throws EchoiotException {
         E savedEntity = importResult.getSavedEntity();
         E oldEntity = importResult.getOldEntity();
 
@@ -158,11 +156,11 @@ public abstract class BaseEntityImportService<I extends EntityId, E extends Expo
         }
     }
 
-    private void importRelations(@NotNull EntitiesImportCtx ctx, @NotNull List<EntityRelation> relations, @NotNull EntityImportResult<E> importResult, @NotNull IdProvider idProvider) {
+    private void importRelations(EntitiesImportCtx ctx, List<EntityRelation> relations, EntityImportResult<E> importResult, IdProvider idProvider) {
         var tenantId = ctx.getTenantId();
         E entity = importResult.getSavedEntity();
         importResult.addSaveReferencesCallback(() -> {
-            for (@NotNull EntityRelation relation : relations) {
+            for (EntityRelation relation : relations) {
                 if (!relation.getTo().equals(entity.getId())) {
                     relation.setTo(idProvider.getInternalId(relation.getTo()));
                 }
@@ -171,16 +169,16 @@ public abstract class BaseEntityImportService<I extends EntityId, E extends Expo
                 }
             }
 
-            @NotNull Map<EntityRelation, EntityRelation> relationsMap = new LinkedHashMap<>();
+            Map<EntityRelation, EntityRelation> relationsMap = new LinkedHashMap<>();
             relations.forEach(r -> relationsMap.put(r, r));
 
             if (importResult.getOldEntity() != null) {
-                @NotNull List<EntityRelation> existingRelations = new ArrayList<>();
+                List<EntityRelation> existingRelations = new ArrayList<>();
                 existingRelations.addAll(relationDao.findAllByTo(tenantId, entity.getId(), RelationTypeGroup.COMMON));
                 existingRelations.addAll(relationDao.findAllByFrom(tenantId, entity.getId(), RelationTypeGroup.COMMON));
                 // dao is used here instead of service to avoid getting cached values, because relationService.deleteRelation will evict value from cache only after transaction is committed
 
-                for (@NotNull EntityRelation existingRelation : existingRelations) {
+                for (EntityRelation existingRelation : existingRelations) {
                     EntityRelation relation = relationsMap.get(existingRelation);
                     if (relation == null) {
                         importResult.setUpdatedRelatedEntities(true);
@@ -201,11 +199,11 @@ public abstract class BaseEntityImportService<I extends EntityId, E extends Expo
         });
     }
 
-    private void importAttributes(@NotNull User user, @NotNull Map<String, List<AttributeExportData>> attributes, @NotNull EntityImportResult<E> importResult) {
+    private void importAttributes(User user, Map<String, List<AttributeExportData>> attributes, EntityImportResult<E> importResult) {
         E entity = importResult.getSavedEntity();
         importResult.addSaveReferencesCallback(() -> {
             attributes.forEach((scope, attributesExportData) -> {
-                @NotNull List<AttributeKvEntry> attributeKvEntries = attributesExportData.stream()
+                List<AttributeKvEntry> attributeKvEntries = attributesExportData.stream()
                                                                                          .map(attributeExportData -> {
                             KvEntry kvEntry;
                             String key = attributeExportData.getKey();
@@ -240,7 +238,7 @@ public abstract class BaseEntityImportService<I extends EntityId, E extends Expo
         });
     }
 
-    protected void onEntitySaved(@NotNull User user, @NotNull E savedEntity, @org.jetbrains.annotations.Nullable E oldEntity) throws EchoiotException {
+    protected void onEntitySaved(User user, E savedEntity, @org.jetbrains.annotations.Nullable E oldEntity) throws EchoiotException {
         entityNotificationService.notifyCreateOrUpdateEntity(user.getTenantId(), savedEntity.getId(), savedEntity,
                 null, oldEntity == null ? ActionType.ADDED : ActionType.UPDATED, user);
     }
@@ -248,7 +246,7 @@ public abstract class BaseEntityImportService<I extends EntityId, E extends Expo
 
     @org.jetbrains.annotations.Nullable
     @SuppressWarnings("unchecked")
-    protected E findExistingEntity(@NotNull EntitiesImportCtx ctx, @NotNull E entity, IdProvider idProvider) {
+    protected E findExistingEntity(EntitiesImportCtx ctx, E entity, IdProvider idProvider) {
         return (E) Optional.ofNullable(exportableEntitiesService.findEntityByTenantIdAndExternalId(ctx.getTenantId(), entity.getId()))
                 .or(() -> Optional.ofNullable(exportableEntitiesService.findEntityByTenantIdAndId(ctx.getTenantId(), entity.getId())))
                 .or(() -> {
@@ -272,10 +270,8 @@ public abstract class BaseEntityImportService<I extends EntityId, E extends Expo
     @SuppressWarnings("unchecked")
     @RequiredArgsConstructor
     protected class IdProvider {
-        @NotNull
-        private final EntitiesImportCtx ctx;
-        @NotNull
-        private final EntityImportResult<E> importResult;
+            private final EntitiesImportCtx ctx;
+            private final EntityImportResult<E> importResult;
 
         public <ID extends EntityId> ID getInternalId(ID externalId) {
             return getInternalId(externalId, true);
@@ -309,12 +305,11 @@ public abstract class BaseEntityImportService<I extends EntityId, E extends Expo
             return entity.getId();
         }
 
-        @NotNull
-        public Optional<EntityId> getInternalIdByUuid(@NotNull UUID externalUuid, boolean fetchAllUUIDs, @NotNull Set<EntityType> hints) {
+            public Optional<EntityId> getInternalIdByUuid(UUID externalUuid, boolean fetchAllUUIDs, Set<EntityType> hints) {
             if (externalUuid.equals(EntityId.NULL_UUID)) return Optional.empty();
 
-            for (@NotNull EntityType entityType : EntityType.values()) {
-                @NotNull Optional<EntityId> externalIdOpt = buildEntityId(entityType, externalUuid);
+            for (EntityType entityType : EntityType.values()) {
+                Optional<EntityId> externalIdOpt = buildEntityId(entityType, externalUuid);
                 if (!externalIdOpt.isPresent()) {
                     continue;
                 }
@@ -325,15 +320,15 @@ public abstract class BaseEntityImportService<I extends EntityId, E extends Expo
             }
 
             if (fetchAllUUIDs) {
-                for (@NotNull EntityType entityType : hints) {
-                    @NotNull Optional<EntityId> internalId = lookupInDb(externalUuid, entityType);
+                for (EntityType entityType : hints) {
+                    Optional<EntityId> internalId = lookupInDb(externalUuid, entityType);
                     if (internalId.isPresent()) return internalId;
                 }
-                for (@NotNull EntityType entityType : EntityType.values()) {
+                for (EntityType entityType : EntityType.values()) {
                     if (hints.contains(entityType)) {
                         continue;
                     }
-                    @NotNull Optional<EntityId> internalId = lookupInDb(externalUuid, entityType);
+                    Optional<EntityId> internalId = lookupInDb(externalUuid, entityType);
                     if (internalId.isPresent()) return internalId;
                 }
             }
@@ -342,9 +337,8 @@ public abstract class BaseEntityImportService<I extends EntityId, E extends Expo
             return Optional.empty();
         }
 
-        @NotNull
-        private Optional<EntityId> lookupInDb(UUID externalUuid, @NotNull EntityType entityType) {
-            @NotNull Optional<EntityId> externalIdOpt = buildEntityId(entityType, externalUuid);
+            private Optional<EntityId> lookupInDb(UUID externalUuid, EntityType entityType) {
+            Optional<EntityId> externalIdOpt = buildEntityId(entityType, externalUuid);
             if (externalIdOpt.isEmpty() || ctx.isNotFound(externalIdOpt.get())) {
                 return Optional.empty();
             }
@@ -357,8 +351,7 @@ public abstract class BaseEntityImportService<I extends EntityId, E extends Expo
             return Optional.empty();
         }
 
-        @NotNull
-        private Optional<EntityId> buildEntityId(@NotNull EntityType entityType, UUID externalUuid) {
+            private Optional<EntityId> buildEntityId(EntityType entityType, UUID externalUuid) {
             try {
                 return Optional.of(EntityIdFactory.getByTypeAndUuid(entityType, externalUuid));
             } catch (Exception e) {
@@ -369,11 +362,11 @@ public abstract class BaseEntityImportService<I extends EntityId, E extends Expo
     }
 
     @org.jetbrains.annotations.Nullable
-    protected <T extends EntityId, O> T getOldEntityField(@org.jetbrains.annotations.Nullable O oldEntity, @NotNull Function<O, T> getter) {
+    protected <T extends EntityId, O> T getOldEntityField(@org.jetbrains.annotations.Nullable O oldEntity, Function<O, T> getter) {
         return oldEntity == null ? null : getter.apply(oldEntity);
     }
 
-    protected void replaceIdsRecursively(@NotNull EntitiesImportCtx ctx, @NotNull IdProvider idProvider, JsonNode entityAlias, @NotNull Set<String> skipFieldsSet, @NotNull LinkedHashSet<EntityType> hints) {
+    protected void replaceIdsRecursively(EntitiesImportCtx ctx, IdProvider idProvider, JsonNode entityAlias, Set<String> skipFieldsSet, LinkedHashSet<EntityType> hints) {
         JacksonUtil.replaceUuidsRecursively(entityAlias, skipFieldsSet,
                 uuid -> idProvider.getInternalIdByUuid(uuid, ctx.isFinalImportAttempt(), hints).map(EntityId::getId).orElse(uuid));
     }

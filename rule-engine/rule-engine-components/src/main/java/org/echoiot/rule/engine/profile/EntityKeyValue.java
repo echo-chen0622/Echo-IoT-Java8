@@ -3,7 +3,6 @@ package org.echoiot.rule.engine.profile;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.echoiot.server.common.data.kv.DataType;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @EqualsAndHashCode
@@ -70,37 +69,32 @@ class EntityKeyValue {
         return dataType != null;
     }
 
-    @NotNull
     static EntityKeyValue fromString(String s) {
-        @NotNull EntityKeyValue result = new EntityKeyValue();
+        EntityKeyValue result = new EntityKeyValue();
         result.setStrValue(s);
         return result;
     }
 
-    @NotNull
     static EntityKeyValue fromBool(boolean b) {
-        @NotNull EntityKeyValue result = new EntityKeyValue();
+        EntityKeyValue result = new EntityKeyValue();
         result.setBoolValue(b);
         return result;
     }
 
-    @NotNull
     static EntityKeyValue fromLong(long l) {
-        @NotNull EntityKeyValue result = new EntityKeyValue();
+        EntityKeyValue result = new EntityKeyValue();
         result.setLngValue(l);
         return result;
     }
 
-    @NotNull
     static EntityKeyValue fromDouble(double d) {
-        @NotNull EntityKeyValue result = new EntityKeyValue();
+        EntityKeyValue result = new EntityKeyValue();
         result.setDblValue(d);
         return result;
     }
 
-    @NotNull
     static EntityKeyValue fromJson(String s) {
-        @NotNull EntityKeyValue result = new EntityKeyValue();
+        EntityKeyValue result = new EntityKeyValue();
         result.setJsonValue(s);
         return result;
     }

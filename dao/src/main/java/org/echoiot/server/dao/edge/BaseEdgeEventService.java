@@ -9,7 +9,6 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.TimePageLink;
 import org.echoiot.server.dao.service.DataValidator;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,10 +16,8 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class BaseEdgeEventService implements EdgeEventService {
 
-    @NotNull
     private final EdgeEventDao edgeEventDao;
 
-    @NotNull
     private final DataValidator<EdgeEvent> edgeEventValidator;
 
     @Override
@@ -30,7 +27,7 @@ public class BaseEdgeEventService implements EdgeEventService {
     }
 
     @Override
-    public PageData<EdgeEvent> findEdgeEvents(@NotNull TenantId tenantId, EdgeId edgeId, TimePageLink pageLink, boolean withTsUpdate) {
+    public PageData<EdgeEvent> findEdgeEvents(TenantId tenantId, EdgeId edgeId, TimePageLink pageLink, boolean withTsUpdate) {
         return edgeEventDao.findEdgeEvents(tenantId.getId(), edgeId, pageLink, withTsUpdate);
     }
 

@@ -14,7 +14,6 @@ import org.echoiot.server.queue.TbQueueMsg;
 import org.echoiot.server.queue.TbQueueMsgDecoder;
 import org.echoiot.server.queue.common.AbstractParallelTbQueueConsumerTemplate;
 import org.echoiot.server.queue.common.DefaultTbQueueMsg;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
@@ -35,11 +34,10 @@ public class TbPubSubConsumerTemplate<T extends TbQueueMsg> extends AbstractPara
     private volatile Set<String> subscriptionNames;
     private final List<AcknowledgeRequest> acknowledgeRequests = new CopyOnWriteArrayList<>();
 
-    @NotNull
     private final SubscriberStub subscriber;
     private volatile int messagesPerTopic;
 
-    public TbPubSubConsumerTemplate(TbQueueAdmin admin, @NotNull TbPubSubSettings pubSubSettings, String topic, TbQueueMsgDecoder<T> decoder) {
+    public TbPubSubConsumerTemplate(TbQueueAdmin admin, TbPubSubSettings pubSubSettings, String topic, TbQueueMsgDecoder<T> decoder) {
         super(topic);
         this.admin = admin;
         this.pubSubSettings = pubSubSettings;
@@ -61,7 +59,6 @@ public class TbPubSubConsumerTemplate<T extends TbQueueMsg> extends AbstractPara
         }
     }
 
-    @NotNull
     @Override
     protected List<PubsubMessage> doPoll(long durationInMillis) {
         try {
@@ -80,7 +77,7 @@ public class TbPubSubConsumerTemplate<T extends TbQueueMsg> extends AbstractPara
     }
 
     @Override
-    protected void doSubscribe(@NotNull List<String> topicNames) {
+    protected void doSubscribe(List<String> topicNames) {
         subscriptionNames = new LinkedHashSet<>(topicNames);
         subscriptionNames.forEach(admin::createTopicIfNotExists);
         initNewExecutor(subscriptionNames.size() + 1);
@@ -102,9 +99,9 @@ public class TbPubSubConsumerTemplate<T extends TbQueueMsg> extends AbstractPara
     }
 
     private List<ReceivedMessage> receiveMessages() throws ExecutionException, InterruptedException {
-        @NotNull List<ApiFuture<List<ReceivedMessage>>> result = subscriptionNames.stream().map(subscriptionId -> {
+        List<ApiFuture<List<ReceivedMessage>>> result = subscriptionNames.stream().map(subscriptionId -> {
             String subscriptionName = ProjectSubscriptionName.format(pubSubSettings.getProjectId(), subscriptionId);
-            @NotNull PullRequest pullRequest =
+            PullRequest pullRequest =
                     PullRequest.newBuilder()
                             .setMaxMessages(messagesPerTopic)
 //                            .setReturnImmediately(false) // return immediately if messages are not available
@@ -115,11 +112,11 @@ public class TbPubSubConsumerTemplate<T extends TbQueueMsg> extends AbstractPara
 
             return ApiFutures.transform(pullResponseApiFuture, pullResponse -> {
                 if (pullResponse != null && !pullResponse.getReceivedMessagesList().isEmpty()) {
-                    @NotNull List<String> ackIds = new ArrayList<>();
-                    for (@NotNull ReceivedMessage message : pullResponse.getReceivedMessagesList()) {
+                    List<String> ackIds = new ArrayList<>();
+                    for (ReceivedMessage message : pullResponse.getReceivedMessagesList()) {
                         ackIds.add(message.getAckId());
                     }
-                    @NotNull AcknowledgeRequest acknowledgeRequest =
+                    AcknowledgeRequest acknowledgeRequest =
                             AcknowledgeRequest.newBuilder()
                                     .setSubscription(subscriptionName)
                                     .addAllAckIds(ackIds)
@@ -133,7 +130,7 @@ public class TbPubSubConsumerTemplate<T extends TbQueueMsg> extends AbstractPara
 
         }).collect(Collectors.toList());
 
-        @NotNull ApiFuture<List<ReceivedMessage>> transform = ApiFutures.transform(ApiFutures.allAsList(result), listMessages -> {
+        ApiFuture<List<ReceivedMessage>> transform = ApiFutures.transform(ApiFutures.allAsList(result), listMessages -> {
             if (!CollectionUtils.isEmpty(listMessages)) {
                 return listMessages.stream().filter(Objects::nonNull).flatMap(List::stream).collect(Collectors.toList());
             }
@@ -144,7 +141,7 @@ public class TbPubSubConsumerTemplate<T extends TbQueueMsg> extends AbstractPara
     }
 
     @Override
-    public T decode(@NotNull PubsubMessage message) throws InvalidProtocolBufferException {
+    public T decode(PubsubMessage message) throws InvalidProtocolBufferException {
         DefaultTbQueueMsg msg = gson.fromJson(message.getData().toStringUtf8(), DefaultTbQueueMsg.class);
         return decoder.decode(msg);
     }

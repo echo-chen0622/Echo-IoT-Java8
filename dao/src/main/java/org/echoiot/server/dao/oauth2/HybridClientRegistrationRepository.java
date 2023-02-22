@@ -1,7 +1,6 @@
 package org.echoiot.server.dao.oauth2;
 
 import org.echoiot.server.common.data.oauth2.OAuth2Registration;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
@@ -21,14 +20,13 @@ public class HybridClientRegistrationRepository implements ClientRegistrationRep
 
     @Nullable
     @Override
-    public ClientRegistration findByRegistrationId(@NotNull String registrationId) {
+    public ClientRegistration findByRegistrationId(String registrationId) {
         OAuth2Registration registration = oAuth2Service.findRegistration(UUID.fromString(registrationId));
         return registration == null ?
                 null : toSpringClientRegistration(registration);
     }
 
-    @NotNull
-    private ClientRegistration toSpringClientRegistration(@NotNull OAuth2Registration registration){
+    private ClientRegistration toSpringClientRegistration(OAuth2Registration registration){
         String registrationId = registration.getUuidId().toString();
         return ClientRegistration.withRegistrationId(registrationId)
                 .clientName(registration.getName())

@@ -1,6 +1,5 @@
 package org.echoiot.server.service.security.auth.oauth2;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.util.SerializationUtils;
 
@@ -12,12 +11,11 @@ import java.util.Optional;
 
 public class CookieUtils {
 
-    @NotNull
-    public static Optional<Cookie> getCookie(@NotNull HttpServletRequest request, String name) {
+    public static Optional<Cookie> getCookie(HttpServletRequest request, String name) {
         Cookie[] cookies = request.getCookies();
 
         if (cookies != null) {
-            for (@NotNull Cookie cookie : cookies) {
+            for (Cookie cookie : cookies) {
                 if (cookie.getName().equals(name)) {
                     return Optional.of(cookie);
                 }
@@ -27,18 +25,18 @@ public class CookieUtils {
         return Optional.empty();
     }
 
-    public static void addCookie(@NotNull HttpServletResponse response, String name, String value, int maxAge) {
-        @NotNull Cookie cookie = new Cookie(name, value);
+    public static void addCookie(HttpServletResponse response, String name, String value, int maxAge) {
+        Cookie cookie = new Cookie(name, value);
         cookie.setPath("/");
         cookie.setHttpOnly(true);
         cookie.setMaxAge(maxAge);
         response.addCookie(cookie);
     }
 
-    public static void deleteCookie(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, String name) {
+    public static void deleteCookie(HttpServletRequest request, HttpServletResponse response, String name) {
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
-            for (@NotNull Cookie cookie: cookies) {
+            for (Cookie cookie: cookies) {
                 if (cookie.getName().equals(name)) {
                     cookie.setValue("");
                     cookie.setPath("/");
@@ -55,7 +53,7 @@ public class CookieUtils {
     }
 
     @Nullable
-    public static <T> T deserialize(@NotNull Cookie cookie, @NotNull Class<T> cls) {
+    public static <T> T deserialize(Cookie cookie, Class<T> cls) {
         return cls.cast(SerializationUtils.deserialize(
                 Base64.getUrlDecoder().decode(cookie.getValue())));
     }

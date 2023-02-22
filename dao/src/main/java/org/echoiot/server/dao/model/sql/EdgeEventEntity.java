@@ -15,7 +15,6 @@ import org.echoiot.server.dao.model.BaseSqlEntity;
 import org.echoiot.server.dao.util.mapping.JsonStringType;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
-import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
 import java.util.UUID;
@@ -57,7 +56,7 @@ public class EdgeEventEntity extends BaseSqlEntity<EdgeEvent> implements BaseEnt
     @Column(name = TS_COLUMN)
     private long ts;
 
-    public EdgeEventEntity(@NotNull EdgeEvent edgeEvent) {
+    public EdgeEventEntity(EdgeEvent edgeEvent) {
         if (edgeEvent.getId() != null) {
             this.setUuid(edgeEvent.getId().getId());
             this.ts = getTs(edgeEvent.getId().getId());
@@ -80,10 +79,9 @@ public class EdgeEventEntity extends BaseSqlEntity<EdgeEvent> implements BaseEnt
         this.edgeEventUid = edgeEvent.getUid();
     }
 
-    @NotNull
     @Override
     public EdgeEvent toData() {
-        @NotNull EdgeEvent edgeEvent = new EdgeEvent(new EdgeEventId(this.getUuid()));
+        EdgeEvent edgeEvent = new EdgeEvent(new EdgeEventId(this.getUuid()));
         edgeEvent.setCreatedTime(createdTime);
         edgeEvent.setTenantId(TenantId.fromUUID(tenantId));
         edgeEvent.setEdgeId(new EdgeId(edgeId));
@@ -97,7 +95,7 @@ public class EdgeEventEntity extends BaseSqlEntity<EdgeEvent> implements BaseEnt
         return edgeEvent;
     }
 
-    private static long getTs(@NotNull UUID uuid) {
+    private static long getTs(UUID uuid) {
         return (uuid.timestamp() - EPOCH_DIFF) / 10000;
     }
 }

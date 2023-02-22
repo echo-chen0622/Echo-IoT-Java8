@@ -6,7 +6,6 @@ import org.echoiot.server.dao.service.DaoSqlTest;
 import org.echoiot.server.gen.transport.TransportApiProtos;
 import org.echoiot.server.transport.mqtt.MqttTestClient;
 import org.echoiot.server.transport.mqtt.MqttTestConfigProperties;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -46,7 +45,7 @@ public class MqttClaimProtoDeviceTest extends MqttClaimDeviceTest {
     }
 
     protected void processTestClaimingDevice(boolean emptyPayload) throws Exception {
-        @NotNull MqttTestClient client = new MqttTestClient();
+        MqttTestClient client = new MqttTestClient();
         client.connectAndWait(accessToken);
         byte[] payloadBytes;
         if (emptyPayload) {
@@ -62,7 +61,6 @@ public class MqttClaimProtoDeviceTest extends MqttClaimDeviceTest {
         processProtoTestGatewayClaimDevice(deviceName, emptyPayload);
     }
 
-    @NotNull
     private TransportApiProtos.ClaimDevice getClaimDevice(long duration, boolean emptyPayload) {
         TransportApiProtos.ClaimDevice.Builder claimDeviceBuilder = TransportApiProtos.ClaimDevice.newBuilder();
         if (!emptyPayload) {

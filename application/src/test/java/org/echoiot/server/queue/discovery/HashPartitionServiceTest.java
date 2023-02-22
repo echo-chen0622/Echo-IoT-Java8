@@ -8,7 +8,6 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.msg.queue.ServiceType;
 import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
 import org.echoiot.server.gen.transport.TransportProtos;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -60,7 +59,7 @@ public class HashPartitionServiceTest {
                 .build();
 //        when(queueService.resolve(Mockito.any(), Mockito.anyString())).thenAnswer(i -> i.getArguments()[1]);
 //        when(discoveryService.getServiceInfo()).thenReturn(currentServer);
-        @NotNull List<TransportProtos.ServiceInfo> otherServers = new ArrayList<>();
+        List<TransportProtos.ServiceInfo> otherServers = new ArrayList<>();
         for (int i = 1; i < SERVER_COUNT; i++) {
             otherServers.add(TransportProtos.ServiceInfo.newBuilder()
                     .setServiceId("tb-rule-" + i)
@@ -75,19 +74,19 @@ public class HashPartitionServiceTest {
 
     @Test
     public void testDispersionOnMillionDevices() {
-        @NotNull List<DeviceId> devices = new ArrayList<>();
+        List<DeviceId> devices = new ArrayList<>();
         for (int i = 0; i < ITERATIONS; i++) {
             devices.add(new DeviceId(Uuids.timeBased()));
         }
         testDevicesDispersion(devices);
     }
 
-    private void testDevicesDispersion(@NotNull List<DeviceId> devices) {
+    private void testDevicesDispersion(List<DeviceId> devices) {
         long start = System.currentTimeMillis();
-        @NotNull Map<Integer, Integer> map = new HashMap<>();
-        for (@NotNull DeviceId deviceId : devices) {
+        Map<Integer, Integer> map = new HashMap<>();
+        for (DeviceId deviceId : devices) {
             TopicPartitionInfo address = clusterRoutingService.resolve(ServiceType.TB_CORE, TenantId.SYS_TENANT_ID, deviceId);
-            @NotNull Integer partition = address.getPartition().get();
+            Integer partition = address.getPartition().get();
             map.put(partition, map.getOrDefault(partition, 0) + 1);
         }
 
@@ -102,23 +101,23 @@ public class HashPartitionServiceTest {
         int queueCount = 3;
         int partitionCount = 3;
 
-        @NotNull List<TransportProtos.ServiceInfo> services = new ArrayList<>();
+        List<TransportProtos.ServiceInfo> services = new ArrayList<>();
 
         for (int i = 0; i < serverCount; i++) {
             services.add(TransportProtos.ServiceInfo.newBuilder().setServiceId("RE-" + i).build());
         }
 
         long start = System.currentTimeMillis();
-        @NotNull Map<String, Integer> map = new HashMap<>();
+        Map<String, Integer> map = new HashMap<>();
         services.forEach(s -> map.put(s.getServiceId(), 0));
 
-        @NotNull Random random = new Random();
+        Random random = new Random();
         long ts = new SimpleDateFormat("dd-MM-yyyy").parse("06-12-2016").getTime() - TimeUnit.DAYS.toMillis(tenantCount);
         for (int tenantIndex = 0; tenantIndex < tenantCount; tenantIndex++) {
-            @NotNull TenantId tenantId = new TenantId(Uuids.startOf(ts));
+            TenantId tenantId = new TenantId(Uuids.startOf(ts));
             ts += TimeUnit.DAYS.toMillis(1) + random.nextInt(1000);
             for (int queueIndex = 0; queueIndex < queueCount; queueIndex++) {
-                @NotNull QueueKey queueKey = new QueueKey(ServiceType.TB_RULE_ENGINE, "queue" + queueIndex, tenantId);
+                QueueKey queueKey = new QueueKey(ServiceType.TB_RULE_ENGINE, "queue" + queueIndex, tenantId);
                 for (int partition = 0; partition < partitionCount; partition++) {
                     TransportProtos.ServiceInfo serviceInfo = clusterRoutingService.resolveByPartitionIdx(services, queueKey, partition);
                     String serviceId = serviceInfo.getServiceId();
@@ -130,14 +129,14 @@ public class HashPartitionServiceTest {
         checkDispersion(start, map, tenantCount * queueCount * partitionCount, 10.0);
     }
 
-    private <T> void checkDispersion(long start, @NotNull Map<T, Integer> map, int iterations, double maxDiffPercent) {
-        @NotNull List<Map.Entry<T, Integer>> data = map.entrySet().stream().sorted(Comparator.comparingInt(Map.Entry::getValue)).collect(Collectors.toList());
+    private <T> void checkDispersion(long start, Map<T, Integer> map, int iterations, double maxDiffPercent) {
+        List<Map.Entry<T, Integer>> data = map.entrySet().stream().sorted(Comparator.comparingInt(Map.Entry::getValue)).collect(Collectors.toList());
         long end = System.currentTimeMillis();
         double ideal = ((double) iterations) / map.size();
         double diff = Math.max(data.get(data.size() - 1).getValue() - ideal, ideal - data.get(0).getValue());
         double diffPercent = (diff / ideal) * 100.0;
         System.out.println("Time: " + (end - start) + " Diff: " + diff + "(" + String.format("%f", diffPercent) + "%)");
-        for (@NotNull Map.Entry<T, Integer> entry : data) {
+        for (Map.Entry<T, Integer> entry : data) {
             System.out.println(entry.getKey() + ": " + entry.getValue());
         }
         Assert.assertTrue(diffPercent < maxDiffPercent);

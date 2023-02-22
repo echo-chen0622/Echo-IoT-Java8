@@ -9,14 +9,12 @@ import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.alarm.Alarm;
 import org.echoiot.server.common.data.id.AlarmId;
 import org.echoiot.server.common.data.id.EntityId;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
 public class EntitiesAlarmOriginatorIdAsyncLoader {
 
-    @NotNull
-    public static ListenableFuture<EntityId> findEntityIdAsync(@NotNull TbContext ctx, @NotNull EntityId original) {
+    public static ListenableFuture<EntityId> findEntityIdAsync(TbContext ctx, EntityId original) {
 
         if (Objects.requireNonNull(original.getEntityType()) == EntityType.ALARM) {
             return getAlarmOriginatorAsync(ctx.getAlarmService().findAlarmByIdAsync(ctx.getTenantId(), (AlarmId) original));
@@ -24,8 +22,7 @@ public class EntitiesAlarmOriginatorIdAsyncLoader {
         return Futures.immediateFailedFuture(new TbNodeException("Unexpected original EntityType " + original.getEntityType()));
     }
 
-    @NotNull
-    private static ListenableFuture<EntityId> getAlarmOriginatorAsync(@NotNull ListenableFuture<Alarm> future) {
+    private static ListenableFuture<EntityId> getAlarmOriginatorAsync(ListenableFuture<Alarm> future) {
         return Futures.transformAsync(future, in -> {
             return in != null ? Futures.immediateFuture(in.getOriginator())
                     : Futures.immediateFuture(null);

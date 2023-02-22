@@ -17,7 +17,6 @@ import org.echoiot.server.dao.exception.DataValidationException;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.edge.imitator.EdgeImitator;
 import org.echoiot.server.gen.edge.v1.*;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.junit.After;
 import org.junit.Assert;
@@ -70,7 +69,7 @@ public abstract class BaseEdgeControllerTest extends AbstractControllerTest {
     public void beforeTest() throws Exception {
         loginSysAdmin();
 
-        @NotNull Tenant tenant = new Tenant();
+        Tenant tenant = new Tenant();
         tenant.setTitle("My tenant for Edge");
         savedTenant = doPost("/api/tenant", tenant, Tenant.class);
         tenantId = savedTenant.getId();
@@ -173,7 +172,7 @@ public abstract class BaseEdgeControllerTest extends AbstractControllerTest {
 
     @Test
     public void testFindEdgeTypesByTenantId() throws Exception {
-        @NotNull List<Edge> edges = new ArrayList<>();
+        List<Edge> edges = new ArrayList<>();
 
         int cntEntity = 3;
 
@@ -232,7 +231,7 @@ public abstract class BaseEdgeControllerTest extends AbstractControllerTest {
 
         Mockito.reset(tbClusterService, auditLogService);
 
-        @NotNull String msgError = "Edge type " + msgErrorShouldBeSpecified;
+        String msgError = "Edge type " + msgErrorShouldBeSpecified;
         doPost("/api/edge", edge)
                 .andExpect(status().isBadRequest())
                 .andExpect(statusReason(containsString(msgError)));
@@ -247,7 +246,7 @@ public abstract class BaseEdgeControllerTest extends AbstractControllerTest {
 
         Mockito.reset(tbClusterService, auditLogService);
 
-        @NotNull String msgError = "Edge name " + msgErrorShouldBeSpecified;
+        String msgError = "Edge name " + msgErrorShouldBeSpecified;
         doPost("/api/edge", edge)
                 .andExpect(status().isBadRequest())
                 .andExpect(statusReason(containsString(msgError)));
@@ -261,7 +260,7 @@ public abstract class BaseEdgeControllerTest extends AbstractControllerTest {
         Edge edge = constructEdge("My edge", "default");
         Edge savedEdge = doPost("/api/edge", edge, Edge.class);
 
-        @NotNull Customer customer = new Customer();
+        Customer customer = new Customer();
         customer.setTitle("My customer");
         Customer savedCustomer = doPost("/api/customer", customer, Customer.class);
 
@@ -297,7 +296,7 @@ public abstract class BaseEdgeControllerTest extends AbstractControllerTest {
 
         Mockito.reset(tbClusterService, auditLogService);
 
-        @NotNull CustomerId customerId = new CustomerId(Uuids.timeBased());
+        CustomerId customerId = new CustomerId(Uuids.timeBased());
         String customerIdStr = customerId.getId().toString();
 
         String msgError = msgErrorNoFound("Customer", customerIdStr);
@@ -313,12 +312,12 @@ public abstract class BaseEdgeControllerTest extends AbstractControllerTest {
     public void testAssignEdgeToCustomerFromDifferentTenant() throws Exception {
         loginSysAdmin();
 
-        @NotNull Tenant tenant2 = new Tenant();
+        Tenant tenant2 = new Tenant();
         tenant2.setTitle("Different tenant");
         Tenant savedTenant2 = doPost("/api/tenant", tenant2, Tenant.class);
         Assert.assertNotNull(savedTenant2);
 
-        @NotNull User tenantAdmin2 = new User();
+        User tenantAdmin2 = new User();
         tenantAdmin2.setAuthority(Authority.TENANT_ADMIN);
         tenantAdmin2.setTenantId(savedTenant2.getId());
         tenantAdmin2.setEmail("tenant3@echoiot.org");
@@ -327,7 +326,7 @@ public abstract class BaseEdgeControllerTest extends AbstractControllerTest {
 
         createUserAndLogin(tenantAdmin2, "testPassword1");
 
-        @NotNull Customer customer = new Customer();
+        Customer customer = new Customer();
         customer.setTitle("Different customer");
         Customer savedCustomer = doPost("/api/customer", customer, Customer.class);
 
@@ -354,12 +353,12 @@ public abstract class BaseEdgeControllerTest extends AbstractControllerTest {
 
     @Test
     public void testFindTenantEdges() throws Exception {
-        @NotNull List<Edge> edges = new ArrayList<>();
+        List<Edge> edges = new ArrayList<>();
         for (int i = 0; i < 178; i++) {
             Edge edge = constructEdge("Edge" + i, "default");
             edges.add(doPost("/api/edge", edge, Edge.class));
         }
-        @NotNull List<Edge> loadedEdges = new ArrayList<>();
+        List<Edge> loadedEdges = new ArrayList<>();
         PageLink pageLink = new PageLink(23);
         @Nullable PageData<Edge> pageData = null;
         do {
@@ -380,26 +379,26 @@ public abstract class BaseEdgeControllerTest extends AbstractControllerTest {
 
     @Test
     public void testFindTenantEdgesByName() throws Exception {
-        @NotNull String title1 = "Edge title 1";
-        @NotNull List<Edge> edgesTitle1 = new ArrayList<>();
+        String title1 = "Edge title 1";
+        List<Edge> edgesTitle1 = new ArrayList<>();
         for (int i = 0; i < 143; i++) {
-            @NotNull String suffix = StringUtils.randomAlphanumeric(15);
-            @NotNull String name = title1 + suffix;
+            String suffix = StringUtils.randomAlphanumeric(15);
+            String name = title1 + suffix;
             name = i % 2 == 0 ? name.toLowerCase() : name.toUpperCase();
             Edge edge = constructEdge(name, "default");
             edgesTitle1.add(doPost("/api/edge", edge, Edge.class));
         }
-        @NotNull String title2 = "Edge title 2";
-        @NotNull List<Edge> edgesTitle2 = new ArrayList<>();
+        String title2 = "Edge title 2";
+        List<Edge> edgesTitle2 = new ArrayList<>();
         for (int i = 0; i < 75; i++) {
-            @NotNull String suffix = StringUtils.randomAlphanumeric(15);
-            @NotNull String name = title2 + suffix;
+            String suffix = StringUtils.randomAlphanumeric(15);
+            String name = title2 + suffix;
             name = i % 2 == 0 ? name.toLowerCase() : name.toUpperCase();
             Edge edge = constructEdge(name, "default");
             edgesTitle2.add(doPost("/api/edge", edge, Edge.class));
         }
 
-        @NotNull List<Edge> loadedEdgesTitle1 = new ArrayList<>();
+        List<Edge> loadedEdgesTitle1 = new ArrayList<>();
         PageLink pageLink = new PageLink(15, 0, title1);
         @Nullable PageData<Edge> pageData = null;
         do {
@@ -417,7 +416,7 @@ public abstract class BaseEdgeControllerTest extends AbstractControllerTest {
 
         Assert.assertEquals(edgesTitle1, loadedEdgesTitle1);
 
-        @NotNull List<Edge> loadedEdgesTitle2 = new ArrayList<>();
+        List<Edge> loadedEdgesTitle2 = new ArrayList<>();
         pageLink = new PageLink(4, 0, title2);
         do {
             pageData = doGetTypedWithPageLink("/api/tenant/edges?",
@@ -434,7 +433,7 @@ public abstract class BaseEdgeControllerTest extends AbstractControllerTest {
 
         Assert.assertEquals(edgesTitle2, loadedEdgesTitle2);
 
-        for (@NotNull Edge edge : loadedEdgesTitle1) {
+        for (Edge edge : loadedEdgesTitle1) {
             doDelete("/api/edge/" + edge.getId().getId().toString())
                     .andExpect(status().isOk());
         }
@@ -446,7 +445,7 @@ public abstract class BaseEdgeControllerTest extends AbstractControllerTest {
         Assert.assertFalse(pageData.hasNext());
         Assert.assertEquals(0, pageData.getData().size());
 
-        for (@NotNull Edge edge : loadedEdgesTitle2) {
+        for (Edge edge : loadedEdgesTitle2) {
             doDelete("/api/edge/" + edge.getId().getId().toString())
                     .andExpect(status().isOk());
         }
@@ -461,28 +460,28 @@ public abstract class BaseEdgeControllerTest extends AbstractControllerTest {
 
     @Test
     public void testFindTenantEdgesByType() throws Exception {
-        @NotNull String title1 = "Edge title 1";
-        @NotNull String type1 = "typeA";
-        @NotNull List<Edge> edgesType1 = new ArrayList<>();
+        String title1 = "Edge title 1";
+        String type1 = "typeA";
+        List<Edge> edgesType1 = new ArrayList<>();
         for (int i = 0; i < 143; i++) {
-            @NotNull String suffix = StringUtils.randomAlphanumeric(15);
-            @NotNull String name = title1 + suffix;
+            String suffix = StringUtils.randomAlphanumeric(15);
+            String name = title1 + suffix;
             name = i % 2 == 0 ? name.toLowerCase() : name.toUpperCase();
             Edge edge = constructEdge(name, type1);
             edgesType1.add(doPost("/api/edge", edge, Edge.class));
         }
-        @NotNull String title2 = "Edge title 2";
-        @NotNull String type2 = "typeB";
-        @NotNull List<Edge> edgesType2 = new ArrayList<>();
+        String title2 = "Edge title 2";
+        String type2 = "typeB";
+        List<Edge> edgesType2 = new ArrayList<>();
         for (int i = 0; i < 75; i++) {
-            @NotNull String suffix = StringUtils.randomAlphanumeric(15);
-            @NotNull String name = title2 + suffix;
+            String suffix = StringUtils.randomAlphanumeric(15);
+            String name = title2 + suffix;
             name = i % 2 == 0 ? name.toLowerCase() : name.toUpperCase();
             Edge edge = constructEdge(name, type2);
             edgesType2.add(doPost("/api/edge", edge, Edge.class));
         }
 
-        @NotNull List<Edge> loadedEdgesType1 = new ArrayList<>();
+        List<Edge> loadedEdgesType1 = new ArrayList<>();
         PageLink pageLink = new PageLink(15);
         @Nullable PageData<Edge> pageData = null;
         do {
@@ -500,7 +499,7 @@ public abstract class BaseEdgeControllerTest extends AbstractControllerTest {
 
         Assert.assertEquals(edgesType1, loadedEdgesType1);
 
-        @NotNull List<Edge> loadedEdgesType2 = new ArrayList<>();
+        List<Edge> loadedEdgesType2 = new ArrayList<>();
         pageLink = new PageLink(4);
         do {
             pageData = doGetTypedWithPageLink("/api/tenant/edges?type={type}&",
@@ -517,7 +516,7 @@ public abstract class BaseEdgeControllerTest extends AbstractControllerTest {
 
         Assert.assertEquals(edgesType2, loadedEdgesType2);
 
-        for (@NotNull Edge edge : loadedEdgesType1) {
+        for (Edge edge : loadedEdgesType1) {
             doDelete("/api/edge/" + edge.getId().getId().toString())
                     .andExpect(status().isOk());
         }
@@ -529,7 +528,7 @@ public abstract class BaseEdgeControllerTest extends AbstractControllerTest {
         Assert.assertFalse(pageData.hasNext());
         Assert.assertEquals(0, pageData.getData().size());
 
-        for (@NotNull Edge edge : loadedEdgesType2) {
+        for (Edge edge : loadedEdgesType2) {
             doDelete("/api/edge/" + edge.getId().getId().toString())
                     .andExpect(status().isOk());
         }
@@ -551,7 +550,7 @@ public abstract class BaseEdgeControllerTest extends AbstractControllerTest {
 
         Mockito.reset(tbClusterService, auditLogService);
 
-        @NotNull List<Edge> edges = new ArrayList<>();
+        List<Edge> edges = new ArrayList<>();
         int cntEntity = 128;
         for (int i = 0; i < cntEntity; i++) {
             Edge edge = constructEdge("Edge" + i, "default");
@@ -565,7 +564,7 @@ public abstract class BaseEdgeControllerTest extends AbstractControllerTest {
                                                                 ActionType.ASSIGNED_TO_CUSTOMER, ActionType.ASSIGNED_TO_CUSTOMER, cntEntity, cntEntity, cntEntity * 2, "", "", ""
                                                                );
 
-        @NotNull List<Edge> loadedEdges = new ArrayList<>();
+        List<Edge> loadedEdges = new ArrayList<>();
         PageLink pageLink = new PageLink(23);
         @Nullable PageData<Edge> pageData = null;
         do {
@@ -591,22 +590,22 @@ public abstract class BaseEdgeControllerTest extends AbstractControllerTest {
         customer = doPost("/api/customer", customer, Customer.class);
         CustomerId customerId = customer.getId();
 
-        @NotNull String title1 = "Edge title 1";
-        @NotNull List<Edge> edgesTitle1 = new ArrayList<>();
+        String title1 = "Edge title 1";
+        List<Edge> edgesTitle1 = new ArrayList<>();
         for (int i = 0; i < 125; i++) {
-            @NotNull String suffix = StringUtils.randomAlphanumeric(15);
-            @NotNull String name = title1 + suffix;
+            String suffix = StringUtils.randomAlphanumeric(15);
+            String name = title1 + suffix;
             name = i % 2 == 0 ? name.toLowerCase() : name.toUpperCase();
             Edge edge = constructEdge(name, "default");
             edge = doPost("/api/edge", edge, Edge.class);
             edgesTitle1.add(doPost("/api/customer/" + customerId.getId().toString()
                     + "/edge/" + edge.getId().getId().toString(), Edge.class));
         }
-        @NotNull String title2 = "Edge title 2";
-        @NotNull List<Edge> edgesTitle2 = new ArrayList<>();
+        String title2 = "Edge title 2";
+        List<Edge> edgesTitle2 = new ArrayList<>();
         for (int i = 0; i < 143; i++) {
-            @NotNull String suffix = StringUtils.randomAlphanumeric(15);
-            @NotNull String name = title2 + suffix;
+            String suffix = StringUtils.randomAlphanumeric(15);
+            String name = title2 + suffix;
             name = i % 2 == 0 ? name.toLowerCase() : name.toUpperCase();
             Edge edge = constructEdge(name, "default");
             edge = doPost("/api/edge", edge, Edge.class);
@@ -614,7 +613,7 @@ public abstract class BaseEdgeControllerTest extends AbstractControllerTest {
                     + "/edge/" + edge.getId().getId().toString(), Edge.class));
         }
 
-        @NotNull List<Edge> loadedEdgesTitle1 = new ArrayList<>();
+        List<Edge> loadedEdgesTitle1 = new ArrayList<>();
         PageLink pageLink = new PageLink(15, 0, title1);
         @Nullable PageData<Edge> pageData = null;
         do {
@@ -632,7 +631,7 @@ public abstract class BaseEdgeControllerTest extends AbstractControllerTest {
 
         Assert.assertEquals(edgesTitle1, loadedEdgesTitle1);
 
-        @NotNull List<Edge> loadedEdgesTitle2 = new ArrayList<>();
+        List<Edge> loadedEdgesTitle2 = new ArrayList<>();
         pageLink = new PageLink(4, 0, title2);
         do {
             pageData = doGetTypedWithPageLink("/api/customer/" + customerId.getId().toString() + "/edges?",
@@ -651,7 +650,7 @@ public abstract class BaseEdgeControllerTest extends AbstractControllerTest {
 
         Mockito.reset(tbClusterService, auditLogService);
 
-        for (@NotNull Edge edge : loadedEdgesTitle1) {
+        for (Edge edge : loadedEdgesTitle1) {
             doDelete("/api/customer/edge/" + edge.getId().getId().toString())
                     .andExpect(status().isOk());
         }
@@ -668,7 +667,7 @@ public abstract class BaseEdgeControllerTest extends AbstractControllerTest {
         Assert.assertFalse(pageData.hasNext());
         Assert.assertEquals(0, pageData.getData().size());
 
-        for (@NotNull Edge edge : loadedEdgesTitle2) {
+        for (Edge edge : loadedEdgesTitle2) {
             doDelete("/api/customer/edge/" + edge.getId().getId().toString())
                     .andExpect(status().isOk());
         }
@@ -688,24 +687,24 @@ public abstract class BaseEdgeControllerTest extends AbstractControllerTest {
         customer = doPost("/api/customer", customer, Customer.class);
         CustomerId customerId = customer.getId();
 
-        @NotNull String title1 = "Edge title 1";
-        @NotNull String type1 = "typeC";
-        @NotNull List<Edge> edgesType1 = new ArrayList<>();
+        String title1 = "Edge title 1";
+        String type1 = "typeC";
+        List<Edge> edgesType1 = new ArrayList<>();
         for (int i = 0; i < 125; i++) {
-            @NotNull String suffix = StringUtils.randomAlphanumeric(15);
-            @NotNull String name = title1 + suffix;
+            String suffix = StringUtils.randomAlphanumeric(15);
+            String name = title1 + suffix;
             name = i % 2 == 0 ? name.toLowerCase() : name.toUpperCase();
             Edge edge = constructEdge(name, type1);
             edge = doPost("/api/edge", edge, Edge.class);
             edgesType1.add(doPost("/api/customer/" + customerId.getId().toString()
                     + "/edge/" + edge.getId().getId().toString(), Edge.class));
         }
-        @NotNull String title2 = "Edge title 2";
-        @NotNull String type2 = "typeD";
-        @NotNull List<Edge> edgesType2 = new ArrayList<>();
+        String title2 = "Edge title 2";
+        String type2 = "typeD";
+        List<Edge> edgesType2 = new ArrayList<>();
         for (int i = 0; i < 143; i++) {
-            @NotNull String suffix = StringUtils.randomAlphanumeric(15);
-            @NotNull String name = title2 + suffix;
+            String suffix = StringUtils.randomAlphanumeric(15);
+            String name = title2 + suffix;
             name = i % 2 == 0 ? name.toLowerCase() : name.toUpperCase();
             Edge edge = constructEdge(name, type2);
             edge = doPost("/api/edge", edge, Edge.class);
@@ -713,7 +712,7 @@ public abstract class BaseEdgeControllerTest extends AbstractControllerTest {
                     + "/edge/" + edge.getId().getId().toString(), Edge.class));
         }
 
-        @NotNull List<Edge> loadedEdgesType1 = new ArrayList<>();
+        List<Edge> loadedEdgesType1 = new ArrayList<>();
         PageLink pageLink = new PageLink(15, 0, title1);
         @Nullable PageData<Edge> pageData = null;
         do {
@@ -731,7 +730,7 @@ public abstract class BaseEdgeControllerTest extends AbstractControllerTest {
 
         Assert.assertEquals(edgesType1, loadedEdgesType1);
 
-        @NotNull List<Edge> loadedEdgesType2 = new ArrayList<>();
+        List<Edge> loadedEdgesType2 = new ArrayList<>();
         pageLink = new PageLink(4, 0, title2);
         do {
             pageData = doGetTypedWithPageLink("/api/customer/" + customerId.getId().toString() + "/edges?type={type}&",
@@ -748,7 +747,7 @@ public abstract class BaseEdgeControllerTest extends AbstractControllerTest {
 
         Assert.assertEquals(edgesType2, loadedEdgesType2);
 
-        for (@NotNull Edge edge : loadedEdgesType1) {
+        for (Edge edge : loadedEdgesType1) {
             doDelete("/api/customer/edge/" + edge.getId().getId().toString())
                     .andExpect(status().isOk());
         }
@@ -760,7 +759,7 @@ public abstract class BaseEdgeControllerTest extends AbstractControllerTest {
         Assert.assertFalse(pageData.hasNext());
         Assert.assertEquals(0, pageData.getData().size());
 
-        for (@NotNull Edge edge : loadedEdgesType2) {
+        for (Edge edge : loadedEdgesType2) {
             doDelete("/api/customer/edge/" + edge.getId().getId().toString())
                     .andExpect(status().isOk());
         }
@@ -777,21 +776,21 @@ public abstract class BaseEdgeControllerTest extends AbstractControllerTest {
     public void testSyncEdge() throws Exception {
         Edge edge = doPost("/api/edge", constructEdge("Test Sync Edge", "test"), Edge.class);
 
-        @NotNull Device device = new Device();
+        Device device = new Device();
         device.setName("Test Sync Edge Device 1");
         device.setType("default");
         Device savedDevice = doPost("/api/device", device, Device.class);
         doPost("/api/edge/" + edge.getId().getId().toString()
                 + "/device/" + savedDevice.getId().getId().toString(), Device.class);
 
-        @NotNull Asset asset = new Asset();
+        Asset asset = new Asset();
         asset.setName("Test Sync Edge Asset 1");
         asset.setType("test");
         Asset savedAsset = doPost("/api/asset", asset, Asset.class);
         doPost("/api/edge/" + edge.getId().getId().toString()
                 + "/asset/" + savedAsset.getId().getId().toString(), Asset.class);
 
-        @NotNull EdgeImitator edgeImitator = new EdgeImitator(EDGE_HOST, EDGE_PORT, edge.getRoutingKey(), edge.getSecret());
+        EdgeImitator edgeImitator = new EdgeImitator(EDGE_HOST, EDGE_PORT, edge.getRoutingKey(), edge.getSecret());
         edgeImitator.ignoreType(UserCredentialsUpdateMsg.class);
 
         edgeImitator.expectMessageAmount(19);
@@ -799,7 +798,7 @@ public abstract class BaseEdgeControllerTest extends AbstractControllerTest {
         assertThat(edgeImitator.waitForMessages()).as("await for messages on first connect").isTrue();
 
         assertThat(edgeImitator.findAllMessagesByType(QueueUpdateMsg.class)).as("one msg during sync process").hasSize(1);
-        @NotNull List<RuleChainUpdateMsg> ruleChainUpdateMsgs = edgeImitator.findAllMessagesByType(RuleChainUpdateMsg.class);
+        List<RuleChainUpdateMsg> ruleChainUpdateMsgs = edgeImitator.findAllMessagesByType(RuleChainUpdateMsg.class);
         assertThat(ruleChainUpdateMsgs).as("one msg during sync process, another from edge creation").hasSize(2);
         assertThat(edgeImitator.findAllMessagesByType(DeviceProfileUpdateMsg.class)).as("one msg during sync process for 'default' device profile").hasSize(3);
         assertThat(edgeImitator.findAllMessagesByType(DeviceUpdateMsg.class)).as("one msg once device assigned to edge").hasSize(2);
@@ -838,8 +837,8 @@ public abstract class BaseEdgeControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk());
     }
 
-    private void verifyRuleChainMsgsAreRoot(@NotNull List<RuleChainUpdateMsg> ruleChainUpdateMsgs) {
-        for (@NotNull RuleChainUpdateMsg ruleChainUpdateMsg : ruleChainUpdateMsgs) {
+    private void verifyRuleChainMsgsAreRoot(List<RuleChainUpdateMsg> ruleChainUpdateMsgs) {
+        for (RuleChainUpdateMsg ruleChainUpdateMsg : ruleChainUpdateMsgs) {
             Assert.assertTrue(ruleChainUpdateMsg.getRoot());
         }
     }

@@ -17,7 +17,6 @@ import org.eclipse.californium.core.coap.CoAP;
 import org.eclipse.californium.core.coap.MediaTypeRegistry;
 import org.eclipse.californium.core.coap.Request;
 import org.eclipse.californium.core.coap.Response;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -28,7 +27,7 @@ import java.util.UUID;
 public class ProtoCoapAdaptor implements CoapTransportAdaptor {
 
     @Override
-    public TransportProtos.PostTelemetryMsg convertToPostTelemetry(UUID sessionId, @NotNull Request inbound, Descriptors.Descriptor telemetryMsgDescriptor) throws AdaptorException {
+    public TransportProtos.PostTelemetryMsg convertToPostTelemetry(UUID sessionId, Request inbound, Descriptors.Descriptor telemetryMsgDescriptor) throws AdaptorException {
         ProtoConverter.validateDescriptor(telemetryMsgDescriptor);
         try {
             return JsonConverter.convertToTelemetryProto(new JsonParser().parse(ProtoConverter.dynamicMsgToJson(inbound.getPayload(), telemetryMsgDescriptor)));
@@ -38,7 +37,7 @@ public class ProtoCoapAdaptor implements CoapTransportAdaptor {
     }
 
     @Override
-    public TransportProtos.PostAttributeMsg convertToPostAttributes(UUID sessionId, @NotNull Request inbound, Descriptors.Descriptor attributesMsgDescriptor) throws AdaptorException {
+    public TransportProtos.PostAttributeMsg convertToPostAttributes(UUID sessionId, Request inbound, Descriptors.Descriptor attributesMsgDescriptor) throws AdaptorException {
         ProtoConverter.validateDescriptor(attributesMsgDescriptor);
         try {
             return JsonConverter.convertToAttributesProto(new JsonParser().parse(ProtoConverter.dynamicMsgToJson(inbound.getPayload(), attributesMsgDescriptor)));
@@ -48,12 +47,12 @@ public class ProtoCoapAdaptor implements CoapTransportAdaptor {
     }
 
     @Override
-    public TransportProtos.GetAttributeRequestMsg convertToGetAttributes(UUID sessionId, @NotNull Request inbound) throws AdaptorException {
+    public TransportProtos.GetAttributeRequestMsg convertToGetAttributes(UUID sessionId, Request inbound) throws AdaptorException {
         return CoapAdaptorUtils.toGetAttributeRequestMsg(inbound);
     }
 
     @Override
-    public TransportProtos.ToDeviceRpcResponseMsg convertToDeviceRpcResponse(UUID sessionId, @NotNull Request inbound, Descriptors.Descriptor rpcResponseMsgDescriptor) throws AdaptorException {
+    public TransportProtos.ToDeviceRpcResponseMsg convertToDeviceRpcResponse(UUID sessionId, Request inbound, Descriptors.Descriptor rpcResponseMsgDescriptor) throws AdaptorException {
         Optional<Integer> requestId = CoapTransportResource.getRequestId(inbound);
         if (requestId.isEmpty()) {
             throw new AdaptorException("Request id is missing!");
@@ -70,7 +69,7 @@ public class ProtoCoapAdaptor implements CoapTransportAdaptor {
     }
 
     @Override
-    public TransportProtos.ToServerRpcRequestMsg convertToServerRpcRequest(UUID sessionId, @NotNull Request inbound) throws AdaptorException {
+    public TransportProtos.ToServerRpcRequestMsg convertToServerRpcRequest(UUID sessionId, Request inbound) throws AdaptorException {
         try {
             return ProtoConverter.convertToServerRpcRequest(inbound.getPayload(), 0);
         } catch (InvalidProtocolBufferException ex) {
@@ -79,8 +78,8 @@ public class ProtoCoapAdaptor implements CoapTransportAdaptor {
     }
 
     @Override
-    public TransportProtos.ClaimDeviceMsg convertToClaimDevice(UUID sessionId, @NotNull Request inbound, @NotNull TransportProtos.SessionInfoProto sessionInfo) throws AdaptorException {
-        @NotNull DeviceId deviceId = new DeviceId(new UUID(sessionInfo.getDeviceIdMSB(), sessionInfo.getDeviceIdLSB()));
+    public TransportProtos.ClaimDeviceMsg convertToClaimDevice(UUID sessionId, Request inbound, TransportProtos.SessionInfoProto sessionInfo) throws AdaptorException {
+        DeviceId deviceId = new DeviceId(new UUID(sessionInfo.getDeviceIdMSB(), sessionInfo.getDeviceIdLSB()));
         try {
             return ProtoConverter.convertToClaimDeviceProto(deviceId, inbound.getPayload());
         } catch (InvalidProtocolBufferException ex) {
@@ -89,7 +88,7 @@ public class ProtoCoapAdaptor implements CoapTransportAdaptor {
     }
 
     @Override
-    public TransportProtos.ProvisionDeviceRequestMsg convertToProvisionRequestMsg(UUID sessionId, @NotNull Request inbound) throws AdaptorException {
+    public TransportProtos.ProvisionDeviceRequestMsg convertToProvisionRequestMsg(UUID sessionId, Request inbound) throws AdaptorException {
         try {
             return ProtoConverter.convertToProvisionRequestMsg(inbound.getPayload());
         } catch (InvalidProtocolBufferException ex) {
@@ -97,32 +96,28 @@ public class ProtoCoapAdaptor implements CoapTransportAdaptor {
         }
     }
 
-    @NotNull
     @Override
-    public Response convertToPublish(@NotNull TransportProtos.AttributeUpdateNotificationMsg msg) throws AdaptorException {
+    public Response convertToPublish(TransportProtos.AttributeUpdateNotificationMsg msg) throws AdaptorException {
         return getObserveNotification(msg.toByteArray());
     }
 
-    @NotNull
     @Override
-    public Response convertToPublish(@NotNull TransportProtos.ToDeviceRpcRequestMsg rpcRequest, DynamicMessage.Builder rpcRequestDynamicMessageBuilder) throws AdaptorException {
+    public Response convertToPublish(TransportProtos.ToDeviceRpcRequestMsg rpcRequest, DynamicMessage.Builder rpcRequestDynamicMessageBuilder) throws AdaptorException {
         return getObserveNotification(ProtoConverter.convertToRpcRequest(rpcRequest, rpcRequestDynamicMessageBuilder));
     }
 
-    @NotNull
     @Override
-    public Response convertToPublish(@NotNull TransportProtos.ToServerRpcResponseMsg msg) throws AdaptorException {
-        @NotNull Response response = new Response(CoAP.ResponseCode.CONTENT);
+    public Response convertToPublish(TransportProtos.ToServerRpcResponseMsg msg) throws AdaptorException {
+        Response response = new Response(CoAP.ResponseCode.CONTENT);
         response.setPayload(msg.toByteArray());
         return response;
     }
 
-    @NotNull
     @Override
-    public Response convertToPublish(@NotNull TransportProtos.GetAttributeResponseMsg msg) throws AdaptorException {
+    public Response convertToPublish(TransportProtos.GetAttributeResponseMsg msg) throws AdaptorException {
         if (msg.getSharedStateMsg()) {
             if (StringUtils.isEmpty(msg.getError())) {
-                @NotNull Response response = new Response(CoAP.ResponseCode.CONTENT);
+                Response response = new Response(CoAP.ResponseCode.CONTENT);
                 TransportProtos.AttributeUpdateNotificationMsg notificationMsg = TransportProtos.AttributeUpdateNotificationMsg.newBuilder().addAllSharedUpdated(msg.getSharedAttributeListList()).build();
                 response.setPayload(notificationMsg.toByteArray());
                 return response;
@@ -133,16 +128,15 @@ public class ProtoCoapAdaptor implements CoapTransportAdaptor {
             if (msg.getClientAttributeListCount() == 0 && msg.getSharedAttributeListCount() == 0) {
                 return new Response(CoAP.ResponseCode.NOT_FOUND);
             } else {
-                @NotNull Response response = new Response(CoAP.ResponseCode.CONTENT);
+                Response response = new Response(CoAP.ResponseCode.CONTENT);
                 response.setPayload(msg.toByteArray());
                 return response;
             }
         }
     }
 
-    @NotNull
     private Response getObserveNotification(byte[] notification) {
-        @NotNull Response response = new Response(CoAP.ResponseCode.CONTENT);
+        Response response = new Response(CoAP.ResponseCode.CONTENT);
         response.setPayload(notification);
         return response;
     }

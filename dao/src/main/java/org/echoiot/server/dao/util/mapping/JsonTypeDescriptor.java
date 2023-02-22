@@ -5,7 +5,6 @@ import org.hibernate.type.descriptor.WrapperOptions;
 import org.hibernate.type.descriptor.java.AbstractTypeDescriptor;
 import org.hibernate.type.descriptor.java.MutableMutabilityPlan;
 import org.hibernate.usertype.DynamicParameterizedType;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Properties;
@@ -20,7 +19,7 @@ public class JsonTypeDescriptor
     private Class<?> jsonObjectClass;
 
     @Override
-    public void setParameterValues(@NotNull Properties parameters) {
+    public void setParameterValues(Properties parameters) {
         jsonObjectClass = ( (ParameterType) parameters.get( PARAMETER_TYPE ) )
                 .getReturnedClass();
 
@@ -29,7 +28,7 @@ public class JsonTypeDescriptor
     public JsonTypeDescriptor() {
         super( Object.class, new MutableMutabilityPlan<Object>() {
             @Override
-            protected Object deepCopyNotNull(@NotNull Object value) {
+            protected Object deepCopyNotNull(Object value) {
                 return JacksonUtil.clone(value);
             }
         });
@@ -62,7 +61,7 @@ public class JsonTypeDescriptor
     @Nullable
     @SuppressWarnings({"unchecked" })
     @Override
-    public <X> X unwrap(@Nullable Object value, @NotNull Class<X> type, WrapperOptions options) {
+    public <X> X unwrap(@Nullable Object value, Class<X> type, WrapperOptions options) {
         if ( value == null ) {
             return null;
         }

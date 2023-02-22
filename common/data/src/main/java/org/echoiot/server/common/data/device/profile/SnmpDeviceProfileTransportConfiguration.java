@@ -5,7 +5,6 @@ import lombok.Data;
 import org.echoiot.server.common.data.DeviceTransportType;
 import org.echoiot.server.common.data.transport.snmp.SnmpMapping;
 import org.echoiot.server.common.data.transport.snmp.config.SnmpCommunicationConfig;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -15,7 +14,6 @@ public class SnmpDeviceProfileTransportConfiguration implements DeviceProfileTra
     private Integer retries;
     private List<SnmpCommunicationConfig> communicationConfigs;
 
-    @NotNull
     @Override
     public DeviceTransportType getType() {
         return DeviceTransportType.SNMP;

@@ -1,6 +1,5 @@
 package org.echoiot.server.common.data;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -12,14 +11,12 @@ import java.util.stream.Collectors;
  */
 public class UUIDConverter {
 
-    @NotNull
-    public static UUID fromString(@NotNull String src) {
+    public static UUID fromString(String src) {
         return UUID.fromString(src.substring(7, 15) + "-" + src.substring(3, 7) + "-1"
                 + src.substring(0, 3) + "-" + src.substring(15, 19) + "-" + src.substring(19));
     }
 
-    @NotNull
-    public static String fromTimeUUID(@NotNull UUID src) {
+    public static String fromTimeUUID(UUID src) {
         if (src.version() != 1) {
             throw new IllegalArgumentException("Only Time-Based UUID (Version 1) is supported!");
         }

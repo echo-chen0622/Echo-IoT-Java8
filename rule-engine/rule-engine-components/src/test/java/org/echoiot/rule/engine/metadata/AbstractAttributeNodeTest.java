@@ -21,7 +21,6 @@ import org.echoiot.server.dao.attributes.AttributesService;
 import org.echoiot.server.dao.device.DeviceService;
 import org.echoiot.server.dao.timeseries.TimeseriesService;
 import org.echoiot.server.dao.user.UserService;
-import org.jetbrains.annotations.NotNull;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
@@ -64,8 +63,8 @@ public abstract class AbstractAttributeNodeTest {
     TbEntityGetAttrNode node;
 
     void init(TbEntityGetAttrNode node) throws TbNodeException {
-        @NotNull ObjectMapper mapper = JacksonUtil.OBJECT_MAPPER;
-        @NotNull TbNodeConfiguration nodeConfiguration = new TbNodeConfiguration(mapper.valueToTree(getTbNodeConfig()));
+        ObjectMapper mapper = JacksonUtil.OBJECT_MAPPER;
+        TbNodeConfiguration nodeConfiguration = new TbNodeConfiguration(mapper.valueToTree(getTbNodeConfig()));
 
         metaData = new HashMap<>();
         metaData.putIfAbsent("word", "temperature");
@@ -75,7 +74,7 @@ public abstract class AbstractAttributeNodeTest {
         this.node.init(null, nodeConfiguration);
     }
 
-    void errorThrownIfCannotLoadAttributes(@NotNull User user) {
+    void errorThrownIfCannotLoadAttributes(User user) {
         msg = TbMsg.newMsg("USER", user.getId(), new TbMsgMetaData(), TbMsgDataType.JSON, "{}", ruleChainId, ruleNodeId);
 
         when(ctx.getAttributesService()).thenReturn(attributesService);
@@ -83,7 +82,7 @@ public abstract class AbstractAttributeNodeTest {
                 .thenThrow(new IllegalStateException("something wrong"));
 
         node.onMsg(ctx, msg);
-        @NotNull final ArgumentCaptor<Throwable> captor = ArgumentCaptor.forClass(Throwable.class);
+        final ArgumentCaptor<Throwable> captor = ArgumentCaptor.forClass(Throwable.class);
         verify(ctx).tellFailure(same(msg), captor.capture());
 
         Throwable value = captor.getValue();
@@ -91,7 +90,7 @@ public abstract class AbstractAttributeNodeTest {
         assertTrue(msg.getMetaData().getData().isEmpty());
     }
 
-    void errorThrownIfCannotLoadAttributesAsync(@NotNull User user) {
+    void errorThrownIfCannotLoadAttributesAsync(User user) {
 
         msg = TbMsg.newMsg("USER", user.getId(), new TbMsgMetaData(), TbMsgDataType.JSON, "{}", ruleChainId, ruleNodeId);
 
@@ -100,7 +99,7 @@ public abstract class AbstractAttributeNodeTest {
                 .thenReturn(Futures.immediateFailedFuture(new IllegalStateException("something wrong")));
 
         node.onMsg(ctx, msg);
-        @NotNull final ArgumentCaptor<Throwable> captor = ArgumentCaptor.forClass(Throwable.class);
+        final ArgumentCaptor<Throwable> captor = ArgumentCaptor.forClass(Throwable.class);
         verify(ctx).tellFailure(same(msg), captor.capture());
 
         Throwable value = captor.getValue();
@@ -108,7 +107,7 @@ public abstract class AbstractAttributeNodeTest {
         assertTrue(msg.getMetaData().getData().isEmpty());
     }
 
-    void failedChainUsedIfCustomerCannotBeFound(@NotNull User user) {
+    void failedChainUsedIfCustomerCannotBeFound(User user) {
         msg = TbMsg.newMsg("USER", user.getId(), new TbMsgMetaData(), TbMsgDataType.JSON, "{}", ruleChainId, ruleNodeId);
 
         node.onMsg(ctx, msg);
@@ -121,34 +120,34 @@ public abstract class AbstractAttributeNodeTest {
         entityAttributeFetched(getEntityId());
     }
 
-    void usersCustomerAttributesFetched(@NotNull User user) {
+    void usersCustomerAttributesFetched(User user) {
         msg = TbMsg.newMsg("USER", user.getId(), new TbMsgMetaData(metaData), TbMsgDataType.JSON, "{}", ruleChainId, ruleNodeId);
 
         entityAttributeFetched(getEntityId());
     }
 
-    void assetsCustomerAttributesFetched(@NotNull Asset asset) {
+    void assetsCustomerAttributesFetched(Asset asset) {
         msg = TbMsg.newMsg("ASSET", asset.getId(), new TbMsgMetaData(metaData), TbMsgDataType.JSON, "{}", ruleChainId, ruleNodeId);
 
         entityAttributeFetched(getEntityId());
     }
 
-    void deviceCustomerAttributesFetched(@NotNull Device device) {
+    void deviceCustomerAttributesFetched(Device device) {
         msg = TbMsg.newMsg("DEVICE", device.getId(), new TbMsgMetaData(metaData), TbMsgDataType.JSON, "{}", ruleChainId, ruleNodeId);
 
         entityAttributeFetched(getEntityId());
     }
 
-    void deviceCustomerTelemetryFetched(@NotNull Device device) throws TbNodeException {
-        @NotNull ObjectMapper mapper = JacksonUtil.OBJECT_MAPPER;
-        @NotNull TbNodeConfiguration nodeConfiguration = new TbNodeConfiguration(mapper.valueToTree(getTbNodeConfigForTelemetry()));
+    void deviceCustomerTelemetryFetched(Device device) throws TbNodeException {
+        ObjectMapper mapper = JacksonUtil.OBJECT_MAPPER;
+        TbNodeConfiguration nodeConfiguration = new TbNodeConfiguration(mapper.valueToTree(getTbNodeConfigForTelemetry()));
 
         TbEntityGetAttrNode node = getEmptyNode();
         node.init(null, nodeConfiguration);
 
         msg = TbMsg.newMsg("DEVICE", device.getId(), new TbMsgMetaData(metaData), TbMsgDataType.JSON, "{}", ruleChainId, ruleNodeId);
 
-        @NotNull List<TsKvEntry> timeseries = Lists.newArrayList(new BasicTsKvEntry(1L, new StringDataEntry("temperature", "highest")));
+        List<TsKvEntry> timeseries = Lists.newArrayList(new BasicTsKvEntry(1L, new StringDataEntry("temperature", "highest")));
 
         when(ctx.getTimeseriesService()).thenReturn(timeseriesService);
         when(timeseriesService.findLatest(any(), eq(getEntityId()), anyCollection()))
@@ -160,7 +159,7 @@ public abstract class AbstractAttributeNodeTest {
     }
 
     void entityAttributeFetched(EntityId entityId) {
-        @NotNull List<AttributeKvEntry> attributes = Lists.newArrayList(new BaseAttributeKvEntry(new StringDataEntry("temperature", "high"), 1L));
+        List<AttributeKvEntry> attributes = Lists.newArrayList(new BaseAttributeKvEntry(new StringDataEntry("temperature", "high"), 1L));
 
         when(ctx.getAttributesService()).thenReturn(attributesService);
         when(attributesService.find(any(), eq(entityId), eq(SERVER_SCOPE), anyCollection()))
@@ -179,10 +178,9 @@ public abstract class AbstractAttributeNodeTest {
         return getConfig(true);
     }
 
-    @NotNull
     private TbGetEntityAttrNodeConfiguration getConfig(boolean isTelemetry) {
-        @NotNull TbGetEntityAttrNodeConfiguration config = new TbGetEntityAttrNodeConfiguration();
-        @NotNull Map<String, String> conf = new HashMap<>();
+        TbGetEntityAttrNodeConfiguration config = new TbGetEntityAttrNodeConfiguration();
+        Map<String, String> conf = new HashMap<>();
         conf.put(keyAttrConf, valueAttrConf);
         config.setAttrMapping(conf);
         config.setTelemetry(isTelemetry);
@@ -193,17 +191,17 @@ public abstract class AbstractAttributeNodeTest {
 
     abstract EntityId getEntityId();
 
-    void mockFindDevice(@NotNull Device device) {
+    void mockFindDevice(Device device) {
         when(ctx.getDeviceService()).thenReturn(deviceService);
         when(deviceService.findDeviceByIdAsync(any(), eq(device.getId()))).thenReturn(Futures.immediateFuture(device));
     }
 
-    void mockFindAsset(@NotNull Asset asset) {
+    void mockFindAsset(Asset asset) {
         when(ctx.getAssetService()).thenReturn(assetService);
         when(assetService.findAssetByIdAsync(any(), eq(asset.getId()))).thenReturn(Futures.immediateFuture(asset));
     }
 
-    void mockFindUser(@NotNull User user) {
+    void mockFindUser(User user) {
         when(ctx.getUserService()).thenReturn(userService);
         when(userService.findUserByIdAsync(any(), eq(user.getId()))).thenReturn(Futures.immediateFuture(user));
     }

@@ -15,7 +15,6 @@ import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.entitiy.edge.TbEdgeService;
 import org.echoiot.server.service.security.model.SecurityUser;
 import org.echoiot.server.service.sync.ie.importing.csv.AbstractBulkImportService;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -25,15 +24,12 @@ import java.util.Optional;
 @TbCoreComponent
 @RequiredArgsConstructor
 public class EdgeBulkImportService extends AbstractBulkImportService<Edge> {
-    @NotNull
     private final EdgeService edgeService;
-    @NotNull
     private final TbEdgeService tbEdgeService;
-    @NotNull
     private final RuleChainService ruleChainService;
 
     @Override
-    protected void setEntityFields(@NotNull Edge entity, @NotNull Map<BulkImportColumnType, String> fields) {
+    protected void setEntityFields(Edge entity, Map<BulkImportColumnType, String> fields) {
         ObjectNode additionalInfo = getOrCreateAdditionalInfoObj(entity);
         fields.forEach((columnType, value) -> {
             switch (columnType) {
@@ -62,12 +58,11 @@ public class EdgeBulkImportService extends AbstractBulkImportService<Edge> {
 
     @SneakyThrows
     @Override
-    protected Edge saveEntity(@NotNull SecurityUser user, Edge entity, Map<BulkImportColumnType, String> fields) {
+    protected Edge saveEntity(SecurityUser user, Edge entity, Map<BulkImportColumnType, String> fields) {
         RuleChain edgeTemplateRootRuleChain = ruleChainService.getEdgeTemplateRootRuleChain(user.getTenantId());
         return tbEdgeService.save(entity, edgeTemplateRootRuleChain, user);
     }
 
-    @NotNull
     @Override
     protected Edge findOrCreateEntity(TenantId tenantId, String name) {
         return Optional.ofNullable(edgeService.findEdgeByTenantIdAndName(tenantId, name))
@@ -75,12 +70,11 @@ public class EdgeBulkImportService extends AbstractBulkImportService<Edge> {
     }
 
     @Override
-    protected void setOwners(@NotNull Edge entity, @NotNull SecurityUser user) {
+    protected void setOwners(Edge entity, SecurityUser user) {
         entity.setTenantId(user.getTenantId());
         entity.setCustomerId(user.getCustomerId());
     }
 
-    @NotNull
     @Override
     protected EntityType getEntityType() {
         return EntityType.EDGE;

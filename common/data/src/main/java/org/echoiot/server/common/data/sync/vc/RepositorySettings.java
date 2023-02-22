@@ -1,7 +1,6 @@
 package org.echoiot.server.common.data.sync.vc;
 
 import lombok.Data;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 
@@ -23,7 +22,7 @@ public class RepositorySettings implements Serializable {
     public RepositorySettings() {
     }
 
-    public RepositorySettings(@NotNull RepositorySettings settings) {
+    public RepositorySettings(RepositorySettings settings) {
         this.repositoryUri = settings.getRepositoryUri();
         this.authMethod = settings.getAuthMethod();
         this.username = settings.getUsername();

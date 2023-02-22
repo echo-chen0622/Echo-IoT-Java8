@@ -15,7 +15,6 @@ import org.echoiot.server.dao.service.PaginatedRemover;
 import org.echoiot.server.dao.service.Validator;
 import org.echoiot.server.dao.tenant.TbTenantProfileCache;
 import org.hibernate.exception.ConstraintViolationException;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -42,14 +41,14 @@ public class BaseQueueService extends AbstractEntityService implements QueueServ
 //    private QueueStatsService queueStatsService;
 
     @Override
-    public Queue saveQueue(@NotNull Queue queue) {
+    public Queue saveQueue(Queue queue) {
         log.trace("Executing createOrUpdateQueue [{}]", queue);
         queueValidator.validate(queue, Queue::getTenantId);
         return queueDao.save(queue.getTenantId(), queue);
     }
 
     @Override
-    public void deleteQueue(TenantId tenantId, @NotNull QueueId queueId) {
+    public void deleteQueue(TenantId tenantId, QueueId queueId) {
         log.trace("Executing deleteQueue, queueId: [{}]", queueId);
         try {
             queueDao.removeById(tenantId, queueId.getId());
@@ -64,13 +63,13 @@ public class BaseQueueService extends AbstractEntityService implements QueueServ
     }
 
     @Override
-    public List<Queue> findQueuesByTenantId(@NotNull TenantId tenantId) {
+    public List<Queue> findQueuesByTenantId(TenantId tenantId) {
         log.trace("Executing findQueues, tenantId: [{}]", tenantId);
         return queueDao.findAllByTenantId(getSystemOrIsolatedTenantId(tenantId));
     }
 
     @Override
-    public PageData<Queue> findQueuesByTenantId(@NotNull TenantId tenantId, PageLink pageLink) {
+    public PageData<Queue> findQueuesByTenantId(TenantId tenantId, PageLink pageLink) {
         log.trace("Executing findQueues pageLink [{}]", pageLink);
         Validator.validatePageLink(pageLink);
         return queueDao.findQueuesByTenantId(getSystemOrIsolatedTenantId(tenantId), pageLink);
@@ -83,13 +82,13 @@ public class BaseQueueService extends AbstractEntityService implements QueueServ
     }
 
     @Override
-    public Queue findQueueById(TenantId tenantId, @NotNull QueueId queueId) {
+    public Queue findQueueById(TenantId tenantId, QueueId queueId) {
         log.trace("Executing findQueueById, queueId: [{}]", queueId);
         return queueDao.findById(tenantId, queueId.getId());
     }
 
     @Override
-    public Queue findQueueByTenantIdAndName(@NotNull TenantId tenantId, String queueName) {
+    public Queue findQueueByTenantIdAndName(TenantId tenantId, String queueName) {
         log.trace("Executing findQueueByTenantIdAndName, tenantId: [{}] queueName: [{}]", tenantId, queueName);
         return queueDao.findQueueByTenantIdAndName(getSystemOrIsolatedTenantId(tenantId), queueName);
     }
@@ -115,13 +114,13 @@ public class BaseQueueService extends AbstractEntityService implements QueueServ
                 }
 
                 @Override
-                protected void removeEntity(TenantId tenantId, @NotNull Queue entity) {
+                protected void removeEntity(TenantId tenantId, Queue entity) {
                     deleteQueue(tenantId, entity.getId());
                 }
             };
 
     @Nullable
-    private TenantId getSystemOrIsolatedTenantId(@NotNull TenantId tenantId) {
+    private TenantId getSystemOrIsolatedTenantId(TenantId tenantId) {
         if (!tenantId.equals(TenantId.SYS_TENANT_ID)) {
             TenantProfile tenantProfile = tenantProfileCache.get(tenantId);
             if (tenantProfile.isIsolatedTbRuleEngine()) {

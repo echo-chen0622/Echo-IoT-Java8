@@ -8,7 +8,6 @@ import org.echoiot.server.queue.azure.servicebus.*;
 import org.echoiot.server.queue.common.TbProtoQueueMsg;
 import org.echoiot.server.queue.settings.TbQueueCoreSettings;
 import org.echoiot.server.queue.settings.TbQueueVersionControlSettings;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Component;
 
@@ -22,17 +21,14 @@ public class ServiceBusTbVersionControlQueueFactory implements TbVersionControlQ
     private final TbQueueCoreSettings coreSettings;
     private final TbQueueVersionControlSettings vcSettings;
 
-    @NotNull
     private final TbQueueAdmin coreAdmin;
-    @NotNull
     private final TbQueueAdmin notificationAdmin;
-    @NotNull
     private final TbQueueAdmin vcAdmin;
 
-    public ServiceBusTbVersionControlQueueFactory(@NotNull TbServiceBusSettings serviceBusSettings,
+    public ServiceBusTbVersionControlQueueFactory(TbServiceBusSettings serviceBusSettings,
                                                   TbQueueCoreSettings coreSettings,
                                                   TbQueueVersionControlSettings vcSettings,
-                                                  @NotNull TbServiceBusQueueConfigs serviceBusQueueConfigs
+                                                  TbServiceBusQueueConfigs serviceBusQueueConfigs
     ) {
         this.serviceBusSettings = serviceBusSettings;
         this.coreSettings = coreSettings;
@@ -43,19 +39,16 @@ public class ServiceBusTbVersionControlQueueFactory implements TbVersionControlQ
         this.vcAdmin = new TbServiceBusAdmin(serviceBusSettings, serviceBusQueueConfigs.getVcConfigs());
     }
 
-    @NotNull
     @Override
     public TbQueueProducer<TbProtoQueueMsg<TransportProtos.ToUsageStatsServiceMsg>> createToUsageStatsServiceMsgProducer() {
         return new TbServiceBusProducerTemplate<>(coreAdmin, serviceBusSettings, coreSettings.getUsageStatsTopic());
     }
 
-    @NotNull
     @Override
     public TbQueueProducer<TbProtoQueueMsg<TransportProtos.ToCoreNotificationMsg>> createTbCoreNotificationsMsgProducer() {
         return new TbServiceBusProducerTemplate<>(notificationAdmin, serviceBusSettings, coreSettings.getTopic());
     }
 
-    @NotNull
     @Override
     public TbQueueConsumer<TbProtoQueueMsg<TransportProtos.ToVersionControlServiceMsg>> createToVersionControlMsgConsumer() {
         return new TbServiceBusConsumerTemplate<>(vcAdmin, serviceBusSettings, vcSettings.getTopic(),

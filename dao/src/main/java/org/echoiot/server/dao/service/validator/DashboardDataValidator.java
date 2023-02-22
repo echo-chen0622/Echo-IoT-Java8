@@ -10,7 +10,6 @@ import org.echoiot.server.dao.exception.DataValidationException;
 import org.echoiot.server.dao.service.DataValidator;
 import org.echoiot.server.dao.tenant.TbTenantProfileCache;
 import org.echoiot.server.dao.tenant.TenantService;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
@@ -38,7 +37,7 @@ public class DashboardDataValidator extends DataValidator<Dashboard> {
     }
 
     @Override
-    protected void validateDataImpl(TenantId tenantId, @NotNull Dashboard dashboard) {
+    protected void validateDataImpl(TenantId tenantId, Dashboard dashboard) {
         if (StringUtils.isEmpty(dashboard.getTitle())) {
             throw new DataValidationException("Dashboard title should be specified!");
         }

@@ -16,7 +16,6 @@ import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.security.permission.Operation;
 import org.echoiot.server.service.security.permission.PerResource;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -41,11 +40,11 @@ public class WidgetTypeController extends AutoCommitController {
     @RequestMapping(value = "/widgetType/{widgetTypeId}", method = RequestMethod.GET)
     @ResponseBody
     public WidgetTypeDetails getWidgetTypeById(
-            @NotNull @ApiParam(value = ControllerConstants.WIDGET_TYPE_ID_PARAM_DESCRIPTION, required = true)
+            @ApiParam(value = ControllerConstants.WIDGET_TYPE_ID_PARAM_DESCRIPTION, required = true)
             @PathVariable("widgetTypeId") String strWidgetTypeId) throws EchoiotException {
         checkParameter("widgetTypeId", strWidgetTypeId);
         try {
-            @NotNull WidgetTypeId widgetTypeId = new WidgetTypeId(toUUID(strWidgetTypeId));
+            WidgetTypeId widgetTypeId = new WidgetTypeId(toUUID(strWidgetTypeId));
             return checkWidgetTypeId(widgetTypeId, Operation.READ);
         } catch (Exception e) {
             throw handleException(e);
@@ -66,7 +65,7 @@ public class WidgetTypeController extends AutoCommitController {
     @RequestMapping(value = "/widgetType", method = RequestMethod.POST)
     @ResponseBody
     public WidgetTypeDetails saveWidgetType(
-            @NotNull @ApiParam(value = "A JSON value representing the Widget Type Details.", required = true)
+            @ApiParam(value = "A JSON value representing the Widget Type Details.", required = true)
             @RequestBody WidgetTypeDetails widgetTypeDetails) throws EchoiotException {
         try {
             var currentUser = getCurrentUser();
@@ -101,12 +100,12 @@ public class WidgetTypeController extends AutoCommitController {
     @RequestMapping(value = "/widgetType/{widgetTypeId}", method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.OK)
     public void deleteWidgetType(
-            @NotNull @ApiParam(value = ControllerConstants.WIDGET_TYPE_ID_PARAM_DESCRIPTION, required = true)
+            @ApiParam(value = ControllerConstants.WIDGET_TYPE_ID_PARAM_DESCRIPTION, required = true)
             @PathVariable("widgetTypeId") String strWidgetTypeId) throws EchoiotException {
         checkParameter("widgetTypeId", strWidgetTypeId);
         try {
             var currentUser = getCurrentUser();
-            @NotNull WidgetTypeId widgetTypeId = new WidgetTypeId(toUUID(strWidgetTypeId));
+            WidgetTypeId widgetTypeId = new WidgetTypeId(toUUID(strWidgetTypeId));
             WidgetTypeDetails wtd = checkWidgetTypeId(widgetTypeId, Operation.DELETE);
             widgetTypeService.deleteWidgetType(currentUser.getTenantId(), widgetTypeId);
 
@@ -193,7 +192,6 @@ public class WidgetTypeController extends AutoCommitController {
         }
     }
 
-    @NotNull
     @ApiOperation(value = "Get Widget Type (getWidgetType)",
             notes = "Get the Widget Type based on the provided parameters. " + WIDGET_TYPE_DESCRIPTION + ControllerConstants.AVAILABLE_FOR_ANY_AUTHORIZED_USER)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")

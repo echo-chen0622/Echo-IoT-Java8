@@ -18,7 +18,6 @@ import org.echoiot.server.common.data.kv.ReadTsKvQuery;
 import org.echoiot.server.common.data.kv.TsKvEntry;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.msg.TbMsg;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -57,7 +56,7 @@ public class TbGetTelemetryNode implements TbNode {
     private Aggregation aggregation;
 
     @Override
-    public void init(TbContext ctx, @NotNull TbNodeConfiguration configuration) throws TbNodeException {
+    public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
         this.config = TbNodeUtils.convert(configuration, TbGetTelemetryNodeConfiguration.class);
         tsKeyNames = config.getLatestTsKeyNames();
         limit = config.getFetchMode().equals(FETCH_MODE_ALL) ? validateLimit(config.getLimit()) : 1;
@@ -69,7 +68,6 @@ public class TbGetTelemetryNode implements TbNode {
         aggregation = parseAggregationConfig(config.getAggregation());
     }
 
-    @NotNull
     Aggregation parseAggregationConfig(String aggName) {
         if (StringUtils.isEmpty(aggName) || !fetchMode.equals(FETCH_MODE_ALL)) {
             return Aggregation.NONE;
@@ -78,13 +76,13 @@ public class TbGetTelemetryNode implements TbNode {
     }
 
     @Override
-    public void onMsg(@NotNull TbContext ctx, @NotNull TbMsg msg) throws ExecutionException, InterruptedException, TbNodeException {
+    public void onMsg(TbContext ctx, TbMsg msg) throws ExecutionException, InterruptedException, TbNodeException {
         if (tsKeyNames.isEmpty()) {
             ctx.tellFailure(msg, new IllegalStateException("Telemetry is not selected!"));
         } else {
             try {
-                @NotNull Interval interval = getInterval(msg);
-                @NotNull List<String> keys = TbNodeUtils.processPatterns(tsKeyNames, msg);
+                Interval interval = getInterval(msg);
+                List<String> keys = TbNodeUtils.processPatterns(tsKeyNames, msg);
                 ListenableFuture<List<TsKvEntry>> list = ctx.getTimeseriesService().findAll(ctx.getTenantId(), msg.getOriginator(), buildQueries(interval, keys));
                 DonAsynchron.withCallback(list, data -> {
                     process(data, msg, keys);
@@ -96,8 +94,7 @@ public class TbGetTelemetryNode implements TbNode {
         }
     }
 
-    @NotNull
-    private List<ReadTsKvQuery> buildQueries(@NotNull Interval interval, @NotNull List<String> keys) {
+    private List<ReadTsKvQuery> buildQueries(Interval interval, List<String> keys) {
         final long aggIntervalStep = Aggregation.NONE.equals(aggregation) ? 1 :
                 // exact how it validates on BaseTimeseriesService.validate()
                 // see CassandraBaseTimeseriesDao.findAllAsync()
@@ -119,7 +116,7 @@ public class TbGetTelemetryNode implements TbNode {
         }
     }
 
-    private void process(@NotNull List<TsKvEntry> entries, @NotNull TbMsg msg, @NotNull List<String> keys) {
+    private void process(List<TsKvEntry> entries, TbMsg msg, List<String> keys) {
         ObjectNode resultNode = JacksonUtil.newObjectNode(JacksonUtil.ALLOW_UNQUOTED_FIELD_NAMES_MAPPER);
         if (FETCH_MODE_ALL.equals(fetchMode)) {
             entries.forEach(entry -> processArray(resultNode, entry));
@@ -134,11 +131,11 @@ public class TbGetTelemetryNode implements TbNode {
         }
     }
 
-    private void processSingle(@NotNull ObjectNode node, @NotNull TsKvEntry entry) {
+    private void processSingle(ObjectNode node, TsKvEntry entry) {
         node.put(entry.getKey(), entry.getValueAsString());
     }
 
-    private void processArray(@NotNull ObjectNode node, @NotNull TsKvEntry entry) {
+    private void processArray(ObjectNode node, TsKvEntry entry) {
         if (node.has(entry.getKey())) {
             ArrayNode arrayNode = (ArrayNode) node.get(entry.getKey());
             arrayNode.add(buildNode(entry));
@@ -149,20 +146,18 @@ public class TbGetTelemetryNode implements TbNode {
         }
     }
 
-    @NotNull
-    private ObjectNode buildNode(@NotNull TsKvEntry entry) {
+    private ObjectNode buildNode(TsKvEntry entry) {
         ObjectNode obj = JacksonUtil.newObjectNode(JacksonUtil.ALLOW_UNQUOTED_FIELD_NAMES_MAPPER);
         obj.put("ts", entry.getTs());
         JacksonUtil.addKvEntry(obj, entry, "value", JacksonUtil.ALLOW_UNQUOTED_FIELD_NAMES_MAPPER);
         return obj;
     }
 
-    @NotNull
-    private Interval getInterval(@NotNull TbMsg msg) {
+    private Interval getInterval(TbMsg msg) {
         if (config.isUseMetadataIntervalPatterns()) {
             return getIntervalFromPatterns(msg);
         } else {
-            @NotNull Interval interval = new Interval();
+            Interval interval = new Interval();
             long ts = System.currentTimeMillis();
             interval.setStartTs(ts - TimeUnit.valueOf(config.getStartIntervalTimeUnit()).toMillis(config.getStartInterval()));
             interval.setEndTs(ts - TimeUnit.valueOf(config.getEndIntervalTimeUnit()).toMillis(config.getEndInterval()));
@@ -170,15 +165,14 @@ public class TbGetTelemetryNode implements TbNode {
         }
     }
 
-    @NotNull
-    private Interval getIntervalFromPatterns(@NotNull TbMsg msg) {
-        @NotNull Interval interval = new Interval();
+    private Interval getIntervalFromPatterns(TbMsg msg) {
+        Interval interval = new Interval();
         interval.setStartTs(checkPattern(msg, config.getStartIntervalPattern()));
         interval.setEndTs(checkPattern(msg, config.getEndIntervalPattern()));
         return interval;
     }
 
-    private long checkPattern(@NotNull TbMsg msg, @NotNull String pattern) {
+    private long checkPattern(TbMsg msg, String pattern) {
         @Nullable String value = getValuePattern(msg, pattern);
         if (value == null) {
             throw new IllegalArgumentException("Message value: '" +
@@ -193,13 +187,12 @@ public class TbGetTelemetryNode implements TbNode {
     }
 
     @Nullable
-    private String getValuePattern(@NotNull TbMsg msg, String pattern) {
+    private String getValuePattern(TbMsg msg, String pattern) {
         String value = TbNodeUtils.processPattern(pattern, msg);
         return value.equals(pattern) ? null : value;
     }
 
-    @NotNull
-    private String replaceRegex(@NotNull String pattern) {
+    private String replaceRegex(String pattern) {
         return pattern.replaceAll("[$\\[{}\\]]", "");
     }
 

@@ -8,7 +8,6 @@ import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.common.data.widget.WidgetsBundle;
 import org.echoiot.server.dao.exception.DataValidationException;
 import org.echoiot.server.dao.model.ModelConstants;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.junit.After;
 import org.junit.Assert;
@@ -28,7 +27,7 @@ public abstract class BaseWidgetsBundleServiceTest extends AbstractServiceTest {
 
     @Before
     public void before() {
-        @NotNull Tenant tenant = new Tenant();
+        Tenant tenant = new Tenant();
         tenant.setTitle("My tenant");
         Tenant savedTenant = tenantService.saveTenant(tenant);
         Assert.assertNotNull(savedTenant);
@@ -42,7 +41,7 @@ public abstract class BaseWidgetsBundleServiceTest extends AbstractServiceTest {
 
     @Test
     public void testSaveWidgetsBundle() throws IOException {
-        @NotNull WidgetsBundle widgetsBundle = new WidgetsBundle();
+        WidgetsBundle widgetsBundle = new WidgetsBundle();
         widgetsBundle.setTenantId(tenantId);
         widgetsBundle.setTitle("My first widgets bundle");
 
@@ -66,14 +65,14 @@ public abstract class BaseWidgetsBundleServiceTest extends AbstractServiceTest {
 
     @Test(expected = DataValidationException.class)
     public void testSaveWidgetsBundleWithEmptyTitle() {
-        @NotNull WidgetsBundle widgetsBundle = new WidgetsBundle();
+        WidgetsBundle widgetsBundle = new WidgetsBundle();
         widgetsBundle.setTenantId(tenantId);
         widgetsBundleService.saveWidgetsBundle(widgetsBundle);
     }
 
     @Test(expected = DataValidationException.class)
     public void testSaveWidgetsBundleWithInvalidTenant() {
-        @NotNull WidgetsBundle widgetsBundle = new WidgetsBundle();
+        WidgetsBundle widgetsBundle = new WidgetsBundle();
         widgetsBundle.setTitle("My widgets bundle");
         widgetsBundle.setTenantId(TenantId.fromUUID(Uuids.timeBased()));
         widgetsBundleService.saveWidgetsBundle(widgetsBundle);
@@ -81,7 +80,7 @@ public abstract class BaseWidgetsBundleServiceTest extends AbstractServiceTest {
 
     @Test(expected = DataValidationException.class)
     public void testUpdateWidgetsBundleTenant() {
-        @NotNull WidgetsBundle widgetsBundle = new WidgetsBundle();
+        WidgetsBundle widgetsBundle = new WidgetsBundle();
         widgetsBundle.setTitle("My widgets bundle");
         widgetsBundle.setTenantId(tenantId);
         WidgetsBundle savedWidgetsBundle = widgetsBundleService.saveWidgetsBundle(widgetsBundle);
@@ -95,7 +94,7 @@ public abstract class BaseWidgetsBundleServiceTest extends AbstractServiceTest {
 
     @Test(expected = DataValidationException.class)
     public void testUpdateWidgetsBundleAlias() {
-        @NotNull WidgetsBundle widgetsBundle = new WidgetsBundle();
+        WidgetsBundle widgetsBundle = new WidgetsBundle();
         widgetsBundle.setTitle("My widgets bundle");
         widgetsBundle.setTenantId(tenantId);
         WidgetsBundle savedWidgetsBundle = widgetsBundleService.saveWidgetsBundle(widgetsBundle);
@@ -109,7 +108,7 @@ public abstract class BaseWidgetsBundleServiceTest extends AbstractServiceTest {
 
     @Test
     public void testFindWidgetsBundleById() {
-        @NotNull WidgetsBundle widgetsBundle = new WidgetsBundle();
+        WidgetsBundle widgetsBundle = new WidgetsBundle();
         widgetsBundle.setTenantId(tenantId);
         widgetsBundle.setTitle("My widgets bundle");
         WidgetsBundle savedWidgetsBundle = widgetsBundleService.saveWidgetsBundle(widgetsBundle);
@@ -121,7 +120,7 @@ public abstract class BaseWidgetsBundleServiceTest extends AbstractServiceTest {
 
     @Test
     public void testFindWidgetsBundleByTenantIdAndAlias() {
-        @NotNull WidgetsBundle widgetsBundle = new WidgetsBundle();
+        WidgetsBundle widgetsBundle = new WidgetsBundle();
         widgetsBundle.setTenantId(tenantId);
         widgetsBundle.setTitle("My widgets bundle");
         WidgetsBundle savedWidgetsBundle = widgetsBundleService.saveWidgetsBundle(widgetsBundle);
@@ -133,7 +132,7 @@ public abstract class BaseWidgetsBundleServiceTest extends AbstractServiceTest {
 
     @Test
     public void testDeleteWidgetsBundle() {
-        @NotNull WidgetsBundle widgetsBundle = new WidgetsBundle();
+        WidgetsBundle widgetsBundle = new WidgetsBundle();
         widgetsBundle.setTenantId(tenantId);
         widgetsBundle.setTitle("My widgets bundle");
         WidgetsBundle savedWidgetsBundle = widgetsBundleService.saveWidgetsBundle(widgetsBundle);
@@ -150,15 +149,15 @@ public abstract class BaseWidgetsBundleServiceTest extends AbstractServiceTest {
         TenantId tenantId = TenantId.fromUUID(ModelConstants.NULL_UUID);
 
         List<WidgetsBundle> systemWidgetsBundles = widgetsBundleService.findSystemWidgetsBundles(tenantId);
-        @NotNull List<WidgetsBundle> createdWidgetsBundles = new ArrayList<>();
+        List<WidgetsBundle> createdWidgetsBundles = new ArrayList<>();
         for (int i=0;i<235;i++) {
-            @NotNull WidgetsBundle widgetsBundle = new WidgetsBundle();
+            WidgetsBundle widgetsBundle = new WidgetsBundle();
             widgetsBundle.setTenantId(tenantId);
             widgetsBundle.setTitle("Widgets bundle "+i);
             createdWidgetsBundles.add(widgetsBundleService.saveWidgetsBundle(widgetsBundle));
         }
 
-        @NotNull List<WidgetsBundle> widgetsBundles = new ArrayList<>(createdWidgetsBundles);
+        List<WidgetsBundle> widgetsBundles = new ArrayList<>(createdWidgetsBundles);
         widgetsBundles.addAll(systemWidgetsBundles);
 
         List<WidgetsBundle> loadedWidgetsBundles = new ArrayList<>();
@@ -177,7 +176,7 @@ public abstract class BaseWidgetsBundleServiceTest extends AbstractServiceTest {
 
         Assert.assertEquals(widgetsBundles, loadedWidgetsBundles);
 
-        for (@NotNull WidgetsBundle widgetsBundle : createdWidgetsBundles) {
+        for (WidgetsBundle widgetsBundle : createdWidgetsBundles) {
             widgetsBundleService.deleteWidgetsBundle(tenantId, widgetsBundle.getId());
         }
 
@@ -195,15 +194,15 @@ public abstract class BaseWidgetsBundleServiceTest extends AbstractServiceTest {
 
         List<WidgetsBundle> systemWidgetsBundles = widgetsBundleService.findSystemWidgetsBundles(tenantId);
 
-        @NotNull List<WidgetsBundle> createdWidgetsBundles = new ArrayList<>();
+        List<WidgetsBundle> createdWidgetsBundles = new ArrayList<>();
         for (int i=0;i<135;i++) {
-            @NotNull WidgetsBundle widgetsBundle = new WidgetsBundle();
+            WidgetsBundle widgetsBundle = new WidgetsBundle();
             widgetsBundle.setTenantId(tenantId);
             widgetsBundle.setTitle("Widgets bundle "+i);
             createdWidgetsBundles.add(widgetsBundleService.saveWidgetsBundle(widgetsBundle));
         }
 
-        @NotNull List<WidgetsBundle> widgetsBundles = new ArrayList<>(createdWidgetsBundles);
+        List<WidgetsBundle> widgetsBundles = new ArrayList<>(createdWidgetsBundles);
         widgetsBundles.addAll(systemWidgetsBundles);
 
         List<WidgetsBundle> loadedWidgetsBundles = widgetsBundleService.findSystemWidgetsBundles(tenantId);
@@ -213,7 +212,7 @@ public abstract class BaseWidgetsBundleServiceTest extends AbstractServiceTest {
 
         Assert.assertEquals(widgetsBundles, loadedWidgetsBundles);
 
-        for (@NotNull WidgetsBundle widgetsBundle : createdWidgetsBundles) {
+        for (WidgetsBundle widgetsBundle : createdWidgetsBundles) {
             widgetsBundleService.deleteWidgetsBundle(tenantId, widgetsBundle.getId());
         }
 
@@ -233,15 +232,15 @@ public abstract class BaseWidgetsBundleServiceTest extends AbstractServiceTest {
 
         TenantId tenantId = tenant.getId();
 
-        @NotNull List<WidgetsBundle> widgetsBundles = new ArrayList<>();
+        List<WidgetsBundle> widgetsBundles = new ArrayList<>();
         for (int i=0;i<127;i++) {
-            @NotNull WidgetsBundle widgetsBundle = new WidgetsBundle();
+            WidgetsBundle widgetsBundle = new WidgetsBundle();
             widgetsBundle.setTenantId(tenantId);
             widgetsBundle.setTitle("Widgets bundle "+i);
             widgetsBundles.add(widgetsBundleService.saveWidgetsBundle(widgetsBundle));
         }
 
-        @NotNull List<WidgetsBundle> loadedWidgetsBundles = new ArrayList<>();
+        List<WidgetsBundle> loadedWidgetsBundles = new ArrayList<>();
         PageLink pageLink = new PageLink(11);
         @Nullable PageData<WidgetsBundle> pageData = null;
         do {
@@ -279,10 +278,10 @@ public abstract class BaseWidgetsBundleServiceTest extends AbstractServiceTest {
         TenantId tenantId = tenant.getId();
         TenantId systemTenantId = TenantId.fromUUID(ModelConstants.NULL_UUID);
 
-        @NotNull List<WidgetsBundle> createdWidgetsBundles = new ArrayList<>();
-        @NotNull List<WidgetsBundle> createdSystemWidgetsBundles = new ArrayList<>();
+        List<WidgetsBundle> createdWidgetsBundles = new ArrayList<>();
+        List<WidgetsBundle> createdSystemWidgetsBundles = new ArrayList<>();
         for (int i=0;i<177;i++) {
-            @NotNull WidgetsBundle widgetsBundle = new WidgetsBundle();
+            WidgetsBundle widgetsBundle = new WidgetsBundle();
             widgetsBundle.setTenantId(i % 2 == 0 ? tenantId : systemTenantId);
             widgetsBundle.setTitle((i % 2 == 0 ? "Widgets bundle " : "System widget bundle ") + i);
             WidgetsBundle savedWidgetsBundle = widgetsBundleService.saveWidgetsBundle(widgetsBundle);
@@ -292,10 +291,10 @@ public abstract class BaseWidgetsBundleServiceTest extends AbstractServiceTest {
             }
         }
 
-        @NotNull List<WidgetsBundle> widgetsBundles = new ArrayList<>(createdWidgetsBundles);
+        List<WidgetsBundle> widgetsBundles = new ArrayList<>(createdWidgetsBundles);
         widgetsBundles.addAll(systemWidgetsBundles);
 
-        @NotNull List<WidgetsBundle> loadedWidgetsBundles = new ArrayList<>();
+        List<WidgetsBundle> loadedWidgetsBundles = new ArrayList<>();
         PageLink pageLink = new PageLink(17);
         @Nullable PageData<WidgetsBundle> pageData = null;
         do {
@@ -323,7 +322,7 @@ public abstract class BaseWidgetsBundleServiceTest extends AbstractServiceTest {
             }
         } while (pageData.hasNext());
 
-        @NotNull List<WidgetsBundle> allSystemWidgetsBundles = new ArrayList<>(systemWidgetsBundles);
+        List<WidgetsBundle> allSystemWidgetsBundles = new ArrayList<>(systemWidgetsBundles);
         allSystemWidgetsBundles.addAll(createdSystemWidgetsBundles);
 
         Collections.sort(allSystemWidgetsBundles, idComparator);
@@ -331,7 +330,7 @@ public abstract class BaseWidgetsBundleServiceTest extends AbstractServiceTest {
 
         Assert.assertEquals(allSystemWidgetsBundles, loadedWidgetsBundles);
 
-        for (@NotNull WidgetsBundle widgetsBundle : createdSystemWidgetsBundles) {
+        for (WidgetsBundle widgetsBundle : createdSystemWidgetsBundles) {
             widgetsBundleService.deleteWidgetsBundle(tenantId, widgetsBundle.getId());
         }
 
@@ -365,10 +364,10 @@ public abstract class BaseWidgetsBundleServiceTest extends AbstractServiceTest {
         TenantId tenantId = tenant.getId();
         TenantId systemTenantId = TenantId.fromUUID(ModelConstants.NULL_UUID);
 
-        @NotNull List<WidgetsBundle> createdWidgetsBundles = new ArrayList<>();
-        @NotNull List<WidgetsBundle> createdSystemWidgetsBundles = new ArrayList<>();
+        List<WidgetsBundle> createdWidgetsBundles = new ArrayList<>();
+        List<WidgetsBundle> createdSystemWidgetsBundles = new ArrayList<>();
         for (int i=0;i<277;i++) {
-            @NotNull WidgetsBundle widgetsBundle = new WidgetsBundle();
+            WidgetsBundle widgetsBundle = new WidgetsBundle();
             widgetsBundle.setTenantId(i % 2 == 0 ? tenantId : systemTenantId);
             widgetsBundle.setTitle((i % 2 == 0 ? "Widgets bundle " : "System widget bundle ") + i);
             WidgetsBundle savedWidgetsBundle = widgetsBundleService.saveWidgetsBundle(widgetsBundle);
@@ -378,7 +377,7 @@ public abstract class BaseWidgetsBundleServiceTest extends AbstractServiceTest {
             }
         }
 
-        @NotNull List<WidgetsBundle> widgetsBundles = new ArrayList<>(createdWidgetsBundles);
+        List<WidgetsBundle> widgetsBundles = new ArrayList<>(createdWidgetsBundles);
         widgetsBundles.addAll(systemWidgetsBundles);
 
         List<WidgetsBundle> loadedWidgetsBundles = widgetsBundleService.findAllTenantWidgetsBundlesByTenantId(tenantId);
@@ -392,7 +391,7 @@ public abstract class BaseWidgetsBundleServiceTest extends AbstractServiceTest {
 
         loadedWidgetsBundles = widgetsBundleService.findAllTenantWidgetsBundlesByTenantId(tenantId);
 
-        @NotNull List<WidgetsBundle> allSystemWidgetsBundles = new ArrayList<>(systemWidgetsBundles);
+        List<WidgetsBundle> allSystemWidgetsBundles = new ArrayList<>(systemWidgetsBundles);
         allSystemWidgetsBundles.addAll(createdSystemWidgetsBundles);
 
         Collections.sort(allSystemWidgetsBundles, idComparator);
@@ -400,7 +399,7 @@ public abstract class BaseWidgetsBundleServiceTest extends AbstractServiceTest {
 
         Assert.assertEquals(allSystemWidgetsBundles, loadedWidgetsBundles);
 
-        for (@NotNull WidgetsBundle widgetsBundle : createdSystemWidgetsBundles) {
+        for (WidgetsBundle widgetsBundle : createdSystemWidgetsBundles) {
             widgetsBundleService.deleteWidgetsBundle(tenantId, widgetsBundle.getId());
         }
 

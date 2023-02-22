@@ -8,7 +8,6 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.id.WidgetTypeId;
 import org.echoiot.server.common.data.validation.Length;
 import org.echoiot.server.common.data.validation.NoXss;
-import org.jetbrains.annotations.NotNull;
 
 @Data
 public class BaseWidgetType extends BaseData<WidgetTypeId> implements HasTenantId {
@@ -38,7 +37,7 @@ public class BaseWidgetType extends BaseData<WidgetTypeId> implements HasTenantI
         super(id);
     }
 
-    public BaseWidgetType(@NotNull BaseWidgetType widgetType) {
+    public BaseWidgetType(BaseWidgetType widgetType) {
         super(widgetType);
         this.tenantId = widgetType.getTenantId();
         this.bundleAlias = widgetType.getBundleAlias();

@@ -14,7 +14,6 @@ import org.echoiot.server.queue.settings.TbQueueCoreSettings;
 import org.echoiot.server.queue.settings.TbQueueRuleEngineSettings;
 import org.echoiot.server.queue.settings.TbQueueTransportApiSettings;
 import org.echoiot.server.queue.settings.TbQueueTransportNotificationSettings;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Component;
 
@@ -33,25 +32,20 @@ public class KafkaTbTransportQueueFactory implements TbTransportQueueFactory {
     private final TbQueueTransportNotificationSettings transportNotificationSettings;
     private final TbKafkaConsumerStatsService consumerStatsService;
 
-    @NotNull
     private final TbQueueAdmin coreAdmin;
-    @NotNull
     private final TbQueueAdmin ruleEngineAdmin;
-    @NotNull
     private final TbQueueAdmin transportApiRequestAdmin;
-    @NotNull
     private final TbQueueAdmin transportApiResponseAdmin;
-    @NotNull
     private final TbQueueAdmin notificationAdmin;
 
-    public KafkaTbTransportQueueFactory(@NotNull TbKafkaSettings kafkaSettings,
+    public KafkaTbTransportQueueFactory(TbKafkaSettings kafkaSettings,
                                         TbServiceInfoProvider serviceInfoProvider,
                                         TbQueueCoreSettings coreSettings,
                                         TbQueueRuleEngineSettings ruleEngineSettings,
                                         TbQueueTransportApiSettings transportApiSettings,
                                         TbQueueTransportNotificationSettings transportNotificationSettings,
                                         TbKafkaConsumerStatsService consumerStatsService,
-                                        @NotNull TbKafkaTopicConfigs kafkaTopicConfigs) {
+                                        TbKafkaTopicConfigs kafkaTopicConfigs) {
         this.kafkaSettings = kafkaSettings;
         this.serviceInfoProvider = serviceInfoProvider;
         this.coreSettings = coreSettings;

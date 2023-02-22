@@ -5,7 +5,6 @@ import org.echoiot.rule.engine.data.RelationsQuery;
 import org.echoiot.server.common.data.relation.EntityRelation;
 import org.echoiot.server.common.data.relation.EntitySearchDirection;
 import org.echoiot.server.common.data.relation.RelationEntityTypeFilter;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -16,19 +15,18 @@ public class TbGetRelatedAttrNodeConfiguration extends TbGetEntityAttrNodeConfig
 
     private RelationsQuery relationsQuery;
 
-    @NotNull
     @Override
     public TbGetRelatedAttrNodeConfiguration defaultConfiguration() {
-        @NotNull TbGetRelatedAttrNodeConfiguration configuration = new TbGetRelatedAttrNodeConfiguration();
-        @NotNull Map<String, String> attrMapping = new HashMap<>();
+        TbGetRelatedAttrNodeConfiguration configuration = new TbGetRelatedAttrNodeConfiguration();
+        Map<String, String> attrMapping = new HashMap<>();
         attrMapping.putIfAbsent("temperature", "tempo");
         configuration.setAttrMapping(attrMapping);
         configuration.setTelemetry(false);
 
-        @NotNull RelationsQuery relationsQuery = new RelationsQuery();
+        RelationsQuery relationsQuery = new RelationsQuery();
         relationsQuery.setDirection(EntitySearchDirection.FROM);
         relationsQuery.setMaxLevel(1);
-        @NotNull RelationEntityTypeFilter relationEntityTypeFilter = new RelationEntityTypeFilter(EntityRelation.CONTAINS_TYPE, Collections.emptyList());
+        RelationEntityTypeFilter relationEntityTypeFilter = new RelationEntityTypeFilter(EntityRelation.CONTAINS_TYPE, Collections.emptyList());
         relationsQuery.setFilters(Collections.singletonList(relationEntityTypeFilter));
         configuration.setRelationsQuery(relationsQuery);
 

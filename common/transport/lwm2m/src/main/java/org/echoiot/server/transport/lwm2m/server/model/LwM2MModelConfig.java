@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.device.profile.lwm2m.ObjectAttributes;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -39,7 +38,7 @@ public class LwM2MModelConfig {
         this.toCancelRead = new HashSet<>();
     }
 
-    public void merge(@NotNull LwM2MModelConfig modelConfig) {
+    public void merge(LwM2MModelConfig modelConfig) {
         if (modelConfig.isEmpty() && modelConfig.getToCancelRead().isEmpty()) {
             return;
         }

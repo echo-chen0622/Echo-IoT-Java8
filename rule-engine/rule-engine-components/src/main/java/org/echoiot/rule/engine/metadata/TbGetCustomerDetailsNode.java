@@ -14,7 +14,6 @@ import org.echoiot.server.common.data.Customer;
 import org.echoiot.server.common.data.id.*;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.msg.TbMsg;
-import org.jetbrains.annotations.NotNull;
 
 @Slf4j
 @RuleNode(type = ComponentType.ENRICHMENT,
@@ -31,7 +30,7 @@ public class TbGetCustomerDetailsNode extends TbAbstractGetEntityDetailsNode<TbG
     private static final String CUSTOMER_PREFIX = "customer_";
 
     @Override
-    protected TbGetCustomerDetailsNodeConfiguration loadGetEntityDetailsNodeConfiguration(@NotNull TbNodeConfiguration configuration) throws TbNodeException {
+    protected TbGetCustomerDetailsNodeConfiguration loadGetEntityDetailsNodeConfiguration(TbNodeConfiguration configuration) throws TbNodeException {
         return TbNodeUtils.convert(configuration, TbGetCustomerDetailsNodeConfiguration.class);
     }
 
@@ -40,9 +39,8 @@ public class TbGetCustomerDetailsNode extends TbAbstractGetEntityDetailsNode<TbG
         return getTbMsgListenableFuture(ctx, msg, getDataAsJson(msg), CUSTOMER_PREFIX);
     }
 
-    @NotNull
     @Override
-    protected ListenableFuture<ContactBased> getContactBasedListenableFuture(@NotNull TbContext ctx, @NotNull TbMsg msg) {
+    protected ListenableFuture<ContactBased> getContactBasedListenableFuture(TbContext ctx, TbMsg msg) {
         return Futures.transformAsync(getCustomer(ctx, msg), customer -> {
             if (customer != null) {
                 return Futures.immediateFuture(customer);
@@ -52,8 +50,7 @@ public class TbGetCustomerDetailsNode extends TbAbstractGetEntityDetailsNode<TbG
         }, MoreExecutors.directExecutor());
     }
 
-    @NotNull
-    private ListenableFuture<Customer> getCustomer(@NotNull TbContext ctx, @NotNull TbMsg msg) {
+    private ListenableFuture<Customer> getCustomer(TbContext ctx, TbMsg msg) {
         switch (msg.getOriginator().getEntityType()) {
             case DEVICE:
                 return Futures.transformAsync(ctx.getDeviceService().findDeviceByIdAsync(ctx.getTenantId(), new DeviceId(msg.getOriginator().getId())), device -> {

@@ -1,7 +1,6 @@
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import org.echoiot.server.common.transport.adaptor.JsonConverter;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,55 +21,55 @@ public class JsonConverterTest {
 
     @Test
     public void testParseBigDecimalAsLong() {
-        @NotNull var result = JsonConverter.convertToTelemetry(JSON_PARSER.parse("{\"meterReadingDelta\": 1E+1}"), 0L);
+        var result = JsonConverter.convertToTelemetry(JSON_PARSER.parse("{\"meterReadingDelta\": 1E+1}"), 0L);
         Assert.assertEquals(10L, result.get(0L).get(0).getLongValue().get().longValue());
     }
 
     @Test
     public void testParseBigDecimalAsDouble() {
-        @NotNull var result = JsonConverter.convertToTelemetry(JSON_PARSER.parse("{\"meterReadingDelta\": 101E-1}"), 0L);
+        var result = JsonConverter.convertToTelemetry(JSON_PARSER.parse("{\"meterReadingDelta\": 101E-1}"), 0L);
         Assert.assertEquals(10.1, result.get(0L).get(0).getDoubleValue().get(), 0.0);
     }
 
     @Test
     public void testParseAttributesBigDecimalAsLong() {
-        @NotNull var result = new ArrayList<>(JsonConverter.convertToAttributes(JSON_PARSER.parse("{\"meterReadingDelta\": 1E1}")));
+        var result = new ArrayList<>(JsonConverter.convertToAttributes(JSON_PARSER.parse("{\"meterReadingDelta\": 1E1}")));
         Assert.assertEquals(10L, result.get(0).getLongValue().get().longValue());
     }
 
     @Test
     public void testParseAsDoubleWithZero() {
-        @NotNull var result = JsonConverter.convertToTelemetry(JSON_PARSER.parse("{\"meterReadingDelta\": 42.0}"), 0L);
+        var result = JsonConverter.convertToTelemetry(JSON_PARSER.parse("{\"meterReadingDelta\": 42.0}"), 0L);
         Assert.assertEquals(42.0, result.get(0L).get(0).getDoubleValue().get(), 0.0);
     }
 
     @Test
     public void testParseAsDouble() {
-        @NotNull var result = JsonConverter.convertToTelemetry(JSON_PARSER.parse("{\"meterReadingDelta\": 1.1}"), 0L);
+        var result = JsonConverter.convertToTelemetry(JSON_PARSER.parse("{\"meterReadingDelta\": 1.1}"), 0L);
         Assert.assertEquals(1.1, result.get(0L).get(0).getDoubleValue().get(), 0.0);
     }
 
     @Test
     public void testParseAsLong() {
-        @NotNull var result = JsonConverter.convertToTelemetry(JSON_PARSER.parse("{\"meterReadingDelta\": 11}"), 0L);
+        var result = JsonConverter.convertToTelemetry(JSON_PARSER.parse("{\"meterReadingDelta\": 11}"), 0L);
         Assert.assertEquals(11L, result.get(0L).get(0).getLongValue().get().longValue());
     }
 
     @Test
     public void testParseBigDecimalAsStringOutOfLongRange() {
-        @NotNull var result = JsonConverter.convertToTelemetry(JSON_PARSER.parse("{\"meterReadingDelta\": 9.9701010061400066E19}"), 0L);
+        var result = JsonConverter.convertToTelemetry(JSON_PARSER.parse("{\"meterReadingDelta\": 9.9701010061400066E19}"), 0L);
         Assert.assertEquals("99701010061400066000", result.get(0L).get(0).getStrValue().get());
     }
 
     @Test
     public void testParseBigDecimalAsStringOutOfLongRange2() {
-        @NotNull var result = JsonConverter.convertToTelemetry(JSON_PARSER.parse("{\"meterReadingDelta\": 99701010061400066001}"), 0L);
+        var result = JsonConverter.convertToTelemetry(JSON_PARSER.parse("{\"meterReadingDelta\": 99701010061400066001}"), 0L);
         Assert.assertEquals("99701010061400066001", result.get(0L).get(0).getStrValue().get());
     }
 
     @Test
     public void testParseBigDecimalAsStringOutOfLongRange3() {
-        @NotNull var result = JsonConverter.convertToTelemetry(JSON_PARSER.parse("{\"meterReadingDelta\": 1E19}"), 0L);
+        var result = JsonConverter.convertToTelemetry(JSON_PARSER.parse("{\"meterReadingDelta\": 1E19}"), 0L);
         Assert.assertEquals("10000000000000000000", result.get(0L).get(0).getStrValue().get());
     }
 

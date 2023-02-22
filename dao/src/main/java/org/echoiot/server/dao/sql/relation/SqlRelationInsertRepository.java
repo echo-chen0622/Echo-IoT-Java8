@@ -2,7 +2,6 @@ package org.echoiot.server.dao.sql.relation;
 
 import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.server.dao.model.sql.RelationEntity;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -36,7 +35,7 @@ public class SqlRelationInsertRepository implements RelationInsertRepository {
     @Resource
     protected JdbcTemplate jdbcTemplate;
 
-    protected Query getQuery(@NotNull RelationEntity entity, String query) {
+    protected Query getQuery(RelationEntity entity, String query) {
         Query nativeQuery = entityManager.createNativeQuery(query, RelationEntity.class);
         if (entity.getAdditionalInfo() == null) {
             nativeQuery.setParameter("additionalInfo", null);
@@ -53,12 +52,12 @@ public class SqlRelationInsertRepository implements RelationInsertRepository {
     }
 
     @Override
-    public RelationEntity saveOrUpdate(@NotNull RelationEntity entity) {
+    public RelationEntity saveOrUpdate(RelationEntity entity) {
         return (RelationEntity) getQuery(entity, INSERT_ON_CONFLICT_DO_UPDATE_JPA).getSingleResult();
     }
 
     @Override
-    public void saveOrUpdate(@NotNull List<RelationEntity> entities) {
+    public void saveOrUpdate(List<RelationEntity> entities) {
         jdbcTemplate.batchUpdate(INSERT_ON_CONFLICT_DO_UPDATE_JDBC, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {

@@ -4,7 +4,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.echoiot.server.common.data.StringUtils;
-import org.jetbrains.annotations.NotNull;
 
 @Data
 @ApiModel
@@ -21,7 +20,6 @@ public class StatisticsEventFilter implements EventFilter {
     @ApiModelProperty(position = 5, value = "The maximum number of errors occurred during messages processing", example = "300")
     protected Integer maxErrorsOccurred;
 
-    @NotNull
     @Override
     public EventType getEventType() {
         return EventType.STATS;

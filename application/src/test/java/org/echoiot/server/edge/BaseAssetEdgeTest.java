@@ -9,7 +9,6 @@ import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.gen.edge.v1.AssetProfileUpdateMsg;
 import org.echoiot.server.gen.edge.v1.AssetUpdateMsg;
 import org.echoiot.server.gen.edge.v1.UpdateMsgType;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -28,17 +27,17 @@ abstract public class BaseAssetEdgeTest extends AbstractEdgeTest {
         doPost("/api/edge/" + edge.getUuidId()
                 + "/asset/" + savedAsset.getUuidId(), Asset.class);
         Assert.assertTrue(edgeImitator.waitForMessages());
-        @NotNull Optional<AssetUpdateMsg> assetUpdateMsgOpt = edgeImitator.findMessageByType(AssetUpdateMsg.class);
+        Optional<AssetUpdateMsg> assetUpdateMsgOpt = edgeImitator.findMessageByType(AssetUpdateMsg.class);
         Assert.assertTrue(assetUpdateMsgOpt.isPresent());
-        @NotNull AssetUpdateMsg assetUpdateMsg = assetUpdateMsgOpt.get();
+        AssetUpdateMsg assetUpdateMsg = assetUpdateMsgOpt.get();
         Assert.assertEquals(UpdateMsgType.ENTITY_CREATED_RPC_MESSAGE, assetUpdateMsg.getMsgType());
         Assert.assertEquals(savedAsset.getUuidId().getMostSignificantBits(), assetUpdateMsg.getIdMSB());
         Assert.assertEquals(savedAsset.getUuidId().getLeastSignificantBits(), assetUpdateMsg.getIdLSB());
         Assert.assertEquals(savedAsset.getName(), assetUpdateMsg.getName());
         Assert.assertEquals(savedAsset.getType(), assetUpdateMsg.getType());
-        @NotNull Optional<AssetProfileUpdateMsg> assetProfileUpdateMsgOpt = edgeImitator.findMessageByType(AssetProfileUpdateMsg.class);
+        Optional<AssetProfileUpdateMsg> assetProfileUpdateMsgOpt = edgeImitator.findMessageByType(AssetProfileUpdateMsg.class);
         Assert.assertTrue(assetProfileUpdateMsgOpt.isPresent());
-        @NotNull AssetProfileUpdateMsg assetProfileUpdateMsg = assetProfileUpdateMsgOpt.get();
+        AssetProfileUpdateMsg assetProfileUpdateMsg = assetProfileUpdateMsgOpt.get();
         Assert.assertEquals(UpdateMsgType.ENTITY_CREATED_RPC_MESSAGE, assetProfileUpdateMsg.getMsgType());
         Assert.assertEquals(savedAsset.getAssetProfileId().getId().getMostSignificantBits(), assetProfileUpdateMsg.getIdMSB());
         Assert.assertEquals(savedAsset.getAssetProfileId().getId().getLeastSignificantBits(), assetProfileUpdateMsg.getIdLSB());
@@ -95,7 +94,7 @@ abstract public class BaseAssetEdgeTest extends AbstractEdgeTest {
         Assert.assertEquals(savedAsset.getAssetProfileId().getId().getLeastSignificantBits(), assetProfileUpdateMsg.getIdLSB());
 
         // assign asset #2 to customer
-        @NotNull Customer customer = new Customer();
+        Customer customer = new Customer();
         customer.setTitle("Edge Customer");
         Customer savedCustomer = doPost("/api/customer", customer, Customer.class);
         edgeImitator.expectMessageAmount(2);

@@ -7,7 +7,6 @@ import org.echoiot.server.common.transport.adaptor.AdaptorException;
 import org.echoiot.server.common.transport.adaptor.JsonConverter;
 import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.queue.util.TbLwM2mTransportComponent;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -29,7 +28,7 @@ public class LwM2MJsonAdaptor implements LwM2MTransportAdaptor  {
     }
 
     @Override
-    public TransportProtos.PostAttributeMsg convertToPostAttributes(@NotNull JsonElement jsonElement) throws AdaptorException {
+    public TransportProtos.PostAttributeMsg convertToPostAttributes(JsonElement jsonElement) throws AdaptorException {
         try {
             return JsonConverter.convertToAttributesProto(jsonElement);
         } catch (IllegalStateException | JsonSyntaxException ex) {
@@ -41,7 +40,7 @@ public class LwM2MJsonAdaptor implements LwM2MTransportAdaptor  {
     public TransportProtos.GetAttributeRequestMsg convertToGetAttributes(@Nullable Collection<String> clientKeys, @Nullable Collection<String> sharedKeys) throws AdaptorException {
         try {
             TransportProtos.GetAttributeRequestMsg.Builder result = TransportProtos.GetAttributeRequestMsg.newBuilder();
-            @NotNull Random random = new Random();
+            Random random = new Random();
             result.setRequestId(random.nextInt());
             if (clientKeys != null) {
                 result.addAllClientAttributeNames(clientKeys);

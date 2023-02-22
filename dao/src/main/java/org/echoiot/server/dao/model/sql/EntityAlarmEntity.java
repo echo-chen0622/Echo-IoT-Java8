@@ -7,7 +7,6 @@ import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.id.EntityIdFactory;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.dao.model.ToData;
-import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
 import java.util.UUID;
@@ -47,7 +46,7 @@ public final class EntityAlarmEntity implements ToData<EntityAlarm> {
         super();
     }
 
-    public EntityAlarmEntity(@NotNull EntityAlarm entityAlarm) {
+    public EntityAlarmEntity(EntityAlarm entityAlarm) {
         tenantId = entityAlarm.getTenantId().getId();
         entityId = entityAlarm.getEntityId().getId();
         entityType = entityAlarm.getEntityId().getEntityType().name();
@@ -59,10 +58,9 @@ public final class EntityAlarmEntity implements ToData<EntityAlarm> {
         }
     }
 
-    @NotNull
     @Override
     public EntityAlarm toData() {
-        @NotNull EntityAlarm result = new EntityAlarm();
+        EntityAlarm result = new EntityAlarm();
         result.setTenantId(TenantId.fromUUID(tenantId));
         result.setEntityId(EntityIdFactory.getByTypeAndUuid(entityType, entityId));
         result.setAlarmId(new AlarmId(alarmId));

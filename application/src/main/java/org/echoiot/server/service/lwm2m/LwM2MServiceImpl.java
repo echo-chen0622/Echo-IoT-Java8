@@ -8,7 +8,6 @@ import org.echoiot.server.common.transport.config.ssl.SslCredentials;
 import org.echoiot.server.transport.lwm2m.config.LwM2MSecureServerConfig;
 import org.echoiot.server.transport.lwm2m.config.LwM2MTransportBootstrapConfig;
 import org.echoiot.server.transport.lwm2m.config.LwM2MTransportServerConfig;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Service;
@@ -21,9 +20,7 @@ import java.util.Optional;
 @ConditionalOnExpression("('${service.type:null}'=='monolith' || '${service.type:null}'=='tb-core') && '${transport.lwm2m.enabled:false}'=='true'")
 public class LwM2MServiceImpl implements LwM2MService {
 
-    @NotNull
     private final LwM2MTransportServerConfig serverConfig;
-    @NotNull
     private final Optional<LwM2MTransportBootstrapConfig> bootstrapConfig;
 
     @Nullable
@@ -31,7 +28,7 @@ public class LwM2MServiceImpl implements LwM2MService {
     public LwM2MServerSecurityConfigDefault getServerSecurityInfo(boolean bootstrapServer) {
         @Nullable LwM2MSecureServerConfig bsServerConfig = bootstrapServer ? bootstrapConfig.orElse(null) : serverConfig;
         if (bsServerConfig!= null) {
-            @NotNull LwM2MServerSecurityConfigDefault result = getServerSecurityConfig(bsServerConfig);
+            LwM2MServerSecurityConfigDefault result = getServerSecurityConfig(bsServerConfig);
             result.setBootstrapServerIs(bootstrapServer);
             return result;
         }
@@ -40,9 +37,8 @@ public class LwM2MServiceImpl implements LwM2MService {
         }
     }
 
-    @NotNull
-    private LwM2MServerSecurityConfigDefault getServerSecurityConfig(@NotNull LwM2MSecureServerConfig bsServerConfig) {
-        @NotNull LwM2MServerSecurityConfigDefault bsServ = new LwM2MServerSecurityConfigDefault();
+    private LwM2MServerSecurityConfigDefault getServerSecurityConfig(LwM2MSecureServerConfig bsServerConfig) {
+        LwM2MServerSecurityConfigDefault bsServ = new LwM2MServerSecurityConfigDefault();
         bsServ.setShortServerId(bsServerConfig.getId());
         bsServ.setHost(bsServerConfig.getHost());
         bsServ.setPort(bsServerConfig.getPort());
@@ -63,7 +59,7 @@ public class LwM2MServiceImpl implements LwM2MService {
         return bsServ;
     }
 
-    private byte[] getPublicKey(@NotNull LwM2MSecureServerConfig config) {
+    private byte[] getPublicKey(LwM2MSecureServerConfig config) {
         try {
             SslCredentials sslCredentials = config.getSslCredentials();
             if (sslCredentials != null) {
@@ -75,7 +71,7 @@ public class LwM2MServiceImpl implements LwM2MService {
         return null;
     }
 
-    private byte[] getCertificate(@NotNull LwM2MSecureServerConfig config) {
+    private byte[] getCertificate(LwM2MSecureServerConfig config) {
         try {
             SslCredentials sslCredentials = config.getSslCredentials();
             if (sslCredentials != null) {

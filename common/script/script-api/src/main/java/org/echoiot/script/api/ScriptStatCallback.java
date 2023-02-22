@@ -3,7 +3,6 @@ package org.echoiot.script.api;
 import com.google.common.util.concurrent.FutureCallback;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.concurrent.TimeoutException;
@@ -13,11 +12,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 @AllArgsConstructor
 public class ScriptStatCallback<T> implements FutureCallback<T> {
 
-    @NotNull
     private final AtomicInteger successMsgs;
-    @NotNull
     private final AtomicInteger timeoutMsgs;
-    @NotNull
     private final AtomicInteger failedMsgs;
 
     @Override

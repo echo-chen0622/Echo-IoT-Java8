@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.dao.service.DaoSqlTest;
 import org.echoiot.server.service.security.AccessValidator;
 import org.echoiot.server.transport.coap.CoapTestConfigProperties;
-import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -32,7 +31,7 @@ public class CoapServerSideRpcDefaultIntegrationTest extends AbstractCoapServerS
 
     @Test
     public void testServerCoapOneWayRpcDeviceOffline() throws Exception {
-        @NotNull String setGpioRequest = "{\"method\":\"setGpio\",\"params\":{\"pin\": \"24\",\"value\": 1},\"timeout\": 6000}";
+        String setGpioRequest = "{\"method\":\"setGpio\",\"params\":{\"pin\": \"24\",\"value\": 1},\"timeout\": 6000}";
         String deviceId = savedDevice.getId().getId().toString();
 
         doPostAsync("/api/rpc/oneway/" + deviceId, setGpioRequest, String.class, status().is(504),
@@ -41,7 +40,7 @@ public class CoapServerSideRpcDefaultIntegrationTest extends AbstractCoapServerS
 
     @Test
     public void testServerCoapOneWayRpcDeviceDoesNotExist() throws Exception {
-        @NotNull String setGpioRequest = "{\"method\":\"setGpio\",\"params\":{\"pin\": \"25\",\"value\": 1}}";
+        String setGpioRequest = "{\"method\":\"setGpio\",\"params\":{\"pin\": \"25\",\"value\": 1}}";
         String nonExistentDeviceId = Uuids.timeBased().toString();
 
         String result = doPostAsync("/api/rpc/oneway/" + nonExistentDeviceId, setGpioRequest, String.class,
@@ -51,7 +50,7 @@ public class CoapServerSideRpcDefaultIntegrationTest extends AbstractCoapServerS
 
     @Test
     public void testServerCoapTwoWayRpcDeviceOffline() throws Exception {
-        @NotNull String setGpioRequest = "{\"method\":\"setGpio\",\"params\":{\"pin\": \"27\",\"value\": 1},\"timeout\": 6000}";
+        String setGpioRequest = "{\"method\":\"setGpio\",\"params\":{\"pin\": \"27\",\"value\": 1},\"timeout\": 6000}";
         String deviceId = savedDevice.getId().getId().toString();
 
         doPostAsync("/api/rpc/twoway/" + deviceId, setGpioRequest, String.class, status().is(504),
@@ -60,7 +59,7 @@ public class CoapServerSideRpcDefaultIntegrationTest extends AbstractCoapServerS
 
     @Test
     public void testServerCoapTwoWayRpcDeviceDoesNotExist() throws Exception {
-        @NotNull String setGpioRequest = "{\"method\":\"setGpio\",\"params\":{\"pin\": \"28\",\"value\": 1}}";
+        String setGpioRequest = "{\"method\":\"setGpio\",\"params\":{\"pin\": \"28\",\"value\": 1}}";
         String nonExistentDeviceId = Uuids.timeBased().toString();
 
         String result = doPostAsync("/api/rpc/twoway/" + nonExistentDeviceId, setGpioRequest, String.class,

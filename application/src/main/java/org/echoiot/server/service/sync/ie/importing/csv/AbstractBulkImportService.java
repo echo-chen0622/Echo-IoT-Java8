@@ -36,7 +36,6 @@ import org.echoiot.server.service.security.permission.PerResource;
 import org.echoiot.server.service.telemetry.TelemetrySubscriptionService;
 import org.echoiot.server.utils.CsvUtils;
 import org.echoiot.server.utils.TypeCastUtil;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -77,19 +76,18 @@ public abstract class AbstractBulkImportService<E extends HasId<? extends Entity
         }
     }
 
-    @NotNull
-    public final BulkImportResult<E> processBulkImport(@NotNull BulkImportRequest request, @NotNull SecurityUser user) throws Exception {
-        @NotNull List<EntityData> entitiesData = parseData(request);
+    public final BulkImportResult<E> processBulkImport(BulkImportRequest request, SecurityUser user) throws Exception {
+        List<EntityData> entitiesData = parseData(request);
 
-        @NotNull BulkImportResult<E> result = new BulkImportResult<>();
-        @NotNull CountDownLatch completionLatch = new CountDownLatch(entitiesData.size());
+        BulkImportResult<E> result = new BulkImportResult<>();
+        CountDownLatch completionLatch = new CountDownLatch(entitiesData.size());
 
         SecurityContext securityContext = SecurityContextHolder.getContext();
 
         entitiesData.forEach(entityData -> DonAsynchron.submit(() -> {
                     SecurityContextHolder.setContext(securityContext);
 
-                    @NotNull ImportedEntityInfo<E> importedEntityInfo = saveEntity(entityData.getFields(), user);
+                    ImportedEntityInfo<E> importedEntityInfo = saveEntity(entityData.getFields(), user);
                     E entity = importedEntityInfo.getEntity();
 
                     saveKvs(user, entity, entityData.getKvs());
@@ -115,10 +113,9 @@ public abstract class AbstractBulkImportService<E extends HasId<? extends Entity
         return result;
     }
 
-    @NotNull
     @SneakyThrows
-    private ImportedEntityInfo<E> saveEntity(@NotNull Map<BulkImportColumnType, String> fields, @NotNull SecurityUser user) {
-        @NotNull ImportedEntityInfo<E> importedEntityInfo = new ImportedEntityInfo<>();
+    private ImportedEntityInfo<E> saveEntity(Map<BulkImportColumnType, String> fields, SecurityUser user) {
+        ImportedEntityInfo<E> importedEntityInfo = new ImportedEntityInfo<>();
 
         E entity = findOrCreateEntity(user.getTenantId(), fields.get(BulkImportColumnType.NAME));
         if (entity.getId() != null) {
@@ -148,16 +145,16 @@ public abstract class AbstractBulkImportService<E extends HasId<? extends Entity
 
     protected abstract EntityType getEntityType();
 
-    protected ObjectNode getOrCreateAdditionalInfoObj(@NotNull HasAdditionalInfo entity) {
+    protected ObjectNode getOrCreateAdditionalInfoObj(HasAdditionalInfo entity) {
         return entity.getAdditionalInfo() == null || entity.getAdditionalInfo().isNull() ?
                 JacksonUtil.newObjectNode() : (ObjectNode) entity.getAdditionalInfo();
     }
 
-    private void saveKvs(@NotNull SecurityUser user, @NotNull E entity, @NotNull Map<BulkImportRequest.ColumnMapping, ParsedValue> data) {
+    private void saveKvs(SecurityUser user, E entity, Map<BulkImportRequest.ColumnMapping, ParsedValue> data) {
         Arrays.stream(BulkImportColumnType.values())
                 .filter(BulkImportColumnType::isKv)
                 .map(kvType -> {
-                    @NotNull JsonObject kvs = new JsonObject();
+                    JsonObject kvs = new JsonObject();
                     data.entrySet().stream()
                             .filter(dataEntry -> dataEntry.getKey().getType() == kvType &&
                                                  StringUtils.isNotEmpty(dataEntry.getKey().getKey()))
@@ -176,8 +173,8 @@ public abstract class AbstractBulkImportService<E extends HasId<? extends Entity
     }
 
     @SneakyThrows
-    private void saveTelemetry(@NotNull SecurityUser user, @NotNull E entity, @NotNull Map.Entry<BulkImportColumnType, JsonObject> kvsEntry) {
-        @NotNull List<TsKvEntry> timeseries = JsonConverter.convertToTelemetry(kvsEntry.getValue(), System.currentTimeMillis())
+    private void saveTelemetry(SecurityUser user, E entity, Map.Entry<BulkImportColumnType, JsonObject> kvsEntry) {
+        List<TsKvEntry> timeseries = JsonConverter.convertToTelemetry(kvsEntry.getValue(), System.currentTimeMillis())
                                                            .entrySet().stream()
                                                            .flatMap(entry -> entry.getValue().stream().map(kvEntry -> new BasicTsKvEntry(entry.getKey(), kvEntry)))
                                                            .collect(Collectors.toList());
@@ -203,9 +200,9 @@ public abstract class AbstractBulkImportService<E extends HasId<? extends Entity
     }
 
     @SneakyThrows
-    private void saveAttributes(SecurityUser user, @NotNull E entity, @NotNull Map.Entry<BulkImportColumnType, JsonObject> kvsEntry, @NotNull BulkImportColumnType kvType) {
+    private void saveAttributes(SecurityUser user, E entity, Map.Entry<BulkImportColumnType, JsonObject> kvsEntry, BulkImportColumnType kvType) {
         String scope = kvType.getKey();
-        @NotNull List<AttributeKvEntry> attributes = new ArrayList<>(JsonConverter.convertToAttributes(kvsEntry.getValue()));
+        List<AttributeKvEntry> attributes = new ArrayList<>(JsonConverter.convertToAttributes(kvsEntry.getValue()));
 
         accessValidator.validateEntityAndCallback(user, Operation.WRITE_ATTRIBUTES, entity.getId(), (result, tenantId, entityId) -> {
             tsSubscriptionService.saveAndNotify(tenantId, entityId, scope, attributes, new FutureCallback<>() {
@@ -228,10 +225,9 @@ public abstract class AbstractBulkImportService<E extends HasId<? extends Entity
         });
     }
 
-    @NotNull
-    private List<EntityData> parseData(@NotNull BulkImportRequest request) throws Exception {
-        @NotNull List<List<String>> records = CsvUtils.parseCsv(request.getFile(), request.getMapping().getDelimiter());
-        @NotNull AtomicInteger linesCounter = new AtomicInteger(0);
+    private List<EntityData> parseData(BulkImportRequest request) throws Exception {
+        List<List<String>> records = CsvUtils.parseCsv(request.getFile(), request.getMapping().getDelimiter());
+        AtomicInteger linesCounter = new AtomicInteger(0);
 
         if (request.getMapping().getHeader()) {
             records.remove(0);
@@ -241,7 +237,7 @@ public abstract class AbstractBulkImportService<E extends HasId<? extends Entity
         List<BulkImportRequest.ColumnMapping> columnsMappings = request.getMapping().getColumns();
         return records.stream()
                 .map(record -> {
-                    @NotNull EntityData entityData = new EntityData();
+                    EntityData entityData = new EntityData();
                     Stream.iterate(0, i -> i < record.size(), i -> i + 1)
                             .map(i -> Map.entry(columnsMappings.get(i), record.get(i)))
                             .filter(entry -> StringUtils.isNotEmpty(entry.getValue()))
@@ -249,7 +245,7 @@ public abstract class AbstractBulkImportService<E extends HasId<? extends Entity
                                 if (!entry.getKey().getType().isKv()) {
                                     entityData.getFields().put(entry.getKey().getType(), entry.getValue());
                                 } else {
-                                    @NotNull Map.Entry<DataType, Object> castResult = TypeCastUtil.castValue(entry.getValue());
+                                    Map.Entry<DataType, Object> castResult = TypeCastUtil.castValue(entry.getValue());
                                     entityData.getKvs().put(entry.getKey(), new ParsedValue(castResult.getValue(), castResult.getKey()));
                                 }
                             });
@@ -275,10 +271,8 @@ public abstract class AbstractBulkImportService<E extends HasId<? extends Entity
 
     @Data
     protected static class ParsedValue {
-        @NotNull
-        private final Object value;
-        @NotNull
-        private final DataType dataType;
+            private final Object value;
+            private final DataType dataType;
 
         @org.jetbrains.annotations.Nullable
         public JsonPrimitive toJsonPrimitive() {

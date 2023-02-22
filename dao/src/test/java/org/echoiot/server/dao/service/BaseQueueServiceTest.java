@@ -11,7 +11,6 @@ import org.echoiot.server.common.data.queue.*;
 import org.echoiot.server.common.data.tenant.profile.TenantProfileData;
 import org.echoiot.server.common.data.tenant.profile.TenantProfileQueueConfiguration;
 import org.echoiot.server.dao.exception.DataValidationException;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.junit.After;
 import org.junit.Assert;
@@ -31,24 +30,24 @@ public abstract class BaseQueueServiceTest extends AbstractServiceTest {
 
     @Before
     public void before() throws NoSuchFieldException, IllegalAccessException {
-        @NotNull TenantProfile tenantProfile = new TenantProfile();
+        TenantProfile tenantProfile = new TenantProfile();
         tenantProfile.setDefault(false);
         tenantProfile.setName("Isolated TB Rule Engine");
         tenantProfile.setDescription("Isolated TB Rule Engine tenant profile");
         tenantProfile.setIsolatedTbRuleEngine(true);
 
-        @NotNull TenantProfileQueueConfiguration mainQueueConfiguration = new TenantProfileQueueConfiguration();
+        TenantProfileQueueConfiguration mainQueueConfiguration = new TenantProfileQueueConfiguration();
         mainQueueConfiguration.setName(DataConstants.MAIN_QUEUE_NAME);
         mainQueueConfiguration.setTopic(DataConstants.MAIN_QUEUE_TOPIC);
         mainQueueConfiguration.setPollInterval(25);
         mainQueueConfiguration.setPartitions(10);
         mainQueueConfiguration.setConsumerPerPartition(true);
         mainQueueConfiguration.setPackProcessingTimeout(2000);
-        @NotNull SubmitStrategy mainQueueSubmitStrategy = new SubmitStrategy();
+        SubmitStrategy mainQueueSubmitStrategy = new SubmitStrategy();
         mainQueueSubmitStrategy.setType(SubmitStrategyType.BURST);
         mainQueueSubmitStrategy.setBatchSize(1000);
         mainQueueConfiguration.setSubmitStrategy(mainQueueSubmitStrategy);
-        @NotNull ProcessingStrategy mainQueueProcessingStrategy = new ProcessingStrategy();
+        ProcessingStrategy mainQueueProcessingStrategy = new ProcessingStrategy();
         mainQueueProcessingStrategy.setType(ProcessingStrategyType.SKIP_ALL_FAILURES);
         mainQueueProcessingStrategy.setRetries(3);
         mainQueueProcessingStrategy.setFailurePercentage(0);
@@ -63,7 +62,7 @@ public abstract class BaseQueueServiceTest extends AbstractServiceTest {
         Assert.assertNotNull(savedTenantProfile);
         tenantProfileId = savedTenantProfile.getId();
 
-        @NotNull Tenant tenant = new Tenant();
+        Tenant tenant = new Tenant();
         tenant.setTitle("My tenant");
         tenant.setTenantProfileId(tenantProfileId);
         Tenant savedTenant = tenantService.saveTenant(tenant);
@@ -77,9 +76,8 @@ public abstract class BaseQueueServiceTest extends AbstractServiceTest {
         tenantProfileService.deleteTenantProfile(TenantId.SYS_TENANT_ID, tenantProfileId);
     }
 
-    @NotNull
     private ProcessingStrategy createTestProcessingStrategy() {
-        @NotNull ProcessingStrategy processingStrategy = new ProcessingStrategy();
+        ProcessingStrategy processingStrategy = new ProcessingStrategy();
         processingStrategy.setType(ProcessingStrategyType.SKIP_ALL_FAILURES);
         processingStrategy.setRetries(3);
         processingStrategy.setFailurePercentage(0);
@@ -88,9 +86,8 @@ public abstract class BaseQueueServiceTest extends AbstractServiceTest {
         return processingStrategy;
     }
 
-    @NotNull
     private SubmitStrategy createTestSubmitStrategy() {
-        @NotNull SubmitStrategy submitStrategy = new SubmitStrategy();
+        SubmitStrategy submitStrategy = new SubmitStrategy();
         submitStrategy.setType(SubmitStrategyType.BURST);
         submitStrategy.setBatchSize(1000);
         return submitStrategy;
@@ -98,7 +95,7 @@ public abstract class BaseQueueServiceTest extends AbstractServiceTest {
 
     @Test
     public void testSaveQueue() {
-        @NotNull Queue queue = new Queue();
+        Queue queue = new Queue();
         queue.setTenantId(tenantId);
         queue.setName("Test");
         queue.setTopic("tb_rule_engine.test");
@@ -126,7 +123,7 @@ public abstract class BaseQueueServiceTest extends AbstractServiceTest {
 
     @Test(expected = DataValidationException.class)
     public void testSaveQueueWithEmptyName() {
-        @NotNull Queue queue = new Queue();
+        Queue queue = new Queue();
         queue.setTenantId(tenantId);
         queue.setTopic("tb_rule_engine.test");
         queue.setPollInterval(25);
@@ -139,7 +136,7 @@ public abstract class BaseQueueServiceTest extends AbstractServiceTest {
 
     @Test(expected = DataValidationException.class)
     public void testSaveQueueWithInvalidName() {
-        @NotNull Queue queue = new Queue();
+        Queue queue = new Queue();
         queue.setTenantId(tenantId);
         queue.setName("Test 1");
         queue.setTopic("tb_rule_engine.test");
@@ -153,7 +150,7 @@ public abstract class BaseQueueServiceTest extends AbstractServiceTest {
 
     @Test(expected = DataValidationException.class)
     public void testSaveQueueWithEmptyTopic() {
-        @NotNull Queue queue = new Queue();
+        Queue queue = new Queue();
         queue.setTenantId(tenantId);
         queue.setName("Test");
         queue.setPollInterval(25);
@@ -166,7 +163,7 @@ public abstract class BaseQueueServiceTest extends AbstractServiceTest {
 
     @Test(expected = DataValidationException.class)
     public void testSaveQueueWithInvalidTopic() {
-        @NotNull Queue queue = new Queue();
+        Queue queue = new Queue();
         queue.setTenantId(tenantId);
         queue.setName("Test");
         queue.setTopic("tb rule engine test");
@@ -180,7 +177,7 @@ public abstract class BaseQueueServiceTest extends AbstractServiceTest {
 
     @Test(expected = DataValidationException.class)
     public void testSaveQueueWithEmptyPollInterval() {
-        @NotNull Queue queue = new Queue();
+        Queue queue = new Queue();
         queue.setTenantId(tenantId);
         queue.setName("Test");
         queue.setTopic("tb_rule_engine.test");
@@ -193,7 +190,7 @@ public abstract class BaseQueueServiceTest extends AbstractServiceTest {
 
     @Test(expected = DataValidationException.class)
     public void testSaveQueueWithEmptyPartitions() {
-        @NotNull Queue queue = new Queue();
+        Queue queue = new Queue();
         queue.setTenantId(tenantId);
         queue.setName("Test");
         queue.setTopic("tb_rule_engine.test");
@@ -206,7 +203,7 @@ public abstract class BaseQueueServiceTest extends AbstractServiceTest {
 
     @Test(expected = DataValidationException.class)
     public void testSaveQueueWithEmptyPackProcessingTimeout() {
-        @NotNull Queue queue = new Queue();
+        Queue queue = new Queue();
         queue.setTenantId(tenantId);
         queue.setName("Test");
         queue.setTopic("tb_rule_engine.test");
@@ -219,7 +216,7 @@ public abstract class BaseQueueServiceTest extends AbstractServiceTest {
 
     @Test(expected = DataValidationException.class)
     public void testSaveQueueWithEmptySubmitStrategy() {
-        @NotNull Queue queue = new Queue();
+        Queue queue = new Queue();
         queue.setTenantId(tenantId);
         queue.setName("Test");
         queue.setTopic("tb_rule_engine.test");
@@ -232,7 +229,7 @@ public abstract class BaseQueueServiceTest extends AbstractServiceTest {
 
     @Test(expected = DataValidationException.class)
     public void testSaveQueueWithEmptyProcessingStrategy() {
-        @NotNull Queue queue = new Queue();
+        Queue queue = new Queue();
         queue.setTenantId(tenantId);
         queue.setName("Test");
         queue.setTopic("tb_rule_engine.test");
@@ -245,7 +242,7 @@ public abstract class BaseQueueServiceTest extends AbstractServiceTest {
 
     @Test(expected = DataValidationException.class)
     public void testSaveQueueWithEmptySubmitStrategyType() {
-        @NotNull Queue queue = new Queue();
+        Queue queue = new Queue();
         queue.setTenantId(tenantId);
         queue.setName("Test");
         queue.setTopic("tb_rule_engine.test");
@@ -260,7 +257,7 @@ public abstract class BaseQueueServiceTest extends AbstractServiceTest {
 
     @Test(expected = DataValidationException.class)
     public void testSaveQueueWithEmptySubmitStrategyBatchSize() {
-        @NotNull Queue queue = new Queue();
+        Queue queue = new Queue();
         queue.setTenantId(tenantId);
         queue.setName("Test");
         queue.setTopic("tb_rule_engine.test");
@@ -276,7 +273,7 @@ public abstract class BaseQueueServiceTest extends AbstractServiceTest {
 
     @Test(expected = DataValidationException.class)
     public void testSaveQueueWithEmptyProcessingStrategyType() {
-        @NotNull Queue queue = new Queue();
+        Queue queue = new Queue();
         queue.setTenantId(tenantId);
         queue.setName("Test");
         queue.setTopic("tb_rule_engine.test");
@@ -291,7 +288,7 @@ public abstract class BaseQueueServiceTest extends AbstractServiceTest {
 
     @Test(expected = DataValidationException.class)
     public void testSaveQueueWithNegativeProcessingStrategyRetries() {
-        @NotNull Queue queue = new Queue();
+        Queue queue = new Queue();
         queue.setTenantId(tenantId);
         queue.setName("Test");
         queue.setTopic("tb_rule_engine.test");
@@ -306,7 +303,7 @@ public abstract class BaseQueueServiceTest extends AbstractServiceTest {
 
     @Test(expected = DataValidationException.class)
     public void testSaveQueueWithNegativeProcessingStrategyFailurePercentage() {
-        @NotNull Queue queue = new Queue();
+        Queue queue = new Queue();
         queue.setTenantId(tenantId);
         queue.setName("Test");
         queue.setTopic("tb_rule_engine.test");
@@ -321,7 +318,7 @@ public abstract class BaseQueueServiceTest extends AbstractServiceTest {
 
     @Test(expected = DataValidationException.class)
     public void testSaveQueueWithNegativeProcessingStrategyPauseBetweenRetries() {
-        @NotNull Queue queue = new Queue();
+        Queue queue = new Queue();
         queue.setTenantId(tenantId);
         queue.setName("Test");
         queue.setTopic("tb_rule_engine.test");
@@ -336,7 +333,7 @@ public abstract class BaseQueueServiceTest extends AbstractServiceTest {
 
     @Test(expected = DataValidationException.class)
     public void testSaveQueueWithProcessingStrategyPauseBetweenRetriesBiggerThenMaxPauseBetweenRetries() {
-        @NotNull Queue queue = new Queue();
+        Queue queue = new Queue();
         queue.setTenantId(tenantId);
         queue.setName("Test");
         queue.setTopic("tb_rule_engine.test");
@@ -351,12 +348,12 @@ public abstract class BaseQueueServiceTest extends AbstractServiceTest {
 
     @Test(expected = DataValidationException.class)
     public void testSaveQueueWithNotIsolatedTenant() {
-        @NotNull Tenant tenant = new Tenant();
+        Tenant tenant = new Tenant();
         tenant.setTitle("Not isolated tenant");
         Tenant savedTenant = tenantService.saveTenant(tenant);
         Assert.assertNotNull(savedTenant);
 
-        @NotNull Queue queue = new Queue();
+        Queue queue = new Queue();
         queue.setTenantId(savedTenant.getId());
         queue.setName("Test");
         queue.setTopic("tb_rule_engine.test");
@@ -374,7 +371,7 @@ public abstract class BaseQueueServiceTest extends AbstractServiceTest {
 
     @Test
     public void testUpdateQueue() {
-        @NotNull Queue queue = new Queue();
+        Queue queue = new Queue();
         queue.setTenantId(tenantId);
         queue.setName("Test");
         queue.setTopic("tb_rule_engine.test");
@@ -399,7 +396,7 @@ public abstract class BaseQueueServiceTest extends AbstractServiceTest {
 
     @Test
     public void testFindQueueById() {
-        @NotNull Queue queue = new Queue();
+        Queue queue = new Queue();
         queue.setTenantId(tenantId);
         queue.setName("Test");
         queue.setTopic("tb_rule_engine.test");
@@ -416,7 +413,7 @@ public abstract class BaseQueueServiceTest extends AbstractServiceTest {
 
     @Test
     public void testDeleteQueue() {
-        @NotNull Queue queue = new Queue();
+        Queue queue = new Queue();
         queue.setTenantId(tenantId);
         queue.setName("Test");
         queue.setTopic("tb_rule_engine.test");
@@ -435,7 +432,7 @@ public abstract class BaseQueueServiceTest extends AbstractServiceTest {
 
     @Test
     public void testFindQueueByTenantIdAndName() {
-        @NotNull Queue queue = new Queue();
+        Queue queue = new Queue();
         queue.setTenantId(tenantId);
         queue.setName("Test");
         queue.setTopic("tb_rule_engine.test");
@@ -453,9 +450,9 @@ public abstract class BaseQueueServiceTest extends AbstractServiceTest {
 
     @Test
     public void testFindQueuesByTenantId() {
-        @NotNull List<Queue> queues = new ArrayList<>();
+        List<Queue> queues = new ArrayList<>();
         for (int i = 1; i < 10; i++) {
-            @NotNull Queue queue = new Queue();
+            Queue queue = new Queue();
             queue.setTenantId(tenantId);
             queue.setName("Test" + i);
             queue.setTopic("tb_rule_engine.test" + i);
@@ -468,7 +465,7 @@ public abstract class BaseQueueServiceTest extends AbstractServiceTest {
             queues.add(queueService.saveQueue(queue));
         }
 
-        @NotNull List<Queue> loadedQueues = new ArrayList<>();
+        List<Queue> loadedQueues = new ArrayList<>();
         PageLink pageLink = new PageLink(3);
         @Nullable PageData<Queue> pageData = null;
         do {

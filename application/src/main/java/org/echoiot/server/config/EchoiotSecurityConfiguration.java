@@ -10,7 +10,6 @@ import org.echoiot.server.service.security.auth.oauth2.HttpCookieOAuth2Authoriza
 import org.echoiot.server.service.security.auth.rest.RestAuthenticationProvider;
 import org.echoiot.server.service.security.auth.rest.RestLoginProcessingFilter;
 import org.echoiot.server.service.security.auth.rest.RestPublicLoginProcessingFilter;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -107,26 +106,23 @@ public class EchoiotSecurityConfiguration {
     @Resource
     private RateLimitProcessingFilter rateLimitProcessingFilter;
 
-    @NotNull
     @Bean
     protected RestLoginProcessingFilter buildRestLoginProcessingFilter() throws Exception {
-        @NotNull RestLoginProcessingFilter filter = new RestLoginProcessingFilter(FORM_BASED_LOGIN_ENTRY_POINT, defaultAuthenticationSuccessHandler, defaultAuthenticationFailureHandler, objectMapper);
+        RestLoginProcessingFilter filter = new RestLoginProcessingFilter(FORM_BASED_LOGIN_ENTRY_POINT, defaultAuthenticationSuccessHandler, defaultAuthenticationFailureHandler, objectMapper);
         filter.setAuthenticationManager(this.authenticationManager);
         return filter;
     }
 
-    @NotNull
     @Bean
     protected RestPublicLoginProcessingFilter buildRestPublicLoginProcessingFilter() throws Exception {
-        @NotNull RestPublicLoginProcessingFilter filter = new RestPublicLoginProcessingFilter(PUBLIC_LOGIN_ENTRY_POINT, defaultAuthenticationSuccessHandler,
+        RestPublicLoginProcessingFilter filter = new RestPublicLoginProcessingFilter(PUBLIC_LOGIN_ENTRY_POINT, defaultAuthenticationSuccessHandler,
                                                                                               defaultAuthenticationFailureHandler, objectMapper);
         filter.setAuthenticationManager(this.authenticationManager);
         return filter;
     }
 
-    @NotNull
     protected JwtTokenAuthenticationProcessingFilter buildJwtTokenAuthenticationProcessingFilter() throws Exception {
-        @NotNull List<String> pathsToSkip = new ArrayList<>(Arrays.asList(NON_TOKEN_BASED_AUTH_ENTRY_POINTS));
+        List<String> pathsToSkip = new ArrayList<>(Arrays.asList(NON_TOKEN_BASED_AUTH_ENTRY_POINTS));
         pathsToSkip.addAll(Arrays.asList(WS_TOKEN_BASED_AUTH_ENTRY_POINT,
                                          TOKEN_REFRESH_ENTRY_POINT,
                                          FORM_BASED_LOGIN_ENTRY_POINT,
@@ -134,34 +130,32 @@ public class EchoiotSecurityConfiguration {
                                          DEVICE_API_ENTRY_POINT,
                                          WEBJARS_ENTRY_POINT
                                         ));
-        @NotNull SkipPathRequestMatcher matcher = new SkipPathRequestMatcher(pathsToSkip, TOKEN_BASED_AUTH_ENTRY_POINT);
-        @NotNull JwtTokenAuthenticationProcessingFilter filter = new JwtTokenAuthenticationProcessingFilter(defaultAuthenticationFailureHandler, jwtHeaderTokenExtractor, matcher);
+        SkipPathRequestMatcher matcher = new SkipPathRequestMatcher(pathsToSkip, TOKEN_BASED_AUTH_ENTRY_POINT);
+        JwtTokenAuthenticationProcessingFilter filter = new JwtTokenAuthenticationProcessingFilter(defaultAuthenticationFailureHandler, jwtHeaderTokenExtractor, matcher);
         filter.setAuthenticationManager(this.authenticationManager);
         return filter;
     }
 
-    @NotNull
     @Bean
     protected RefreshTokenProcessingFilter buildRefreshTokenProcessingFilter() throws Exception {
-        @NotNull RefreshTokenProcessingFilter filter = new RefreshTokenProcessingFilter(TOKEN_REFRESH_ENTRY_POINT, defaultAuthenticationSuccessHandler,
+        RefreshTokenProcessingFilter filter = new RefreshTokenProcessingFilter(TOKEN_REFRESH_ENTRY_POINT, defaultAuthenticationSuccessHandler,
                                                                                         defaultAuthenticationFailureHandler, objectMapper);
         filter.setAuthenticationManager(this.authenticationManager);
         return filter;
     }
 
-    @NotNull
     @Bean
     protected JwtTokenAuthenticationProcessingFilter buildWsJwtTokenAuthenticationProcessingFilter() throws Exception {
-        @NotNull AntPathRequestMatcher matcher = new AntPathRequestMatcher(WS_TOKEN_BASED_AUTH_ENTRY_POINT);
-        @NotNull JwtTokenAuthenticationProcessingFilter filter = new JwtTokenAuthenticationProcessingFilter(defaultAuthenticationFailureHandler, jwtQueryTokenExtractor, matcher);
+        AntPathRequestMatcher matcher = new AntPathRequestMatcher(WS_TOKEN_BASED_AUTH_ENTRY_POINT);
+        JwtTokenAuthenticationProcessingFilter filter = new JwtTokenAuthenticationProcessingFilter(defaultAuthenticationFailureHandler, jwtQueryTokenExtractor, matcher);
         filter.setAuthenticationManager(this.authenticationManager);
         return filter;
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(@NotNull ObjectPostProcessor<Object> objectPostProcessor) throws Exception {
+    public AuthenticationManager authenticationManager(ObjectPostProcessor<Object> objectPostProcessor) throws Exception {
         DefaultAuthenticationEventPublisher eventPublisher = objectPostProcessor.postProcess(new DefaultAuthenticationEventPublisher());
-        @NotNull var auth = new AuthenticationManagerBuilder(objectPostProcessor);
+        var auth = new AuthenticationManagerBuilder(objectPostProcessor);
         auth.authenticationEventPublisher(eventPublisher);
         auth.authenticationProvider(restAuthenticationProvider);
         auth.authenticationProvider(jwtAuthenticationProvider);
@@ -169,7 +163,6 @@ public class EchoiotSecurityConfiguration {
         return auth.build();
     }
 
-    @NotNull
     @Bean
     protected BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -178,14 +171,13 @@ public class EchoiotSecurityConfiguration {
     @Resource
     private OAuth2AuthorizationRequestResolver oAuth2AuthorizationRequestResolver;
 
-    @NotNull
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring().antMatchers("/*.js","/*.css","/*.ico","/assets/**","/static/**");
     }
 
     @Bean
-    SecurityFilterChain filterChain(@NotNull HttpSecurity http) throws Exception {
+    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.headers()
             .cacheControl()
             .and()
@@ -235,14 +227,13 @@ public class EchoiotSecurityConfiguration {
         return http.build();
     }
 
-    @NotNull
     @Bean
     @ConditionalOnMissingBean(CorsFilter.class)
-    public CorsFilter corsFilter(@NotNull @Autowired MvcCorsProperties mvcCorsProperties) {
+    public CorsFilter corsFilter(@Autowired MvcCorsProperties mvcCorsProperties) {
         if (mvcCorsProperties.getMappings().size() == 0) {
             return new CorsFilter(new UrlBasedCorsConfigurationSource());
         } else {
-            @NotNull UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+            UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
             source.setCorsConfigurations(mvcCorsProperties.getMappings());
             return new CorsFilter(source);
         }

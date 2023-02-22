@@ -9,7 +9,6 @@ import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.dao.device.DeviceProfileService;
 import org.echoiot.server.dao.device.DeviceService;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
@@ -132,7 +131,7 @@ public class DefaultTbDeviceProfileCache implements TbDeviceProfileCache {
         }
     }
 
-    private void notifyProfileListeners(@NotNull DeviceProfile profile) {
+    private void notifyProfileListeners(DeviceProfile profile) {
         ConcurrentMap<EntityId, Consumer<DeviceProfile>> tenantListeners = profileListeners.get(profile.getTenantId());
         if (tenantListeners != null) {
             tenantListeners.forEach((id, listener) -> listener.accept(profile));

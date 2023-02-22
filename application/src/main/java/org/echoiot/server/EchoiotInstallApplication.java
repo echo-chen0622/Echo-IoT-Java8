@@ -2,7 +2,6 @@ package org.echoiot.server;
 
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.install.EchoiotInstallService;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -35,8 +34,8 @@ public class EchoiotInstallApplication {
      */
     private static final String DEFAULT_SPRING_CONFIG_PARAM = SPRING_CONFIG_NAME_KEY + "=" + "echoiot";
 
-    public static void main(@NotNull String[] args) throws Exception {
-        @NotNull SpringApplication application = new SpringApplication(EchoiotInstallApplication.class);
+    public static void main(String[] args) throws Exception {
+        SpringApplication application = new SpringApplication(EchoiotInstallApplication.class);
         // 设置启动参数，设置配置文件名称
         application.setAdditionalProfiles("install");
         // 启动应用

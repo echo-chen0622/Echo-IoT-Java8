@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.echoiot.server.common.data.id.OtaPackageId;
-import org.jetbrains.annotations.NotNull;
 
 import java.nio.ByteBuffer;
 
@@ -27,7 +26,7 @@ public class OtaPackage extends OtaPackageInfo {
         super(id);
     }
 
-    public OtaPackage(@NotNull OtaPackage otaPackage) {
+    public OtaPackage(OtaPackage otaPackage) {
         super(otaPackage);
         this.data = otaPackage.getData();
     }

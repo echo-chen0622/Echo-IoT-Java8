@@ -10,7 +10,6 @@ import org.echoiot.server.common.data.security.DeviceCredentialsType;
 import org.echoiot.server.dao.device.DeviceCredentialsDao;
 import org.echoiot.server.dao.device.DeviceCredentialsService;
 import org.echoiot.server.dao.device.DeviceService;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.junit.After;
 import org.junit.Before;
@@ -99,11 +98,11 @@ public abstract class BaseDeviceCredentialsCacheTest extends AbstractServiceTest
 
         when(deviceCredentialsDao.findByDeviceId(SYSTEM_TENANT_ID, deviceId)).thenReturn(createDummyDeviceCredentialsEntity(CREDENTIALS_ID_1));
 
-        @NotNull UUID deviceCredentialsId = UUID.randomUUID();
+        UUID deviceCredentialsId = UUID.randomUUID();
         when(deviceCredentialsDao.findById(SYSTEM_TENANT_ID, deviceCredentialsId)).thenReturn(createDummyDeviceCredentialsEntity(CREDENTIALS_ID_1));
         when(deviceService.findDeviceById(SYSTEM_TENANT_ID, new DeviceId(deviceId))).thenReturn(new Device());
 
-        @NotNull var dummy = createDummyDeviceCredentials(deviceCredentialsId, CREDENTIALS_ID_2, deviceId);
+        var dummy = createDummyDeviceCredentials(deviceCredentialsId, CREDENTIALS_ID_2, deviceId);
         when(deviceCredentialsDao.saveAndFlush(SYSTEM_TENANT_ID, dummy)).thenReturn(dummy);
 
         deviceCredentialsService.updateDeviceCredentials(SYSTEM_TENANT_ID, dummy);
@@ -125,21 +124,18 @@ public abstract class BaseDeviceCredentialsCacheTest extends AbstractServiceTest
         return deviceCredentialsService;
     }
 
-    @NotNull
     private DeviceCredentials createDummyDeviceCredentialsEntity(String deviceCredentialsId) {
-        @NotNull DeviceCredentials result = new DeviceCredentials(new DeviceCredentialsId(UUID.randomUUID()));
+        DeviceCredentials result = new DeviceCredentials(new DeviceCredentialsId(UUID.randomUUID()));
         result.setCredentialsId(deviceCredentialsId);
         return result;
     }
 
-    @NotNull
     private DeviceCredentials createDummyDeviceCredentials(String deviceCredentialsId, UUID deviceId) {
         return createDummyDeviceCredentials(null, deviceCredentialsId, deviceId);
     }
 
-    @NotNull
     private DeviceCredentials createDummyDeviceCredentials(UUID id, String deviceCredentialsId, UUID deviceId) {
-        @NotNull DeviceCredentials result = new DeviceCredentials();
+        DeviceCredentials result = new DeviceCredentials();
         result.setId(new DeviceCredentialsId(id));
         result.setDeviceId(new DeviceId(deviceId));
         result.setCredentialsId(deviceCredentialsId);

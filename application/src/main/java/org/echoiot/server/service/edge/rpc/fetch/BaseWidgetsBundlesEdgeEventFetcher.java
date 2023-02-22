@@ -12,13 +12,11 @@ import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.common.data.widget.WidgetsBundle;
 import org.echoiot.server.dao.widget.WidgetsBundleService;
-import org.jetbrains.annotations.NotNull;
 
 @Slf4j
 @AllArgsConstructor
 public abstract class BaseWidgetsBundlesEdgeEventFetcher extends BasePageableEdgeEventFetcher<WidgetsBundle> {
 
-    @NotNull
     protected final WidgetsBundleService widgetsBundleService;
 
     @Override
@@ -26,9 +24,8 @@ public abstract class BaseWidgetsBundlesEdgeEventFetcher extends BasePageableEdg
         return findWidgetsBundles(tenantId, pageLink);
     }
 
-    @NotNull
     @Override
-    EdgeEvent constructEdgeEvent(TenantId tenantId, @NotNull Edge edge, @NotNull WidgetsBundle widgetsBundle) {
+    EdgeEvent constructEdgeEvent(TenantId tenantId, Edge edge, WidgetsBundle widgetsBundle) {
         return EdgeUtils.constructEdgeEvent(tenantId, edge.getId(), EdgeEventType.WIDGETS_BUNDLE,
                                             EdgeEventActionType.ADDED, widgetsBundle.getId(), null);
     }

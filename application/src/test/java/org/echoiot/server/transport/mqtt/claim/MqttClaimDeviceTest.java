@@ -13,7 +13,6 @@ import org.echoiot.server.gen.transport.TransportApiProtos;
 import org.echoiot.server.transport.mqtt.AbstractMqttIntegrationTest;
 import org.echoiot.server.transport.mqtt.MqttTestClient;
 import org.echoiot.server.transport.mqtt.MqttTestConfigProperties;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -43,14 +42,14 @@ public class MqttClaimDeviceTest extends AbstractMqttIntegrationTest {
     }
 
     protected void createCustomerAndUser() throws Exception {
-        @NotNull Customer customer = new Customer();
+        Customer customer = new Customer();
         customer.setTenantId(tenantId);
         customer.setTitle("Test Claiming Customer");
         savedCustomer = doPost("/api/customer", customer, Customer.class);
         assertNotNull(savedCustomer);
         assertEquals(tenantId, savedCustomer.getTenantId());
 
-        @NotNull User user = new User();
+        User user = new User();
         user.setAuthority(Authority.CUSTOMER_USER);
         user.setTenantId(tenantId);
         user.setCustomerId(savedCustomer.getId());
@@ -83,7 +82,7 @@ public class MqttClaimDeviceTest extends AbstractMqttIntegrationTest {
 
 
     protected void processTestClaimingDevice(boolean emptyPayload) throws Exception {
-        @NotNull MqttTestClient client = new MqttTestClient();
+        MqttTestClient client = new MqttTestClient();
         client.connectAndWait(accessToken);
         byte[] payloadBytes;
         byte[] failurePayloadBytes;
@@ -97,7 +96,7 @@ public class MqttClaimDeviceTest extends AbstractMqttIntegrationTest {
         validateClaimResponse(emptyPayload, client, payloadBytes, failurePayloadBytes);
     }
 
-    protected void validateClaimResponse(boolean emptyPayload, @NotNull MqttTestClient client, byte[] payloadBytes, byte[] failurePayloadBytes) throws Exception {
+    protected void validateClaimResponse(boolean emptyPayload, MqttTestClient client, byte[] payloadBytes, byte[] failurePayloadBytes) throws Exception {
         client.publishAndWait(DEVICE_CLAIM_TOPIC, failurePayloadBytes);
 
         loginUser(customerAdmin.getName(), CUSTOMER_USER_PASSWORD);
@@ -134,7 +133,7 @@ public class MqttClaimDeviceTest extends AbstractMqttIntegrationTest {
         assertEquals(claimResponse, ClaimResponse.CLAIMED);
     }
 
-    protected void validateGatewayClaimResponse(String deviceName, boolean emptyPayload, @NotNull MqttTestClient client, byte[] failurePayloadBytes, byte[] payloadBytes) throws Exception {
+    protected void validateGatewayClaimResponse(String deviceName, boolean emptyPayload, MqttTestClient client, byte[] failurePayloadBytes, byte[] payloadBytes) throws Exception {
         client.publishAndWait(GATEWAY_CLAIM_TOPIC, failurePayloadBytes);
 
         Device savedDevice = doExecuteWithRetriesAndInterval(
@@ -176,7 +175,7 @@ public class MqttClaimDeviceTest extends AbstractMqttIntegrationTest {
     }
 
     protected void processTestGatewayClaimingDevice(String deviceName, boolean emptyPayload) throws Exception {
-        @NotNull MqttTestClient client = new MqttTestClient();
+        MqttTestClient client = new MqttTestClient();
         client.connectAndWait(gatewayAccessToken);
         byte[] failurePayloadBytes;
         byte[] payloadBytes;
@@ -195,7 +194,7 @@ public class MqttClaimDeviceTest extends AbstractMqttIntegrationTest {
     }
 
     protected void processProtoTestGatewayClaimDevice(String deviceName, boolean emptyPayload) throws Exception {
-        @NotNull MqttTestClient client = new MqttTestClient();
+        MqttTestClient client = new MqttTestClient();
         client.connectAndWait(gatewayAccessToken);
         byte[] failurePayloadBytes;
         byte[] payloadBytes;
@@ -209,7 +208,6 @@ public class MqttClaimDeviceTest extends AbstractMqttIntegrationTest {
         validateGatewayClaimResponse(deviceName, emptyPayload, client, failurePayloadBytes, payloadBytes);
     }
 
-    @NotNull
     private TransportApiProtos.GatewayClaimMsg getGatewayClaimMsg(String deviceName, long duration, boolean emptyPayload) {
         TransportApiProtos.GatewayClaimMsg.Builder gatewayClaimMsgBuilder = TransportApiProtos.GatewayClaimMsg.newBuilder();
         TransportApiProtos.ClaimDeviceMsg.Builder claimDeviceMsgBuilder = TransportApiProtos.ClaimDeviceMsg.newBuilder();
@@ -220,10 +218,10 @@ public class MqttClaimDeviceTest extends AbstractMqttIntegrationTest {
         if (duration > 0) {
             claimDeviceBuilder.setDurationMs(duration);
         }
-        @NotNull TransportApiProtos.ClaimDevice claimDevice = claimDeviceBuilder.build();
+        TransportApiProtos.ClaimDevice claimDevice = claimDeviceBuilder.build();
         claimDeviceMsgBuilder.setClaimRequest(claimDevice);
         claimDeviceMsgBuilder.setDeviceName(deviceName);
-        @NotNull TransportApiProtos.ClaimDeviceMsg claimDeviceMsg = claimDeviceMsgBuilder.build();
+        TransportApiProtos.ClaimDeviceMsg claimDeviceMsg = claimDeviceMsgBuilder.build();
         gatewayClaimMsgBuilder.addMsg(claimDeviceMsg);
         return gatewayClaimMsgBuilder.build();
     }

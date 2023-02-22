@@ -17,7 +17,6 @@ import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.nosql.TbResultSet;
 import org.echoiot.server.dao.sqlts.AggregationTimeseriesDao;
 import org.echoiot.server.dao.util.NoSqlTsLatestDao;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -40,50 +39,48 @@ public class CassandraBaseTimeseriesLatestDao extends AbstractCassandraBaseTimes
     private PreparedStatement findAllLatestStmt;
 
     @Override
-    public ListenableFuture<Optional<TsKvEntry>> findLatestOpt(TenantId tenantId, @NotNull EntityId entityId, String key) {
+    public ListenableFuture<Optional<TsKvEntry>> findLatestOpt(TenantId tenantId, EntityId entityId, String key) {
         return findLatest(tenantId, entityId, key, rs -> convertResultToTsKvEntryOpt(key, rs.one()));
     }
 
     @Override
-    public ListenableFuture<TsKvEntry> findLatest(TenantId tenantId, @NotNull EntityId entityId, String key) {
+    public ListenableFuture<TsKvEntry> findLatest(TenantId tenantId, EntityId entityId, String key) {
         return findLatest(tenantId, entityId, key, rs -> convertResultToTsKvEntry(key, rs.one()));
     }
 
-    private <T> ListenableFuture<T> findLatest(TenantId tenantId, @NotNull EntityId entityId, String key, @NotNull java.util.function.Function<TbResultSet, T> function) {
-        @NotNull BoundStatementBuilder stmtBuilder = new BoundStatementBuilder(getFindLatestStmt().bind());
+    private <T> ListenableFuture<T> findLatest(TenantId tenantId, EntityId entityId, String key, java.util.function.Function<TbResultSet, T> function) {
+        BoundStatementBuilder stmtBuilder = new BoundStatementBuilder(getFindLatestStmt().bind());
         stmtBuilder.setString(0, entityId.getEntityType().name());
         stmtBuilder.setUuid(1, entityId.getId());
         stmtBuilder.setString(2, key);
-        @NotNull BoundStatement stmt = stmtBuilder.build();
+        BoundStatement stmt = stmtBuilder.build();
         log.debug(GENERATED_QUERY_FOR_ENTITY_TYPE_AND_ENTITY_ID, stmt, entityId.getEntityType(), entityId.getId());
         return getFuture(executeAsyncRead(tenantId, stmt), function);
     }
 
     @Override
-    public ListenableFuture<List<TsKvEntry>> findAllLatest(TenantId tenantId, @NotNull EntityId entityId) {
-        @NotNull BoundStatementBuilder stmtBuilder = new BoundStatementBuilder(getFindAllLatestStmt().bind());
+    public ListenableFuture<List<TsKvEntry>> findAllLatest(TenantId tenantId, EntityId entityId) {
+        BoundStatementBuilder stmtBuilder = new BoundStatementBuilder(getFindAllLatestStmt().bind());
         stmtBuilder.setString(0, entityId.getEntityType().name());
         stmtBuilder.setUuid(1, entityId.getId());
-        @NotNull BoundStatement stmt = stmtBuilder.build();
+        BoundStatement stmt = stmtBuilder.build();
         log.debug(GENERATED_QUERY_FOR_ENTITY_TYPE_AND_ENTITY_ID, stmt, entityId.getEntityType(), entityId.getId());
         return getFutureAsync(executeAsyncRead(tenantId, stmt), rs -> convertAsyncResultSetToTsKvEntryList(rs));
     }
 
-    @NotNull
     @Override
     public List<String> findAllKeysByDeviceProfileId(TenantId tenantId, DeviceProfileId deviceProfileId) {
         return Collections.emptyList();
     }
 
-    @NotNull
     @Override
     public List<String> findAllKeysByEntityIds(TenantId tenantId, List<EntityId> entityIds) {
         return Collections.emptyList();
     }
 
     @Override
-    public ListenableFuture<Void> saveLatest(TenantId tenantId, @NotNull EntityId entityId, @NotNull TsKvEntry tsKvEntry) {
-        @NotNull BoundStatementBuilder stmtBuilder = new BoundStatementBuilder(getLatestStmt().bind());
+    public ListenableFuture<Void> saveLatest(TenantId tenantId, EntityId entityId, TsKvEntry tsKvEntry) {
+        BoundStatementBuilder stmtBuilder = new BoundStatementBuilder(getLatestStmt().bind());
         stmtBuilder.setString(0, entityId.getEntityType().name())
                 .setUuid(1, entityId.getId())
                 .setString(2, tsKvEntry.getKey())
@@ -98,17 +95,16 @@ public class CassandraBaseTimeseriesLatestDao extends AbstractCassandraBaseTimes
         } else {
             stmtBuilder.setToNull(8);
         }
-        @NotNull BoundStatement stmt = stmtBuilder.build();
+        BoundStatement stmt = stmtBuilder.build();
 
         return getFuture(executeAsyncWrite(tenantId, stmt), rs -> null);
     }
 
-    @NotNull
     @Override
-    public ListenableFuture<TsKvLatestRemovingResult> removeLatest(TenantId tenantId, @NotNull EntityId entityId, @NotNull DeleteTsKvQuery query) {
+    public ListenableFuture<TsKvLatestRemovingResult> removeLatest(TenantId tenantId, EntityId entityId, DeleteTsKvQuery query) {
         ListenableFuture<TsKvEntry> latestEntryFuture = findLatest(tenantId, entityId, query.getKey());
 
-        @NotNull ListenableFuture<Boolean> booleanFuture = Futures.transform(latestEntryFuture, latestEntry -> {
+        ListenableFuture<Boolean> booleanFuture = Futures.transform(latestEntryFuture, latestEntry -> {
             long ts = latestEntry.getTs();
             if (ts > query.getStartTs() && ts <= query.getEndTs()) {
                 return true;
@@ -118,7 +114,7 @@ public class CassandraBaseTimeseriesLatestDao extends AbstractCassandraBaseTimes
             return false;
         }, readResultsProcessingExecutor);
 
-        @NotNull ListenableFuture<Boolean> removedLatestFuture = Futures.transformAsync(booleanFuture, isRemove -> {
+        ListenableFuture<Boolean> removedLatestFuture = Futures.transformAsync(booleanFuture, isRemove -> {
             if (isRemove) {
                 return Futures.transform(deleteLatest(tenantId, entityId, query.getKey()), res -> true, MoreExecutors.directExecutor());
             }
@@ -133,11 +129,10 @@ public class CassandraBaseTimeseriesLatestDao extends AbstractCassandraBaseTimes
         }, MoreExecutors.directExecutor());
     }
 
-    @NotNull
-    private ListenableFuture<TsKvLatestRemovingResult> getNewLatestEntryFuture(TenantId tenantId, @NotNull EntityId entityId, @NotNull DeleteTsKvQuery query) {
+    private ListenableFuture<TsKvLatestRemovingResult> getNewLatestEntryFuture(TenantId tenantId, EntityId entityId, DeleteTsKvQuery query) {
         long startTs = 0;
         long endTs = query.getStartTs() - 1;
-        @NotNull ReadTsKvQuery findNewLatestQuery = new BaseReadTsKvQuery(query.getKey(), startTs, endTs, endTs - startTs, 1,
+        ReadTsKvQuery findNewLatestQuery = new BaseReadTsKvQuery(query.getKey(), startTs, endTs, endTs - startTs, 1,
                                                                           Aggregation.NONE, DESC_ORDER);
         ListenableFuture<ReadTsKvQueryResult> future = aggregationTimeseriesDao.findAllAsync(tenantId, entityId, findNewLatestQuery);
 
@@ -153,8 +148,8 @@ public class CassandraBaseTimeseriesLatestDao extends AbstractCassandraBaseTimes
         }, readResultsProcessingExecutor);
     }
 
-    private ListenableFuture<Void> deleteLatest(TenantId tenantId, @NotNull EntityId entityId, String key) {
-        @NotNull Statement delete = QueryBuilder.deleteFrom(ModelConstants.TS_KV_LATEST_CF)
+    private ListenableFuture<Void> deleteLatest(TenantId tenantId, EntityId entityId, String key) {
+        Statement delete = QueryBuilder.deleteFrom(ModelConstants.TS_KV_LATEST_CF)
                                                 .whereColumn(ModelConstants.ENTITY_TYPE_COLUMN).isEqualTo(literal(entityId.getEntityType().name()))
                                                 .whereColumn(ModelConstants.ENTITY_ID_COLUMN).isEqualTo(literal(entityId.getId()))
                                                 .whereColumn(ModelConstants.KEY_COLUMN).isEqualTo(literal(key)).build();
@@ -162,8 +157,7 @@ public class CassandraBaseTimeseriesLatestDao extends AbstractCassandraBaseTimes
         return getFuture(executeAsyncWrite(tenantId, delete), rs -> null);
     }
 
-    @NotNull
-    private ListenableFuture<List<TsKvEntry>> convertAsyncResultSetToTsKvEntryList(@NotNull TbResultSet rs) {
+    private ListenableFuture<List<TsKvEntry>> convertAsyncResultSetToTsKvEntryList(TbResultSet rs) {
         return Futures.transform(rs.allRows(readResultsProcessingExecutor),
                 rows -> this.convertResultToTsKvEntryList(rows), readResultsProcessingExecutor);
     }

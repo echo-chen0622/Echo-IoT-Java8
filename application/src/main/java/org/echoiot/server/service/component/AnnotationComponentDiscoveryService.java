@@ -13,7 +13,6 @@ import org.echoiot.server.common.data.plugin.ComponentDescriptor;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.data.rule.RuleChainType;
 import org.echoiot.server.dao.component.ComponentDescriptorService;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -62,14 +61,14 @@ public class AnnotationComponentDiscoveryService implements ComponentDiscoverySe
     }
 
     private void registerRuleNodeComponents() {
-        @NotNull Set<BeanDefinition> ruleNodeBeanDefinitions = getBeanDefinitions(RuleNode.class);
-        for (@NotNull BeanDefinition def : ruleNodeBeanDefinitions) {
+        Set<BeanDefinition> ruleNodeBeanDefinitions = getBeanDefinitions(RuleNode.class);
+        for (BeanDefinition def : ruleNodeBeanDefinitions) {
             int retryCount = 0;
             @Nullable Exception cause = null;
             while (retryCount < MAX_OPTIMISITC_RETRIES) {
                 try {
                     @Nullable String clazzName = def.getBeanClassName();
-                    @NotNull Class<?> clazz = Class.forName(clazzName);
+                    Class<?> clazz = Class.forName(clazzName);
                     RuleNode ruleNodeAnnotation = clazz.getAnnotation(RuleNode.class);
                     ComponentType type = ruleNodeAnnotation.type();
                     ComponentDescriptor component = scanAndPersistComponent(def, type);
@@ -94,7 +93,7 @@ public class AnnotationComponentDiscoveryService implements ComponentDiscoverySe
         }
     }
 
-    private void putComponentIntoMaps(ComponentType type, @NotNull RuleNode ruleNodeAnnotation, ComponentDescriptor component) {
+    private void putComponentIntoMaps(ComponentType type, RuleNode ruleNodeAnnotation, ComponentDescriptor component) {
         boolean ruleChainTypesMethodAvailable;
         try {
             ruleNodeAnnotation.getClass().getMethod("ruleChainTypes");
@@ -116,7 +115,7 @@ public class AnnotationComponentDiscoveryService implements ComponentDiscoverySe
         }
     }
 
-    private boolean ruleChainTypeContainsArray(@NotNull RuleChainType ruleChainType, @NotNull RuleChainType[] array) {
+    private boolean ruleChainTypeContainsArray(RuleChainType ruleChainType, RuleChainType[] array) {
         for (RuleChainType tmp : array) {
             if (ruleChainType.equals(tmp)) {
                 return true;
@@ -125,16 +124,16 @@ public class AnnotationComponentDiscoveryService implements ComponentDiscoverySe
         return false;
     }
 
-    private ComponentDescriptor scanAndPersistComponent(@NotNull BeanDefinition def, ComponentType type) {
+    private ComponentDescriptor scanAndPersistComponent(BeanDefinition def, ComponentType type) {
         ComponentDescriptor scannedComponent = new ComponentDescriptor();
         @Nullable String clazzName = def.getBeanClassName();
         try {
             scannedComponent.setType(type);
-            @NotNull Class<?> clazz = Class.forName(clazzName);
+            Class<?> clazz = Class.forName(clazzName);
             RuleNode ruleNodeAnnotation = clazz.getAnnotation(RuleNode.class);
             scannedComponent.setName(ruleNodeAnnotation.name());
             scannedComponent.setScope(ruleNodeAnnotation.scope());
-            @NotNull NodeDefinition nodeDefinition = prepareNodeDefinition(ruleNodeAnnotation);
+            NodeDefinition nodeDefinition = prepareNodeDefinition(ruleNodeAnnotation);
             ObjectNode configurationDescriptor = mapper.createObjectNode();
             JsonNode node = mapper.valueToTree(nodeDefinition);
             configurationDescriptor.set("nodeDefinition", node);
@@ -161,9 +160,8 @@ public class AnnotationComponentDiscoveryService implements ComponentDiscoverySe
         return scannedComponent;
     }
 
-    @NotNull
-    private NodeDefinition prepareNodeDefinition(@NotNull RuleNode nodeAnnotation) throws Exception {
-        @NotNull NodeDefinition nodeDefinition = new NodeDefinition();
+    private NodeDefinition prepareNodeDefinition(RuleNode nodeAnnotation) throws Exception {
+        NodeDefinition nodeDefinition = new NodeDefinition();
         nodeDefinition.setDetails(nodeAnnotation.nodeDetails());
         nodeDefinition.setDescription(nodeAnnotation.nodeDescription());
         nodeDefinition.setInEnabled(nodeAnnotation.inEnabled());
@@ -172,7 +170,7 @@ public class AnnotationComponentDiscoveryService implements ComponentDiscoverySe
         nodeDefinition.setCustomRelations(nodeAnnotation.customRelations());
         nodeDefinition.setRuleChainNode(nodeAnnotation.ruleChainNode());
         Class<? extends NodeConfiguration> configClazz = nodeAnnotation.configClazz();
-        @NotNull NodeConfiguration config = configClazz.getDeclaredConstructor().newInstance();
+        NodeConfiguration config = configClazz.getDeclaredConstructor().newInstance();
         NodeConfiguration defaultConfiguration = config.defaultConfiguration();
         nodeDefinition.setDefaultConfiguration(mapper.valueToTree(defaultConfiguration));
         nodeDefinition.setUiResources(nodeAnnotation.uiResources());
@@ -183,21 +181,19 @@ public class AnnotationComponentDiscoveryService implements ComponentDiscoverySe
         return nodeDefinition;
     }
 
-    @NotNull
-    private String[] getRelationTypesWithFailureRelation(@NotNull RuleNode nodeAnnotation) {
-        @NotNull List<String> relationTypes = new ArrayList<>(Arrays.asList(nodeAnnotation.relationTypes()));
+    private String[] getRelationTypesWithFailureRelation(RuleNode nodeAnnotation) {
+        List<String> relationTypes = new ArrayList<>(Arrays.asList(nodeAnnotation.relationTypes()));
         if (!relationTypes.contains(TbRelationTypes.FAILURE)) {
             relationTypes.add(TbRelationTypes.FAILURE);
         }
         return relationTypes.toArray(new String[relationTypes.size()]);
     }
 
-    @NotNull
-    private Set<BeanDefinition> getBeanDefinitions(@NotNull Class<? extends Annotation> componentType) {
-        @NotNull ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false);
+    private Set<BeanDefinition> getBeanDefinitions(Class<? extends Annotation> componentType) {
+        ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false);
         scanner.addIncludeFilter(new AnnotationTypeFilter(componentType));
-        @NotNull Set<BeanDefinition> defs = new HashSet<>();
-        for (@NotNull String scanPackage : scanPackages) {
+        Set<BeanDefinition> defs = new HashSet<>();
+        for (String scanPackage : scanPackages) {
             defs.addAll(scanner.findCandidateComponents(scanPackage));
         }
         return defs;
@@ -209,7 +205,6 @@ public class AnnotationComponentDiscoveryService implements ComponentDiscoverySe
         log.debug("Found following definitions: {}", components.values());
     }
 
-    @NotNull
     @Override
     public List<ComponentDescriptor> getComponents(ComponentType type, RuleChainType ruleChainType) {
         if (RuleChainType.CORE.equals(ruleChainType)) {
@@ -230,9 +225,8 @@ public class AnnotationComponentDiscoveryService implements ComponentDiscoverySe
         }
     }
 
-    @NotNull
     @Override
-    public List<ComponentDescriptor> getComponents(@NotNull Set<ComponentType> types, RuleChainType ruleChainType) {
+    public List<ComponentDescriptor> getComponents(Set<ComponentType> types, RuleChainType ruleChainType) {
         if (RuleChainType.CORE.equals(ruleChainType)) {
             return getComponents(types, coreComponentsMap);
         } else if (RuleChainType.EDGE.equals(ruleChainType)) {
@@ -243,15 +237,13 @@ public class AnnotationComponentDiscoveryService implements ComponentDiscoverySe
         }
     }
 
-    @NotNull
     @Override
     public Optional<ComponentDescriptor> getComponent(String clazz) {
         return Optional.ofNullable(components.get(clazz));
     }
 
-    @NotNull
-    private List<ComponentDescriptor> getComponents(@NotNull Set<ComponentType> types, @NotNull Map<ComponentType, List<ComponentDescriptor>> componentsMap) {
-        @NotNull List<ComponentDescriptor> result = new ArrayList<>();
+    private List<ComponentDescriptor> getComponents(Set<ComponentType> types, Map<ComponentType, List<ComponentDescriptor>> componentsMap) {
+        List<ComponentDescriptor> result = new ArrayList<>();
         types.stream().filter(componentsMap::containsKey).forEach(type -> {
             result.addAll(componentsMap.get(type));
         });

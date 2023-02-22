@@ -10,7 +10,6 @@ import org.echoiot.server.common.msg.tools.TbRateLimitsException;
 import org.echoiot.server.dao.tenant.TbTenantProfileCache;
 import org.echoiot.server.exception.EchoiotErrorResponseHandler;
 import org.echoiot.server.service.security.model.SecurityUser;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -77,7 +76,7 @@ public class RateLimitProcessingFilter extends OncePerRequestFilter {
         return false;
     }
 
-    private <I extends EntityId> boolean checkRateLimits(@NotNull I ownerId, @NotNull String rateLimitConfig, @NotNull Map<I, TbRateLimits> rateLimitsMap, ServletResponse response) {
+    private <I extends EntityId> boolean checkRateLimits(I ownerId, String rateLimitConfig, Map<I, TbRateLimits> rateLimitsMap, ServletResponse response) {
         if (StringUtils.isNotEmpty(rateLimitConfig)) {
             TbRateLimits rateLimits = rateLimitsMap.get(ownerId);
             if (rateLimits == null || !rateLimits.getConfiguration().equals(rateLimitConfig)) {

@@ -1,6 +1,5 @@
 package org.echoiot.server.common.data.kv;
 
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -13,13 +12,11 @@ public class BooleanDataEntry extends BasicKvEntry {
         this.value = value;
     }
 
-    @NotNull
     @Override
     public DataType getDataType() {
         return DataType.BOOLEAN;
     }
 
-    @NotNull
     @Override
     public Optional<Boolean> getBooleanValue() {
         return Optional.ofNullable(value);
@@ -30,7 +27,7 @@ public class BooleanDataEntry extends BasicKvEntry {
         if (this == o) return true;
         if (!(o instanceof BooleanDataEntry)) return false;
         if (!super.equals(o)) return false;
-        @NotNull BooleanDataEntry that = (BooleanDataEntry) o;
+        BooleanDataEntry that = (BooleanDataEntry) o;
         return Objects.equals(value, that.value);
     }
 
@@ -44,7 +41,6 @@ public class BooleanDataEntry extends BasicKvEntry {
         return Objects.hash(super.hashCode(), value);
     }
 
-    @NotNull
     @Override
     public String toString() {
         return "BooleanDataEntry{" +
@@ -52,7 +48,6 @@ public class BooleanDataEntry extends BasicKvEntry {
                 "} " + super.toString();
     }
 
-    @NotNull
     @Override
     public String getValueAsString() {
         return Boolean.toString(value);

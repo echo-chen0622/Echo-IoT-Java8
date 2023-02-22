@@ -15,7 +15,6 @@ import org.eclipse.leshan.server.registration.Registration;
 import org.eclipse.leshan.server.registration.RegistrationListener;
 import org.eclipse.leshan.server.registration.RegistrationUpdate;
 import org.eclipse.leshan.server.send.SendListener;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
@@ -37,7 +36,7 @@ public class LwM2mServerListener {
          * Register – query represented as POST /rd?…
          */
         @Override
-        public void registered(@NotNull Registration registration, Registration previousReg,
+        public void registered(Registration registration, Registration previousReg,
                                Collection<Observation> previousObservations) {
             log.debug("Client: registered: [{}]", registration.getEndpoint());
             service.onRegistered(registration, previousObservations);
@@ -65,13 +64,13 @@ public class LwM2mServerListener {
 
     public final PresenceListener presenceListener = new PresenceListener() {
         @Override
-        public void onSleeping(@NotNull Registration registration) {
+        public void onSleeping(Registration registration) {
             log.info("[{}] onSleeping", registration.getEndpoint());
             service.onSleepingDev(registration);
         }
 
         @Override
-        public void onAwake(@NotNull Registration registration) {
+        public void onAwake(Registration registration) {
             log.info("[{}] onAwake", registration.getEndpoint());
             service.onAwakeDev(registration);
         }
@@ -80,13 +79,13 @@ public class LwM2mServerListener {
     public final ObservationListener observationListener = new ObservationListener() {
 
         @Override
-        public void cancelled(@NotNull Observation observation) {
+        public void cancelled(Observation observation) {
             //TODO: should be able to use CompositeObservation
             log.trace("Canceled Observation {}.", ((SingleObservation)observation).getPath());
         }
 
         @Override
-        public void onResponse(@NotNull SingleObservation observation, @Nullable Registration registration, ObserveResponse response) {
+        public void onResponse(SingleObservation observation, @Nullable Registration registration, ObserveResponse response) {
             if (registration != null) {
                 service.onUpdateValueAfterReadResponse(registration, convertObjectIdToVersionedId(observation.getPath().toString(), registration), response);
             }
@@ -98,7 +97,7 @@ public class LwM2mServerListener {
         }
 
         @Override
-        public void onError(@NotNull Observation observation, Registration registration, @Nullable Exception error) {
+        public void onError(Observation observation, Registration registration, @Nullable Exception error) {
             if (error != null) {
                 //TODO: should be able to use CompositeObservation
                 log.debug("Unable to handle notification of [{}:{}] [{}]", observation.getRegistrationId(), ((SingleObservation)observation).getPath(), error.getMessage());
@@ -106,7 +105,7 @@ public class LwM2mServerListener {
         }
 
         @Override
-        public void newObservation(@NotNull Observation observation, Registration registration) {
+        public void newObservation(Observation observation, Registration registration) {
             //TODO: should be able to use CompositeObservation
             log.trace("Successful start newObservation {}.", ((SingleObservation)observation).getPath());
         }

@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.event.EventType;
 import org.echoiot.server.dao.sql.JpaAbstractDaoListeningExecutorService;
 import org.echoiot.server.dao.sqlts.insert.sql.SqlPartitioningRepository;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
@@ -23,7 +22,7 @@ public class SqlEventCleanupRepository extends JpaAbstractDaoListeningExecutorSe
 
     @Override
     public void cleanupEvents(long eventExpTime, boolean debug) {
-        for (@NotNull EventType eventType : EventType.values()) {
+        for (EventType eventType : EventType.values()) {
             if (eventType.isDebug() == debug) {
                 cleanupEvents(eventType, eventExpTime);
             }
@@ -80,7 +79,7 @@ public class SqlEventCleanupRepository extends JpaAbstractDaoListeningExecutorSe
         }
     }
 
-    private void cleanupEvents(@NotNull EventType eventType, long eventExpTime) {
+    private void cleanupEvents(EventType eventType, long eventExpTime) {
         partitioningRepository.dropPartitionsBefore(eventType.getTable(), eventExpTime, partitionConfiguration.getPartitionSizeInMs(eventType));
     }
 

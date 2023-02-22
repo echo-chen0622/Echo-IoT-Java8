@@ -13,7 +13,6 @@ import org.echoiot.server.common.data.id.RuleNodeId;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.TbMsgDataType;
 import org.echoiot.server.common.msg.TbMsgMetaData;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -49,15 +48,15 @@ public class TbMsgToEmailNodeTest {
         metaData.putValue("name", "temp");
         metaData.putValue("passed", "5");
         metaData.putValue("count", "100");
-        @NotNull TbMsg msg = TbMsg.newMsg("USER", originator, metaData, TbMsgDataType.JSON, rawJson, ruleChainId, ruleNodeId);
+        TbMsg msg = TbMsg.newMsg("USER", originator, metaData, TbMsgDataType.JSON, rawJson, ruleChainId, ruleNodeId);
 
         emailNode.onMsg(ctx, msg);
 
-        @NotNull ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
-        @NotNull ArgumentCaptor<String> typeCaptor = ArgumentCaptor.forClass(String.class);
-        @NotNull ArgumentCaptor<EntityId> originatorCaptor = ArgumentCaptor.forClass(EntityId.class);
-        @NotNull ArgumentCaptor<TbMsgMetaData> metadataCaptor = ArgumentCaptor.forClass(TbMsgMetaData.class);
-        @NotNull ArgumentCaptor<String> dataCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        ArgumentCaptor<String> typeCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<EntityId> originatorCaptor = ArgumentCaptor.forClass(EntityId.class);
+        ArgumentCaptor<TbMsgMetaData> metadataCaptor = ArgumentCaptor.forClass(TbMsgMetaData.class);
+        ArgumentCaptor<String> dataCaptor = ArgumentCaptor.forClass(String.class);
         verify(ctx).transformMsg(msgCaptor.capture(), typeCaptor.capture(), originatorCaptor.capture(), metadataCaptor.capture(), dataCaptor.capture());
 
 
@@ -79,14 +78,14 @@ public class TbMsgToEmailNodeTest {
 
     private void initWithScript() {
         try {
-            @NotNull TbMsgToEmailNodeConfiguration config = new TbMsgToEmailNodeConfiguration();
+            TbMsgToEmailNodeConfiguration config = new TbMsgToEmailNodeConfiguration();
             config.setFromTemplate("test@mail.org");
             config.setToTemplate("${userEmail}");
             config.setSubjectTemplate("Hi ${username} there");
             config.setBodyTemplate("${name} is to high. Current ${passed} and ${count}");
             config.setMailBodyType("false");
-            @NotNull ObjectMapper mapper = new ObjectMapper();
-            @NotNull TbNodeConfiguration nodeConfiguration = new TbNodeConfiguration(mapper.valueToTree(config));
+            ObjectMapper mapper = new ObjectMapper();
+            TbNodeConfiguration nodeConfiguration = new TbNodeConfiguration(mapper.valueToTree(config));
 
             emailNode = new TbMsgToEmailNode();
             emailNode.init(ctx, nodeConfiguration);

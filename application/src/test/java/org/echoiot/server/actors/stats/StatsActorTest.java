@@ -5,7 +5,6 @@ import org.echoiot.server.common.data.event.Event;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.dao.event.EventService;
 import org.echoiot.server.queue.discovery.TbServiceInfoProvider;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -34,7 +33,7 @@ class StatsActorTest {
 
     @Test
     void givenEmptyStatMessage_whenOnStatsPersistMsg_thenNoAction() {
-        @NotNull StatsPersistMsg emptyStats = new StatsPersistMsg(0, 0, TenantId.SYS_TENANT_ID, TenantId.SYS_TENANT_ID);
+        StatsPersistMsg emptyStats = new StatsPersistMsg(0, 0, TenantId.SYS_TENANT_ID, TenantId.SYS_TENANT_ID);
         statsActor.onStatsPersistMsg(emptyStats);
         verify(actorSystemContext, never()).getEventService();
     }

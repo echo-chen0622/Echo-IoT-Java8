@@ -19,7 +19,6 @@ import org.echoiot.server.transport.mqtt.AbstractMqttIntegrationTest;
 import org.echoiot.server.transport.mqtt.MqttTestCallback;
 import org.echoiot.server.transport.mqtt.MqttTestClient;
 import org.echoiot.server.transport.mqtt.MqttTestConfigProperties;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.junit.Assert;
 import org.junit.Test;
@@ -163,7 +162,7 @@ public class MqttProvisionProtoDeviceTest extends AbstractMqttIntegrationTest {
         Assert.assertEquals(deviceCredentials.getCredentialsType().name(), response.getCredentialsType().toString());
         Assert.assertEquals(deviceCredentials.getCredentialsType(), DeviceCredentialsType.X509_CERTIFICATE);
 
-        @NotNull String cert = EncryptionUtil.certTrimNewLines(deviceCredentials.getCredentialsValue());
+        String cert = EncryptionUtil.certTrimNewLines(deviceCredentials.getCredentialsValue());
         String sha3Hash = EncryptionUtil.getSha3Hash(cert);
 
         Assert.assertEquals(deviceCredentials.getCredentialsId(), sha3Hash);
@@ -202,7 +201,7 @@ public class MqttProvisionProtoDeviceTest extends AbstractMqttIntegrationTest {
         Assert.assertEquals(deviceCredentials.getCredentialsType(), DeviceCredentialsType.MQTT_BASIC);
         Assert.assertEquals(deviceCredentials.getCredentialsId(), EncryptionUtil.getSha3Hash("|", "test_clientId", "test_username"));
 
-        @NotNull BasicMqttCredentials mqttCredentials = new BasicMqttCredentials();
+        BasicMqttCredentials mqttCredentials = new BasicMqttCredentials();
         mqttCredentials.setClientId("test_clientId");
         mqttCredentials.setUserName("test_username");
         mqttCredentials.setPassword("test_password");
@@ -247,9 +246,9 @@ public class MqttProvisionProtoDeviceTest extends AbstractMqttIntegrationTest {
     }
 
     protected byte[] createMqttClientAndPublish(byte[] provisionRequestMsg) throws Exception {
-        @NotNull MqttTestClient client = new MqttTestClient();
+        MqttTestClient client = new MqttTestClient();
         client.connectAndWait("provision");
-        @NotNull MqttTestCallback onProvisionCallback = new MqttTestCallback(DEVICE_PROVISION_RESPONSE_TOPIC);
+        MqttTestCallback onProvisionCallback = new MqttTestCallback(DEVICE_PROVISION_RESPONSE_TOPIC);
         client.setCallback(onProvisionCallback);
         client.subscribe(DEVICE_PROVISION_RESPONSE_TOPIC, MqttQoS.AT_MOST_ONCE);
         client.publishAndWait(DEVICE_PROVISION_REQUEST_TOPIC, provisionRequestMsg);

@@ -26,7 +26,6 @@ import org.eclipse.leshan.core.request.BootstrapRequest;
 import org.eclipse.leshan.core.request.DeregisterRequest;
 import org.eclipse.leshan.core.request.RegisterRequest;
 import org.eclipse.leshan.core.request.UpdateRequest;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.junit.Assert;
 import org.mockito.Mockito;
@@ -48,9 +47,7 @@ import static org.eclipse.leshan.core.LwM2mId.*;
 @Data
 public class LwM2MTestClient {
 
-    @NotNull
     private final ScheduledExecutorService executor;
-    @NotNull
     private final String endpoint;
     private LeshanClient leshanClient;
 
@@ -72,25 +69,25 @@ public class LwM2MTestClient {
     private DefaultLwM2mUplinkMsgHandler defaultLwM2mUplinkMsgHandlerTest;
     private LwM2mClientContext clientContext;
 
-    public void init(@NotNull Security security, @NotNull Configuration coapConfig, int port, boolean isRpc, boolean isBootstrap,
+    public void init(Security security, Configuration coapConfig, int port, boolean isRpc, boolean isBootstrap,
                      int shortServerId, int shortServerIdBs, @Nullable Security securityBs,
                      DefaultLwM2mUplinkMsgHandler defaultLwM2mUplinkMsgHandler,
                      LwM2mClientContext clientContext) throws InvalidDDFFileException, IOException {
         Assert.assertNull("client already initialized", leshanClient);
         this.defaultLwM2mUplinkMsgHandlerTest = defaultLwM2mUplinkMsgHandler;
         this.clientContext = clientContext;
-        @NotNull List<ObjectModel> models = new ArrayList<>();
+        List<ObjectModel> models = new ArrayList<>();
         for (String resourceName : resources) {
             models.addAll(ObjectLoader.loadDdfFile(LwM2MTestClient.class.getClassLoader().getResourceAsStream("lwm2m/" + resourceName), resourceName));
         }
-        @NotNull LwM2mModel model = new StaticModel(models);
-        @NotNull ObjectsInitializer initializer = new ObjectsInitializer(model);
+        LwM2mModel model = new StaticModel(models);
+        ObjectsInitializer initializer = new ObjectsInitializer(model);
         if (securityBs == null) {
             initializer.setInstancesForObject(SECURITY, this.lwm2mSecurity = security);
         } else {
             securityBs.setId(0);
             security.setId(1);
-            @NotNull LwM2mInstanceEnabler[] instances = new LwM2mInstanceEnabler[]{this.lwm2mSecurityBs = securityBs, this.lwm2mSecurity = security};
+            LwM2mInstanceEnabler[] instances = new LwM2mInstanceEnabler[]{this.lwm2mSecurityBs = securityBs, this.lwm2mSecurity = security};
             initializer.setClassForObject(SECURITY, Security.class);
             initializer.setInstancesForObject(SECURITY, instances);
         }
@@ -104,7 +101,7 @@ public class LwM2MTestClient {
                 lwm2mServerBs.setId(0);
                 lwm2mServer = new Lwm2mServer(shortServerId, 300);
                 lwm2mServer.setId(1);
-                @NotNull LwM2mInstanceEnabler[] instances = new LwM2mInstanceEnabler[]{lwm2mServerBs, lwm2mServer};
+                LwM2mInstanceEnabler[] instances = new LwM2mInstanceEnabler[]{lwm2mServerBs, lwm2mServer};
                 initializer.setClassForObject(SERVER, Server.class);
                 initializer.setInstancesForObject(SERVER, instances);
             }
@@ -120,15 +117,15 @@ public class LwM2MTestClient {
         initializer.setInstancesForObject(LOCATION, new LwM2mLocation(locationParams.getLatitude(), locationParams.getLongitude(), locationParams.getScaleFactor(), executor, OBJECT_INSTANCE_ID_0));
         initializer.setInstancesForObject(TEMPERATURE_SENSOR, lwM2MTemperatureSensor = new LwM2mTemperatureSensor(executor, OBJECT_INSTANCE_ID_0), new LwM2mTemperatureSensor(executor, OBJECT_INSTANCE_ID_12));
 
-        @NotNull DtlsConnectorConfig.Builder dtlsConfig = new DtlsConnectorConfig.Builder(coapConfig);
+        DtlsConnectorConfig.Builder dtlsConfig = new DtlsConnectorConfig.Builder(coapConfig);
         dtlsConfig.set(DTLS_RECOMMENDED_CIPHER_SUITES_ONLY, true);
 
-        @NotNull DefaultRegistrationEngineFactory engineFactory = new DefaultRegistrationEngineFactory();
+        DefaultRegistrationEngineFactory engineFactory = new DefaultRegistrationEngineFactory();
         engineFactory.setReconnectOnUpdate(false);
         engineFactory.setResumeOnConnect(true);
         engineFactory.setCommunicationPeriod(5000);
 
-        @NotNull LeshanClientBuilder builder = new LeshanClientBuilder(endpoint);
+        LeshanClientBuilder builder = new LeshanClientBuilder(endpoint);
         builder.setLocalAddress("0.0.0.0", port);
         builder.setObjects(initializer.createAll());
         builder.setCoapConfig(coapConfig);
@@ -142,7 +139,7 @@ public class LwM2MTestClient {
         clientStates.add(ON_INIT);
         leshanClient = builder.build();
 
-        @NotNull LwM2mClientObserver observer = new LwM2mClientObserver() {
+        LwM2mClientObserver observer = new LwM2mClientObserver() {
             @Override
             public void onBootstrapStarted(ServerIdentity bsserver, BootstrapRequest request) {
                 clientStates.add(ON_BOOTSTRAP_STARTED);

@@ -8,7 +8,6 @@ import org.echoiot.server.common.data.id.AssetId;
 import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.UserId;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,11 +20,8 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class TbGetTenantAttributeNodeTest extends AbstractAttributeNodeTest {
 
-    @NotNull
     User user = new User();
-    @NotNull
     Asset asset = new Asset();
-    @NotNull
     Device device = new Device();
 
     @Before
@@ -44,7 +40,6 @@ public class TbGetTenantAttributeNodeTest extends AbstractAttributeNodeTest {
         when(ctx.getTenantId()).thenReturn(tenantId);
     }
 
-    @NotNull
     @Override
     protected TbEntityGetAttrNode getEmptyNode() {
         return new TbGetTenantAttributeNode();

@@ -18,7 +18,6 @@ import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.util.mapping.JsonStringType;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.util.CollectionUtils;
 
@@ -94,7 +93,7 @@ public abstract class AbstractAlarmEntity<T extends Alarm> extends BaseSqlEntity
         super();
     }
 
-    public AbstractAlarmEntity(@NotNull Alarm alarm) {
+    public AbstractAlarmEntity(Alarm alarm) {
         if (alarm.getId() != null) {
             this.setUuid(alarm.getUuidId());
         }
@@ -126,7 +125,7 @@ public abstract class AbstractAlarmEntity<T extends Alarm> extends BaseSqlEntity
         }
     }
 
-    public AbstractAlarmEntity(@NotNull AlarmEntity alarmEntity) {
+    public AbstractAlarmEntity(AlarmEntity alarmEntity) {
         this.setId(alarmEntity.getId());
         this.setCreatedTime(alarmEntity.getCreatedTime());
         this.tenantId = alarmEntity.getTenantId();
@@ -148,9 +147,8 @@ public abstract class AbstractAlarmEntity<T extends Alarm> extends BaseSqlEntity
         this.propagateRelationTypes = alarmEntity.getPropagateRelationTypes();
     }
 
-    @NotNull
     protected Alarm toAlarm() {
-        @NotNull Alarm alarm = new Alarm(new AlarmId(id));
+        Alarm alarm = new Alarm(new AlarmId(id));
         alarm.setCreatedTime(createdTime);
         if (tenantId != null) {
             alarm.setTenantId(TenantId.fromUUID(tenantId));

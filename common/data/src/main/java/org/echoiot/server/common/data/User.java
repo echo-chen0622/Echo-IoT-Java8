@@ -13,7 +13,6 @@ import org.echoiot.server.common.data.id.UserId;
 import org.echoiot.server.common.data.security.Authority;
 import org.echoiot.server.common.data.validation.Length;
 import org.echoiot.server.common.data.validation.NoXss;
-import org.jetbrains.annotations.NotNull;
 
 @ApiModel
 @EqualsAndHashCode(callSuper = true)
@@ -40,7 +39,7 @@ public class User extends SearchTextBasedWithAdditionalInfo<UserId> implements H
         super(id);
     }
 
-    public User(@NotNull User user) {
+    public User(User user) {
         super(user);
         this.tenantId = user.getTenantId();
         this.customerId = user.getCustomerId();
@@ -138,7 +137,6 @@ public class User extends SearchTextBasedWithAdditionalInfo<UserId> implements H
         return getEmail();
     }
 
-    @NotNull
     @Override
     public String toString() {
         String builder = "User [tenantId=" +

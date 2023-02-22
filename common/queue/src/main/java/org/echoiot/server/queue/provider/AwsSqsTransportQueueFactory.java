@@ -15,7 +15,6 @@ import org.echoiot.server.queue.settings.TbQueueRuleEngineSettings;
 import org.echoiot.server.queue.settings.TbQueueTransportApiSettings;
 import org.echoiot.server.queue.settings.TbQueueTransportNotificationSettings;
 import org.echoiot.server.queue.sqs.*;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Component;
 
@@ -32,21 +31,17 @@ public class AwsSqsTransportQueueFactory implements TbTransportQueueFactory {
     private final TbServiceInfoProvider serviceInfoProvider;
     private final TbQueueRuleEngineSettings ruleEngineSettings;
 
-    @NotNull
     private final TbQueueAdmin coreAdmin;
-    @NotNull
     private final TbQueueAdmin transportApiAdmin;
-    @NotNull
     private final TbQueueAdmin notificationAdmin;
-    @NotNull
     private final TbQueueAdmin ruleEngineAdmin;
 
     public AwsSqsTransportQueueFactory(TbQueueTransportApiSettings transportApiSettings,
                                        TbQueueTransportNotificationSettings transportNotificationSettings,
-                                       @NotNull TbAwsSqsSettings sqsSettings,
+                                       TbAwsSqsSettings sqsSettings,
                                        TbServiceInfoProvider serviceInfoProvider,
                                        TbQueueCoreSettings coreSettings,
-                                       @NotNull TbAwsSqsQueueAttributes sqsQueueAttributes,
+                                       TbAwsSqsQueueAttributes sqsQueueAttributes,
                                        TbQueueRuleEngineSettings ruleEngineSettings) {
         this.transportApiSettings = transportApiSettings;
         this.transportNotificationSettings = transportNotificationSettings;
@@ -63,10 +58,10 @@ public class AwsSqsTransportQueueFactory implements TbTransportQueueFactory {
 
     @Override
     public TbQueueRequestTemplate<TbProtoQueueMsg<TransportApiRequestMsg>, TbProtoQueueMsg<TransportApiResponseMsg>> createTransportApiRequestTemplate() {
-        @NotNull TbQueueProducer<TbProtoQueueMsg<TransportApiRequestMsg>> producerTemplate =
+        TbQueueProducer<TbProtoQueueMsg<TransportApiRequestMsg>> producerTemplate =
                 new TbAwsSqsProducerTemplate<>(transportApiAdmin, sqsSettings, transportApiSettings.getRequestsTopic());
 
-        @NotNull TbQueueConsumer<TbProtoQueueMsg<TransportApiResponseMsg>> consumerTemplate =
+        TbQueueConsumer<TbProtoQueueMsg<TransportApiResponseMsg>> consumerTemplate =
                 new TbAwsSqsConsumerTemplate<>(transportApiAdmin, sqsSettings,
                         transportApiSettings.getResponsesTopic() + "_" + serviceInfoProvider.getServiceId(),
                         msg -> new TbProtoQueueMsg<>(msg.getKey(), TransportApiResponseMsg.parseFrom(msg.getData()), msg.getHeaders()));
@@ -82,26 +77,22 @@ public class AwsSqsTransportQueueFactory implements TbTransportQueueFactory {
         return templateBuilder.build();
     }
 
-    @NotNull
     @Override
     public TbQueueProducer<TbProtoQueueMsg<ToRuleEngineMsg>> createRuleEngineMsgProducer() {
         return new TbAwsSqsProducerTemplate<>(ruleEngineAdmin, sqsSettings, ruleEngineSettings.getTopic());
     }
 
-    @NotNull
     @Override
     public TbQueueProducer<TbProtoQueueMsg<ToCoreMsg>> createTbCoreMsgProducer() {
         return new TbAwsSqsProducerTemplate<>(coreAdmin, sqsSettings, coreSettings.getTopic());
     }
 
-    @NotNull
     @Override
     public TbQueueConsumer<TbProtoQueueMsg<ToTransportMsg>> createTransportNotificationsConsumer() {
         return new TbAwsSqsConsumerTemplate<>(notificationAdmin, sqsSettings, transportNotificationSettings.getNotificationsTopic() + "_" + serviceInfoProvider.getServiceId(),
                 msg -> new TbProtoQueueMsg<>(msg.getKey(), ToTransportMsg.parseFrom(msg.getData()), msg.getHeaders()));
     }
 
-    @NotNull
     @Override
     public TbQueueProducer<TbProtoQueueMsg<TransportProtos.ToUsageStatsServiceMsg>> createToUsageStatsServiceMsgProducer() {
         return new TbAwsSqsProducerTemplate<>(coreAdmin, sqsSettings, coreSettings.getUsageStatsTopic());

@@ -12,7 +12,6 @@ import org.echoiot.server.gen.edge.v1.QueueUpdateMsg;
 import org.echoiot.server.gen.edge.v1.UpdateMsgType;
 import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.queue.util.TbCoreComponent;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -22,15 +21,15 @@ import org.springframework.stereotype.Component;
 public class QueueEdgeProcessor extends BaseEdgeProcessor {
 
     @Nullable
-    public DownlinkMsg convertQueueEventToDownlink(@NotNull EdgeEvent edgeEvent) {
-        @NotNull QueueId queueId = new QueueId(edgeEvent.getEntityId());
+    public DownlinkMsg convertQueueEventToDownlink(EdgeEvent edgeEvent) {
+        QueueId queueId = new QueueId(edgeEvent.getEntityId());
         @Nullable DownlinkMsg downlinkMsg = null;
         switch (edgeEvent.getAction()) {
             case ADDED:
             case UPDATED:
                 Queue queue = queueService.findQueueById(edgeEvent.getTenantId(), queueId);
                 if (queue != null) {
-                    @NotNull UpdateMsgType msgType = getUpdateMsgType(edgeEvent.getAction());
+                    UpdateMsgType msgType = getUpdateMsgType(edgeEvent.getAction());
                     QueueUpdateMsg queueUpdateMsg =
                             queueMsgConstructor.constructQueueUpdatedMsg(msgType, queue);
                     downlinkMsg = DownlinkMsg.newBuilder()
@@ -51,7 +50,7 @@ public class QueueEdgeProcessor extends BaseEdgeProcessor {
         return downlinkMsg;
     }
 
-    public ListenableFuture<Void> processQueueNotification(TenantId tenantId, @NotNull TransportProtos.EdgeNotificationMsgProto edgeNotificationMsg) {
+    public ListenableFuture<Void> processQueueNotification(TenantId tenantId, TransportProtos.EdgeNotificationMsgProto edgeNotificationMsg) {
         return processEntityNotificationForAllEdges(tenantId, edgeNotificationMsg);
     }
 }

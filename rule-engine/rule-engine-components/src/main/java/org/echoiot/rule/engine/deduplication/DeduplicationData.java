@@ -2,7 +2,6 @@ package org.echoiot.rule.engine.deduplication;
 
 import lombok.Data;
 import org.echoiot.server.common.msg.TbMsg;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -10,7 +9,6 @@ import java.util.List;
 @Data
 public class DeduplicationData {
 
-    @NotNull
     private final List<TbMsg> msgList;
     private boolean tickScheduled;
 

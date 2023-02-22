@@ -12,13 +12,11 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.dao.ota.OtaPackageService;
-import org.jetbrains.annotations.NotNull;
 
 @AllArgsConstructor
 @Slf4j
 public class OtaPackagesEdgeEventFetcher extends BasePageableEdgeEventFetcher<OtaPackageInfo> {
 
-    @NotNull
     private final OtaPackageService otaPackageService;
 
     @Override
@@ -26,9 +24,8 @@ public class OtaPackagesEdgeEventFetcher extends BasePageableEdgeEventFetcher<Ot
         return otaPackageService.findTenantOtaPackagesByTenantId(tenantId, pageLink);
     }
 
-    @NotNull
     @Override
-    EdgeEvent constructEdgeEvent(TenantId tenantId, @NotNull Edge edge, @NotNull OtaPackageInfo otaPackageInfo) {
+    EdgeEvent constructEdgeEvent(TenantId tenantId, Edge edge, OtaPackageInfo otaPackageInfo) {
         return EdgeUtils.constructEdgeEvent(tenantId, edge.getId(), EdgeEventType.OTA_PACKAGE,
                                             EdgeEventActionType.ADDED, otaPackageInfo.getId(), null);
     }

@@ -17,7 +17,6 @@ import org.echoiot.server.queue.common.TbProtoQueueMsg;
 import org.echoiot.server.queue.discovery.PartitionService;
 import org.echoiot.server.queue.provider.TbQueueProducerProvider;
 import org.echoiot.server.queue.scheduler.SchedulerComponent;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -74,15 +73,15 @@ public class DefaultTbApiUsageReportClient implements TbApiUsageReportClient {
     }
 
     private void reportStats() {
-        @NotNull ConcurrentMap<OwnerId, ToUsageStatsServiceMsg.Builder> report = new ConcurrentHashMap<>();
+        ConcurrentMap<OwnerId, ToUsageStatsServiceMsg.Builder> report = new ConcurrentHashMap<>();
 
-        for (@NotNull ApiUsageRecordKey key : ApiUsageRecordKey.values()) {
+        for (ApiUsageRecordKey key : ApiUsageRecordKey.values()) {
             ConcurrentMap<OwnerId, AtomicLong> statsForKey = stats.get(key);
             statsForKey.forEach((ownerId, statsValue) -> {
                 long value = statsValue.get();
                 if (value == 0) return;
 
-                @NotNull ToUsageStatsServiceMsg.Builder statsMsgBuilder = report.computeIfAbsent(ownerId, id -> {
+                ToUsageStatsServiceMsg.Builder statsMsgBuilder = report.computeIfAbsent(ownerId, id -> {
                     ToUsageStatsServiceMsg.Builder newStatsMsgBuilder = ToUsageStatsServiceMsg.newBuilder();
 
                     TenantId tenantId = ownerId.getTenantId();

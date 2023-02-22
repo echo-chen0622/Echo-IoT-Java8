@@ -8,7 +8,6 @@ import org.echoiot.server.common.data.id.TbResourceId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.dao.model.BaseSqlEntity;
 import org.echoiot.server.dao.model.SearchTextEntity;
-import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -41,7 +40,7 @@ public class TbResourceInfoEntity extends BaseSqlEntity<TbResourceInfo> implemen
     public TbResourceInfoEntity() {
     }
 
-    public TbResourceInfoEntity(@NotNull TbResourceInfo resource) {
+    public TbResourceInfoEntity(TbResourceInfo resource) {
         if (resource.getId() != null) {
             this.id = resource.getId().getId();
         }
@@ -53,10 +52,9 @@ public class TbResourceInfoEntity extends BaseSqlEntity<TbResourceInfo> implemen
         this.searchText = resource.getSearchText();
     }
 
-    @NotNull
     @Override
     public TbResourceInfo toData() {
-        @NotNull TbResourceInfo resource = new TbResourceInfo(new TbResourceId(id));
+        TbResourceInfo resource = new TbResourceInfo(new TbResourceId(id));
         resource.setCreatedTime(createdTime);
         resource.setTenantId(TenantId.fromUUID(tenantId));
         resource.setTitle(title);

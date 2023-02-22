@@ -15,7 +15,6 @@ import org.echoiot.server.dao.service.DataValidator;
 import org.echoiot.server.dao.service.PaginatedRemover;
 import org.echoiot.server.dao.service.Validator;
 import org.hibernate.exception.ConstraintViolationException;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.event.TransactionalEventListener;
@@ -40,8 +39,8 @@ public class TenantProfileServiceImpl extends AbstractCachedEntityService<Tenant
 
     @TransactionalEventListener(classes = TenantProfileEvictEvent.class)
     @Override
-    public void handleEvictEvent(@NotNull TenantProfileEvictEvent event) {
-        @NotNull List<TenantProfileCacheKey> keys = new ArrayList<>(2);
+    public void handleEvictEvent(TenantProfileEvictEvent event) {
+        List<TenantProfileCacheKey> keys = new ArrayList<>(2);
         if (event.getTenantProfileId() != null) {
             keys.add(TenantProfileCacheKey.fromId(event.getTenantProfileId()));
         }
@@ -52,7 +51,7 @@ public class TenantProfileServiceImpl extends AbstractCachedEntityService<Tenant
     }
 
     @Override
-    public TenantProfile findTenantProfileById(TenantId tenantId, @NotNull TenantProfileId tenantProfileId) {
+    public TenantProfile findTenantProfileById(TenantId tenantId, TenantProfileId tenantProfileId) {
         log.trace("Executing findTenantProfileById [{}]", tenantProfileId);
         Validator.validateId(tenantProfileId, INCORRECT_TENANT_PROFILE_ID + tenantProfileId);
         return cache.getAndPutInTransaction(TenantProfileCacheKey.fromId(tenantProfileId),
@@ -61,15 +60,14 @@ public class TenantProfileServiceImpl extends AbstractCachedEntityService<Tenant
 
     @Nullable
     @Override
-    public EntityInfo findTenantProfileInfoById(TenantId tenantId, @NotNull TenantProfileId tenantProfileId) {
+    public EntityInfo findTenantProfileInfoById(TenantId tenantId, TenantProfileId tenantProfileId) {
         log.trace("Executing findTenantProfileInfoById [{}]", tenantProfileId);
         TenantProfile profile = findTenantProfileById(tenantId, tenantProfileId);
         return profile == null ? null : new EntityInfo(profile.getId(), profile.getName());
     }
 
-    @NotNull
     @Override
-    public TenantProfile saveTenantProfile(TenantId tenantId, @NotNull TenantProfile tenantProfile) {
+    public TenantProfile saveTenantProfile(TenantId tenantId, TenantProfile tenantProfile) {
         log.trace("Executing saveTenantProfile [{}]", tenantProfile);
         tenantProfileValidator.validate(tenantProfile, (tenantProfile1) -> TenantId.SYS_TENANT_ID);
         TenantProfile savedTenantProfile;
@@ -89,7 +87,7 @@ public class TenantProfileServiceImpl extends AbstractCachedEntityService<Tenant
     }
 
     @Override
-    public void deleteTenantProfile(TenantId tenantId, @NotNull TenantProfileId tenantProfileId) {
+    public void deleteTenantProfile(TenantId tenantId, TenantProfileId tenantProfileId) {
         log.trace("Executing deleteTenantProfile [{}]", tenantProfileId);
         validateId(tenantId, INCORRECT_TENANT_PROFILE_ID + tenantProfileId);
         TenantProfile tenantProfile = tenantProfileDao.findById(tenantId, tenantProfileId.getId());
@@ -99,7 +97,7 @@ public class TenantProfileServiceImpl extends AbstractCachedEntityService<Tenant
         this.removeTenantProfile(tenantId, tenantProfileId, false);
     }
 
-    private void removeTenantProfile(TenantId tenantId, @NotNull TenantProfileId tenantProfileId, boolean isDefault) {
+    private void removeTenantProfile(TenantId tenantId, TenantProfileId tenantProfileId, boolean isDefault) {
         try {
             tenantProfileDao.removeById(tenantId, tenantProfileId.getId());
         } catch (Exception t) {
@@ -136,7 +134,7 @@ public class TenantProfileServiceImpl extends AbstractCachedEntityService<Tenant
             defaultTenantProfile = new TenantProfile();
             defaultTenantProfile.setDefault(true);
             defaultTenantProfile.setName("Default");
-            @NotNull TenantProfileData profileData = new TenantProfileData();
+            TenantProfileData profileData = new TenantProfileData();
             profileData.setConfiguration(new DefaultTenantProfileConfiguration());
             defaultTenantProfile.setProfileData(profileData);
             defaultTenantProfile.setDescription("Default tenant profile");
@@ -163,7 +161,7 @@ public class TenantProfileServiceImpl extends AbstractCachedEntityService<Tenant
     }
 
     @Override
-    public boolean setDefaultTenantProfile(TenantId tenantId, @NotNull TenantProfileId tenantProfileId) {
+    public boolean setDefaultTenantProfile(TenantId tenantId, TenantProfileId tenantProfileId) {
         log.trace("Executing setDefaultTenantProfile [{}]", tenantProfileId);
         validateId(tenantId, INCORRECT_TENANT_PROFILE_ID + tenantProfileId);
         TenantProfile tenantProfile = tenantProfileDao.findById(tenantId, tenantProfileId.getId());
@@ -203,7 +201,7 @@ public class TenantProfileServiceImpl extends AbstractCachedEntityService<Tenant
                 }
 
                 @Override
-                protected void removeEntity(TenantId tenantId, @NotNull TenantProfile entity) {
+                protected void removeEntity(TenantId tenantId, TenantProfile entity) {
                     removeTenantProfile(tenantId, entity.getId(), entity.isDefault());
                 }
             };

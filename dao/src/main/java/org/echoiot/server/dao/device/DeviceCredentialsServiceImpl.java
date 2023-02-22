@@ -18,7 +18,6 @@ import org.echoiot.server.dao.service.Validator;
 import org.eclipse.leshan.core.SecurityMode;
 import org.eclipse.leshan.core.util.SecurityUtil;
 import org.hibernate.exception.ConstraintViolationException;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.event.TransactionalEventListener;
@@ -39,7 +38,7 @@ public class DeviceCredentialsServiceImpl extends AbstractCachedEntityService<St
 
     @TransactionalEventListener(classes = DeviceCredentialsEvictEvent.class)
     @Override
-    public void handleEvictEvent(@NotNull DeviceCredentialsEvictEvent event) {
+    public void handleEvictEvent(DeviceCredentialsEvictEvent event) {
         cache.evict(event.getNewCedentialsId());
         if (StringUtils.isNotEmpty(event.getOldCredentialsId()) && !event.getNewCedentialsId().equals(event.getOldCredentialsId())) {
             cache.evict(event.getOldCredentialsId());
@@ -47,7 +46,7 @@ public class DeviceCredentialsServiceImpl extends AbstractCachedEntityService<St
     }
 
     @Override
-    public DeviceCredentials findDeviceCredentialsByDeviceId(TenantId tenantId, @NotNull DeviceId deviceId) {
+    public DeviceCredentials findDeviceCredentialsByDeviceId(TenantId tenantId, DeviceId deviceId) {
         log.trace("Executing findDeviceCredentialsByDeviceId [{}]", deviceId);
         validateId(deviceId, "Incorrect deviceId " + deviceId);
         return deviceCredentialsDao.findByDeviceId(tenantId, deviceId.getId());
@@ -62,20 +61,17 @@ public class DeviceCredentialsServiceImpl extends AbstractCachedEntityService<St
                 false);
     }
 
-    @NotNull
     @Override
-    public DeviceCredentials updateDeviceCredentials(TenantId tenantId, @NotNull DeviceCredentials deviceCredentials) {
+    public DeviceCredentials updateDeviceCredentials(TenantId tenantId, DeviceCredentials deviceCredentials) {
         return saveOrUpdate(tenantId, deviceCredentials);
     }
 
-    @NotNull
     @Override
-    public DeviceCredentials createDeviceCredentials(TenantId tenantId, @NotNull DeviceCredentials deviceCredentials) {
+    public DeviceCredentials createDeviceCredentials(TenantId tenantId, DeviceCredentials deviceCredentials) {
         return saveOrUpdate(tenantId, deviceCredentials);
     }
 
-    @NotNull
-    private DeviceCredentials saveOrUpdate(TenantId tenantId, @NotNull DeviceCredentials deviceCredentials) {
+    private DeviceCredentials saveOrUpdate(TenantId tenantId, DeviceCredentials deviceCredentials) {
         if (deviceCredentials.getCredentialsType() == null) {
             throw new DataValidationException("Device credentials type should be specified");
         }
@@ -103,7 +99,7 @@ public class DeviceCredentialsServiceImpl extends AbstractCachedEntityService<St
     }
 
     @Override
-    public void formatCredentials(@NotNull DeviceCredentials deviceCredentials) {
+    public void formatCredentials(DeviceCredentials deviceCredentials) {
         switch (deviceCredentials.getCredentialsType()) {
             case X509_CERTIFICATE:
                 formatCertData(deviceCredentials);
@@ -119,7 +115,7 @@ public class DeviceCredentialsServiceImpl extends AbstractCachedEntityService<St
 
     @Nullable
     @Override
-    public JsonNode toCredentialsInfo(@NotNull DeviceCredentials deviceCredentials) {
+    public JsonNode toCredentialsInfo(DeviceCredentials deviceCredentials) {
         switch (deviceCredentials.getCredentialsType()) {
             case ACCESS_TOKEN:
                 return JacksonUtil.valueToTree(deviceCredentials.getCredentialsId());
@@ -129,7 +125,7 @@ public class DeviceCredentialsServiceImpl extends AbstractCachedEntityService<St
         return JacksonUtil.fromString(deviceCredentials.getCredentialsValue(), JsonNode.class);
     }
 
-    private void formatSimpleMqttCredentials(@NotNull DeviceCredentials deviceCredentials) {
+    private void formatSimpleMqttCredentials(DeviceCredentials deviceCredentials) {
         @Nullable BasicMqttCredentials mqttCredentials;
         try {
             mqttCredentials = JacksonUtil.fromString(deviceCredentials.getCredentialsValue(), BasicMqttCredentials.class);
@@ -160,14 +156,14 @@ public class DeviceCredentialsServiceImpl extends AbstractCachedEntityService<St
         deviceCredentials.setCredentialsValue(JacksonUtil.toString(mqttCredentials));
     }
 
-    private void formatCertData(@NotNull DeviceCredentials deviceCredentials) {
-        @NotNull String cert = EncryptionUtil.certTrimNewLines(deviceCredentials.getCredentialsValue());
+    private void formatCertData(DeviceCredentials deviceCredentials) {
+        String cert = EncryptionUtil.certTrimNewLines(deviceCredentials.getCredentialsValue());
         String sha3Hash = EncryptionUtil.getSha3Hash(cert);
         deviceCredentials.setCredentialsId(sha3Hash);
         deviceCredentials.setCredentialsValue(cert);
     }
 
-    private void formatAndValidateSimpleLwm2mCredentials(@NotNull DeviceCredentials deviceCredentials) {
+    private void formatAndValidateSimpleLwm2mCredentials(DeviceCredentials deviceCredentials) {
         @Nullable LwM2MDeviceCredentials lwM2MCredentials;
         try {
             lwM2MCredentials = JacksonUtil.fromString(deviceCredentials.getCredentialsValue(), LwM2MDeviceCredentials.class);
@@ -189,7 +185,7 @@ public class DeviceCredentialsServiceImpl extends AbstractCachedEntityService<St
                 break;
             case X509:
                 deviceCredentials.setCredentialsValue(JacksonUtil.toString(lwM2MCredentials));
-                @NotNull X509ClientCredential x509ClientConfig = (X509ClientCredential) clientCredentials;
+                X509ClientCredential x509ClientConfig = (X509ClientCredential) clientCredentials;
                 if ((StringUtils.isNotBlank(x509ClientConfig.getCert()))) {
                     credentialsId = EncryptionUtil.getSha3Hash(x509ClientConfig.getCert());
                 } else {
@@ -203,7 +199,7 @@ public class DeviceCredentialsServiceImpl extends AbstractCachedEntityService<St
         deviceCredentials.setCredentialsId(credentialsId);
     }
 
-    private void validateLwM2MDeviceCredentials(@NotNull LwM2MDeviceCredentials lwM2MCredentials) {
+    private void validateLwM2MDeviceCredentials(LwM2MDeviceCredentials lwM2MCredentials) {
         if (lwM2MCredentials == null) {
             throw new DeviceCredentialsValidationException("LwM2M credentials must be specified!");
         }
@@ -232,7 +228,7 @@ public class DeviceCredentialsServiceImpl extends AbstractCachedEntityService<St
         validateServerCredentials(lwm2MBootstrapClientCredential, "LwM2M server");
     }
 
-    private void validateLwM2MClientCredentials(@NotNull LwM2MClientCredential clientCredentials) {
+    private void validateLwM2MClientCredentials(LwM2MClientCredential clientCredentials) {
         if (StringUtils.isBlank(clientCredentials.getEndpoint())) {
             throw new DeviceCredentialsValidationException("LwM2M client endpoint must be specified!");
         }
@@ -241,7 +237,7 @@ public class DeviceCredentialsServiceImpl extends AbstractCachedEntityService<St
             case NO_SEC:
                 break;
             case PSK:
-                @NotNull PSKClientCredential pskCredentials = (PSKClientCredential) clientCredentials;
+                PSKClientCredential pskCredentials = (PSKClientCredential) clientCredentials;
                 if (StringUtils.isBlank(pskCredentials.getIdentity())) {
                     throw new DeviceCredentialsValidationException("LwM2M client PSK identity must be specified and must be an utf8 string!");
                 }
@@ -265,13 +261,13 @@ public class DeviceCredentialsServiceImpl extends AbstractCachedEntityService<St
 
                 break;
             case RPK:
-                @NotNull RPKClientCredential rpkCredentials = (RPKClientCredential) clientCredentials;
+                RPKClientCredential rpkCredentials = (RPKClientCredential) clientCredentials;
                 if (StringUtils.isBlank(rpkCredentials.getKey())) {
                     throw new DeviceCredentialsValidationException("LwM2M client RPK key must be specified!");
                 }
 
                 try {
-                    @NotNull String pubkClient = EncryptionUtil.pubkTrimNewLines(rpkCredentials.getKey());
+                    String pubkClient = EncryptionUtil.pubkTrimNewLines(rpkCredentials.getKey());
                     rpkCredentials.setKey(pubkClient);
                     SecurityUtil.publicKey.decode(rpkCredentials.getDecoded());
                 } catch (Exception e) {
@@ -279,10 +275,10 @@ public class DeviceCredentialsServiceImpl extends AbstractCachedEntityService<St
                 }
                 break;
             case X509:
-                @NotNull X509ClientCredential x509CCredentials = (X509ClientCredential) clientCredentials;
+                X509ClientCredential x509CCredentials = (X509ClientCredential) clientCredentials;
                 if (StringUtils.isNotEmpty(x509CCredentials.getCert())) {
                     try {
-                        @NotNull String certClient = EncryptionUtil.certTrimNewLines(x509CCredentials.getCert());
+                        String certClient = EncryptionUtil.certTrimNewLines(x509CCredentials.getCert());
                         x509CCredentials.setCert(certClient);
                         SecurityUtil.certificate.decode(x509CCredentials.getDecoded());
                     } catch (Exception e) {
@@ -293,12 +289,12 @@ public class DeviceCredentialsServiceImpl extends AbstractCachedEntityService<St
         }
     }
 
-    private void validateServerCredentials(@NotNull LwM2MBootstrapClientCredential serverCredentials, String server) {
+    private void validateServerCredentials(LwM2MBootstrapClientCredential serverCredentials, String server) {
         switch (serverCredentials.getSecurityMode()) {
             case NO_SEC:
                 break;
             case PSK:
-                @NotNull PSKBootstrapClientCredential pskCredentials = (PSKBootstrapClientCredential) serverCredentials;
+                PSKBootstrapClientCredential pskCredentials = (PSKBootstrapClientCredential) serverCredentials;
                 if (StringUtils.isBlank(pskCredentials.getClientPublicKeyOrId())) {
                     throw new DeviceCredentialsValidationException(server + " client PSK public key or id must be specified and must be an utf8 string!");
                 }
@@ -322,12 +318,12 @@ public class DeviceCredentialsServiceImpl extends AbstractCachedEntityService<St
                 }
                 break;
             case RPK:
-                @NotNull RPKBootstrapClientCredential rpkServerCredentials = (RPKBootstrapClientCredential) serverCredentials;
+                RPKBootstrapClientCredential rpkServerCredentials = (RPKBootstrapClientCredential) serverCredentials;
                 if (StringUtils.isEmpty(rpkServerCredentials.getClientPublicKeyOrId())) {
                     throw new DeviceCredentialsValidationException(server + " client RPK public key or id must be specified!");
                 }
                 try {
-                    @NotNull String pubkRpkSever = EncryptionUtil.pubkTrimNewLines(rpkServerCredentials.getClientPublicKeyOrId());
+                    String pubkRpkSever = EncryptionUtil.pubkTrimNewLines(rpkServerCredentials.getClientPublicKeyOrId());
                     rpkServerCredentials.setClientPublicKeyOrId(pubkRpkSever);
                     SecurityUtil.publicKey.decode(rpkServerCredentials.getDecodedClientPublicKeyOrId());
                 } catch (Exception e) {
@@ -339,7 +335,7 @@ public class DeviceCredentialsServiceImpl extends AbstractCachedEntityService<St
                 }
 
                 try {
-                    @NotNull String prikRpkSever = EncryptionUtil.prikTrimNewLines(rpkServerCredentials.getClientSecretKey());
+                    String prikRpkSever = EncryptionUtil.prikTrimNewLines(rpkServerCredentials.getClientSecretKey());
                     rpkServerCredentials.setClientSecretKey(prikRpkSever);
                     SecurityUtil.privateKey.decode(rpkServerCredentials.getDecodedClientSecretKey());
                 } catch (Exception e) {
@@ -347,13 +343,13 @@ public class DeviceCredentialsServiceImpl extends AbstractCachedEntityService<St
                 }
                 break;
             case X509:
-                @NotNull X509BootstrapClientCredential x509ServerCredentials = (X509BootstrapClientCredential) serverCredentials;
+                X509BootstrapClientCredential x509ServerCredentials = (X509BootstrapClientCredential) serverCredentials;
                 if (StringUtils.isBlank(x509ServerCredentials.getClientPublicKeyOrId())) {
                     throw new DeviceCredentialsValidationException(server + " client X509 public key or id must be specified!");
                 }
 
                 try {
-                    @NotNull String certServer = EncryptionUtil.certTrimNewLines(x509ServerCredentials.getClientPublicKeyOrId());
+                    String certServer = EncryptionUtil.certTrimNewLines(x509ServerCredentials.getClientPublicKeyOrId());
                     x509ServerCredentials.setClientPublicKeyOrId(certServer);
                     SecurityUtil.certificate.decode(x509ServerCredentials.getDecodedClientPublicKeyOrId());
                 } catch (Exception e) {
@@ -364,7 +360,7 @@ public class DeviceCredentialsServiceImpl extends AbstractCachedEntityService<St
                 }
 
                 try {
-                    @NotNull String prikX509Sever = EncryptionUtil.prikTrimNewLines(x509ServerCredentials.getClientSecretKey());
+                    String prikX509Sever = EncryptionUtil.prikTrimNewLines(x509ServerCredentials.getClientSecretKey());
                     x509ServerCredentials.setClientSecretKey(prikX509Sever);
                     SecurityUtil.privateKey.decode(x509ServerCredentials.getDecodedClientSecretKey());
                 } catch (Exception e) {
@@ -375,7 +371,7 @@ public class DeviceCredentialsServiceImpl extends AbstractCachedEntityService<St
     }
 
     @Override
-    public void deleteDeviceCredentials(TenantId tenantId, @NotNull DeviceCredentials deviceCredentials) {
+    public void deleteDeviceCredentials(TenantId tenantId, DeviceCredentials deviceCredentials) {
         log.trace("Executing deleteDeviceCredentials [{}]", deviceCredentials);
         deviceCredentialsDao.removeById(tenantId, deviceCredentials.getUuidId());
         publishEvictEvent(new DeviceCredentialsEvictEvent(deviceCredentials.getCredentialsId(), null));

@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 import java.util.LinkedHashMap;
@@ -17,9 +16,7 @@ import java.util.UUID;
 public class CaffeineTbCacheTransaction<K extends Serializable, V extends Serializable> implements TbCacheTransaction<K, V> {
     @Getter
     private final UUID id = UUID.randomUUID();
-    @NotNull
     private final CaffeineTbTransactionalCache<K, V> cache;
-    @NotNull
     @Getter
     private final List<K> keys;
     @Getter

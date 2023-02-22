@@ -6,7 +6,6 @@ import org.echoiot.rule.engine.api.util.TbNodeUtils;
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.msg.TbMsg;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -34,14 +33,14 @@ public class TbMsgDeleteAttributesNode implements TbNode {
     private List<String> keys;
 
     @Override
-    public void init(TbContext ctx, @NotNull TbNodeConfiguration configuration) throws TbNodeException {
+    public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
         this.config = TbNodeUtils.convert(configuration, TbMsgDeleteAttributesNodeConfiguration.class);
         this.keys = config.getKeys();
     }
 
     @Override
-    public void onMsg(@NotNull TbContext ctx, @NotNull TbMsg msg) throws ExecutionException, InterruptedException, TbNodeException {
-        @NotNull List<String> keysToDelete = keys.stream()
+    public void onMsg(TbContext ctx, TbMsg msg) throws ExecutionException, InterruptedException, TbNodeException {
+        List<String> keysToDelete = keys.stream()
                                                  .map(keyPattern -> TbNodeUtils.processPattern(keyPattern, msg))
                                                  .distinct()
                                                  .filter(StringUtils::isNotBlank)

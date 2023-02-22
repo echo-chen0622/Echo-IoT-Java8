@@ -1,7 +1,6 @@
 package org.echoiot.server.transport.lwm2m.server.ota.software;
 
 import lombok.Getter;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * SW Update Result
@@ -55,9 +54,8 @@ public enum SoftwareUpdateResult {
         this.isAgain = isAgain;
     }
 
-    @NotNull
     public static SoftwareUpdateResult fromUpdateResultSwByType(String type) {
-        for (@NotNull SoftwareUpdateResult to : SoftwareUpdateResult.values()) {
+        for (SoftwareUpdateResult to : SoftwareUpdateResult.values()) {
             if (to.type.equals(type)) {
                 return to;
             }
@@ -65,9 +63,8 @@ public enum SoftwareUpdateResult {
         throw new IllegalArgumentException(String.format("Unsupported SW Update Result type  : %s", type));
     }
 
-    @NotNull
     public static SoftwareUpdateResult fromUpdateResultSwByCode(int code) {
-        for (@NotNull SoftwareUpdateResult to : SoftwareUpdateResult.values()) {
+        for (SoftwareUpdateResult to : SoftwareUpdateResult.values()) {
             if (to.code == code) {
                 return to;
             }

@@ -6,7 +6,6 @@ import lombok.Getter;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.EntityViewId;
 import org.echoiot.server.common.data.id.TenantId;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 
@@ -27,17 +26,14 @@ public class EntityViewCacheKey implements Serializable {
         this.entityViewId = entityViewId;
     }
 
-    @NotNull
     public static EntityViewCacheKey byName(TenantId tenantId, String name) {
         return new EntityViewCacheKey(tenantId, name, null, null);
     }
 
-    @NotNull
     public static EntityViewCacheKey byEntityId(TenantId tenantId, EntityId entityId) {
         return new EntityViewCacheKey(tenantId, null, entityId, null);
     }
 
-    @NotNull
     public static EntityViewCacheKey byId(EntityViewId id) {
         return new EntityViewCacheKey(null, null, null, id);
     }

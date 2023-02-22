@@ -5,7 +5,6 @@ import org.echoiot.server.dao.sqlts.insert.AbstractInsertRepository;
 import org.echoiot.server.dao.sqlts.insert.latest.InsertLatestTsRepository;
 import org.echoiot.server.dao.util.SqlDao;
 import org.echoiot.server.dao.util.SqlTsLatestAnyDao;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.stereotype.Repository;
@@ -41,14 +40,14 @@ public class SqlLatestInsertTsRepository extends AbstractInsertRepository implem
     private static final String INSERT_OR_UPDATE_BY_LATEST_TS = INSERT_OR_UPDATE + " WHERE ts_kv_latest.ts <= ?";
 
     @Override
-    public void saveOrUpdate(@NotNull List<TsKvLatestEntity> entities) {
+    public void saveOrUpdate(List<TsKvLatestEntity> entities) {
         transactionTemplate.execute(new TransactionCallbackWithoutResult() {
             @Override
             protected void doInTransactionWithoutResult(TransactionStatus status) {
-                @NotNull String batchUpdateQuery = updateByLatestTs ? BATCH_UPDATE_BY_LATEST_TS : BATCH_UPDATE;
-                @NotNull String insertOrUpdateQuery = updateByLatestTs ? INSERT_OR_UPDATE_BY_LATEST_TS : INSERT_OR_UPDATE;
+                String batchUpdateQuery = updateByLatestTs ? BATCH_UPDATE_BY_LATEST_TS : BATCH_UPDATE;
+                String insertOrUpdateQuery = updateByLatestTs ? INSERT_OR_UPDATE_BY_LATEST_TS : INSERT_OR_UPDATE;
 
-                @NotNull int[] result = jdbcTemplate.batchUpdate(batchUpdateQuery, new BatchPreparedStatementSetter() {
+                int[] result = jdbcTemplate.batchUpdate(batchUpdateQuery, new BatchPreparedStatementSetter() {
                     @Override
                     public void setValues(PreparedStatement ps, int i) throws SQLException {
                         TsKvLatestEntity tsKvLatestEntity = entities.get(i);
@@ -96,7 +95,7 @@ public class SqlLatestInsertTsRepository extends AbstractInsertRepository implem
                     }
                 }
 
-                @NotNull List<TsKvLatestEntity> insertEntities = new ArrayList<>(updatedCount);
+                List<TsKvLatestEntity> insertEntities = new ArrayList<>(updatedCount);
                 for (int i = 0; i < result.length; i++) {
                     if (result[i] == 0) {
                         insertEntities.add(entities.get(i));

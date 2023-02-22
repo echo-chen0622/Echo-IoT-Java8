@@ -8,7 +8,6 @@ import org.echoiot.server.dao.service.DaoSqlTest;
 import org.echoiot.server.gen.transport.TransportApiProtos;
 import org.echoiot.server.transport.coap.CoapTestClient;
 import org.echoiot.server.transport.coap.CoapTestConfigProperties;
-import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,18 +45,17 @@ public class CoapClaimProtoDeviceTest extends CoapClaimDeviceTest {
         client = new CoapTestClient(accessToken, FeatureType.CLAIM);
         byte[] payloadBytes;
         if (emptyPayload) {
-            @NotNull TransportApiProtos.ClaimDevice claimDevice = getClaimDevice(0, emptyPayload);
+            TransportApiProtos.ClaimDevice claimDevice = getClaimDevice(0, emptyPayload);
             payloadBytes = claimDevice.toByteArray();
         } else {
-            @NotNull TransportApiProtos.ClaimDevice claimDevice = getClaimDevice(60000, emptyPayload);
+            TransportApiProtos.ClaimDevice claimDevice = getClaimDevice(60000, emptyPayload);
             payloadBytes = claimDevice.toByteArray();
         }
-        @NotNull TransportApiProtos.ClaimDevice claimDevice = getClaimDevice(1, emptyPayload);
+        TransportApiProtos.ClaimDevice claimDevice = getClaimDevice(1, emptyPayload);
         byte[] failurePayloadBytes = claimDevice.toByteArray();
         validateClaimResponse(emptyPayload, client, payloadBytes, failurePayloadBytes);
     }
 
-    @NotNull
     private TransportApiProtos.ClaimDevice getClaimDevice(long duration, boolean emptyPayload) {
         TransportApiProtos.ClaimDevice.Builder claimDeviceBuilder = TransportApiProtos.ClaimDevice.newBuilder();
         if (!emptyPayload) {

@@ -6,7 +6,6 @@ import org.echoiot.server.transport.lwm2m.server.LwM2MOperationType;
 import org.echoiot.server.transport.lwm2m.server.downlink.AbstractTbLwM2MTargetedDownlinkRequest;
 import org.eclipse.leshan.core.request.ContentFormat;
 import org.eclipse.leshan.core.response.WriteCompositeResponse;
-import org.jetbrains.annotations.NotNull;
 
 public class TbLwM2MWriteCompositeRequest extends AbstractTbLwM2MTargetedDownlinkRequest<WriteCompositeResponse> {
 
@@ -22,7 +21,6 @@ public class TbLwM2MWriteCompositeRequest extends AbstractTbLwM2MTargetedDownlin
         this.value = value;
     }
 
-    @NotNull
     @Override
     public LwM2MOperationType getType() {
         return LwM2MOperationType.WRITE_REPLACE;

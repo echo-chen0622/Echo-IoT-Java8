@@ -2,7 +2,6 @@ package org.echoiot.rule.engine.telemetry;
 
 import lombok.Data;
 import org.echoiot.rule.engine.api.NodeConfiguration;
-import org.jetbrains.annotations.NotNull;
 
 @Data
 public class TbMsgTimeseriesNodeConfiguration implements NodeConfiguration<TbMsgTimeseriesNodeConfiguration> {
@@ -11,10 +10,9 @@ public class TbMsgTimeseriesNodeConfiguration implements NodeConfiguration<TbMsg
     private boolean skipLatestPersistence;
     private boolean useServerTs;
 
-    @NotNull
     @Override
     public TbMsgTimeseriesNodeConfiguration defaultConfiguration() {
-        @NotNull TbMsgTimeseriesNodeConfiguration configuration = new TbMsgTimeseriesNodeConfiguration();
+        TbMsgTimeseriesNodeConfiguration configuration = new TbMsgTimeseriesNodeConfiguration();
         configuration.setDefaultTTL(0L);
         configuration.setSkipLatestPersistence(false);
         configuration.setUseServerTs(false);

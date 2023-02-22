@@ -17,7 +17,6 @@ import org.echoiot.server.queue.TbQueueMsg;
 import org.echoiot.server.queue.TbQueueMsgDecoder;
 import org.echoiot.server.queue.common.AbstractParallelTbQueueConsumerTemplate;
 import org.echoiot.server.queue.common.DefaultTbQueueMsg;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
@@ -41,7 +40,7 @@ public class TbAwsSqsConsumerTemplate<T extends TbQueueMsg> extends AbstractPara
     private final List<AwsSqsMsgWrapper> pendingMessages = new CopyOnWriteArrayList<>();
     private volatile Set<String> queueUrls;
 
-    public TbAwsSqsConsumerTemplate(TbQueueAdmin admin, @NotNull TbAwsSqsSettings sqsSettings, String topic, TbQueueMsgDecoder<T> decoder) {
+    public TbAwsSqsConsumerTemplate(TbQueueAdmin admin, TbAwsSqsSettings sqsSettings, String topic, TbQueueMsgDecoder<T> decoder) {
         super(topic);
         this.admin = admin;
         this.decoder = decoder;
@@ -51,7 +50,7 @@ public class TbAwsSqsConsumerTemplate<T extends TbQueueMsg> extends AbstractPara
         if (sqsSettings.getUseDefaultCredentialProviderChain()) {
             credentialsProvider = new DefaultAWSCredentialsProviderChain();
         } else {
-            @NotNull AWSCredentials awsCredentials = new BasicAWSCredentials(sqsSettings.getAccessKeyId(), sqsSettings.getSecretAccessKey());
+            AWSCredentials awsCredentials = new BasicAWSCredentials(sqsSettings.getAccessKeyId(), sqsSettings.getSecretAccessKey());
             credentialsProvider = new AWSStaticCredentialsProvider(awsCredentials);
         }
 
@@ -63,20 +62,19 @@ public class TbAwsSqsConsumerTemplate<T extends TbQueueMsg> extends AbstractPara
     }
 
     @Override
-    protected void doSubscribe(@NotNull List<String> topicNames) {
+    protected void doSubscribe(List<String> topicNames) {
         queueUrls = topicNames.stream().map(this::getQueueUrl).collect(Collectors.toSet());
         initNewExecutor(queueUrls.size() * sqsSettings.getThreadsPerTopic() + 1);
     }
 
-    @NotNull
     @Override
     protected List<Message> doPoll(long durationInMillis) {
         int duration = (int) TimeUnit.MILLISECONDS.toSeconds(durationInMillis);
-        @NotNull List<ListenableFuture<List<Message>>> futureList = queueUrls
+        List<ListenableFuture<List<Message>>> futureList = queueUrls
                 .stream()
                 .map(url -> poll(url, duration))
                 .collect(Collectors.toList());
-        @NotNull ListenableFuture<List<List<Message>>> futureResult = Futures.allAsList(futureList);
+        ListenableFuture<List<List<Message>>> futureResult = Futures.allAsList(futureList);
         try {
             return futureResult.get().stream()
                     .flatMap(List::stream)
@@ -93,7 +91,7 @@ public class TbAwsSqsConsumerTemplate<T extends TbQueueMsg> extends AbstractPara
     }
 
     @Override
-    public T decode(@NotNull Message message) throws InvalidProtocolBufferException {
+    public T decode(Message message) throws InvalidProtocolBufferException {
         DefaultTbQueueMsg msg = gson.fromJson(message.getBody(), DefaultTbQueueMsg.class);
         return decoder.decode(msg);
     }
@@ -102,7 +100,7 @@ public class TbAwsSqsConsumerTemplate<T extends TbQueueMsg> extends AbstractPara
     protected void doCommit() {
         pendingMessages.forEach(msg ->
                 consumerExecutor.submit(() -> {
-                    @NotNull List<DeleteMessageBatchRequestEntry> entries = msg.getMessages()
+                    List<DeleteMessageBatchRequestEntry> entries = msg.getMessages()
                                                                                .stream()
                                                                                .map(message -> new DeleteMessageBatchRequestEntry(message.getMessageId(), message.getReceiptHandle()))
                                                                                .collect(Collectors.toList());
@@ -120,13 +118,12 @@ public class TbAwsSqsConsumerTemplate<T extends TbQueueMsg> extends AbstractPara
         shutdownExecutor();
     }
 
-    @NotNull
     private ListenableFuture<List<Message>> poll(String url, int waitTimeSeconds) {
-        @NotNull List<ListenableFuture<List<Message>>> result = new ArrayList<>();
+        List<ListenableFuture<List<Message>>> result = new ArrayList<>();
 
         for (int i = 0; i < sqsSettings.getThreadsPerTopic(); i++) {
             result.add(consumerExecutor.submit(() -> {
-                @NotNull ReceiveMessageRequest request = new ReceiveMessageRequest();
+                ReceiveMessageRequest request = new ReceiveMessageRequest();
                 request
                         .withWaitTimeSeconds(waitTimeSeconds)
                         .withQueueUrl(url)
@@ -161,7 +158,7 @@ public class TbAwsSqsConsumerTemplate<T extends TbQueueMsg> extends AbstractPara
         }
     }
 
-    private String getQueueUrl(@NotNull String topic) {
+    private String getQueueUrl(String topic) {
         admin.createTopicIfNotExists(topic);
         return sqsClient.getQueueUrl(topic.replaceAll("\\.", "_") + ".fifo").getQueueUrl();
     }

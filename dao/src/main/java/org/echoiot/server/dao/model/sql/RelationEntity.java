@@ -9,7 +9,6 @@ import org.echoiot.server.dao.model.ToData;
 import org.echoiot.server.dao.util.mapping.JsonStringType;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
-import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
 import java.util.UUID;
@@ -55,7 +54,7 @@ public final class RelationEntity implements ToData<EntityRelation> {
         super();
     }
 
-    public RelationEntity(@NotNull EntityRelation relation) {
+    public RelationEntity(EntityRelation relation) {
         if (relation.getTo() != null) {
             this.toId = relation.getTo().getId();
             this.toType = relation.getTo().getEntityType().name();
@@ -69,10 +68,9 @@ public final class RelationEntity implements ToData<EntityRelation> {
         this.additionalInfo = relation.getAdditionalInfo();
     }
 
-    @NotNull
     @Override
     public EntityRelation toData() {
-        @NotNull EntityRelation relation = new EntityRelation();
+        EntityRelation relation = new EntityRelation();
         if (toId != null && toType != null) {
             relation.setTo(EntityIdFactory.getByTypeAndUuid(toType, toId));
         }

@@ -31,7 +31,6 @@ import org.echoiot.server.dao.device.DeviceService;
 import org.echoiot.server.dao.edge.EdgeService;
 import org.echoiot.server.dao.entityview.EntityViewService;
 import org.echoiot.server.dao.user.UserService;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -52,7 +51,7 @@ public abstract class TbAbstractRelationActionNode<C extends TbAbstractRelationA
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
         this.config = loadEntityNodeActionConfig(configuration);
-        @NotNull CacheBuilder<Object, Object> cacheBuilder = CacheBuilder.newBuilder();
+        CacheBuilder<Object, Object> cacheBuilder = CacheBuilder.newBuilder();
         if (this.config.getEntityCacheExpiration() > 0) {
             cacheBuilder.expireAfterWrite(this.config.getEntityCacheExpiration(), TimeUnit.SECONDS);
         }
@@ -60,7 +59,7 @@ public abstract class TbAbstractRelationActionNode<C extends TbAbstractRelationA
     }
 
     @Override
-    public void onMsg(@NotNull TbContext ctx, @NotNull TbMsg msg) {
+    public void onMsg(TbContext ctx, TbMsg msg) {
         String relationType = processPattern(msg, config.getRelationType());
         withCallback(processEntityRelationAction(ctx, msg, relationType),
                 filterResult -> ctx.tellNext(filterResult.getMsg(), filterResult.isResult() ? SUCCESS : FAILURE), t -> ctx.tellFailure(msg, t), ctx.getDbCallbackExecutor());
@@ -73,7 +72,7 @@ public abstract class TbAbstractRelationActionNode<C extends TbAbstractRelationA
         }
     }
 
-    protected ListenableFuture<RelationContainer> processEntityRelationAction(@NotNull TbContext ctx, @NotNull TbMsg msg, String relationType) {
+    protected ListenableFuture<RelationContainer> processEntityRelationAction(TbContext ctx, TbMsg msg, String relationType) {
         return Futures.transformAsync(getEntity(ctx, msg), entityContainer -> doProcessEntityRelationAction(ctx, msg, entityContainer, relationType), ctx.getDbCallbackExecutor());
     }
 
@@ -83,7 +82,7 @@ public abstract class TbAbstractRelationActionNode<C extends TbAbstractRelationA
 
     protected abstract C loadEntityNodeActionConfig(TbNodeConfiguration configuration) throws TbNodeException;
 
-    protected ListenableFuture<EntityContainer> getEntity(@NotNull TbContext ctx, @NotNull TbMsg msg) {
+    protected ListenableFuture<EntityContainer> getEntity(TbContext ctx, TbMsg msg) {
         String entityName = processPattern(msg, this.config.getEntityNamePattern());
         @Nullable String type;
         if (this.config.getEntityTypePattern() != null) {
@@ -91,10 +90,10 @@ public abstract class TbAbstractRelationActionNode<C extends TbAbstractRelationA
         } else {
             type = null;
         }
-        @NotNull EntityType entityType = EntityType.valueOf(this.config.getEntityType());
-        @NotNull EntityKey key = new EntityKey(entityName, type, entityType);
+        EntityType entityType = EntityType.valueOf(this.config.getEntityType());
+        EntityKey key = new EntityKey(entityName, type, entityType);
         return ctx.getDbCallbackExecutor().executeAsync(() -> {
-            @NotNull EntityContainer entityContainer = entityIdCache.get(key);
+            EntityContainer entityContainer = entityIdCache.get(key);
             if (entityContainer.getEntityId() == null) {
                 throw new RuntimeException("No entity found with type '" + key.getEntityType() + "' and name '" + key.getEntityName() + "'.");
             }
@@ -102,9 +101,8 @@ public abstract class TbAbstractRelationActionNode<C extends TbAbstractRelationA
         });
     }
 
-    @NotNull
-    protected SearchDirectionIds processSingleSearchDirection(@NotNull TbMsg msg, @NotNull EntityContainer entityContainer) {
-        @NotNull SearchDirectionIds searchDirectionIds = new SearchDirectionIds();
+    protected SearchDirectionIds processSingleSearchDirection(TbMsg msg, EntityContainer entityContainer) {
+        SearchDirectionIds searchDirectionIds = new SearchDirectionIds();
         if (EntitySearchDirection.FROM.name().equals(this.config.getDirection())) {
             searchDirectionIds.setFromId(EntityIdFactory.getByTypeAndId(entityContainer.getEntityType().name(), entityContainer.getEntityId().toString()));
             searchDirectionIds.setToId(msg.getOriginator());
@@ -117,7 +115,7 @@ public abstract class TbAbstractRelationActionNode<C extends TbAbstractRelationA
         return searchDirectionIds;
     }
 
-    protected ListenableFuture<List<EntityRelation>> processListSearchDirection(@NotNull TbContext ctx, @NotNull TbMsg msg) {
+    protected ListenableFuture<List<EntityRelation>> processListSearchDirection(TbContext ctx, TbMsg msg) {
         if (EntitySearchDirection.FROM.name().equals(this.config.getDirection())) {
             return ctx.getRelationService().findByToAndTypeAsync(ctx.getTenantId(), msg.getOriginator(), processPattern(msg, this.config.getRelationType()), RelationTypeGroup.COMMON);
         } else {
@@ -125,7 +123,7 @@ public abstract class TbAbstractRelationActionNode<C extends TbAbstractRelationA
         }
     }
 
-    protected String processPattern(@NotNull TbMsg msg, String pattern) {
+    protected String processPattern(TbMsg msg, String pattern) {
         return TbNodeUtils.processPattern(pattern, msg);
     }
 
@@ -154,16 +152,14 @@ public abstract class TbAbstractRelationActionNode<C extends TbAbstractRelationA
             this.createIfNotExists = createIfNotExists;
         }
 
-        @NotNull
-        @Override
+            @Override
         public EntityContainer load(EntityKey key) {
             return loadEntity(key);
         }
 
-        @NotNull
-        private EntityContainer loadEntity(@NotNull EntityKey entitykey) {
+            private EntityContainer loadEntity(EntityKey entitykey) {
             EntityType type = entitykey.getEntityType();
-            @NotNull EntityContainer targetEntity = new EntityContainer();
+            EntityContainer targetEntity = new EntityContainer();
             targetEntity.setEntityType(type);
             switch (type) {
                 case DEVICE:
@@ -172,7 +168,7 @@ public abstract class TbAbstractRelationActionNode<C extends TbAbstractRelationA
                     if (device != null) {
                         targetEntity.setEntityId(device.getId());
                     } else if (createIfNotExists) {
-                        @NotNull Device newDevice = new Device();
+                        Device newDevice = new Device();
                         newDevice.setName(entitykey.getEntityName());
                         newDevice.setType(entitykey.getType());
                         newDevice.setTenantId(ctx.getTenantId());
@@ -190,7 +186,7 @@ public abstract class TbAbstractRelationActionNode<C extends TbAbstractRelationA
                     if (asset != null) {
                         targetEntity.setEntityId(asset.getId());
                     } else if (createIfNotExists) {
-                        @NotNull Asset newAsset = new Asset();
+                        Asset newAsset = new Asset();
                         newAsset.setName(entitykey.getEntityName());
                         newAsset.setType(entitykey.getType());
                         newAsset.setTenantId(ctx.getTenantId());
@@ -207,7 +203,7 @@ public abstract class TbAbstractRelationActionNode<C extends TbAbstractRelationA
                     if (customerOptional.isPresent()) {
                         targetEntity.setEntityId(customerOptional.get().getId());
                     } else if (createIfNotExists) {
-                        @NotNull Customer newCustomer = new Customer();
+                        Customer newCustomer = new Customer();
                         newCustomer.setTitle(entitykey.getEntityName());
                         newCustomer.setTenantId(ctx.getTenantId());
                         Customer savedCustomer = customerService.saveCustomer(newCustomer);

@@ -12,7 +12,6 @@ import org.echoiot.server.gen.edge.v1.UpdateMsgType;
 import org.echoiot.server.gen.edge.v1.WidgetTypeUpdateMsg;
 import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.queue.util.TbCoreComponent;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -22,15 +21,15 @@ import org.springframework.stereotype.Component;
 public class WidgetTypeEdgeProcessor extends BaseEdgeProcessor {
 
     @Nullable
-    public DownlinkMsg convertWidgetTypeEventToDownlink(@NotNull EdgeEvent edgeEvent) {
-        @NotNull WidgetTypeId widgetTypeId = new WidgetTypeId(edgeEvent.getEntityId());
+    public DownlinkMsg convertWidgetTypeEventToDownlink(EdgeEvent edgeEvent) {
+        WidgetTypeId widgetTypeId = new WidgetTypeId(edgeEvent.getEntityId());
         @Nullable DownlinkMsg downlinkMsg = null;
         switch (edgeEvent.getAction()) {
             case ADDED:
             case UPDATED:
                 WidgetTypeDetails widgetTypeDetails = widgetTypeService.findWidgetTypeDetailsById(edgeEvent.getTenantId(), widgetTypeId);
                 if (widgetTypeDetails != null) {
-                    @NotNull UpdateMsgType msgType = getUpdateMsgType(edgeEvent.getAction());
+                    UpdateMsgType msgType = getUpdateMsgType(edgeEvent.getAction());
                     WidgetTypeUpdateMsg widgetTypeUpdateMsg =
                             widgetTypeMsgConstructor.constructWidgetTypeUpdateMsg(msgType, widgetTypeDetails);
                     downlinkMsg = DownlinkMsg.newBuilder()
@@ -51,7 +50,7 @@ public class WidgetTypeEdgeProcessor extends BaseEdgeProcessor {
         return downlinkMsg;
     }
 
-    public ListenableFuture<Void> processWidgetTypeNotification(TenantId tenantId, @NotNull TransportProtos.EdgeNotificationMsgProto edgeNotificationMsg) {
+    public ListenableFuture<Void> processWidgetTypeNotification(TenantId tenantId, TransportProtos.EdgeNotificationMsgProto edgeNotificationMsg) {
         return processEntityNotificationForAllEdges(tenantId, edgeNotificationMsg);
     }
 }

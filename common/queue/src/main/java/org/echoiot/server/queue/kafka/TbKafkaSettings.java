@@ -12,7 +12,6 @@ import org.apache.kafka.common.serialization.ByteArraySerializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.echoiot.server.common.data.TbProperty;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -93,22 +92,19 @@ public class TbKafkaSettings {
     @Setter
     private List<TbProperty> other;
 
-    @NotNull
     @Setter
     private Map<String, List<TbProperty>> consumerPropertiesPerTopic = Collections.emptyMap();
 
-    @NotNull
     public Properties toAdminProps() {
-        @NotNull Properties props = toProps();
+        Properties props = toProps();
         props.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, servers);
         props.put(AdminClientConfig.RETRIES_CONFIG, retries);
 
         return props;
     }
 
-    @NotNull
     public Properties toConsumerProps(String topic) {
-        @NotNull Properties props = toProps();
+        Properties props = toProps();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, servers);
         props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, maxPollRecords);
         props.put(ConsumerConfig.MAX_PARTITION_FETCH_BYTES_CONFIG, maxPartitionFetchBytes);
@@ -124,9 +120,8 @@ public class TbKafkaSettings {
         return props;
     }
 
-    @NotNull
     public Properties toProducerProps() {
-        @NotNull Properties props = toProps();
+        Properties props = toProps();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, servers);
         props.put(ProducerConfig.RETRIES_CONFIG, retries);
         props.put(ProducerConfig.ACKS_CONFIG, acks);
@@ -141,9 +136,8 @@ public class TbKafkaSettings {
         return props;
     }
 
-    @NotNull
     private Properties toProps() {
-        @NotNull Properties props = new Properties();
+        Properties props = new Properties();
 
         if (useConfluent) {
             props.put("ssl.endpoint.identification.algorithm", sslAlgorithm);

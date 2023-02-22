@@ -29,7 +29,6 @@ import org.echoiot.server.dao.settings.AdminSettingsService;
 import org.echoiot.server.dao.usagerecord.ApiUsageStateService;
 import org.echoiot.server.dao.user.UserService;
 import org.echoiot.server.dao.widget.WidgetsBundleService;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -111,7 +110,7 @@ public class TenantServiceImpl extends AbstractCachedEntityService<TenantId, Ten
 
     @TransactionalEventListener(classes = TenantEvictEvent.class)
     @Override
-    public void handleEvictEvent(@NotNull TenantEvictEvent event) {
+    public void handleEvictEvent(TenantEvictEvent event) {
         TenantId tenantId = event.getTenantId();
         cache.evict(tenantId);
         if (event.isInvalidateExists()) {
@@ -120,7 +119,7 @@ public class TenantServiceImpl extends AbstractCachedEntityService<TenantId, Ten
     }
 
     @Override
-    public Tenant findTenantById(@NotNull TenantId tenantId) {
+    public Tenant findTenantById(TenantId tenantId) {
         log.trace("Executing findTenantById [{}]", tenantId);
         Validator.validateId(tenantId, INCORRECT_TENANT_ID + tenantId);
 
@@ -128,23 +127,22 @@ public class TenantServiceImpl extends AbstractCachedEntityService<TenantId, Ten
     }
 
     @Override
-    public TenantInfo findTenantInfoById(@NotNull TenantId tenantId) {
+    public TenantInfo findTenantInfoById(TenantId tenantId) {
         log.trace("Executing findTenantInfoById [{}]", tenantId);
         validateId(tenantId, INCORRECT_TENANT_ID + tenantId);
         return tenantDao.findTenantInfoById(tenantId, tenantId.getId());
     }
 
     @Override
-    public ListenableFuture<Tenant> findTenantByIdAsync(TenantId callerId, @NotNull TenantId tenantId) {
+    public ListenableFuture<Tenant> findTenantByIdAsync(TenantId callerId, TenantId tenantId) {
         log.trace("Executing findTenantByIdAsync [{}]", tenantId);
         validateId(tenantId, INCORRECT_TENANT_ID + tenantId);
         return tenantDao.findByIdAsync(callerId, tenantId.getId());
     }
 
-    @NotNull
     @Override
     @Transactional
-    public Tenant saveTenant(@NotNull Tenant tenant) {
+    public Tenant saveTenant(Tenant tenant) {
         log.trace("Executing saveTenant [{}]", tenant);
         tenant.setRegion(DEFAULT_TENANT_REGION);
         if (tenant.getTenantProfileId() == null) {
@@ -169,7 +167,7 @@ public class TenantServiceImpl extends AbstractCachedEntityService<TenantId, Ten
      * We will create separate task to make "deleteTenant" transactional.
      */
     @Override
-    public void deleteTenant(@NotNull TenantId tenantId) {
+    public void deleteTenant(TenantId tenantId) {
         log.trace("Executing deleteTenant [{}]", tenantId);
         Validator.validateId(tenantId, INCORRECT_TENANT_ID + tenantId);
         entityViewService.deleteEntityViewsByTenantId(tenantId);
@@ -228,7 +226,7 @@ public class TenantServiceImpl extends AbstractCachedEntityService<TenantId, Ten
     }
 
     @Override
-    public boolean tenantExists(@NotNull TenantId tenantId) {
+    public boolean tenantExists(TenantId tenantId) {
         return existsTenantCache.getAndPutInTransaction(tenantId, () -> tenantDao.existsById(tenantId, tenantId.getId()), false);
     }
 
@@ -240,7 +238,7 @@ public class TenantServiceImpl extends AbstractCachedEntityService<TenantId, Ten
         }
 
         @Override
-        protected void removeEntity(TenantId tenantId, @NotNull Tenant entity) {
+        protected void removeEntity(TenantId tenantId, Tenant entity) {
             deleteTenant(TenantId.fromUUID(entity.getUuidId()));
         }
     };

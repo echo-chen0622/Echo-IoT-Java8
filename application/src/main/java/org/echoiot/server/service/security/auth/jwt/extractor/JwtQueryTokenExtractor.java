@@ -2,7 +2,6 @@ package org.echoiot.server.service.security.auth.jwt.extractor;
 
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.config.EchoiotSecurityConfiguration;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.stereotype.Component;
@@ -12,9 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 @Component(value="jwtQueryTokenExtractor")
 public class JwtQueryTokenExtractor implements TokenExtractor {
 
-    @NotNull
     @Override
-    public String extract(@NotNull HttpServletRequest request) {
+    public String extract(HttpServletRequest request) {
         @Nullable String token = null;
         if (request.getParameterMap() != null && !request.getParameterMap().isEmpty()) {
             String[] tokenParamValue = request.getParameterMap().get(EchoiotSecurityConfiguration.JWT_TOKEN_QUERY_PARAM);

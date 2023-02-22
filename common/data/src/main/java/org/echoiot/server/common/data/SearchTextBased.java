@@ -2,7 +2,6 @@ package org.echoiot.server.common.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.echoiot.server.common.data.id.UUIDBased;
-import org.jetbrains.annotations.NotNull;
 
 public abstract class SearchTextBased<I extends UUIDBased> extends BaseData<I> {
 
@@ -16,7 +15,7 @@ public abstract class SearchTextBased<I extends UUIDBased> extends BaseData<I> {
         super(id);
     }
 
-    public SearchTextBased(@NotNull SearchTextBased<I> searchTextBased) {
+    public SearchTextBased(SearchTextBased<I> searchTextBased) {
         super(searchTextBased);
     }
 

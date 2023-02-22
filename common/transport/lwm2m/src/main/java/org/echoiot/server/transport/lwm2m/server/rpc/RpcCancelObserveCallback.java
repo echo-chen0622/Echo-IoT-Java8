@@ -6,7 +6,6 @@ import org.echoiot.server.transport.lwm2m.server.client.LwM2mClient;
 import org.echoiot.server.transport.lwm2m.server.downlink.DownlinkRequestCallback;
 import org.echoiot.server.transport.lwm2m.server.downlink.TbLwM2MCancelObserveRequest;
 import org.eclipse.leshan.core.ResponseCode;
-import org.jetbrains.annotations.NotNull;
 
 public class RpcCancelObserveCallback extends RpcDownlinkRequestCallbackProxy<TbLwM2MCancelObserveRequest, Integer> {
 
@@ -15,7 +14,7 @@ public class RpcCancelObserveCallback extends RpcDownlinkRequestCallbackProxy<Tb
     }
 
     @Override
-    protected void sendRpcReplyOnSuccess(@NotNull Integer response) {
+    protected void sendRpcReplyOnSuccess(Integer response) {
         reply(LwM2MRpcResponseBody.builder().result(ResponseCode.CONTENT.getName()).value(response.toString()).build());
     }
 }

@@ -14,7 +14,6 @@ import org.echoiot.server.common.data.ota.ChecksumAlgorithm;
 import org.echoiot.server.common.data.ota.OtaPackageType;
 import org.echoiot.server.common.data.validation.Length;
 import org.echoiot.server.common.data.validation.NoXss;
-import org.jetbrains.annotations.NotNull;
 
 @ApiModel
 @Slf4j
@@ -72,7 +71,7 @@ public class OtaPackageInfo extends SearchTextBasedWithAdditionalInfo<OtaPackage
         super(id);
     }
 
-    public OtaPackageInfo(@NotNull OtaPackageInfo otaPackageInfo) {
+    public OtaPackageInfo(OtaPackageInfo otaPackageInfo) {
         super(otaPackageInfo);
         this.tenantId = otaPackageInfo.getTenantId();
         this.deviceProfileId = otaPackageInfo.getDeviceProfileId();

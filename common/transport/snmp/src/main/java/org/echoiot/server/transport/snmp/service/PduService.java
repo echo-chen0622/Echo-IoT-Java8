@@ -10,7 +10,6 @@ import org.echoiot.server.common.data.transport.snmp.SnmpProtocolVersion;
 import org.echoiot.server.common.data.transport.snmp.config.SnmpCommunicationConfig;
 import org.echoiot.server.queue.util.TbSnmpTransportComponent;
 import org.echoiot.server.transport.snmp.session.DeviceSessionContext;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.snmp4j.PDU;
 import org.snmp4j.ScopedPDU;
@@ -25,16 +24,15 @@ import java.util.stream.IntStream;
 @Service
 @Slf4j
 public class PduService {
-    @NotNull
-    public PDU createPdu(@NotNull DeviceSessionContext sessionContext, @NotNull SnmpCommunicationConfig communicationConfig, @NotNull Map<String, String> values) {
-        @NotNull PDU pdu = setUpPdu(sessionContext);
+    public PDU createPdu(DeviceSessionContext sessionContext, SnmpCommunicationConfig communicationConfig, Map<String, String> values) {
+        PDU pdu = setUpPdu(sessionContext);
 
         pdu.setType(communicationConfig.getMethod().getCode());
         pdu.addAll(communicationConfig.getAllMappings().stream()
                 .filter(mapping -> values.isEmpty() || values.containsKey(mapping.getKey()))
                 .map(mapping -> Optional.ofNullable(values.get(mapping.getKey()))
                         .map(value -> {
-                            @NotNull Variable variable = toSnmpVariable(value, mapping.getDataType());
+                            Variable variable = toSnmpVariable(value, mapping.getDataType());
                             return new VariableBinding(new OID(mapping.getOid()), variable);
                         })
                         .orElseGet(() -> new VariableBinding(new OID(mapping.getOid()))))
@@ -43,9 +41,8 @@ public class PduService {
         return pdu;
     }
 
-    @NotNull
-    public PDU createSingleVariablePdu(@NotNull DeviceSessionContext sessionContext, @NotNull SnmpMethod snmpMethod, String oid, @Nullable String value, DataType dataType) {
-        @NotNull PDU pdu = setUpPdu(sessionContext);
+    public PDU createSingleVariablePdu(DeviceSessionContext sessionContext, SnmpMethod snmpMethod, String oid, @Nullable String value, DataType dataType) {
+        PDU pdu = setUpPdu(sessionContext);
         pdu.setType(snmpMethod.getCode());
 
         Variable variable = value == null ? Null.instance : toSnmpVariable(value, dataType);
@@ -54,8 +51,7 @@ public class PduService {
         return pdu;
     }
 
-    @NotNull
-    private Variable toSnmpVariable(@NotNull String value, DataType dataType) {
+    private Variable toSnmpVariable(String value, DataType dataType) {
         dataType = dataType == null ? DataType.STRING : dataType;
         Variable variable;
         switch (dataType) {
@@ -75,8 +71,7 @@ public class PduService {
         return variable;
     }
 
-    @NotNull
-    private PDU setUpPdu(@NotNull DeviceSessionContext sessionContext) {
+    private PDU setUpPdu(DeviceSessionContext sessionContext) {
         PDU pdu;
         SnmpDeviceTransportConfiguration deviceTransportConfiguration = sessionContext.getDeviceTransportConfiguration();
         SnmpProtocolVersion snmpVersion = deviceTransportConfiguration.getProtocolVersion();
@@ -86,7 +81,7 @@ public class PduService {
                 pdu = new PDU();
                 break;
             case V3:
-                @NotNull ScopedPDU scopedPdu = new ScopedPDU();
+                ScopedPDU scopedPdu = new ScopedPDU();
                 scopedPdu.setContextName(new OctetString(deviceTransportConfiguration.getContextName()));
                 scopedPdu.setContextEngineID(new OctetString(deviceTransportConfiguration.getEngineId()));
                 pdu = scopedPdu;
@@ -98,19 +93,18 @@ public class PduService {
     }
 
 
-    @NotNull
-    public JsonObject processPdu(@NotNull PDU pdu, @Nullable List<SnmpMapping> responseMappings) {
-        @NotNull Map<OID, String> values = processPdu(pdu);
+    public JsonObject processPdu(PDU pdu, @Nullable List<SnmpMapping> responseMappings) {
+        Map<OID, String> values = processPdu(pdu);
 
-        @NotNull Map<OID, SnmpMapping> mappings = new HashMap<>();
+        Map<OID, SnmpMapping> mappings = new HashMap<>();
         if (responseMappings != null) {
-            for (@NotNull SnmpMapping mapping : responseMappings) {
-                @NotNull OID oid = new OID(mapping.getOid());
+            for (SnmpMapping mapping : responseMappings) {
+                OID oid = new OID(mapping.getOid());
                 mappings.put(oid, mapping);
             }
         }
 
-        @NotNull JsonObject data = new JsonObject();
+        JsonObject data = new JsonObject();
         values.forEach((oid, value) -> {
             log.trace("Processing variable binding: {} - {}", oid, value);
 
@@ -126,8 +120,7 @@ public class PduService {
         return data;
     }
 
-    @NotNull
-    public Map<OID, String> processPdu(@NotNull PDU pdu) {
+    public Map<OID, String> processPdu(PDU pdu) {
         return IntStream.range(0, pdu.size())
                 .mapToObj(pdu::get)
                 .filter(Objects::nonNull)
@@ -135,7 +128,7 @@ public class PduService {
                 .collect(Collectors.toMap(VariableBinding::getOid, VariableBinding::toValueString));
     }
 
-    public void processValue(@NotNull String key, @NotNull DataType dataType, @NotNull String value, @NotNull JsonObject result) {
+    public void processValue(String key, DataType dataType, String value, JsonObject result) {
         switch (dataType) {
             case LONG:
                 result.addProperty(key, Long.parseLong(value));

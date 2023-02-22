@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
 import org.echoiot.server.queue.TbQueueConsumer;
 import org.echoiot.server.queue.TbQueueMsg;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
@@ -48,11 +47,10 @@ public class InMemoryTbQueueConsumer<T extends TbQueueMsg> implements TbQueueCon
         stopped = true;
     }
 
-    @NotNull
     @Override
     public List<T> poll(long durationInMillis) {
         if (subscribed) {
-            @NotNull @SuppressWarnings("unchecked")
+            @SuppressWarnings("unchecked")
             List<T> messages = partitions
                     .stream()
                     .map(tpi -> {

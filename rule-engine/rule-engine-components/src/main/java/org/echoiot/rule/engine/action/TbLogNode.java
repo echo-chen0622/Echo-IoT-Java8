@@ -11,7 +11,6 @@ import org.echoiot.rule.engine.api.util.TbNodeUtils;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.data.script.ScriptLanguage;
 import org.echoiot.server.common.msg.TbMsg;
-import org.jetbrains.annotations.NotNull;
 
 @Slf4j
 @RuleNode(
@@ -33,7 +32,7 @@ public class TbLogNode implements TbNode {
     private boolean standard;
 
     @Override
-    public void init(@NotNull TbContext ctx, @NotNull TbNodeConfiguration configuration) throws TbNodeException {
+    public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
         this.config = TbNodeUtils.convert(configuration, TbLogNodeConfiguration.class);
         this.standard = new TbLogNodeConfiguration().defaultConfiguration().getJsScript().equals(config.getJsScript());
         this.scriptEngine = this.standard ? null : ctx.createScriptEngine(config.getScriptLang(),
@@ -41,7 +40,7 @@ public class TbLogNode implements TbNode {
     }
 
     @Override
-    public void onMsg(@NotNull TbContext ctx, @NotNull TbMsg msg) {
+    public void onMsg(TbContext ctx, TbMsg msg) {
         if (standard) {
             logStandard(ctx, msg);
             return;
@@ -64,13 +63,12 @@ public class TbLogNode implements TbNode {
         }, MoreExecutors.directExecutor()); //usually js responses runs on js callback executor
     }
 
-    void logStandard(@NotNull TbContext ctx, @NotNull TbMsg msg) {
+    void logStandard(TbContext ctx, TbMsg msg) {
         log.info(toLogMessage(msg));
         ctx.tellSuccess(msg);
     }
 
-    @NotNull
-    String toLogMessage(@NotNull TbMsg msg) {
+    String toLogMessage(TbMsg msg) {
         return "\n" +
                 "Incoming message:\n" + msg.getData() + "\n" +
                 "Incoming metadata:\n" + JacksonUtil.toString(msg.getMetaData().getData());

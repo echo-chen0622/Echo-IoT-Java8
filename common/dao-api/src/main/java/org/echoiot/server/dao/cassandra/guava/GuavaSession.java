@@ -7,7 +7,6 @@ import com.datastax.oss.driver.internal.core.cql.DefaultPrepareRequest;
 import com.datastax.oss.driver.internal.core.cql.SinglePageResultSet;
 import com.google.common.util.concurrent.ListenableFuture;
 import edu.umd.cs.findbugs.annotations.NonNull;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.ExecutionException;
@@ -31,11 +30,11 @@ public interface GuavaSession extends Session, SyncCqlSession {
     }
 
     @Nullable
-    default ListenableFuture<AsyncResultSet> executeAsync(@NotNull Statement<?> statement) {
+    default ListenableFuture<AsyncResultSet> executeAsync(Statement<?> statement) {
         return this.execute(statement, ASYNC);
     }
 
-    default ListenableFuture<AsyncResultSet> executeAsync(@NotNull String statement) {
+    default ListenableFuture<AsyncResultSet> executeAsync(String statement) {
         return this.executeAsync(SimpleStatement.newInstance(statement));
     }
 
@@ -44,11 +43,11 @@ public interface GuavaSession extends Session, SyncCqlSession {
         return this.execute(new DefaultPrepareRequest(statement), ASYNC_PREPARED);
     }
 
-    default ListenableFuture<PreparedStatement> prepareAsync(@NotNull String statement) {
+    default ListenableFuture<PreparedStatement> prepareAsync(String statement) {
         return this.prepareAsync(SimpleStatement.newInstance(statement));
     }
 
-    static AsyncResultSet getSafe(@NotNull ListenableFuture<AsyncResultSet> future) {
+    static AsyncResultSet getSafe(ListenableFuture<AsyncResultSet> future) {
         try {
             return future.get();
         } catch (InterruptedException | ExecutionException e) {

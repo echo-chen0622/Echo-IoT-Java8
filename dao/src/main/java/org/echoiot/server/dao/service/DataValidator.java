@@ -9,7 +9,6 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.dao.TenantEntityDao;
 import org.echoiot.server.dao.TenantEntityWithDataDao;
 import org.echoiot.server.dao.exception.DataValidationException;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
@@ -31,7 +30,7 @@ public abstract class DataValidator<D extends BaseData<?>> {
 
     // Returns old instance of the same object that is fetched during validation.
     @Nullable
-    public D validate(@NotNull D data, @NotNull Function<D, TenantId> tenantIdFunction) {
+    public D validate(D data, Function<D, TenantId> tenantIdFunction) {
         try {
             if (data == null) {
                 throw new DataValidationException("Data object can't be null!");
@@ -66,7 +65,7 @@ public abstract class DataValidator<D extends BaseData<?>> {
         return null;
     }
 
-    protected boolean isSameData(@NotNull D existentData, @NotNull D actualData) {
+    protected boolean isSameData(D existentData, D actualData) {
         return actualData.getId() != null && existentData.getId().equals(actualData.getId());
     }
 
@@ -81,14 +80,14 @@ public abstract class DataValidator<D extends BaseData<?>> {
             return false;
         }
 
-        @NotNull Matcher emailMatcher = EMAIL_PATTERN.matcher(email);
+        Matcher emailMatcher = EMAIL_PATTERN.matcher(email);
         return emailMatcher.matches();
     }
 
     protected void validateNumberOfEntitiesPerTenant(TenantId tenantId,
-                                                     @NotNull TenantEntityDao tenantEntityDao,
+                                                     TenantEntityDao tenantEntityDao,
                                                      long maxEntities,
-                                                     @NotNull EntityType entityType) {
+                                                     EntityType entityType) {
         if (maxEntities > 0) {
             long currentEntitiesCount = tenantEntityDao.countByTenantId(tenantId);
             if (currentEntitiesCount >= maxEntities) {
@@ -99,10 +98,10 @@ public abstract class DataValidator<D extends BaseData<?>> {
     }
 
     protected void validateMaxSumDataSizePerTenant(TenantId tenantId,
-                                                   @NotNull TenantEntityWithDataDao dataDao,
+                                                   TenantEntityWithDataDao dataDao,
                                                    long maxSumDataSize,
                                                    long currentDataSize,
-                                                   @NotNull EntityType entityType) {
+                                                   EntityType entityType) {
         if (maxSumDataSize > 0) {
             if (dataDao.sumDataSizeByTenantId(tenantId) + currentDataSize > maxSumDataSize) {
                 throw new DataValidationException(String.format("Failed to create the %s, files size limit is exhausted %d bytes!",
@@ -111,14 +110,14 @@ public abstract class DataValidator<D extends BaseData<?>> {
         }
     }
 
-    protected static void validateJsonStructure(@NotNull JsonNode expectedNode, @NotNull JsonNode actualNode) {
-        @NotNull Set<String> expectedFields = new HashSet<>();
+    protected static void validateJsonStructure(JsonNode expectedNode, JsonNode actualNode) {
+        Set<String> expectedFields = new HashSet<>();
         Iterator<String> fieldsIterator = expectedNode.fieldNames();
         while (fieldsIterator.hasNext()) {
             expectedFields.add(fieldsIterator.next());
         }
 
-        @NotNull Set<String> actualFields = new HashSet<>();
+        Set<String> actualFields = new HashSet<>();
         fieldsIterator = actualNode.fieldNames();
         while (fieldsIterator.hasNext()) {
             actualFields.add(fieldsIterator.next());
@@ -129,15 +128,15 @@ public abstract class DataValidator<D extends BaseData<?>> {
         }
     }
 
-    protected static void validateQueueName(@NotNull String name) {
+    protected static void validateQueueName(String name) {
         validateQueueNameOrTopic(name, NAME);
     }
 
-    protected static void validateQueueTopic(@NotNull String topic) {
+    protected static void validateQueueTopic(String topic) {
         validateQueueNameOrTopic(topic, TOPIC);
     }
 
-    private static void validateQueueNameOrTopic(@NotNull String value, String fieldName) {
+    private static void validateQueueNameOrTopic(String value, String fieldName) {
         if (StringUtils.isEmpty(value)) {
             throw new DataValidationException(String.format("Queue %s should be specified!", fieldName));
         }

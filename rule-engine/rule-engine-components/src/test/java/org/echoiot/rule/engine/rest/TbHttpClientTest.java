@@ -10,7 +10,6 @@ import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.TbMsgMetaData;
-import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -71,64 +70,64 @@ public class TbHttpClientTest {
     @Test
     public void testBuildSimpleUri() {
         Mockito.when(client.buildEncodedUri(any())).thenCallRealMethod();
-        @NotNull String url = "http://localhost:8080/";
-        @NotNull URI uri = client.buildEncodedUri(url);
+        String url = "http://localhost:8080/";
+        URI uri = client.buildEncodedUri(url);
         Assert.assertEquals(url, uri.toString());
     }
 
     @Test
     public void testBuildUriWithoutProtocol() {
         Mockito.when(client.buildEncodedUri(any())).thenCallRealMethod();
-        @NotNull String url = "localhost:8080/";
+        String url = "localhost:8080/";
         assertThatThrownBy(() -> client.buildEncodedUri(url));
     }
 
     @Test
     public void testBuildInvalidUri() {
         Mockito.when(client.buildEncodedUri(any())).thenCallRealMethod();
-        @NotNull String url = "aaa";
+        String url = "aaa";
         assertThatThrownBy(() -> client.buildEncodedUri(url));
     }
 
     @Test
     public void testBuildUriWithSpecialSymbols() {
         Mockito.when(client.buildEncodedUri(any())).thenCallRealMethod();
-        @NotNull String url = "http://192.168.1.1/data?d={\"a\": 12}";
-        @NotNull String expected = "http://192.168.1.1/data?d=%7B%22a%22:%2012%7D";
-        @NotNull URI uri = client.buildEncodedUri(url);
+        String url = "http://192.168.1.1/data?d={\"a\": 12}";
+        String expected = "http://192.168.1.1/data?d=%7B%22a%22:%2012%7D";
+        URI uri = client.buildEncodedUri(url);
         Assert.assertEquals(expected, uri.toString());
     }
 
     @Test
     public void testProcessMessageWithJsonInUrlVariable() throws Exception {
-        @NotNull String host = "localhost";
-        @NotNull String path = "/org/echoiot/rule/engine/api";
-        @NotNull String paramKey = "data";
-        @NotNull String paramVal = "[{\"test\":\"test\"}]";
-        @NotNull String successResponseBody = "SUCCESS";
+        String host = "localhost";
+        String path = "/org/echoiot/rule/engine/api";
+        String paramKey = "data";
+        String paramVal = "[{\"test\":\"test\"}]";
+        String successResponseBody = "SUCCESS";
 
-        @NotNull var server = setUpDummyServer(host, path, paramKey, paramVal, successResponseBody);
+        var server = setUpDummyServer(host, path, paramKey, paramVal, successResponseBody);
 
         String endpointUrl = String.format(
                 "http://%s:%d%s?%s=%s",
                 host, server.getPort(), path, paramKey, paramVal
         );
-        @NotNull String method = "GET";
+        String method = "GET";
 
 
-        @NotNull var config = new TbRestApiCallNodeConfiguration()
+        var config = new TbRestApiCallNodeConfiguration()
                 .defaultConfiguration();
         config.setRequestMethod(method);
         config.setRestEndpointUrlPattern(endpointUrl);
         config.setUseSimpleClientHttpFactory(true);
 
-        @NotNull var asyncRestTemplate = new AsyncRestTemplate();
+        var asyncRestTemplate = new AsyncRestTemplate();
 
-        @NotNull var httpClient = new TbHttpClient(config, eventLoop);
+        var httpClient = new TbHttpClient(config, eventLoop);
         httpClient.setHttpClient(asyncRestTemplate);
 
-        @NotNull var msg = TbMsg.newMsg("GET", new DeviceId(EntityId.NULL_UUID), TbMsgMetaData.EMPTY, "{}");
-        @NotNull var successMsg = TbMsg.newMsg(
+        var msg = TbMsg.newMsg("GET", new DeviceId(EntityId.NULL_UUID), TbMsgMetaData.EMPTY, "{}");
+        var successMsg = TbMsg.newMsg(
                 "SUCCESS", msg.getOriginator(),
                 msg.getMetaData(), msg.getData()
                                               );
@@ -141,7 +140,7 @@ public class TbHttpClientTest {
                 eq(msg.getData())
         )).thenReturn(successMsg);
 
-        @NotNull var capturedData = ArgumentCaptor.forClass(String.class);
+        var capturedData = ArgumentCaptor.forClass(String.class);
 
         when(ctx.transformMsg(
                 eq(msg), eq(msg.getType()),
@@ -168,14 +167,13 @@ public class TbHttpClientTest {
         Assert.assertEquals(successResponseBody, capturedData.getValue());
     }
 
-    @NotNull
     private ClientAndServer setUpDummyServer(String host, String path, String paramKey, String paramVal, String successResponseBody) {
         var server = startClientAndServer(host, 1080);
         createGetMethodExpectations(server, path, paramKey, paramVal, successResponseBody);
         return server;
     }
 
-    private void createGetMethodExpectations(@NotNull ClientAndServer server, String path, String paramKey, String paramVal, String successResponseBody) {
+    private void createGetMethodExpectations(ClientAndServer server, String path, String paramKey, String paramVal, String successResponseBody) {
         server.when(
                 request()
                         .withMethod("GET")
@@ -190,11 +188,11 @@ public class TbHttpClientTest {
 
     @Test
     public void testHeadersToMetaData() {
-        @NotNull Map<String, List<String>> headers = new LinkedMultiValueMap<>();
+        Map<String, List<String>> headers = new LinkedMultiValueMap<>();
         headers.put("Content-Type", List.of("binary"));
         headers.put("Set-Cookie", List.of("sap-context=sap-client=075; path=/", "sap-token=sap-client=075; path=/"));
 
-        @NotNull TbMsgMetaData metaData = new TbMsgMetaData();
+        TbMsgMetaData metaData = new TbMsgMetaData();
 
         willCallRealMethod().given(client).headersToMetaData(any(), any());
 

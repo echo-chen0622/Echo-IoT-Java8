@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.TbMsgMetaData;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
@@ -17,12 +16,12 @@ public class TbLogNodeTest {
 
     @Test
     void givenMsg_whenToLog_thenReturnString() {
-        @NotNull TbLogNode node = new TbLogNode();
-        @NotNull String data = "{\"key\": \"value\"}";
-        @NotNull TbMsgMetaData metaData = new TbMsgMetaData(Map.of("mdKey1", "mdValue1", "mdKey2", "23"));
-        @NotNull TbMsg msg = TbMsg.newMsg("POST_TELEMETRY", TenantId.SYS_TENANT_ID, metaData, data);
+        TbLogNode node = new TbLogNode();
+        String data = "{\"key\": \"value\"}";
+        TbMsgMetaData metaData = new TbMsgMetaData(Map.of("mdKey1", "mdValue1", "mdKey2", "23"));
+        TbMsg msg = TbMsg.newMsg("POST_TELEMETRY", TenantId.SYS_TENANT_ID, metaData, data);
 
-        @NotNull String logMessage = node.toLogMessage(msg);
+        String logMessage = node.toLogMessage(msg);
         log.info(logMessage);
 
         assertThat(logMessage).isEqualTo("\n" +
@@ -34,11 +33,11 @@ public class TbLogNodeTest {
 
     @Test
     void givenEmptyDataMsg_whenToLog_thenReturnString() {
-        @NotNull TbLogNode node = new TbLogNode();
-        @NotNull TbMsgMetaData metaData = new TbMsgMetaData(Collections.emptyMap());
-        @NotNull TbMsg msg = TbMsg.newMsg("POST_TELEMETRY", TenantId.SYS_TENANT_ID, metaData, "");
+        TbLogNode node = new TbLogNode();
+        TbMsgMetaData metaData = new TbMsgMetaData(Collections.emptyMap());
+        TbMsg msg = TbMsg.newMsg("POST_TELEMETRY", TenantId.SYS_TENANT_ID, metaData, "");
 
-        @NotNull String logMessage = node.toLogMessage(msg);
+        String logMessage = node.toLogMessage(msg);
         log.info(logMessage);
 
         assertThat(logMessage).isEqualTo("\n" +
@@ -49,11 +48,11 @@ public class TbLogNodeTest {
     }
     @Test
     void givenNullDataMsg_whenToLog_thenReturnString() {
-        @NotNull TbLogNode node = new TbLogNode();
-        @NotNull TbMsgMetaData metaData = new TbMsgMetaData(Collections.emptyMap());
-        @NotNull TbMsg msg = TbMsg.newMsg("POST_TELEMETRY", TenantId.SYS_TENANT_ID, metaData, null);
+        TbLogNode node = new TbLogNode();
+        TbMsgMetaData metaData = new TbMsgMetaData(Collections.emptyMap());
+        TbMsg msg = TbMsg.newMsg("POST_TELEMETRY", TenantId.SYS_TENANT_ID, metaData, null);
 
-        @NotNull String logMessage = node.toLogMessage(msg);
+        String logMessage = node.toLogMessage(msg);
         log.info(logMessage);
 
         assertThat(logMessage).isEqualTo("\n" +

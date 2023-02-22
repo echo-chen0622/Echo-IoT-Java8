@@ -4,13 +4,11 @@ import org.echoiot.server.common.msg.queue.RuleEngineException;
 import org.echoiot.server.common.msg.queue.TbMsgCallback;
 import org.echoiot.server.queue.TbQueueCallback;
 import org.echoiot.server.queue.TbQueueMsgMetadata;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class MultipleTbQueueTbMsgCallbackWrapper implements TbQueueCallback {
 
-    @NotNull
     private final AtomicInteger tbQueueCallbackCount;
     private final TbMsgCallback tbMsgCallback;
 
@@ -27,7 +25,7 @@ public class MultipleTbQueueTbMsgCallbackWrapper implements TbQueueCallback {
     }
 
     @Override
-    public void onFailure(@NotNull Throwable t) {
+    public void onFailure(Throwable t) {
         tbMsgCallback.onFailure(new RuleEngineException(t.getMessage()));
     }
 }

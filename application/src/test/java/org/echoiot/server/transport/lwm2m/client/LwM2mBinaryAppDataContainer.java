@@ -9,7 +9,6 @@ import org.eclipse.leshan.core.node.LwM2mMultipleResource;
 import org.eclipse.leshan.core.node.LwM2mResource;
 import org.eclipse.leshan.core.response.ReadResponse;
 import org.eclipse.leshan.core.response.WriteResponse;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.security.auth.Destroyable;
@@ -51,7 +50,6 @@ public class LwM2mBinaryAppDataContainer extends BaseInstanceEnabler implements 
      */
 
     Map<Integer, byte[]> data;
-    @NotNull
     private Integer priority = 0;
     private Time timestamp;
     private String description;
@@ -62,7 +60,7 @@ public class LwM2mBinaryAppDataContainer extends BaseInstanceEnabler implements 
     public LwM2mBinaryAppDataContainer() {
     }
 
-    public LwM2mBinaryAppDataContainer(@NotNull ScheduledExecutorService executorService, @Nullable Integer id) {
+    public LwM2mBinaryAppDataContainer(ScheduledExecutorService executorService, @Nullable Integer id) {
         try {
             if (id != null) this.setId(id);
             executorService.scheduleWithFixedDelay(() -> {
@@ -81,7 +79,7 @@ public class LwM2mBinaryAppDataContainer extends BaseInstanceEnabler implements 
         try {
             switch (resourceId) {
                 case 0:
-                    @NotNull ReadResponse response = ReadResponse.success(resourceId, getData(), ResourceModel.Type.OPAQUE);
+                    ReadResponse response = ReadResponse.success(resourceId, getData(), ResourceModel.Type.OPAQUE);
                     return response;
                 case 1:
                     return ReadResponse.success(resourceId, getPriority());
@@ -102,7 +100,7 @@ public class LwM2mBinaryAppDataContainer extends BaseInstanceEnabler implements 
     }
 
     @Override
-    public WriteResponse write(ServerIdentity identity, boolean replace, int resourceId, @NotNull LwM2mResource value) {
+    public WriteResponse write(ServerIdentity identity, boolean replace, int resourceId, LwM2mResource value) {
         log.info("Write on Device resource /[{}]/[{}]/[{}]", getModel().id, getId(), resourceId);
         switch (resourceId) {
             case 0:
@@ -148,7 +146,6 @@ public class LwM2mBinaryAppDataContainer extends BaseInstanceEnabler implements 
         this.dataFormat = value;
     }
 
-    @NotNull
     private String getDataFormat() {
         return this.dataFormat == null ? "OPAQUE" : this.dataFormat;
     }
@@ -166,7 +163,6 @@ public class LwM2mBinaryAppDataContainer extends BaseInstanceEnabler implements 
         this.timestamp = new Time(time);
     }
 
-    @NotNull
     private Time getTimestamp() {
         return this.timestamp != null ? this.timestamp : new Time(new Date().getTime());
     }
@@ -189,7 +185,6 @@ public class LwM2mBinaryAppDataContainer extends BaseInstanceEnabler implements 
         }
     }
 
-    @NotNull
     private Map<Integer, byte[]> getData() {
         if (data == null) {
             this.data = new HashMap<>();

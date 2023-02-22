@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.id.TbResourceId;
 import org.echoiot.server.common.data.validation.Length;
 import org.echoiot.server.common.data.validation.NoXss;
-import org.jetbrains.annotations.NotNull;
 
 @Slf4j
 @Data
@@ -36,12 +35,11 @@ public class TbResource extends TbResourceInfo {
         super(resourceInfo);
     }
 
-    public TbResource(@NotNull TbResource resource) {
+    public TbResource(TbResource resource) {
         super(resource);
         this.data = resource.getData();
     }
 
-    @NotNull
     @Override
     public String toString() {
         String builder = "Resource [tenantId=" +

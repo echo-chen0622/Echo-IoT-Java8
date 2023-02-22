@@ -2,7 +2,6 @@ package org.echoiot.server.dao.timeseries;
 
 import lombok.Getter;
 import org.echoiot.server.common.data.kv.TsKvQuery;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.UUID;
@@ -23,7 +22,7 @@ public class QueryCursor {
     final List<Long> partitions;
     private int partitionIndex;
 
-    public QueryCursor(String entityType, UUID entityId, @NotNull TsKvQuery baseQuery, @NotNull List<Long> partitions) {
+    public QueryCursor(String entityType, UUID entityId, TsKvQuery baseQuery, List<Long> partitions) {
         this.entityType = entityType;
         this.entityId = entityId;
         this.key = baseQuery.getKey();

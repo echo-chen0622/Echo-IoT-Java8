@@ -8,7 +8,6 @@ import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.data.kv.*;
 import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.gen.transport.TransportProtos.*;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
@@ -28,17 +27,17 @@ public class JsonConverter {
 
     private static int maxStringValueLength = 0;
 
-    public static PostTelemetryMsg convertToTelemetryProto(@NotNull JsonElement jsonElement, long ts) throws JsonSyntaxException {
+    public static PostTelemetryMsg convertToTelemetryProto(JsonElement jsonElement, long ts) throws JsonSyntaxException {
         PostTelemetryMsg.Builder builder = PostTelemetryMsg.newBuilder();
         convertToTelemetry(jsonElement, ts, null, builder);
         return builder.build();
     }
 
-    public static PostTelemetryMsg convertToTelemetryProto(@NotNull JsonElement jsonElement) throws JsonSyntaxException {
+    public static PostTelemetryMsg convertToTelemetryProto(JsonElement jsonElement) throws JsonSyntaxException {
         return convertToTelemetryProto(jsonElement, System.currentTimeMillis());
     }
 
-    private static void convertToTelemetry(@NotNull JsonElement jsonElement, long systemTs, Map<Long, List<KvEntry>> result, @NotNull PostTelemetryMsg.Builder builder) {
+    private static void convertToTelemetry(JsonElement jsonElement, long systemTs, Map<Long, List<KvEntry>> result, PostTelemetryMsg.Builder builder) {
         if (jsonElement.isJsonObject()) {
             parseObject(systemTs, result, builder, jsonElement.getAsJsonObject());
         } else if (jsonElement.isJsonArray()) {
@@ -54,7 +53,7 @@ public class JsonConverter {
         }
     }
 
-    private static void parseObject(long systemTs, @Nullable Map<Long, List<KvEntry>> result, @NotNull PostTelemetryMsg.Builder builder, @NotNull JsonObject jo) {
+    private static void parseObject(long systemTs, @Nullable Map<Long, List<KvEntry>> result, PostTelemetryMsg.Builder builder, JsonObject jo) {
         if (result != null) {
             parseObject(result, systemTs, jo);
         } else {
@@ -62,7 +61,7 @@ public class JsonConverter {
         }
     }
 
-    public static ClaimDeviceMsg convertToClaimDeviceProto(@NotNull DeviceId deviceId, @Nullable String json) {
+    public static ClaimDeviceMsg convertToClaimDeviceProto(DeviceId deviceId, @Nullable String json) {
         long durationMs = 0L;
         if (json != null && !json.isEmpty()) {
             return convertToClaimDeviceProto(deviceId, JSON_PARSER.parse(json));
@@ -70,7 +69,7 @@ public class JsonConverter {
         return buildClaimDeviceMsg(deviceId, DataConstants.DEFAULT_SECRET_KEY, durationMs);
     }
 
-    public static ClaimDeviceMsg convertToClaimDeviceProto(@NotNull DeviceId deviceId, @NotNull JsonElement jsonElement) {
+    public static ClaimDeviceMsg convertToClaimDeviceProto(DeviceId deviceId, JsonElement jsonElement) {
         String secretKey = DataConstants.DEFAULT_SECRET_KEY;
         long durationMs = 0L;
         if (jsonElement.isJsonObject()) {
@@ -87,7 +86,7 @@ public class JsonConverter {
         return buildClaimDeviceMsg(deviceId, secretKey, durationMs);
     }
 
-    private static ClaimDeviceMsg buildClaimDeviceMsg(@NotNull DeviceId deviceId, String secretKey, long durationMs) {
+    private static ClaimDeviceMsg buildClaimDeviceMsg(DeviceId deviceId, String secretKey, long durationMs) {
         ClaimDeviceMsg.Builder result = ClaimDeviceMsg.newBuilder();
         return result
                 .setDeviceIdMSB(deviceId.getId().getMostSignificantBits())
@@ -97,10 +96,10 @@ public class JsonConverter {
                 .build();
     }
 
-    public static PostAttributeMsg convertToAttributesProto(@NotNull JsonElement jsonObject) throws JsonSyntaxException {
+    public static PostAttributeMsg convertToAttributesProto(JsonElement jsonObject) throws JsonSyntaxException {
         if (jsonObject.isJsonObject()) {
             PostAttributeMsg.Builder result = PostAttributeMsg.newBuilder();
-            @NotNull List<KeyValueProto> keyValueList = parseProtoValues(jsonObject.getAsJsonObject());
+            List<KeyValueProto> keyValueList = parseProtoValues(jsonObject.getAsJsonObject());
             result.addAllKv(keyValueList);
             return result.build();
         } else {
@@ -108,9 +107,8 @@ public class JsonConverter {
         }
     }
 
-    @NotNull
-    public static JsonElement toJson(@NotNull TransportProtos.ToDeviceRpcRequestMsg msg, boolean includeRequestId) {
-        @NotNull JsonObject result = new JsonObject();
+    public static JsonElement toJson(TransportProtos.ToDeviceRpcRequestMsg msg, boolean includeRequestId) {
+        JsonObject result = new JsonObject();
         if (includeRequestId) {
             result.addProperty("id", msg.getRequestId());
         }
@@ -119,7 +117,7 @@ public class JsonConverter {
         return result;
     }
 
-    private static void parseObject(@NotNull PostTelemetryMsg.Builder builder, long systemTs, @NotNull JsonObject jo) {
+    private static void parseObject(PostTelemetryMsg.Builder builder, long systemTs, JsonObject jo) {
         if (jo.has("ts") && jo.has("values")) {
             parseWithTs(builder, jo);
         } else {
@@ -127,24 +125,23 @@ public class JsonConverter {
         }
     }
 
-    private static void parseWithoutTs(@NotNull PostTelemetryMsg.Builder request, long systemTs, @NotNull JsonObject jo) {
+    private static void parseWithoutTs(PostTelemetryMsg.Builder request, long systemTs, JsonObject jo) {
         TsKvListProto.Builder builder = TsKvListProto.newBuilder();
         builder.setTs(systemTs);
         builder.addAllKv(parseProtoValues(jo));
         request.addTsKvList(builder.build());
     }
 
-    private static void parseWithTs(@NotNull PostTelemetryMsg.Builder request, @NotNull JsonObject jo) {
+    private static void parseWithTs(PostTelemetryMsg.Builder request, JsonObject jo) {
         TsKvListProto.Builder builder = TsKvListProto.newBuilder();
         builder.setTs(jo.get("ts").getAsLong());
         builder.addAllKv(parseProtoValues(jo.get("values").getAsJsonObject()));
         request.addTsKvList(builder.build());
     }
 
-    @NotNull
-    private static List<KeyValueProto> parseProtoValues(@NotNull JsonObject valuesObject) {
-        @NotNull List<KeyValueProto> result = new ArrayList<>();
-        for (@NotNull Entry<String, JsonElement> valueEntry : valuesObject.entrySet()) {
+    private static List<KeyValueProto> parseProtoValues(JsonObject valuesObject) {
+        List<KeyValueProto> result = new ArrayList<>();
+        for (Entry<String, JsonElement> valueEntry : valuesObject.entrySet()) {
             JsonElement element = valueEntry.getValue();
             if (element.isJsonPrimitive()) {
                 JsonPrimitive value = element.getAsJsonPrimitive();
@@ -181,10 +178,10 @@ public class JsonConverter {
         return result;
     }
 
-    private static KeyValueProto buildNumericKeyValueProto(@NotNull JsonPrimitive value, String key) {
+    private static KeyValueProto buildNumericKeyValueProto(JsonPrimitive value, String key) {
         String valueAsString = value.getAsString();
         KeyValueProto.Builder builder = KeyValueProto.newBuilder().setKey(key);
-        @NotNull var bd = new BigDecimal(valueAsString);
+        var bd = new BigDecimal(valueAsString);
         if (bd.stripTrailingZeros().scale() <= 0 && !isSimpleDouble(valueAsString)) {
             try {
                 return builder.setType(KeyValueType.LONG_V).setLongV(bd.longValueExact()).build();
@@ -207,19 +204,19 @@ public class JsonConverter {
 
     }
 
-    private static boolean isSimpleDouble(@NotNull String valueAsString) {
+    private static boolean isSimpleDouble(String valueAsString) {
         return valueAsString.contains(".") && !valueAsString.contains("E") && !valueAsString.contains("e");
     }
 
-    public static TransportProtos.ToServerRpcRequestMsg convertToServerRpcRequest(@NotNull JsonElement json, int requestId) throws JsonSyntaxException {
+    public static TransportProtos.ToServerRpcRequestMsg convertToServerRpcRequest(JsonElement json, int requestId) throws JsonSyntaxException {
         JsonObject object = json.getAsJsonObject();
         return TransportProtos.ToServerRpcRequestMsg.newBuilder().setRequestId(requestId).setMethodName(object.get("method").getAsString()).setParams(GSON.toJson(object.get("params"))).build();
     }
 
-    private static void parseNumericValue(@NotNull List<KvEntry> result, @NotNull Entry<String, JsonElement> valueEntry, @NotNull JsonPrimitive value) {
+    private static void parseNumericValue(List<KvEntry> result, Entry<String, JsonElement> valueEntry, JsonPrimitive value) {
         String valueAsString = value.getAsString();
         String key = valueEntry.getKey();
-        @NotNull var bd = new BigDecimal(valueAsString);
+        var bd = new BigDecimal(valueAsString);
         if (bd.stripTrailingZeros().scale() <= 0 && !isSimpleDouble(valueAsString)) {
             try {
                 result.add(new LongDataEntry(key, bd.longValueExact()));
@@ -241,42 +238,39 @@ public class JsonConverter {
         }
     }
 
-    @NotNull
-    public static JsonObject toJson(@NotNull GetAttributeResponseMsg payload) {
-        @NotNull JsonObject result = new JsonObject();
+    public static JsonObject toJson(GetAttributeResponseMsg payload) {
+        JsonObject result = new JsonObject();
         if (payload.getClientAttributeListCount() > 0) {
-            @NotNull JsonObject attrObject = new JsonObject();
+            JsonObject attrObject = new JsonObject();
             payload.getClientAttributeListList().forEach(addToObjectFromProto(attrObject));
             result.add("client", attrObject);
         }
         if (payload.getSharedAttributeListCount() > 0) {
-            @NotNull JsonObject attrObject = new JsonObject();
+            JsonObject attrObject = new JsonObject();
             payload.getSharedAttributeListList().forEach(addToObjectFromProto(attrObject));
             result.add("shared", attrObject);
         }
         return result;
     }
 
-    @NotNull
-    public static JsonObject toJson(@NotNull AttributeUpdateNotificationMsg payload) {
-        @NotNull JsonObject result = new JsonObject();
+    public static JsonObject toJson(AttributeUpdateNotificationMsg payload) {
+        JsonObject result = new JsonObject();
         if (payload.getSharedUpdatedCount() > 0) {
             payload.getSharedUpdatedList().forEach(addToObjectFromProto(result));
         }
         if (payload.getSharedDeletedCount() > 0) {
-            @NotNull JsonArray attrObject = new JsonArray();
+            JsonArray attrObject = new JsonArray();
             payload.getSharedDeletedList().forEach(attrObject::add);
             result.add("deleted", attrObject);
         }
         return result;
     }
 
-    @NotNull
     public static JsonObject getJsonObjectForGateway(
             String deviceName,
-            @NotNull TransportProtos.GetAttributeResponseMsg responseMsg
+            TransportProtos.GetAttributeResponseMsg responseMsg
                                                     ) {
-        @NotNull JsonObject result = new JsonObject();
+        JsonObject result = new JsonObject();
         result.addProperty("id", responseMsg.getRequestId());
         result.addProperty(DEVICE_PROPERTY, deviceName);
         if (responseMsg.getClientAttributeListCount() > 0) {
@@ -288,16 +282,15 @@ public class JsonConverter {
         return result;
     }
 
-    @NotNull
-    public static JsonObject getJsonObjectForGateway(String deviceName, @NotNull AttributeUpdateNotificationMsg
+    public static JsonObject getJsonObjectForGateway(String deviceName, AttributeUpdateNotificationMsg
             notificationMsg) {
-        @NotNull JsonObject result = new JsonObject();
+        JsonObject result = new JsonObject();
         result.addProperty(DEVICE_PROPERTY, deviceName);
         result.add("data", toJson(notificationMsg));
         return result;
     }
 
-    private static void addValues(@NotNull JsonObject result, @NotNull List<TransportProtos.TsKvProto> kvList, boolean multipleAttrKeysRequested) {
+    private static void addValues(JsonObject result, List<TransportProtos.TsKvProto> kvList, boolean multipleAttrKeysRequested) {
         if (kvList.size() == 1 && !multipleAttrKeysRequested) {
             addValueToJson(result, "value", kvList.get(0).getKv());
         } else {
@@ -312,7 +305,7 @@ public class JsonConverter {
         }
     }
 
-    private static void addValueToJson(@NotNull JsonObject json, @NotNull String name, @NotNull TransportProtos.KeyValueProto entry) {
+    private static void addValueToJson(JsonObject json, String name, TransportProtos.KeyValueProto entry) {
         switch (entry.getType()) {
             case BOOLEAN_V:
                 json.addProperty(name, entry.getBoolV());
@@ -332,8 +325,7 @@ public class JsonConverter {
         }
     }
 
-    @NotNull
-    private static Consumer<TsKvProto> addToObjectFromProto(@NotNull JsonObject result) {
+    private static Consumer<TsKvProto> addToObjectFromProto(JsonObject result) {
         return de -> {
             switch (de.getKv().getType()) {
                 case BOOLEAN_V:
@@ -357,8 +349,7 @@ public class JsonConverter {
         };
     }
 
-    @NotNull
-    private static Consumer<AttributeKvEntry> addToObject(@NotNull JsonObject result) {
+    private static Consumer<AttributeKvEntry> addToObject(JsonObject result) {
         return de -> {
             switch (de.getDataType()) {
                 case BOOLEAN:
@@ -382,29 +373,26 @@ public class JsonConverter {
         };
     }
 
-    public static JsonElement toJson(@NotNull TransportProtos.ToServerRpcResponseMsg msg) {
+    public static JsonElement toJson(TransportProtos.ToServerRpcResponseMsg msg) {
         if (StringUtils.isEmpty(msg.getError())) {
             return JSON_PARSER.parse(msg.getPayload());
         } else {
-            @NotNull JsonObject errorMsg = new JsonObject();
+            JsonObject errorMsg = new JsonObject();
             errorMsg.addProperty("error", msg.getError());
             return errorMsg;
         }
     }
 
-    @NotNull
-    public static JsonObject toJson(@NotNull ProvisionDeviceResponseMsg payload) {
+    public static JsonObject toJson(ProvisionDeviceResponseMsg payload) {
         return toJson(payload, false, 0);
     }
 
-    @NotNull
-    public static JsonObject toJson(@NotNull ProvisionDeviceResponseMsg payload, int requestId) {
+    public static JsonObject toJson(ProvisionDeviceResponseMsg payload, int requestId) {
         return toJson(payload, true, requestId);
     }
 
-    @NotNull
-    private static JsonObject toJson(@NotNull ProvisionDeviceResponseMsg payload, boolean toGateway, int requestId) {
-        @NotNull JsonObject result = new JsonObject();
+    private static JsonObject toJson(ProvisionDeviceResponseMsg payload, boolean toGateway, int requestId) {
+        JsonObject result = new JsonObject();
         if (payload.getStatus() == ResponseStatus.NOT_FOUND) {
             result.addProperty("errorMsg", "Provision data was not found!");
             result.addProperty("status", ResponseStatus.NOT_FOUND.name());
@@ -432,42 +420,37 @@ public class JsonConverter {
         return result;
     }
 
-    @NotNull
     public static JsonElement toErrorJson(String errorMsg) {
-        @NotNull JsonObject error = new JsonObject();
+        JsonObject error = new JsonObject();
         error.addProperty("error", errorMsg);
         return error;
     }
 
-    @NotNull
-    public static JsonElement toGatewayJson(String deviceName, @NotNull TransportProtos.ToDeviceRpcRequestMsg rpcRequest) {
-        @NotNull JsonObject result = new JsonObject();
+    public static JsonElement toGatewayJson(String deviceName, TransportProtos.ToDeviceRpcRequestMsg rpcRequest) {
+        JsonObject result = new JsonObject();
         result.addProperty(DEVICE_PROPERTY, deviceName);
         result.add("data", JsonConverter.toJson(rpcRequest, true));
         return result;
     }
 
-    @NotNull
-    public static JsonElement toGatewayJson(String deviceName, @NotNull TransportProtos.ProvisionDeviceResponseMsg
+    public static JsonElement toGatewayJson(String deviceName, TransportProtos.ProvisionDeviceResponseMsg
             responseRequest) {
-        @NotNull JsonObject result = new JsonObject();
+        JsonObject result = new JsonObject();
         result.addProperty(DEVICE_PROPERTY, deviceName);
         result.add("data", JsonConverter.toJson(responseRequest));
         return result;
     }
 
-    @NotNull
-    public static Set<AttributeKvEntry> convertToAttributes(@NotNull JsonElement element) {
-        @NotNull Set<AttributeKvEntry> result = new HashSet<>();
+    public static Set<AttributeKvEntry> convertToAttributes(JsonElement element) {
+        Set<AttributeKvEntry> result = new HashSet<>();
         long ts = System.currentTimeMillis();
         result.addAll(parseValues(element.getAsJsonObject()).stream().map(kv -> new BaseAttributeKvEntry(kv, ts)).collect(Collectors.toList()));
         return result;
     }
 
-    @NotNull
-    private static List<KvEntry> parseValues(@NotNull JsonObject valuesObject) {
-        @NotNull List<KvEntry> result = new ArrayList<>();
-        for (@NotNull Entry<String, JsonElement> valueEntry : valuesObject.entrySet()) {
+    private static List<KvEntry> parseValues(JsonObject valuesObject) {
+        List<KvEntry> result = new ArrayList<>();
+        for (Entry<String, JsonElement> valueEntry : valuesObject.entrySet()) {
             JsonElement element = valueEntry.getValue();
             if (element.isJsonPrimitive()) {
                 JsonPrimitive value = element.getAsJsonPrimitive();
@@ -501,28 +484,25 @@ public class JsonConverter {
         return result;
     }
 
-    @NotNull
-    public static Map<Long, List<KvEntry>> convertToTelemetry(@NotNull JsonElement jsonElement, long systemTs) throws
+    public static Map<Long, List<KvEntry>> convertToTelemetry(JsonElement jsonElement, long systemTs) throws
             JsonSyntaxException {
         return convertToTelemetry(jsonElement, systemTs, false);
     }
 
-    @NotNull
-    public static Map<Long, List<KvEntry>> convertToSortedTelemetry(@NotNull JsonElement jsonElement, long systemTs) throws
+    public static Map<Long, List<KvEntry>> convertToSortedTelemetry(JsonElement jsonElement, long systemTs) throws
             JsonSyntaxException {
         return convertToTelemetry(jsonElement, systemTs, true);
     }
 
-    @NotNull
-    public static Map<Long, List<KvEntry>> convertToTelemetry(@NotNull JsonElement jsonElement, long systemTs, boolean sorted) throws
+    public static Map<Long, List<KvEntry>> convertToTelemetry(JsonElement jsonElement, long systemTs, boolean sorted) throws
             JsonSyntaxException {
-        @NotNull Map<Long, List<KvEntry>> result = sorted ? new TreeMap<>() : new HashMap<>();
+        Map<Long, List<KvEntry>> result = sorted ? new TreeMap<>() : new HashMap<>();
         convertToTelemetry(jsonElement, systemTs, result, null);
         return result;
     }
 
 
-    private static void parseObject(@NotNull Map<Long, List<KvEntry>> result, long systemTs, @NotNull JsonObject jo) {
+    private static void parseObject(Map<Long, List<KvEntry>> result, long systemTs, JsonObject jo) {
         if (jo.has("ts") && jo.has("values")) {
             parseWithTs(result, jo);
         } else {
@@ -530,13 +510,13 @@ public class JsonConverter {
         }
     }
 
-    private static void parseWithoutTs(@NotNull Map<Long, List<KvEntry>> result, long systemTs, @NotNull JsonObject jo) {
+    private static void parseWithoutTs(Map<Long, List<KvEntry>> result, long systemTs, JsonObject jo) {
         for (KvEntry entry : parseValues(jo)) {
             result.computeIfAbsent(systemTs, tmp -> new ArrayList<>()).add(entry);
         }
     }
 
-    public static void parseWithTs(@NotNull Map<Long, List<KvEntry>> result, @NotNull JsonObject jo) {
+    public static void parseWithTs(Map<Long, List<KvEntry>> result, JsonObject jo) {
         long ts = jo.get("ts").getAsLong();
         JsonObject valuesObject = jo.get("values").getAsJsonObject();
         for (KvEntry entry : parseValues(valuesObject)) {
@@ -544,11 +524,11 @@ public class JsonConverter {
         }
     }
 
-    public static JsonElement parse(@NotNull String json) {
+    public static JsonElement parse(String json) {
         return JSON_PARSER.parse(json);
     }
 
-    public static <T> T parse(@NotNull String json, Class<T> clazz) {
+    public static <T> T parse(String json, Class<T> clazz) {
         return fromJson(parse(json), clazz);
     }
 
@@ -572,7 +552,7 @@ public class JsonConverter {
         maxStringValueLength = length;
     }
 
-    public static TransportProtos.ProvisionDeviceRequestMsg convertToProvisionRequestMsg(@NotNull String json) {
+    public static TransportProtos.ProvisionDeviceRequestMsg convertToProvisionRequestMsg(String json) {
         JsonElement jsonElement = JSON_PARSER.parse(json);
         if (jsonElement.isJsonObject()) {
             return buildProvisionRequestMsg(jsonElement.getAsJsonObject());
@@ -581,11 +561,11 @@ public class JsonConverter {
         }
     }
 
-    public static TransportProtos.ProvisionDeviceRequestMsg convertToProvisionRequestMsg(@NotNull JsonObject jo) {
+    public static TransportProtos.ProvisionDeviceRequestMsg convertToProvisionRequestMsg(JsonObject jo) {
         return buildProvisionRequestMsg(jo);
     }
 
-    private static TransportProtos.ProvisionDeviceRequestMsg buildProvisionRequestMsg(@NotNull JsonObject jo) {
+    private static TransportProtos.ProvisionDeviceRequestMsg buildProvisionRequestMsg(JsonObject jo) {
         return TransportProtos.ProvisionDeviceRequestMsg.newBuilder()
                 .setDeviceName(getStrValue(jo, DataConstants.DEVICE_NAME, false))
                 .setCredentialsType(jo.get(DataConstants.CREDENTIALS_TYPE) != null ? TransportProtos.CredentialsType.valueOf(getStrValue(jo, DataConstants.CREDENTIALS_TYPE, false)) : CredentialsType.ACCESS_TOKEN)
@@ -613,7 +593,7 @@ public class JsonConverter {
     }
 
 
-    private static String getStrValue(@NotNull JsonObject jo, String field, boolean requiredField) {
+    private static String getStrValue(JsonObject jo, String field, boolean requiredField) {
         if (jo.has(field)) {
             return jo.get(field).getAsString();
         } else {

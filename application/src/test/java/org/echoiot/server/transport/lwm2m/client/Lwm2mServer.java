@@ -11,7 +11,6 @@ import org.eclipse.leshan.core.request.BindingMode;
 import org.eclipse.leshan.core.response.ExecuteResponse;
 import org.eclipse.leshan.core.response.ReadResponse;
 import org.eclipse.leshan.core.response.WriteResponse;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,7 +58,7 @@ public class Lwm2mServer extends BaseInstanceEnabler {
     }
 
     @Override
-    public ReadResponse read(@NotNull ServerIdentity identity, int resourceid) {
+    public ReadResponse read(ServerIdentity identity, int resourceid) {
         if (!identity.isSystem())
             LOG.debug("Read on Server resource /{}/{}/{}", getModel().id, getId(), resourceid);
 
@@ -97,7 +96,7 @@ public class Lwm2mServer extends BaseInstanceEnabler {
     }
 
     @Override
-    public WriteResponse write(@NotNull ServerIdentity identity, boolean replace, int resourceid, @NotNull LwM2mResource value) {
+    public WriteResponse write(ServerIdentity identity, boolean replace, int resourceid, LwM2mResource value) {
         if (!identity.isSystem())
             log.debug("Write on Server resource /{}/{}/{}", getModel().id, getId(), resourceid);
 

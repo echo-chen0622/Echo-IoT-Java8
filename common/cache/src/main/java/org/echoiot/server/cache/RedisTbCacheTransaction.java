@@ -2,7 +2,6 @@ package org.echoiot.server.cache;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisStringCommands;
 
@@ -13,9 +12,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class RedisTbCacheTransaction<K extends Serializable, V extends Serializable> implements TbCacheTransaction<K, V> {
 
-    @NotNull
     private final RedisTbTransactionalCache<K, V> cache;
-    @NotNull
     private final RedisConnection connection;
 
     @Override
@@ -26,7 +23,7 @@ public class RedisTbCacheTransaction<K extends Serializable, V extends Serializa
     @Override
     public boolean commit() {
         try {
-            @NotNull var execResult = connection.exec();
+            var execResult = connection.exec();
             var result = execResult != null && execResult.stream().anyMatch(Objects::nonNull);
             return result;
         } finally {

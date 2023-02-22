@@ -5,7 +5,6 @@ import org.echoiot.rule.engine.api.NodeConfiguration;
 import org.echoiot.server.common.data.alarm.AlarmSeverity;
 import org.echoiot.server.common.data.script.ScriptLanguage;
 import org.echoiot.server.common.data.validation.NoXss;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
@@ -24,10 +23,9 @@ public class TbCreateAlarmNodeConfiguration extends TbAbstractAlarmNodeConfigura
 
     private List<String> relationTypes;
 
-    @NotNull
     @Override
     public TbCreateAlarmNodeConfiguration defaultConfiguration() {
-        @NotNull TbCreateAlarmNodeConfiguration configuration = new TbCreateAlarmNodeConfiguration();
+        TbCreateAlarmNodeConfiguration configuration = new TbCreateAlarmNodeConfiguration();
         configuration.setScriptLang(ScriptLanguage.TBEL);
         configuration.setAlarmDetailsBuildJs(ALARM_DETAILS_BUILD_JS_TEMPLATE);
         configuration.setAlarmDetailsBuildTbel(ALARM_DETAILS_BUILD_TBEL_TEMPLATE);

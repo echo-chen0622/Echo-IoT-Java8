@@ -7,7 +7,6 @@ import org.echoiot.server.dao.model.sql.UserCredentialsEntity;
 import org.echoiot.server.dao.sql.JpaAbstractDao;
 import org.echoiot.server.dao.user.UserCredentialsDao;
 import org.echoiot.server.dao.util.SqlDao;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +23,6 @@ public class JpaUserCredentialsDao extends JpaAbstractDao<UserCredentialsEntity,
     @Resource
     private UserCredentialsRepository userCredentialsRepository;
 
-    @NotNull
     @Override
     protected Class<UserCredentialsEntity> getEntityClass() {
         return UserCredentialsEntity.class;

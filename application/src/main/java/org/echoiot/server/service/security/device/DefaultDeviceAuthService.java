@@ -8,7 +8,6 @@ import org.echoiot.server.common.transport.auth.DeviceAuthService;
 import org.echoiot.server.dao.device.DeviceCredentialsService;
 import org.echoiot.server.dao.device.DeviceService;
 import org.echoiot.server.queue.util.TbCoreComponent;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,9 +24,8 @@ public class DefaultDeviceAuthService implements DeviceAuthService {
         this.deviceCredentialsService = deviceCredentialsService;
     }
 
-    @NotNull
     @Override
-    public DeviceAuthResult process(@NotNull DeviceCredentialsFilter credentialsFilter) {
+    public DeviceAuthResult process(DeviceCredentialsFilter credentialsFilter) {
         log.trace("Lookup device credentials using filter {}", credentialsFilter);
         DeviceCredentials credentials = deviceCredentialsService.findDeviceCredentialsByCredentialsId(credentialsFilter.getCredentialsId());
         if (credentials != null) {

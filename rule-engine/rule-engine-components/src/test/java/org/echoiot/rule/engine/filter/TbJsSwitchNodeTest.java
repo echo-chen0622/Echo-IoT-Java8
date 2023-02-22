@@ -14,7 +14,6 @@ import org.echoiot.server.common.data.script.ScriptLanguage;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.TbMsgDataType;
 import org.echoiot.server.common.msg.TbMsgMetaData;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -39,12 +38,12 @@ public class TbJsSwitchNodeTest {
     @Test
     public void multipleRoutesAreAllowed() throws TbNodeException {
         initWithScript();
-        @NotNull TbMsgMetaData metaData = new TbMsgMetaData();
+        TbMsgMetaData metaData = new TbMsgMetaData();
         metaData.putValue("temp", "10");
         metaData.putValue("humidity", "99");
-        @NotNull String rawJson = "{\"name\": \"Vit\", \"passed\": 5}";
+        String rawJson = "{\"name\": \"Vit\", \"passed\": 5}";
 
-        @NotNull TbMsg msg = TbMsg.newMsg("USER", null, metaData, TbMsgDataType.JSON, rawJson, ruleChainId, ruleNodeId);
+        TbMsg msg = TbMsg.newMsg("USER", null, metaData, TbMsgDataType.JSON, rawJson, ruleChainId, ruleNodeId);
         when(scriptEngine.executeSwitchAsync(msg)).thenReturn(Futures.immediateFuture(Sets.newHashSet("one", "three")));
 
         node.onMsg(ctx, msg);
@@ -52,11 +51,11 @@ public class TbJsSwitchNodeTest {
     }
 
     private void initWithScript() throws TbNodeException {
-        @NotNull TbJsSwitchNodeConfiguration config = new TbJsSwitchNodeConfiguration();
+        TbJsSwitchNodeConfiguration config = new TbJsSwitchNodeConfiguration();
         config.setScriptLang(ScriptLanguage.JS);
         config.setJsScript("scr");
-        @NotNull ObjectMapper mapper = new ObjectMapper();
-        @NotNull TbNodeConfiguration nodeConfiguration = new TbNodeConfiguration(mapper.valueToTree(config));
+        ObjectMapper mapper = new ObjectMapper();
+        TbNodeConfiguration nodeConfiguration = new TbNodeConfiguration(mapper.valueToTree(config));
 
         when(ctx.createScriptEngine(ScriptLanguage.JS, "scr")).thenReturn(scriptEngine);
 

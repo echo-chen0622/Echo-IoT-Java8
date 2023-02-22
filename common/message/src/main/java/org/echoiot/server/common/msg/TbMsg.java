@@ -12,7 +12,6 @@ import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.id.*;
 import org.echoiot.server.common.msg.gen.MsgProtos;
 import org.echoiot.server.common.msg.queue.TbMsgCallback;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
@@ -37,14 +36,12 @@ public final class TbMsg implements Serializable {
     private final String data;
     private final RuleChainId ruleChainId;
     private final RuleNodeId ruleNodeId;
-    @NotNull
     @Getter(value = AccessLevel.NONE)
     @JsonIgnore
     //This field is not serialized because we use queues and there is no need to do it
     private final TbMsgProcessingCtx ctx;
 
     //This field is not serialized because we use queues and there is no need to do it
-    @NotNull
     @JsonIgnore
     transient private final TbMsgCallback callback;
 
@@ -52,111 +49,93 @@ public final class TbMsg implements Serializable {
         return ctx.getAndIncrementRuleNodeCounter();
     }
 
-    @NotNull
-    public static TbMsg newMsg(String queueName, String type, EntityId originator, @NotNull TbMsgMetaData metaData, String data, RuleChainId ruleChainId, RuleNodeId ruleNodeId) {
+    public static TbMsg newMsg(String queueName, String type, EntityId originator, TbMsgMetaData metaData, String data, RuleChainId ruleChainId, RuleNodeId ruleNodeId) {
         return newMsg(queueName, type, originator, null, metaData, data, ruleChainId, ruleNodeId);
     }
 
-    @NotNull
-    public static TbMsg newMsg(String queueName, String type, EntityId originator, CustomerId customerId, @NotNull TbMsgMetaData metaData, String data, RuleChainId ruleChainId, RuleNodeId ruleNodeId) {
+    public static TbMsg newMsg(String queueName, String type, EntityId originator, CustomerId customerId, TbMsgMetaData metaData, String data, RuleChainId ruleChainId, RuleNodeId ruleNodeId) {
         return new TbMsg(queueName, UUID.randomUUID(), System.currentTimeMillis(), type, originator, customerId,
                 metaData.copy(), TbMsgDataType.JSON, data, ruleChainId, ruleNodeId, null, TbMsgCallback.EMPTY);
     }
 
-    @NotNull
-    public static TbMsg newMsg(String type, EntityId originator, @NotNull TbMsgMetaData metaData, String data) {
+    public static TbMsg newMsg(String type, EntityId originator, TbMsgMetaData metaData, String data) {
         return newMsg(type, originator, null, metaData, data);
     }
 
-    @NotNull
-    public static TbMsg newMsg(String type, EntityId originator, CustomerId customerId, @NotNull TbMsgMetaData metaData, String data) {
+    public static TbMsg newMsg(String type, EntityId originator, CustomerId customerId, TbMsgMetaData metaData, String data) {
         return new TbMsg(null, UUID.randomUUID(), System.currentTimeMillis(), type, originator, customerId,
                 metaData.copy(), TbMsgDataType.JSON, data, null, null, null, TbMsgCallback.EMPTY);
     }
 
     // REALLY NEW MSG
 
-    @NotNull
-    public static TbMsg newMsg(String queueName, String type, EntityId originator, @NotNull TbMsgMetaData metaData, String data) {
+    public static TbMsg newMsg(String queueName, String type, EntityId originator, TbMsgMetaData metaData, String data) {
         return newMsg(queueName, type, originator, null, metaData, data);
     }
 
-    @NotNull
-    public static TbMsg newMsg(String queueName, String type, EntityId originator, CustomerId customerId, @NotNull TbMsgMetaData metaData, String data) {
+    public static TbMsg newMsg(String queueName, String type, EntityId originator, CustomerId customerId, TbMsgMetaData metaData, String data) {
         return new TbMsg(queueName, UUID.randomUUID(), System.currentTimeMillis(), type, originator, customerId,
                 metaData.copy(), TbMsgDataType.JSON, data, null, null, null, TbMsgCallback.EMPTY);
     }
 
-    @NotNull
-    public static TbMsg newMsg(String type, EntityId originator, CustomerId customerId, @NotNull TbMsgMetaData metaData, TbMsgDataType dataType, String data) {
+    public static TbMsg newMsg(String type, EntityId originator, CustomerId customerId, TbMsgMetaData metaData, TbMsgDataType dataType, String data) {
         return new TbMsg(null, UUID.randomUUID(), System.currentTimeMillis(), type, originator, customerId,
                 metaData.copy(), dataType, data, null, null, null, TbMsgCallback.EMPTY);
     }
 
-    @NotNull
-    public static TbMsg newMsg(String type, EntityId originator, @NotNull TbMsgMetaData metaData, TbMsgDataType dataType, String data) {
+    public static TbMsg newMsg(String type, EntityId originator, TbMsgMetaData metaData, TbMsgDataType dataType, String data) {
         return newMsg(type, originator, null, metaData, dataType, data);
     }
 
     // For Tests only
 
-    @NotNull
-    public static TbMsg newMsg(String type, EntityId originator, @NotNull TbMsgMetaData metaData, TbMsgDataType dataType, String data, RuleChainId ruleChainId, RuleNodeId ruleNodeId) {
+    public static TbMsg newMsg(String type, EntityId originator, TbMsgMetaData metaData, TbMsgDataType dataType, String data, RuleChainId ruleChainId, RuleNodeId ruleNodeId) {
         return new TbMsg(null, UUID.randomUUID(), System.currentTimeMillis(), type, originator, null,
                 metaData.copy(), dataType, data, ruleChainId, ruleNodeId, null, TbMsgCallback.EMPTY);
     }
 
-    @NotNull
-    public static TbMsg newMsg(String type, EntityId originator, @NotNull TbMsgMetaData metaData, String data, TbMsgCallback callback) {
+    public static TbMsg newMsg(String type, EntityId originator, TbMsgMetaData metaData, String data, TbMsgCallback callback) {
         return new TbMsg(null, UUID.randomUUID(), System.currentTimeMillis(), type, originator, null,
                 metaData.copy(), TbMsgDataType.JSON, data, null, null, null, callback);
     }
 
-    @NotNull
-    public static TbMsg transformMsg(@NotNull TbMsg tbMsg, String type, EntityId originator, @NotNull TbMsgMetaData metaData, String data) {
+    public static TbMsg transformMsg(TbMsg tbMsg, String type, EntityId originator, TbMsgMetaData metaData, String data) {
         return new TbMsg(tbMsg.queueName, tbMsg.id, tbMsg.ts, type, originator, tbMsg.customerId, metaData.copy(), tbMsg.dataType,
                 data, tbMsg.ruleChainId, tbMsg.ruleNodeId, tbMsg.ctx.copy(), tbMsg.callback);
     }
 
-    @NotNull
-    public static TbMsg transformMsgData(@NotNull TbMsg tbMsg, String data) {
+    public static TbMsg transformMsgData(TbMsg tbMsg, String data) {
         return new TbMsg(tbMsg.queueName, tbMsg.id, tbMsg.ts, tbMsg.type, tbMsg.originator, tbMsg.customerId, tbMsg.metaData, tbMsg.dataType,
                 data, tbMsg.ruleChainId, tbMsg.ruleNodeId, tbMsg.ctx.copy(), tbMsg.getCallback());
     }
 
-    @NotNull
-    public static TbMsg transformMsg(@NotNull TbMsg tbMsg, @NotNull TbMsgMetaData metadata) {
+    public static TbMsg transformMsg(TbMsg tbMsg, TbMsgMetaData metadata) {
         return new TbMsg(tbMsg.queueName, tbMsg.id, tbMsg.ts, tbMsg.type, tbMsg.originator, tbMsg.customerId, metadata.copy(), tbMsg.dataType,
                 tbMsg.data, tbMsg.ruleChainId, tbMsg.ruleNodeId, tbMsg.ctx.copy(), tbMsg.getCallback());
     }
 
-    @NotNull
-    public static TbMsg transformMsg(@NotNull TbMsg tbMsg, CustomerId customerId) {
+    public static TbMsg transformMsg(TbMsg tbMsg, CustomerId customerId) {
         return new TbMsg(tbMsg.queueName, tbMsg.id, tbMsg.ts, tbMsg.type, tbMsg.originator, customerId, tbMsg.metaData, tbMsg.dataType,
                 tbMsg.data, tbMsg.ruleChainId, tbMsg.ruleNodeId, tbMsg.ctx.copy(), tbMsg.getCallback());
     }
 
-    @NotNull
-    public static TbMsg transformMsg(@NotNull TbMsg tbMsg, RuleChainId ruleChainId) {
+    public static TbMsg transformMsg(TbMsg tbMsg, RuleChainId ruleChainId) {
         return new TbMsg(tbMsg.queueName, tbMsg.id, tbMsg.ts, tbMsg.type, tbMsg.originator, tbMsg.customerId, tbMsg.metaData, tbMsg.dataType,
                 tbMsg.data, ruleChainId, null, tbMsg.ctx.copy(), tbMsg.getCallback());
     }
 
-    @NotNull
-    public static TbMsg transformMsg(@NotNull TbMsg tbMsg, String queueName) {
+    public static TbMsg transformMsg(TbMsg tbMsg, String queueName) {
         return new TbMsg(queueName, tbMsg.id, tbMsg.ts, tbMsg.type, tbMsg.originator, tbMsg.customerId, tbMsg.metaData, tbMsg.dataType,
                 tbMsg.data, tbMsg.getRuleChainId(), null, tbMsg.ctx.copy(), tbMsg.getCallback());
     }
 
-    @NotNull
-    public static TbMsg transformMsg(@NotNull TbMsg tbMsg, RuleChainId ruleChainId, String queueName) {
+    public static TbMsg transformMsg(TbMsg tbMsg, RuleChainId ruleChainId, String queueName) {
         return new TbMsg(queueName, tbMsg.id, tbMsg.ts, tbMsg.type, tbMsg.originator, tbMsg.customerId, tbMsg.metaData, tbMsg.dataType,
                 tbMsg.data, ruleChainId, null, tbMsg.ctx.copy(), tbMsg.getCallback());
     }
 
     //used for enqueueForTellNext
-    @NotNull
-    public static TbMsg newMsg(@NotNull TbMsg tbMsg, String queueName, RuleChainId ruleChainId, RuleNodeId ruleNodeId) {
+    public static TbMsg newMsg(TbMsg tbMsg, String queueName, RuleChainId ruleChainId, RuleNodeId ruleNodeId) {
         return new TbMsg(queueName, UUID.randomUUID(), tbMsg.getTs(), tbMsg.getType(), tbMsg.getOriginator(), tbMsg.customerId, tbMsg.getMetaData().copy(),
                 tbMsg.getDataType(), tbMsg.getData(), ruleChainId, ruleNodeId, tbMsg.ctx.copy(), TbMsgCallback.EMPTY);
     }
@@ -194,12 +173,11 @@ public final class TbMsg implements Serializable {
         }
     }
 
-    @NotNull
-    public static ByteString toByteString(@NotNull TbMsg msg) {
+    public static ByteString toByteString(TbMsg msg) {
         return ByteString.copyFrom(toByteArray(msg));
     }
 
-    public static byte[] toByteArray(@NotNull TbMsg msg) {
+    public static byte[] toByteArray(TbMsg msg) {
         MsgProtos.TbMsgProto.Builder builder = MsgProtos.TbMsgProto.newBuilder();
         builder.setId(msg.getId().toString());
         builder.setTs(msg.getTs());
@@ -234,11 +212,10 @@ public final class TbMsg implements Serializable {
         return builder.build().toByteArray();
     }
 
-    @NotNull
     public static TbMsg fromBytes(String queueName, byte[] data, TbMsgCallback callback) {
         try {
             MsgProtos.TbMsgProto proto = MsgProtos.TbMsgProto.parseFrom(data);
-            @NotNull TbMsgMetaData metaData = new TbMsgMetaData(proto.getMetaData().getDataMap());
+            TbMsgMetaData metaData = new TbMsgMetaData(proto.getMetaData().getDataMap());
             EntityId entityId = EntityIdFactory.getByTypeAndUuid(proto.getEntityType(), new UUID(proto.getEntityIdMSB(), proto.getEntityIdLSB()));
             @Nullable CustomerId customerId = null;
             @Nullable RuleChainId ruleChainId = null;
@@ -269,24 +246,20 @@ public final class TbMsg implements Serializable {
         }
     }
 
-    @NotNull
     public TbMsg copyWithRuleChainId(RuleChainId ruleChainId) {
         return copyWithRuleChainId(ruleChainId, this.id);
     }
 
-    @NotNull
     public TbMsg copyWithRuleChainId(RuleChainId ruleChainId, UUID msgId) {
         return new TbMsg(this.queueName, msgId, this.ts, this.type, this.originator, this.customerId,
                 this.metaData, this.dataType, this.data, ruleChainId, null, this.ctx, callback);
     }
 
-    @NotNull
     public TbMsg copyWithRuleNodeId(RuleChainId ruleChainId, RuleNodeId ruleNodeId, UUID msgId) {
         return new TbMsg(this.queueName, msgId, this.ts, this.type, this.originator, this.customerId,
                 this.metaData, this.dataType, this.data, ruleChainId, ruleNodeId, this.ctx, callback);
     }
 
-    @NotNull
     public TbMsgCallback getCallback() {
         // May be null in case of deserialization;
         if (callback != null) {

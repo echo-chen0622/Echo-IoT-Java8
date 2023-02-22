@@ -5,7 +5,6 @@ import io.netty.handler.ipfilter.AbstractRemoteAddressFilter;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.transport.mqtt.MqttTransportContext;
 import org.echoiot.server.transport.mqtt.MqttTransportService;
-import org.jetbrains.annotations.NotNull;
 
 import java.net.InetSocketAddress;
 
@@ -19,7 +18,7 @@ public class IpFilter extends AbstractRemoteAddressFilter<InetSocketAddress> {
     }
 
     @Override
-    protected boolean accept(@NotNull ChannelHandlerContext ctx, InetSocketAddress remoteAddress) throws Exception {
+    protected boolean accept(ChannelHandlerContext ctx, InetSocketAddress remoteAddress) throws Exception {
         log.trace("[{}] Received msg: {}", ctx.channel().id(), remoteAddress);
         if(context.checkAddress(remoteAddress)){
             log.trace("[{}] Setting address: {}", ctx.channel().id(), remoteAddress);

@@ -16,7 +16,6 @@ import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.entitiy.alarm.TbAlarmService;
 import org.echoiot.server.service.security.permission.Operation;
 import org.echoiot.server.service.security.permission.PerResource;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -29,7 +28,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api")
 public class AlarmController extends BaseController {
 
-    @NotNull
     private final TbAlarmService tbAlarmService;
 
     public static final String ALARM_ID = "alarmId";
@@ -50,11 +48,11 @@ public class AlarmController extends BaseController {
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/alarm/{alarmId}", method = RequestMethod.GET)
     @ResponseBody
-    public Alarm getAlarmById(@NotNull @ApiParam(value = ControllerConstants.ALARM_ID_PARAM_DESCRIPTION)
+    public Alarm getAlarmById(@ApiParam(value = ControllerConstants.ALARM_ID_PARAM_DESCRIPTION)
                               @PathVariable(ALARM_ID) String strAlarmId) throws EchoiotException {
         checkParameter(ALARM_ID, strAlarmId);
         try {
-            @NotNull AlarmId alarmId = new AlarmId(toUUID(strAlarmId));
+            AlarmId alarmId = new AlarmId(toUUID(strAlarmId));
             return checkAlarmId(alarmId, Operation.READ);
         } catch (Exception e) {
             throw handleException(e);
@@ -67,11 +65,11 @@ public class AlarmController extends BaseController {
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/alarm/info/{alarmId}", method = RequestMethod.GET)
     @ResponseBody
-    public AlarmInfo getAlarmInfoById(@NotNull @ApiParam(value = ControllerConstants.ALARM_ID_PARAM_DESCRIPTION)
+    public AlarmInfo getAlarmInfoById(@ApiParam(value = ControllerConstants.ALARM_ID_PARAM_DESCRIPTION)
                                       @PathVariable(ALARM_ID) String strAlarmId) throws EchoiotException {
         checkParameter(ALARM_ID, strAlarmId);
         try {
-            @NotNull AlarmId alarmId = new AlarmId(toUUID(strAlarmId));
+            AlarmId alarmId = new AlarmId(toUUID(strAlarmId));
             return checkAlarmInfoId(alarmId, Operation.READ);
         } catch (Exception e) {
             throw handleException(e);
@@ -93,7 +91,7 @@ public class AlarmController extends BaseController {
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/alarm", method = RequestMethod.POST)
     @ResponseBody
-    public Alarm saveAlarm(@NotNull @ApiParam(value = "A JSON value representing the alarm.") @RequestBody Alarm alarm) throws EchoiotException {
+    public Alarm saveAlarm(@ApiParam(value = "A JSON value representing the alarm.") @RequestBody Alarm alarm) throws EchoiotException {
         alarm.setTenantId(getTenantId());
         checkEntity(alarm.getId(), alarm, PerResource.ALARM);
         return tbAlarmService.save(alarm, getCurrentUser());
@@ -104,9 +102,9 @@ public class AlarmController extends BaseController {
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/alarm/{alarmId}", method = RequestMethod.DELETE)
     @ResponseBody
-    public Boolean deleteAlarm(@NotNull @ApiParam(value = ControllerConstants.ALARM_ID_PARAM_DESCRIPTION) @PathVariable(ALARM_ID) String strAlarmId) throws EchoiotException {
+    public Boolean deleteAlarm(@ApiParam(value = ControllerConstants.ALARM_ID_PARAM_DESCRIPTION) @PathVariable(ALARM_ID) String strAlarmId) throws EchoiotException {
         checkParameter(ALARM_ID, strAlarmId);
-        @NotNull AlarmId alarmId = new AlarmId(toUUID(strAlarmId));
+        AlarmId alarmId = new AlarmId(toUUID(strAlarmId));
         Alarm alarm = checkAlarmId(alarmId, Operation.DELETE);
         return tbAlarmService.delete(alarm, getCurrentUser());
     }
@@ -118,9 +116,9 @@ public class AlarmController extends BaseController {
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/alarm/{alarmId}/ack", method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.OK)
-    public void ackAlarm(@NotNull @ApiParam(value = ControllerConstants.ALARM_ID_PARAM_DESCRIPTION) @PathVariable(ALARM_ID) String strAlarmId) throws Exception {
+    public void ackAlarm(@ApiParam(value = ControllerConstants.ALARM_ID_PARAM_DESCRIPTION) @PathVariable(ALARM_ID) String strAlarmId) throws Exception {
         checkParameter(ALARM_ID, strAlarmId);
-        @NotNull AlarmId alarmId = new AlarmId(toUUID(strAlarmId));
+        AlarmId alarmId = new AlarmId(toUUID(strAlarmId));
         Alarm alarm = checkAlarmId(alarmId, Operation.WRITE);
         tbAlarmService.ack(alarm, getCurrentUser()).get();
     }
@@ -132,9 +130,9 @@ public class AlarmController extends BaseController {
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/alarm/{alarmId}/clear", method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.OK)
-    public void clearAlarm(@NotNull @ApiParam(value = ControllerConstants.ALARM_ID_PARAM_DESCRIPTION) @PathVariable(ALARM_ID) String strAlarmId) throws Exception {
+    public void clearAlarm(@ApiParam(value = ControllerConstants.ALARM_ID_PARAM_DESCRIPTION) @PathVariable(ALARM_ID) String strAlarmId) throws Exception {
         checkParameter(ALARM_ID, strAlarmId);
-        @NotNull AlarmId alarmId = new AlarmId(toUUID(strAlarmId));
+        AlarmId alarmId = new AlarmId(toUUID(strAlarmId));
         Alarm alarm = checkAlarmId(alarmId, Operation.WRITE);
         tbAlarmService.clear(alarm, getCurrentUser()).get();
     }
@@ -148,7 +146,7 @@ public class AlarmController extends BaseController {
     public PageData<AlarmInfo> getAlarms(
             @ApiParam(value = ControllerConstants.ENTITY_TYPE_PARAM_DESCRIPTION, required = true, defaultValue = "DEVICE")
             @PathVariable(ControllerConstants.ENTITY_TYPE) String strEntityType,
-            @NotNull @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true)
+            @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true)
             @PathVariable(ControllerConstants.ENTITY_ID) String strEntityId,
             @ApiParam(value = ALARM_QUERY_SEARCH_STATUS_DESCRIPTION, allowableValues = ALARM_QUERY_SEARCH_STATUS_ALLOWABLE_VALUES)
             @RequestParam(required = false) String searchStatus,
@@ -162,7 +160,7 @@ public class AlarmController extends BaseController {
             @RequestParam(required = false) String textSearch,
             @ApiParam(value = ControllerConstants.SORT_PROPERTY_DESCRIPTION, allowableValues = ControllerConstants.ALARM_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
-            @NotNull @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
+            @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortOrder,
             @ApiParam(value = ALARM_QUERY_START_TIME_DESCRIPTION)
             @RequestParam(required = false) Long startTime,
@@ -181,7 +179,7 @@ public class AlarmController extends BaseController {
                     "and 'status' can't be specified at the same time!", EchoiotErrorCode.BAD_REQUEST_PARAMS);
         }
         checkEntityId(entityId, Operation.READ);
-        @NotNull TimePageLink pageLink = createTimePageLink(pageSize, page, textSearch, sortProperty, sortOrder, startTime, endTime);
+        TimePageLink pageLink = createTimePageLink(pageSize, page, textSearch, sortProperty, sortOrder, startTime, endTime);
 
         try {
             return checkNotNull(alarmService.findAlarms(getCurrentUser().getTenantId(), new AlarmQuery(entityId, pageLink, alarmSearchStatus, alarmStatus, fetchOriginator)).get());
@@ -212,7 +210,7 @@ public class AlarmController extends BaseController {
             @RequestParam(required = false) String textSearch,
             @ApiParam(value = ControllerConstants.SORT_PROPERTY_DESCRIPTION, allowableValues = ControllerConstants.ALARM_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
-            @NotNull @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
+            @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortOrder,
             @ApiParam(value = ALARM_QUERY_START_TIME_DESCRIPTION)
             @RequestParam(required = false) Long startTime,
@@ -227,7 +225,7 @@ public class AlarmController extends BaseController {
             throw new EchoiotException("Invalid alarms search query: Both parameters 'searchStatus' " +
                     "and 'status' can't be specified at the same time!", EchoiotErrorCode.BAD_REQUEST_PARAMS);
         }
-        @NotNull TimePageLink pageLink = createTimePageLink(pageSize, page, textSearch, sortProperty, sortOrder, startTime, endTime);
+        TimePageLink pageLink = createTimePageLink(pageSize, page, textSearch, sortProperty, sortOrder, startTime, endTime);
 
         try {
             if (getCurrentUser().isCustomerUser()) {
@@ -250,7 +248,7 @@ public class AlarmController extends BaseController {
     public AlarmSeverity getHighestAlarmSeverity(
             @ApiParam(value = ControllerConstants.ENTITY_TYPE_PARAM_DESCRIPTION, required = true, defaultValue = "DEVICE")
             @PathVariable(ControllerConstants.ENTITY_TYPE) String strEntityType,
-            @NotNull @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true)
+            @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true)
             @PathVariable(ControllerConstants.ENTITY_ID) String strEntityId,
             @ApiParam(value = ALARM_QUERY_SEARCH_STATUS_DESCRIPTION, allowableValues = ALARM_QUERY_SEARCH_STATUS_ALLOWABLE_VALUES)
             @RequestParam(required = false) String searchStatus,

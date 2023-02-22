@@ -13,7 +13,6 @@ import org.echoiot.server.common.data.script.ScriptLanguage;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.TbMsgDataType;
 import org.echoiot.server.common.msg.TbMsgMetaData;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -40,18 +39,18 @@ public class TbTransformMsgNodeTest {
     @Test
     public void metadataCanBeUpdated() throws TbNodeException {
         initWithScript();
-        @NotNull TbMsgMetaData metaData = new TbMsgMetaData();
+        TbMsgMetaData metaData = new TbMsgMetaData();
         metaData.putValue("temp", "7");
-        @NotNull String rawJson = "{\"passed\": 5}";
+        String rawJson = "{\"passed\": 5}";
 
-        @NotNull RuleChainId ruleChainId = new RuleChainId(Uuids.timeBased());
-        @NotNull RuleNodeId ruleNodeId = new RuleNodeId(Uuids.timeBased());
-        @NotNull TbMsg msg = TbMsg.newMsg("USER", null, metaData, TbMsgDataType.JSON, rawJson, ruleChainId, ruleNodeId);
-        @NotNull TbMsg transformedMsg = TbMsg.newMsg("USER", null, metaData, TbMsgDataType.JSON, "{new}", ruleChainId, ruleNodeId);
+        RuleChainId ruleChainId = new RuleChainId(Uuids.timeBased());
+        RuleNodeId ruleNodeId = new RuleNodeId(Uuids.timeBased());
+        TbMsg msg = TbMsg.newMsg("USER", null, metaData, TbMsgDataType.JSON, rawJson, ruleChainId, ruleNodeId);
+        TbMsg transformedMsg = TbMsg.newMsg("USER", null, metaData, TbMsgDataType.JSON, "{new}", ruleChainId, ruleNodeId);
         when(scriptEngine.executeUpdateAsync(msg)).thenReturn(Futures.immediateFuture(Collections.singletonList(transformedMsg)));
 
         node.onMsg(ctx, msg);
-        @NotNull ArgumentCaptor<TbMsg> captor = ArgumentCaptor.forClass(TbMsg.class);
+        ArgumentCaptor<TbMsg> captor = ArgumentCaptor.forClass(TbMsg.class);
         verify(ctx).tellSuccess(captor.capture());
         TbMsg actualMsg = captor.getValue();
         assertEquals(transformedMsg, actualMsg);
@@ -60,13 +59,13 @@ public class TbTransformMsgNodeTest {
     @Test
     public void exceptionHandledCorrectly() throws TbNodeException {
         initWithScript();
-        @NotNull TbMsgMetaData metaData = new TbMsgMetaData();
+        TbMsgMetaData metaData = new TbMsgMetaData();
         metaData.putValue("temp", "7");
-        @NotNull String rawJson = "{\"passed\": 5";
+        String rawJson = "{\"passed\": 5";
 
-        @NotNull RuleChainId ruleChainId = new RuleChainId(Uuids.timeBased());
-        @NotNull RuleNodeId ruleNodeId = new RuleNodeId(Uuids.timeBased());
-        @NotNull TbMsg msg = TbMsg.newMsg("USER", null, metaData, TbMsgDataType.JSON, rawJson, ruleChainId, ruleNodeId);
+        RuleChainId ruleChainId = new RuleChainId(Uuids.timeBased());
+        RuleNodeId ruleNodeId = new RuleNodeId(Uuids.timeBased());
+        TbMsg msg = TbMsg.newMsg("USER", null, metaData, TbMsgDataType.JSON, rawJson, ruleChainId, ruleNodeId);
         when(scriptEngine.executeUpdateAsync(msg)).thenReturn(Futures.immediateFailedFuture(new IllegalStateException("error")));
 
         node.onMsg(ctx, msg);
@@ -74,11 +73,11 @@ public class TbTransformMsgNodeTest {
     }
 
     private void initWithScript() throws TbNodeException {
-        @NotNull TbTransformMsgNodeConfiguration config = new TbTransformMsgNodeConfiguration();
+        TbTransformMsgNodeConfiguration config = new TbTransformMsgNodeConfiguration();
         config.setScriptLang(ScriptLanguage.JS);
         config.setJsScript("scr");
-        @NotNull ObjectMapper mapper = new ObjectMapper();
-        @NotNull TbNodeConfiguration nodeConfiguration = new TbNodeConfiguration(mapper.valueToTree(config));
+        ObjectMapper mapper = new ObjectMapper();
+        TbNodeConfiguration nodeConfiguration = new TbNodeConfiguration(mapper.valueToTree(config));
 
         when(ctx.createScriptEngine(ScriptLanguage.JS, "scr")).thenReturn(scriptEngine);
 
@@ -87,7 +86,7 @@ public class TbTransformMsgNodeTest {
     }
 
     private void verifyError(TbMsg msg, String message, Class expectedClass) {
-        @NotNull ArgumentCaptor<Throwable> captor = ArgumentCaptor.forClass(Throwable.class);
+        ArgumentCaptor<Throwable> captor = ArgumentCaptor.forClass(Throwable.class);
         verify(ctx).tellFailure(same(msg), captor.capture());
 
         Throwable value = captor.getValue();

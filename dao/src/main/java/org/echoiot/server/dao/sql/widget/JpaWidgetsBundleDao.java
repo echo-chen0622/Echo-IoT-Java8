@@ -11,7 +11,6 @@ import org.echoiot.server.dao.model.sql.WidgetsBundleEntity;
 import org.echoiot.server.dao.sql.JpaAbstractSearchTextDao;
 import org.echoiot.server.dao.util.SqlDao;
 import org.echoiot.server.dao.widget.WidgetsBundleDao;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
@@ -33,7 +32,6 @@ public class JpaWidgetsBundleDao extends JpaAbstractSearchTextDao<WidgetsBundleE
     @Resource
     private WidgetsBundleRepository widgetsBundleRepository;
 
-    @NotNull
     @Override
     protected Class<WidgetsBundleEntity> getEntityClass() {
         return WidgetsBundleEntity.class;
@@ -49,9 +47,8 @@ public class JpaWidgetsBundleDao extends JpaAbstractSearchTextDao<WidgetsBundleE
         return DaoUtil.getData(widgetsBundleRepository.findWidgetsBundleByTenantIdAndAlias(tenantId, alias));
     }
 
-    @NotNull
     @Override
-    public PageData<WidgetsBundle> findSystemWidgetsBundles(TenantId tenantId, @NotNull PageLink pageLink) {
+    public PageData<WidgetsBundle> findSystemWidgetsBundles(TenantId tenantId, PageLink pageLink) {
         return DaoUtil.toPageData(
                 widgetsBundleRepository
                         .findSystemWidgetsBundles(
@@ -60,9 +57,8 @@ public class JpaWidgetsBundleDao extends JpaAbstractSearchTextDao<WidgetsBundleE
                                 DaoUtil.toPageable(pageLink)));
     }
 
-    @NotNull
     @Override
-    public PageData<WidgetsBundle> findTenantWidgetsBundlesByTenantId(UUID tenantId, @NotNull PageLink pageLink) {
+    public PageData<WidgetsBundle> findTenantWidgetsBundlesByTenantId(UUID tenantId, PageLink pageLink) {
         return DaoUtil.toPageData(
                 widgetsBundleRepository
                         .findTenantWidgetsBundlesByTenantId(
@@ -71,9 +67,8 @@ public class JpaWidgetsBundleDao extends JpaAbstractSearchTextDao<WidgetsBundleE
                                 DaoUtil.toPageable(pageLink)));
     }
 
-    @NotNull
     @Override
-    public PageData<WidgetsBundle> findAllTenantWidgetsBundlesByTenantId(UUID tenantId, @NotNull PageLink pageLink) {
+    public PageData<WidgetsBundle> findAllTenantWidgetsBundlesByTenantId(UUID tenantId, PageLink pageLink) {
         return DaoUtil.toPageData(
                 widgetsBundleRepository
                         .findAllTenantWidgetsBundlesByTenantId(
@@ -94,18 +89,17 @@ public class JpaWidgetsBundleDao extends JpaAbstractSearchTextDao<WidgetsBundleE
     }
 
     @Override
-    public PageData<WidgetsBundle> findByTenantId(UUID tenantId, @NotNull PageLink pageLink) {
+    public PageData<WidgetsBundle> findByTenantId(UUID tenantId, PageLink pageLink) {
         return findTenantWidgetsBundlesByTenantId(tenantId, pageLink);
     }
 
     @Nullable
     @Override
-    public WidgetsBundleId getExternalIdByInternal(@NotNull WidgetsBundleId internalId) {
+    public WidgetsBundleId getExternalIdByInternal(WidgetsBundleId internalId) {
         return Optional.ofNullable(widgetsBundleRepository.getExternalIdById(internalId.getId()))
                 .map(WidgetsBundleId::new).orElse(null);
     }
 
-    @NotNull
     @Override
     public EntityType getEntityType() {
         return EntityType.WIDGETS_BUNDLE;

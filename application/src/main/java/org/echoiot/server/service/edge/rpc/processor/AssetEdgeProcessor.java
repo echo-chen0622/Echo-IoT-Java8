@@ -13,7 +13,6 @@ import org.echoiot.server.gen.edge.v1.DownlinkMsg;
 import org.echoiot.server.gen.edge.v1.UpdateMsgType;
 import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.queue.util.TbCoreComponent;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -23,8 +22,8 @@ import org.springframework.stereotype.Component;
 public class AssetEdgeProcessor extends BaseEdgeProcessor {
 
     @Nullable
-    public DownlinkMsg convertAssetEventToDownlink(@NotNull EdgeEvent edgeEvent) {
-        @NotNull AssetId assetId = new AssetId(edgeEvent.getEntityId());
+    public DownlinkMsg convertAssetEventToDownlink(EdgeEvent edgeEvent) {
+        AssetId assetId = new AssetId(edgeEvent.getEntityId());
         @Nullable DownlinkMsg downlinkMsg = null;
         switch (edgeEvent.getAction()) {
             case ADDED:
@@ -34,10 +33,10 @@ public class AssetEdgeProcessor extends BaseEdgeProcessor {
             case UNASSIGNED_FROM_CUSTOMER:
                 Asset asset = assetService.findAssetById(edgeEvent.getTenantId(), assetId);
                 if (asset != null) {
-                    @NotNull UpdateMsgType msgType = getUpdateMsgType(edgeEvent.getAction());
+                    UpdateMsgType msgType = getUpdateMsgType(edgeEvent.getAction());
                     AssetUpdateMsg assetUpdateMsg =
                             assetMsgConstructor.constructAssetUpdatedMsg(msgType, asset);
-                    @NotNull DownlinkMsg.Builder builder = DownlinkMsg.newBuilder()
+                    DownlinkMsg.Builder builder = DownlinkMsg.newBuilder()
                                                                       .setDownlinkMsgId(EdgeUtils.nextPositiveInt())
                                                                       .addAssetUpdateMsg(assetUpdateMsg);
                     if (UpdateMsgType.ENTITY_CREATED_RPC_MESSAGE.equals(msgType)) {
@@ -60,7 +59,7 @@ public class AssetEdgeProcessor extends BaseEdgeProcessor {
         return downlinkMsg;
     }
 
-    public ListenableFuture<Void> processAssetNotification(TenantId tenantId, @NotNull TransportProtos.EdgeNotificationMsgProto edgeNotificationMsg) {
+    public ListenableFuture<Void> processAssetNotification(TenantId tenantId, TransportProtos.EdgeNotificationMsgProto edgeNotificationMsg) {
         return processEntityNotification(tenantId, edgeNotificationMsg);
     }
 }

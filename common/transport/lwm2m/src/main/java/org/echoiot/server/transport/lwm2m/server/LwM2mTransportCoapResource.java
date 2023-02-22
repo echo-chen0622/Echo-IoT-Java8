@@ -11,7 +11,6 @@ import org.eclipse.californium.core.observe.ObserveRelation;
 import org.eclipse.californium.core.server.resources.CoapExchange;
 import org.eclipse.californium.core.server.resources.Resource;
 import org.eclipse.californium.core.server.resources.ResourceObserver;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.UUID;
@@ -34,8 +33,8 @@ public class LwM2mTransportCoapResource extends AbstractLwM2mTransportResource {
 
 
     @Override
-    public void checkObserveRelation(@NotNull Exchange exchange, @NotNull Response response) {
-        @NotNull String token = getTokenFromRequest(exchange.getRequest());
+    public void checkObserveRelation(Exchange exchange, Response response) {
+        String token = getTokenFromRequest(exchange.getRequest());
         final ObserveRelation relation = exchange.getRelation();
         if (relation == null || relation.isCanceled()) {
             return; // because request did not try to establish a relation
@@ -46,14 +45,14 @@ public class LwM2mTransportCoapResource extends AbstractLwM2mTransportResource {
                 relation.setEstablished();
                 addObserveRelation(relation);
             }
-            @NotNull AtomicInteger notificationCounter = tokenToObserveNotificationSeqMap.computeIfAbsent(token, s -> new AtomicInteger(0));
+            AtomicInteger notificationCounter = tokenToObserveNotificationSeqMap.computeIfAbsent(token, s -> new AtomicInteger(0));
             response.getOptions().setObserve(notificationCounter.getAndIncrement());
         } // ObserveLayer takes care of the else case
     }
 
 
     @Override
-    protected void processHandleGet(@NotNull CoapExchange exchange) {
+    protected void processHandleGet(CoapExchange exchange) {
         log.debug("processHandleGet [{}]", exchange);
         List<String> uriPath = exchange.getRequestOptions().getUriPath();
         if (uriPath.size() >= 2 &&
@@ -72,15 +71,13 @@ public class LwM2mTransportCoapResource extends AbstractLwM2mTransportResource {
      * Override the default behavior so that requests to sub resources (typically /{name}/{token}) are handled by
      * /name resource.
      */
-    @NotNull
     @Override
     public Resource getChild(String name) {
         return this;
     }
 
 
-    @NotNull
-    private String getTokenFromRequest(@NotNull Request request) {
+    private String getTokenFromRequest(Request request) {
         return (request.getSourceContext() != null ? request.getSourceContext().getPeerAddress().getAddress().getHostAddress() : "null")
                 + ":" + (request.getSourceContext() != null ? request.getSourceContext().getPeerAddress().getPort() : -1) + ":" + request.getTokenString();
     }
@@ -118,11 +115,11 @@ public class LwM2mTransportCoapResource extends AbstractLwM2mTransportResource {
         }
     }
 
-    private void sendOtaData(@NotNull CoapExchange exchange) {
+    private void sendOtaData(CoapExchange exchange) {
         String idStr = exchange.getRequestOptions().getUriPath().get(exchange.getRequestOptions().getUriPath().size() - 1
         );
-        @NotNull UUID currentId = UUID.fromString(idStr);
-        @NotNull Response response = new Response(CoAP.ResponseCode.CONTENT);
+        UUID currentId = UUID.fromString(idStr);
+        Response response = new Response(CoAP.ResponseCode.CONTENT);
         byte[] otaData = this.getOtaData(currentId);
         if (otaData != null && otaData.length > 0) {
             log.debug("Read ota data (length): [{}]", otaData.length);
@@ -141,7 +138,7 @@ public class LwM2mTransportCoapResource extends AbstractLwM2mTransportResource {
         }
     }
 
-    private byte[] getOtaData(@NotNull UUID currentId) {
+    private byte[] getOtaData(UUID currentId) {
         return otaPackageDataCache.get(currentId.toString());
     }
 

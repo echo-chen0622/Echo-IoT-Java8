@@ -9,7 +9,6 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.echoiot.server.queue.TbQueueAdmin;
 import org.echoiot.server.queue.TbQueueMsg;
 import org.echoiot.server.queue.common.AbstractTbQueueConsumerTemplate;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.util.StopWatch;
 
@@ -27,7 +26,6 @@ import java.util.Properties;
 public class TbKafkaConsumerTemplate<T extends TbQueueMsg> extends AbstractTbQueueConsumerTemplate<ConsumerRecord<String, byte[]>, T> {
 
     private final TbQueueAdmin admin;
-    @NotNull
     private final KafkaConsumer<String, byte[]> consumer;
     private final TbKafkaDecoder<T> decoder;
 
@@ -36,11 +34,11 @@ public class TbKafkaConsumerTemplate<T extends TbQueueMsg> extends AbstractTbQue
     private final String groupId;
 
     @Builder
-    private TbKafkaConsumerTemplate(@NotNull TbKafkaSettings settings, TbKafkaDecoder<T> decoder,
+    private TbKafkaConsumerTemplate(TbKafkaSettings settings, TbKafkaDecoder<T> decoder,
                                     String clientId, @Nullable String groupId, String topic,
                                     TbQueueAdmin admin, @Nullable TbKafkaConsumerStatsService statsService) {
         super(topic);
-        @NotNull Properties props = settings.toConsumerProps(topic);
+        Properties props = settings.toConsumerProps(topic);
         props.put(ConsumerConfig.CLIENT_ID_CONFIG, clientId);
         if (groupId != null) {
             props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
@@ -59,7 +57,7 @@ public class TbKafkaConsumerTemplate<T extends TbQueueMsg> extends AbstractTbQue
     }
 
     @Override
-    protected void doSubscribe(@NotNull List<String> topicNames) {
+    protected void doSubscribe(List<String> topicNames) {
         if (!topicNames.isEmpty()) {
             topicNames.forEach(admin::createTopicIfNotExists);
             log.info("subscribe topics {}", topicNames);
@@ -70,10 +68,9 @@ public class TbKafkaConsumerTemplate<T extends TbQueueMsg> extends AbstractTbQue
         }
     }
 
-    @NotNull
     @Override
     protected List<ConsumerRecord<String, byte[]>> doPoll(long durationInMillis) {
-        @NotNull StopWatch stopWatch = new StopWatch();
+        StopWatch stopWatch = new StopWatch();
         stopWatch.start();
 
         log.trace("poll topic {} maxDuration {}", getTopic(), durationInMillis);
@@ -86,14 +83,14 @@ public class TbKafkaConsumerTemplate<T extends TbQueueMsg> extends AbstractTbQue
         if (records.isEmpty()) {
             return Collections.emptyList();
         } else {
-            @NotNull List<ConsumerRecord<String, byte[]>> recordList = new ArrayList<>(256);
+            List<ConsumerRecord<String, byte[]>> recordList = new ArrayList<>(256);
             records.forEach(recordList::add);
             return recordList;
         }
     }
 
     @Override
-    public T decode(@NotNull ConsumerRecord<String, byte[]> record) throws IOException {
+    public T decode(ConsumerRecord<String, byte[]> record) throws IOException {
         return decoder.decode(new KafkaTbQueueMsg(record));
     }
 

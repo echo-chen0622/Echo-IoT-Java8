@@ -6,7 +6,6 @@ import org.echoiot.server.common.data.DataConstants;
 import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.queue.common.TbProtoQueueMsg;
 import org.echoiot.server.service.queue.processing.TbRuleEngineSubmitStrategy;
-import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
@@ -41,18 +40,18 @@ public class TbMsgPackProcessingContextTest {
         int parallelCount = 5;
         executorService = Executors.newFixedThreadPool(parallelCount, EchoiotThreadFactory.forName(getClass().getSimpleName() + "-test-scope"));
 
-        @NotNull ConcurrentMap<UUID, TbProtoQueueMsg<TransportProtos.ToRuleEngineMsg>> messages = new ConcurrentHashMap<>(msgCount);
+        ConcurrentMap<UUID, TbProtoQueueMsg<TransportProtos.ToRuleEngineMsg>> messages = new ConcurrentHashMap<>(msgCount);
         for (int i = 0; i < msgCount; i++) {
             messages.put(UUID.randomUUID(), new TbProtoQueueMsg<>(UUID.randomUUID(), null));
         }
         TbRuleEngineSubmitStrategy strategyMock = mock(TbRuleEngineSubmitStrategy.class);
         when(strategyMock.getPendingMap()).thenReturn(messages);
 
-        @NotNull TbMsgPackProcessingContext context = new TbMsgPackProcessingContext(DataConstants.MAIN_QUEUE_NAME, strategyMock, false);
+        TbMsgPackProcessingContext context = new TbMsgPackProcessingContext(DataConstants.MAIN_QUEUE_NAME, strategyMock, false);
         for (UUID uuid : messages.keySet()) {
-            @NotNull final CountDownLatch readyLatch = new CountDownLatch(parallelCount);
-            @NotNull final CountDownLatch startLatch = new CountDownLatch(1);
-            @NotNull final CountDownLatch finishLatch = new CountDownLatch(parallelCount);
+            final CountDownLatch readyLatch = new CountDownLatch(parallelCount);
+            final CountDownLatch startLatch = new CountDownLatch(1);
+            final CountDownLatch finishLatch = new CountDownLatch(parallelCount);
             for (int i = 0; i < parallelCount; i++) {
                 //final String taskName = "" + uuid + " " + i;
                 executorService.submit(() -> {

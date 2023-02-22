@@ -8,7 +8,6 @@ import org.echoiot.rule.engine.api.TbNodeException;
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.TbMsgMetaData;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.util.CollectionUtils;
 
@@ -28,7 +27,7 @@ public class TbNodeUtils {
 
     private static final Pattern DATA_PATTERN = Pattern.compile("(\\$\\[)(.*?)(])");
 
-    public static <T> T convert(@NotNull TbNodeConfiguration configuration, Class<T> clazz) throws TbNodeException {
+    public static <T> T convert(TbNodeConfiguration configuration, Class<T> clazz) throws TbNodeException {
         try {
             return mapper.treeToValue(configuration.getData(), clazz);
         } catch (JsonProcessingException e) {
@@ -36,23 +35,22 @@ public class TbNodeUtils {
         }
     }
 
-    @NotNull
-    public static List<String> processPatterns(@NotNull List<String> patterns, @NotNull TbMsg tbMsg) {
+    public static List<String> processPatterns(List<String> patterns, TbMsg tbMsg) {
         if (!CollectionUtils.isEmpty(patterns)) {
             return patterns.stream().map(p -> processPattern(p, tbMsg)).collect(Collectors.toList());
         }
         return Collections.emptyList();
     }
 
-    public static String processPattern(String pattern, @NotNull TbMsg tbMsg) {
+    public static String processPattern(String pattern, TbMsg tbMsg) {
         try {
             String result = processPattern(pattern, tbMsg.getMetaData());
             JsonNode json = mapper.readTree(tbMsg.getData());
             if (json.isObject()) {
-                @NotNull Matcher matcher = DATA_PATTERN.matcher(result);
+                Matcher matcher = DATA_PATTERN.matcher(result);
                 while (matcher.find()) {
                     String group = matcher.group(2);
-                    @NotNull String[] keys = group.split("\\.");
+                    String[] keys = group.split("\\.");
                     @Nullable JsonNode jsonNode = json;
                     for (String key : keys) {
                         if (!StringUtils.isEmpty(key) && jsonNode != null) {
@@ -74,37 +72,33 @@ public class TbNodeUtils {
         }
     }
 
-    @NotNull
-    public static List<String> processPatterns(@NotNull List<String> patterns, @NotNull TbMsgMetaData metaData) {
+    public static List<String> processPatterns(List<String> patterns, TbMsgMetaData metaData) {
         if (!CollectionUtils.isEmpty(patterns)) {
             return patterns.stream().map(p -> processPattern(p, metaData)).collect(Collectors.toList());
         }
         return Collections.emptyList();
     }
 
-    public static String processPattern(String pattern, @NotNull TbMsgMetaData metaData) {
+    public static String processPattern(String pattern, TbMsgMetaData metaData) {
         return processTemplate(pattern, metaData.values());
     }
 
-    public static String processTemplate(String template, @NotNull Map<String, String> data) {
+    public static String processTemplate(String template, Map<String, String> data) {
         String result = template;
-        for (@NotNull Map.Entry<String, String> kv : data.entrySet()) {
+        for (Map.Entry<String, String> kv : data.entrySet()) {
             result = processVar(result, kv.getKey(), kv.getValue());
         }
         return result;
     }
 
-    @NotNull
-    private static String processVar(@NotNull String pattern, String key, @NotNull String val) {
+    private static String processVar(String pattern, String key, String val) {
         return pattern.replace(formatMetadataVarTemplate(key), val);
     }
 
-    @NotNull
     static String formatDataVarTemplate(String key) {
         return "$[" + key + ']';
     }
 
-    @NotNull
     static String formatMetadataVarTemplate(String key) {
         return "${" + key + '}';
     }

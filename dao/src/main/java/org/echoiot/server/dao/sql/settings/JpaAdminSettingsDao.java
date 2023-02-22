@@ -7,7 +7,6 @@ import org.echoiot.server.dao.model.sql.AdminSettingsEntity;
 import org.echoiot.server.dao.settings.AdminSettingsDao;
 import org.echoiot.server.dao.sql.JpaAbstractDao;
 import org.echoiot.server.dao.util.SqlDao;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +22,6 @@ public class JpaAdminSettingsDao extends JpaAbstractDao<AdminSettingsEntity, Adm
     @Resource
     private AdminSettingsRepository adminSettingsRepository;
 
-    @NotNull
     @Override
     protected Class<AdminSettingsEntity> getEntityClass() {
         return AdminSettingsEntity.class;

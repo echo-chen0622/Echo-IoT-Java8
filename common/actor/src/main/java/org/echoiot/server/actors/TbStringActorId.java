@@ -1,7 +1,6 @@
 package org.echoiot.server.actors;
 
 import org.echoiot.server.common.data.EntityType;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -23,7 +22,7 @@ public class TbStringActorId implements TbActorId {
     public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        @NotNull TbStringActorId that = (TbStringActorId) o;
+        TbStringActorId that = (TbStringActorId) o;
         return id.equals(that.id);
     }
 

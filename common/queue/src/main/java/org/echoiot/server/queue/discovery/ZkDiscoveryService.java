@@ -18,7 +18,6 @@ import org.apache.zookeeper.KeeperException;
 import org.echoiot.common.util.EchoiotThreadFactory;
 import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.queue.util.AfterStartUp;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -85,7 +84,6 @@ public class ZkDiscoveryService implements DiscoveryService, PathChildrenCacheLi
         initZkClient();
     }
 
-    @NotNull
     private List<TransportProtos.ServiceInfo> getOtherServers() {
         return cache.getCurrentData().stream()
                 .filter(cd -> !cd.getPath().equals(nodePath))
@@ -156,8 +154,7 @@ public class ZkDiscoveryService implements DiscoveryService, PathChildrenCacheLi
         return false;
     }
 
-    @NotNull
-    private ConnectionStateListener checkReconnect(@NotNull TransportProtos.ServiceInfo self) {
+    private ConnectionStateListener checkReconnect(TransportProtos.ServiceInfo self) {
         return (client, newState) -> {
             log.info("[{}] ZK state changed: {}", self.getServiceId(), newState);
             if (newState == ConnectionState.LOST) {
@@ -230,13 +227,12 @@ public class ZkDiscoveryService implements DiscoveryService, PathChildrenCacheLi
         log.info("Stopped discovery service");
     }
 
-    @NotNull
     public static String missingProperty(String propertyName) {
         return "The " + propertyName + " property need to be set!";
     }
 
     @Override
-    public void childEvent(CuratorFramework curatorFramework, @NotNull PathChildrenCacheEvent pathChildrenCacheEvent) throws Exception {
+    public void childEvent(CuratorFramework curatorFramework, PathChildrenCacheEvent pathChildrenCacheEvent) throws Exception {
         if (stopped) {
             log.debug("Ignoring {}. Service is stopped.", pathChildrenCacheEvent);
             return;

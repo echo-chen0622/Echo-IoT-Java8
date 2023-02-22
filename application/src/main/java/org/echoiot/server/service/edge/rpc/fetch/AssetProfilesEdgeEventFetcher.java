@@ -12,13 +12,11 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.dao.asset.AssetProfileService;
-import org.jetbrains.annotations.NotNull;
 
 @AllArgsConstructor
 @Slf4j
 public class AssetProfilesEdgeEventFetcher extends BasePageableEdgeEventFetcher<AssetProfile> {
 
-    @NotNull
     private final AssetProfileService assetProfileService;
 
     @Override
@@ -26,9 +24,8 @@ public class AssetProfilesEdgeEventFetcher extends BasePageableEdgeEventFetcher<
         return assetProfileService.findAssetProfiles(tenantId, pageLink);
     }
 
-    @NotNull
     @Override
-    EdgeEvent constructEdgeEvent(TenantId tenantId, @NotNull Edge edge, @NotNull AssetProfile assetProfile) {
+    EdgeEvent constructEdgeEvent(TenantId tenantId, Edge edge, AssetProfile assetProfile) {
         return EdgeUtils.constructEdgeEvent(tenantId, edge.getId(), EdgeEventType.ASSET_PROFILE,
                                             EdgeEventActionType.ADDED, assetProfile.getId(), null);
     }

@@ -29,7 +29,6 @@ import org.echoiot.server.dao.exception.DataValidationException;
 import org.echoiot.server.dao.exception.DeviceCredentialsValidationException;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.service.gateway_device.GatewayNotificationsService;
-import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -87,7 +86,7 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
 
         loginSysAdmin();
 
-        @NotNull Tenant tenant = new Tenant();
+        Tenant tenant = new Tenant();
         tenant.setTitle("My tenant");
         savedTenant = doPost("/api/tenant", tenant, Tenant.class);
         Assert.assertNotNull(savedTenant);
@@ -114,7 +113,7 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
 
     @Test
     public void testSaveDevice() throws Exception {
-        @NotNull Device device = new Device();
+        Device device = new Device();
         device.setName("My device");
         device.setType("default");
 
@@ -122,7 +121,7 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
 
         Device savedDevice = doPost("/api/device", device, Device.class);
 
-        @NotNull Device oldDevice = new Device(savedDevice);
+        Device oldDevice = new Device(savedDevice);
 
         testNotifyEntityOneTimeMsgToEdgeServiceNever(savedDevice, savedDevice.getId(), savedDevice.getId(),
                 savedTenant.getId(), tenantAdmin.getCustomerId(), tenantAdmin.getId(), tenantAdmin.getEmail(),
@@ -162,23 +161,23 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
 
     @Test
     public void testSaveDeviceWithCredentials() throws Exception {
-        @NotNull String testToken = "TEST_TOKEN";
+        String testToken = "TEST_TOKEN";
 
-        @NotNull Device device = new Device();
+        Device device = new Device();
         device.setName("My device");
         device.setType("default");
 
-        @NotNull DeviceCredentials deviceCredentials = new DeviceCredentials();
+        DeviceCredentials deviceCredentials = new DeviceCredentials();
         deviceCredentials.setCredentialsType(DeviceCredentialsType.ACCESS_TOKEN);
         deviceCredentials.setCredentialsId(testToken);
 
-        @NotNull SaveDeviceWithCredentialsRequest saveRequest = new SaveDeviceWithCredentialsRequest(device, deviceCredentials);
+        SaveDeviceWithCredentialsRequest saveRequest = new SaveDeviceWithCredentialsRequest(device, deviceCredentials);
 
         Mockito.reset(tbClusterService, auditLogService, gatewayNotificationsService);
 
-        @NotNull Device savedDevice = readResponse(doPost("/api/device-with-credentials", saveRequest).andExpect(status().isOk()), Device.class);
+        Device savedDevice = readResponse(doPost("/api/device-with-credentials", saveRequest).andExpect(status().isOk()), Device.class);
 
-        @NotNull Device oldDevice = new Device(savedDevice);
+        Device oldDevice = new Device(savedDevice);
 
         testNotifyEntityOneTimeMsgToEdgeServiceNever(savedDevice, savedDevice.getId(), savedDevice.getId(),
                 savedTenant.getId(), tenantAdmin.getCustomerId(), tenantAdmin.getId(), tenantAdmin.getEmail(),
@@ -214,13 +213,13 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
 
     @Test
     public void saveDeviceWithViolationOfValidation() throws Exception {
-        @NotNull Device device = new Device();
+        Device device = new Device();
         device.setName(StringUtils.randomAlphabetic(300));
         device.setType("default");
 
         Mockito.reset(tbClusterService, auditLogService, gatewayNotificationsService);
 
-        @NotNull String msgError = msgErrorFieldLength("name");
+        String msgError = msgErrorFieldLength("name");
         doPost("/api/device", device)
                 .andExpect(status().isBadRequest())
                 .andExpect(statusReason(containsString(msgError)));
@@ -256,7 +255,7 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
 
     @Test
     public void testUpdateDeviceFromDifferentTenant() throws Exception {
-        @NotNull Device device = new Device();
+        Device device = new Device();
         device.setName("My device");
         device.setType("default");
         Device savedDevice = doPost("/api/device", device, Device.class);
@@ -291,7 +290,7 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
         differentProfile = doPost("/api/deviceProfile", differentProfile, DeviceProfile.class);
 
         loginTenantAdmin();
-        @NotNull Device device = new Device();
+        Device device = new Device();
         device.setName("My device");
         device.setDeviceProfileId(differentProfile.getId());
         doPost("/api/device", device).andExpect(status().isBadRequest())
@@ -303,7 +302,7 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
         loginDifferentTenant();
         DeviceProfile differentProfile = createDeviceProfile("Different profile");
         differentProfile = doPost("/api/deviceProfile", differentProfile, DeviceProfile.class);
-        @NotNull SaveOtaPackageInfoRequest firmwareInfo = new SaveOtaPackageInfoRequest();
+        SaveOtaPackageInfoRequest firmwareInfo = new SaveOtaPackageInfoRequest();
         firmwareInfo.setDeviceProfileId(differentProfile.getId());
         firmwareInfo.setType(FIRMWARE);
         firmwareInfo.setTitle("title");
@@ -313,7 +312,7 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
         OtaPackageInfo savedFw = doPost("/api/otaPackage", firmwareInfo, OtaPackageInfo.class);
 
         loginTenantAdmin();
-        @NotNull Device device = new Device();
+        Device device = new Device();
         device.setName("My device");
         device.setType("default");
         device.setFirmwareId(savedFw.getId());
@@ -326,7 +325,7 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
         loginDifferentTenant();
         DeviceProfile differentProfile = createDeviceProfile("Different profile");
         differentProfile = doPost("/api/deviceProfile", differentProfile, DeviceProfile.class);
-        @NotNull SaveOtaPackageInfoRequest softwareInfo = new SaveOtaPackageInfoRequest();
+        SaveOtaPackageInfoRequest softwareInfo = new SaveOtaPackageInfoRequest();
         softwareInfo.setDeviceProfileId(differentProfile.getId());
         softwareInfo.setType(SOFTWARE);
         softwareInfo.setTitle("title");
@@ -336,7 +335,7 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
         OtaPackageInfo savedSw = doPost("/api/otaPackage", softwareInfo, OtaPackageInfo.class);
 
         loginTenantAdmin();
-        @NotNull Device device = new Device();
+        Device device = new Device();
         device.setName("My device");
         device.setType("default");
         device.setSoftwareId(savedSw.getId());
@@ -346,7 +345,7 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
 
     @Test
     public void testFindDeviceById() throws Exception {
-        @NotNull Device device = new Device();
+        Device device = new Device();
         device.setName("My device");
         device.setType("default");
         Device savedDevice = doPost("/api/device", device, Device.class);
@@ -357,14 +356,14 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
 
     @Test
     public void testFindDeviceTypesByTenantId() throws Exception {
-        @NotNull List<Device> devices = new ArrayList<>();
+        List<Device> devices = new ArrayList<>();
 
         int cntEntity = 3;
 
         Mockito.reset(tbClusterService, auditLogService, gatewayNotificationsService);
 
         for (int i = 0; i < cntEntity; i++) {
-            @NotNull Device device = new Device();
+            Device device = new Device();
             device.setName("My device B" + i);
             device.setType("typeB");
             devices.add(doPost("/api/device", device, Device.class));
@@ -376,13 +375,13 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
         testNotificationUpdateGatewayNever();
 
         for (int i = 0; i < 7; i++) {
-            @NotNull Device device = new Device();
+            Device device = new Device();
             device.setName("My device C" + i);
             device.setType("typeC");
             devices.add(doPost("/api/device", device, Device.class));
         }
         for (int i = 0; i < 9; i++) {
-            @NotNull Device device = new Device();
+            Device device = new Device();
             device.setName("My device A" + i);
             device.setType("typeA");
             devices.add(doPost("/api/device", device, Device.class));
@@ -402,7 +401,7 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
 
     @Test
     public void testDeleteDevice() throws Exception {
-        @NotNull Device device = new Device();
+        Device device = new Device();
         device.setName("My device");
         device.setType("default");
         Device savedDevice = doPost("/api/device", device, Device.class);
@@ -424,7 +423,7 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
 
     @Test
     public void testSaveDeviceWithEmptyType() throws Exception {
-        @NotNull Device device = new Device();
+        Device device = new Device();
         device.setName("My device");
 
         Mockito.reset(tbClusterService, auditLogService, gatewayNotificationsService);
@@ -440,12 +439,12 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
 
     @Test
     public void testSaveDeviceWithEmptyName() throws Exception {
-        @NotNull Device device = new Device();
+        Device device = new Device();
         device.setType("default");
 
         Mockito.reset(tbClusterService, auditLogService, gatewayNotificationsService);
 
-        @NotNull String msgError = "Device name " + msgErrorShouldBeSpecified;
+        String msgError = "Device name " + msgErrorShouldBeSpecified;
         doPost("/api/device", device)
                 .andExpect(status().isBadRequest())
                 .andExpect(statusReason(containsString(msgError)));
@@ -457,12 +456,12 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
 
     @Test
     public void testAssignUnassignDeviceToCustomer() throws Exception {
-        @NotNull Device device = new Device();
+        Device device = new Device();
         device.setName("My device");
         device.setType("default");
         Device savedDevice = doPost("/api/device", device, Device.class);
 
-        @NotNull Customer customer = new Customer();
+        Customer customer = new Customer();
         customer.setTitle("My customer");
         Customer savedCustomer = doPost("/api/customer", customer, Customer.class);
 
@@ -499,7 +498,7 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
 
     @Test
     public void testAssignDeviceToNonExistentCustomer() throws Exception {
-        @NotNull Device device = new Device();
+        Device device = new Device();
         device.setName("My device");
         device.setType("default");
         Device savedDevice = doPost("/api/device", device, Device.class);
@@ -520,12 +519,12 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
     public void testAssignDeviceToCustomerFromDifferentTenant() throws Exception {
         loginSysAdmin();
 
-        @NotNull Tenant tenant2 = new Tenant();
+        Tenant tenant2 = new Tenant();
         tenant2.setTitle("Different tenant");
         Tenant savedTenant2 = doPost("/api/tenant", tenant2, Tenant.class);
         Assert.assertNotNull(savedTenant2);
 
-        @NotNull User tenantAdmin2 = new User();
+        User tenantAdmin2 = new User();
         tenantAdmin2.setAuthority(Authority.TENANT_ADMIN);
         tenantAdmin2.setTenantId(savedTenant2.getId());
         tenantAdmin2.setEmail("tenant3@echoiot.org");
@@ -534,13 +533,13 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
 
         createUserAndLogin(tenantAdmin2, "testPassword1");
 
-        @NotNull Customer customer = new Customer();
+        Customer customer = new Customer();
         customer.setTitle("Different customer");
         Customer savedCustomer = doPost("/api/customer", customer, Customer.class);
 
         login(tenantAdmin.getEmail(), "testPassword1");
 
-        @NotNull Device device = new Device();
+        Device device = new Device();
         device.setName("My device");
         device.setType("default");
         Device savedDevice = doPost("/api/device", device, Device.class);
@@ -563,7 +562,7 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
 
     @Test
     public void testFindDeviceCredentialsByDeviceId() throws Exception {
-        @NotNull Device device = new Device();
+        Device device = new Device();
         device.setName("My device");
         device.setType("default");
         Device savedDevice = doPost("/api/device", device, Device.class);
@@ -574,7 +573,7 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
 
     @Test
     public void testSaveDeviceCredentials() throws Exception {
-        @NotNull Device device = new Device();
+        Device device = new Device();
         device.setName("My device");
         device.setType("default");
         Device savedDevice = doPost("/api/device", device, Device.class);
@@ -601,7 +600,7 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
 
     @Test
     public void testSaveDeviceCredentialsWithEmptyDevice() throws Exception {
-        @NotNull DeviceCredentials deviceCredentials = new DeviceCredentials();
+        DeviceCredentials deviceCredentials = new DeviceCredentials();
 
         Mockito.reset(tbClusterService, auditLogService, gatewayNotificationsService);
 
@@ -615,7 +614,7 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
 
     @Test
     public void testSaveDeviceCredentialsWithEmptyCredentialsType() throws Exception {
-        @NotNull Device device = new Device();
+        Device device = new Device();
         device.setName("My device");
         device.setType("default");
         Device savedDevice = doPost("/api/device", device, Device.class);
@@ -625,7 +624,7 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
 
         Mockito.reset(tbClusterService, auditLogService, gatewayNotificationsService);
 
-        @NotNull String msgError = "Device credentials type " + msgErrorShouldBeSpecified;
+        String msgError = "Device credentials type " + msgErrorShouldBeSpecified;
         doPost("/api/device/credentials", deviceCredentials)
                 .andExpect(status().isBadRequest())
                 .andExpect(statusReason(containsString(msgError)));
@@ -638,7 +637,7 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
 
     @Test
     public void testSaveDeviceCredentialsWithEmptyCredentialsId() throws Exception {
-        @NotNull Device device = new Device();
+        Device device = new Device();
         device.setName("My device");
         device.setType("default");
         Device savedDevice = doPost("/api/device", device, Device.class);
@@ -648,7 +647,7 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
 
         Mockito.reset(tbClusterService, auditLogService, gatewayNotificationsService);
 
-        @NotNull String msgError = "Device credentials id " + msgErrorShouldBeSpecified;
+        String msgError = "Device credentials id " + msgErrorShouldBeSpecified;
         doPost("/api/device/credentials", deviceCredentials)
                 .andExpect(status().isBadRequest())
                 .andExpect(statusReason(containsString(msgError)));
@@ -661,13 +660,13 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
 
     @Test
     public void testSaveNonExistentDeviceCredentials() throws Exception {
-        @NotNull Device device = new Device();
+        Device device = new Device();
         device.setName("My device");
         device.setType("default");
         Device savedDevice = doPost("/api/device", device, Device.class);
         DeviceCredentials deviceCredentials =
                 doGet("/api/device/" + savedDevice.getId().getId() + "/credentials", DeviceCredentials.class);
-        @NotNull DeviceCredentials newDeviceCredentials = new DeviceCredentials(new DeviceCredentialsId(Uuids.timeBased()));
+        DeviceCredentials newDeviceCredentials = new DeviceCredentials(new DeviceCredentialsId(Uuids.timeBased()));
         newDeviceCredentials.setCreatedTime(deviceCredentials.getCreatedTime());
         newDeviceCredentials.setDeviceId(deviceCredentials.getDeviceId());
         newDeviceCredentials.setCredentialsType(deviceCredentials.getCredentialsType());
@@ -675,7 +674,7 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
 
         Mockito.reset(tbClusterService, auditLogService, gatewayNotificationsService);
 
-        @NotNull String msgError = "Unable to update non-existent device credentials";
+        String msgError = "Unable to update non-existent device credentials";
         doPost("/api/device/credentials", newDeviceCredentials)
                 .andExpect(status().isBadRequest())
                 .andExpect(statusReason(containsString(msgError)));
@@ -688,11 +687,11 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
 
     @Test
     public void testSaveDeviceCredentialsWithNonExistentDevice() throws Exception {
-        @NotNull Device device = new Device();
+        Device device = new Device();
         device.setName("My device");
         device.setType("default");
         Device savedDevice = doPost("/api/device", device, Device.class);
-        @NotNull DeviceId deviceTimeBasedId = new DeviceId(Uuids.timeBased());
+        DeviceId deviceTimeBasedId = new DeviceId(Uuids.timeBased());
         DeviceCredentials deviceCredentials =
                 doGet("/api/device/" + savedDevice.getId().getId() + "/credentials", DeviceCredentials.class);
         deviceCredentials.setDeviceId(deviceTimeBasedId);
@@ -715,7 +714,7 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
 
         futures = new ArrayList<>(cntEntity);
         for (int i = 0; i < cntEntity; i++) {
-            @NotNull Device device = new Device();
+            Device device = new Device();
             device.setName("Device" + i);
             device.setType("default");
             futures.add(executor.submit(() ->
@@ -729,7 +728,7 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
                 ActionType.ADDED, cntEntity);
         testNotificationUpdateGatewayNever();
 
-        @NotNull List<Device> loadedDevices = new ArrayList<>(cntEntity);
+        List<Device> loadedDevices = new ArrayList<>(cntEntity);
         PageLink pageLink = new PageLink(23);
         do {
             pageData = doGetTypedWithPageLink("/api/tenant/devices?",
@@ -755,13 +754,13 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
 
     @Test
     public void testFindTenantDevicesByName() throws Exception {
-        @NotNull String title1 = "Device title 1";
+        String title1 = "Device title 1";
 
         futures = new ArrayList<>(143);
         for (int i = 0; i < 143; i++) {
-            @NotNull Device device = new Device();
-            @NotNull String suffix = StringUtils.randomAlphanumeric(15);
-            @NotNull String name = title1 + suffix;
+            Device device = new Device();
+            String suffix = StringUtils.randomAlphanumeric(15);
+            String name = title1 + suffix;
             name = i % 2 == 0 ? name.toLowerCase() : name.toUpperCase();
             device.setName(name);
             device.setType("default");
@@ -770,12 +769,12 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
         }
         List<Device> devicesTitle1 = Futures.allAsList(futures).get(TIMEOUT, TimeUnit.SECONDS);
 
-        @NotNull String title2 = "Device title 2";
+        String title2 = "Device title 2";
         futures = new ArrayList<>(75);
         for (int i = 0; i < 75; i++) {
-            @NotNull Device device = new Device();
-            @NotNull String suffix = StringUtils.randomAlphanumeric(15);
-            @NotNull String name = title2 + suffix;
+            Device device = new Device();
+            String suffix = StringUtils.randomAlphanumeric(15);
+            String name = title2 + suffix;
             name = i % 2 == 0 ? name.toLowerCase() : name.toUpperCase();
             device.setName(name);
             device.setType("default");
@@ -784,7 +783,7 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
         }
         List<Device> devicesTitle2 = Futures.allAsList(futures).get(TIMEOUT, TimeUnit.SECONDS);
 
-        @NotNull List<Device> loadedDevicesTitle1 = new ArrayList<>(143);
+        List<Device> loadedDevicesTitle1 = new ArrayList<>(143);
         PageLink pageLink = new PageLink(15, 0, title1);
         do {
             pageData = doGetTypedWithPageLink("/api/tenant/devices?",
@@ -797,7 +796,7 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
 
         assertThat(devicesTitle1).as(title1).containsExactlyInAnyOrderElementsOf(loadedDevicesTitle1);
 
-        @NotNull List<Device> loadedDevicesTitle2 = new ArrayList<>(75);
+        List<Device> loadedDevicesTitle2 = new ArrayList<>(75);
         pageLink = new PageLink(4, 0, title2);
         do {
             pageData = doGetTypedWithPageLink("/api/tenant/devices?",
@@ -829,13 +828,13 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
 
     @Test
     public void testFindTenantDevicesByType() throws Exception {
-        @NotNull String title1 = "Device title 1";
-        @NotNull String type1 = "typeA";
+        String title1 = "Device title 1";
+        String type1 = "typeA";
         futures = new ArrayList<>(143);
         for (int i = 0; i < 143; i++) {
-            @NotNull Device device = new Device();
-            @NotNull String suffix = StringUtils.randomAlphanumeric(15);
-            @NotNull String name = title1 + suffix;
+            Device device = new Device();
+            String suffix = StringUtils.randomAlphanumeric(15);
+            String name = title1 + suffix;
             name = i % 2 == 0 ? name.toLowerCase() : name.toUpperCase();
             device.setName(name);
             device.setType(type1);
@@ -847,13 +846,13 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
         }
         List<Device> devicesType1 = Futures.allAsList(futures).get(TIMEOUT, TimeUnit.SECONDS);
 
-        @NotNull String title2 = "Device title 2";
-        @NotNull String type2 = "typeB";
+        String title2 = "Device title 2";
+        String type2 = "typeB";
         futures = new ArrayList<>(75);
         for (int i = 0; i < 75; i++) {
-            @NotNull Device device = new Device();
-            @NotNull String suffix = StringUtils.randomAlphanumeric(15);
-            @NotNull String name = title2 + suffix;
+            Device device = new Device();
+            String suffix = StringUtils.randomAlphanumeric(15);
+            String name = title2 + suffix;
             name = i % 2 == 0 ? name.toLowerCase() : name.toUpperCase();
             device.setName(name);
             device.setType(type2);
@@ -866,7 +865,7 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
 
         List<Device> devicesType2 = Futures.allAsList(futures).get(TIMEOUT, TimeUnit.SECONDS);
 
-        @NotNull List<Device> loadedDevicesType1 = new ArrayList<>(143);
+        List<Device> loadedDevicesType1 = new ArrayList<>(143);
         PageLink pageLink = new PageLink(15);
         do {
             pageData = doGetTypedWithPageLink("/api/tenant/devices?type={type}&",
@@ -879,7 +878,7 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
 
         assertThat(devicesType1).as(title1).containsExactlyInAnyOrderElementsOf(loadedDevicesType1);
 
-        @NotNull List<Device> loadedDevicesType2 = new ArrayList<>(75);
+        List<Device> loadedDevicesType2 = new ArrayList<>(75);
         pageLink = new PageLink(4);
         do {
             pageData = doGetTypedWithPageLink("/api/tenant/devices?type={type}&",
@@ -921,10 +920,10 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
 
         futures = new ArrayList<>(cntEntity);
         for (int i = 0; i < cntEntity; i++) {
-            @NotNull Device device = new Device();
+            Device device = new Device();
             device.setName("Device" + i);
             device.setType("default");
-            @NotNull ListenableFuture<Device> future = executor.submit(() -> doPost("/api/device", device, Device.class));
+            ListenableFuture<Device> future = executor.submit(() -> doPost("/api/device", device, Device.class));
             futures.add(Futures.transform(future, (dev) ->
                     doPost("/api/customer/" + customerId.getId()
                             + "/device/" + dev.getId().getId(), Device.class), MoreExecutors.directExecutor()));
@@ -939,7 +938,7 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
         testNotificationUpdateGatewayNever();
         Mockito.reset(tbClusterService, auditLogService, gatewayNotificationsService);
 
-        @NotNull List<Device> loadedDevices = new ArrayList<>(cntEntity);
+        List<Device> loadedDevices = new ArrayList<>(cntEntity);
         PageLink pageLink = new PageLink(23);
         do {
             pageData = doGetTypedWithPageLink("/api/customer/" + customerId.getId() + "/devices?",
@@ -967,39 +966,39 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
         customer = doPost("/api/customer", customer, Customer.class);
         CustomerId customerId = customer.getId();
 
-        @NotNull String title1 = "Device title 1";
+        String title1 = "Device title 1";
         futures = new ArrayList<>(125);
         for (int i = 0; i < 125; i++) {
-            @NotNull Device device = new Device();
-            @NotNull String suffix = StringUtils.randomAlphanumeric(15);
-            @NotNull String name = title1 + suffix;
+            Device device = new Device();
+            String suffix = StringUtils.randomAlphanumeric(15);
+            String name = title1 + suffix;
             name = i % 2 == 0 ? name.toLowerCase() : name.toUpperCase();
             device.setName(name);
             device.setType("default");
-            @NotNull ListenableFuture<Device> future = executor.submit(() -> doPost("/api/device", device, Device.class));
+            ListenableFuture<Device> future = executor.submit(() -> doPost("/api/device", device, Device.class));
             futures.add(Futures.transform(future, (dev) ->
                     doPost("/api/customer/" + customerId.getId()
                             + "/device/" + dev.getId().getId(), Device.class), MoreExecutors.directExecutor()));
         }
         List<Device> devicesTitle1 = Futures.allAsList(futures).get(TIMEOUT, TimeUnit.SECONDS);
 
-        @NotNull String title2 = "Device title 2";
+        String title2 = "Device title 2";
         futures = new ArrayList<>(143);
         for (int i = 0; i < 143; i++) {
-            @NotNull Device device = new Device();
-            @NotNull String suffix = StringUtils.randomAlphanumeric(15);
-            @NotNull String name = title2 + suffix;
+            Device device = new Device();
+            String suffix = StringUtils.randomAlphanumeric(15);
+            String name = title2 + suffix;
             name = i % 2 == 0 ? name.toLowerCase() : name.toUpperCase();
             device.setName(name);
             device.setType("default");
-            @NotNull ListenableFuture<Device> future = executor.submit(() -> doPost("/api/device", device, Device.class));
+            ListenableFuture<Device> future = executor.submit(() -> doPost("/api/device", device, Device.class));
             futures.add(Futures.transform(future, (dev) ->
                     doPost("/api/customer/" + customerId.getId()
                             + "/device/" + dev.getId().getId(), Device.class), MoreExecutors.directExecutor()));
         }
         List<Device> devicesTitle2 = Futures.allAsList(futures).get(TIMEOUT, TimeUnit.SECONDS);
 
-        @NotNull List<Device> loadedDevicesTitle1 = new ArrayList<>(125);
+        List<Device> loadedDevicesTitle1 = new ArrayList<>(125);
         PageLink pageLink = new PageLink(15, 0, title1);
         do {
             pageData = doGetTypedWithPageLink("/api/customer/" + customerId.getId() + "/devices?",
@@ -1012,7 +1011,7 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
 
         assertThat(devicesTitle1).as(title1).containsExactlyInAnyOrderElementsOf(loadedDevicesTitle1);
 
-        @NotNull List<Device> loadedDevicesTitle2 = new ArrayList<>(143);
+        List<Device> loadedDevicesTitle2 = new ArrayList<>(143);
         pageLink = new PageLink(4, 0, title2);
         do {
             pageData = doGetTypedWithPageLink("/api/customer/" + customerId.getId() + "/devices?",
@@ -1049,17 +1048,17 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
         customer = doPost("/api/customer", customer, Customer.class);
         CustomerId customerId = customer.getId();
 
-        @NotNull String title1 = "Device title 1";
-        @NotNull String type1 = "typeC";
+        String title1 = "Device title 1";
+        String type1 = "typeC";
         futures = new ArrayList<>(125);
         for (int i = 0; i < 125; i++) {
-            @NotNull Device device = new Device();
-            @NotNull String suffix = StringUtils.randomAlphanumeric(15);
-            @NotNull String name = title1 + suffix;
+            Device device = new Device();
+            String suffix = StringUtils.randomAlphanumeric(15);
+            String name = title1 + suffix;
             name = i % 2 == 0 ? name.toLowerCase() : name.toUpperCase();
             device.setName(name);
             device.setType(type1);
-            @NotNull ListenableFuture<Device> future = executor.submit(() -> doPost("/api/device", device, Device.class));
+            ListenableFuture<Device> future = executor.submit(() -> doPost("/api/device", device, Device.class));
             futures.add(Futures.transform(future, (dev) ->
                     doPost("/api/customer/" + customerId.getId()
                             + "/device/" + dev.getId().getId(), Device.class), MoreExecutors.directExecutor()));
@@ -1069,17 +1068,17 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
         }
         List<Device> devicesType1 = Futures.allAsList(futures).get(TIMEOUT, TimeUnit.SECONDS);
 
-        @NotNull String title2 = "Device title 2";
-        @NotNull String type2 = "typeD";
+        String title2 = "Device title 2";
+        String type2 = "typeD";
         futures = new ArrayList<>(143);
         for (int i = 0; i < 143; i++) {
-            @NotNull Device device = new Device();
-            @NotNull String suffix = StringUtils.randomAlphanumeric(15);
-            @NotNull String name = title2 + suffix;
+            Device device = new Device();
+            String suffix = StringUtils.randomAlphanumeric(15);
+            String name = title2 + suffix;
             name = i % 2 == 0 ? name.toLowerCase() : name.toUpperCase();
             device.setName(name);
             device.setType(type2);
-            @NotNull ListenableFuture<Device> future = executor.submit(() -> doPost("/api/device", device, Device.class));
+            ListenableFuture<Device> future = executor.submit(() -> doPost("/api/device", device, Device.class));
             futures.add(Futures.transform(future, (dev) ->
                     doPost("/api/customer/" + customerId.getId()
                             + "/device/" + dev.getId().getId(), Device.class), MoreExecutors.directExecutor()));
@@ -1089,7 +1088,7 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
         }
         List<Device> devicesType2 = Futures.allAsList(futures).get(TIMEOUT, TimeUnit.SECONDS);
 
-        @NotNull List<Device> loadedDevicesType1 = new ArrayList<>(125);
+        List<Device> loadedDevicesType1 = new ArrayList<>(125);
         PageLink pageLink = new PageLink(15);
         do {
             pageData = doGetTypedWithPageLink("/api/customer/" + customerId.getId() + "/devices?type={type}&",
@@ -1102,7 +1101,7 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
 
         assertThat(devicesType1).as(title1).containsExactlyInAnyOrderElementsOf(loadedDevicesType1);
 
-        @NotNull List<Device> loadedDevicesType2 = new ArrayList<>(143);
+        List<Device> loadedDevicesType2 = new ArrayList<>(143);
         pageLink = new PageLink(4);
         do {
             pageData = doGetTypedWithPageLink("/api/customer/" + customerId.getId() + "/devices?type={type}&",
@@ -1134,17 +1133,17 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
 
     @Test
     public void testAssignDeviceToTenant() throws Exception {
-        @NotNull Device device = new Device();
+        Device device = new Device();
         device.setName("My device");
         device.setType("default");
         Device savedDevice = doPost("/api/device", device, Device.class);
 
-        @NotNull Device anotherDevice = new Device();
+        Device anotherDevice = new Device();
         anotherDevice.setName("My device1");
         anotherDevice.setType("default");
         Device savedAnotherDevice = doPost("/api/device", anotherDevice, Device.class);
 
-        @NotNull EntityRelation relation = new EntityRelation();
+        EntityRelation relation = new EntityRelation();
         relation.setFrom(savedDevice.getId());
         relation.setTo(savedAnotherDevice.getId());
         relation.setTypeGroup(RelationTypeGroup.COMMON);
@@ -1152,12 +1151,12 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
         doPost("/api/relation", relation).andExpect(status().isOk());
 
         loginSysAdmin();
-        @NotNull Tenant tenant = new Tenant();
+        Tenant tenant = new Tenant();
         tenant.setTitle("Different tenant");
         Tenant savedDifferentTenant = doPost("/api/tenant", tenant, Tenant.class);
         Assert.assertNotNull(savedDifferentTenant);
 
-        @NotNull User user = new User();
+        User user = new User();
         user.setAuthority(Authority.TENANT_ADMIN);
         user.setTenantId(savedDifferentTenant.getId());
         user.setEmail("tenant9@echoiot.org");
@@ -1202,7 +1201,7 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
         Edge edge = constructEdge("My edge", "default");
         Edge savedEdge = doPost("/api/edge", edge, Edge.class);
 
-        @NotNull Device device = new Device();
+        Device device = new Device();
         device.setName("My device");
         device.setType("default");
         Device savedDevice = doPost("/api/device", device, Device.class);
@@ -1269,16 +1268,16 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
 
     @Test
     public void testBulkImportDeviceWithoutCredentials() throws Exception {
-        @NotNull String deviceName = "some_device";
-        @NotNull String deviceType = "some_type";
-        @NotNull BulkImportRequest request = new BulkImportRequest();
+        String deviceName = "some_device";
+        String deviceType = "some_type";
+        BulkImportRequest request = new BulkImportRequest();
         request.setFile(String.format("NAME,TYPE\n%s,%s", deviceName, deviceType));
-        @NotNull BulkImportRequest.Mapping mapping = new BulkImportRequest.Mapping();
-        @NotNull BulkImportRequest.ColumnMapping name = new BulkImportRequest.ColumnMapping();
+        BulkImportRequest.Mapping mapping = new BulkImportRequest.Mapping();
+        BulkImportRequest.ColumnMapping name = new BulkImportRequest.ColumnMapping();
         name.setType(BulkImportColumnType.NAME);
-        @NotNull BulkImportRequest.ColumnMapping type = new BulkImportRequest.ColumnMapping();
+        BulkImportRequest.ColumnMapping type = new BulkImportRequest.ColumnMapping();
         type.setType(BulkImportColumnType.TYPE);
-        @NotNull List<BulkImportRequest.ColumnMapping> columns = new ArrayList<>();
+        List<BulkImportRequest.ColumnMapping> columns = new ArrayList<>();
         columns.add(name);
         columns.add(type);
 
@@ -1328,7 +1327,7 @@ public abstract class BaseDeviceControllerTest extends AbstractControllerTest {
     }
 
     private Device createDevice(String name) {
-        @NotNull Device device = new Device();
+        Device device = new Device();
         device.setName(name);
         device.setType("default");
         return doPost("/api/device", device, Device.class);

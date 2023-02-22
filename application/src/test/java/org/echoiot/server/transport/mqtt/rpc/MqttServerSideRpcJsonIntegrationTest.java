@@ -5,7 +5,6 @@ import org.echoiot.server.common.data.TransportPayloadType;
 import org.echoiot.server.dao.service.DaoSqlTest;
 import org.echoiot.server.transport.mqtt.MqttTestClient;
 import org.echoiot.server.transport.mqtt.MqttTestConfigProperties;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -66,10 +65,10 @@ public class MqttServerSideRpcJsonIntegrationTest extends AbstractMqttServerSide
     }
 
     protected void processJsonOneWayRpcTestGateway(String deviceName) throws Exception {
-        @NotNull MqttTestClient client = new MqttTestClient();
+        MqttTestClient client = new MqttTestClient();
         client.connectAndWait(gatewayAccessToken);
-        @NotNull String payload = "{\"device\": \"" + deviceName + "\", \"type\": \"" + TransportPayloadType.JSON.name() + "\"}";
-        @NotNull byte[] payloadBytes = payload.getBytes();
+        String payload = "{\"device\": \"" + deviceName + "\", \"type\": \"" + TransportPayloadType.JSON.name() + "\"}";
+        byte[] payloadBytes = payload.getBytes();
         validateOneWayRpcGatewayResponse(deviceName, client, payloadBytes);
         client.disconnect();
     }

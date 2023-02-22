@@ -16,7 +16,6 @@ import org.echoiot.server.common.data.edge.EdgeEventActionType;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.session.SessionMsgType;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -32,12 +31,12 @@ public abstract class AbstractTbMsgPushNode<T extends BaseTbMsgPushNodeConfigura
     private static final String SCOPE = "scope";
 
     @Override
-    public void init(TbContext ctx, @NotNull TbNodeConfiguration configuration) throws TbNodeException {
+    public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
         this.config = TbNodeUtils.convert(configuration, getConfigClazz());
     }
 
     @Override
-    public void onMsg(@NotNull TbContext ctx, @NotNull TbMsg msg) {
+    public void onMsg(TbContext ctx, TbMsg msg) {
         if (getIgnoredMessageSource().equalsIgnoreCase(msg.getMetaData().getValue(DataConstants.MSG_SOURCE_KEY))) {
             log.debug("Ignoring msg from the {}, msg [{}]", getIgnoredMessageSource(), msg);
             ctx.ack(msg);
@@ -58,13 +57,13 @@ public abstract class AbstractTbMsgPushNode<T extends BaseTbMsgPushNodeConfigura
         }
     }
 
-    protected S buildEvent(@NotNull TbMsg msg, @NotNull TbContext ctx) {
+    protected S buildEvent(TbMsg msg, TbContext ctx) {
         String msgType = msg.getType();
         if (DataConstants.ALARM.equals(msgType)) {
             return buildEvent(ctx.getTenantId(), EdgeEventActionType.ADDED, getUUIDFromMsgData(msg), getAlarmEventType(), null);
         } else {
-            @NotNull EdgeEventActionType actionType = getEdgeEventActionTypeByMsgType(msgType);
-            @NotNull Map<String, Object> entityBody = new HashMap<>();
+            EdgeEventActionType actionType = getEdgeEventActionTypeByMsgType(msgType);
+            Map<String, Object> entityBody = new HashMap<>();
             Map<String, String> metadata = msg.getMetaData().getData();
             JsonNode dataJson = JacksonUtil.toJsonNode(msg.getData());
             switch (actionType) {
@@ -110,14 +109,13 @@ public abstract class AbstractTbMsgPushNode<T extends BaseTbMsgPushNodeConfigura
 
     abstract void processMsg(TbContext ctx, TbMsg msg);
 
-    @NotNull
-    protected UUID getUUIDFromMsgData(@NotNull TbMsg msg) {
+    protected UUID getUUIDFromMsgData(TbMsg msg) {
         JsonNode data = JacksonUtil.toJsonNode(msg.getData()).get("id");
         @Nullable String id = JacksonUtil.convertValue(data.get("id"), String.class);
         return UUID.fromString(id);
     }
 
-    protected String getScope(@NotNull Map<String, String> metadata) {
+    protected String getScope(Map<String, String> metadata) {
         String scope = metadata.get(SCOPE);
         if (StringUtils.isEmpty(scope)) {
             scope = config.getScope();
@@ -125,7 +123,6 @@ public abstract class AbstractTbMsgPushNode<T extends BaseTbMsgPushNodeConfigura
         return scope;
     }
 
-    @NotNull
     protected EdgeEventActionType getEdgeEventActionTypeByMsgType(String msgType) {
         EdgeEventActionType actionType;
         if (SessionMsgType.POST_TELEMETRY_REQUEST.name().equals(msgType)
@@ -153,7 +150,7 @@ public abstract class AbstractTbMsgPushNode<T extends BaseTbMsgPushNodeConfigura
                 || DataConstants.ALARM.equals(msgType);
     }
 
-    protected boolean isSupportedOriginator(@NotNull EntityType entityType) {
+    protected boolean isSupportedOriginator(EntityType entityType) {
         switch (entityType) {
             case DEVICE:
             case ASSET:

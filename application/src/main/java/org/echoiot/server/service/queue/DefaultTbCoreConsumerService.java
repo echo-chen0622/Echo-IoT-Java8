@@ -43,7 +43,6 @@ import org.echoiot.server.service.subscription.TbLocalSubscriptionService;
 import org.echoiot.server.service.subscription.TbSubscriptionUtils;
 import org.echoiot.server.service.sync.vc.GitVersionControlQueueService;
 import org.echoiot.server.service.transport.msg.TransportToDeviceActorMsgWrapper;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -84,7 +83,6 @@ public class DefaultTbCoreConsumerService extends AbstractConsumerService<ToCore
     private final EdgeNotificationService edgeNotificationService;
     private final OtaPackageStateService firmwareStateService;
     private final GitVersionControlQueueService vcQueueService;
-    @NotNull
     private final TbCoreConsumerStats stats;
     protected final TbQueueConsumer<TbProtoQueueMsg<ToUsageStatsServiceMsg>> usageStatsConsumer;
     private final TbQueueConsumer<TbProtoQueueMsg<ToOtaPackageStateServiceMsg>> firmwareStatesConsumer;
@@ -93,14 +91,14 @@ public class DefaultTbCoreConsumerService extends AbstractConsumerService<ToCore
 
     private volatile ExecutorService firmwareStatesExecutor;
 
-    public DefaultTbCoreConsumerService(@NotNull TbCoreQueueFactory tbCoreQueueFactory,
+    public DefaultTbCoreConsumerService(TbCoreQueueFactory tbCoreQueueFactory,
                                         ActorSystemContext actorContext,
                                         DeviceStateService stateService,
                                         TbLocalSubscriptionService localSubscriptionService,
                                         SubscriptionManagerService subscriptionManagerService,
                                         DataDecodingEncodingService encodingService,
                                         TbCoreDeviceRpcService tbCoreDeviceRpcService,
-                                        @NotNull StatsFactory statsFactory,
+                                        StatsFactory statsFactory,
                                         TbDeviceProfileCache deviceProfileCache,
                                         TbAssetProfileCache assetProfileCache,
                                         TbApiUsageStateService statsService,
@@ -152,7 +150,7 @@ public class DefaultTbCoreConsumerService extends AbstractConsumerService<ToCore
     }
 
     @Override
-    protected void onTbApplicationEvent(@NotNull PartitionChangeEvent event) {
+    protected void onTbApplicationEvent(PartitionChangeEvent event) {
         if (event.getServiceType().equals(getServiceType())) {
             log.info("Subscribing to partitions: {}", event.getPartitions());
             this.mainConsumer.subscribe(event.getPartitions());
@@ -175,19 +173,19 @@ public class DefaultTbCoreConsumerService extends AbstractConsumerService<ToCore
                     if (msgs.isEmpty()) {
                         continue;
                     }
-                    @NotNull List<IdMsgPair<ToCoreMsg>> orderedMsgList = msgs.stream().map(msg -> new IdMsgPair<>(UUID.randomUUID(), msg)).collect(Collectors.toList());
-                    @NotNull ConcurrentMap<UUID, TbProtoQueueMsg<ToCoreMsg>> pendingMap = orderedMsgList.stream().collect(
+                    List<IdMsgPair<ToCoreMsg>> orderedMsgList = msgs.stream().map(msg -> new IdMsgPair<>(UUID.randomUUID(), msg)).collect(Collectors.toList());
+                    ConcurrentMap<UUID, TbProtoQueueMsg<ToCoreMsg>> pendingMap = orderedMsgList.stream().collect(
                             Collectors.toConcurrentMap(IdMsgPair::getUuid, IdMsgPair::getMsg));
-                    @NotNull CountDownLatch processingTimeoutLatch = new CountDownLatch(1);
-                    @NotNull TbPackProcessingContext<TbProtoQueueMsg<ToCoreMsg>> ctx = new TbPackProcessingContext<>(
+                    CountDownLatch processingTimeoutLatch = new CountDownLatch(1);
+                    TbPackProcessingContext<TbProtoQueueMsg<ToCoreMsg>> ctx = new TbPackProcessingContext<>(
                             processingTimeoutLatch, pendingMap, new ConcurrentHashMap<>());
-                    @NotNull PendingMsgHolder pendingMsgHolder = new PendingMsgHolder();
-                    @NotNull Future<?> packSubmitFuture = consumersExecutor.submit(() -> {
+                    PendingMsgHolder pendingMsgHolder = new PendingMsgHolder();
+                    Future<?> packSubmitFuture = consumersExecutor.submit(() -> {
                         orderedMsgList.forEach((element) -> {
                             UUID id = element.getUuid();
                             TbProtoQueueMsg<ToCoreMsg> msg = element.getMsg();
                             log.trace("[{}] Creating main callback for message: {}", id, msg.getValue());
-                            @NotNull TbCallback callback = new TbPackCallback<>(id, ctx);
+                            TbCallback callback = new TbPackCallback<>(id, ctx);
                             try {
                                 ToCoreMsg toCoreMsg = msg.getValue();
                                 pendingMsgHolder.setToCoreMsg(toCoreMsg);
@@ -209,7 +207,7 @@ public class DefaultTbCoreConsumerService extends AbstractConsumerService<ToCore
                                 } else if (!toCoreMsg.getToDeviceActorNotificationMsg().isEmpty()) {
                                     Optional<TbActorMsg> actorMsg = encodingService.decode(toCoreMsg.getToDeviceActorNotificationMsg().toByteArray());
                                     if (actorMsg.isPresent()) {
-                                        @NotNull TbActorMsg tbActorMsg = actorMsg.get();
+                                        TbActorMsg tbActorMsg = actorMsg.get();
                                         if (tbActorMsg.getMsgType().equals(MsgType.DEVICE_RPC_REQUEST_TO_DEVICE_ACTOR_MSG)) {
                                             tbCoreDeviceRpcService.forwardRpcRequestToDeviceActor((ToDeviceRpcRequestActorMsg) tbActorMsg);
                                         } else {
@@ -256,7 +254,6 @@ public class DefaultTbCoreConsumerService extends AbstractConsumerService<ToCore
         private volatile ToCoreMsg toCoreMsg;
     }
 
-    @NotNull
     @Override
     protected ServiceType getServiceType() {
         return ServiceType.TB_CORE;
@@ -273,7 +270,7 @@ public class DefaultTbCoreConsumerService extends AbstractConsumerService<ToCore
     }
 
     @Override
-    protected void handleNotification(UUID id, @NotNull TbProtoQueueMsg<ToCoreNotificationMsg> msg, @NotNull TbCallback callback) {
+    protected void handleNotification(UUID id, TbProtoQueueMsg<ToCoreNotificationMsg> msg, TbCallback callback) {
         ToCoreNotificationMsg toCoreNotification = msg.getValue();
         if (toCoreNotification.hasToLocalSubscriptionServiceMsg()) {
             log.trace("[{}] Forwarding message to local subscription service {}", id, toCoreNotification.getToLocalSubscriptionServiceMsg());
@@ -315,14 +312,14 @@ public class DefaultTbCoreConsumerService extends AbstractConsumerService<ToCore
                     if (msgs.isEmpty()) {
                         continue;
                     }
-                    @NotNull ConcurrentMap<UUID, TbProtoQueueMsg<ToUsageStatsServiceMsg>> pendingMap = msgs.stream().collect(
+                    ConcurrentMap<UUID, TbProtoQueueMsg<ToUsageStatsServiceMsg>> pendingMap = msgs.stream().collect(
                             Collectors.toConcurrentMap(s -> UUID.randomUUID(), Function.identity()));
-                    @NotNull CountDownLatch processingTimeoutLatch = new CountDownLatch(1);
-                    @NotNull TbPackProcessingContext<TbProtoQueueMsg<ToUsageStatsServiceMsg>> ctx = new TbPackProcessingContext<>(
+                    CountDownLatch processingTimeoutLatch = new CountDownLatch(1);
+                    TbPackProcessingContext<TbProtoQueueMsg<ToUsageStatsServiceMsg>> ctx = new TbPackProcessingContext<>(
                             processingTimeoutLatch, pendingMap, new ConcurrentHashMap<>());
                     pendingMap.forEach((id, msg) -> {
                         log.trace("[{}] Creating usage stats callback for message: {}", id, msg.getValue());
-                        @NotNull TbCallback callback = new TbPackCallback<>(id, ctx);
+                        TbCallback callback = new TbPackCallback<>(id, ctx);
                         try {
                             handleUsageStats(msg, callback);
                         } catch (Throwable e) {
@@ -360,7 +357,7 @@ public class DefaultTbCoreConsumerService extends AbstractConsumerService<ToCore
                         continue;
                     }
                     long timeToSleep = maxProcessingTimeoutPerRecord;
-                    for (@NotNull TbProtoQueueMsg<ToOtaPackageStateServiceMsg> msg : msgs) {
+                    for (TbProtoQueueMsg<ToOtaPackageStateServiceMsg> msg : msgs) {
                         try {
                             long startTime = System.currentTimeMillis();
                             boolean isSuccessUpdate = handleOtaPackageUpdates(msg);
@@ -399,13 +396,13 @@ public class DefaultTbCoreConsumerService extends AbstractConsumerService<ToCore
         statsService.process(msg, callback);
     }
 
-    private boolean handleOtaPackageUpdates(@NotNull TbProtoQueueMsg<ToOtaPackageStateServiceMsg> msg) {
+    private boolean handleOtaPackageUpdates(TbProtoQueueMsg<ToOtaPackageStateServiceMsg> msg) {
         return firmwareStateService.process(msg.getValue());
     }
 
-    private void forwardToCoreRpcService(@NotNull FromDeviceRPCResponseProto proto, @NotNull TbCallback callback) {
+    private void forwardToCoreRpcService(FromDeviceRPCResponseProto proto, TbCallback callback) {
         RpcError error = proto.getError() > 0 ? RpcError.values()[proto.getError()] : null;
-        @NotNull FromDeviceRpcResponse response = new FromDeviceRpcResponse(new UUID(proto.getRequestIdMSB(), proto.getRequestIdLSB())
+        FromDeviceRpcResponse response = new FromDeviceRpcResponse(new UUID(proto.getRequestIdMSB(), proto.getRequestIdLSB())
                 , proto.getResponse(), error);
         tbCoreDeviceRpcService.processRpcResponseFromRuleEngine(response);
         callback.onSuccess();
@@ -419,7 +416,7 @@ public class DefaultTbCoreConsumerService extends AbstractConsumerService<ToCore
         }
     }
 
-    private void forwardToLocalSubMgrService(@NotNull LocalSubscriptionServiceMsgProto msg, @NotNull TbCallback callback) {
+    private void forwardToLocalSubMgrService(LocalSubscriptionServiceMsgProto msg, TbCallback callback) {
         if (msg.hasSubUpdate()) {
             localSubscriptionService.onSubscriptionUpdate(msg.getSubUpdate().getSessionId(), TbSubscriptionUtils.fromProto(msg.getSubUpdate()), callback);
         } else if (msg.hasAlarmSubUpdate()) {
@@ -429,7 +426,7 @@ public class DefaultTbCoreConsumerService extends AbstractConsumerService<ToCore
         }
     }
 
-    private void forwardToSubMgrService(@NotNull SubscriptionMgrMsgProto msg, @NotNull TbCallback callback) {
+    private void forwardToSubMgrService(SubscriptionMgrMsgProto msg, TbCallback callback) {
         if (msg.hasAttributeSub()) {
             subscriptionManagerService.addSubscription(TbSubscriptionUtils.fromProto(msg.getAttributeSub()), callback);
         } else if (msg.hasTelemetrySub()) {
@@ -490,12 +487,12 @@ public class DefaultTbCoreConsumerService extends AbstractConsumerService<ToCore
         stateService.onQueueMsg(deviceStateServiceMsg, callback);
     }
 
-    private void forwardToStateService(@NotNull TransportProtos.DeviceActivityProto deviceActivityMsg, @NotNull TbCallback callback) {
+    private void forwardToStateService(TransportProtos.DeviceActivityProto deviceActivityMsg, TbCallback callback) {
         if (statsEnabled) {
             stats.log(deviceActivityMsg);
         }
-        @NotNull TenantId tenantId = TenantId.fromUUID(new UUID(deviceActivityMsg.getTenantIdMSB(), deviceActivityMsg.getTenantIdLSB()));
-        @NotNull DeviceId deviceId = new DeviceId(new UUID(deviceActivityMsg.getDeviceIdMSB(), deviceActivityMsg.getDeviceIdLSB()));
+        TenantId tenantId = TenantId.fromUUID(new UUID(deviceActivityMsg.getTenantIdMSB(), deviceActivityMsg.getTenantIdLSB()));
+        DeviceId deviceId = new DeviceId(new UUID(deviceActivityMsg.getDeviceIdMSB(), deviceActivityMsg.getDeviceIdLSB()));
         try {
             stateService.onDeviceActivity(tenantId, deviceId, deviceActivityMsg.getLastActivityTime());
             callback.onSuccess();
@@ -511,14 +508,14 @@ public class DefaultTbCoreConsumerService extends AbstractConsumerService<ToCore
         edgeNotificationService.pushNotificationToEdge(edgeNotificationMsg, callback);
     }
 
-    private void forwardToDeviceActor(@NotNull TransportToDeviceActorMsg toDeviceActorMsg, TbCallback callback) {
+    private void forwardToDeviceActor(TransportToDeviceActorMsg toDeviceActorMsg, TbCallback callback) {
         if (statsEnabled) {
             stats.log(toDeviceActorMsg);
         }
         actorContext.tell(new TransportToDeviceActorMsgWrapper(toDeviceActorMsg, callback));
     }
 
-    private void forwardToAppActor(UUID id, @NotNull Optional<TbActorMsg> actorMsg, @NotNull TbCallback callback) {
+    private void forwardToAppActor(UUID id, Optional<TbActorMsg> actorMsg, TbCallback callback) {
         if (actorMsg.isPresent()) {
             log.trace("[{}] Forwarding message to App Actor {}", id, actorMsg.get());
             actorContext.tell(actorMsg.get());
@@ -526,7 +523,7 @@ public class DefaultTbCoreConsumerService extends AbstractConsumerService<ToCore
         callback.onSuccess();
     }
 
-    private void throwNotHandled(Object msg, @NotNull TbCallback callback) {
+    private void throwNotHandled(Object msg, TbCallback callback) {
         log.warn("Message not handled: {}", msg);
         callback.onFailure(new RuntimeException("Message not handled!"));
     }

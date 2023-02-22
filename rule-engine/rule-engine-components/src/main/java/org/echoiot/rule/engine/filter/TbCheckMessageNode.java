@@ -6,7 +6,6 @@ import org.echoiot.rule.engine.api.*;
 import org.echoiot.rule.engine.api.util.TbNodeUtils;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.msg.TbMsg;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
@@ -32,14 +31,14 @@ public class TbCheckMessageNode implements TbNode {
     private List<String> metadataNamesList;
 
     @Override
-    public void init(TbContext tbContext, @NotNull TbNodeConfiguration configuration) throws TbNodeException {
+    public void init(TbContext tbContext, TbNodeConfiguration configuration) throws TbNodeException {
         this.config = TbNodeUtils.convert(configuration, TbCheckMessageNodeConfiguration.class);
         messageNamesList = config.getMessageNames();
         metadataNamesList = config.getMetadataNames();
     }
 
     @Override
-    public void onMsg(@NotNull TbContext ctx, @NotNull TbMsg msg) {
+    public void onMsg(TbContext ctx, TbMsg msg) {
         try {
             if (config.isCheckAllKeys()) {
                 ctx.tellNext(msg, allKeysData(msg) && allKeysMetadata(msg) ? "True" : "False");
@@ -51,7 +50,7 @@ public class TbCheckMessageNode implements TbNode {
         }
     }
 
-    private boolean allKeysData(@NotNull TbMsg msg) {
+    private boolean allKeysData(TbMsg msg) {
         if (!messageNamesList.isEmpty()) {
             Map<String, String> dataMap = dataToMap(msg);
             return processAllKeys(messageNamesList, dataMap);
@@ -59,7 +58,7 @@ public class TbCheckMessageNode implements TbNode {
         return true;
     }
 
-    private boolean allKeysMetadata(@NotNull TbMsg msg) {
+    private boolean allKeysMetadata(TbMsg msg) {
         if (!metadataNamesList.isEmpty()) {
             Map<String, String> metadataMap = metadataToMap(msg);
             return processAllKeys(metadataNamesList, metadataMap);
@@ -67,7 +66,7 @@ public class TbCheckMessageNode implements TbNode {
         return true;
     }
 
-    private boolean atLeastOneData(@NotNull TbMsg msg) {
+    private boolean atLeastOneData(TbMsg msg) {
         if (!messageNamesList.isEmpty()) {
             Map<String, String> dataMap = dataToMap(msg);
             return processAtLeastOne(messageNamesList, dataMap);
@@ -75,7 +74,7 @@ public class TbCheckMessageNode implements TbNode {
         return false;
     }
 
-    private boolean atLeastOneMetadata(@NotNull TbMsg msg) {
+    private boolean atLeastOneMetadata(TbMsg msg) {
         if (!metadataNamesList.isEmpty()) {
             Map<String, String> metadataMap = metadataToMap(msg);
             return processAtLeastOne(metadataNamesList, metadataMap);
@@ -83,7 +82,7 @@ public class TbCheckMessageNode implements TbNode {
         return false;
     }
 
-    private boolean processAllKeys(@NotNull List<String> data, @NotNull Map<String, String> map) {
+    private boolean processAllKeys(List<String> data, Map<String, String> map) {
         for (String field : data) {
             if (!map.containsKey(field)) {
                 return false;
@@ -92,7 +91,7 @@ public class TbCheckMessageNode implements TbNode {
         return true;
     }
 
-    private boolean processAtLeastOne(@NotNull List<String> data, @NotNull Map<String, String> map) {
+    private boolean processAtLeastOne(List<String> data, Map<String, String> map) {
         for (String field : data) {
             if (map.containsKey(field)) {
                 return true;
@@ -101,12 +100,12 @@ public class TbCheckMessageNode implements TbNode {
         return false;
     }
 
-    private Map<String, String> metadataToMap(@NotNull TbMsg msg) {
+    private Map<String, String> metadataToMap(TbMsg msg) {
         return msg.getMetaData().getData();
     }
 
     @SuppressWarnings("unchecked")
-    private Map<String, String> dataToMap(@NotNull TbMsg msg) {
+    private Map<String, String> dataToMap(TbMsg msg) {
         return (Map<String, String>) gson.fromJson(msg.getData(), Map.class);
     }
 

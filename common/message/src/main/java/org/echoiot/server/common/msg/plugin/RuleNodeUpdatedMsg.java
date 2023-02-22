@@ -5,7 +5,6 @@ import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.plugin.ComponentLifecycleEvent;
 import org.echoiot.server.common.msg.MsgType;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Andrew Shvayka
@@ -17,7 +16,6 @@ public class RuleNodeUpdatedMsg extends ComponentLifecycleMsg {
         super(tenantId, entityId, ComponentLifecycleEvent.UPDATED);
     }
 
-    @NotNull
     @Override
     public MsgType getMsgType() {
         return MsgType.RULE_NODE_UPDATED_MSG;

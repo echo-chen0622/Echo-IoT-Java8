@@ -10,7 +10,6 @@ import org.echoiot.server.transport.lwm2m.server.downlink.*;
 import org.echoiot.server.transport.lwm2m.server.log.LwM2MTelemetryLogService;
 import org.echoiot.server.transport.lwm2m.server.store.TbLwM2MModelConfigStore;
 import org.echoiot.server.transport.lwm2m.server.uplink.LwM2mUplinkMsgHandler;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -55,7 +54,7 @@ public class LwM2MModelConfigServiceImpl implements LwM2MModelConfigService {
     }
 
     @Override
-    public void sendUpdates(@NotNull LwM2mClient lwM2mClient) {
+    public void sendUpdates(LwM2mClient lwM2mClient) {
         LwM2MModelConfig modelConfig = currentModelConfigs.get(lwM2mClient.getEndpoint());
         if (modelConfig == null || modelConfig.isEmpty()) {
             return;
@@ -64,7 +63,7 @@ public class LwM2MModelConfigServiceImpl implements LwM2MModelConfigService {
         doSend(lwM2mClient, modelConfig);
     }
 
-    public void sendUpdates(@NotNull LwM2mClient lwM2mClient, @NotNull LwM2MModelConfig newModelConfig) {
+    public void sendUpdates(LwM2mClient lwM2mClient, LwM2MModelConfig newModelConfig) {
         String endpoint = lwM2mClient.getEndpoint();
         LwM2MModelConfig modelConfig = currentModelConfigs.get(endpoint);
         if (modelConfig == null || modelConfig.isEmpty()) {
@@ -81,7 +80,7 @@ public class LwM2MModelConfigServiceImpl implements LwM2MModelConfigService {
         }
     }
 
-    private void doSend(@NotNull LwM2mClient lwM2mClient, @NotNull LwM2MModelConfig modelConfig) {
+    private void doSend(LwM2mClient lwM2mClient, LwM2MModelConfig modelConfig) {
         log.trace("Send LwM2M Model updates: [{}]", modelConfig);
 
         String endpoint = lwM2mClient.getEndpoint();
@@ -159,8 +158,7 @@ public class LwM2MModelConfigServiceImpl implements LwM2MModelConfigService {
         });
     }
 
-    @NotNull
-    private <R, T> DownlinkRequestCallback<R, T> createDownlinkProxyCallback(@NotNull Runnable processRemove, @NotNull DownlinkRequestCallback<R, T> callback) {
+    private <R, T> DownlinkRequestCallback<R, T> createDownlinkProxyCallback(Runnable processRemove, DownlinkRequestCallback<R, T> callback) {
         return new DownlinkRequestCallback<>() {
             @Override
             public void onSuccess(R request, T response) {

@@ -7,7 +7,6 @@ import lombok.ToString;
 import org.echoiot.server.common.data.BaseData;
 import org.echoiot.server.common.data.id.OAuth2MobileId;
 import org.echoiot.server.common.data.id.OAuth2ParamsId;
-import org.jetbrains.annotations.NotNull;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -19,7 +18,7 @@ public class OAuth2Mobile extends BaseData<OAuth2MobileId> {
     private String pkgName;
     private String appSecret;
 
-    public OAuth2Mobile(@NotNull OAuth2Mobile mobile) {
+    public OAuth2Mobile(OAuth2Mobile mobile) {
         super(mobile);
         this.oauth2ParamsId = mobile.oauth2ParamsId;
         this.pkgName = mobile.pkgName;

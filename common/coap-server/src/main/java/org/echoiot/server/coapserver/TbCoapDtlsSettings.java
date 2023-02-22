@@ -10,7 +10,6 @@ import org.eclipse.californium.elements.util.SslContextUtil;
 import org.eclipse.californium.scandium.config.DtlsConnectorConfig;
 import org.eclipse.californium.scandium.dtls.CertificateType;
 import org.eclipse.californium.scandium.dtls.x509.SingleCertificateProvider;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -42,7 +41,6 @@ public class TbCoapDtlsSettings {
     @Value("${transport.coap.dtls.retransmission_timeout:9000}")
     private int dtlsRetransmissionTimeout;
 
-    @NotNull
     @Bean
     @ConfigurationProperties(prefix = "transport.coap.dtls.credentials")
     public SslCredentialsConfig coapDtlsCredentials() {
@@ -67,11 +65,11 @@ public class TbCoapDtlsSettings {
     @Resource
     private TbServiceInfoProvider serviceInfoProvider;
 
-    public DtlsConnectorConfig dtlsConnectorConfig(@NotNull Configuration configuration) throws UnknownHostException {
-        @NotNull DtlsConnectorConfig.Builder configBuilder = new DtlsConnectorConfig.Builder(configuration);
+    public DtlsConnectorConfig dtlsConnectorConfig(Configuration configuration) throws UnknownHostException {
+        DtlsConnectorConfig.Builder configBuilder = new DtlsConnectorConfig.Builder(configuration);
         configBuilder.setAddress(getInetSocketAddress());
         SslCredentials sslCredentials = this.coapDtlsCredentialsConfig.getCredentials();
-        @NotNull SslContextUtil.Credentials serverCredentials =
+        SslContextUtil.Credentials serverCredentials =
                 new SslContextUtil.Credentials(sslCredentials.getPrivateKey(), null, sslCredentials.getCertificateChain());
         configBuilder.set(DTLS_CLIENT_AUTHENTICATION_MODE, WANTED);
         configBuilder.set(DTLS_RETRANSMISSION_TIMEOUT, dtlsRetransmissionTimeout, MILLISECONDS);
@@ -90,7 +88,6 @@ public class TbCoapDtlsSettings {
         return configBuilder.build();
     }
 
-    @NotNull
     private InetSocketAddress getInetSocketAddress() throws UnknownHostException {
         InetAddress addr = InetAddress.getByName(host);
         return new InetSocketAddress(addr, port);

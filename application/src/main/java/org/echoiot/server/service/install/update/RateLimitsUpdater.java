@@ -6,7 +6,6 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.dao.tenant.TenantProfileService;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -59,7 +58,6 @@ class RateLimitsUpdater extends PaginatedUpdater<String, TenantProfile> {
         return true;
     }
 
-    @NotNull
     @Override
     protected String getName() {
         return "Rate limits updater";
@@ -71,7 +69,7 @@ class RateLimitsUpdater extends PaginatedUpdater<String, TenantProfile> {
     }
 
     @Override
-    protected void updateEntity(@NotNull TenantProfile tenantProfile) {
+    protected void updateEntity(TenantProfile tenantProfile) {
         @Nullable var profileConfiguration = tenantProfile.getDefaultProfileConfiguration();
 
         if (tenantServerRestLimitsEnabled && StringUtils.isNotEmpty(tenantServerRestLimitsConfiguration)) {

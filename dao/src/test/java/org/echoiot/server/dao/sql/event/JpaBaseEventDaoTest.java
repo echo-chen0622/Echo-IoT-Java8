@@ -10,7 +10,6 @@ import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.TimePageLink;
 import org.echoiot.server.dao.AbstractJpaDaoTest;
 import org.echoiot.server.dao.event.EventDao;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
 import javax.annotation.Resource;
@@ -28,13 +27,12 @@ public class JpaBaseEventDaoTest extends AbstractJpaDaoTest {
 
     @Resource
     private EventDao eventDao;
-    @NotNull
     UUID tenantId = Uuids.timeBased();
 
 
     @Test
     public void findEvent() throws InterruptedException, ExecutionException, TimeoutException {
-        @NotNull UUID entityId = Uuids.timeBased();
+        UUID entityId = Uuids.timeBased();
 
         Event event1 = getStatsEvent(Uuids.timeBased(), tenantId, entityId);
         eventDao.saveAsync(event1).get(1, TimeUnit.MINUTES);
@@ -50,8 +48,8 @@ public class JpaBaseEventDaoTest extends AbstractJpaDaoTest {
 
     @Test
     public void findEventsByEntityIdAndPageLink() throws Exception {
-        @NotNull UUID entityId1 = Uuids.timeBased();
-        @NotNull UUID entityId2 = Uuids.timeBased();
+        UUID entityId1 = Uuids.timeBased();
+        UUID entityId2 = Uuids.timeBased();
         long startTime = System.currentTimeMillis();
 
         Event event1 = getStatsEvent(Uuids.timeBased(), tenantId, entityId1);
@@ -72,12 +70,12 @@ public class JpaBaseEventDaoTest extends AbstractJpaDaoTest {
         assertEquals(0, events3.getData().size());
 
 
-        @NotNull TimePageLink pageLink2 = new TimePageLink(30, 0, "", null, startTime, null);
+        TimePageLink pageLink2 = new TimePageLink(30, 0, "", null, startTime, null);
         PageData<? extends Event> events12 = eventDao.findEvents(tenantId, entityId1, EventType.STATS, pageLink2);
         assertEquals(1, events12.getData().size());
         assertEquals(event1, events12.getData().get(0));
 
-        @NotNull TimePageLink pageLink3 = new TimePageLink(30, 0, "", null, startTime, endTime);
+        TimePageLink pageLink3 = new TimePageLink(30, 0, "", null, startTime, endTime);
         PageData<? extends Event> events13 = eventDao.findEvents(tenantId, entityId1, EventType.STATS, pageLink3);
         assertEquals(1, events13.getData().size());
         assertEquals(event1, events13.getData().get(0));

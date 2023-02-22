@@ -7,7 +7,6 @@ import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.msg.MsgType;
 import org.echoiot.server.common.msg.TbActorMsg;
-import org.jetbrains.annotations.NotNull;
 
 @AllArgsConstructor
 @Getter
@@ -16,12 +15,9 @@ public final class StatsPersistMsg implements TbActorMsg {
 
     private final long messagesProcessed;
     private final long errorsOccurred;
-    @NotNull
     private final TenantId tenantId;
-    @NotNull
     private final EntityId entityId;
 
-    @NotNull
     @Override
     public MsgType getMsgType() {
         return MsgType.STATS_PERSIST_MSG;

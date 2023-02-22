@@ -53,7 +53,6 @@ import org.echoiot.server.service.apiusage.TbApiUsageStateService;
 import org.echoiot.server.service.executors.DbCallbackExecutorService;
 import org.echoiot.server.service.profile.TbDeviceProfileCache;
 import org.echoiot.server.service.resource.TbResourceService;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
@@ -77,33 +76,19 @@ public class DefaultTransportApiService implements TransportApiService {
 
     private static final ObjectMapper mapper = new ObjectMapper();
 
-    @NotNull
     private final TbDeviceProfileCache deviceProfileCache;
-    @NotNull
     private final TbTenantProfileCache tenantProfileCache;
-    @NotNull
     private final TbApiUsageStateService apiUsageStateService;
-    @NotNull
     private final DeviceService deviceService;
-    @NotNull
     private final RelationService relationService;
-    @NotNull
     private final DeviceCredentialsService deviceCredentialsService;
-    @NotNull
     private final DbCallbackExecutorService dbCallbackExecutorService;
-    @NotNull
     private final TbClusterService tbClusterService;
-    @NotNull
     private final DataDecodingEncodingService dataDecodingEncodingService;
-    @NotNull
     private final DeviceProvisionService deviceProvisionService;
-    @NotNull
     private final TbResourceService resourceService;
-    @NotNull
     private final OtaPackageService otaPackageService;
-    @NotNull
     private final OtaPackageDataCache otaPackageDataCache;
-    @NotNull
     private final QueueService queueService;
 
     private final ConcurrentMap<String, ReentrantLock> deviceCreationLocks = new ConcurrentHashMap<>();
@@ -112,9 +97,8 @@ public class DefaultTransportApiService implements TransportApiService {
         return credentials != null && DeviceCredentialsType.MQTT_BASIC.equals(credentials.getCredentialsType());
     }
 
-    @NotNull
     @Override
-    public ListenableFuture<TbProtoQueueMsg<TransportApiResponseMsg>> handle(@NotNull TbProtoQueueMsg<TransportApiRequestMsg> tbProtoQueueMsg) {
+    public ListenableFuture<TbProtoQueueMsg<TransportApiResponseMsg>> handle(TbProtoQueueMsg<TransportApiRequestMsg> tbProtoQueueMsg) {
         TransportApiRequestMsg transportApiRequestMsg = tbProtoQueueMsg.getValue();
         @Nullable ListenableFuture<TransportApiResponseMsg> result = null;
 
@@ -157,7 +141,6 @@ public class DefaultTransportApiService implements TransportApiService {
                 MoreExecutors.directExecutor());
     }
 
-    @NotNull
     private ListenableFuture<TransportApiResponseMsg> validateCredentials(String credentialsId, DeviceCredentialsType credentialsType) {
         //TODO: Make async and enable caching
         DeviceCredentials credentials = deviceCredentialsService.findDeviceCredentialsByCredentialsId(credentialsId);
@@ -168,7 +151,7 @@ public class DefaultTransportApiService implements TransportApiService {
         }
     }
 
-    private ListenableFuture<TransportApiResponseMsg> validateCredentials(@NotNull TransportProtos.ValidateBasicMqttCredRequestMsg mqtt) {
+    private ListenableFuture<TransportApiResponseMsg> validateCredentials(TransportProtos.ValidateBasicMqttCredRequestMsg mqtt) {
         @Nullable DeviceCredentials credentials;
         if (StringUtils.isEmpty(mqtt.getUserName())) {
             credentials = checkMqttCredentials(mqtt, EncryptionUtil.getSha3Hash(mqtt.getClientId()));
@@ -181,7 +164,7 @@ public class DefaultTransportApiService implements TransportApiService {
             credentials = deviceCredentialsService.findDeviceCredentialsByCredentialsId(
                     EncryptionUtil.getSha3Hash("|", mqtt.getClientId(), mqtt.getUserName()));
             if (checkIsMqttCredentials(credentials)) {
-                @NotNull var validationResult = validateMqttCredentials(mqtt, credentials);
+                var validationResult = validateMqttCredentials(mqtt, credentials);
                 if (BasicCredentialsValidationResult.VALID.equals(validationResult)) {
                     return getDeviceInfo(credentials);
                 } else if (BasicCredentialsValidationResult.PASSWORD_MISMATCH.equals(validationResult)) {
@@ -195,8 +178,7 @@ public class DefaultTransportApiService implements TransportApiService {
         }
     }
 
-    @NotNull
-    private ListenableFuture<TransportApiResponseMsg> validateUserNameCredentials(@NotNull TransportProtos.ValidateBasicMqttCredRequestMsg mqtt) {
+    private ListenableFuture<TransportApiResponseMsg> validateUserNameCredentials(TransportProtos.ValidateBasicMqttCredRequestMsg mqtt) {
         DeviceCredentials credentials = deviceCredentialsService.findDeviceCredentialsByCredentialsId(mqtt.getUserName());
         if (credentials != null) {
             switch (credentials.getCredentialsType()) {
@@ -214,11 +196,11 @@ public class DefaultTransportApiService implements TransportApiService {
     }
 
     @Nullable
-    private DeviceCredentials checkMqttCredentials(@NotNull TransportProtos.ValidateBasicMqttCredRequestMsg clientCred, String credId) {
+    private DeviceCredentials checkMqttCredentials(TransportProtos.ValidateBasicMqttCredRequestMsg clientCred, String credId) {
         return checkMqttCredentials(clientCred, deviceCredentialsService.findDeviceCredentialsByCredentialsId(credId));
     }
 
-    private DeviceCredentials checkMqttCredentials(@NotNull TransportProtos.ValidateBasicMqttCredRequestMsg clientCred, @Nullable DeviceCredentials deviceCredentials) {
+    private DeviceCredentials checkMqttCredentials(TransportProtos.ValidateBasicMqttCredRequestMsg clientCred, @Nullable DeviceCredentials deviceCredentials) {
         if (deviceCredentials != null && deviceCredentials.getCredentialsType() == DeviceCredentialsType.MQTT_BASIC) {
             if (BasicCredentialsValidationResult.VALID.equals(validateMqttCredentials(clientCred, deviceCredentials))) {
                 return deviceCredentials;
@@ -227,8 +209,7 @@ public class DefaultTransportApiService implements TransportApiService {
         return null;
     }
 
-    @NotNull
-    private BasicCredentialsValidationResult validateMqttCredentials(@NotNull TransportProtos.ValidateBasicMqttCredRequestMsg clientCred, @NotNull DeviceCredentials deviceCredentials) {
+    private BasicCredentialsValidationResult validateMqttCredentials(TransportProtos.ValidateBasicMqttCredRequestMsg clientCred, DeviceCredentials deviceCredentials) {
         @Nullable BasicMqttCredentials dbCred = JacksonUtil.fromString(deviceCredentials.getCredentialsValue(), BasicMqttCredentials.class);
         if (!StringUtils.isEmpty(dbCred.getClientId()) && !dbCred.getClientId().equals(clientCred.getClientId())) {
             return BasicCredentialsValidationResult.HASH_MISMATCH;
@@ -246,12 +227,11 @@ public class DefaultTransportApiService implements TransportApiService {
         return BasicCredentialsValidationResult.VALID;
     }
 
-    @NotNull
-    private ListenableFuture<TransportApiResponseMsg> handle(@NotNull GetOrCreateDeviceFromGatewayRequestMsg requestMsg) {
-        @NotNull DeviceId gatewayId = new DeviceId(new UUID(requestMsg.getGatewayIdMSB(), requestMsg.getGatewayIdLSB()));
+    private ListenableFuture<TransportApiResponseMsg> handle(GetOrCreateDeviceFromGatewayRequestMsg requestMsg) {
+        DeviceId gatewayId = new DeviceId(new UUID(requestMsg.getGatewayIdMSB(), requestMsg.getGatewayIdLSB()));
         ListenableFuture<Device> gatewayFuture = deviceService.findDeviceByIdAsync(TenantId.SYS_TENANT_ID, gatewayId);
         return Futures.transform(gatewayFuture, gateway -> {
-            @NotNull Lock deviceCreationLock = deviceCreationLocks.computeIfAbsent(requestMsg.getDeviceName(), id -> new ReentrantLock());
+            Lock deviceCreationLock = deviceCreationLocks.computeIfAbsent(requestMsg.getDeviceName(), id -> new ReentrantLock());
             deviceCreationLock.lock();
             try {
                 Device device = deviceService.findDeviceByTenantIdAndName(gateway.getTenantId(), requestMsg.getDeviceName());
@@ -273,7 +253,7 @@ public class DefaultTransportApiService implements TransportApiService {
 
                     relationService.saveRelation(TenantId.SYS_TENANT_ID, new EntityRelation(gateway.getId(), device.getId(), "Created"));
 
-                    @NotNull TbMsgMetaData metaData = new TbMsgMetaData();
+                    TbMsgMetaData metaData = new TbMsgMetaData();
                     CustomerId customerId = gateway.getCustomerId();
                     if (customerId != null && !customerId.isNullUid()) {
                         metaData.putValue("customerId", customerId.toString());
@@ -282,7 +262,7 @@ public class DefaultTransportApiService implements TransportApiService {
 
                     DeviceId deviceId = device.getId();
                     ObjectNode entityNode = mapper.valueToTree(device);
-                    @NotNull TbMsg tbMsg = TbMsg.newMsg(DataConstants.ENTITY_CREATED, deviceId, customerId, metaData, TbMsgDataType.JSON, mapper.writeValueAsString(entityNode));
+                    TbMsg tbMsg = TbMsg.newMsg(DataConstants.ENTITY_CREATED, deviceId, customerId, metaData, TbMsgDataType.JSON, mapper.writeValueAsString(entityNode));
                     tbClusterService.pushMsgToRuleEngine(tenantId, deviceId, tbMsg, null);
                 } else {
                     JsonNode deviceAdditionalInfo = device.getAdditionalInfo();
@@ -292,7 +272,7 @@ public class DefaultTransportApiService implements TransportApiService {
                     if (deviceAdditionalInfo.isObject() &&
                             (!deviceAdditionalInfo.has(DataConstants.LAST_CONNECTED_GATEWAY)
                                     || !gatewayId.toString().equals(deviceAdditionalInfo.get(DataConstants.LAST_CONNECTED_GATEWAY).asText()))) {
-                        @NotNull ObjectNode newDeviceAdditionalInfo = (ObjectNode) deviceAdditionalInfo;
+                        ObjectNode newDeviceAdditionalInfo = (ObjectNode) deviceAdditionalInfo;
                         newDeviceAdditionalInfo.put(DataConstants.LAST_CONNECTED_GATEWAY, gatewayId.toString());
                         Device savedDevice = deviceService.saveDevice(device);
                         tbClusterService.onDeviceUpdated(savedDevice, device);
@@ -318,8 +298,7 @@ public class DefaultTransportApiService implements TransportApiService {
         }, dbCallbackExecutorService);
     }
 
-    @NotNull
-    private ListenableFuture<TransportApiResponseMsg> handle(@NotNull ProvisionDeviceRequestMsg requestMsg) {
+    private ListenableFuture<TransportApiResponseMsg> handle(ProvisionDeviceRequestMsg requestMsg) {
         @Nullable ListenableFuture<ProvisionResponse> provisionResponseFuture = null;
         try {
             provisionResponseFuture = Futures.immediateFuture(deviceProvisionService.provisionDevice(
@@ -343,8 +322,8 @@ public class DefaultTransportApiService implements TransportApiService {
                 dbCallbackExecutorService);
     }
 
-    private TransportApiResponseMsg getTransportApiResponseMsg(@NotNull DeviceCredentials
-                                                                       deviceCredentials, @NotNull TransportProtos.ResponseStatus status) {
+    private TransportApiResponseMsg getTransportApiResponseMsg(DeviceCredentials
+                                                                       deviceCredentials, TransportProtos.ResponseStatus status) {
         if (!status.equals(TransportProtos.ResponseStatus.SUCCESS)) {
             return TransportApiResponseMsg.newBuilder().setProvisionDeviceResponseMsg(TransportProtos.ProvisionDeviceResponseMsg.newBuilder().setStatus(status).build()).build();
         }
@@ -367,17 +346,16 @@ public class DefaultTransportApiService implements TransportApiService {
                 .build();
     }
 
-    @NotNull
-    private ListenableFuture<TransportApiResponseMsg> handle(@NotNull GetEntityProfileRequestMsg requestMsg) {
-        @NotNull EntityType entityType = EntityType.valueOf(requestMsg.getEntityType());
-        @NotNull UUID entityUuid = new UUID(requestMsg.getEntityIdMSB(), requestMsg.getEntityIdLSB());
+    private ListenableFuture<TransportApiResponseMsg> handle(GetEntityProfileRequestMsg requestMsg) {
+        EntityType entityType = EntityType.valueOf(requestMsg.getEntityType());
+        UUID entityUuid = new UUID(requestMsg.getEntityIdMSB(), requestMsg.getEntityIdLSB());
         GetEntityProfileResponseMsg.Builder builder = GetEntityProfileResponseMsg.newBuilder();
         if (entityType.equals(EntityType.DEVICE_PROFILE)) {
-            @NotNull DeviceProfileId deviceProfileId = new DeviceProfileId(entityUuid);
+            DeviceProfileId deviceProfileId = new DeviceProfileId(entityUuid);
             DeviceProfile deviceProfile = deviceProfileCache.find(deviceProfileId);
             builder.setData(ByteString.copyFrom(dataDecodingEncodingService.encode(deviceProfile)));
         } else if (entityType.equals(EntityType.TENANT)) {
-            @NotNull TenantId tenantId = TenantId.fromUUID(entityUuid);
+            TenantId tenantId = TenantId.fromUUID(entityUuid);
             @Nullable TenantProfile tenantProfile = tenantProfileCache.get(tenantId);
             ApiUsageState state = apiUsageStateService.getApiUsageState(tenantId);
             builder.setData(ByteString.copyFrom(dataDecodingEncodingService.encode(tenantProfile)));
@@ -388,9 +366,8 @@ public class DefaultTransportApiService implements TransportApiService {
         return Futures.immediateFuture(TransportApiResponseMsg.newBuilder().setEntityProfileResponseMsg(builder).build());
     }
 
-    @NotNull
-    private ListenableFuture<TransportApiResponseMsg> handle(@NotNull GetDeviceRequestMsg requestMsg) {
-        @NotNull DeviceId deviceId = new DeviceId(new UUID(requestMsg.getDeviceIdMSB(), requestMsg.getDeviceIdLSB()));
+    private ListenableFuture<TransportApiResponseMsg> handle(GetDeviceRequestMsg requestMsg) {
+        DeviceId deviceId = new DeviceId(new UUID(requestMsg.getDeviceIdMSB(), requestMsg.getDeviceIdLSB()));
         Device device = deviceService.findDeviceById(TenantId.SYS_TENANT_ID, deviceId);
 
         TransportApiResponseMsg responseMsg;
@@ -411,9 +388,8 @@ public class DefaultTransportApiService implements TransportApiService {
         return Futures.immediateFuture(responseMsg);
     }
 
-    @NotNull
-    private ListenableFuture<TransportApiResponseMsg> handle(@NotNull GetDeviceCredentialsRequestMsg requestMsg) {
-        @NotNull DeviceId deviceId = new DeviceId(new UUID(requestMsg.getDeviceIdMSB(), requestMsg.getDeviceIdLSB()));
+    private ListenableFuture<TransportApiResponseMsg> handle(GetDeviceCredentialsRequestMsg requestMsg) {
+        DeviceId deviceId = new DeviceId(new UUID(requestMsg.getDeviceIdMSB(), requestMsg.getDeviceIdLSB()));
         DeviceCredentials deviceCredentials = deviceCredentialsService.findDeviceCredentialsByDeviceId(TenantId.SYS_TENANT_ID, deviceId);
 
         return Futures.immediateFuture(TransportApiResponseMsg.newBuilder()
@@ -423,10 +399,9 @@ public class DefaultTransportApiService implements TransportApiService {
     }
 
 
-    @NotNull
-    private ListenableFuture<TransportApiResponseMsg> handle(@NotNull GetResourceRequestMsg requestMsg) {
-        @NotNull TenantId tenantId = TenantId.fromUUID(new UUID(requestMsg.getTenantIdMSB(), requestMsg.getTenantIdLSB()));
-        @NotNull ResourceType resourceType = ResourceType.valueOf(requestMsg.getResourceType());
+    private ListenableFuture<TransportApiResponseMsg> handle(GetResourceRequestMsg requestMsg) {
+        TenantId tenantId = TenantId.fromUUID(new UUID(requestMsg.getTenantIdMSB(), requestMsg.getTenantIdLSB()));
+        ResourceType resourceType = ResourceType.valueOf(requestMsg.getResourceType());
         String resourceKey = requestMsg.getResourceKey();
         TransportProtos.GetResourceResponseMsg.Builder builder = TransportProtos.GetResourceResponseMsg.newBuilder();
         TbResource resource = resourceService.getResource(tenantId, resourceType, resourceKey);
@@ -442,9 +417,8 @@ public class DefaultTransportApiService implements TransportApiService {
         return Futures.immediateFuture(TransportApiResponseMsg.newBuilder().setResourceResponseMsg(builder).build());
     }
 
-    @NotNull
-    private ListenableFuture<TransportApiResponseMsg> handle(@NotNull GetSnmpDevicesRequestMsg requestMsg) {
-        @NotNull PageLink pageLink = new PageLink(requestMsg.getPageSize(), requestMsg.getPage());
+    private ListenableFuture<TransportApiResponseMsg> handle(GetSnmpDevicesRequestMsg requestMsg) {
+        PageLink pageLink = new PageLink(requestMsg.getPageSize(), requestMsg.getPage());
         PageData<UUID> result = deviceService.findDevicesIdsByDeviceProfileTransportType(DeviceTransportType.SNMP, pageLink);
 
         GetSnmpDevicesResponseMsg responseMsg = GetSnmpDevicesResponseMsg.newBuilder()
@@ -459,8 +433,7 @@ public class DefaultTransportApiService implements TransportApiService {
                 .build());
     }
 
-    @NotNull
-    private ListenableFuture<TransportApiResponseMsg> getDeviceInfo(@NotNull DeviceCredentials credentials) {
+    private ListenableFuture<TransportApiResponseMsg> getDeviceInfo(DeviceCredentials credentials) {
         return Futures.transform(deviceService.findDeviceByIdAsync(TenantId.SYS_TENANT_ID, credentials.getDeviceId()), device -> {
             if (device == null) {
                 log.trace("[{}] Failed to lookup device by id", credentials.getDeviceId());
@@ -487,7 +460,7 @@ public class DefaultTransportApiService implements TransportApiService {
         }, MoreExecutors.directExecutor());
     }
 
-    private DeviceInfoProto getDeviceInfoProto(@NotNull Device device) throws JsonProcessingException {
+    private DeviceInfoProto getDeviceInfoProto(Device device) throws JsonProcessingException {
         DeviceInfoProto.Builder builder = DeviceInfoProto.newBuilder()
                 .setTenantIdMSB(device.getTenantId().getId().getMostSignificantBits())
                 .setTenantIdLSB(device.getTenantId().getId().getLeastSignificantBits())
@@ -526,7 +499,6 @@ public class DefaultTransportApiService implements TransportApiService {
         return builder.build();
     }
 
-    @NotNull
     private ListenableFuture<TransportApiResponseMsg> getEmptyTransportApiResponseFuture() {
         return Futures.immediateFuture(getEmptyTransportApiResponse());
     }
@@ -536,8 +508,7 @@ public class DefaultTransportApiService implements TransportApiService {
                 .setValidateCredResponseMsg(ValidateDeviceCredentialsResponseMsg.getDefaultInstance()).build();
     }
 
-    @NotNull
-    private ListenableFuture<TransportApiResponseMsg> handle(@NotNull TransportProtos.LwM2MRequestMsg requestMsg) {
+    private ListenableFuture<TransportApiResponseMsg> handle(TransportProtos.LwM2MRequestMsg requestMsg) {
         if (requestMsg.hasRegistrationMsg()) {
             return handleRegistration(requestMsg.getRegistrationMsg());
         } else {
@@ -545,11 +516,10 @@ public class DefaultTransportApiService implements TransportApiService {
         }
     }
 
-    @NotNull
-    private ListenableFuture<TransportApiResponseMsg> handle(@NotNull TransportProtos.GetOtaPackageRequestMsg requestMsg) {
-        @NotNull TenantId tenantId = TenantId.fromUUID(new UUID(requestMsg.getTenantIdMSB(), requestMsg.getTenantIdLSB()));
-        @NotNull DeviceId deviceId = new DeviceId(new UUID(requestMsg.getDeviceIdMSB(), requestMsg.getDeviceIdLSB()));
-        @NotNull OtaPackageType otaPackageType = OtaPackageType.valueOf(requestMsg.getType());
+    private ListenableFuture<TransportApiResponseMsg> handle(TransportProtos.GetOtaPackageRequestMsg requestMsg) {
+        TenantId tenantId = TenantId.fromUUID(new UUID(requestMsg.getTenantIdMSB(), requestMsg.getTenantIdLSB()));
+        DeviceId deviceId = new DeviceId(new UUID(requestMsg.getDeviceIdMSB(), requestMsg.getDeviceIdLSB()));
+        OtaPackageType otaPackageType = OtaPackageType.valueOf(requestMsg.getType());
         Device device = deviceService.findDeviceById(tenantId, deviceId);
 
         if (device == null) {
@@ -596,12 +566,11 @@ public class DefaultTransportApiService implements TransportApiService {
                         .build());
     }
 
-    @NotNull
     private ListenableFuture<TransportApiResponseMsg> handleRegistration
-            (@NotNull TransportProtos.LwM2MRegistrationRequestMsg msg) {
-        @NotNull TenantId tenantId = TenantId.fromUUID(UUID.fromString(msg.getTenantId()));
+            (TransportProtos.LwM2MRegistrationRequestMsg msg) {
+        TenantId tenantId = TenantId.fromUUID(UUID.fromString(msg.getTenantId()));
         String deviceName = msg.getEndpoint();
-        @NotNull Lock deviceCreationLock = deviceCreationLocks.computeIfAbsent(deviceName, id -> new ReentrantLock());
+        Lock deviceCreationLock = deviceCreationLocks.computeIfAbsent(deviceName, id -> new ReentrantLock());
         deviceCreationLock.lock();
         try {
             Device device = deviceService.findDeviceByTenantIdAndName(tenantId, deviceName);
@@ -626,13 +595,11 @@ public class DefaultTransportApiService implements TransportApiService {
         }
     }
 
-    @NotNull
     private ListenableFuture<TransportApiResponseMsg> handle(TransportProtos.GetAllQueueRoutingInfoRequestMsg requestMsg) {
         return queuesToTransportApiResponseMsg(queueService.findAllQueues());
     }
 
-    @NotNull
-    private ListenableFuture<TransportApiResponseMsg> queuesToTransportApiResponseMsg(@NotNull List<Queue> queues) {
+    private ListenableFuture<TransportApiResponseMsg> queuesToTransportApiResponseMsg(List<Queue> queues) {
         return Futures.immediateFuture(TransportApiResponseMsg.newBuilder()
                 .addAllGetQueueRoutingInfoResponseMsgs(queues.stream()
                         .map(queue -> TransportProtos.GetQueueRoutingInfoResponseMsg.newBuilder()
@@ -647,7 +614,6 @@ public class DefaultTransportApiService implements TransportApiService {
     }
 
 
-    @NotNull
     private Long checkLong(@Nullable Long l) {
         return l != null ? l : 0;
     }

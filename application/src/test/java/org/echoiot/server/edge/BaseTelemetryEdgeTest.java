@@ -11,7 +11,6 @@ import org.echoiot.server.gen.edge.v1.AttributeDeleteMsg;
 import org.echoiot.server.gen.edge.v1.DeviceUpdateMsg;
 import org.echoiot.server.gen.edge.v1.EntityDataProto;
 import org.echoiot.server.gen.transport.TransportProtos;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -23,16 +22,16 @@ abstract public class BaseTelemetryEdgeTest extends AbstractEdgeTest {
     public void testTimeseriesWithFailures() throws Exception {
         int numberOfTimeseriesToSend = 333;
 
-        @NotNull Device device = findDeviceByName("Edge Device 1");
+        Device device = findDeviceByName("Edge Device 1");
 
         edgeImitator.setRandomFailuresOnTimeseriesDownlink(true);
         // imitator will generate failure in 5% of cases
         edgeImitator.setFailureProbability(5.0);
         edgeImitator.expectMessageAmount(numberOfTimeseriesToSend);
         for (int idx = 1; idx <= numberOfTimeseriesToSend; idx++) {
-            @NotNull String timeseriesData = "{\"data\":{\"idx\":" + idx + "},\"ts\":" + System.currentTimeMillis() + "}";
+            String timeseriesData = "{\"data\":{\"idx\":" + idx + "},\"ts\":" + System.currentTimeMillis() + "}";
             JsonNode timeseriesEntityData = mapper.readTree(timeseriesData);
-            @NotNull EdgeEvent edgeEvent = constructEdgeEvent(tenantId, edge.getId(), EdgeEventActionType.TIMESERIES_UPDATED,
+            EdgeEvent edgeEvent = constructEdgeEvent(tenantId, edge.getId(), EdgeEventActionType.TIMESERIES_UPDATED,
                                                               device.getId().getId(), EdgeEventType.DEVICE, timeseriesEntityData);
             edgeEventService.saveAsync(edgeEvent).get();
             clusterService.onEdgeEventUpdate(tenantId, edge.getId());
@@ -40,7 +39,7 @@ abstract public class BaseTelemetryEdgeTest extends AbstractEdgeTest {
 
         Assert.assertTrue(edgeImitator.waitForMessages(120));
 
-        @NotNull List<EntityDataProto> allTelemetryMsgs = edgeImitator.findAllMessagesByType(EntityDataProto.class);
+        List<EntityDataProto> allTelemetryMsgs = edgeImitator.findAllMessagesByType(EntityDataProto.class);
         Assert.assertEquals(numberOfTimeseriesToSend, allTelemetryMsgs.size());
 
         for (int idx = 1; idx <= numberOfTimeseriesToSend; idx++) {
@@ -52,17 +51,17 @@ abstract public class BaseTelemetryEdgeTest extends AbstractEdgeTest {
 
     @Test
     public void testAttributes() throws Exception {
-        @NotNull Device device = findDeviceByName("Edge Device 1");
+        Device device = findDeviceByName("Edge Device 1");
 
         testAttributesUpdatedMsg(device.getId());
         testPostAttributesMsg(device);
         testAttributesDeleteMsg(device);
     }
 
-    private void testPostAttributesMsg(@NotNull Device device) throws Exception {
-        @NotNull String postAttributesData = "{\"scope\":\"SERVER_SCOPE\",\"kv\":{\"key2\":\"value2\"}}";
+    private void testPostAttributesMsg(Device device) throws Exception {
+        String postAttributesData = "{\"scope\":\"SERVER_SCOPE\",\"kv\":{\"key2\":\"value2\"}}";
         JsonNode postAttributesEntityData = mapper.readTree(postAttributesData);
-        @NotNull EdgeEvent edgeEvent = constructEdgeEvent(tenantId, edge.getId(), EdgeEventActionType.POST_ATTRIBUTES, device.getId().getId(), EdgeEventType.DEVICE, postAttributesEntityData);
+        EdgeEvent edgeEvent = constructEdgeEvent(tenantId, edge.getId(), EdgeEventActionType.POST_ATTRIBUTES, device.getId().getId(), EdgeEventType.DEVICE, postAttributesEntityData);
         edgeImitator.expectMessageAmount(1);
         edgeEventService.saveAsync(edgeEvent).get();
         clusterService.onEdgeEventUpdate(tenantId, edge.getId());
@@ -70,24 +69,24 @@ abstract public class BaseTelemetryEdgeTest extends AbstractEdgeTest {
 
         AbstractMessage latestMessage = edgeImitator.getLatestMessage();
         Assert.assertTrue(latestMessage instanceof EntityDataProto);
-        @NotNull EntityDataProto latestEntityDataMsg = (EntityDataProto) latestMessage;
+        EntityDataProto latestEntityDataMsg = (EntityDataProto) latestMessage;
         Assert.assertEquals(device.getUuidId().getMostSignificantBits(), latestEntityDataMsg.getEntityIdMSB());
         Assert.assertEquals(device.getUuidId().getLeastSignificantBits(), latestEntityDataMsg.getEntityIdLSB());
         Assert.assertEquals(device.getId().getEntityType().name(), latestEntityDataMsg.getEntityType());
         Assert.assertEquals("SERVER_SCOPE", latestEntityDataMsg.getPostAttributeScope());
         Assert.assertTrue(latestEntityDataMsg.hasPostAttributesMsg());
 
-        @NotNull TransportProtos.PostAttributeMsg postAttributesMsg = latestEntityDataMsg.getPostAttributesMsg();
+        TransportProtos.PostAttributeMsg postAttributesMsg = latestEntityDataMsg.getPostAttributesMsg();
         Assert.assertEquals(1, postAttributesMsg.getKvCount());
         TransportProtos.KeyValueProto keyValueProto = postAttributesMsg.getKv(0);
         Assert.assertEquals("key2", keyValueProto.getKey());
         Assert.assertEquals("value2", keyValueProto.getStringV());
     }
 
-    private void testAttributesDeleteMsg(@NotNull Device device) throws Exception {
-        @NotNull String deleteAttributesData = "{\"scope\":\"SERVER_SCOPE\",\"keys\":[\"key1\",\"key2\"]}";
+    private void testAttributesDeleteMsg(Device device) throws Exception {
+        String deleteAttributesData = "{\"scope\":\"SERVER_SCOPE\",\"keys\":[\"key1\",\"key2\"]}";
         JsonNode deleteAttributesEntityData = mapper.readTree(deleteAttributesData);
-        @NotNull EdgeEvent edgeEvent = constructEdgeEvent(tenantId, edge.getId(), EdgeEventActionType.ATTRIBUTES_DELETED, device.getId().getId(), EdgeEventType.DEVICE, deleteAttributesEntityData);
+        EdgeEvent edgeEvent = constructEdgeEvent(tenantId, edge.getId(), EdgeEventActionType.ATTRIBUTES_DELETED, device.getId().getId(), EdgeEventType.DEVICE, deleteAttributesEntityData);
         edgeImitator.expectMessageAmount(1);
         edgeEventService.saveAsync(edgeEvent).get();
         clusterService.onEdgeEventUpdate(tenantId, edge.getId());
@@ -95,14 +94,14 @@ abstract public class BaseTelemetryEdgeTest extends AbstractEdgeTest {
 
         AbstractMessage latestMessage = edgeImitator.getLatestMessage();
         Assert.assertTrue(latestMessage instanceof EntityDataProto);
-        @NotNull EntityDataProto latestEntityDataMsg = (EntityDataProto) latestMessage;
+        EntityDataProto latestEntityDataMsg = (EntityDataProto) latestMessage;
         Assert.assertEquals(device.getUuidId().getMostSignificantBits(), latestEntityDataMsg.getEntityIdMSB());
         Assert.assertEquals(device.getUuidId().getLeastSignificantBits(), latestEntityDataMsg.getEntityIdLSB());
         Assert.assertEquals(device.getId().getEntityType().name(), latestEntityDataMsg.getEntityType());
 
         Assert.assertTrue(latestEntityDataMsg.hasAttributeDeleteMsg());
 
-        @NotNull AttributeDeleteMsg attributeDeleteMsg = latestEntityDataMsg.getAttributeDeleteMsg();
+        AttributeDeleteMsg attributeDeleteMsg = latestEntityDataMsg.getAttributeDeleteMsg();
         Assert.assertEquals(attributeDeleteMsg.getScope(), deleteAttributesEntityData.get("scope").asText());
 
         Assert.assertEquals(2, attributeDeleteMsg.getAttributeNamesCount());
@@ -112,24 +111,24 @@ abstract public class BaseTelemetryEdgeTest extends AbstractEdgeTest {
 
     @Test
     public void testTimeseries() throws Exception {
-        @NotNull Device device = findDeviceByName("Edge Device 1");
-        @NotNull String timeseriesData = "{\"data\":{\"temperature\":25},\"ts\":" + System.currentTimeMillis() + "}";
+        Device device = findDeviceByName("Edge Device 1");
+        String timeseriesData = "{\"data\":{\"temperature\":25},\"ts\":" + System.currentTimeMillis() + "}";
         JsonNode timeseriesEntityData = mapper.readTree(timeseriesData);
         edgeImitator.expectMessageAmount(1);
-        @NotNull EdgeEvent edgeEvent = constructEdgeEvent(tenantId, edge.getId(), EdgeEventActionType.TIMESERIES_UPDATED, device.getId().getId(), EdgeEventType.DEVICE, timeseriesEntityData);
+        EdgeEvent edgeEvent = constructEdgeEvent(tenantId, edge.getId(), EdgeEventActionType.TIMESERIES_UPDATED, device.getId().getId(), EdgeEventType.DEVICE, timeseriesEntityData);
         edgeEventService.saveAsync(edgeEvent).get();
         clusterService.onEdgeEventUpdate(tenantId, edge.getId());
         Assert.assertTrue(edgeImitator.waitForMessages());
 
         AbstractMessage latestMessage = edgeImitator.getLatestMessage();
         Assert.assertTrue(latestMessage instanceof EntityDataProto);
-        @NotNull EntityDataProto latestEntityDataMsg = (EntityDataProto) latestMessage;
+        EntityDataProto latestEntityDataMsg = (EntityDataProto) latestMessage;
         Assert.assertEquals(latestEntityDataMsg.getEntityIdMSB(), device.getUuidId().getMostSignificantBits());
         Assert.assertEquals(latestEntityDataMsg.getEntityIdLSB(), device.getUuidId().getLeastSignificantBits());
         Assert.assertEquals(latestEntityDataMsg.getEntityType(), device.getId().getEntityType().name());
         Assert.assertTrue(latestEntityDataMsg.hasPostTelemetryMsg());
 
-        @NotNull TransportProtos.PostTelemetryMsg postTelemetryMsg = latestEntityDataMsg.getPostTelemetryMsg();
+        TransportProtos.PostTelemetryMsg postTelemetryMsg = latestEntityDataMsg.getPostTelemetryMsg();
         Assert.assertEquals(1, postTelemetryMsg.getTsKvListCount());
         TransportProtos.TsKvListProto tsKvListProto = postTelemetryMsg.getTsKvList(0);
         Assert.assertEquals(timeseriesEntityData.get("ts").asLong(), tsKvListProto.getTs());
@@ -139,9 +138,9 @@ abstract public class BaseTelemetryEdgeTest extends AbstractEdgeTest {
         Assert.assertEquals(25, keyValueProto.getLongV());
     }
 
-    private boolean isIdxExistsInTheDownlinkList(int idx, @NotNull List<EntityDataProto> allTelemetryMsgs) {
-        for (@NotNull EntityDataProto proto : allTelemetryMsgs) {
-            @NotNull TransportProtos.PostTelemetryMsg postTelemetryMsg = proto.getPostTelemetryMsg();
+    private boolean isIdxExistsInTheDownlinkList(int idx, List<EntityDataProto> allTelemetryMsgs) {
+        for (EntityDataProto proto : allTelemetryMsgs) {
+            TransportProtos.PostTelemetryMsg postTelemetryMsg = proto.getPostTelemetryMsg();
             Assert.assertEquals(1, postTelemetryMsg.getTsKvListCount());
             TransportProtos.TsKvListProto tsKvListProto = postTelemetryMsg.getTsKvList(0);
             Assert.assertEquals(1, tsKvListProto.getKvCount());
@@ -158,20 +157,20 @@ abstract public class BaseTelemetryEdgeTest extends AbstractEdgeTest {
     public void testTimeseriesDeliveryFailuresForever_deliverOnlyDeviceUpdateMsgs() throws Exception {
         int numberOfMsgsToSend = 100;
 
-        @NotNull Device device = findDeviceByName("Edge Device 1");
+        Device device = findDeviceByName("Edge Device 1");
 
         edgeImitator.setRandomFailuresOnTimeseriesDownlink(true);
         // imitator will generate failure in 100% of timeseries cases
         edgeImitator.setFailureProbability(100);
         edgeImitator.expectMessageAmount(numberOfMsgsToSend);
         for (int idx = 1; idx <= numberOfMsgsToSend; idx++) {
-            @NotNull String timeseriesData = "{\"data\":{\"idx\":" + idx + "},\"ts\":" + System.currentTimeMillis() + "}";
+            String timeseriesData = "{\"data\":{\"idx\":" + idx + "},\"ts\":" + System.currentTimeMillis() + "}";
             JsonNode timeseriesEntityData = mapper.readTree(timeseriesData);
-            @NotNull EdgeEvent failedEdgeEvent = constructEdgeEvent(tenantId, edge.getId(), EdgeEventActionType.TIMESERIES_UPDATED,
+            EdgeEvent failedEdgeEvent = constructEdgeEvent(tenantId, edge.getId(), EdgeEventActionType.TIMESERIES_UPDATED,
                                                                     device.getId().getId(), EdgeEventType.DEVICE, timeseriesEntityData);
             edgeEventService.saveAsync(failedEdgeEvent).get();
 
-            @NotNull EdgeEvent successEdgeEvent = constructEdgeEvent(tenantId, edge.getId(), EdgeEventActionType.UPDATED,
+            EdgeEvent successEdgeEvent = constructEdgeEvent(tenantId, edge.getId(), EdgeEventActionType.UPDATED,
                                                                      device.getId().getId(), EdgeEventType.DEVICE, null);
             edgeEventService.saveAsync(successEdgeEvent).get();
 
@@ -180,10 +179,10 @@ abstract public class BaseTelemetryEdgeTest extends AbstractEdgeTest {
 
         Assert.assertTrue(edgeImitator.waitForMessages(120));
 
-        @NotNull List<EntityDataProto> allTelemetryMsgs = edgeImitator.findAllMessagesByType(EntityDataProto.class);
+        List<EntityDataProto> allTelemetryMsgs = edgeImitator.findAllMessagesByType(EntityDataProto.class);
         Assert.assertTrue(allTelemetryMsgs.isEmpty());
 
-        @NotNull List<DeviceUpdateMsg> deviceUpdateMsgs = edgeImitator.findAllMessagesByType(DeviceUpdateMsg.class);
+        List<DeviceUpdateMsg> deviceUpdateMsgs = edgeImitator.findAllMessagesByType(DeviceUpdateMsg.class);
         Assert.assertEquals(numberOfMsgsToSend, deviceUpdateMsgs.size());
 
         edgeImitator.setRandomFailuresOnTimeseriesDownlink(false);
@@ -194,10 +193,10 @@ abstract public class BaseTelemetryEdgeTest extends AbstractEdgeTest {
         testAttributesUpdatedMsg(tenantAdmin.getId());
     }
 
-    private void testAttributesUpdatedMsg(@NotNull EntityId entityId) throws Exception {
-        @NotNull String attributesData = "{\"scope\":\"SERVER_SCOPE\",\"kv\":{\"key1\":\"value1\"}}";
+    private void testAttributesUpdatedMsg(EntityId entityId) throws Exception {
+        String attributesData = "{\"scope\":\"SERVER_SCOPE\",\"kv\":{\"key1\":\"value1\"}}";
         JsonNode attributesEntityData = mapper.readTree(attributesData);
-        @NotNull EdgeEvent edgeEvent1 = constructEdgeEvent(tenantId, edge.getId(), EdgeEventActionType.ATTRIBUTES_UPDATED, entityId.getId(), EdgeEventType.valueOf(entityId.getEntityType().name()), attributesEntityData);
+        EdgeEvent edgeEvent1 = constructEdgeEvent(tenantId, edge.getId(), EdgeEventActionType.ATTRIBUTES_UPDATED, entityId.getId(), EdgeEventType.valueOf(entityId.getEntityType().name()), attributesEntityData);
         edgeImitator.expectMessageAmount(1);
         edgeEventService.saveAsync(edgeEvent1).get();
         clusterService.onEdgeEventUpdate(tenantId, edge.getId());
@@ -205,14 +204,14 @@ abstract public class BaseTelemetryEdgeTest extends AbstractEdgeTest {
 
         AbstractMessage latestMessage = edgeImitator.getLatestMessage();
         Assert.assertTrue(latestMessage instanceof EntityDataProto);
-        @NotNull EntityDataProto latestEntityDataMsg = (EntityDataProto) latestMessage;
+        EntityDataProto latestEntityDataMsg = (EntityDataProto) latestMessage;
         Assert.assertEquals(entityId.getId().getMostSignificantBits(), latestEntityDataMsg.getEntityIdMSB());
         Assert.assertEquals(entityId.getId().getLeastSignificantBits(), latestEntityDataMsg.getEntityIdLSB());
         Assert.assertEquals(entityId.getEntityType().name(), latestEntityDataMsg.getEntityType());
         Assert.assertEquals("SERVER_SCOPE", latestEntityDataMsg.getPostAttributeScope());
         Assert.assertTrue(latestEntityDataMsg.hasAttributesUpdatedMsg());
 
-        @NotNull TransportProtos.PostAttributeMsg attributesUpdatedMsg = latestEntityDataMsg.getAttributesUpdatedMsg();
+        TransportProtos.PostAttributeMsg attributesUpdatedMsg = latestEntityDataMsg.getAttributesUpdatedMsg();
         Assert.assertEquals(1, attributesUpdatedMsg.getKvCount());
         TransportProtos.KeyValueProto keyValueProto = attributesUpdatedMsg.getKv(0);
         Assert.assertEquals("key1", keyValueProto.getKey());

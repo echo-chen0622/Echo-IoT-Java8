@@ -10,7 +10,6 @@ import org.echoiot.server.common.msg.TbActorStopReason;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.TbRuleEngineActorMsg;
 import org.echoiot.server.common.msg.queue.RuleEngineException;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 import java.util.Set;
@@ -46,7 +45,6 @@ class RuleNodeToRuleChainTellNextMsg extends TbRuleEngineActorMsg implements Ser
         msg.getCallback().onFailure(new RuleEngineException(message));
     }
 
-    @NotNull
     @Override
     public MsgType getMsgType() {
         return MsgType.RULE_TO_RULE_CHAIN_TELL_NEXT_MSG;

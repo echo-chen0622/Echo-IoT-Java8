@@ -10,7 +10,6 @@ import org.echoiot.server.exception.EchoiotErrorResponse;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.security.auth.rest.LoginRequest;
 import org.echoiot.server.service.security.auth.rest.LoginResponse;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -76,7 +75,7 @@ public class SwaggerConfiguration {
 
     @Bean
     public Docket echoiotApi() {
-        @NotNull TypeResolver typeResolver = new TypeResolver();
+        TypeResolver typeResolver = new TypeResolver();
         return new Docket(DocumentationType.OAS_30)
                 .groupName("echoiot")
                 .apiInfo(apiInfo())
@@ -104,13 +103,11 @@ public class SwaggerConfiguration {
                 .enableUrlTemplating(true);
     }
 
-    @NotNull
     @Bean
     @Order(SwaggerPluginSupport.SWAGGER_PLUGIN_ORDER)
     ApiListingScannerPlugin loginEndpointListingScanner(final CachingOperationNameGenerator operationNames) {
         return new ApiListingScannerPlugin() {
-            @NotNull
-            @Override
+                    @Override
             public List<ApiDescription> apply(DocumentationContext context) {
                 return List.of(loginEndpointApiDescription(operationNames));
             }
@@ -122,13 +119,12 @@ public class SwaggerConfiguration {
         };
     }
 
-    @NotNull
     @Bean
     @Order(SwaggerPluginSupport.SWAGGER_PLUGIN_ORDER)
     ApiListingBuilderPlugin loginEndpointListingBuilder() {
         return new ApiListingBuilderPlugin() {
             @Override
-            public void apply(@NotNull ApiListingContext apiListingContext) {
+            public void apply(ApiListingContext apiListingContext) {
                 if (apiListingContext.getResourceGroup().getGroupName().equals("default")) {
                     ApiListing apiListing = apiListingContext.apiListingBuilder().build();
                     if (apiListing.getResourcePath().equals("/api/auth/login")) {
@@ -184,19 +180,16 @@ public class SwaggerConfiguration {
                 .build();
     }
 
-    @NotNull
     private Predicate<String> apiPaths() {
         return regex(apiPathRegex);
     }
 
-    @NotNull
     private Predicate<OperationContext> securityPathOperationSelector() {
         return new SecurityPathOperationSelector(securityPathRegex, nonSecurityPathRegex);
     }
 
-    @NotNull
     List<SecurityReference> defaultAuth() {
-        @NotNull AuthorizationScope[] authorizationScopes = new AuthorizationScope[3];
+        AuthorizationScope[] authorizationScopes = new AuthorizationScope[3];
         authorizationScopes[0] = new AuthorizationScope(Authority.SYS_ADMIN.name(), "System administrator");
         authorizationScopes[1] = new AuthorizationScope(Authority.TENANT_ADMIN.name(), "Tenant administrator");
         authorizationScopes[2] = new AuthorizationScope(Authority.CUSTOMER_USER.name(), "Customer");
@@ -219,7 +212,6 @@ public class SwaggerConfiguration {
                 .build();
     }
 
-    @NotNull
     private ApiDescription loginEndpointApiDescription(final CachingOperationNameGenerator operationNames) {
         return new ApiDescription(null, "/api/auth/login", "Login method to get user JWT token data", "Login endpoint", Collections.singletonList(
                 new OperationBuilder(operationNames)
@@ -250,9 +242,8 @@ public class SwaggerConfiguration {
         ), false);
     }
 
-    @NotNull
     private Collection<Response> loginResponses() {
-        @NotNull List<Response> responses = new ArrayList<>();
+        List<Response> responses = new ArrayList<>();
         responses.add(
                 new ResponseBuilder()
                         .code("200")
@@ -267,7 +258,6 @@ public class SwaggerConfiguration {
 
     /** Helper methods **/
 
-    @NotNull
     private List<Response> defaultErrorResponses(boolean isPost) {
         return List.of(
                 errorResponse("400", "Bad Request",
@@ -285,7 +275,6 @@ public class SwaggerConfiguration {
         );
     }
 
-    @NotNull
     private List<Response> loginErrorResponses() {
         return List.of(
                 errorResponse("401", "Unauthorized",
@@ -320,7 +309,7 @@ public class SwaggerConfiguration {
     }
 
     private Response errorResponse(String code, String description, List<Example> examples,
-                                   @NotNull Class<? extends EchoiotErrorResponse> errorResponseClass) {
+                                   Class<? extends EchoiotErrorResponse> errorResponseClass) {
         return new ResponseBuilder()
                 .code(code)
                 .description(description)
@@ -338,8 +327,7 @@ public class SwaggerConfiguration {
                 .value(example).build();
     }
 
-    @NotNull
-    private Consumer<RepresentationBuilder> classRepresentation(@NotNull Class<?> clazz, boolean isResponse) {
+    private Consumer<RepresentationBuilder> classRepresentation(Class<?> clazz, boolean isResponse) {
         return r -> r.model(
                 m ->
                         m.referenceModel(ref ->
@@ -352,8 +340,7 @@ public class SwaggerConfiguration {
 
     private static class SecurityPathOperationSelector implements Predicate<OperationContext> {
 
-        @NotNull
-        private final Predicate<String> securityPathSelector;
+            private final Predicate<String> securityPathSelector;
 
         SecurityPathOperationSelector(String securityPathRegex, String nonSecurityPathRegex) {
             this.securityPathSelector = regex(securityPathRegex).and(
@@ -363,7 +350,7 @@ public class SwaggerConfiguration {
         }
 
         @Override
-        public boolean test(@NotNull OperationContext operationContext) {
+        public boolean test(OperationContext operationContext) {
             return this.securityPathSelector.test(operationContext.requestMappingPattern());
         }
     }

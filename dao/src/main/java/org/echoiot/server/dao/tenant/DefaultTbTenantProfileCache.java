@@ -6,7 +6,6 @@ import org.echoiot.server.common.data.TenantProfile;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.id.TenantProfileId;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
@@ -71,7 +70,7 @@ public class DefaultTbTenantProfileCache implements TbTenantProfileCache {
     }
 
     @Override
-    public void put(@NotNull TenantProfile profile) {
+    public void put(TenantProfile profile) {
         if (profile.getId() != null) {
             tenantProfilesMap.put(profile.getId(), profile);
             notifyTenantListeners(profile);

@@ -4,7 +4,6 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.MoreExecutors;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.Executor;
@@ -18,18 +17,18 @@ import java.util.function.Consumer;
 public class AsyncCallbackTemplate {
 
     public static <T> void withCallbackAndTimeout(ListenableFuture<T> future,
-                                                  @NotNull Consumer<T> onSuccess,
-                                                  @NotNull Consumer<Throwable> onFailure,
+                                                  Consumer<T> onSuccess,
+                                                  Consumer<Throwable> onFailure,
                                                   long timeoutInMs,
-                                                  @NotNull ScheduledExecutorService timeoutExecutor,
+                                                  ScheduledExecutorService timeoutExecutor,
                                                   Executor callbackExecutor) {
         future = Futures.withTimeout(future, timeoutInMs, TimeUnit.MILLISECONDS, timeoutExecutor);
         withCallback(future, onSuccess, onFailure, callbackExecutor);
     }
 
-    public static <T> void withCallback(@NotNull ListenableFuture<T> future, @NotNull Consumer<T> onSuccess,
-                                        @NotNull Consumer<Throwable> onFailure, @Nullable Executor executor) {
-        @NotNull FutureCallback<T> callback = new FutureCallback<T>() {
+    public static <T> void withCallback(ListenableFuture<T> future, Consumer<T> onSuccess,
+                                        Consumer<Throwable> onFailure, @Nullable Executor executor) {
+        FutureCallback<T> callback = new FutureCallback<T>() {
             @Override
             public void onSuccess(T result) {
                 try {

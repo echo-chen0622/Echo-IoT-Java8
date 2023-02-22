@@ -13,7 +13,6 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.echoiot.server.common.data.kv.DataType;
 import org.echoiot.server.common.data.kv.KvEntry;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
@@ -113,7 +112,7 @@ public class JacksonUtil {
         }
     }
 
-    public static <T> T treeToValue(@NotNull JsonNode node, Class<T> clazz) {
+    public static <T> T treeToValue(JsonNode node, Class<T> clazz) {
         try {
             return OBJECT_MAPPER.treeToValue(node, clazz);
         } catch (IOException e) {
@@ -125,7 +124,7 @@ public class JacksonUtil {
         return toJsonNode(value, OBJECT_MAPPER);
     }
 
-    public static JsonNode toJsonNode(@Nullable String value, @NotNull ObjectMapper mapper) {
+    public static JsonNode toJsonNode(@Nullable String value, ObjectMapper mapper) {
         if (value == null || value.isEmpty()) {
             return null;
         }
@@ -140,12 +139,12 @@ public class JacksonUtil {
         return newObjectNode(OBJECT_MAPPER);
     }
 
-    public static ObjectNode newObjectNode(@NotNull ObjectMapper mapper) {
+    public static ObjectNode newObjectNode(ObjectMapper mapper) {
         return mapper.createObjectNode();
     }
 
     @Nullable
-    public static <T> T clone(@NotNull T value) {
+    public static <T> T clone(T value) {
         @SuppressWarnings("unchecked")
         Class<T> valueClass = (Class<T>) value.getClass();
         return fromString(toString(value), valueClass);
@@ -165,7 +164,7 @@ public class JacksonUtil {
     }
 
 
-    public static JsonNode getSafely(@Nullable JsonNode node, @NotNull String... path) {
+    public static JsonNode getSafely(@Nullable JsonNode node, String... path) {
         if (node == null) {
             return null;
         }
@@ -179,13 +178,13 @@ public class JacksonUtil {
         return node;
     }
 
-    public static void replaceUuidsRecursively(@Nullable JsonNode node, @NotNull Set<String> skipFieldsSet, @NotNull UnaryOperator<UUID> replacer) {
+    public static void replaceUuidsRecursively(@Nullable JsonNode node, Set<String> skipFieldsSet, UnaryOperator<UUID> replacer) {
         if (node == null) {
             return;
         }
         if (node.isObject()) {
-            @NotNull ObjectNode objectNode = (ObjectNode) node;
-            @NotNull List<String> fieldNames = new ArrayList<>(objectNode.size());
+            ObjectNode objectNode = (ObjectNode) node;
+            List<String> fieldNames = new ArrayList<>(objectNode.size());
             objectNode.fieldNames().forEachRemaining(fieldNames::add);
             for (String fieldName : fieldNames) {
                 if (skipFieldsSet.contains(fieldName)) {
@@ -203,7 +202,7 @@ public class JacksonUtil {
                 }
             }
         } else if (node.isArray()) {
-            @NotNull ArrayNode array = (ArrayNode) node;
+            ArrayNode array = (ArrayNode) node;
             for (int i = 0; i < array.size(); i++) {
                 JsonNode arrayElement = array.get(i);
                 if (arrayElement.isObject() || arrayElement.isArray()) {
@@ -219,15 +218,15 @@ public class JacksonUtil {
         }
     }
 
-    public static void addKvEntry(@NotNull ObjectNode entityNode, @NotNull KvEntry kvEntry) {
+    public static void addKvEntry(ObjectNode entityNode, KvEntry kvEntry) {
         addKvEntry(entityNode, kvEntry, kvEntry.getKey());
     }
 
-    public static void addKvEntry(@NotNull ObjectNode entityNode, @NotNull KvEntry kvEntry, String key) {
+    public static void addKvEntry(ObjectNode entityNode, KvEntry kvEntry, String key) {
         addKvEntry(entityNode, kvEntry, key, OBJECT_MAPPER);
     }
 
-    public static void addKvEntry(@NotNull ObjectNode entityNode, @NotNull KvEntry kvEntry, String key, @NotNull ObjectMapper mapper) {
+    public static void addKvEntry(ObjectNode entityNode, KvEntry kvEntry, String key, ObjectMapper mapper) {
         if (kvEntry.getDataType() == DataType.BOOLEAN) {
             kvEntry.getBooleanValue().ifPresent(value -> entityNode.put(key, value));
         } else if (kvEntry.getDataType() == DataType.DOUBLE) {

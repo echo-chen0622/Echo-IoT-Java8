@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.validation.NoXss;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -36,7 +35,7 @@ public class ShortCustomerInfo {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        @NotNull ShortCustomerInfo that = (ShortCustomerInfo) o;
+        ShortCustomerInfo that = (ShortCustomerInfo) o;
 
         return customerId.equals(that.customerId);
 

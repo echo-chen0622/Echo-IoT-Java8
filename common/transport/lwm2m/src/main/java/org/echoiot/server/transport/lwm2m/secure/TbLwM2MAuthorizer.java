@@ -14,7 +14,6 @@ import org.eclipse.leshan.server.registration.Registration;
 import org.eclipse.leshan.server.security.Authorizer;
 import org.eclipse.leshan.server.security.SecurityChecker;
 import org.eclipse.leshan.server.security.SecurityInfo;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -26,17 +25,14 @@ import java.util.Arrays;
 @Slf4j
 public class TbLwM2MAuthorizer implements Authorizer {
 
-    @NotNull
     private final TbLwM2MDtlsSessionStore sessionStorage;
-    @NotNull
     private final TbMainSecurityStore securityStore;
     private final SecurityChecker securityChecker = new SecurityChecker();
-    @NotNull
     private final LwM2mClientContext clientContext;
 
     @Nullable
     @Override
-    public Registration isAuthorized(UplinkRequest<?> request, @NotNull Registration registration, @NotNull Identity senderIdentity) {
+    public Registration isAuthorized(UplinkRequest<?> request, Registration registration, Identity senderIdentity) {
         if (senderIdentity.isX509()) {
             TbX509DtlsSessionInfo sessionInfo = sessionStorage.get(registration.getEndpoint());
             if (sessionInfo != null) {

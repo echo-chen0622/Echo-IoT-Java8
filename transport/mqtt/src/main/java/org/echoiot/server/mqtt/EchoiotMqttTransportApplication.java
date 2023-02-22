@@ -1,6 +1,5 @@
 package org.echoiot.server.mqtt;
 
-import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
@@ -18,7 +17,7 @@ public class EchoiotMqttTransportApplication {
 
     private static final String DEFAULT_SPRING_CONFIG_PARAM = SPRING_CONFIG_NAME_KEY + "=" + "tb-mqtt-transport";
 
-    public static void main(@NotNull String[] args) {
+    public static void main(String[] args) {
         SpringApplication.run(EchoiotMqttTransportApplication.class, updateArguments(args, DEFAULT_SPRING_CONFIG_PARAM));
     }
 

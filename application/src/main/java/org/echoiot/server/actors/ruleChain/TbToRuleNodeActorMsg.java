@@ -7,7 +7,6 @@ import org.echoiot.server.common.msg.TbActorStopReason;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.TbRuleEngineActorMsg;
 import org.echoiot.server.common.msg.queue.RuleNodeException;
-import org.jetbrains.annotations.NotNull;
 
 @EqualsAndHashCode(callSuper = true)
 public abstract class TbToRuleNodeActorMsg extends TbRuleEngineActorMsg {
@@ -22,7 +21,7 @@ public abstract class TbToRuleNodeActorMsg extends TbRuleEngineActorMsg {
 
     @Override
     public void onTbActorStopped(TbActorStopReason reason) {
-        @NotNull String message = reason == TbActorStopReason.STOPPED ? "Rule node stopped" : "Failed to initialize rule node!";
+        String message = reason == TbActorStopReason.STOPPED ? "Rule node stopped" : "Failed to initialize rule node!";
         msg.getCallback().onFailure(new RuleNodeException(message, ctx.getRuleChainName(), ctx.getSelf()));
     }
 }

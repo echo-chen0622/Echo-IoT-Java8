@@ -12,7 +12,6 @@ import org.echoiot.server.common.msg.queue.ServiceType;
 import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
 import org.echoiot.server.queue.discovery.TbApplicationEventListener;
 import org.echoiot.server.queue.discovery.event.PartitionChangeEvent;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -44,7 +43,6 @@ public abstract class AbstractPartitionBasedService<T extends EntityId> extends 
         scheduledExecutor = MoreExecutors.listeningDecorator(Executors.newSingleThreadScheduledExecutor(EchoiotThreadFactory.forName(getSchedulerExecutorName())));
     }
 
-    @NotNull
     protected ServiceType getServiceType() {
         return ServiceType.TB_CORE;
     }
@@ -63,7 +61,7 @@ public abstract class AbstractPartitionBasedService<T extends EntityId> extends 
      * Any locks or delays in this module will affect DiscoveryService and entire system
      */
     @Override
-    protected void onTbApplicationEvent(@NotNull PartitionChangeEvent partitionChangeEvent) {
+    protected void onTbApplicationEvent(PartitionChangeEvent partitionChangeEvent) {
         if (getServiceType().equals(partitionChangeEvent.getServiceType())) {
             log.debug("onTbApplicationEvent, processing event: {}", partitionChangeEvent);
             subscribeQueue.add(partitionChangeEvent.getPartitions());
@@ -80,17 +78,17 @@ public abstract class AbstractPartitionBasedService<T extends EntityId> extends 
         initStateFromDB(partitions);
     }
 
-    private void initStateFromDB(@NotNull Set<TopicPartitionInfo> partitions) {
+    private void initStateFromDB(Set<TopicPartitionInfo> partitions) {
         try {
             log.info("[{}] CURRENT PARTITIONS: {}", getServiceName(), partitionedEntities.keySet());
             log.info("[{}] NEW PARTITIONS: {}", getServiceName(), partitions);
 
-            @NotNull Set<TopicPartitionInfo> addedPartitions = new HashSet<>(partitions);
+            Set<TopicPartitionInfo> addedPartitions = new HashSet<>(partitions);
             addedPartitions.removeAll(partitionedEntities.keySet());
 
             log.info("[{}] ADDED PARTITIONS: {}", getServiceName(), addedPartitions);
 
-            @NotNull Set<TopicPartitionInfo> removedPartitions = new HashSet<>(partitionedEntities.keySet());
+            Set<TopicPartitionInfo> removedPartitions = new HashSet<>(partitionedEntities.keySet());
             removedPartitions.removeAll(partitions);
 
             log.info("[{}] REMOVED PARTITIONS: {}", getServiceName(), removedPartitions);
@@ -122,7 +120,7 @@ public abstract class AbstractPartitionBasedService<T extends EntityId> extends 
             }
 
             if (partitionListChanged) {
-                @NotNull List<ListenableFuture<?>> partitionFetchFutures = new ArrayList<>();
+                List<ListenableFuture<?>> partitionFetchFutures = new ArrayList<>();
                 partitionedFetchTasks.values().forEach(partitionFetchFutures::addAll);
                 DonAsynchron.withCallback(Futures.allAsList(partitionFetchFutures), t -> logPartitions(), this::logFailure);
             }

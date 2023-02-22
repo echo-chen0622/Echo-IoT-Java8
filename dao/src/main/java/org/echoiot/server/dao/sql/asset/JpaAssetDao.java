@@ -18,7 +18,6 @@ import org.echoiot.server.dao.model.sql.AssetEntity;
 import org.echoiot.server.dao.model.sql.AssetInfoEntity;
 import org.echoiot.server.dao.sql.JpaAbstractSearchTextDao;
 import org.echoiot.server.dao.util.SqlDao;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
@@ -39,7 +38,6 @@ public class JpaAssetDao extends JpaAbstractSearchTextDao<AssetEntity, Asset> im
     @Resource
     private AssetRepository assetRepository;
 
-    @NotNull
     @Override
     protected Class<AssetEntity> getEntityClass() {
         return AssetEntity.class;
@@ -55,9 +53,8 @@ public class JpaAssetDao extends JpaAbstractSearchTextDao<AssetEntity, Asset> im
         return DaoUtil.getData(assetRepository.findAssetInfoById(assetId));
     }
 
-    @NotNull
     @Override
-    public PageData<Asset> findAssetsByTenantId(UUID tenantId, @NotNull PageLink pageLink) {
+    public PageData<Asset> findAssetsByTenantId(UUID tenantId, PageLink pageLink) {
         return DaoUtil.toPageData(assetRepository
                 .findByTenantId(
                         tenantId,
@@ -65,9 +62,8 @@ public class JpaAssetDao extends JpaAbstractSearchTextDao<AssetEntity, Asset> im
                         DaoUtil.toPageable(pageLink)));
     }
 
-    @NotNull
     @Override
-    public PageData<AssetInfo> findAssetInfosByTenantId(UUID tenantId, @NotNull PageLink pageLink) {
+    public PageData<AssetInfo> findAssetInfosByTenantId(UUID tenantId, PageLink pageLink) {
         return DaoUtil.toPageData(
                 assetRepository.findAssetInfosByTenantId(
                         tenantId,
@@ -81,9 +77,8 @@ public class JpaAssetDao extends JpaAbstractSearchTextDao<AssetEntity, Asset> im
                 DaoUtil.convertDataList(assetRepository.findByTenantIdAndIdIn(tenantId, assetIds)));
     }
 
-    @NotNull
     @Override
-    public PageData<Asset> findAssetsByTenantIdAndCustomerId(UUID tenantId, UUID customerId, @NotNull PageLink pageLink) {
+    public PageData<Asset> findAssetsByTenantIdAndCustomerId(UUID tenantId, UUID customerId, PageLink pageLink) {
         return DaoUtil.toPageData(assetRepository
                 .findByTenantIdAndCustomerId(
                         tenantId,
@@ -92,9 +87,8 @@ public class JpaAssetDao extends JpaAbstractSearchTextDao<AssetEntity, Asset> im
                         DaoUtil.toPageable(pageLink)));
     }
 
-    @NotNull
     @Override
-    public PageData<AssetInfo> findAssetInfosByTenantIdAndCustomerId(UUID tenantId, UUID customerId, @NotNull PageLink pageLink) {
+    public PageData<AssetInfo> findAssetInfosByTenantIdAndCustomerId(UUID tenantId, UUID customerId, PageLink pageLink) {
         return DaoUtil.toPageData(
                 assetRepository.findAssetInfosByTenantIdAndCustomerId(
                         tenantId,
@@ -109,16 +103,14 @@ public class JpaAssetDao extends JpaAbstractSearchTextDao<AssetEntity, Asset> im
                 DaoUtil.convertDataList(assetRepository.findByTenantIdAndCustomerIdAndIdIn(tenantId, customerId, assetIds)));
     }
 
-    @NotNull
     @Override
     public Optional<Asset> findAssetsByTenantIdAndName(UUID tenantId, String name) {
         Asset asset = DaoUtil.getData(assetRepository.findByTenantIdAndName(tenantId, name));
         return Optional.ofNullable(asset);
     }
 
-    @NotNull
     @Override
-    public PageData<Asset> findAssetsByTenantIdAndType(UUID tenantId, String type, @NotNull PageLink pageLink) {
+    public PageData<Asset> findAssetsByTenantIdAndType(UUID tenantId, String type, PageLink pageLink) {
         return DaoUtil.toPageData(assetRepository
                 .findByTenantIdAndType(
                         tenantId,
@@ -127,9 +119,8 @@ public class JpaAssetDao extends JpaAbstractSearchTextDao<AssetEntity, Asset> im
                         DaoUtil.toPageable(pageLink)));
     }
 
-    @NotNull
     @Override
-    public PageData<AssetInfo> findAssetInfosByTenantIdAndType(UUID tenantId, String type, @NotNull PageLink pageLink) {
+    public PageData<AssetInfo> findAssetInfosByTenantIdAndType(UUID tenantId, String type, PageLink pageLink) {
         return DaoUtil.toPageData(
                 assetRepository.findAssetInfosByTenantIdAndType(
                         tenantId,
@@ -138,9 +129,8 @@ public class JpaAssetDao extends JpaAbstractSearchTextDao<AssetEntity, Asset> im
                         DaoUtil.toPageable(pageLink, AssetInfoEntity.assetInfoColumnMap)));
     }
 
-    @NotNull
     @Override
-    public PageData<AssetInfo> findAssetInfosByTenantIdAndAssetProfileId(UUID tenantId, UUID assetProfileId, @NotNull PageLink pageLink) {
+    public PageData<AssetInfo> findAssetInfosByTenantIdAndAssetProfileId(UUID tenantId, UUID assetProfileId, PageLink pageLink) {
         return DaoUtil.toPageData(
                 assetRepository.findAssetInfosByTenantIdAndAssetProfileId(
                         tenantId,
@@ -149,9 +139,8 @@ public class JpaAssetDao extends JpaAbstractSearchTextDao<AssetEntity, Asset> im
                         DaoUtil.toPageable(pageLink, AssetInfoEntity.assetInfoColumnMap)));
     }
 
-    @NotNull
     @Override
-    public PageData<Asset> findAssetsByTenantIdAndCustomerIdAndType(UUID tenantId, UUID customerId, String type, @NotNull PageLink pageLink) {
+    public PageData<Asset> findAssetsByTenantIdAndCustomerIdAndType(UUID tenantId, UUID customerId, String type, PageLink pageLink) {
         return DaoUtil.toPageData(assetRepository
                 .findByTenantIdAndCustomerIdAndType(
                         tenantId,
@@ -161,9 +150,8 @@ public class JpaAssetDao extends JpaAbstractSearchTextDao<AssetEntity, Asset> im
                         DaoUtil.toPageable(pageLink)));
     }
 
-    @NotNull
     @Override
-    public PageData<AssetInfo> findAssetInfosByTenantIdAndCustomerIdAndType(UUID tenantId, UUID customerId, String type, @NotNull PageLink pageLink) {
+    public PageData<AssetInfo> findAssetInfosByTenantIdAndCustomerIdAndType(UUID tenantId, UUID customerId, String type, PageLink pageLink) {
         return DaoUtil.toPageData(
                 assetRepository.findAssetInfosByTenantIdAndCustomerIdAndType(
                         tenantId,
@@ -173,9 +161,8 @@ public class JpaAssetDao extends JpaAbstractSearchTextDao<AssetEntity, Asset> im
                         DaoUtil.toPageable(pageLink, AssetInfoEntity.assetInfoColumnMap)));
     }
 
-    @NotNull
     @Override
-    public PageData<AssetInfo> findAssetInfosByTenantIdAndCustomerIdAndAssetProfileId(UUID tenantId, UUID customerId, UUID assetProfileId, @NotNull PageLink pageLink) {
+    public PageData<AssetInfo> findAssetInfosByTenantIdAndCustomerIdAndAssetProfileId(UUID tenantId, UUID customerId, UUID assetProfileId, PageLink pageLink) {
         return DaoUtil.toPageData(
                 assetRepository.findAssetInfosByTenantIdAndCustomerIdAndAssetProfileId(
                         tenantId,
@@ -195,9 +182,8 @@ public class JpaAssetDao extends JpaAbstractSearchTextDao<AssetEntity, Asset> im
         return assetRepository.countByAssetProfileId(assetProfileId);
     }
 
-    @NotNull
     @Override
-    public PageData<Asset> findAssetsByTenantIdAndProfileId(UUID tenantId, UUID profileId, @NotNull PageLink pageLink) {
+    public PageData<Asset> findAssetsByTenantIdAndProfileId(UUID tenantId, UUID profileId, PageLink pageLink) {
         return DaoUtil.toPageData(
                 assetRepository.findByTenantIdAndProfileId(
                         tenantId,
@@ -206,9 +192,8 @@ public class JpaAssetDao extends JpaAbstractSearchTextDao<AssetEntity, Asset> im
                         DaoUtil.toPageable(pageLink)));
     }
 
-    @NotNull
     private List<EntitySubtype> convertTenantAssetTypesToDto(UUID tenantId, @Nullable List<String> types) {
-        @NotNull List<EntitySubtype> list = Collections.emptyList();
+        List<EntitySubtype> list = Collections.emptyList();
         if (types != null && !types.isEmpty()) {
             list = new ArrayList<>();
             for (String type : types) {
@@ -218,9 +203,8 @@ public class JpaAssetDao extends JpaAbstractSearchTextDao<AssetEntity, Asset> im
         return list;
     }
 
-    @NotNull
     @Override
-    public PageData<Asset> findAssetsByTenantIdAndEdgeId(UUID tenantId, UUID edgeId, @NotNull PageLink pageLink) {
+    public PageData<Asset> findAssetsByTenantIdAndEdgeId(UUID tenantId, UUID edgeId, PageLink pageLink) {
         log.debug("Try to find assets by tenantId [{}], edgeId [{}] and pageLink [{}]", tenantId, edgeId, pageLink);
         return DaoUtil.toPageData(assetRepository
                 .findByTenantIdAndEdgeId(
@@ -230,9 +214,8 @@ public class JpaAssetDao extends JpaAbstractSearchTextDao<AssetEntity, Asset> im
                         DaoUtil.toPageable(pageLink)));
     }
 
-    @NotNull
     @Override
-    public PageData<Asset> findAssetsByTenantIdAndEdgeIdAndType(UUID tenantId, UUID edgeId, String type, @NotNull PageLink pageLink) {
+    public PageData<Asset> findAssetsByTenantIdAndEdgeIdAndType(UUID tenantId, UUID edgeId, String type, PageLink pageLink) {
         log.debug("Try to find assets by tenantId [{}], edgeId [{}], type [{}] and pageLink [{}]", tenantId, edgeId, type, pageLink);
         return DaoUtil.toPageData(assetRepository
                 .findByTenantIdAndEdgeIdAndType(
@@ -243,7 +226,6 @@ public class JpaAssetDao extends JpaAbstractSearchTextDao<AssetEntity, Asset> im
                         DaoUtil.toPageable(pageLink)));
     }
 
-    @NotNull
     public PageData<TbPair<UUID, String>> getAllAssetTypes(PageLink pageLink) {
         log.debug("Try to find all asset types and pageLink [{}]", pageLink);
         return DaoUtil.pageToPageData(assetRepository.getAllAssetTypes(
@@ -251,7 +233,7 @@ public class JpaAssetDao extends JpaAbstractSearchTextDao<AssetEntity, Asset> im
     }
 
     @Override
-    public Long countByTenantId(@NotNull TenantId tenantId) {
+    public Long countByTenantId(TenantId tenantId) {
         return assetRepository.countByTenantIdAndTypeIsNot(tenantId.getId(), TB_SERVICE_QUEUE);
     }
 
@@ -267,18 +249,17 @@ public class JpaAssetDao extends JpaAbstractSearchTextDao<AssetEntity, Asset> im
     }
 
     @Override
-    public PageData<Asset> findByTenantId(UUID tenantId, @NotNull PageLink pageLink) {
+    public PageData<Asset> findByTenantId(UUID tenantId, PageLink pageLink) {
         return findAssetsByTenantId(tenantId, pageLink);
     }
 
     @Nullable
     @Override
-    public AssetId getExternalIdByInternal(@NotNull AssetId internalId) {
+    public AssetId getExternalIdByInternal(AssetId internalId) {
         return Optional.ofNullable(assetRepository.getExternalIdById(internalId.getId()))
                 .map(AssetId::new).orElse(null);
     }
 
-    @NotNull
     @Override
     public EntityType getEntityType() {
         return EntityType.ASSET;

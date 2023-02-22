@@ -12,7 +12,6 @@ import org.echoiot.server.gen.edge.v1.OtaPackageUpdateMsg;
 import org.echoiot.server.gen.edge.v1.UpdateMsgType;
 import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.queue.util.TbCoreComponent;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -22,15 +21,15 @@ import org.springframework.stereotype.Component;
 public class OtaPackageEdgeProcessor extends BaseEdgeProcessor {
 
     @Nullable
-    public DownlinkMsg convertOtaPackageEventToDownlink(@NotNull EdgeEvent edgeEvent) {
-        @NotNull OtaPackageId otaPackageId = new OtaPackageId(edgeEvent.getEntityId());
+    public DownlinkMsg convertOtaPackageEventToDownlink(EdgeEvent edgeEvent) {
+        OtaPackageId otaPackageId = new OtaPackageId(edgeEvent.getEntityId());
         @Nullable DownlinkMsg downlinkMsg = null;
         switch (edgeEvent.getAction()) {
             case ADDED:
             case UPDATED:
                 OtaPackage otaPackage = otaPackageService.findOtaPackageById(edgeEvent.getTenantId(), otaPackageId);
                 if (otaPackage != null) {
-                    @NotNull UpdateMsgType msgType = getUpdateMsgType(edgeEvent.getAction());
+                    UpdateMsgType msgType = getUpdateMsgType(edgeEvent.getAction());
                     OtaPackageUpdateMsg otaPackageUpdateMsg =
                             otaPackageMsgConstructor.constructOtaPackageUpdatedMsg(msgType, otaPackage);
                     downlinkMsg = DownlinkMsg.newBuilder()
@@ -51,7 +50,7 @@ public class OtaPackageEdgeProcessor extends BaseEdgeProcessor {
         return downlinkMsg;
     }
 
-    public ListenableFuture<Void> processOtaPackageNotification(TenantId tenantId, @NotNull TransportProtos.EdgeNotificationMsgProto edgeNotificationMsg) {
+    public ListenableFuture<Void> processOtaPackageNotification(TenantId tenantId, TransportProtos.EdgeNotificationMsgProto edgeNotificationMsg) {
         return processEntityNotificationForAllEdges(tenantId, edgeNotificationMsg);
     }
 }

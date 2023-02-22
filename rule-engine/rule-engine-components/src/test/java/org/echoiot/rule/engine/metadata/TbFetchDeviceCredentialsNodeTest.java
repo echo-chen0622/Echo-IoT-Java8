@@ -13,7 +13,6 @@ import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.TbMsgMetaData;
 import org.echoiot.server.common.msg.queue.TbMsgCallback;
 import org.echoiot.server.dao.device.DeviceCredentialsService;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -54,7 +53,7 @@ public class TbFetchDeviceCredentialsNodeTest {
 
         willReturn(deviceCredentialsService).given(ctx).getDeviceCredentialsService();
         willAnswer(invocation -> {
-            @NotNull DeviceCredentials deviceCredentials = new DeviceCredentials();
+            DeviceCredentials deviceCredentials = new DeviceCredentials();
             deviceCredentials.setCredentialsType(ACCESS_TOKEN);
             return deviceCredentials;
         }).given(deviceCredentialsService).findDeviceCredentialsByDeviceId(any(), any());
@@ -76,7 +75,7 @@ public class TbFetchDeviceCredentialsNodeTest {
 
     @Test
     void givenDefaultConfig_whenVerify_thenOK() {
-        @NotNull TbFetchDeviceCredentialsNodeConfiguration defaultConfig = new TbFetchDeviceCredentialsNodeConfiguration().defaultConfiguration();
+        TbFetchDeviceCredentialsNodeConfiguration defaultConfig = new TbFetchDeviceCredentialsNodeConfiguration().defaultConfiguration();
         assertThat(defaultConfig.isFetchToMetadata()).isEqualTo(true);
     }
 
@@ -84,7 +83,7 @@ public class TbFetchDeviceCredentialsNodeTest {
     void givenMsg_whenOnMsg_thenVerifyOutput() throws Exception {
         node.onMsg(ctx, getTbMsg(deviceId));
 
-        @NotNull ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
         verify(ctx, times(1)).tellSuccess(newMsgCaptor.capture());
         verify(ctx, never()).tellFailure(any(), any());
         verify(deviceCredentialsService, times(1)).findDeviceCredentialsByDeviceId(any(), any());
@@ -100,8 +99,8 @@ public class TbFetchDeviceCredentialsNodeTest {
     void givenUnsupportedOriginatorType_whenOnMsg_thenTellFailure() throws Exception {
         node.onMsg(ctx, getTbMsg(new CustomerId(UUID.randomUUID())));
 
-        @NotNull ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
-        @NotNull ArgumentCaptor<Exception> exceptionCaptor = ArgumentCaptor.forClass(Exception.class);
+        ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        ArgumentCaptor<Exception> exceptionCaptor = ArgumentCaptor.forClass(Exception.class);
         verify(ctx, never()).tellSuccess(any());
         verify(ctx, times(1)).tellFailure(newMsgCaptor.capture(), exceptionCaptor.capture());
 
@@ -116,23 +115,22 @@ public class TbFetchDeviceCredentialsNodeTest {
 
         node.onMsg(ctx, getTbMsg(deviceId));
 
-        @NotNull ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
-        @NotNull ArgumentCaptor<Exception> exceptionCaptor = ArgumentCaptor.forClass(Exception.class);
+        ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        ArgumentCaptor<Exception> exceptionCaptor = ArgumentCaptor.forClass(Exception.class);
         verify(ctx, never()).tellSuccess(any());
         verify(ctx, times(1)).tellFailure(newMsgCaptor.capture(), exceptionCaptor.capture());
 
         assertThat(exceptionCaptor.getValue()).isInstanceOf(RuntimeException.class);
     }
 
-    @NotNull
     private TbMsg getTbMsg(EntityId entityId) {
-        @NotNull final Map<String, String> mdMap = Map.of(
+        final Map<String, String> mdMap = Map.of(
                 "country", "US",
                 "city", "NY"
                                                          );
 
-        @NotNull final TbMsgMetaData metaData = new TbMsgMetaData(mdMap);
-        @NotNull final String data = "{\"TestAttribute_1\": \"humidity\", \"TestAttribute_2\": \"voltage\"}";
+        final TbMsgMetaData metaData = new TbMsgMetaData(mdMap);
+        final String data = "{\"TestAttribute_1\": \"humidity\", \"TestAttribute_2\": \"voltage\"}";
 
         return TbMsg.newMsg("POST_ATTRIBUTES_REQUEST", entityId, metaData, data, callback);
     }

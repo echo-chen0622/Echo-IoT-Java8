@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.echoiot.server.common.data.sync.vc.VersionCreationResult;
 import org.echoiot.server.common.data.sync.vc.VersionLoadResult;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 
@@ -17,12 +16,10 @@ public class VersionControlTaskCacheEntry implements Serializable {
     private VersionCreationResult exportResult;
     private VersionLoadResult importResult;
 
-    @NotNull
     public static VersionControlTaskCacheEntry newForExport(VersionCreationResult result) {
         return new VersionControlTaskCacheEntry(result, null);
     }
 
-    @NotNull
     public static VersionControlTaskCacheEntry newForImport(VersionLoadResult result) {
         return new VersionControlTaskCacheEntry(null, result);
     }

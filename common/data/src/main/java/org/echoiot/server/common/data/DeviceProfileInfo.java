@@ -9,7 +9,6 @@ import lombok.Value;
 import org.echoiot.server.common.data.id.DashboardId;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.EntityIdFactory;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -51,7 +50,7 @@ public class DeviceProfileInfo extends EntityInfo {
         this.transportType = transportType;
     }
 
-    public DeviceProfileInfo(@NotNull DeviceProfile profile) {
+    public DeviceProfileInfo(DeviceProfile profile) {
         this(profile.getId(), profile.getName(), profile.getImage(), profile.getDefaultDashboardId(),
                 profile.getType(), profile.getTransportType());
     }

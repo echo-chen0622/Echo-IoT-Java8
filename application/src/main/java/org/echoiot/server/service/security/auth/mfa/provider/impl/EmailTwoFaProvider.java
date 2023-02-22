@@ -10,7 +10,6 @@ import org.echoiot.server.common.data.security.model.mfa.provider.EmailTwoFaProv
 import org.echoiot.server.common.data.security.model.mfa.provider.TwoFaProviderType;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.security.model.SecurityUser;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 
@@ -20,15 +19,14 @@ public class EmailTwoFaProvider extends OtpBasedTwoFaProvider<EmailTwoFaProvider
 
     private final MailService mailService;
 
-    protected EmailTwoFaProvider(@NotNull CacheManager cacheManager, MailService mailService) {
+    protected EmailTwoFaProvider(CacheManager cacheManager, MailService mailService) {
         super(cacheManager);
         this.mailService = mailService;
     }
 
-    @NotNull
     @Override
-    public EmailTwoFaAccountConfig generateNewAccountConfig(@NotNull User user, EmailTwoFaProviderConfig providerConfig) {
-        @NotNull EmailTwoFaAccountConfig config = new EmailTwoFaAccountConfig();
+    public EmailTwoFaAccountConfig generateNewAccountConfig(User user, EmailTwoFaProviderConfig providerConfig) {
+        EmailTwoFaAccountConfig config = new EmailTwoFaAccountConfig();
         config.setEmail(user.getEmail());
         return config;
     }
@@ -43,11 +41,10 @@ public class EmailTwoFaProvider extends OtpBasedTwoFaProvider<EmailTwoFaProvider
     }
 
     @Override
-    protected void sendVerificationCode(SecurityUser user, String verificationCode, @NotNull EmailTwoFaProviderConfig providerConfig, @NotNull EmailTwoFaAccountConfig accountConfig) throws EchoiotException {
+    protected void sendVerificationCode(SecurityUser user, String verificationCode, EmailTwoFaProviderConfig providerConfig, EmailTwoFaAccountConfig accountConfig) throws EchoiotException {
         mailService.sendTwoFaVerificationEmail(accountConfig.getEmail(), verificationCode, providerConfig.getVerificationCodeLifetime());
     }
 
-    @NotNull
     @Override
     public TwoFaProviderType getType() {
         return TwoFaProviderType.EMAIL;

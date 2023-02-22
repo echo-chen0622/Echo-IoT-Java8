@@ -13,7 +13,6 @@ import org.echoiot.server.common.data.rule.RuleChainConnectionInfo;
 import org.echoiot.server.common.data.rule.RuleChainMetaData;
 import org.echoiot.server.common.data.rule.RuleNode;
 import org.echoiot.server.gen.edge.v1.RuleChainMetadataUpdateMsg;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -27,14 +26,14 @@ public class RuleChainMetadataConstructorV330 extends AbstractRuleChainMetadataC
 
     @Override
     protected void constructRuleChainMetadataUpdatedMsg(TenantId tenantId,
-                                                        @NotNull RuleChainMetadataUpdateMsg.Builder builder,
-                                                        @NotNull RuleChainMetaData ruleChainMetaData) throws JsonProcessingException {
-        @NotNull List<RuleNode> supportedNodes = filterNodes(ruleChainMetaData.getNodes());
+                                                        RuleChainMetadataUpdateMsg.Builder builder,
+                                                        RuleChainMetaData ruleChainMetaData) throws JsonProcessingException {
+        List<RuleNode> supportedNodes = filterNodes(ruleChainMetaData.getNodes());
 
-        @NotNull NavigableSet<Integer> removedNodeIndexes = getRemovedNodeIndexes(ruleChainMetaData.getNodes(), ruleChainMetaData.getConnections());
-        @NotNull List<NodeConnectionInfo> connections = filterConnections(ruleChainMetaData.getNodes(), ruleChainMetaData.getConnections(), removedNodeIndexes);
+        NavigableSet<Integer> removedNodeIndexes = getRemovedNodeIndexes(ruleChainMetaData.getNodes(), ruleChainMetaData.getConnections());
+        List<NodeConnectionInfo> connections = filterConnections(ruleChainMetaData.getNodes(), ruleChainMetaData.getConnections(), removedNodeIndexes);
 
-        @NotNull List<RuleChainConnectionInfo> ruleChainConnections = new ArrayList<>();
+        List<RuleChainConnectionInfo> ruleChainConnections = new ArrayList<>();
         if (ruleChainMetaData.getRuleChainConnections() != null) {
             ruleChainConnections.addAll(ruleChainMetaData.getRuleChainConnections());
         }
@@ -43,7 +42,7 @@ public class RuleChainMetadataConstructorV330 extends AbstractRuleChainMetadataC
                 .addAllConnections(constructConnections(connections))
                 .addAllRuleChainConnections(constructRuleChainConnections(ruleChainConnections, removedNodeIndexes));
         if (ruleChainMetaData.getFirstNodeIndex() != null) {
-            @NotNull Integer firstNodeIndex = ruleChainMetaData.getFirstNodeIndex();
+            Integer firstNodeIndex = ruleChainMetaData.getFirstNodeIndex();
             // decrease index because of removed nodes
             for (Integer removedIndex : removedNodeIndexes) {
                 if (firstNodeIndex > removedIndex) {
@@ -56,10 +55,9 @@ public class RuleChainMetadataConstructorV330 extends AbstractRuleChainMetadataC
         }
     }
 
-    @NotNull
-    private NavigableSet<Integer> getRemovedNodeIndexes(@NotNull List<RuleNode> nodes, @NotNull List<NodeConnectionInfo> connections) {
-        @NotNull TreeSet<Integer> removedIndexes = new TreeSet<>();
-        for (@NotNull NodeConnectionInfo connection : connections) {
+    private NavigableSet<Integer> getRemovedNodeIndexes(List<RuleNode> nodes, List<NodeConnectionInfo> connections) {
+        TreeSet<Integer> removedIndexes = new TreeSet<>();
+        for (NodeConnectionInfo connection : connections) {
             for (int i = 0; i < nodes.size(); i++) {
                 RuleNode node = nodes.get(i);
                 if (node.getType().equalsIgnoreCase(RULE_CHAIN_INPUT_NODE)
@@ -73,11 +71,10 @@ public class RuleChainMetadataConstructorV330 extends AbstractRuleChainMetadataC
         return removedIndexes.descendingSet();
     }
 
-    @NotNull
-    private List<NodeConnectionInfo> filterConnections(@NotNull List<RuleNode> nodes,
+    private List<NodeConnectionInfo> filterConnections(List<RuleNode> nodes,
                                                        @Nullable List<NodeConnectionInfo> connections,
-                                                       @NotNull NavigableSet<Integer> removedNodeIndexes) {
-        @NotNull List<NodeConnectionInfo> result = new ArrayList<>();
+                                                       NavigableSet<Integer> removedNodeIndexes) {
+        List<NodeConnectionInfo> result = new ArrayList<>();
         if (connections != null) {
             result = connections.stream().filter(conn -> {
                 for (int i = 0; i < nodes.size(); i++) {
@@ -91,7 +88,7 @@ public class RuleChainMetadataConstructorV330 extends AbstractRuleChainMetadataC
                 }
                 return true;
             }).map(conn -> {
-                @NotNull NodeConnectionInfo newConn = new NodeConnectionInfo();
+                NodeConnectionInfo newConn = new NodeConnectionInfo();
                 newConn.setFromIndex(conn.getFromIndex());
                 newConn.setToIndex(conn.getToIndex());
                 newConn.setType(conn.getType());
@@ -101,7 +98,7 @@ public class RuleChainMetadataConstructorV330 extends AbstractRuleChainMetadataC
 
         // decrease index because of removed nodes
         for (Integer removedIndex : removedNodeIndexes) {
-            for (@NotNull NodeConnectionInfo newConn : result) {
+            for (NodeConnectionInfo newConn : result) {
                 if (newConn.getToIndex() > removedIndex) {
                     newConn.setToIndex(newConn.getToIndex() - 1);
                 }
@@ -114,10 +111,9 @@ public class RuleChainMetadataConstructorV330 extends AbstractRuleChainMetadataC
         return result;
     }
 
-    @NotNull
-    private List<RuleNode> filterNodes(@NotNull List<RuleNode> nodes) {
-        @NotNull List<RuleNode> result = new ArrayList<>();
-        for (@NotNull RuleNode node : nodes) {
+    private List<RuleNode> filterNodes(List<RuleNode> nodes) {
+        List<RuleNode> result = new ArrayList<>();
+        for (RuleNode node : nodes) {
             if (RULE_CHAIN_INPUT_NODE.equals(node.getType())
                     || TB_RULE_CHAIN_OUTPUT_NODE.equals(node.getType())) {
                 log.trace("Skipping not supported rule node {}", node);
@@ -128,15 +124,14 @@ public class RuleChainMetadataConstructorV330 extends AbstractRuleChainMetadataC
         return result;
     }
 
-    @NotNull
-    private List<RuleChainConnectionInfo> addRuleChainConnections(@NotNull List<RuleNode> nodes, @NotNull List<NodeConnectionInfo> connections) {
-        @NotNull List<RuleChainConnectionInfo> result = new ArrayList<>();
+    private List<RuleChainConnectionInfo> addRuleChainConnections(List<RuleNode> nodes, List<NodeConnectionInfo> connections) {
+        List<RuleChainConnectionInfo> result = new ArrayList<>();
         for (int i = 0; i < nodes.size(); i++) {
             RuleNode node = nodes.get(i);
             if (node.getType().equalsIgnoreCase(RULE_CHAIN_INPUT_NODE)) {
-                for (@NotNull NodeConnectionInfo connection : connections) {
+                for (NodeConnectionInfo connection : connections) {
                     if (connection.getToIndex() == i) {
-                        @NotNull RuleChainConnectionInfo e = new RuleChainConnectionInfo();
+                        RuleChainConnectionInfo e = new RuleChainConnectionInfo();
                         e.setFromIndex(connection.getFromIndex());
                         TbRuleChainInputNodeConfiguration configuration = JacksonUtil.treeToValue(node.getConfiguration(), TbRuleChainInputNodeConfiguration.class);
                         e.setTargetRuleChainId(new RuleChainId(UUID.fromString(configuration.getRuleChainId())));

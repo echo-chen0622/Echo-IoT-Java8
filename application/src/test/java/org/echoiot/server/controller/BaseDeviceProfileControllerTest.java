@@ -13,7 +13,6 @@ import org.echoiot.server.common.data.rule.RuleChain;
 import org.echoiot.server.common.data.security.Authority;
 import org.echoiot.server.dao.device.DeviceProfileDao;
 import org.echoiot.server.dao.exception.DataValidationException;
-import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -59,7 +58,7 @@ public abstract class BaseDeviceProfileControllerTest extends AbstractController
     public void beforeTest() throws Exception {
         loginSysAdmin();
 
-        @NotNull Tenant tenant = new Tenant();
+        Tenant tenant = new Tenant();
         tenant.setTitle("My tenant");
         savedTenant = doPost("/api/tenant", tenant, Tenant.class);
         Assert.assertNotNull(savedTenant);
@@ -115,7 +114,7 @@ public abstract class BaseDeviceProfileControllerTest extends AbstractController
 
     @Test
     public void saveDeviceProfileWithViolationOfValidation() throws Exception {
-        @NotNull String msgError = msgErrorFieldLength("name");
+        String msgError = msgErrorFieldLength("name");
 
         Mockito.reset(tbClusterService, auditLogService);
 
@@ -159,12 +158,12 @@ public abstract class BaseDeviceProfileControllerTest extends AbstractController
         Assert.assertEquals(savedDeviceProfile.getName(), foundDeviceProfileInfo.getName());
         Assert.assertEquals(savedDeviceProfile.getType(), foundDeviceProfileInfo.getType());
 
-        @NotNull Customer customer = new Customer();
+        Customer customer = new Customer();
         customer.setTitle("Customer");
         customer.setTenantId(savedTenant.getId());
         Customer savedCustomer = doPost("/api/customer", customer, Customer.class);
 
-        @NotNull User customerUser = new User();
+        User customerUser = new User();
         customerUser.setAuthority(Authority.CUSTOMER_USER);
         customerUser.setTenantId(savedTenant.getId());
         customerUser.setCustomerId(savedCustomer.getId());
@@ -223,11 +222,11 @@ public abstract class BaseDeviceProfileControllerTest extends AbstractController
 
     @Test
     public void testSaveDeviceProfileWithEmptyName() throws Exception {
-        @NotNull DeviceProfile deviceProfile = new DeviceProfile();
+        DeviceProfile deviceProfile = new DeviceProfile();
 
         Mockito.reset(tbClusterService, auditLogService);
 
-        @NotNull String msgError = "Device profile name " + msgErrorShouldBeSpecified;
+        String msgError = "Device profile name " + msgErrorShouldBeSpecified;
         doPost("/api/deviceProfile", deviceProfile)
                 .andExpect(status().isBadRequest())
                 .andExpect(statusReason(containsString(msgError)));
@@ -244,7 +243,7 @@ public abstract class BaseDeviceProfileControllerTest extends AbstractController
 
         Mockito.reset(tbClusterService, auditLogService);
 
-        @NotNull String msgError = "Device profile with such name already exists";
+        String msgError = "Device profile with such name already exists";
         doPost("/api/deviceProfile", deviceProfile2)
                 .andExpect(status().isBadRequest())
                 .andExpect(statusReason(containsString(msgError)));
@@ -263,7 +262,7 @@ public abstract class BaseDeviceProfileControllerTest extends AbstractController
 
         Mockito.reset(tbClusterService, auditLogService);
 
-        @NotNull String msgError = "Device profile with such provision device key already exists";
+        String msgError = "Device profile with such provision device key already exists";
         doPost("/api/deviceProfile", deviceProfile2)
                 .andExpect(status().isBadRequest())
                 .andExpect(statusReason(containsString(msgError)));
@@ -280,7 +279,7 @@ public abstract class BaseDeviceProfileControllerTest extends AbstractController
         Mockito.reset(tbClusterService, auditLogService);
 
         savedDeviceProfile.setType(null);
-        @NotNull String msgError = "Device profile type " + msgErrorShouldBeSpecified;
+        String msgError = "Device profile type " + msgErrorShouldBeSpecified;
         doPost("/api/deviceProfile", savedDeviceProfile)
                 .andExpect(status().isBadRequest())
                 .andExpect(statusReason(containsString(msgError)));
@@ -293,7 +292,7 @@ public abstract class BaseDeviceProfileControllerTest extends AbstractController
     public void testChangeDeviceProfileTransportTypeWithExistingDevices() throws Exception {
         DeviceProfile deviceProfile = this.createDeviceProfile("Device Profile");
         DeviceProfile savedDeviceProfile = doPost("/api/deviceProfile", deviceProfile, DeviceProfile.class);
-        @NotNull Device device = new Device();
+        Device device = new Device();
         device.setName("Test device");
         device.setType("default");
         device.setDeviceProfileId(savedDeviceProfile.getId());
@@ -301,7 +300,7 @@ public abstract class BaseDeviceProfileControllerTest extends AbstractController
 
         Mockito.reset(tbClusterService, auditLogService);
 
-        @NotNull String msgError = "Can't change device profile transport type because devices referenced it";
+        String msgError = "Can't change device profile transport type because devices referenced it";
         savedDeviceProfile.setTransportType(DeviceTransportType.MQTT);
         doPost("/api/deviceProfile", savedDeviceProfile)
                 .andExpect(status().isBadRequest())
@@ -316,7 +315,7 @@ public abstract class BaseDeviceProfileControllerTest extends AbstractController
         DeviceProfile deviceProfile = this.createDeviceProfile("Device Profile");
         DeviceProfile savedDeviceProfile = doPost("/api/deviceProfile", deviceProfile, DeviceProfile.class);
 
-        @NotNull Device device = new Device();
+        Device device = new Device();
         device.setName("Test device");
         device.setType("default");
         device.setDeviceProfileId(savedDeviceProfile.getId());
@@ -335,7 +334,7 @@ public abstract class BaseDeviceProfileControllerTest extends AbstractController
     @Test
     public void testSaveDeviceProfileWithRuleChainFromDifferentTenant() throws Exception {
         loginDifferentTenant();
-        @NotNull RuleChain ruleChain = new RuleChain();
+        RuleChain ruleChain = new RuleChain();
         ruleChain.setName("Different rule chain");
         RuleChain savedRuleChain = doPost("/api/ruleChain", ruleChain, RuleChain.class);
 
@@ -350,7 +349,7 @@ public abstract class BaseDeviceProfileControllerTest extends AbstractController
     @Test
     public void testSaveDeviceProfileWithDashboardFromDifferentTenant() throws Exception {
         loginDifferentTenant();
-        @NotNull Dashboard dashboard = new Dashboard();
+        Dashboard dashboard = new Dashboard();
         dashboard.setTitle("Different dashboard");
         Dashboard savedDashboard = doPost("/api/dashboard", dashboard, Dashboard.class);
 
@@ -367,7 +366,7 @@ public abstract class BaseDeviceProfileControllerTest extends AbstractController
         loginDifferentTenant();
         DeviceProfile differentProfile = createDeviceProfile("Different profile");
         differentProfile = doPost("/api/deviceProfile", differentProfile, DeviceProfile.class);
-        @NotNull SaveOtaPackageInfoRequest firmwareInfo = new SaveOtaPackageInfoRequest();
+        SaveOtaPackageInfoRequest firmwareInfo = new SaveOtaPackageInfoRequest();
         firmwareInfo.setDeviceProfileId(differentProfile.getId());
         firmwareInfo.setType(FIRMWARE);
         firmwareInfo.setTitle("title");
@@ -389,7 +388,7 @@ public abstract class BaseDeviceProfileControllerTest extends AbstractController
         loginDifferentTenant();
         DeviceProfile differentProfile = createDeviceProfile("Different profile");
         differentProfile = doPost("/api/deviceProfile", differentProfile, DeviceProfile.class);
-        @NotNull SaveOtaPackageInfoRequest softwareInfo = new SaveOtaPackageInfoRequest();
+        SaveOtaPackageInfoRequest softwareInfo = new SaveOtaPackageInfoRequest();
         softwareInfo.setDeviceProfileId(differentProfile.getId());
         softwareInfo.setType(SOFTWARE);
         softwareInfo.setTitle("title");
@@ -428,7 +427,7 @@ public abstract class BaseDeviceProfileControllerTest extends AbstractController
 
     @Test
     public void testFindDeviceProfiles() throws Exception {
-        @NotNull List<DeviceProfile> deviceProfiles = new ArrayList<>();
+        List<DeviceProfile> deviceProfiles = new ArrayList<>();
         PageLink pageLink = new PageLink(17);
         PageData<DeviceProfile> pageData = doGetTypedWithPageLink("/api/deviceProfiles?",
                 new TypeReference<>() {
@@ -450,7 +449,7 @@ public abstract class BaseDeviceProfileControllerTest extends AbstractController
                 ActionType.ADDED, ActionType.ADDED, cntEntity, cntEntity, cntEntity);
         Mockito.reset(tbClusterService, auditLogService);
 
-        @NotNull List<DeviceProfile> loadedDeviceProfiles = new ArrayList<>();
+        List<DeviceProfile> loadedDeviceProfiles = new ArrayList<>();
         pageLink = new PageLink(17);
         do {
             pageData = doGetTypedWithPageLink("/api/deviceProfiles?",
@@ -467,7 +466,7 @@ public abstract class BaseDeviceProfileControllerTest extends AbstractController
 
         Assert.assertEquals(deviceProfiles, loadedDeviceProfiles);
 
-        for (@NotNull DeviceProfile deviceProfile : loadedDeviceProfiles) {
+        for (DeviceProfile deviceProfile : loadedDeviceProfiles) {
             if (!deviceProfile.isDefault()) {
                 doDelete("/api/deviceProfile/" + deviceProfile.getId().getId().toString())
                         .andExpect(status().isOk());
@@ -488,7 +487,7 @@ public abstract class BaseDeviceProfileControllerTest extends AbstractController
 
     @Test
     public void testFindDeviceProfileInfos() throws Exception {
-        @NotNull List<DeviceProfile> deviceProfiles = new ArrayList<>();
+        List<DeviceProfile> deviceProfiles = new ArrayList<>();
         PageLink pageLink = new PageLink(17);
         PageData<DeviceProfile> deviceProfilePageData = doGetTypedWithPageLink("/api/deviceProfiles?",
                 new TypeReference<PageData<DeviceProfile>>() {
@@ -502,7 +501,7 @@ public abstract class BaseDeviceProfileControllerTest extends AbstractController
             deviceProfiles.add(doPost("/api/deviceProfile", deviceProfile, DeviceProfile.class));
         }
 
-        @NotNull List<DeviceProfileInfo> loadedDeviceProfileInfos = new ArrayList<>();
+        List<DeviceProfileInfo> loadedDeviceProfileInfos = new ArrayList<>();
         pageLink = new PageLink(17);
         PageData<DeviceProfileInfo> pageData;
         do {
@@ -518,13 +517,13 @@ public abstract class BaseDeviceProfileControllerTest extends AbstractController
         Collections.sort(deviceProfiles, idComparator);
         Collections.sort(loadedDeviceProfileInfos, deviceProfileInfoIdComparator);
 
-        @NotNull List<DeviceProfileInfo> deviceProfileInfos = deviceProfiles.stream().map(deviceProfile -> new DeviceProfileInfo(deviceProfile.getId(),
+        List<DeviceProfileInfo> deviceProfileInfos = deviceProfiles.stream().map(deviceProfile -> new DeviceProfileInfo(deviceProfile.getId(),
                                                                                                                                  deviceProfile.getName(), deviceProfile.getImage(), deviceProfile.getDefaultDashboardId(),
                                                                                                                                  deviceProfile.getType(), deviceProfile.getTransportType())).collect(Collectors.toList());
 
         Assert.assertEquals(deviceProfileInfos, loadedDeviceProfileInfos);
 
-        for (@NotNull DeviceProfile deviceProfile : deviceProfiles) {
+        for (DeviceProfile deviceProfile : deviceProfiles) {
             if (!deviceProfile.isDefault()) {
                 doDelete("/api/deviceProfile/" + deviceProfile.getId().getId().toString())
                         .andExpect(status().isOk());
@@ -904,9 +903,9 @@ public abstract class BaseDeviceProfileControllerTest extends AbstractController
 
     @Test
     public void testSaveDeviceProfileWithSendAckOnValidationException() throws Exception {
-        @NotNull JsonTransportPayloadConfiguration jsonTransportPayloadConfiguration = new JsonTransportPayloadConfiguration();
-        @NotNull MqttDeviceProfileTransportConfiguration mqttDeviceProfileTransportConfiguration = this.createMqttDeviceProfileTransportConfiguration(jsonTransportPayloadConfiguration, true);
-        @NotNull DeviceProfile deviceProfile = this.createDeviceProfile("Device Profile", mqttDeviceProfileTransportConfiguration);
+        JsonTransportPayloadConfiguration jsonTransportPayloadConfiguration = new JsonTransportPayloadConfiguration();
+        MqttDeviceProfileTransportConfiguration mqttDeviceProfileTransportConfiguration = this.createMqttDeviceProfileTransportConfiguration(jsonTransportPayloadConfiguration, true);
+        DeviceProfile deviceProfile = this.createDeviceProfile("Device Profile", mqttDeviceProfileTransportConfiguration);
         DeviceProfile savedDeviceProfile = doPost("/api/deviceProfile", deviceProfile, DeviceProfile.class);
         Assert.assertNotNull(savedDeviceProfile);
         Assert.assertEquals(savedDeviceProfile.getTransportType(), DeviceTransportType.MQTT);
@@ -917,11 +916,10 @@ public abstract class BaseDeviceProfileControllerTest extends AbstractController
         Assert.assertEquals(savedDeviceProfile, foundDeviceProfile);
     }
 
-    @NotNull
     private DeviceProfile testSaveDeviceProfileWithProtoPayloadType(String schema) throws Exception {
-        @NotNull ProtoTransportPayloadConfiguration protoTransportPayloadConfiguration = this.createProtoTransportPayloadConfiguration(schema, schema, null, null);
-        @NotNull MqttDeviceProfileTransportConfiguration mqttDeviceProfileTransportConfiguration = this.createMqttDeviceProfileTransportConfiguration(protoTransportPayloadConfiguration, false);
-        @NotNull DeviceProfile deviceProfile = this.createDeviceProfile("Device Profile", mqttDeviceProfileTransportConfiguration);
+        ProtoTransportPayloadConfiguration protoTransportPayloadConfiguration = this.createProtoTransportPayloadConfiguration(schema, schema, null, null);
+        MqttDeviceProfileTransportConfiguration mqttDeviceProfileTransportConfiguration = this.createMqttDeviceProfileTransportConfiguration(protoTransportPayloadConfiguration, false);
+        DeviceProfile deviceProfile = this.createDeviceProfile("Device Profile", mqttDeviceProfileTransportConfiguration);
         DeviceProfile savedDeviceProfile = doPost("/api/deviceProfile", deviceProfile, DeviceProfile.class);
         Assert.assertNotNull(savedDeviceProfile);
         DeviceProfile foundDeviceProfile = doGet("/api/deviceProfile/" + savedDeviceProfile.getId().getId().toString(), DeviceProfile.class);
@@ -930,9 +928,9 @@ public abstract class BaseDeviceProfileControllerTest extends AbstractController
     }
 
     private void testSaveDeviceProfileWithInvalidProtoSchema(String schema, String errorMsg) throws Exception {
-        @NotNull ProtoTransportPayloadConfiguration protoTransportPayloadConfiguration = this.createProtoTransportPayloadConfiguration(schema, schema, null, null);
-        @NotNull MqttDeviceProfileTransportConfiguration mqttDeviceProfileTransportConfiguration = this.createMqttDeviceProfileTransportConfiguration(protoTransportPayloadConfiguration, false);
-        @NotNull DeviceProfile deviceProfile = this.createDeviceProfile("Device Profile", mqttDeviceProfileTransportConfiguration);
+        ProtoTransportPayloadConfiguration protoTransportPayloadConfiguration = this.createProtoTransportPayloadConfiguration(schema, schema, null, null);
+        MqttDeviceProfileTransportConfiguration mqttDeviceProfileTransportConfiguration = this.createMqttDeviceProfileTransportConfiguration(protoTransportPayloadConfiguration, false);
+        DeviceProfile deviceProfile = this.createDeviceProfile("Device Profile", mqttDeviceProfileTransportConfiguration);
 
         Mockito.reset(tbClusterService, auditLogService);
 
@@ -945,9 +943,9 @@ public abstract class BaseDeviceProfileControllerTest extends AbstractController
     }
 
     private void testSaveDeviceProfileWithInvalidRpcRequestProtoSchema(String schema, String errorMsg) throws Exception {
-        @NotNull ProtoTransportPayloadConfiguration protoTransportPayloadConfiguration = this.createProtoTransportPayloadConfiguration(schema, schema, schema, null);
-        @NotNull MqttDeviceProfileTransportConfiguration mqttDeviceProfileTransportConfiguration = this.createMqttDeviceProfileTransportConfiguration(protoTransportPayloadConfiguration, false);
-        @NotNull DeviceProfile deviceProfile = this.createDeviceProfile("Device Profile", mqttDeviceProfileTransportConfiguration);
+        ProtoTransportPayloadConfiguration protoTransportPayloadConfiguration = this.createProtoTransportPayloadConfiguration(schema, schema, schema, null);
+        MqttDeviceProfileTransportConfiguration mqttDeviceProfileTransportConfiguration = this.createMqttDeviceProfileTransportConfiguration(protoTransportPayloadConfiguration, false);
+        DeviceProfile deviceProfile = this.createDeviceProfile("Device Profile", mqttDeviceProfileTransportConfiguration);
 
         Mockito.reset(tbClusterService, auditLogService);
 

@@ -15,7 +15,6 @@ import org.echoiot.server.service.telemetry.cmd.v1.AttributesSubscriptionCmd;
 import org.echoiot.server.service.telemetry.cmd.v2.*;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.net.URI;
@@ -33,7 +32,7 @@ public class TbTestWebSocketClient extends WebSocketClient {
     private volatile CountDownLatch reply;
     private volatile CountDownLatch update;
 
-    public TbTestWebSocketClient(@NotNull URI serverUri) {
+    public TbTestWebSocketClient(URI serverUri) {
         super(serverUri);
     }
 
@@ -80,13 +79,13 @@ public class TbTestWebSocketClient extends WebSocketClient {
     }
 
     public void send(EntityDataCmd cmd) throws NotYetConnectedException {
-        @NotNull TelemetryPluginCmdsWrapper wrapper = new TelemetryPluginCmdsWrapper();
+        TelemetryPluginCmdsWrapper wrapper = new TelemetryPluginCmdsWrapper();
         wrapper.setEntityDataCmds(Collections.singletonList(cmd));
         this.send(JacksonUtil.toString(wrapper));
     }
 
     public void send(EntityCountCmd cmd) throws NotYetConnectedException {
-        @NotNull TelemetryPluginCmdsWrapper wrapper = new TelemetryPluginCmdsWrapper();
+        TelemetryPluginCmdsWrapper wrapper = new TelemetryPluginCmdsWrapper();
         wrapper.setEntityCountCmds(Collections.singletonList(cmd));
         this.send(JacksonUtil.toString(wrapper));
     }
@@ -124,7 +123,7 @@ public class TbTestWebSocketClient extends WebSocketClient {
     }
 
     public EntityDataUpdate subscribeLatestUpdate(List<EntityKey> keys, EntityFilter entityFilter) {
-        @NotNull EntityDataQuery edq = new EntityDataQuery(entityFilter, new EntityDataPageLink(1, 0, null, null),
+        EntityDataQuery edq = new EntityDataQuery(entityFilter, new EntityDataPageLink(1, 0, null, null),
                                                            Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
         return subscribeLatestUpdate(keys, edq);
     }
@@ -134,9 +133,9 @@ public class TbTestWebSocketClient extends WebSocketClient {
     }
 
     public EntityDataUpdate subscribeLatestUpdate(List<EntityKey> keys, EntityDataQuery edq) {
-        @NotNull LatestValueCmd latestCmd = new LatestValueCmd();
+        LatestValueCmd latestCmd = new LatestValueCmd();
         latestCmd.setKeys(keys);
-        @NotNull EntityDataCmd cmd = new EntityDataCmd(1, edq, null, latestCmd, null);
+        EntityDataCmd cmd = new EntityDataCmd(1, edq, null, latestCmd, null);
         send(cmd);
         return parseDataReply(waitForReply());
     }
@@ -146,34 +145,34 @@ public class TbTestWebSocketClient extends WebSocketClient {
     }
 
     public EntityDataUpdate subscribeTsUpdate(List<String> keys, long startTs, long timeWindow, EntityFilter entityFilter) {
-        @NotNull EntityDataQuery edq = new EntityDataQuery(entityFilter, new EntityDataPageLink(1, 0, null, null),
+        EntityDataQuery edq = new EntityDataQuery(entityFilter, new EntityDataPageLink(1, 0, null, null),
                                                            Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
         return subscribeTsUpdate(keys, startTs, timeWindow, edq);
     }
 
     public EntityDataUpdate subscribeTsUpdate(List<String> keys, long startTs, long timeWindow, EntityDataQuery edq) {
-        @NotNull TimeSeriesCmd tsCmd = new TimeSeriesCmd();
+        TimeSeriesCmd tsCmd = new TimeSeriesCmd();
         tsCmd.setKeys(keys);
         tsCmd.setAgg(Aggregation.NONE);
         tsCmd.setLimit(1000);
         tsCmd.setStartTs(startTs - timeWindow);
         tsCmd.setTimeWindow(timeWindow);
 
-        @NotNull EntityDataCmd cmd = new EntityDataCmd(1, edq, null, null, tsCmd);
+        EntityDataCmd cmd = new EntityDataCmd(1, edq, null, null, tsCmd);
 
         send(cmd);
         return parseDataReply(waitForReply());
     }
 
     @Nullable
-    public JsonNode subscribeForAttributes(@NotNull EntityId entityId, String scope, @NotNull List<String> keys) {
-        @NotNull AttributesSubscriptionCmd cmd = new AttributesSubscriptionCmd();
+    public JsonNode subscribeForAttributes(EntityId entityId, String scope, List<String> keys) {
+        AttributesSubscriptionCmd cmd = new AttributesSubscriptionCmd();
         cmd.setCmdId(1);
         cmd.setEntityType(entityId.getEntityType().toString());
         cmd.setEntityId(entityId.getId().toString());
         cmd.setScope(scope);
         cmd.setKeys(String.join(",", keys));
-        @NotNull TelemetryPluginCmdsWrapper cmdsWrapper = new TelemetryPluginCmdsWrapper();
+        TelemetryPluginCmdsWrapper cmdsWrapper = new TelemetryPluginCmdsWrapper();
         cmdsWrapper.setAttrSubCmds(List.of(cmd));
         JsonNode msg = JacksonUtil.valueToTree(cmdsWrapper);
         ((ObjectNode) msg.get("attrSubCmds").get(0)).remove("type");
@@ -186,21 +185,21 @@ public class TbTestWebSocketClient extends WebSocketClient {
     }
 
     public EntityDataUpdate sendHistoryCmd(List<String> keys, long startTs, long timeWindow, EntityFilter entityFilter) {
-        @NotNull EntityDataQuery edq = new EntityDataQuery(entityFilter,
+        EntityDataQuery edq = new EntityDataQuery(entityFilter,
                                                            new EntityDataPageLink(1, 0, null, null),
                                                            Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
         return sendHistoryCmd(keys, startTs, timeWindow, edq);
     }
 
     public EntityDataUpdate sendHistoryCmd(List<String> keys, long startTs, long timeWindow, EntityDataQuery edq) {
-        @NotNull EntityHistoryCmd historyCmd = new EntityHistoryCmd();
+        EntityHistoryCmd historyCmd = new EntityHistoryCmd();
         historyCmd.setKeys(keys);
         historyCmd.setAgg(Aggregation.NONE);
         historyCmd.setLimit(1000);
         historyCmd.setStartTs(startTs - timeWindow);
         historyCmd.setEndTs(startTs);
 
-        @NotNull EntityDataCmd cmd = new EntityDataCmd(1, edq, historyCmd, null, null);
+        EntityDataCmd cmd = new EntityDataCmd(1, edq, historyCmd, null, null);
 
         send(cmd);
         return parseDataReply(this.waitForReply());
@@ -208,7 +207,7 @@ public class TbTestWebSocketClient extends WebSocketClient {
 
     public EntityDataUpdate sendEntityDataQuery(EntityDataQuery edq) {
         log.warn("sendEntityDataQuery {}", edq);
-        @NotNull EntityDataCmd cmd = new EntityDataCmd(1, edq, null, null, null);
+        EntityDataCmd cmd = new EntityDataCmd(1, edq, null, null, null);
         send(cmd);
         String msg = this.waitForReply();
         return parseDataReply(msg);
@@ -216,7 +215,7 @@ public class TbTestWebSocketClient extends WebSocketClient {
 
     public EntityDataUpdate sendEntityDataQuery(EntityFilter entityFilter) {
         log.warn("sendEntityDataQuery {}", entityFilter);
-        @NotNull EntityDataQuery edq = new EntityDataQuery(entityFilter, new EntityDataPageLink(1, 0, null, null),
+        EntityDataQuery edq = new EntityDataQuery(entityFilter, new EntityDataPageLink(1, 0, null, null),
                                                            Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
         return sendEntityDataQuery(edq);
     }

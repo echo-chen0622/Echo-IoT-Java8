@@ -5,7 +5,6 @@ import lombok.Getter;
 import org.echoiot.server.common.data.device.profile.lwm2m.ObjectAttributes;
 import org.echoiot.server.transport.lwm2m.server.LwM2MOperationType;
 import org.eclipse.leshan.core.response.WriteAttributesResponse;
-import org.jetbrains.annotations.NotNull;
 
 public class TbLwM2MWriteAttributesRequest extends AbstractTbLwM2MTargetedDownlinkRequest<WriteAttributesResponse> {
 
@@ -18,7 +17,6 @@ public class TbLwM2MWriteAttributesRequest extends AbstractTbLwM2MTargetedDownli
         this.attributes = attributes;
     }
 
-    @NotNull
     @Override
     public LwM2MOperationType getType() {
         return LwM2MOperationType.WRITE_ATTRIBUTES;

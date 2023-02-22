@@ -15,7 +15,6 @@ import org.echoiot.server.queue.discovery.NotificationsTopicService;
 import org.echoiot.server.queue.discovery.TbServiceInfoProvider;
 import org.echoiot.server.queue.kafka.*;
 import org.echoiot.server.queue.settings.*;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
@@ -38,27 +37,18 @@ public class KafkaTbCoreQueueFactory implements TbCoreQueueFactory {
     private final TbKafkaConsumerStatsService consumerStatsService;
     private final TbQueueTransportNotificationSettings transportNotificationSettings;
 
-    @NotNull
     private final TbQueueAdmin coreAdmin;
-    @NotNull
     private final TbQueueAdmin ruleEngineAdmin;
-    @NotNull
     private final TbQueueAdmin jsExecutorRequestAdmin;
-    @NotNull
     private final TbQueueAdmin jsExecutorResponseAdmin;
-    @NotNull
     private final TbQueueAdmin transportApiRequestAdmin;
-    @NotNull
     private final TbQueueAdmin transportApiResponseAdmin;
-    @NotNull
     private final TbQueueAdmin notificationAdmin;
-    @NotNull
     private final TbQueueAdmin fwUpdatesAdmin;
-    @NotNull
     private final TbQueueAdmin vcAdmin;
 
     public KafkaTbCoreQueueFactory(NotificationsTopicService notificationsTopicService,
-                                   @NotNull TbKafkaSettings kafkaSettings,
+                                   TbKafkaSettings kafkaSettings,
                                    TbServiceInfoProvider serviceInfoProvider,
                                    TbQueueCoreSettings coreSettings,
                                    TbQueueRuleEngineSettings ruleEngineSettings,
@@ -67,7 +57,7 @@ public class KafkaTbCoreQueueFactory implements TbCoreQueueFactory {
                                    TbQueueVersionControlSettings vcSettings,
                                    TbKafkaConsumerStatsService consumerStatsService,
                                    TbQueueTransportNotificationSettings transportNotificationSettings,
-                                   @NotNull TbKafkaTopicConfigs kafkaTopicConfigs) {
+                                   TbKafkaTopicConfigs kafkaTopicConfigs) {
         this.notificationsTopicService = notificationsTopicService;
         this.kafkaSettings = kafkaSettings;
         this.serviceInfoProvider = serviceInfoProvider;

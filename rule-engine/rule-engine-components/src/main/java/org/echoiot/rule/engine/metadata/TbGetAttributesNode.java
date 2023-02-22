@@ -11,7 +11,6 @@ import org.echoiot.rule.engine.api.util.TbNodeUtils;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.msg.TbMsg;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by Echo on 19.01.18.
@@ -30,13 +29,12 @@ import org.jetbrains.annotations.NotNull;
 public class TbGetAttributesNode extends TbAbstractGetAttributesNode<TbGetAttributesNodeConfiguration, EntityId> {
 
     @Override
-    protected TbGetAttributesNodeConfiguration loadGetAttributesNodeConfig(@NotNull TbNodeConfiguration configuration) throws TbNodeException {
+    protected TbGetAttributesNodeConfiguration loadGetAttributesNodeConfig(TbNodeConfiguration configuration) throws TbNodeException {
         return TbNodeUtils.convert(configuration, TbGetAttributesNodeConfiguration.class);
     }
 
-    @NotNull
     @Override
-    protected ListenableFuture<EntityId> findEntityIdAsync(TbContext ctx, @NotNull TbMsg msg) {
+    protected ListenableFuture<EntityId> findEntityIdAsync(TbContext ctx, TbMsg msg) {
         return Futures.immediateFuture(msg.getOriginator());
     }
 

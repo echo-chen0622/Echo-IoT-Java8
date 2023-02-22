@@ -1,7 +1,6 @@
 package org.echoiot.server.common.data;
 
 import com.datastax.oss.driver.api.core.uuid.Uuids;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,8 +17,8 @@ public class UUIDConverterTest {
 
     @Test
     public void basicUuidToStringTest() {
-        @NotNull UUID original = UUID.fromString("58e0a7d7-eebc-11d8-9669-0800200c9a66");
-        @NotNull String result = UUIDConverter.fromTimeUUID(original);
+        UUID original = UUID.fromString("58e0a7d7-eebc-11d8-9669-0800200c9a66");
+        String result = UUIDConverter.fromTimeUUID(original);
         Assert.assertEquals("1d8eebc58e0a7d796690800200c9a66", result);
     }
 
@@ -31,13 +30,13 @@ public class UUIDConverterTest {
 
     @Test
     public void basicUuidConversion() {
-        @NotNull UUID original = UUID.fromString("3dd11790-abf2-11ea-b151-83a091b9d4cc");
+        UUID original = UUID.fromString("3dd11790-abf2-11ea-b151-83a091b9d4cc");
         Assert.assertEquals(Uuids.unixTimestamp(original), 1591886749577L);
     }
 
     @Test
     public void basicStringToUUIDTest() {
-        @NotNull UUID result = UUIDConverter.fromString("1d8eebc58e0a7d796690800200c9a66");
+        UUID result = UUIDConverter.fromString("1d8eebc58e0a7d796690800200c9a66");
         Assert.assertEquals(UUID.fromString("58e0a7d7-eebc-11d8-9669-0800200c9a66"), result);
     }
 
@@ -48,7 +47,7 @@ public class UUIDConverterTest {
 
     @Test
     public void basicUuidComperisonTest() {
-        @NotNull Random r = new Random(System.currentTimeMillis());
+        Random r = new Random(System.currentTimeMillis());
         for (int i = 0; i < 100000; i++) {
             long ts = System.currentTimeMillis() + 1000L * 60 * 60 * 24 * 365 * 10;
             long before = (long) (Math.random() * ts);
@@ -59,8 +58,8 @@ public class UUIDConverterTest {
                 before = tmp;
             }
 
-            @NotNull String beforeStr = UUIDConverter.fromTimeUUID(Uuids.startOf(before));
-            @NotNull String afterStr = UUIDConverter.fromTimeUUID(Uuids.startOf(after));
+            String beforeStr = UUIDConverter.fromTimeUUID(Uuids.startOf(before));
+            String afterStr = UUIDConverter.fromTimeUUID(Uuids.startOf(after));
 
             if (afterStr.compareTo(beforeStr) < 0) {
                 System.out.println("Before: " + before + " | " + beforeStr);

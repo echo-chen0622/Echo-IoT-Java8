@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.queue.util.TbLwM2mTransportComponent;
 import org.echoiot.server.transport.lwm2m.server.LwM2mTransportServerHelper;
 import org.echoiot.server.transport.lwm2m.server.client.LwM2mClient;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +16,6 @@ import static org.echoiot.server.transport.lwm2m.utils.LwM2MTransportUtil.LOG_LW
 @RequiredArgsConstructor
 public class DefaultLwM2MTelemetryLogService implements LwM2MTelemetryLogService {
 
-    @NotNull
     private final LwM2mTransportServerHelper helper;
 
     @Override

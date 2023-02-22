@@ -14,7 +14,6 @@ import org.echoiot.server.dao.model.sql.RpcEntity;
 import org.echoiot.server.dao.rpc.RpcDao;
 import org.echoiot.server.dao.sql.JpaAbstractDao;
 import org.echoiot.server.dao.util.SqlDao;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
@@ -26,10 +25,8 @@ import java.util.UUID;
 @SqlDao
 public class JpaRpcDao extends JpaAbstractDao<RpcEntity, Rpc> implements RpcDao {
 
-    @NotNull
     private final RpcRepository rpcRepository;
 
-    @NotNull
     @Override
     protected Class<RpcEntity> getEntityClass() {
         return RpcEntity.class;
@@ -40,30 +37,26 @@ public class JpaRpcDao extends JpaAbstractDao<RpcEntity, Rpc> implements RpcDao 
         return rpcRepository;
     }
 
-    @NotNull
     @Override
-    public PageData<Rpc> findAllByDeviceId(@NotNull TenantId tenantId, @NotNull DeviceId deviceId, PageLink pageLink) {
+    public PageData<Rpc> findAllByDeviceId(TenantId tenantId, DeviceId deviceId, PageLink pageLink) {
         return DaoUtil.toPageData(rpcRepository.findAllByTenantIdAndDeviceId(tenantId.getId(), deviceId.getId(), DaoUtil.toPageable(pageLink)));
     }
 
-    @NotNull
     @Override
-    public PageData<Rpc> findAllByDeviceIdAndStatus(@NotNull TenantId tenantId, @NotNull DeviceId deviceId, RpcStatus rpcStatus, PageLink pageLink) {
+    public PageData<Rpc> findAllByDeviceIdAndStatus(TenantId tenantId, DeviceId deviceId, RpcStatus rpcStatus, PageLink pageLink) {
         return DaoUtil.toPageData(rpcRepository.findAllByTenantIdAndDeviceIdAndStatus(tenantId.getId(), deviceId.getId(), rpcStatus, DaoUtil.toPageable(pageLink)));
     }
 
-    @NotNull
     @Override
-    public PageData<Rpc> findAllRpcByTenantId(@NotNull TenantId tenantId, PageLink pageLink) {
+    public PageData<Rpc> findAllRpcByTenantId(TenantId tenantId, PageLink pageLink) {
         return DaoUtil.toPageData(rpcRepository.findAllByTenantId(tenantId.getId(), DaoUtil.toPageable(pageLink)));
     }
 
     @Override
-    public Long deleteOutdatedRpcByTenantId(@NotNull TenantId tenantId, Long expirationTime) {
+    public Long deleteOutdatedRpcByTenantId(TenantId tenantId, Long expirationTime) {
         return rpcRepository.deleteOutdatedRpcByTenantId(tenantId.getId(), expirationTime);
     }
 
-    @NotNull
     @Override
     public EntityType getEntityType() {
         return EntityType.RPC;

@@ -25,7 +25,6 @@ import org.echoiot.server.common.stats.StatsType;
 import org.echoiot.server.dao.entity.EntityService;
 import org.echoiot.server.dao.nosql.CassandraStatementTask;
 import org.echoiot.server.dao.tenant.TbTenantProfileCache;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -45,13 +44,9 @@ public abstract class AbstractBufferedRateExecutor<T extends AsyncTask, F extend
 
     private final long maxWaitTime;
     private final long pollMs;
-    @NotNull
     private final BlockingQueue<AsyncTaskContext<T, V>> queue;
-    @NotNull
     private final ExecutorService dispatcherExecutor;
-    @NotNull
     private final ExecutorService callbackExecutor;
-    @NotNull
     private final ScheduledExecutorService timeoutExecutor;
     private final int concurrencyLimit;
     private final int printQueriesFreq;
@@ -60,7 +55,6 @@ public abstract class AbstractBufferedRateExecutor<T extends AsyncTask, F extend
     private final AtomicInteger printQueriesIdx = new AtomicInteger(0);
 
     protected final AtomicInteger concurrencyLevel;
-    @NotNull
     protected final BufferedRateExecutorStats stats;
 
     private final EntityService entityService;
@@ -70,7 +64,7 @@ public abstract class AbstractBufferedRateExecutor<T extends AsyncTask, F extend
     private final Map<TenantId, String> tenantNamesCache = new HashMap<>();
 
     public AbstractBufferedRateExecutor(int queueLimit, int concurrencyLimit, long maxWaitTime, int dispatcherThreads,
-                                        int callbackThreads, long pollMs, int printQueriesFreq, @NotNull StatsFactory statsFactory,
+                                        int callbackThreads, long pollMs, int printQueriesFreq, StatsFactory statsFactory,
                                         EntityService entityService, TbTenantProfileCache tenantProfileCache, boolean printTenantNames) {
         this.maxWaitTime = maxWaitTime;
         this.pollMs = pollMs;
@@ -81,7 +75,7 @@ public abstract class AbstractBufferedRateExecutor<T extends AsyncTask, F extend
         this.callbackExecutor = EchoiotExecutors.newWorkStealingPool(callbackThreads, "nosql-" + getBufferName() + "-callback");
         this.timeoutExecutor = Executors.newSingleThreadScheduledExecutor(EchoiotThreadFactory.forName("nosql-" + getBufferName() + "-timeout"));
         this.stats = new BufferedRateExecutorStats(statsFactory);
-        @NotNull String concurrencyLevelKey = StatsType.RATE_EXECUTOR.getName() + "." + CONCURRENCY_LEVEL + getBufferName(); //metric name may change with buffer name suffix
+        String concurrencyLevelKey = StatsType.RATE_EXECUTOR.getName() + "." + CONCURRENCY_LEVEL + getBufferName(); //metric name may change with buffer name suffix
         this.concurrencyLevel = statsFactory.createGauge(concurrencyLevelKey, new AtomicInteger(0));
 
         this.entityService = entityService;
@@ -94,7 +88,7 @@ public abstract class AbstractBufferedRateExecutor<T extends AsyncTask, F extend
     }
 
     @Override
-    public F submit(@NotNull T task) {
+    public F submit(T task) {
         SettableFuture<V> settableFuture = create();
         F result = wrap(task, settableFuture);
 
@@ -109,7 +103,7 @@ public abstract class AbstractBufferedRateExecutor<T extends AsyncTask, F extend
             if (task.getTenantId() == null) {
                 log.info("Invalid task received: {}", task);
             } else if (!task.getTenantId().isNullUid()) {
-                @NotNull TbRateLimits rateLimits = perTenantLimits.computeIfAbsent(
+                TbRateLimits rateLimits = perTenantLimits.computeIfAbsent(
                         task.getTenantId(), id -> new TbRateLimits(tenantProfileConfiguration.getCassandraQueryTenantRateLimitsConfiguration())
                                                                                   );
                 if (!rateLimits.tryConsume()) {
@@ -163,7 +157,7 @@ public abstract class AbstractBufferedRateExecutor<T extends AsyncTask, F extend
             try {
                 if (curLvl <= concurrencyLimit) {
                     taskCtx = queue.take();
-                    @NotNull final AsyncTaskContext<T, V> finalTaskCtx = taskCtx;
+                    final AsyncTaskContext<T, V> finalTaskCtx = taskCtx;
                     if (printQueriesFreq > 0) {
                         if (printQueriesIdx.incrementAndGet() >= printQueriesFreq) {
                             printQueriesIdx.set(0);
@@ -224,7 +218,7 @@ public abstract class AbstractBufferedRateExecutor<T extends AsyncTask, F extend
         log.info("Buffered rate executor thread stopped");
     }
 
-    private void logTask(String action, @NotNull AsyncTaskContext<T, V> taskCtx) {
+    private void logTask(String action, AsyncTaskContext<T, V> taskCtx) {
         if (log.isTraceEnabled()) {
             if (taskCtx.getTask() instanceof CassandraStatementTask) {
                 String query = queryToString(taskCtx);
@@ -237,11 +231,11 @@ public abstract class AbstractBufferedRateExecutor<T extends AsyncTask, F extend
         }
     }
 
-    private String queryToString(@NotNull AsyncTaskContext<T, V> taskCtx) {
+    private String queryToString(AsyncTaskContext<T, V> taskCtx) {
         CassandraStatementTask cassStmtTask = (CassandraStatementTask) taskCtx.getTask();
         if (cassStmtTask.getStatement() instanceof BoundStatement) {
-            @NotNull BoundStatement stmt = (BoundStatement) cassStmtTask.getStatement();
-            @NotNull String query = stmt.getPreparedStatement().getQuery();
+            BoundStatement stmt = (BoundStatement) cassStmtTask.getStatement();
+            String query = stmt.getPreparedStatement().getQuery();
             try {
                 query = toStringWithValues(stmt, ProtocolVersion.V5);
             } catch (Exception e) {
@@ -253,16 +247,15 @@ public abstract class AbstractBufferedRateExecutor<T extends AsyncTask, F extend
         }
     }
 
-    @NotNull
-    private static String toStringWithValues(@NotNull BoundStatement boundStatement, @NotNull ProtocolVersion protocolVersion) {
-        @NotNull CodecRegistry codecRegistry = boundStatement.codecRegistry();
-        @NotNull PreparedStatement preparedStatement = boundStatement.getPreparedStatement();
-        @NotNull String query = preparedStatement.getQuery();
-        @NotNull ColumnDefinitions defs = preparedStatement.getVariableDefinitions();
+    private static String toStringWithValues(BoundStatement boundStatement, ProtocolVersion protocolVersion) {
+        CodecRegistry codecRegistry = boundStatement.codecRegistry();
+        PreparedStatement preparedStatement = boundStatement.getPreparedStatement();
+        String query = preparedStatement.getQuery();
+        ColumnDefinitions defs = preparedStatement.getVariableDefinitions();
         int index = 0;
-        for (@NotNull ColumnDefinition def : defs) {
-            @NotNull DataType type = def.getType();
-            @NotNull TypeCodec<Object> codec = codecRegistry.codecFor(type);
+        for (ColumnDefinition def : defs) {
+            DataType type = def.getType();
+            TypeCodec<Object> codec = codecRegistry.codecFor(type);
             if (boundStatement.getBytesUnsafe(index) != null) {
                 @org.jetbrains.annotations.Nullable Object value = codec.decode(boundStatement.getBytesUnsafe(index), protocolVersion);
                 String replacement = Matcher.quoteReplacement(codec.format(value));
@@ -288,7 +281,7 @@ public abstract class AbstractBufferedRateExecutor<T extends AsyncTask, F extend
                 || concurrencyLevel.get() > 0
                 || stats.getStatsCounters().stream().anyMatch(counter -> counter.get() > 0)
         ) {
-            @NotNull StringBuilder statsBuilder = new StringBuilder();
+            StringBuilder statsBuilder = new StringBuilder();
 
             statsBuilder.append("queueSize").append(" = [").append(queueSize).append("] ");
             stats.getStatsCounters().forEach(counter -> {

@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.californium.core.observe.ObserveRelation;
 import org.eclipse.californium.core.server.resources.CoapExchange;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -12,9 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @RequiredArgsConstructor
 public class TbCoapObservationState {
 
-    @NotNull
     private final CoapExchange exchange;
-    @NotNull
     private final String token;
     private final AtomicInteger observeCounter = new AtomicInteger(0);
     private volatile ObserveRelation observeRelation;

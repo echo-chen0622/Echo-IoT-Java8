@@ -5,7 +5,6 @@ import lombok.ToString;
 import org.echoiot.server.common.msg.queue.ServiceType;
 import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
 import org.echoiot.server.queue.discovery.QueueKey;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
@@ -19,7 +18,7 @@ public class PartitionChangeEvent extends TbApplicationEvent {
     @Getter
     private final Set<TopicPartitionInfo> partitions;
 
-    public PartitionChangeEvent(@NotNull Object source, QueueKey queueKey, Set<TopicPartitionInfo> partitions) {
+    public PartitionChangeEvent(Object source, QueueKey queueKey, Set<TopicPartitionInfo> partitions) {
         super(source);
         this.queueKey = queueKey;
         this.partitions = partitions;

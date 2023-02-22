@@ -6,7 +6,6 @@ import org.echoiot.server.common.data.alarm.Alarm;
 import org.echoiot.server.common.data.alarm.AlarmInfo;
 import org.echoiot.server.dao.util.mapping.JsonStringType;
 import org.hibernate.annotations.TypeDef;
-import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -24,11 +23,11 @@ public final class AlarmEntity extends AbstractAlarmEntity<Alarm> {
         super();
     }
 
-    public AlarmEntity(@NotNull AlarmInfo alarmInfo) {
+    public AlarmEntity(AlarmInfo alarmInfo) {
         super(alarmInfo);
     }
 
-    public AlarmEntity(@NotNull Alarm alarm) {
+    public AlarmEntity(Alarm alarm) {
         super(alarm);
     }
 

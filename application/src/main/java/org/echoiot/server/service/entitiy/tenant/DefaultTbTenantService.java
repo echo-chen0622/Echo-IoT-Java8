@@ -13,7 +13,6 @@ import org.echoiot.server.service.entitiy.AbstractTbEntityService;
 import org.echoiot.server.service.entitiy.queue.TbQueueService;
 import org.echoiot.server.service.install.InstallScripts;
 import org.echoiot.server.service.sync.vc.EntitiesVersionControlService;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -24,22 +23,15 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class DefaultTbTenantService extends AbstractTbEntityService implements TbTenantService {
 
-    @NotNull
     private final TenantService tenantService;
-    @NotNull
     private final TbTenantProfileCache tenantProfileCache;
-    @NotNull
     private final InstallScripts installScripts;
-    @NotNull
     private final TbQueueService tbQueueService;
-    @NotNull
     private final TenantProfileService tenantProfileService;
-    @NotNull
     private final EntitiesVersionControlService versionControlService;
 
-    @NotNull
     @Override
-    public Tenant save(@NotNull Tenant tenant) throws Exception {
+    public Tenant save(Tenant tenant) throws Exception {
         boolean created = tenant.getId() == null;
         Tenant oldTenant = !created ? tenantService.findTenantById(tenant.getId()) : null;
 
@@ -59,7 +51,7 @@ public class DefaultTbTenantService extends AbstractTbEntityService implements T
     }
 
     @Override
-    public void delete(@NotNull Tenant tenant) throws Exception {
+    public void delete(Tenant tenant) throws Exception {
         TenantId tenantId = tenant.getId();
         tenantService.deleteTenant(tenantId);
         tenantProfileCache.evict(tenantId);

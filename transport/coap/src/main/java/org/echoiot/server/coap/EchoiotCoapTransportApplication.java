@@ -1,6 +1,5 @@
 package org.echoiot.server.coap;
 
-import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -20,7 +19,7 @@ public class EchoiotCoapTransportApplication {
 
     private static final String DEFAULT_SPRING_CONFIG_PARAM = SPRING_CONFIG_NAME_KEY + "=" + "tb-coap-transport";
 
-    public static void main(@NotNull String[] args) {
+    public static void main(String[] args) {
         SpringApplication.run(EchoiotCoapTransportApplication.class, updateArguments(args, DEFAULT_SPRING_CONFIG_PARAM));
     }
 

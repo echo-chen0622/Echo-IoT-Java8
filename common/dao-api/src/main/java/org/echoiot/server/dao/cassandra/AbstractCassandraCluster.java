@@ -9,7 +9,6 @@ import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.dao.cassandra.guava.GuavaSession;
 import org.echoiot.server.dao.cassandra.guava.GuavaSessionBuilder;
 import org.echoiot.server.dao.cassandra.guava.GuavaSessionUtils;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.Profiles;
@@ -90,7 +89,7 @@ public abstract class AbstractCassandraCluster {
         session = sessionBuilder.build();
 
         if (this.metrics && this.jmx) {
-            @NotNull MetricRegistry registry =
+            MetricRegistry registry =
                     session.getMetrics().orElseThrow(
                             () -> new IllegalStateException("Metrics are disabled"))
                     .getRegistry();

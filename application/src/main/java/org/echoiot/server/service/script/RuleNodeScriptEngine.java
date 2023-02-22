@@ -10,7 +10,6 @@ import org.echoiot.script.api.ScriptType;
 import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.msg.TbMsg;
-import org.jetbrains.annotations.NotNull;
 
 import javax.script.ScriptException;
 import java.util.List;
@@ -43,9 +42,8 @@ public abstract class RuleNodeScriptEngine<T extends ScriptInvokeService, R> imp
 
     protected abstract Object[] prepareArgs(TbMsg msg);
 
-    @NotNull
     @Override
-    public ListenableFuture<List<TbMsg>> executeUpdateAsync(@NotNull TbMsg msg) {
+    public ListenableFuture<List<TbMsg>> executeUpdateAsync(TbMsg msg) {
         ListenableFuture<R> result = executeScriptAsync(msg);
         return Futures.transformAsync(result,
                 json -> executeUpdateTransform(msg, json),
@@ -54,9 +52,8 @@ public abstract class RuleNodeScriptEngine<T extends ScriptInvokeService, R> imp
 
     protected abstract ListenableFuture<List<TbMsg>> executeUpdateTransform(TbMsg msg, R result);
 
-    @NotNull
     @Override
-    public ListenableFuture<TbMsg> executeGenerateAsync(@NotNull TbMsg prevMsg) {
+    public ListenableFuture<TbMsg> executeGenerateAsync(TbMsg prevMsg) {
         return Futures.transformAsync(executeScriptAsync(prevMsg),
                 result -> executeGenerateTransform(prevMsg, result),
                 MoreExecutors.directExecutor());
@@ -64,16 +61,14 @@ public abstract class RuleNodeScriptEngine<T extends ScriptInvokeService, R> imp
 
     protected abstract ListenableFuture<TbMsg> executeGenerateTransform(TbMsg prevMsg, R result);
 
-    @NotNull
     @Override
-    public ListenableFuture<String> executeToStringAsync(@NotNull TbMsg msg) {
+    public ListenableFuture<String> executeToStringAsync(TbMsg msg) {
         return Futures.transformAsync(executeScriptAsync(msg), this::executeToStringTransform, MoreExecutors.directExecutor());
     }
 
 
-    @NotNull
     @Override
-    public ListenableFuture<Boolean> executeFilterAsync(@NotNull TbMsg msg) {
+    public ListenableFuture<Boolean> executeFilterAsync(TbMsg msg) {
         return Futures.transformAsync(executeScriptAsync(msg),
                 this::executeFilterTransform,
                 MoreExecutors.directExecutor());
@@ -85,21 +80,19 @@ public abstract class RuleNodeScriptEngine<T extends ScriptInvokeService, R> imp
 
     protected abstract ListenableFuture<Set<String>> executeSwitchTransform(R result);
 
-    @NotNull
     @Override
-    public ListenableFuture<Set<String>> executeSwitchAsync(@NotNull TbMsg msg) {
+    public ListenableFuture<Set<String>> executeSwitchAsync(TbMsg msg) {
         return Futures.transformAsync(executeScriptAsync(msg),
                 this::executeSwitchTransform,
                 MoreExecutors.directExecutor()); //usually runs in a callbackExecutor
     }
 
-    ListenableFuture<R> executeScriptAsync(@NotNull TbMsg msg) {
+    ListenableFuture<R> executeScriptAsync(TbMsg msg) {
         log.trace("execute script async, msg {}", msg);
         Object[] inArgs = prepareArgs(msg);
         return executeScriptAsync(msg.getCustomerId(), inArgs[0], inArgs[1], inArgs[2]);
     }
 
-    @NotNull
     ListenableFuture<R> executeScriptAsync(CustomerId customerId, Object... args) {
         return Futures.transformAsync(scriptInvokeService.invokeScript(tenantId, customerId, this.scriptId, args),
                 o -> {

@@ -3,7 +3,6 @@ package org.echoiot.server.dao.asset;
 import lombok.Data;
 import org.echoiot.server.common.data.id.AssetProfileId;
 import org.echoiot.server.common.data.id.TenantId;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 
@@ -24,17 +23,14 @@ public class AssetProfileCacheKey implements Serializable {
         this.defaultProfile = defaultProfile;
     }
 
-    @NotNull
     public static AssetProfileCacheKey fromName(TenantId tenantId, String name) {
         return new AssetProfileCacheKey(tenantId, name, null, false);
     }
 
-    @NotNull
     public static AssetProfileCacheKey fromId(AssetProfileId id) {
         return new AssetProfileCacheKey(null, null, id, false);
     }
 
-    @NotNull
     public static AssetProfileCacheKey defaultProfile(TenantId tenantId) {
         return new AssetProfileCacheKey(tenantId, null, null, true);
     }

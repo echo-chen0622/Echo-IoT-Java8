@@ -1,6 +1,5 @@
 package org.echoiot.server.transport.lwm2m.server.ota.software;
 
-import org.jetbrains.annotations.NotNull;
 
 public enum LwM2MSoftwareUpdateStrategy {
     BINARY(1, "ObjectId 9, Binary"),
@@ -14,9 +13,8 @@ public enum LwM2MSoftwareUpdateStrategy {
         this.type = type;
     }
 
-    @NotNull
     public static LwM2MSoftwareUpdateStrategy fromStrategySwByType(String type) {
-        for (@NotNull LwM2MSoftwareUpdateStrategy to : LwM2MSoftwareUpdateStrategy.values()) {
+        for (LwM2MSoftwareUpdateStrategy to : LwM2MSoftwareUpdateStrategy.values()) {
             if (to.type.equals(type)) {
                 return to;
             }
@@ -24,9 +22,8 @@ public enum LwM2MSoftwareUpdateStrategy {
         throw new IllegalArgumentException(String.format("Unsupported SW Strategy type  : %s", type));
     }
 
-    @NotNull
     public static LwM2MSoftwareUpdateStrategy fromStrategySwByCode(int code) {
-        for (@NotNull LwM2MSoftwareUpdateStrategy to : LwM2MSoftwareUpdateStrategy.values()) {
+        for (LwM2MSoftwareUpdateStrategy to : LwM2MSoftwareUpdateStrategy.values()) {
             if (to.code == code) {
                 return to;
             }

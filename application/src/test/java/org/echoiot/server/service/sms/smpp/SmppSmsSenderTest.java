@@ -2,7 +2,6 @@ package org.echoiot.server.service.sms.smpp;
 
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.sms.config.SmppSmsProviderConfiguration;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,7 +26,7 @@ public class SmppSmsSenderTest {
 
     @Before
     public void beforeEach() throws Exception {
-        @NotNull Constructor<SmppSmsSender> constructor = SmppSmsSender.class.getDeclaredConstructor();
+        Constructor<SmppSmsSender> constructor = SmppSmsSender.class.getDeclaredConstructor();
         constructor.setAccessible(true);
         smppSmsSender = Mockito.spy(constructor.newInstance());
 
@@ -44,8 +43,8 @@ public class SmppSmsSenderTest {
         when(smppSession.submit(any())).thenReturn(new SubmitSMResp());
         setDefaultSmppConfig();
 
-        @NotNull String number = "123545";
-        @NotNull String message = "message";
+        String number = "123545";
+        String message = "message";
         smppSmsSender.sendSms(number, message);
 
         verify(smppSmsSender, never()).initSmppSession();

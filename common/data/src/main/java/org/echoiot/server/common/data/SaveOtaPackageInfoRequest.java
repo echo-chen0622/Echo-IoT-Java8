@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.jetbrains.annotations.NotNull;
 
 @ApiModel
 @Data
@@ -15,12 +14,12 @@ public class SaveOtaPackageInfoRequest extends OtaPackageInfo {
     @ApiModelProperty(position = 16, value = "Indicates OTA Package uses url. Should be 'true' if uses url or 'false' if will be used data.", example = "true", accessMode = ApiModelProperty.AccessMode.READ_ONLY)
     boolean usesUrl;
 
-    public SaveOtaPackageInfoRequest(@NotNull OtaPackageInfo otaPackageInfo, boolean usesUrl) {
+    public SaveOtaPackageInfoRequest(OtaPackageInfo otaPackageInfo, boolean usesUrl) {
         super(otaPackageInfo);
         this.usesUrl = usesUrl;
     }
 
-    public SaveOtaPackageInfoRequest(@NotNull SaveOtaPackageInfoRequest saveOtaPackageInfoRequest) {
+    public SaveOtaPackageInfoRequest(SaveOtaPackageInfoRequest saveOtaPackageInfoRequest) {
         super(saveOtaPackageInfoRequest);
         this.usesUrl = saveOtaPackageInfoRequest.isUsesUrl();
     }

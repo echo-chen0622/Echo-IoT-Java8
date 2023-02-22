@@ -5,7 +5,6 @@ import org.echoiot.server.common.msg.queue.TopicPartitionInfo;
 import org.echoiot.server.queue.TbQueueCallback;
 import org.echoiot.server.queue.TbQueueMsg;
 import org.echoiot.server.queue.TbQueueProducer;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Data
@@ -26,7 +25,7 @@ public class InMemoryTbQueueProducer<T extends TbQueueMsg> implements TbQueuePro
     }
 
     @Override
-    public void send(@NotNull TopicPartitionInfo tpi, T msg, @Nullable TbQueueCallback callback) {
+    public void send(TopicPartitionInfo tpi, T msg, @Nullable TbQueueCallback callback) {
         boolean result = storage.put(tpi.getFullTopicName(), msg);
         if (result) {
             if (callback != null) {

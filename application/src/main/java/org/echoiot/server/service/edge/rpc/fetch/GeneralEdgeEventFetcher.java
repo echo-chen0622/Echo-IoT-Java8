@@ -9,17 +9,13 @@ import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.common.data.page.SortOrder;
 import org.echoiot.server.common.data.page.TimePageLink;
 import org.echoiot.server.dao.edge.EdgeEventService;
-import org.jetbrains.annotations.NotNull;
 
 @AllArgsConstructor
 public class GeneralEdgeEventFetcher implements EdgeEventFetcher {
 
-    @NotNull
     private final Long queueStartTs;
-    @NotNull
     private final EdgeEventService edgeEventService;
 
-    @NotNull
     @Override
     public PageLink getPageLink(int pageSize) {
         return new TimePageLink(
@@ -32,7 +28,7 @@ public class GeneralEdgeEventFetcher implements EdgeEventFetcher {
     }
 
     @Override
-    public PageData<EdgeEvent> fetchEdgeEvents(TenantId tenantId, @NotNull Edge edge, PageLink pageLink) {
+    public PageData<EdgeEvent> fetchEdgeEvents(TenantId tenantId, Edge edge, PageLink pageLink) {
         return edgeEventService.findEdgeEvents(tenantId, edge.getId(), (TimePageLink) pageLink, true);
     }
 }

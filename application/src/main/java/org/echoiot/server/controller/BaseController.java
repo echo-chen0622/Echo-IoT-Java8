@@ -82,7 +82,6 @@ import org.echoiot.server.service.state.DeviceStateService;
 import org.echoiot.server.service.sync.vc.EntitiesVersionControlService;
 import org.echoiot.server.service.telemetry.AlarmSubscriptionService;
 import org.echoiot.server.service.telemetry.TelemetrySubscriptionService;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -247,8 +246,8 @@ public abstract class BaseController {
     protected boolean edgesEnabled;
 
     @ExceptionHandler(Exception.class)
-    public void handleControllerException(@NotNull Exception e, @NotNull HttpServletResponse response) {
-        @NotNull EchoiotException echoiotException = handleException(e);
+    public void handleControllerException(Exception e, HttpServletResponse response) {
+        EchoiotException echoiotException = handleException(e);
         if (echoiotException.getErrorCode() == EchoiotErrorCode.GENERAL && echoiotException.getCause() instanceof Exception
             && StringUtils.equals(echoiotException.getCause().getMessage(), echoiotException.getMessage())) {
             e = (Exception) echoiotException.getCause();
@@ -259,7 +258,7 @@ public abstract class BaseController {
     }
 
     @ExceptionHandler(EchoiotException.class)
-    public void handleEchoiotException(@NotNull EchoiotException ex, @NotNull HttpServletResponse response) {
+    public void handleEchoiotException(EchoiotException ex, HttpServletResponse response) {
         errorResponseHandler.handle(ex, response);
     }
 
@@ -276,14 +275,12 @@ public abstract class BaseController {
      *  }
      * }
      * */
-    @NotNull
     @Deprecated
-    EchoiotException handleException(@NotNull Exception exception) {
+    EchoiotException handleException(Exception exception) {
         return handleException(exception, true);
     }
 
-    @NotNull
-    private EchoiotException handleException(@NotNull Exception exception, boolean logException) {
+    private EchoiotException handleException(Exception exception, boolean logException) {
         if (logException && logControllerErrorStackTrace) {
             log.error("Error [{}]", exception.getMessage(), exception);
         }
@@ -311,32 +308,30 @@ public abstract class BaseController {
      * Handles validation error for controller method arguments annotated with @{@link javax.validation.Valid}
      * */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public void handleValidationError(@NotNull MethodArgumentNotValidException e, @NotNull HttpServletResponse response) {
-        @NotNull String errorMessage = "Validation error: " + e.getBindingResult().getAllErrors().stream()
+    public void handleValidationError(MethodArgumentNotValidException e, HttpServletResponse response) {
+        String errorMessage = "Validation error: " + e.getBindingResult().getAllErrors().stream()
                                                                .map(DefaultMessageSourceResolvable::getDefaultMessage)
                                                                .collect(Collectors.joining(", "));
-        @NotNull EchoiotException echoiotException = new EchoiotException(errorMessage, EchoiotErrorCode.BAD_REQUEST_PARAMS);
+        EchoiotException echoiotException = new EchoiotException(errorMessage, EchoiotErrorCode.BAD_REQUEST_PARAMS);
         handleEchoiotException(echoiotException, response);
     }
 
-    <T> T checkNotNull(@NotNull T reference) throws EchoiotException {
+    <T> T checkNotNull(T reference) throws EchoiotException {
         return checkNotNull(reference, "Requested item wasn't found!");
     }
 
-    @NotNull
-    <T> T checkNotNull(@NotNull T reference, String notFoundMessage) throws EchoiotException {
+    <T> T checkNotNull(T reference, String notFoundMessage) throws EchoiotException {
         if (reference == null) {
             throw new EchoiotException(notFoundMessage, EchoiotErrorCode.ITEM_NOT_FOUND);
         }
         return reference;
     }
 
-    <T> T checkNotNull(@NotNull Optional<T> reference) throws EchoiotException {
+    <T> T checkNotNull(Optional<T> reference) throws EchoiotException {
         return checkNotNull(reference, "Requested item wasn't found!");
     }
 
-    @NotNull
-    <T> T checkNotNull(@NotNull Optional<T> reference, String notFoundMessage) throws EchoiotException {
+    <T> T checkNotNull(Optional<T> reference, String notFoundMessage) throws EchoiotException {
         if (reference.isPresent()) {
             return reference.get();
         } else {
@@ -350,7 +345,7 @@ public abstract class BaseController {
         }
     }
 
-    void checkArrayParameter(String name, @NotNull String[] params) throws EchoiotException {
+    void checkArrayParameter(String name, String[] params) throws EchoiotException {
         if (params == null || params.length == 0) {
             throw new EchoiotException("Parameter '" + name + "' can't be empty!", EchoiotErrorCode.BAD_REQUEST_PARAMS);
         } else {
@@ -360,8 +355,7 @@ public abstract class BaseController {
         }
     }
 
-    @NotNull
-    UUID toUUID(@NotNull String id) throws EchoiotException {
+    UUID toUUID(String id) throws EchoiotException {
         try {
             return UUID.fromString(id);
         } catch (IllegalArgumentException e) {
@@ -369,13 +363,12 @@ public abstract class BaseController {
         }
     }
 
-    @NotNull
-    PageLink createPageLink(int pageSize, int page, String textSearch, String sortProperty, @NotNull String sortOrder) throws EchoiotException {
+    PageLink createPageLink(int pageSize, int page, String textSearch, String sortProperty, String sortOrder) throws EchoiotException {
         if (StringUtils.isNotEmpty(sortProperty)) {
             if (!Validator.isValidProperty(sortProperty)) {
                 throw new IllegalArgumentException("Invalid sort property");
             }
-            @NotNull SortOrder.Direction direction = SortOrder.Direction.ASC;
+            SortOrder.Direction direction = SortOrder.Direction.ASC;
             if (StringUtils.isNotEmpty(sortOrder)) {
                 try {
                     direction = SortOrder.Direction.valueOf(sortOrder.toUpperCase());
@@ -383,17 +376,16 @@ public abstract class BaseController {
                     throw new EchoiotException("Unsupported sort order '" + sortOrder + "'! Only 'ASC' or 'DESC' types are allowed.", EchoiotErrorCode.BAD_REQUEST_PARAMS);
                 }
             }
-            @NotNull SortOrder sort = new SortOrder(sortProperty, direction);
+            SortOrder sort = new SortOrder(sortProperty, direction);
             return new PageLink(pageSize, page, textSearch, sort);
         } else {
             return new PageLink(pageSize, page, textSearch);
         }
     }
 
-    @NotNull
     TimePageLink createTimePageLink(int pageSize, int page, String textSearch,
-                                    String sortProperty, @NotNull String sortOrder, Long startTime, Long endTime) throws EchoiotException {
-        @NotNull PageLink pageLink = this.createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
+                                    String sortProperty, String sortOrder, Long startTime, Long endTime) throws EchoiotException {
+        PageLink pageLink = this.createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
         return new TimePageLink(pageLink, startTime, endTime);
     }
 
@@ -406,7 +398,7 @@ public abstract class BaseController {
         }
     }
 
-    Tenant checkTenantId(@NotNull TenantId tenantId, Operation operation) throws EchoiotException {
+    Tenant checkTenantId(TenantId tenantId, Operation operation) throws EchoiotException {
         try {
             validateId(tenantId, INCORRECT_TENANT_ID + tenantId);
             Tenant tenant = tenantService.findTenantById(tenantId);
@@ -418,7 +410,7 @@ public abstract class BaseController {
         }
     }
 
-    TenantInfo checkTenantInfoId(@NotNull TenantId tenantId, Operation operation) throws EchoiotException {
+    TenantInfo checkTenantInfoId(TenantId tenantId, Operation operation) throws EchoiotException {
         try {
             validateId(tenantId, INCORRECT_TENANT_ID + tenantId);
             TenantInfo tenant = tenantService.findTenantInfoById(tenantId);
@@ -430,7 +422,7 @@ public abstract class BaseController {
         }
     }
 
-    TenantProfile checkTenantProfileId(@NotNull TenantProfileId tenantProfileId, Operation operation) throws EchoiotException {
+    TenantProfile checkTenantProfileId(TenantProfileId tenantProfileId, Operation operation) throws EchoiotException {
         try {
             Validator.validateId(tenantProfileId, "Incorrect tenantProfileId " + tenantProfileId);
             TenantProfile tenantProfile = tenantProfileService.findTenantProfileById(getTenantId(), tenantProfileId);
@@ -446,7 +438,7 @@ public abstract class BaseController {
         return getCurrentUser().getTenantId();
     }
 
-    Customer checkCustomerId(@NotNull CustomerId customerId, Operation operation) throws EchoiotException {
+    Customer checkCustomerId(CustomerId customerId, Operation operation) throws EchoiotException {
         try {
             Validator.validateId(customerId, "Incorrect customerId " + customerId);
             Customer customer = customerService.findCustomerById(getTenantId(), customerId);
@@ -458,7 +450,7 @@ public abstract class BaseController {
         }
     }
 
-    User checkUserId(@NotNull UserId userId, Operation operation) throws EchoiotException {
+    User checkUserId(UserId userId, Operation operation) throws EchoiotException {
         try {
             Validator.validateId(userId, "Incorrect userId " + userId);
             User user = userService.findUserById(getCurrentUser().getTenantId(), userId);
@@ -479,7 +471,7 @@ public abstract class BaseController {
         }
     }
 
-    protected void checkEntityId(@NotNull EntityId entityId, Operation operation) throws EchoiotException {
+    protected void checkEntityId(EntityId entityId, Operation operation) throws EchoiotException {
         try {
             if (entityId == null) {
                 throw new EchoiotException("Parameter entityId can't be empty!", EchoiotErrorCode.BAD_REQUEST_PARAMS);
@@ -551,7 +543,7 @@ public abstract class BaseController {
         }
     }
 
-    Device checkDeviceId(@NotNull DeviceId deviceId, Operation operation) throws EchoiotException {
+    Device checkDeviceId(DeviceId deviceId, Operation operation) throws EchoiotException {
         try {
             Validator.validateId(deviceId, "Incorrect deviceId " + deviceId);
             Device device = deviceService.findDeviceById(getCurrentUser().getTenantId(), deviceId);
@@ -563,7 +555,7 @@ public abstract class BaseController {
         }
     }
 
-    DeviceInfo checkDeviceInfoId(@NotNull DeviceId deviceId, Operation operation) throws EchoiotException {
+    DeviceInfo checkDeviceInfoId(DeviceId deviceId, Operation operation) throws EchoiotException {
         try {
             Validator.validateId(deviceId, "Incorrect deviceId " + deviceId);
             DeviceInfo device = deviceService.findDeviceInfoById(getCurrentUser().getTenantId(), deviceId);
@@ -575,7 +567,7 @@ public abstract class BaseController {
         }
     }
 
-    DeviceProfile checkDeviceProfileId(@NotNull DeviceProfileId deviceProfileId, Operation operation) throws EchoiotException {
+    DeviceProfile checkDeviceProfileId(DeviceProfileId deviceProfileId, Operation operation) throws EchoiotException {
         try {
             Validator.validateId(deviceProfileId, "Incorrect deviceProfileId " + deviceProfileId);
             DeviceProfile deviceProfile = deviceProfileService.findDeviceProfileById(getCurrentUser().getTenantId(), deviceProfileId);
@@ -587,7 +579,7 @@ public abstract class BaseController {
         }
     }
 
-    protected EntityView checkEntityViewId(@NotNull EntityViewId entityViewId, Operation operation) throws EchoiotException {
+    protected EntityView checkEntityViewId(EntityViewId entityViewId, Operation operation) throws EchoiotException {
         try {
             Validator.validateId(entityViewId, "Incorrect entityViewId " + entityViewId);
             EntityView entityView = entityViewService.findEntityViewById(getCurrentUser().getTenantId(), entityViewId);
@@ -599,7 +591,7 @@ public abstract class BaseController {
         }
     }
 
-    EntityViewInfo checkEntityViewInfoId(@NotNull EntityViewId entityViewId, Operation operation) throws EchoiotException {
+    EntityViewInfo checkEntityViewInfoId(EntityViewId entityViewId, Operation operation) throws EchoiotException {
         try {
             Validator.validateId(entityViewId, "Incorrect entityViewId " + entityViewId);
             EntityViewInfo entityView = entityViewService.findEntityViewInfoById(getCurrentUser().getTenantId(), entityViewId);
@@ -611,7 +603,7 @@ public abstract class BaseController {
         }
     }
 
-    Asset checkAssetId(@NotNull AssetId assetId, Operation operation) throws EchoiotException {
+    Asset checkAssetId(AssetId assetId, Operation operation) throws EchoiotException {
         try {
             Validator.validateId(assetId, "Incorrect assetId " + assetId);
             Asset asset = assetService.findAssetById(getCurrentUser().getTenantId(), assetId);
@@ -623,7 +615,7 @@ public abstract class BaseController {
         }
     }
 
-    AssetInfo checkAssetInfoId(@NotNull AssetId assetId, Operation operation) throws EchoiotException {
+    AssetInfo checkAssetInfoId(AssetId assetId, Operation operation) throws EchoiotException {
         try {
             Validator.validateId(assetId, "Incorrect assetId " + assetId);
             AssetInfo asset = assetService.findAssetInfoById(getCurrentUser().getTenantId(), assetId);
@@ -635,7 +627,7 @@ public abstract class BaseController {
         }
     }
 
-    AssetProfile checkAssetProfileId(@NotNull AssetProfileId assetProfileId, Operation operation) throws EchoiotException {
+    AssetProfile checkAssetProfileId(AssetProfileId assetProfileId, Operation operation) throws EchoiotException {
         try {
             Validator.validateId(assetProfileId, "Incorrect assetProfileId " + assetProfileId);
             AssetProfile assetProfile = assetProfileService.findAssetProfileById(getCurrentUser().getTenantId(), assetProfileId);
@@ -647,7 +639,7 @@ public abstract class BaseController {
         }
     }
 
-    Alarm checkAlarmId(@NotNull AlarmId alarmId, Operation operation) throws EchoiotException {
+    Alarm checkAlarmId(AlarmId alarmId, Operation operation) throws EchoiotException {
         try {
             Validator.validateId(alarmId, "Incorrect alarmId " + alarmId);
             Alarm alarm = alarmService.findAlarmByIdAsync(getCurrentUser().getTenantId(), alarmId).get();
@@ -659,7 +651,7 @@ public abstract class BaseController {
         }
     }
 
-    AlarmInfo checkAlarmInfoId(@NotNull AlarmId alarmId, Operation operation) throws EchoiotException {
+    AlarmInfo checkAlarmInfoId(AlarmId alarmId, Operation operation) throws EchoiotException {
         try {
             Validator.validateId(alarmId, "Incorrect alarmId " + alarmId);
             AlarmInfo alarmInfo = alarmService.findAlarmInfoByIdAsync(getCurrentUser().getTenantId(), alarmId).get();
@@ -671,7 +663,7 @@ public abstract class BaseController {
         }
     }
 
-    WidgetsBundle checkWidgetsBundleId(@NotNull WidgetsBundleId widgetsBundleId, Operation operation) throws EchoiotException {
+    WidgetsBundle checkWidgetsBundleId(WidgetsBundleId widgetsBundleId, Operation operation) throws EchoiotException {
         try {
             Validator.validateId(widgetsBundleId, "Incorrect widgetsBundleId " + widgetsBundleId);
             WidgetsBundle widgetsBundle = widgetsBundleService.findWidgetsBundleById(getCurrentUser().getTenantId(), widgetsBundleId);
@@ -683,7 +675,7 @@ public abstract class BaseController {
         }
     }
 
-    WidgetTypeDetails checkWidgetTypeId(@NotNull WidgetTypeId widgetTypeId, Operation operation) throws EchoiotException {
+    WidgetTypeDetails checkWidgetTypeId(WidgetTypeId widgetTypeId, Operation operation) throws EchoiotException {
         try {
             Validator.validateId(widgetTypeId, "Incorrect widgetTypeId " + widgetTypeId);
             WidgetTypeDetails widgetTypeDetails = widgetTypeService.findWidgetTypeDetailsById(getCurrentUser().getTenantId(), widgetTypeId);
@@ -695,7 +687,7 @@ public abstract class BaseController {
         }
     }
 
-    Dashboard checkDashboardId(@NotNull DashboardId dashboardId, Operation operation) throws EchoiotException {
+    Dashboard checkDashboardId(DashboardId dashboardId, Operation operation) throws EchoiotException {
         try {
             Validator.validateId(dashboardId, "Incorrect dashboardId " + dashboardId);
             Dashboard dashboard = dashboardService.findDashboardById(getCurrentUser().getTenantId(), dashboardId);
@@ -707,7 +699,7 @@ public abstract class BaseController {
         }
     }
 
-    Edge checkEdgeId(@NotNull EdgeId edgeId, Operation operation) throws EchoiotException {
+    Edge checkEdgeId(EdgeId edgeId, Operation operation) throws EchoiotException {
         try {
             Validator.validateId(edgeId, "Incorrect edgeId " + edgeId);
             Edge edge = edgeService.findEdgeById(getTenantId(), edgeId);
@@ -719,7 +711,7 @@ public abstract class BaseController {
         }
     }
 
-    EdgeInfo checkEdgeInfoId(@NotNull EdgeId edgeId, Operation operation) throws EchoiotException {
+    EdgeInfo checkEdgeInfoId(EdgeId edgeId, Operation operation) throws EchoiotException {
         try {
             Validator.validateId(edgeId, "Incorrect edgeId " + edgeId);
             EdgeInfo edge = edgeService.findEdgeInfoById(getCurrentUser().getTenantId(), edgeId);
@@ -731,7 +723,7 @@ public abstract class BaseController {
         }
     }
 
-    DashboardInfo checkDashboardInfoId(@NotNull DashboardId dashboardId, Operation operation) throws EchoiotException {
+    DashboardInfo checkDashboardInfoId(DashboardId dashboardId, Operation operation) throws EchoiotException {
         try {
             Validator.validateId(dashboardId, "Incorrect dashboardId " + dashboardId);
             DashboardInfo dashboardInfo = dashboardService.findDashboardInfoById(getCurrentUser().getTenantId(), dashboardId);
@@ -770,7 +762,7 @@ public abstract class BaseController {
         }
     }
 
-    protected RuleChain checkRuleChain(@NotNull RuleChainId ruleChainId, Operation operation) throws EchoiotException {
+    protected RuleChain checkRuleChain(RuleChainId ruleChainId, Operation operation) throws EchoiotException {
         Validator.validateId(ruleChainId, "Incorrect ruleChainId " + ruleChainId);
         RuleChain ruleChain = ruleChainService.findRuleChainById(getCurrentUser().getTenantId(), ruleChainId);
         checkNotNull(ruleChain, "Rule chain with id [" + ruleChainId + "] is not found");
@@ -778,8 +770,7 @@ public abstract class BaseController {
         return ruleChain;
     }
 
-    @NotNull
-    protected RuleNode checkRuleNode(@NotNull RuleNodeId ruleNodeId, Operation operation) throws EchoiotException {
+    protected RuleNode checkRuleNode(RuleNodeId ruleNodeId, Operation operation) throws EchoiotException {
         Validator.validateId(ruleNodeId, "Incorrect ruleNodeId " + ruleNodeId);
         RuleNode ruleNode = ruleChainService.findRuleNodeById(getTenantId(), ruleNodeId);
         checkNotNull(ruleNode, "Rule node with id [" + ruleNodeId + "] is not found");
@@ -787,7 +778,7 @@ public abstract class BaseController {
         return ruleNode;
     }
 
-    TbResource checkResourceId(@NotNull TbResourceId resourceId, Operation operation) throws EchoiotException {
+    TbResource checkResourceId(TbResourceId resourceId, Operation operation) throws EchoiotException {
         try {
             Validator.validateId(resourceId, "Incorrect resourceId " + resourceId);
             TbResource resource = resourceService.findResourceById(getCurrentUser().getTenantId(), resourceId);
@@ -799,7 +790,7 @@ public abstract class BaseController {
         }
     }
 
-    TbResourceInfo checkResourceInfoId(@NotNull TbResourceId resourceId, Operation operation) throws EchoiotException {
+    TbResourceInfo checkResourceInfoId(TbResourceId resourceId, Operation operation) throws EchoiotException {
         try {
             Validator.validateId(resourceId, "Incorrect resourceId " + resourceId);
             TbResourceInfo resourceInfo = resourceService.findResourceInfoById(getCurrentUser().getTenantId(), resourceId);
@@ -811,7 +802,7 @@ public abstract class BaseController {
         }
     }
 
-    OtaPackage checkOtaPackageId(@NotNull OtaPackageId otaPackageId, Operation operation) throws EchoiotException {
+    OtaPackage checkOtaPackageId(OtaPackageId otaPackageId, Operation operation) throws EchoiotException {
         try {
             Validator.validateId(otaPackageId, "Incorrect otaPackageId " + otaPackageId);
             OtaPackage otaPackage = otaPackageService.findOtaPackageById(getCurrentUser().getTenantId(), otaPackageId);
@@ -823,7 +814,7 @@ public abstract class BaseController {
         }
     }
 
-    OtaPackageInfo checkOtaPackageInfoId(@NotNull OtaPackageId otaPackageId, Operation operation) throws EchoiotException {
+    OtaPackageInfo checkOtaPackageInfoId(OtaPackageId otaPackageId, Operation operation) throws EchoiotException {
         try {
             Validator.validateId(otaPackageId, "Incorrect otaPackageId " + otaPackageId);
             OtaPackageInfo otaPackageIn = otaPackageService.findOtaPackageInfoById(getCurrentUser().getTenantId(), otaPackageId);
@@ -835,7 +826,7 @@ public abstract class BaseController {
         }
     }
 
-    Rpc checkRpcId(@NotNull RpcId rpcId, Operation operation) throws EchoiotException {
+    Rpc checkRpcId(RpcId rpcId, Operation operation) throws EchoiotException {
         try {
             Validator.validateId(rpcId, "Incorrect rpcId " + rpcId);
             Rpc rpc = rpcService.findById(getCurrentUser().getTenantId(), rpcId);
@@ -847,8 +838,7 @@ public abstract class BaseController {
         }
     }
 
-    @NotNull
-    protected Queue checkQueueId(@NotNull QueueId queueId, Operation operation) throws EchoiotException {
+    protected Queue checkQueueId(QueueId queueId, Operation operation) throws EchoiotException {
         Validator.validateId(queueId, "Incorrect queueId " + queueId);
         Queue queue = queueService.findQueueById(getCurrentUser().getTenantId(), queueId);
         checkNotNull(queue);
@@ -864,7 +854,7 @@ public abstract class BaseController {
         return queue;
     }
 
-    protected <I extends EntityId> I emptyId(@NotNull EntityType entityType) {
+    protected <I extends EntityId> I emptyId(EntityType entityType) {
         return (I) EntityIdFactory.getByTypeAndUuid(entityType, ModelConstants.NULL_UUID);
     }
 
@@ -884,7 +874,7 @@ public abstract class BaseController {
         tbClusterService.sendNotificationMsgToEdge(tenantId, edgeId, entityId, body, type, action);
     }
 
-    protected void processDashboardIdFromAdditionalInfo(@NotNull ObjectNode additionalInfo, String requiredFields) throws EchoiotException {
+    protected void processDashboardIdFromAdditionalInfo(ObjectNode additionalInfo, String requiredFields) throws EchoiotException {
         String dashboardId = additionalInfo.has(requiredFields) ? additionalInfo.get(requiredFields).asText() : null;
         if (dashboardId != null && !dashboardId.equals("null")) {
             if (dashboardService.findDashboardById(getTenantId(), new DashboardId(UUID.fromString(dashboardId))) == null) {
@@ -893,8 +883,7 @@ public abstract class BaseController {
         }
     }
 
-    @NotNull
-    protected MediaType parseMediaType(@NotNull String contentType) {
+    protected MediaType parseMediaType(String contentType) {
         try {
             return MediaType.parseMediaType(contentType);
         } catch (Exception e) {
@@ -902,9 +891,8 @@ public abstract class BaseController {
         }
     }
 
-    @NotNull
-    protected <T> DeferredResult<T> wrapFuture(@NotNull ListenableFuture<T> future) {
-        @NotNull final DeferredResult<T> deferredResult = new DeferredResult<>();
+    protected <T> DeferredResult<T> wrapFuture(ListenableFuture<T> future) {
+        final DeferredResult<T> deferredResult = new DeferredResult<>();
         Futures.addCallback(future, new FutureCallback<>() {
             @Override
             public void onSuccess(T result) {

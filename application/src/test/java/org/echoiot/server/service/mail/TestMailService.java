@@ -2,7 +2,6 @@ package org.echoiot.server.service.mail;
 
 import org.echoiot.rule.engine.api.MailService;
 import org.echoiot.server.common.data.exception.EchoiotException;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
@@ -25,7 +24,7 @@ public class TestMailService {
         MailService mailService = Mockito.mock(MailService.class);
         Mockito.doAnswer(new Answer<Void>() {
             @Nullable
-            public Void answer(@NotNull InvocationOnMock invocation) {
+            public Void answer(InvocationOnMock invocation) {
                 Object[] args = invocation.getArguments();
                 String activationLink = (String) args[0];
                 currentActivateToken = activationLink.split("=")[1];
@@ -34,7 +33,7 @@ public class TestMailService {
         }).when(mailService).sendActivationEmail(Mockito.anyString(), Mockito.anyString());
         Mockito.doAnswer(new Answer<Void>() {
             @Nullable
-            public Void answer(@NotNull InvocationOnMock invocation) {
+            public Void answer(InvocationOnMock invocation) {
                 Object[] args = invocation.getArguments();
                 String passwordResetLink = (String) args[0];
                 currentResetPasswordToken = passwordResetLink.split("=")[1];

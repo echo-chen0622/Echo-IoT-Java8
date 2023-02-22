@@ -3,7 +3,6 @@ package org.echoiot.server.service.security.model.token;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.common.data.StringUtils;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -17,7 +16,6 @@ public class OAuth2AppTokenFactory {
 
     private static final long MAX_EXPIRATION_TIME_DIFF_MS = TimeUnit.MINUTES.toMillis(5);
 
-    @NotNull
     public String validateTokenAndGetCallbackUrlScheme(String appPackage, String appToken, String appSecret) {
         Jws<Claims> jwsClaims;
         try {

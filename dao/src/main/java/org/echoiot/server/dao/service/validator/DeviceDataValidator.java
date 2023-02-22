@@ -14,7 +14,6 @@ import org.echoiot.server.dao.exception.DataValidationException;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.tenant.TbTenantProfileCache;
 import org.echoiot.server.dao.tenant.TenantService;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
@@ -45,9 +44,8 @@ public class DeviceDataValidator extends AbstractHasOtaPackageValidator<Device> 
         validateNumberOfEntitiesPerTenant(tenantId, deviceDao, maxDevices, EntityType.DEVICE);
     }
 
-    @NotNull
     @Override
-    protected Device validateUpdate(TenantId tenantId, @NotNull Device device) {
+    protected Device validateUpdate(TenantId tenantId, Device device) {
         Device old = deviceDao.findById(device.getTenantId(), device.getId().getId());
         if (old == null) {
             throw new DataValidationException("Can't update non existing device!");
@@ -56,7 +54,7 @@ public class DeviceDataValidator extends AbstractHasOtaPackageValidator<Device> 
     }
 
     @Override
-    protected void validateDataImpl(TenantId tenantId, @NotNull Device device) {
+    protected void validateDataImpl(TenantId tenantId, Device device) {
         if (StringUtils.isEmpty(device.getName()) || device.getName().trim().length() == 0) {
             throw new DataValidationException("Device name should be specified!");
         }

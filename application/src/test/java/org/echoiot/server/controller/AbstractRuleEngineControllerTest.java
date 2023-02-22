@@ -12,7 +12,6 @@ import org.echoiot.server.common.data.page.TimePageLink;
 import org.echoiot.server.common.data.rule.RuleChain;
 import org.echoiot.server.common.data.rule.RuleChainMetaData;
 import org.echoiot.server.dao.rule.RuleChainService;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.test.context.TestPropertySource;
 
 import javax.annotation.Resource;
@@ -34,7 +33,7 @@ public abstract class AbstractRuleEngineControllerTest extends AbstractControlle
         return doPost("/api/ruleChain", ruleChain, RuleChain.class);
     }
 
-    protected RuleChain getRuleChain(@NotNull RuleChainId ruleChainId) throws Exception {
+    protected RuleChain getRuleChain(RuleChainId ruleChainId) throws Exception {
         return doGet("/api/ruleChain/" + ruleChainId.getId().toString(), RuleChain.class);
     }
 
@@ -42,23 +41,23 @@ public abstract class AbstractRuleEngineControllerTest extends AbstractControlle
         return doPost("/api/ruleChain/metadata", ruleChainMD, RuleChainMetaData.class);
     }
 
-    protected RuleChainMetaData getRuleChainMetaData(@NotNull RuleChainId ruleChainId) throws Exception {
+    protected RuleChainMetaData getRuleChainMetaData(RuleChainId ruleChainId) throws Exception {
         return doGet("/api/ruleChain/metadata/" + ruleChainId.getId().toString(), RuleChainMetaData.class);
     }
 
-    protected PageData<EventInfo> getDebugEvents(@NotNull TenantId tenantId, @NotNull EntityId entityId, int limit) throws Exception {
+    protected PageData<EventInfo> getDebugEvents(TenantId tenantId, EntityId entityId, int limit) throws Exception {
         return getEvents(tenantId, entityId, EventType.DEBUG_RULE_NODE.getOldName(), limit);
     }
 
-    protected PageData<EventInfo> getEvents(@NotNull TenantId tenantId, @NotNull EntityId entityId, String eventType, int limit) throws Exception {
-        @NotNull TimePageLink pageLink = new TimePageLink(limit);
+    protected PageData<EventInfo> getEvents(TenantId tenantId, EntityId entityId, String eventType, int limit) throws Exception {
+        TimePageLink pageLink = new TimePageLink(limit);
         return doGetTypedWithTimePageLink("/api/events/{entityType}/{entityId}/{eventType}?tenantId={tenantId}&",
                 new TypeReference<PageData<EventInfo>>() {
                 }, pageLink, entityId.getEntityType(), entityId.getId(), eventType, tenantId.getId());
     }
 
 
-    protected JsonNode getMetadata(@NotNull EventInfo outEvent) {
+    protected JsonNode getMetadata(EventInfo outEvent) {
         String metaDataStr = outEvent.getBody().get("metadata").asText();
         try {
             return mapper.readTree(metaDataStr);
@@ -67,7 +66,6 @@ public abstract class AbstractRuleEngineControllerTest extends AbstractControlle
         }
     }
 
-    @NotNull
     protected Predicate<EventInfo> filterByCustomEvent() {
         return event -> event.getBody().get("msgType").textValue().equals("CUSTOM");
     }

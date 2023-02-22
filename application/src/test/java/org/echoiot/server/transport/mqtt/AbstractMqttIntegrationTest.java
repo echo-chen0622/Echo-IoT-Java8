@@ -7,7 +7,6 @@ import org.echoiot.server.common.data.device.profile.*;
 import org.echoiot.server.common.data.security.DeviceCredentials;
 import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.transport.AbstractTransportIntegrationTest;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.test.context.TestPropertySource;
 
 import java.util.List;
@@ -25,7 +24,7 @@ public abstract class AbstractMqttIntegrationTest extends AbstractTransportInteg
     protected Device savedGateway;
     protected String gatewayAccessToken;
 
-    protected void processBeforeTest(@NotNull MqttTestConfigProperties config) throws Exception {
+    protected void processBeforeTest(MqttTestConfigProperties config) throws Exception {
         loginTenantAdmin();
         deviceProfile = createMqttDeviceProfile(config);
         assertNotNull(deviceProfile);
@@ -49,24 +48,24 @@ public abstract class AbstractMqttIntegrationTest extends AbstractTransportInteg
         }
     }
 
-    protected DeviceProfile createMqttDeviceProfile(@NotNull MqttTestConfigProperties config) throws Exception {
+    protected DeviceProfile createMqttDeviceProfile(MqttTestConfigProperties config) throws Exception {
         TransportPayloadType transportPayloadType = config.getTransportPayloadType();
         if (transportPayloadType == null) {
             DeviceProfileInfo defaultDeviceProfileInfo = doGet("/api/deviceProfileInfo/default", DeviceProfileInfo.class);
             return doGet("/api/deviceProfile/" + defaultDeviceProfileInfo.getId().getId(), DeviceProfile.class);
         } else {
-            @NotNull DeviceProfile deviceProfile = new DeviceProfile();
+            DeviceProfile deviceProfile = new DeviceProfile();
             deviceProfile.setName(transportPayloadType.name());
             deviceProfile.setType(DeviceProfileType.DEFAULT);
             deviceProfile.setTransportType(DeviceTransportType.MQTT);
-            @NotNull DeviceProfileProvisionType provisionType = config.getProvisionType() != null ?
+            DeviceProfileProvisionType provisionType = config.getProvisionType() != null ?
                     config.getProvisionType() : DeviceProfileProvisionType.DISABLED;
             deviceProfile.setProvisionType(provisionType);
             deviceProfile.setProvisionDeviceKey(config.getProvisionKey());
             deviceProfile.setDescription(transportPayloadType.name() + " Test");
-            @NotNull DeviceProfileData deviceProfileData = new DeviceProfileData();
-            @NotNull DefaultDeviceProfileConfiguration configuration = new DefaultDeviceProfileConfiguration();
-            @NotNull MqttDeviceProfileTransportConfiguration mqttDeviceProfileTransportConfiguration = new MqttDeviceProfileTransportConfiguration();
+            DeviceProfileData deviceProfileData = new DeviceProfileData();
+            DefaultDeviceProfileConfiguration configuration = new DefaultDeviceProfileConfiguration();
+            MqttDeviceProfileTransportConfiguration mqttDeviceProfileTransportConfiguration = new MqttDeviceProfileTransportConfiguration();
             if (StringUtils.hasLength(config.getTelemetryTopicFilter())) {
                 mqttDeviceProfileTransportConfiguration.setDeviceTelemetryTopic(config.getTelemetryTopicFilter());
             }
@@ -78,7 +77,7 @@ public abstract class AbstractMqttIntegrationTest extends AbstractTransportInteg
             if (TransportPayloadType.JSON.equals(transportPayloadType)) {
                 transportPayloadTypeConfiguration = new JsonTransportPayloadConfiguration();
             } else {
-                @NotNull ProtoTransportPayloadConfiguration protoTransportPayloadConfiguration = new ProtoTransportPayloadConfiguration();
+                ProtoTransportPayloadConfiguration protoTransportPayloadConfiguration = new ProtoTransportPayloadConfiguration();
                 String telemetryProtoSchema = config.getTelemetryProtoSchema();
                 String attributesProtoSchema = config.getAttributesProtoSchema();
                 String rpcResponseProtoSchema = config.getRpcResponseProtoSchema();
@@ -129,7 +128,7 @@ public abstract class AbstractMqttIntegrationTest extends AbstractTransportInteg
     }
 
     protected Device createDevice(String name, String type, boolean gateway) throws Exception {
-        @NotNull Device device = new Device();
+        Device device = new Device();
         device.setName(name);
         device.setType(type);
         if (gateway) {
@@ -140,7 +139,7 @@ public abstract class AbstractMqttIntegrationTest extends AbstractTransportInteg
         return doPost("/api/device", device, Device.class);
     }
 
-    protected TransportProtos.PostAttributeMsg getPostAttributeMsg(@NotNull List<String> expectedKeys) {
+    protected TransportProtos.PostAttributeMsg getPostAttributeMsg(List<String> expectedKeys) {
         List<TransportProtos.KeyValueProto> kvProtos = getKvProtos(expectedKeys);
         TransportProtos.PostAttributeMsg.Builder builder = TransportProtos.PostAttributeMsg.newBuilder();
         builder.addAllKv(kvProtos);

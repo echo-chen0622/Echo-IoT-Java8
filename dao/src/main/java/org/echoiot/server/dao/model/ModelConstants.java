@@ -4,7 +4,6 @@ import com.datastax.oss.driver.api.core.uuid.Uuids;
 import org.apache.commons.lang3.ArrayUtils;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.kv.Aggregation;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
@@ -642,27 +641,23 @@ public class ModelConstants {
             ArrayUtils.addAll(COUNT_AGGREGATION_COLUMNS, sum(LONG_VALUE_COLUMN), sum(DOUBLE_VALUE_COLUMN));
     protected static final String[] AVG_AGGREGATION_COLUMNS = SUM_AGGREGATION_COLUMNS;
 
-    @NotNull
     public static String min(String s) {
         return "min(" + s + ")";
     }
 
-    @NotNull
     public static String max(String s) {
         return "max(" + s + ")";
     }
 
-    @NotNull
     public static String sum(String s) {
         return "sum(" + s + ")";
     }
 
-    @NotNull
     public static String count(String s) {
         return "count(" + s + ")";
     }
 
-    public static String[] getFetchColumnNames(@NotNull Aggregation aggregation) {
+    public static String[] getFetchColumnNames(Aggregation aggregation) {
         switch (aggregation) {
             case NONE:
                 return NONE_AGGREGATION_COLUMNS;

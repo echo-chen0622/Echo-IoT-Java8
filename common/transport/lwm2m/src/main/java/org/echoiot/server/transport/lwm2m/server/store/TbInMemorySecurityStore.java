@@ -4,7 +4,6 @@ import org.echoiot.server.transport.lwm2m.secure.TbLwM2MSecurityInfo;
 import org.eclipse.leshan.core.SecurityMode;
 import org.eclipse.leshan.server.security.NonUniqueSecurityInfoException;
 import org.eclipse.leshan.server.security.SecurityInfo;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -20,11 +19,9 @@ public class TbInMemorySecurityStore implements TbEditableSecurityStore {
     protected final Lock writeLock = readWriteLock.writeLock();
 
     // by client end-point
-    @NotNull
     protected Map<String, TbLwM2MSecurityInfo> securityByEp = new HashMap<>();
 
     // by PSK identity
-    @NotNull
     protected Map<String, TbLwM2MSecurityInfo> securityByIdentity = new HashMap<>();
 
     public TbInMemorySecurityStore() {
@@ -75,7 +72,7 @@ public class TbInMemorySecurityStore implements TbEditableSecurityStore {
     }
 
     @Override
-    public void put(@NotNull TbLwM2MSecurityInfo tbSecurityInfo) throws NonUniqueSecurityInfoException {
+    public void put(TbLwM2MSecurityInfo tbSecurityInfo) throws NonUniqueSecurityInfoException {
         writeLock.lock();
         try {
             @Nullable String identity = null;

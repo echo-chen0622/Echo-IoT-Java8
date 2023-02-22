@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import org.echoiot.server.common.data.EntityType;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.util.ConcurrentReferenceHashMap;
 import org.springframework.util.ConcurrentReferenceHashMap.ReferenceType;
 
@@ -21,7 +20,6 @@ public final class TenantId extends UUIDBased implements EntityId {
 
     private static final long serialVersionUID = 1L;
 
-    @NotNull
     @JsonCreator
     public static TenantId fromUUID(@JsonProperty("id") UUID id) {
         return tenants.computeIfAbsent(id, TenantId::new);
@@ -32,7 +30,6 @@ public final class TenantId extends UUIDBased implements EntityId {
         super(id);
     }
 
-    @NotNull
     @ApiModelProperty(position = 2, required = true, value = "string", example = "TENANT", allowableValues = "TENANT")
     @Override
     public EntityType getEntityType() {

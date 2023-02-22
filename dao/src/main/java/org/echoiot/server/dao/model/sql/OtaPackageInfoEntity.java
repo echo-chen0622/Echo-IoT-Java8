@@ -16,7 +16,6 @@ import org.echoiot.server.dao.model.SearchTextEntity;
 import org.echoiot.server.dao.util.mapping.JsonStringType;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.persistence.*;
@@ -84,7 +83,7 @@ public class OtaPackageInfoEntity extends BaseSqlEntity<OtaPackageInfo> implemen
         super();
     }
 
-    public OtaPackageInfoEntity(@NotNull OtaPackageInfo otaPackageInfo) {
+    public OtaPackageInfoEntity(OtaPackageInfo otaPackageInfo) {
         this.createdTime = otaPackageInfo.getCreatedTime();
         this.setUuid(otaPackageInfo.getUuidId());
         this.tenantId = otaPackageInfo.getTenantId().getId();
@@ -135,10 +134,9 @@ public class OtaPackageInfoEntity extends BaseSqlEntity<OtaPackageInfo> implemen
         this.searchText = searchText;
     }
 
-    @NotNull
     @Override
     public OtaPackageInfo toData() {
-        @NotNull OtaPackageInfo otaPackageInfo = new OtaPackageInfo(new OtaPackageId(id));
+        OtaPackageInfo otaPackageInfo = new OtaPackageInfo(new OtaPackageId(id));
         otaPackageInfo.setCreatedTime(createdTime);
         otaPackageInfo.setTenantId(TenantId.fromUUID(tenantId));
         if (deviceProfileId != null) {

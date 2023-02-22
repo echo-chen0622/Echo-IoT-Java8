@@ -17,7 +17,6 @@ import org.echoiot.server.common.msg.queue.PartitionChangeMsg;
 import org.echoiot.server.common.msg.queue.RuleNodeException;
 import org.echoiot.server.common.msg.queue.RuleNodeInfo;
 import org.echoiot.server.common.stats.TbApiUsageReportClient;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -35,7 +34,7 @@ public class RuleNodeActorMessageProcessor extends ComponentMsgProcessor<RuleNod
     private final DefaultTbContext defaultCtx;
     private RuleNodeInfo info;
 
-    RuleNodeActorMessageProcessor(TenantId tenantId, String ruleChainName, RuleNodeId ruleNodeId, @NotNull ActorSystemContext systemContext
+    RuleNodeActorMessageProcessor(TenantId tenantId, String ruleChainName, RuleNodeId ruleNodeId, ActorSystemContext systemContext
             , TbActorRef parent, TbActorRef self) {
         super(systemContext, tenantId, ruleNodeId);
         this.apiUsageClient = systemContext.getApiUsageClient();
@@ -89,7 +88,7 @@ public class RuleNodeActorMessageProcessor extends ComponentMsgProcessor<RuleNod
         }
     }
 
-    public void onRuleToSelfMsg(@NotNull RuleNodeToSelfMsg msg) throws Exception {
+    public void onRuleToSelfMsg(RuleNodeToSelfMsg msg) throws Exception {
         checkComponentStateActive(msg.getMsg());
         TbMsg tbMsg = msg.getMsg();
         int ruleNodeCount = tbMsg.getAndIncrementRuleNodeCounter();
@@ -109,7 +108,7 @@ public class RuleNodeActorMessageProcessor extends ComponentMsgProcessor<RuleNod
         }
     }
 
-    void onRuleChainToRuleNodeMsg(@NotNull RuleChainToRuleNodeMsg msg) throws Exception {
+    void onRuleChainToRuleNodeMsg(RuleChainToRuleNodeMsg msg) throws Exception {
         msg.getMsg().getCallback().onProcessingStart(info);
         checkComponentStateActive(msg.getMsg());
         TbMsg tbMsg = msg.getMsg();
@@ -139,14 +138,13 @@ public class RuleNodeActorMessageProcessor extends ComponentMsgProcessor<RuleNod
     private TbNode initComponent(@Nullable RuleNode ruleNode) throws Exception {
         @Nullable TbNode tbNode = null;
         if (ruleNode != null) {
-            @NotNull Class<?> componentClazz = Class.forName(ruleNode.getType());
+            Class<?> componentClazz = Class.forName(ruleNode.getType());
             tbNode = (TbNode) (componentClazz.getDeclaredConstructor().newInstance());
             tbNode.init(defaultCtx, new TbNodeConfiguration(ruleNode.getConfiguration()));
         }
         return tbNode;
     }
 
-    @NotNull
     @Override
     protected RuleNodeException getInactiveException() {
         return new RuleNodeException("Rule Node is not active! Failed to initialize.", ruleChainName, ruleNode);

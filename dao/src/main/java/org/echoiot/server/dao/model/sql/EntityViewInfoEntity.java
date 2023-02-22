@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.echoiot.server.common.data.EntityViewInfo;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -26,7 +25,7 @@ public class EntityViewInfoEntity extends AbstractEntityViewEntity<EntityViewInf
         super();
     }
 
-    public EntityViewInfoEntity(@NotNull EntityViewEntity entityViewEntity,
+    public EntityViewInfoEntity(EntityViewEntity entityViewEntity,
                                 String customerTitle,
                                 @Nullable Object customerAdditionalInfo) {
         super(entityViewEntity);
@@ -38,7 +37,6 @@ public class EntityViewInfoEntity extends AbstractEntityViewEntity<EntityViewInf
         }
     }
 
-    @NotNull
     @Override
     public EntityViewInfo toData() {
         return new EntityViewInfo(super.toEntityView(), customerTitle, customerIsPublic);

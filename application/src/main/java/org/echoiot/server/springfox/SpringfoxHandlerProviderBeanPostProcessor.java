@@ -1,6 +1,5 @@
 package org.echoiot.server.springfox;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -25,8 +24,8 @@ public class SpringfoxHandlerProviderBeanPostProcessor implements BeanPostProces
         return bean;
     }
 
-    private <T extends RequestMappingInfoHandlerMapping> void customizeSpringfoxHandlerMappings(@NotNull List<T> mappings) {
-        @NotNull List<T> copy = mappings.stream()
+    private <T extends RequestMappingInfoHandlerMapping> void customizeSpringfoxHandlerMappings(List<T> mappings) {
+        List<T> copy = mappings.stream()
                                         .filter(mapping -> mapping.getPatternParser() == null)
                                         .collect(Collectors.toList());
         mappings.clear();
@@ -34,7 +33,7 @@ public class SpringfoxHandlerProviderBeanPostProcessor implements BeanPostProces
     }
 
     @SuppressWarnings("unchecked")
-    private List<RequestMappingInfoHandlerMapping> getHandlerMappings(@NotNull Object bean) {
+    private List<RequestMappingInfoHandlerMapping> getHandlerMappings(Object bean) {
         try {
             @Nullable Field field = ReflectionUtils.findField(bean.getClass(), "handlerMappings");
             field.setAccessible(true);

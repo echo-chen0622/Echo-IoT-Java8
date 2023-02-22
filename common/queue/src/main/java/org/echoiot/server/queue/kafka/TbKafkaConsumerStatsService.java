@@ -15,7 +15,6 @@ import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.msg.queue.ServiceType;
 import org.echoiot.server.queue.discovery.PartitionService;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -37,9 +36,7 @@ import java.util.concurrent.TimeUnit;
 public class TbKafkaConsumerStatsService {
     private final Set<String> monitoredGroups = ConcurrentHashMap.newKeySet();
 
-    @NotNull
     private final TbKafkaSettings kafkaSettings;
-    @NotNull
     private final TbKafkaConsumerStatisticConfig statsConfig;
 
     @Lazy
@@ -58,7 +55,7 @@ public class TbKafkaConsumerStatsService {
         this.adminClient = AdminClient.create(kafkaSettings.toAdminProps());
         this.statsPrintScheduler = Executors.newSingleThreadScheduledExecutor(EchoiotThreadFactory.forName("kafka-consumer-stats"));
 
-        @NotNull Properties consumerProps = kafkaSettings.toConsumerProps(null);
+        Properties consumerProps = kafkaSettings.toConsumerProps(null);
         consumerProps.put(ConsumerConfig.CLIENT_ID_CONFIG, "consumer-stats-loader-client");
         consumerProps.put(ConsumerConfig.GROUP_ID_CONFIG, "consumer-stats-loader-client-group");
         this.consumer = new KafkaConsumer<>(consumerProps);
@@ -78,9 +75,9 @@ public class TbKafkaConsumerStatsService {
                             .get(statsConfig.getKafkaResponseTimeoutMs(), TimeUnit.MILLISECONDS);
                     Map<TopicPartition, Long> endOffsets = consumer.endOffsets(groupOffsets.keySet(), timeoutDuration);
 
-                    @NotNull List<GroupTopicStats> lagTopicsStats = getTopicsStatsWithLag(groupOffsets, endOffsets);
+                    List<GroupTopicStats> lagTopicsStats = getTopicsStatsWithLag(groupOffsets, endOffsets);
                     if (!lagTopicsStats.isEmpty()) {
-                        @NotNull StringBuilder builder = new StringBuilder();
+                        StringBuilder builder = new StringBuilder();
                         for (int i = 0; i < lagTopicsStats.size(); i++) {
                             builder.append(lagTopicsStats.get(i).toString());
                             if (i != lagTopicsStats.size() - 1) {
@@ -104,10 +101,9 @@ public class TbKafkaConsumerStatsService {
         return log.isInfoEnabled() && (isMyRuleEnginePartition || isMyCorePartition);
     }
 
-    @NotNull
-    private List<GroupTopicStats> getTopicsStatsWithLag(@NotNull Map<TopicPartition, OffsetAndMetadata> groupOffsets, @NotNull Map<TopicPartition, Long> endOffsets) {
-        @NotNull List<GroupTopicStats> consumerGroupStats = new ArrayList<>();
-        for (@NotNull TopicPartition topicPartition : groupOffsets.keySet()) {
+    private List<GroupTopicStats> getTopicsStatsWithLag(Map<TopicPartition, OffsetAndMetadata> groupOffsets, Map<TopicPartition, Long> endOffsets) {
+        List<GroupTopicStats> consumerGroupStats = new ArrayList<>();
+        for (TopicPartition topicPartition : groupOffsets.keySet()) {
             long endOffset = endOffsets.get(topicPartition);
             long committedOffset = groupOffsets.get(topicPartition).offset();
             long lag = endOffset - committedOffset;
@@ -160,8 +156,7 @@ public class TbKafkaConsumerStatsService {
         private long endOffset;
         private long lag;
 
-        @NotNull
-        @Override
+            @Override
         public String toString() {
             return "[" +
                     "topic=[" + topic + ']' +

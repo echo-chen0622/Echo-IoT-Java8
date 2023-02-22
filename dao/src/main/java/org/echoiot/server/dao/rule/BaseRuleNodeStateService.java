@@ -10,7 +10,6 @@ import org.echoiot.server.common.data.rule.RuleNodeState;
 import org.echoiot.server.dao.entity.AbstractEntityService;
 import org.echoiot.server.dao.exception.DataValidationException;
 import org.hibernate.exception.ConstraintViolationException;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +23,7 @@ public class BaseRuleNodeStateService extends AbstractEntityService implements R
     private RuleNodeStateDao ruleNodeStateDao;
 
     @Override
-    public PageData<RuleNodeState> findByRuleNodeId(@NotNull TenantId tenantId, @NotNull RuleNodeId ruleNodeId, PageLink pageLink) {
+    public PageData<RuleNodeState> findByRuleNodeId(TenantId tenantId, RuleNodeId ruleNodeId, PageLink pageLink) {
         if (tenantId == null) {
             throw new DataValidationException("Tenant id should be specified!.");
         }
@@ -35,7 +34,7 @@ public class BaseRuleNodeStateService extends AbstractEntityService implements R
     }
 
     @Override
-    public RuleNodeState findByRuleNodeIdAndEntityId(@NotNull TenantId tenantId, @NotNull RuleNodeId ruleNodeId, @NotNull EntityId entityId) {
+    public RuleNodeState findByRuleNodeIdAndEntityId(TenantId tenantId, RuleNodeId ruleNodeId, EntityId entityId) {
         if (tenantId == null) {
             throw new DataValidationException("Tenant id should be specified!.");
         }
@@ -49,7 +48,7 @@ public class BaseRuleNodeStateService extends AbstractEntityService implements R
     }
 
     @Override
-    public RuleNodeState save(@NotNull TenantId tenantId, @NotNull RuleNodeState ruleNodeState) {
+    public RuleNodeState save(TenantId tenantId, RuleNodeState ruleNodeState) {
         if (tenantId == null) {
             throw new DataValidationException("Tenant id should be specified!.");
         }
@@ -57,7 +56,7 @@ public class BaseRuleNodeStateService extends AbstractEntityService implements R
     }
 
     @Override
-    public void removeByRuleNodeId(@NotNull TenantId tenantId, @NotNull RuleNodeId ruleNodeId) {
+    public void removeByRuleNodeId(TenantId tenantId, RuleNodeId ruleNodeId) {
         if (tenantId == null) {
             throw new DataValidationException("Tenant id should be specified!.");
         }
@@ -68,7 +67,7 @@ public class BaseRuleNodeStateService extends AbstractEntityService implements R
     }
 
     @Override
-    public void removeByRuleNodeIdAndEntityId(@NotNull TenantId tenantId, @NotNull RuleNodeId ruleNodeId, @NotNull EntityId entityId) {
+    public void removeByRuleNodeIdAndEntityId(TenantId tenantId, RuleNodeId ruleNodeId, EntityId entityId) {
         if (tenantId == null) {
             throw new DataValidationException("Tenant id should be specified!.");
         }
@@ -81,7 +80,7 @@ public class BaseRuleNodeStateService extends AbstractEntityService implements R
         ruleNodeStateDao.removeByRuleNodeIdAndEntityId(ruleNodeId.getId(), entityId.getId());
     }
 
-    public RuleNodeState saveOrUpdate(TenantId tenantId, @NotNull RuleNodeState ruleNodeState, boolean update) {
+    public RuleNodeState saveOrUpdate(TenantId tenantId, RuleNodeState ruleNodeState, boolean update) {
         try {
             if (update) {
                 RuleNodeState old = ruleNodeStateDao.findByRuleNodeIdAndEntityId(ruleNodeState.getRuleNodeId().getId(), ruleNodeState.getEntityId().getId());

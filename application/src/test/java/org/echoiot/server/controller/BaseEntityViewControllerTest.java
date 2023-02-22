@@ -30,7 +30,6 @@ import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.junit.After;
 import org.junit.Assert;
@@ -72,7 +71,6 @@ public abstract class BaseEntityViewControllerTest extends AbstractControllerTes
     private Device testDevice;
     private TelemetryEntityView telemetry;
 
-    @NotNull
     List<ListenableFuture<ResultActions>> deleteFutures = new ArrayList<>();
     ListeningExecutorService executor;
 
@@ -93,7 +91,7 @@ public abstract class BaseEntityViewControllerTest extends AbstractControllerTes
 
         loginTenantAdmin();
 
-        @NotNull Device device = new Device();
+        Device device = new Device();
         device.setName("Test device 4view");
         device.setType("default");
         testDevice = doPost("/api/device", device, Device.class);
@@ -121,7 +119,7 @@ public abstract class BaseEntityViewControllerTest extends AbstractControllerTes
 
     @Test
     public void testSaveEntityView() throws Exception {
-        @NotNull String name = "Test entity view";
+        String name = "Test entity view";
 
         Mockito.reset(tbClusterService, auditLogService);
 
@@ -164,11 +162,11 @@ public abstract class BaseEntityViewControllerTest extends AbstractControllerTes
 
     @Test
     public void testSaveEntityViewWithViolationOfValidation() throws Exception {
-        @NotNull EntityView entityView = createEntityView(StringUtils.randomAlphabetic(300), 0, 0);
+        EntityView entityView = createEntityView(StringUtils.randomAlphabetic(300), 0, 0);
 
         Mockito.reset(tbClusterService, auditLogService);
 
-        @NotNull String msgError = msgErrorFieldLength("name");
+        String msgError = msgErrorFieldLength("name");
         doPost("/api/entityView", entityView)
                 .andExpect(status().isBadRequest())
                 .andExpect(statusReason(containsString(msgError)));
@@ -230,12 +228,12 @@ public abstract class BaseEntityViewControllerTest extends AbstractControllerTes
 
     @Test
     public void testSaveEntityViewWithEmptyName() throws Exception {
-        @NotNull EntityView entityView = new EntityView();
+        EntityView entityView = new EntityView();
         entityView.setType("default");
 
         Mockito.reset(tbClusterService, auditLogService);
 
-        @NotNull String msgError = "Entity view name " + msgErrorShouldBeSpecified;
+        String msgError = "Entity view name " + msgErrorShouldBeSpecified;
         doPost("/api/entityView", entityView)
                 .andExpect(status().isBadRequest())
                 .andExpect(statusReason(containsString(msgError)));
@@ -295,7 +293,7 @@ public abstract class BaseEntityViewControllerTest extends AbstractControllerTes
         Mockito.reset(tbClusterService, auditLogService);
 
         String customerIdStr = Uuids.timeBased().toString();
-        @NotNull String msgError = msgErrorNoFound("Customer", customerIdStr);
+        String msgError = msgErrorNoFound("Customer", customerIdStr);
         doPost("/api/customer/" + customerIdStr + "/device/" + savedView.getId().getId().toString())
                 .andExpect(status().isNotFound())
                 .andExpect(statusReason(containsString(msgError)));
@@ -307,11 +305,11 @@ public abstract class BaseEntityViewControllerTest extends AbstractControllerTes
     public void testAssignEntityViewToCustomerFromDifferentTenant() throws Exception {
         loginSysAdmin();
 
-        @NotNull Tenant tenant2 = getNewTenant("Different tenant");
+        Tenant tenant2 = getNewTenant("Different tenant");
         Tenant savedTenant2 = doPost("/api/tenant", tenant2, Tenant.class);
         Assert.assertNotNull(savedTenant2);
 
-        @NotNull User tenantAdmin2 = new User();
+        User tenantAdmin2 = new User();
         tenantAdmin2.setAuthority(Authority.TENANT_ADMIN);
         tenantAdmin2.setTenantId(savedTenant2.getId());
         tenantAdmin2.setEmail("tenant3@echoiot.org");
@@ -319,7 +317,7 @@ public abstract class BaseEntityViewControllerTest extends AbstractControllerTes
         tenantAdmin2.setLastName("Downs");
         createUserAndLogin(tenantAdmin2, "testPassword1");
 
-        @NotNull Customer customer = getNewCustomer("Different customer");
+        Customer customer = getNewCustomer("Different customer");
         Customer savedCustomer = doPost("/api/customer", customer, Customer.class);
 
         login(TENANT_ADMIN_EMAIL, TENANT_ADMIN_PASSWORD);
@@ -344,21 +342,21 @@ public abstract class BaseEntityViewControllerTest extends AbstractControllerTes
     public void testGetCustomerEntityViews() throws Exception {
         Customer customer = doPost("/api/customer", getNewCustomer("Test customer"), Customer.class);
         CustomerId customerId = customer.getId();
-        @NotNull String urlTemplate = "/api/customer/" + customerId.getId().toString() + "/entityViewInfos?";
+        String urlTemplate = "/api/customer/" + customerId.getId().toString() + "/entityViewInfos?";
 
         Mockito.reset(tbClusterService, auditLogService);
 
         int cntEntity = 128;
-        @NotNull List<ListenableFuture<EntityViewInfo>> viewFutures = new ArrayList<>(cntEntity);
+        List<ListenableFuture<EntityViewInfo>> viewFutures = new ArrayList<>(cntEntity);
         for (int i = 0; i < cntEntity; i++) {
-            @NotNull String entityName = "Test entity view " + i;
+            String entityName = "Test entity view " + i;
             viewFutures.add(executor.submit(() ->
                     new EntityViewInfo(doPost("/api/customer/" + customerId.getId().toString() + "/entityView/"
                             + getNewSavedEntityView(entityName).getId().getId().toString(), EntityView.class),
                             customer.getTitle(), customer.isPublic())));
         }
         List<EntityViewInfo> entityViewInfos = Futures.allAsList(viewFutures).get(TIMEOUT, SECONDS);
-        @NotNull List<EntityViewInfo> loadedViews = loadListOfInfo(new PageLink(23), urlTemplate);
+        List<EntityViewInfo> loadedViews = loadListOfInfo(new PageLink(23), urlTemplate);
 
         assertThat(entityViewInfos).containsExactlyInAnyOrderElementsOf(loadedViews);
 
@@ -375,18 +373,18 @@ public abstract class BaseEntityViewControllerTest extends AbstractControllerTes
     @Test
     public void testGetCustomerEntityViewsByName() throws Exception {
         CustomerId customerId = doPost("/api/customer", getNewCustomer("Test customer"), Customer.class).getId();
-        @NotNull String urlTemplate = "/api/customer/" + customerId.getId().toString() + "/entityViews?";
+        String urlTemplate = "/api/customer/" + customerId.getId().toString() + "/entityViews?";
 
-        @NotNull String name1 = "Entity view name1";
+        String name1 = "Entity view name1";
         List<EntityView> namesOfView1 = Futures.allAsList(fillListByTemplate(125, name1, "/api/customer/" + customerId.getId().toString()
                 + "/entityView/")).get(TIMEOUT, SECONDS);
-        @NotNull List<EntityView> loadedNamesOfView1 = loadListOf(new PageLink(15, 0, name1), urlTemplate);
+        List<EntityView> loadedNamesOfView1 = loadListOf(new PageLink(15, 0, name1), urlTemplate);
         assertThat(namesOfView1).as(name1).containsExactlyInAnyOrderElementsOf(loadedNamesOfView1);
 
-        @NotNull String name2 = "Entity view name2";
+        String name2 = "Entity view name2";
         List<EntityView> namesOfView2 = Futures.allAsList(fillListByTemplate(143, name2, "/api/customer/" + customerId.getId().toString()
                 + "/entityView/")).get(TIMEOUT, SECONDS);
-        @NotNull List<EntityView> loadedNamesOfView2 = loadListOf(new PageLink(4, 0, name2), urlTemplate);
+        List<EntityView> loadedNamesOfView2 = loadListOf(new PageLink(4, 0, name2), urlTemplate);
         assertThat(namesOfView2).as(name2).containsExactlyInAnyOrderElementsOf(loadedNamesOfView2);
 
         deleteFutures.clear();
@@ -394,7 +392,7 @@ public abstract class BaseEntityViewControllerTest extends AbstractControllerTes
         Mockito.reset(tbClusterService, auditLogService);
 
         int cntEntity = loadedNamesOfView1.size();
-        for (@NotNull EntityView view : loadedNamesOfView1) {
+        for (EntityView view : loadedNamesOfView1) {
             deleteFutures.add(executor.submit(() ->
                     doDelete("/api/customer/entityView/" + view.getId().getId().toString()).andExpect(status().isOk())));
         }
@@ -411,7 +409,7 @@ public abstract class BaseEntityViewControllerTest extends AbstractControllerTes
         assertEquals(0, pageData.getData().size());
 
         deleteFutures.clear();
-        for (@NotNull EntityView view : loadedNamesOfView2) {
+        for (EntityView view : loadedNamesOfView2) {
             deleteFutures.add(executor.submit(() ->
                     doDelete("/api/customer/entityView/" + view.getId().getId().toString()).andExpect(status().isOk())));
         }
@@ -425,32 +423,32 @@ public abstract class BaseEntityViewControllerTest extends AbstractControllerTes
 
     @Test
     public void testGetTenantEntityViews() throws Exception {
-        @NotNull List<ListenableFuture<EntityViewInfo>> entityViewInfoFutures = new ArrayList<>(178);
+        List<ListenableFuture<EntityViewInfo>> entityViewInfoFutures = new ArrayList<>(178);
         for (int i = 0; i < 178; i++) {
-            @NotNull ListenableFuture<EntityView> entityViewFuture = getNewSavedEntityViewAsync("Test entity view" + i);
+            ListenableFuture<EntityView> entityViewFuture = getNewSavedEntityViewAsync("Test entity view" + i);
             entityViewInfoFutures.add(Futures.transform(entityViewFuture,
                     view -> new EntityViewInfo(view, null, false),
                     MoreExecutors.directExecutor()));
         }
         List<EntityViewInfo> entityViewInfos = Futures.allAsList(entityViewInfoFutures).get(TIMEOUT, SECONDS);
-        @NotNull List<EntityViewInfo> loadedViews = loadListOfInfo(new PageLink(23), "/api/tenant/entityViewInfos?");
+        List<EntityViewInfo> loadedViews = loadListOfInfo(new PageLink(23), "/api/tenant/entityViewInfos?");
         assertThat(entityViewInfos).containsExactlyInAnyOrderElementsOf(loadedViews);
     }
 
     @Test
     public void testGetTenantEntityViewsByName() throws Exception {
-        @NotNull String name1 = "Entity view name1";
+        String name1 = "Entity view name1";
         List<EntityView> namesOfView1 = Futures.allAsList(fillListOf(17, name1)).get(TIMEOUT, SECONDS);
-        @NotNull List<EntityView> loadedNamesOfView1 = loadListOf(new PageLink(5, 0, name1), "/api/tenant/entityViews?");
+        List<EntityView> loadedNamesOfView1 = loadListOf(new PageLink(5, 0, name1), "/api/tenant/entityViews?");
         assertThat(namesOfView1).as(name1).containsExactlyInAnyOrderElementsOf(loadedNamesOfView1);
 
-        @NotNull String name2 = "Entity view name2";
+        String name2 = "Entity view name2";
         List<EntityView> namesOfView2 = Futures.allAsList(fillListOf(15, name2)).get(TIMEOUT, SECONDS);
-        @NotNull List<EntityView> loadedNamesOfView2 = loadListOf(new PageLink(4, 0, name2), "/api/tenant/entityViews?");
+        List<EntityView> loadedNamesOfView2 = loadListOf(new PageLink(4, 0, name2), "/api/tenant/entityViews?");
         assertThat(namesOfView2).as(name2).containsExactlyInAnyOrderElementsOf(loadedNamesOfView2);
 
         deleteFutures.clear();
-        for (@NotNull EntityView view : loadedNamesOfView1) {
+        for (EntityView view : loadedNamesOfView1) {
             deleteFutures.add(executor.submit(() ->
                     doDelete("/api/entityView/" + view.getId().getId().toString()).andExpect(status().isOk())));
         }
@@ -462,7 +460,7 @@ public abstract class BaseEntityViewControllerTest extends AbstractControllerTes
         assertEquals(0, pageData.getData().size());
 
         deleteFutures.clear();
-        for (@NotNull EntityView view : loadedNamesOfView2) {
+        for (EntityView view : loadedNamesOfView2) {
             deleteFutures.add(executor.submit(() ->
                     doDelete("/api/entityView/" + view.getId().getId().toString()).andExpect(status().isOk())));
         }
@@ -476,8 +474,8 @@ public abstract class BaseEntityViewControllerTest extends AbstractControllerTes
 
     @Test
     public void testTheCopyOfAttrsIntoTSForTheView() throws Exception {
-        @NotNull Set<String> expectedActualAttributesSet = Set.of("caKey1", "caKey2", "caKey3", "caKey4");
-        @NotNull Set<String> actualAttributesSet =
+        Set<String> expectedActualAttributesSet = Set.of("caKey1", "caKey2", "caKey3", "caKey4");
+        Set<String> actualAttributesSet =
                 putAttributesAndWait("{\"caKey1\":\"value1\", \"caKey2\":true, \"caKey3\":42.0, \"caKey4\":73}", expectedActualAttributesSet);
         EntityView savedView = getNewSavedEntityView("Test entity view");
 
@@ -497,8 +495,8 @@ public abstract class BaseEntityViewControllerTest extends AbstractControllerTes
     @Test
     public void testTheCopyOfAttrsOutOfTSForTheView() throws Exception {
         long now = System.currentTimeMillis();
-        @NotNull Set<String> expectedActualAttributesSet = Set.of("caKey1", "caKey2", "caKey3", "caKey4");
-        @NotNull Set<String> actualAttributesSet =
+        Set<String> expectedActualAttributesSet = Set.of("caKey1", "caKey2", "caKey3", "caKey4");
+        Set<String> actualAttributesSet =
                 putAttributesAndWait("{\"caKey1\":\"value1\", \"caKey2\":true, \"caKey3\":42.0, \"caKey4\":73}", expectedActualAttributesSet);
 
         List<Map<String, Object>> values = doGetAsyncTyped("/api/plugins/telemetry/DEVICE/" + testDevice.getId() +
@@ -506,7 +504,7 @@ public abstract class BaseEntityViewControllerTest extends AbstractControllerTes
         });
         assertEquals(expectedActualAttributesSet.size(), values.size());
 
-        @NotNull EntityView view = new EntityView();
+        EntityView view = new EntityView();
         view.setEntityId(testDevice.getId());
         view.setTenantId(tenantId);
         view.setName("Test entity view");
@@ -525,8 +523,8 @@ public abstract class BaseEntityViewControllerTest extends AbstractControllerTes
 
     @Test
     public void testGetTelemetryWhenEntityViewTimeRangeInsideTimestampRange() throws Exception {
-        @NotNull DeviceTypeFilter dtf = new DeviceTypeFilter(testDevice.getType(), testDevice.getName());
-        @NotNull List<String> tsKeys = List.of("tsKey1", "tsKey2", "tsKey3");
+        DeviceTypeFilter dtf = new DeviceTypeFilter(testDevice.getType(), testDevice.getName());
+        List<String> tsKeys = List.of("tsKey1", "tsKey2", "tsKey3");
 
         DeviceCredentials deviceCredentials = doGet("/api/device/" + testDevice.getId().getId() + "/credentials", DeviceCredentials.class);
         assertEquals(testDevice.getId(), deviceCredentials.getDeviceId());
@@ -558,9 +556,9 @@ public abstract class BaseEntityViewControllerTest extends AbstractControllerTes
         getWsClient().waitForUpdate();
 
         String deviceId = testDevice.getId().getId().toString();
-        @NotNull Set<String> keys = getTelemetryKeys("DEVICE", deviceId);
+        Set<String> keys = getTelemetryKeys("DEVICE", deviceId);
 
-        @NotNull EntityView view = createEntityView("Test entity view", startTimeMs, endTimeMs);
+        EntityView view = createEntityView("Test entity view", startTimeMs, endTimeMs);
         EntityView savedView = doPost("/api/entityView", view, EntityView.class);
         String entityViewId = savedView.getId().getId().toString();
 
@@ -585,50 +583,47 @@ public abstract class BaseEntityViewControllerTest extends AbstractControllerTes
         }
     }
 
-    private void uploadTelemetry(@NotNull String strKvs, String accessToken) throws Exception {
+    private void uploadTelemetry(String strKvs, String accessToken) throws Exception {
         String viewDeviceId = testDevice.getId().getId().toString();
 
-        @NotNull String clientId = MqttAsyncClient.generateClientId();
-        @NotNull MqttAsyncClient client = new MqttAsyncClient("tcp://localhost:1883", clientId, new MemoryPersistence());
+        String clientId = MqttAsyncClient.generateClientId();
+        MqttAsyncClient client = new MqttAsyncClient("tcp://localhost:1883", clientId, new MemoryPersistence());
 
-        @NotNull MqttConnectOptions options = new MqttConnectOptions();
+        MqttConnectOptions options = new MqttConnectOptions();
         options.setUserName(accessToken);
         client.connect(options);
         awaitConnected(client, SECONDS.toMillis(30));
-        @NotNull MqttMessage message = new MqttMessage();
+        MqttMessage message = new MqttMessage();
         message.setPayload(strKvs.getBytes());
         IMqttDeliveryToken token = client.publish("v1/devices/me/telemetry", message);
         await("mqtt ack").pollInterval(5, MILLISECONDS).atMost(TIMEOUT, SECONDS).until(() -> token.getMessage() == null);
         client.disconnect();
     }
 
-    private void awaitConnected(@NotNull MqttAsyncClient client, long ms) throws InterruptedException {
+    private void awaitConnected(MqttAsyncClient client, long ms) throws InterruptedException {
         await("awaitConnected").pollInterval(5, MILLISECONDS).atMost(TIMEOUT, SECONDS)
                 .until(client::isConnected);
     }
 
-    @NotNull
     private Set<String> getTelemetryKeys(String type, String id) throws Exception {
         return new HashSet<>(doGetAsyncTyped("/api/plugins/telemetry/" + type + "/" + id + "/keys/timeseries", new TypeReference<>() {
         }));
     }
 
-    @NotNull
     private Set<String> getAttributeKeys(String type, String id) throws Exception {
         return new HashSet<>(doGetAsyncTyped("/api/plugins/telemetry/" + type + "/" + id + "/keys/attributes", new TypeReference<>() {
         }));
     }
 
-    private Map<String, List<Map<String, String>>> getTelemetryValues(String type, String id, @NotNull Set<String> keys, Long startTs, Long endTs) throws Exception {
+    private Map<String, List<Map<String, String>>> getTelemetryValues(String type, String id, Set<String> keys, Long startTs, Long endTs) throws Exception {
         return doGetAsyncTyped("/api/plugins/telemetry/" + type + "/" + id +
                 "/values/timeseries?keys=" + String.join(",", keys) + "&startTs=" + startTs + "&endTs=" + endTs, new TypeReference<>() {
         });
     }
 
-    @NotNull
-    private Set<String> putAttributesAndWait(@NotNull String stringKV, @NotNull Set<String> expectedKeySet) throws Exception {
-        @NotNull DeviceTypeFilter dtf = new DeviceTypeFilter(testDevice.getType(), testDevice.getName());
-        @NotNull List<EntityKey> keysToSubscribe = expectedKeySet.stream()
+    private Set<String> putAttributesAndWait(String stringKV, Set<String> expectedKeySet) throws Exception {
+        DeviceTypeFilter dtf = new DeviceTypeFilter(testDevice.getType(), testDevice.getName());
+        List<EntityKey> keysToSubscribe = expectedKeySet.stream()
                                                                  .map(key -> new EntityKey(EntityKeyType.CLIENT_ATTRIBUTE, key))
                                                                  .collect(Collectors.toList());
 
@@ -642,14 +637,14 @@ public abstract class BaseEntityViewControllerTest extends AbstractControllerTes
         String accessToken = deviceCredentials.getCredentialsId();
         assertNotNull(accessToken);
 
-        @NotNull String clientId = MqttAsyncClient.generateClientId();
-        @NotNull MqttAsyncClient client = new MqttAsyncClient("tcp://localhost:1883", clientId, new MemoryPersistence());
+        String clientId = MqttAsyncClient.generateClientId();
+        MqttAsyncClient client = new MqttAsyncClient("tcp://localhost:1883", clientId, new MemoryPersistence());
 
-        @NotNull MqttConnectOptions options = new MqttConnectOptions();
+        MqttConnectOptions options = new MqttConnectOptions();
         options.setUserName(accessToken);
         client.connect(options);
         awaitConnected(client, SECONDS.toMillis(30));
-        @NotNull MqttMessage message = new MqttMessage();
+        MqttMessage message = new MqttMessage();
         message.setPayload((stringKV).getBytes());
         getWsClient().registerWaitForUpdate();
         IMqttDeliveryToken token = client.publish("v1/devices/me/attributes", message);
@@ -659,7 +654,7 @@ public abstract class BaseEntityViewControllerTest extends AbstractControllerTes
     }
 
     @Nullable
-    private Object getValue(@NotNull List<Map<String, Object>> values, String stringValue) {
+    private Object getValue(List<Map<String, Object>> values, String stringValue) {
         return values.size() == 0 ? null :
                 values.stream()
                         .filter(value -> value.get("key").equals(stringValue))
@@ -667,18 +662,16 @@ public abstract class BaseEntityViewControllerTest extends AbstractControllerTes
     }
 
     private EntityView getNewSavedEntityView(String name) {
-        @NotNull EntityView view = createEntityView(name, 0, 0);
+        EntityView view = createEntityView(name, 0, 0);
         return doPost("/api/entityView", view, EntityView.class);
     }
 
-    @NotNull
     private ListenableFuture<EntityView> getNewSavedEntityViewAsync(String name) {
         return executor.submit(() -> getNewSavedEntityView(name));
     }
 
-    @NotNull
     private EntityView createEntityView(String name, long startTimeMs, long endTimeMs) {
-        @NotNull EntityView view = new EntityView();
+        EntityView view = new EntityView();
         view.setEntityId(testDevice.getId());
         view.setTenantId(tenantId);
         view.setName(name);
@@ -689,24 +682,21 @@ public abstract class BaseEntityViewControllerTest extends AbstractControllerTes
         return view;
     }
 
-    @NotNull
     private Customer getNewCustomer(String title) {
-        @NotNull Customer customer = new Customer();
+        Customer customer = new Customer();
         customer.setTitle(title);
         return customer;
     }
 
-    @NotNull
     private Tenant getNewTenant(String title) {
-        @NotNull Tenant tenant = new Tenant();
+        Tenant tenant = new Tenant();
         tenant.setTitle(title);
         return tenant;
     }
 
-    @NotNull
     private List<ListenableFuture<EntityView>> fillListByTemplate(int limit, String partOfName, String urlTemplate) {
-        @NotNull List<ListenableFuture<EntityView>> futures = new ArrayList<>(limit);
-        for (@NotNull ListenableFuture<EntityView> viewFuture : fillListOf(limit, partOfName)) {
+        List<ListenableFuture<EntityView>> futures = new ArrayList<>(limit);
+        for (ListenableFuture<EntityView> viewFuture : fillListOf(limit, partOfName)) {
             futures.add(Futures.transform(viewFuture, view ->
                             doPost(urlTemplate + view.getId().getId().toString(), EntityView.class),
                     MoreExecutors.directExecutor()));
@@ -714,18 +704,17 @@ public abstract class BaseEntityViewControllerTest extends AbstractControllerTes
         return futures;
     }
 
-    @NotNull
     private List<ListenableFuture<EntityView>> fillListOf(int limit, String partOfName) {
-        @NotNull List<ListenableFuture<EntityView>> viewNameFutures = new ArrayList<>(limit);
+        List<ListenableFuture<EntityView>> viewNameFutures = new ArrayList<>(limit);
         for (int i = 0; i < limit; i++) {
             boolean even = i % 2 == 0;
-            @NotNull ListenableFuture<CustomerId> customerFuture = executor.submit(() -> {
-                @NotNull Customer customer = getNewCustomer("Test customer " + Math.random());
+            ListenableFuture<CustomerId> customerFuture = executor.submit(() -> {
+                Customer customer = getNewCustomer("Test customer " + Math.random());
                 return doPost("/api/customer", customer, Customer.class).getId();
             });
 
             viewNameFutures.add(Futures.transform(customerFuture, customerId -> {
-                @NotNull String fullName = partOfName + ' ' + StringUtils.randomAlphanumeric(15);
+                String fullName = partOfName + ' ' + StringUtils.randomAlphanumeric(15);
                 fullName = even ? fullName.toLowerCase() : fullName.toUpperCase();
                 EntityView view = getNewSavedEntityView(fullName);
                 view.setCustomerId(customerId);
@@ -735,9 +724,8 @@ public abstract class BaseEntityViewControllerTest extends AbstractControllerTes
         return viewNameFutures;
     }
 
-    @NotNull
-    private List<EntityView> loadListOf(@NotNull PageLink pageLink, String urlTemplate) throws Exception {
-        @NotNull List<EntityView> loadedItems = new ArrayList<>();
+    private List<EntityView> loadListOf(PageLink pageLink, String urlTemplate) throws Exception {
+        List<EntityView> loadedItems = new ArrayList<>();
         PageData<EntityView> pageData;
         do {
             pageData = doGetTypedWithPageLink(urlTemplate, PAGE_DATA_ENTITY_VIEW_TYPE_REF, pageLink);
@@ -750,9 +738,8 @@ public abstract class BaseEntityViewControllerTest extends AbstractControllerTes
         return loadedItems;
     }
 
-    @NotNull
-    private List<EntityViewInfo> loadListOfInfo(@NotNull PageLink pageLink, String urlTemplate) throws Exception {
-        @NotNull List<EntityViewInfo> loadedItems = new ArrayList<>();
+    private List<EntityViewInfo> loadListOfInfo(PageLink pageLink, String urlTemplate) throws Exception {
+        List<EntityViewInfo> loadedItems = new ArrayList<>();
         PageData<EntityViewInfo> pageData;
         do {
             pageData = doGetTypedWithPageLink(urlTemplate, PAGE_DATA_ENTITY_VIEW_INFO_TYPE_REF, pageLink);

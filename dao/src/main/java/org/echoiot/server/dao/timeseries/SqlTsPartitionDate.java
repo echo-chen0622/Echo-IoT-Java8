@@ -1,6 +1,5 @@
 package org.echoiot.server.dao.timeseries;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.LocalDateTime;
@@ -30,8 +29,7 @@ public enum SqlTsPartitionDate {
         return truncateUnit;
     }
 
-    @NotNull
-    public LocalDateTime trancateTo(@NotNull LocalDateTime time) {
+    public LocalDateTime trancateTo(LocalDateTime time) {
         switch (this) {
             case DAYS:
                 return time.truncatedTo(ChronoUnit.DAYS);
@@ -46,8 +44,7 @@ public enum SqlTsPartitionDate {
         }
     }
 
-    @NotNull
-    public LocalDateTime plusTo(@NotNull LocalDateTime time) {
+    public LocalDateTime plusTo(LocalDateTime time) {
         switch (this) {
             case DAYS:
                 return time.plusDays(1);
@@ -60,11 +57,10 @@ public enum SqlTsPartitionDate {
         }
     }
 
-    @NotNull
     public static Optional<SqlTsPartitionDate> parse(@Nullable String name) {
         @Nullable SqlTsPartitionDate partition = null;
         if (name != null) {
-            for (@NotNull SqlTsPartitionDate partitionDate : SqlTsPartitionDate.values()) {
+            for (SqlTsPartitionDate partitionDate : SqlTsPartitionDate.values()) {
                 if (partitionDate.name().equalsIgnoreCase(name)) {
                     partition = partitionDate;
                     break;

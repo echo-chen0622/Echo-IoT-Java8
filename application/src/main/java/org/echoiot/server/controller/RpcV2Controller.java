@@ -22,7 +22,6 @@ import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.rpc.RemoveRpcActorMsg;
 import org.echoiot.server.service.security.permission.Operation;
 import org.echoiot.server.service.telemetry.exception.ToErrorResponseEntity;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -89,7 +88,7 @@ public class RpcV2Controller extends AbstractRpcController {
     @RequestMapping(value = "/oneway/{deviceId}", method = RequestMethod.POST)
     @ResponseBody
     public DeferredResult<ResponseEntity> handleOneWayDeviceRPCRequest(
-            @NotNull @ApiParam(value = ControllerConstants.DEVICE_ID_PARAM_DESCRIPTION)
+            @ApiParam(value = ControllerConstants.DEVICE_ID_PARAM_DESCRIPTION)
             @PathVariable("deviceId") String deviceIdStr,
             @ApiParam(value = "A JSON value representing the RPC request.")
             @RequestBody String requestBody) throws EchoiotException {
@@ -107,7 +106,7 @@ public class RpcV2Controller extends AbstractRpcController {
     @RequestMapping(value = "/twoway/{deviceId}", method = RequestMethod.POST)
     @ResponseBody
     public DeferredResult<ResponseEntity> handleTwoWayDeviceRPCRequest(
-            @NotNull @ApiParam(value = ControllerConstants.DEVICE_ID_PARAM_DESCRIPTION)
+            @ApiParam(value = ControllerConstants.DEVICE_ID_PARAM_DESCRIPTION)
             @PathVariable(ControllerConstants.DEVICE_ID) String deviceIdStr,
             @ApiParam(value = "A JSON value representing the RPC request.")
             @RequestBody String requestBody) throws EchoiotException {
@@ -119,24 +118,23 @@ public class RpcV2Controller extends AbstractRpcController {
     @RequestMapping(value = "/persistent/{rpcId}", method = RequestMethod.GET)
     @ResponseBody
     public Rpc getPersistedRpc(
-            @NotNull @ApiParam(value = ControllerConstants.RPC_ID_PARAM_DESCRIPTION, required = true)
+            @ApiParam(value = ControllerConstants.RPC_ID_PARAM_DESCRIPTION, required = true)
             @PathVariable(ControllerConstants.RPC_ID) String strRpc) throws EchoiotException {
         checkParameter("RpcId", strRpc);
         try {
-            @NotNull RpcId rpcId = new RpcId(UUID.fromString(strRpc));
+            RpcId rpcId = new RpcId(UUID.fromString(strRpc));
             return checkRpcId(rpcId, Operation.READ);
         } catch (Exception e) {
             throw handleException(e);
         }
     }
 
-    @NotNull
     @ApiOperation(value = "Get persistent RPC requests", notes = "Allows to query RPC calls for specific device using pagination." + ControllerConstants.TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/persistent/device/{deviceId}", method = RequestMethod.GET)
     @ResponseBody
     public DeferredResult<ResponseEntity> getPersistedRpcByDevice(
-            @NotNull @ApiParam(value = ControllerConstants.DEVICE_ID_PARAM_DESCRIPTION, required = true)
+            @ApiParam(value = ControllerConstants.DEVICE_ID_PARAM_DESCRIPTION, required = true)
             @PathVariable(ControllerConstants.DEVICE_ID) String strDeviceId,
             @ApiParam(value = ControllerConstants.PAGE_SIZE_DESCRIPTION, required = true)
             @RequestParam int pageSize,
@@ -148,7 +146,7 @@ public class RpcV2Controller extends AbstractRpcController {
             @RequestParam(required = false) String textSearch,
             @ApiParam(value = ControllerConstants.SORT_PROPERTY_DESCRIPTION, allowableValues = ControllerConstants.RPC_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
-            @NotNull @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
+            @ApiParam(value = ControllerConstants.SORT_ORDER_DESCRIPTION, allowableValues = ControllerConstants.SORT_ORDER_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortOrder) throws EchoiotException {
         checkParameter("DeviceId", strDeviceId);
         try {
@@ -157,9 +155,9 @@ public class RpcV2Controller extends AbstractRpcController {
             }
 
             TenantId tenantId = getCurrentUser().getTenantId();
-            @NotNull PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
-            @NotNull DeviceId deviceId = new DeviceId(UUID.fromString(strDeviceId));
-            @NotNull final DeferredResult<ResponseEntity> response = new DeferredResult<>();
+            PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
+            DeviceId deviceId = new DeviceId(UUID.fromString(strDeviceId));
+            final DeferredResult<ResponseEntity> response = new DeferredResult<>();
 
             accessValidator.validate(getCurrentUser(), Operation.RPC_CALL, deviceId, new HttpValidationCallback(response, new FutureCallback<>() {
                 @Override
@@ -195,16 +193,16 @@ public class RpcV2Controller extends AbstractRpcController {
     @RequestMapping(value = "/persistent/{rpcId}", method = RequestMethod.DELETE)
     @ResponseBody
     public void deleteRpc(
-            @NotNull @ApiParam(value = ControllerConstants.RPC_ID_PARAM_DESCRIPTION, required = true)
+            @ApiParam(value = ControllerConstants.RPC_ID_PARAM_DESCRIPTION, required = true)
             @PathVariable(ControllerConstants.RPC_ID) String strRpc) throws EchoiotException {
         checkParameter("RpcId", strRpc);
         try {
-            @NotNull RpcId rpcId = new RpcId(UUID.fromString(strRpc));
+            RpcId rpcId = new RpcId(UUID.fromString(strRpc));
             Rpc rpc = checkRpcId(rpcId, Operation.DELETE);
 
             if (rpc != null) {
                 if (rpc.getStatus().equals(RpcStatus.QUEUED)) {
-                    @NotNull RemoveRpcActorMsg removeMsg = new RemoveRpcActorMsg(getTenantId(), rpc.getDeviceId(), rpc.getUuidId());
+                    RemoveRpcActorMsg removeMsg = new RemoveRpcActorMsg(getTenantId(), rpc.getDeviceId(), rpc.getUuidId());
                     log.trace("[{}] Forwarding msg {} to queue actor!", rpc.getDeviceId(), rpc);
                     tbClusterService.pushMsgToCore(removeMsg, null);
                 }
@@ -212,7 +210,7 @@ public class RpcV2Controller extends AbstractRpcController {
                 rpcService.deleteRpc(getTenantId(), rpcId);
                 rpc.setStatus(RpcStatus.DELETED);
 
-                @NotNull TbMsg msg = TbMsg.newMsg(DataConstants.RPC_DELETED, rpc.getDeviceId(), TbMsgMetaData.EMPTY, JacksonUtil.toString(rpc));
+                TbMsg msg = TbMsg.newMsg(DataConstants.RPC_DELETED, rpc.getDeviceId(), TbMsgMetaData.EMPTY, JacksonUtil.toString(rpc));
                 tbClusterService.pushMsgToRuleEngine(getTenantId(), rpc.getDeviceId(), msg, null);
             }
         } catch (Exception e) {

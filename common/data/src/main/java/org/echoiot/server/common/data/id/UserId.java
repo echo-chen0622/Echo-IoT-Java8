@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import org.echoiot.server.common.data.EntityType;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
@@ -15,12 +14,10 @@ public class UserId extends UUIDBased implements EntityId {
         super(id);
     }
 
-    @NotNull
-    public static UserId fromString(@NotNull String userId) {
+    public static UserId fromString(String userId) {
         return new UserId(UUID.fromString(userId));
     }
 
-    @NotNull
     @ApiModelProperty(position = 2, required = true, value = "string", example = "USER", allowableValues = "USER")
     @Override
     public EntityType getEntityType() {

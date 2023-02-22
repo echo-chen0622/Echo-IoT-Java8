@@ -2,7 +2,6 @@ package org.echoiot.rule.engine.mail;
 
 import lombok.Data;
 import org.echoiot.rule.engine.api.NodeConfiguration;
-import org.jetbrains.annotations.NotNull;
 
 @Data
 public class TbSendEmailNodeConfiguration implements NodeConfiguration {
@@ -22,10 +21,9 @@ public class TbSendEmailNodeConfiguration implements NodeConfiguration {
     private String proxyUser;
     private String proxyPassword;
 
-    @NotNull
     @Override
     public TbSendEmailNodeConfiguration defaultConfiguration() {
-        @NotNull TbSendEmailNodeConfiguration configuration = new TbSendEmailNodeConfiguration();
+        TbSendEmailNodeConfiguration configuration = new TbSendEmailNodeConfiguration();
         configuration.setUseSystemSmtpSettings(true);
         configuration.setSmtpHost("localhost");
         configuration.setSmtpProtocol("smtp");

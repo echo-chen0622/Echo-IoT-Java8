@@ -12,22 +12,18 @@ import org.echoiot.server.dao.service.DataValidator;
 import org.echoiot.server.dao.tenant.TenantService;
 import org.echoiot.server.dao.widget.WidgetTypeDao;
 import org.echoiot.server.dao.widget.WidgetsBundleDao;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 @Component
 @AllArgsConstructor
 public class WidgetTypeDataValidator extends DataValidator<WidgetTypeDetails> {
 
-    @NotNull
     private final WidgetTypeDao widgetTypeDao;
-    @NotNull
     private final WidgetsBundleDao widgetsBundleDao;
-    @NotNull
     private final TenantService tenantService;
 
     @Override
-    protected void validateDataImpl(TenantId tenantId, @NotNull WidgetTypeDetails widgetTypeDetails) {
+    protected void validateDataImpl(TenantId tenantId, WidgetTypeDetails widgetTypeDetails) {
         if (StringUtils.isEmpty(widgetTypeDetails.getName())) {
             throw new DataValidationException("Widgets type name should be specified!");
         }
@@ -48,7 +44,7 @@ public class WidgetTypeDataValidator extends DataValidator<WidgetTypeDetails> {
     }
 
     @Override
-    protected void validateCreate(TenantId tenantId, @NotNull WidgetTypeDetails widgetTypeDetails) {
+    protected void validateCreate(TenantId tenantId, WidgetTypeDetails widgetTypeDetails) {
         WidgetsBundle widgetsBundle = widgetsBundleDao.findWidgetsBundleByTenantIdAndAlias(widgetTypeDetails.getTenantId().getId(), widgetTypeDetails.getBundleAlias());
         if (widgetsBundle == null) {
             throw new DataValidationException("Widget type is referencing to non-existent widgets bundle!");
@@ -57,7 +53,7 @@ public class WidgetTypeDataValidator extends DataValidator<WidgetTypeDetails> {
         if (alias == null || alias.trim().isEmpty()) {
             alias = widgetTypeDetails.getName().toLowerCase().replaceAll("\\W+", "_");
         }
-        @NotNull String originalAlias = alias;
+        String originalAlias = alias;
         int c = 1;
         WidgetType withSameAlias;
         do {
@@ -69,9 +65,8 @@ public class WidgetTypeDataValidator extends DataValidator<WidgetTypeDetails> {
         widgetTypeDetails.setAlias(alias);
     }
 
-    @NotNull
     @Override
-    protected WidgetTypeDetails validateUpdate(TenantId tenantId, @NotNull WidgetTypeDetails widgetTypeDetails) {
+    protected WidgetTypeDetails validateUpdate(TenantId tenantId, WidgetTypeDetails widgetTypeDetails) {
         WidgetTypeDetails storedWidgetType = widgetTypeDao.findById(tenantId, widgetTypeDetails.getId().getId());
         if (!storedWidgetType.getTenantId().getId().equals(widgetTypeDetails.getTenantId().getId())) {
             throw new DataValidationException("Can't move existing widget type to different tenant!");

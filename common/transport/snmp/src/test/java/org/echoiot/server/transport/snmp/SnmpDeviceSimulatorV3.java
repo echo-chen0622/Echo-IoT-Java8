@@ -1,6 +1,5 @@
 package org.echoiot.server.transport.snmp;
 
-import org.jetbrains.annotations.NotNull;
 import org.snmp4j.MessageDispatcherImpl;
 import org.snmp4j.TransportMapping;
 import org.snmp4j.agent.*;
@@ -43,7 +42,7 @@ public class SnmpDeviceSimulatorV3 extends BaseAgent {
         agent.setWorkerPool(ThreadPool.create("RequestPool", 4));
     }
 
-    public void setUpMappings(@NotNull Map<String, String> oidToResponseMappings) {
+    public void setUpMappings(Map<String, String> oidToResponseMappings) {
         unregisterManagedObject(getSnmpv2MIB());
         oidToResponseMappings.forEach((oid, response) -> {
             registerManagedObject(new MOScalar<>(new OID(oid), MOAccessImpl.ACCESS_READ_WRITE, new OctetString(response)));
@@ -57,7 +56,7 @@ public class SnmpDeviceSimulatorV3 extends BaseAgent {
         }
     }
 
-    protected void unregisterManagedObject(@NotNull MOGroup moGroup) {
+    protected void unregisterManagedObject(MOGroup moGroup) {
         moGroup.unregisterMOs(server, getContext(moGroup));
     }
 
@@ -72,8 +71,8 @@ public class SnmpDeviceSimulatorV3 extends BaseAgent {
         }
     }
 
-    protected void addNotificationTargets(@NotNull SnmpTargetMIB targetMIB,
-                                          @NotNull SnmpNotificationMIB notificationMIB) {
+    protected void addNotificationTargets(SnmpTargetMIB targetMIB,
+                                          SnmpNotificationMIB notificationMIB) {
         targetMIB.addDefaultTDomains();
 
         targetMIB.addTargetAddress(new OctetString("notificationV2c"),
@@ -107,7 +106,7 @@ public class SnmpDeviceSimulatorV3 extends BaseAgent {
                 SnmpNotificationMIB.SnmpNotifyTypeEnum.inform,
                 StorageType.permanent);
     }
-    protected void addViews(@NotNull VacmMIB vacm) {
+    protected void addViews(VacmMIB vacm) {
         vacm.addGroup(SecurityModel.SECURITY_MODEL_SNMPv1,
                 new OctetString("cpublic"),
                 new OctetString("v1v2group"),
@@ -286,8 +285,8 @@ public class SnmpDeviceSimulatorV3 extends BaseAgent {
 
     }
 
-    protected void addUsmUser(@NotNull USM usm) {
-        @NotNull UsmUser user = new UsmUser(new OctetString("SHADES"),
+    protected void addUsmUser(USM usm) {
+        UsmUser user = new UsmUser(new OctetString("SHADES"),
                                             AuthSHA.ID,
                                             new OctetString("SHADESAuthPassword"),
                                             PrivDES.ID,
@@ -363,11 +362,11 @@ public class SnmpDeviceSimulatorV3 extends BaseAgent {
                 new OctetString("MD5AES256PrivPassword"));
         usm.addUser(user.getSecurityName(), usm.getLocalEngineID(), user);
 
-        @NotNull OctetString securityName = new OctetString("aboba");
-        @NotNull OctetString authenticationPassphrase = new OctetString("abobaaboba");
-        @NotNull OctetString privacyPassphrase = new OctetString("abobaaboba");
-        @NotNull OID authenticationProtocol = AuthSHA.ID;
-        @NotNull OID privacyProtocol = PrivDES.ID; // FIXME: to config
+        OctetString securityName = new OctetString("aboba");
+        OctetString authenticationPassphrase = new OctetString("abobaaboba");
+        OctetString privacyPassphrase = new OctetString("abobaaboba");
+        OID authenticationProtocol = AuthSHA.ID;
+        OID privacyProtocol = PrivDES.ID; // FIXME: to config
         user = new UsmUser(securityName, authenticationProtocol, authenticationPassphrase, privacyProtocol, privacyPassphrase);
         usm.addUser(user);
 
@@ -404,13 +403,12 @@ public class SnmpDeviceSimulatorV3 extends BaseAgent {
         this.usm = usm;
     }
 
-    @NotNull
     @SuppressWarnings({"unchecked", "rawtypes"})
     private static DefaultMOTable createStaticIfXTable() {
-        @NotNull MOTableSubIndex[] subIndexes =
+        MOTableSubIndex[] subIndexes =
                 new MOTableSubIndex[] { new MOTableSubIndex(SMIConstants.SYNTAX_INTEGER) };
-        @NotNull MOTableIndex indexDef = new MOTableIndex(subIndexes, false);
-        @NotNull MOColumn[] columns = new MOColumn[19];
+        MOTableIndex indexDef = new MOTableIndex(subIndexes, false);
+        MOColumn[] columns = new MOColumn[19];
         int c = 0;
         columns[c++] =
                 new MOColumn(c, SMIConstants.SYNTAX_OCTET_STRING,
@@ -470,10 +468,10 @@ public class SnmpDeviceSimulatorV3 extends BaseAgent {
                 new MOColumn(c, SMIConstants.SYNTAX_TIMETICKS,
                         MOAccessImpl.ACCESS_READ_ONLY);     // ifCounterDiscontinuityTime
 
-        @NotNull DefaultMOTable ifXTable =
+        DefaultMOTable ifXTable =
                 new DefaultMOTable(new OID("1.3.6.1.2.1.31.1.1.1"), indexDef, columns);
         MOMutableTableModel model = (MOMutableTableModel) ifXTable.getModel();
-        @NotNull Variable[] rowValues1 = new Variable[] {
+        Variable[] rowValues1 = new Variable[] {
                 new OctetString("Ethernet-0"),
                 new Integer32(1),
                 new Integer32(2),
@@ -494,7 +492,7 @@ public class SnmpDeviceSimulatorV3 extends BaseAgent {
                 new OctetString("My eth"),
                 new TimeTicks(1000)
         };
-        @NotNull Variable[] rowValues2 = new Variable[] {
+        Variable[] rowValues2 = new Variable[] {
                 new OctetString("Loopback"),
                 new Integer32(21),
                 new Integer32(22),
@@ -521,13 +519,12 @@ public class SnmpDeviceSimulatorV3 extends BaseAgent {
         return ifXTable;
     }
 
-    @NotNull
     @SuppressWarnings({"unchecked", "rawtypes"})
     private static DefaultMOTable createStaticIfTable() {
-        @NotNull MOTableSubIndex[] subIndexes =
+        MOTableSubIndex[] subIndexes =
                 new MOTableSubIndex[] { new MOTableSubIndex(SMIConstants.SYNTAX_INTEGER) };
-        @NotNull MOTableIndex indexDef = new MOTableIndex(subIndexes, false);
-        @NotNull MOColumn[] columns = new MOColumn[8];
+        MOTableIndex indexDef = new MOTableIndex(subIndexes, false);
+        MOColumn[] columns = new MOColumn[8];
         int c = 0;
         columns[c++] =
                 new MOColumn(c, SMIConstants.SYNTAX_INTEGER,
@@ -554,10 +551,10 @@ public class SnmpDeviceSimulatorV3 extends BaseAgent {
                 new MOColumn(c, SMIConstants.SYNTAX_INTEGER,
                         MOAccessImpl.ACCESS_READ_ONLY);     // ifOperStatus
 
-        @NotNull DefaultMOTable ifTable =
+        DefaultMOTable ifTable =
                 new DefaultMOTable(new OID("1.3.6.1.2.1.2.2.1"), indexDef, columns);
         MOMutableTableModel model = (MOMutableTableModel) ifTable.getModel();
-        @NotNull Variable[] rowValues1 = new Variable[] {
+        Variable[] rowValues1 = new Variable[] {
                 new Integer32(1),
                 new OctetString("eth0"),
                 new Integer32(6),
@@ -567,7 +564,7 @@ public class SnmpDeviceSimulatorV3 extends BaseAgent {
                 new Integer32(1),
                 new Integer32(1)
         };
-        @NotNull Variable[] rowValues2 = new Variable[] {
+        Variable[] rowValues2 = new Variable[] {
                 new Integer32(2),
                 new OctetString("loopback"),
                 new Integer32(24),
@@ -608,8 +605,8 @@ public class SnmpDeviceSimulatorV3 extends BaseAgent {
         // here we should unregister those objects previously registered...
     }
 
-    protected void addCommunities(@NotNull SnmpCommunityMIB communityMIB) {
-        @NotNull Variable[] com2sec = new Variable[] {
+    protected void addCommunities(SnmpCommunityMIB communityMIB) {
+        Variable[] com2sec = new Variable[] {
                 new OctetString("public"),              // community name
                 new OctetString("cpublic"),              // security name
                 getAgent().getContextEngineID(),        // local engine ID

@@ -13,7 +13,6 @@ import org.echoiot.server.common.data.script.ScriptLanguage;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.TbMsgDataType;
 import org.echoiot.server.common.msg.TbMsgMetaData;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -41,7 +40,7 @@ public class TbJsFilterNodeTest {
     @Test
     public void falseEvaluationDoNotSendMsg() throws TbNodeException, ScriptException {
         initWithScript();
-        @NotNull TbMsg msg = TbMsg.newMsg("USER", null, new TbMsgMetaData(), TbMsgDataType.JSON, "{}", ruleChainId, ruleNodeId);
+        TbMsg msg = TbMsg.newMsg("USER", null, new TbMsgMetaData(), TbMsgDataType.JSON, "{}", ruleChainId, ruleNodeId);
         when(scriptEngine.executeFilterAsync(msg)).thenReturn(Futures.immediateFuture(false));
 
         node.onMsg(ctx, msg);
@@ -52,8 +51,8 @@ public class TbJsFilterNodeTest {
     @Test
     public void exceptionInJsThrowsException() throws TbNodeException {
         initWithScript();
-        @NotNull TbMsgMetaData metaData = new TbMsgMetaData();
-        @NotNull TbMsg msg = TbMsg.newMsg("USER", null, metaData, TbMsgDataType.JSON, "{}", ruleChainId, ruleNodeId);
+        TbMsgMetaData metaData = new TbMsgMetaData();
+        TbMsg msg = TbMsg.newMsg("USER", null, metaData, TbMsgDataType.JSON, "{}", ruleChainId, ruleNodeId);
         when(scriptEngine.executeFilterAsync(msg)).thenReturn(Futures.immediateFailedFuture(new ScriptException("error")));
 
 
@@ -64,8 +63,8 @@ public class TbJsFilterNodeTest {
     @Test
     public void metadataConditionCanBeTrue() throws TbNodeException {
         initWithScript();
-        @NotNull TbMsgMetaData metaData = new TbMsgMetaData();
-        @NotNull TbMsg msg = TbMsg.newMsg("USER", null, metaData, TbMsgDataType.JSON, "{}", ruleChainId, ruleNodeId);
+        TbMsgMetaData metaData = new TbMsgMetaData();
+        TbMsg msg = TbMsg.newMsg("USER", null, metaData, TbMsgDataType.JSON, "{}", ruleChainId, ruleNodeId);
         when(scriptEngine.executeFilterAsync(msg)).thenReturn(Futures.immediateFuture(true));
 
         node.onMsg(ctx, msg);
@@ -74,11 +73,11 @@ public class TbJsFilterNodeTest {
     }
 
     private void initWithScript() throws TbNodeException {
-        @NotNull TbJsFilterNodeConfiguration config = new TbJsFilterNodeConfiguration();
+        TbJsFilterNodeConfiguration config = new TbJsFilterNodeConfiguration();
         config.setScriptLang(ScriptLanguage.JS);
         config.setJsScript("scr");
-        @NotNull ObjectMapper mapper = new ObjectMapper();
-        @NotNull TbNodeConfiguration nodeConfiguration = new TbNodeConfiguration(mapper.valueToTree(config));
+        ObjectMapper mapper = new ObjectMapper();
+        TbNodeConfiguration nodeConfiguration = new TbNodeConfiguration(mapper.valueToTree(config));
 
         when(ctx.createScriptEngine(ScriptLanguage.JS, "scr")).thenReturn(scriptEngine);
 
@@ -87,7 +86,7 @@ public class TbJsFilterNodeTest {
     }
 
     private void verifyError(TbMsg msg, String message, Class expectedClass) {
-        @NotNull ArgumentCaptor<Throwable> captor = ArgumentCaptor.forClass(Throwable.class);
+        ArgumentCaptor<Throwable> captor = ArgumentCaptor.forClass(Throwable.class);
         verify(ctx).tellFailure(same(msg), captor.capture());
 
         Throwable value = captor.getValue();

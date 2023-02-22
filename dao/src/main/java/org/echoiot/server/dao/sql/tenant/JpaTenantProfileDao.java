@@ -10,7 +10,6 @@ import org.echoiot.server.dao.model.sql.TenantProfileEntity;
 import org.echoiot.server.dao.sql.JpaAbstractSearchTextDao;
 import org.echoiot.server.dao.tenant.TenantProfileDao;
 import org.echoiot.server.dao.util.SqlDao;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
@@ -25,7 +24,6 @@ public class JpaTenantProfileDao extends JpaAbstractSearchTextDao<TenantProfileE
     @Resource
     private TenantProfileRepository tenantProfileRepository;
 
-    @NotNull
     @Override
     protected Class<TenantProfileEntity> getEntityClass() {
         return TenantProfileEntity.class;
@@ -41,18 +39,16 @@ public class JpaTenantProfileDao extends JpaAbstractSearchTextDao<TenantProfileE
         return tenantProfileRepository.findTenantProfileInfoById(tenantProfileId);
     }
 
-    @NotNull
     @Override
-    public PageData<TenantProfile> findTenantProfiles(TenantId tenantId, @NotNull PageLink pageLink) {
+    public PageData<TenantProfile> findTenantProfiles(TenantId tenantId, PageLink pageLink) {
         return DaoUtil.toPageData(
                 tenantProfileRepository.findTenantProfiles(
                         Objects.toString(pageLink.getTextSearch(), ""),
                         DaoUtil.toPageable(pageLink)));
     }
 
-    @NotNull
     @Override
-    public PageData<EntityInfo> findTenantProfileInfos(TenantId tenantId, @NotNull PageLink pageLink) {
+    public PageData<EntityInfo> findTenantProfileInfos(TenantId tenantId, PageLink pageLink) {
         return DaoUtil.pageToPageData(
                 tenantProfileRepository.findTenantProfileInfos(
                         Objects.toString(pageLink.getTextSearch(), ""),

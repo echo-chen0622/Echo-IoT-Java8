@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.SystemUtils;
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.dao.util.TimescaleDBTsDao;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
@@ -62,7 +61,7 @@ public class TimescaleTsDatabaseUpgradeService extends AbstractSqlTsDatabaseUpgr
     private InstallScripts installScripts;
 
     @Override
-    public void upgradeDatabase(@NotNull String fromVersion) throws Exception {
+    public void upgradeDatabase(String fromVersion) throws Exception {
         switch (fromVersion) {
             case "2.4.3":
                 try (Connection conn = DriverManager.getConnection(dbUrl, dbUserName, dbPassword)) {
@@ -112,7 +111,7 @@ public class TimescaleTsDatabaseUpgradeService extends AbstractSqlTsDatabaseUpgr
                             } else {
                                 try {
                                     Path tempDirPath = Files.createTempDirectory("ts_kv");
-                                    @NotNull File tempDirAsFile = tempDirPath.toFile();
+                                    File tempDirAsFile = tempDirPath.toFile();
                                     boolean writable = tempDirAsFile.setWritable(true, false);
                                     boolean readable = tempDirAsFile.setReadable(true, false);
                                     boolean executable = tempDirAsFile.setExecutable(true, false);
@@ -176,7 +175,7 @@ public class TimescaleTsDatabaseUpgradeService extends AbstractSqlTsDatabaseUpgr
         }
     }
 
-    private void insertTimeseries(@NotNull Connection conn) {
+    private void insertTimeseries(Connection conn) {
         log.warn("Upgrade script failed using the copy to/from files strategy!" +
                 " Trying to perfrom the upgrade using Inserts strategy ...");
         executeQuery(conn, CALL_INSERT_INTO_TS_KV_CURSOR);
@@ -192,8 +191,8 @@ public class TimescaleTsDatabaseUpgradeService extends AbstractSqlTsDatabaseUpgr
     }
 
     @Override
-    protected void loadSql(@NotNull Connection conn, String fileName, String version) {
-        @NotNull Path schemaUpdateFile = Paths.get(installScripts.getDataDir(), "upgrade", version, fileName);
+    protected void loadSql(Connection conn, String fileName, String version) {
+        Path schemaUpdateFile = Paths.get(installScripts.getDataDir(), "upgrade", version, fileName);
         try {
             loadFunctions(schemaUpdateFile, conn);
             log.info("Functions successfully loaded!");

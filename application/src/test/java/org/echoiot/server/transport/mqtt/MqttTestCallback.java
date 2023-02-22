@@ -6,7 +6,6 @@ import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.internal.wire.MqttWireMessage;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CountDownLatch;
 
@@ -15,7 +14,6 @@ import java.util.concurrent.CountDownLatch;
 public class MqttTestCallback implements MqttCallback {
 
     protected CountDownLatch subscribeLatch;
-    @NotNull
     protected final CountDownLatch deliveryLatch;
     protected int qoS;
     protected byte[] payloadBytes;
@@ -45,7 +43,7 @@ public class MqttTestCallback implements MqttCallback {
     }
 
     @Override
-    public void messageArrived(String requestTopic, @NotNull MqttMessage mqttMessage) {
+    public void messageArrived(String requestTopic, MqttMessage mqttMessage) {
         if (awaitSubTopic == null) {
             log.warn("messageArrived on topic: {}", requestTopic);
             qoS = mqttMessage.getQos();
@@ -56,7 +54,7 @@ public class MqttTestCallback implements MqttCallback {
         }
     }
 
-    protected void messageArrivedOnAwaitSubTopic(String requestTopic, @NotNull MqttMessage mqttMessage) {
+    protected void messageArrivedOnAwaitSubTopic(String requestTopic, MqttMessage mqttMessage) {
         log.warn("messageArrived on topic: {}, awaitSubTopic: {}", requestTopic, awaitSubTopic);
         if (awaitSubTopic.equals(requestTopic)) {
             qoS = mqttMessage.getQos();
@@ -66,7 +64,7 @@ public class MqttTestCallback implements MqttCallback {
     }
 
     @Override
-    public void deliveryComplete(@NotNull IMqttDeliveryToken iMqttDeliveryToken) {
+    public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
         log.warn("delivery complete: {}", iMqttDeliveryToken.getResponse());
         pubAckReceived = iMqttDeliveryToken.getResponse().getType() == MqttWireMessage.MESSAGE_TYPE_PUBACK;
         deliveryLatch.countDown();

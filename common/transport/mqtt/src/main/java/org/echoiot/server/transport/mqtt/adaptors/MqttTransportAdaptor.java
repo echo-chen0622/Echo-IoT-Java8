@@ -8,7 +8,6 @@ import org.echoiot.server.common.data.ota.OtaPackageType;
 import org.echoiot.server.common.transport.adaptor.AdaptorException;
 import org.echoiot.server.gen.transport.TransportProtos.*;
 import org.echoiot.server.transport.mqtt.session.MqttDeviceAwareSessionContext;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
@@ -51,11 +50,10 @@ public interface MqttTransportAdaptor {
 
     Optional<MqttMessage> convertToPublish(MqttDeviceAwareSessionContext ctx, byte[] firmwareChunk, String requestId, int chunk, OtaPackageType firmwareType) throws AdaptorException;
 
-    @NotNull
-    default MqttPublishMessage createMqttPublishMsg(@NotNull MqttDeviceAwareSessionContext ctx, @NotNull String topic, byte[] payloadInBytes) {
-        @NotNull MqttFixedHeader mqttFixedHeader =
+    default MqttPublishMessage createMqttPublishMsg(MqttDeviceAwareSessionContext ctx, String topic, byte[] payloadInBytes) {
+        MqttFixedHeader mqttFixedHeader =
                 new MqttFixedHeader(MqttMessageType.PUBLISH, false, ctx.getQoSForTopic(topic), false, 0);
-        @NotNull MqttPublishVariableHeader header = new MqttPublishVariableHeader(topic, ctx.nextMsgId());
+        MqttPublishVariableHeader header = new MqttPublishVariableHeader(topic, ctx.nextMsgId());
         ByteBuf payload = ALLOCATOR.buffer();
         payload.writeBytes(payloadInBytes);
         return new MqttPublishMessage(mqttFixedHeader, header, payload);

@@ -5,7 +5,6 @@ import org.echoiot.rule.engine.api.*;
 import org.echoiot.rule.engine.api.util.TbNodeUtils;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.msg.TbMsg;
-import org.jetbrains.annotations.NotNull;
 
 @Slf4j
 @RuleNode(
@@ -22,13 +21,13 @@ public class TbCheckpointNode implements TbNode {
     private String queueName;
 
     @Override
-    public void init(TbContext ctx, @NotNull TbNodeConfiguration configuration) throws TbNodeException {
+    public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
         TbCheckpointNodeConfiguration config = TbNodeUtils.convert(configuration, TbCheckpointNodeConfiguration.class);
         this.queueName = config.getQueueName();
     }
 
     @Override
-    public void onMsg(@NotNull TbContext ctx, TbMsg msg) {
+    public void onMsg(TbContext ctx, TbMsg msg) {
         ctx.enqueueForTellNext(msg, queueName, TbRelationTypes.SUCCESS, () -> ctx.ack(msg), error -> ctx.tellFailure(msg, error));
     }
 

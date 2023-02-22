@@ -8,7 +8,6 @@ import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.query.*;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.query.EntityQueryService;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +32,7 @@ public class EntityQueryController extends BaseController {
     @RequestMapping(value = "/entitiesQuery/count", method = RequestMethod.POST)
     @ResponseBody
     public long countEntitiesByQuery(
-            @NotNull @ApiParam(value = "A JSON value representing the entity count query. See API call notes above for more details.")
+            @ApiParam(value = "A JSON value representing the entity count query. See API call notes above for more details.")
             @RequestBody EntityCountQuery query) throws EchoiotException {
         checkNotNull(query);
         try {
@@ -48,7 +47,7 @@ public class EntityQueryController extends BaseController {
     @RequestMapping(value = "/entitiesQuery/find", method = RequestMethod.POST)
     @ResponseBody
     public PageData<EntityData> findEntityDataByQuery(
-            @NotNull @ApiParam(value = "A JSON value representing the entity data query. See API call notes above for more details.")
+            @ApiParam(value = "A JSON value representing the entity data query. See API call notes above for more details.")
             @RequestBody EntityDataQuery query) throws EchoiotException {
         checkNotNull(query);
         try {
@@ -63,7 +62,7 @@ public class EntityQueryController extends BaseController {
     @RequestMapping(value = "/alarmsQuery/find", method = RequestMethod.POST)
     @ResponseBody
     public PageData<AlarmData> findAlarmDataByQuery(
-            @NotNull @ApiParam(value = "A JSON value representing the alarm data query. See API call notes above for more details.")
+            @ApiParam(value = "A JSON value representing the alarm data query. See API call notes above for more details.")
             @RequestBody AlarmDataQuery query) throws EchoiotException {
         checkNotNull(query);
         try {
@@ -79,7 +78,7 @@ public class EntityQueryController extends BaseController {
     @RequestMapping(value = "/entitiesQuery/find/keys", method = RequestMethod.POST)
     @ResponseBody
     public DeferredResult<ResponseEntity> findEntityTimeseriesAndAttributesKeysByQuery(
-            @NotNull @ApiParam(value = "A JSON value representing the entity data query. See API call notes above for more details.")
+            @ApiParam(value = "A JSON value representing the entity data query. See API call notes above for more details.")
             @RequestBody EntityDataQuery query,
             @ApiParam(value = "Include all unique time-series keys to the result.")
             @RequestParam("timeseries") boolean isTimeseries,

@@ -37,7 +37,6 @@ import org.echoiot.server.service.telemetry.AttributeData;
 import org.echoiot.server.service.telemetry.TsData;
 import org.echoiot.server.service.telemetry.exception.InvalidParametersException;
 import org.echoiot.server.service.telemetry.exception.UncheckedApiException;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -102,7 +101,7 @@ public class TelemetryController extends BaseController {
     @ResponseBody
     public DeferredResult<ResponseEntity> getAttributeKeys(
             @ApiParam(value = ControllerConstants.ENTITY_TYPE_PARAM_DESCRIPTION, required = true, defaultValue = "DEVICE") @PathVariable("entityType") String entityType,
-            @NotNull @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @PathVariable("entityId") String entityIdStr) throws EchoiotException {
+            @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @PathVariable("entityId") String entityIdStr) throws EchoiotException {
         try {
             return accessValidator.validateEntityAndCallback(getCurrentUser(), Operation.READ_ATTRIBUTES, entityType, entityIdStr, this::getAttributeKeysCallback);
         } catch (Exception e) {
@@ -122,7 +121,7 @@ public class TelemetryController extends BaseController {
     @ResponseBody
     public DeferredResult<ResponseEntity> getAttributeKeysByScope(
             @ApiParam(value = ControllerConstants.ENTITY_TYPE_PARAM_DESCRIPTION, required = true, defaultValue = "DEVICE") @PathVariable("entityType") String entityType,
-            @NotNull @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @PathVariable("entityId") String entityIdStr,
+            @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @PathVariable("entityId") String entityIdStr,
             @ApiParam(value = ControllerConstants.ATTRIBUTES_SCOPE_DESCRIPTION, required = true, allowableValues = ControllerConstants.ATTRIBUTES_SCOPE_ALLOWED_VALUES) @PathVariable("scope") String scope) throws EchoiotException {
         try {
             return accessValidator.validateEntityAndCallback(getCurrentUser(), Operation.READ_ATTRIBUTES, entityType, entityIdStr,
@@ -145,8 +144,8 @@ public class TelemetryController extends BaseController {
     @ResponseBody
     public DeferredResult<ResponseEntity> getAttributes(
             @ApiParam(value = ControllerConstants.ENTITY_TYPE_PARAM_DESCRIPTION, required = true, defaultValue = "DEVICE") @PathVariable("entityType") String entityType,
-            @NotNull @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @PathVariable("entityId") String entityIdStr,
-            @NotNull @ApiParam(value = ControllerConstants.ATTRIBUTES_KEYS_DESCRIPTION) @RequestParam(name = "keys", required = false) String keysStr) throws EchoiotException {
+            @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @PathVariable("entityId") String entityIdStr,
+            @ApiParam(value = ControllerConstants.ATTRIBUTES_KEYS_DESCRIPTION) @RequestParam(name = "keys", required = false) String keysStr) throws EchoiotException {
         try {
             SecurityUser user = getCurrentUser();
             return accessValidator.validateEntityAndCallback(getCurrentUser(), Operation.READ_ATTRIBUTES, entityType, entityIdStr,
@@ -172,9 +171,9 @@ public class TelemetryController extends BaseController {
     @ResponseBody
     public DeferredResult<ResponseEntity> getAttributesByScope(
             @ApiParam(value = ControllerConstants.ENTITY_TYPE_PARAM_DESCRIPTION, required = true, defaultValue = "DEVICE") @PathVariable("entityType") String entityType,
-            @NotNull @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @PathVariable("entityId") String entityIdStr,
+            @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @PathVariable("entityId") String entityIdStr,
             @ApiParam(value = ControllerConstants.ATTRIBUTES_SCOPE_DESCRIPTION, allowableValues = ControllerConstants.ATTRIBUTES_SCOPE_ALLOWED_VALUES, required = true) @PathVariable("scope") String scope,
-            @NotNull @ApiParam(value = ControllerConstants.ATTRIBUTES_KEYS_DESCRIPTION) @RequestParam(name = "keys", required = false) String keysStr) throws EchoiotException {
+            @ApiParam(value = ControllerConstants.ATTRIBUTES_KEYS_DESCRIPTION) @RequestParam(name = "keys", required = false) String keysStr) throws EchoiotException {
         try {
             SecurityUser user = getCurrentUser();
             return accessValidator.validateEntityAndCallback(getCurrentUser(), Operation.READ_ATTRIBUTES, entityType, entityIdStr,
@@ -193,7 +192,7 @@ public class TelemetryController extends BaseController {
     @ResponseBody
     public DeferredResult<ResponseEntity> getTimeseriesKeys(
             @ApiParam(value = ControllerConstants.ENTITY_TYPE_PARAM_DESCRIPTION, required = true, defaultValue = "DEVICE") @PathVariable("entityType") String entityType,
-            @NotNull @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @PathVariable("entityId") String entityIdStr) throws EchoiotException {
+            @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @PathVariable("entityId") String entityIdStr) throws EchoiotException {
         try {
             return accessValidator.validateEntityAndCallback(getCurrentUser(), Operation.READ_TELEMETRY, entityType, entityIdStr,
                     (result, tenantId, entityId) -> Futures.addCallback(tsService.findAllLatest(tenantId, entityId), getTsKeysToResponseCallback(result), MoreExecutors.directExecutor()));
@@ -220,8 +219,8 @@ public class TelemetryController extends BaseController {
     @ResponseBody
     public DeferredResult<ResponseEntity> getLatestTimeseries(
             @ApiParam(value = ControllerConstants.ENTITY_TYPE_PARAM_DESCRIPTION, required = true, defaultValue = "DEVICE") @PathVariable("entityType") String entityType,
-            @NotNull @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @PathVariable("entityId") String entityIdStr,
-            @NotNull @ApiParam(value = ControllerConstants.TELEMETRY_KEYS_DESCRIPTION) @RequestParam(name = "keys", required = false) String keysStr,
+            @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @PathVariable("entityId") String entityIdStr,
+            @ApiParam(value = ControllerConstants.TELEMETRY_KEYS_DESCRIPTION) @RequestParam(name = "keys", required = false) String keysStr,
             @ApiParam(value = ControllerConstants.STRICT_DATA_TYPES_DESCRIPTION)
             @RequestParam(name = "useStrictDataTypes", required = false, defaultValue = "false") Boolean useStrictDataTypes) throws EchoiotException {
         try {
@@ -248,8 +247,8 @@ public class TelemetryController extends BaseController {
     @ResponseBody
     public DeferredResult<ResponseEntity> getTimeseries(
             @ApiParam(value = ControllerConstants.ENTITY_TYPE_PARAM_DESCRIPTION, required = true, defaultValue = "DEVICE") @PathVariable("entityType") String entityType,
-            @NotNull @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @PathVariable("entityId") String entityIdStr,
-            @NotNull @ApiParam(value = ControllerConstants.TELEMETRY_KEYS_BASE_DESCRIPTION, required = true) @RequestParam(name = "keys") String keys,
+            @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @PathVariable("entityId") String entityIdStr,
+            @ApiParam(value = ControllerConstants.TELEMETRY_KEYS_BASE_DESCRIPTION, required = true) @RequestParam(name = "keys") String keys,
             @ApiParam(value = "A long value representing the start timestamp of the time range in milliseconds, UTC.")
             @RequestParam(name = "startTs") Long startTs,
             @ApiParam(value = "A long value representing the end timestamp of the time range in milliseconds, UTC.")
@@ -271,8 +270,8 @@ public class TelemetryController extends BaseController {
             return accessValidator.validateEntityAndCallback(getCurrentUser(), Operation.READ_TELEMETRY, entityType, entityIdStr,
                     (result, tenantId, entityId) -> {
                         // If interval is 0, convert this to a NONE aggregation, which is probably what the user really wanted
-                        @NotNull Aggregation agg = interval == 0L ? Aggregation.valueOf(Aggregation.NONE.name()) : Aggregation.valueOf(aggStr);
-                        @NotNull List<ReadTsKvQuery> queries = toKeysList(keys).stream().map(key -> new BaseReadTsKvQuery(key, startTs, endTs, interval, limit, agg, orderBy))
+                        Aggregation agg = interval == 0L ? Aggregation.valueOf(Aggregation.NONE.name()) : Aggregation.valueOf(aggStr);
+                        List<ReadTsKvQuery> queries = toKeysList(keys).stream().map(key -> new BaseReadTsKvQuery(key, startTs, endTs, interval, limit, agg, orderBy))
                                                                                .collect(Collectors.toList());
 
                         Futures.addCallback(tsService.findAll(tenantId, entityId, queries), getTsKvListCallback(result, useStrictDataTypes), MoreExecutors.directExecutor());
@@ -300,9 +299,9 @@ public class TelemetryController extends BaseController {
     @RequestMapping(value = "/{deviceId}/{scope}", method = RequestMethod.POST)
     @ResponseBody
     public DeferredResult<ResponseEntity> saveDeviceAttributes(
-            @NotNull @ApiParam(value = ControllerConstants.DEVICE_ID_PARAM_DESCRIPTION, required = true) @PathVariable("deviceId") String deviceIdStr,
+            @ApiParam(value = ControllerConstants.DEVICE_ID_PARAM_DESCRIPTION, required = true) @PathVariable("deviceId") String deviceIdStr,
             @ApiParam(value = ControllerConstants.ATTRIBUTES_SCOPE_DESCRIPTION, allowableValues = ControllerConstants.ATTRIBUTES_SAVE_SCOPE_ALLOWED_VALUES, required = true) @PathVariable("scope") String scope,
-            @NotNull @ApiParam(value = ControllerConstants.ATTRIBUTES_JSON_REQUEST_DESCRIPTION, required = true) @RequestBody JsonNode request) throws EchoiotException {
+            @ApiParam(value = ControllerConstants.ATTRIBUTES_JSON_REQUEST_DESCRIPTION, required = true) @RequestBody JsonNode request) throws EchoiotException {
         try {
             EntityId entityId = EntityIdFactory.getByTypeAndUuid(EntityType.DEVICE, deviceIdStr);
             return saveAttributes(getTenantId(), entityId, scope, request);
@@ -328,9 +327,9 @@ public class TelemetryController extends BaseController {
     @ResponseBody
     public DeferredResult<ResponseEntity> saveEntityAttributesV1(
             @ApiParam(value = ControllerConstants.ENTITY_TYPE_PARAM_DESCRIPTION, required = true, defaultValue = "DEVICE") @PathVariable("entityType") String entityType,
-            @NotNull @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @PathVariable("entityId") String entityIdStr,
+            @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @PathVariable("entityId") String entityIdStr,
             @ApiParam(value = ControllerConstants.ATTRIBUTES_SCOPE_DESCRIPTION, allowableValues = ControllerConstants.ATTRIBUTES_SAVE_SCOPE_ALLOWED_VALUES) @PathVariable("scope") String scope,
-            @NotNull @ApiParam(value = ControllerConstants.ATTRIBUTES_JSON_REQUEST_DESCRIPTION, required = true) @RequestBody JsonNode request) throws EchoiotException {
+            @ApiParam(value = ControllerConstants.ATTRIBUTES_JSON_REQUEST_DESCRIPTION, required = true) @RequestBody JsonNode request) throws EchoiotException {
         try {
             EntityId entityId = EntityIdFactory.getByTypeAndId(entityType, entityIdStr);
             return saveAttributes(getTenantId(), entityId, scope, request);
@@ -356,9 +355,9 @@ public class TelemetryController extends BaseController {
     @ResponseBody
     public DeferredResult<ResponseEntity> saveEntityAttributesV2(
             @ApiParam(value = ControllerConstants.ENTITY_TYPE_PARAM_DESCRIPTION, required = true, defaultValue = "DEVICE") @PathVariable("entityType") String entityType,
-            @NotNull @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @PathVariable("entityId") String entityIdStr,
+            @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @PathVariable("entityId") String entityIdStr,
             @ApiParam(value = ControllerConstants.ATTRIBUTES_SCOPE_DESCRIPTION, allowableValues = ControllerConstants.ATTRIBUTES_SAVE_SCOPE_ALLOWED_VALUES, required = true) @PathVariable("scope") String scope,
-            @NotNull @ApiParam(value = ControllerConstants.ATTRIBUTES_JSON_REQUEST_DESCRIPTION, required = true) @RequestBody JsonNode request) throws EchoiotException {
+            @ApiParam(value = ControllerConstants.ATTRIBUTES_JSON_REQUEST_DESCRIPTION, required = true) @RequestBody JsonNode request) throws EchoiotException {
         try {
             EntityId entityId = EntityIdFactory.getByTypeAndId(entityType, entityIdStr);
             return saveAttributes(getTenantId(), entityId, scope, request);
@@ -385,9 +384,9 @@ public class TelemetryController extends BaseController {
     @ResponseBody
     public DeferredResult<ResponseEntity> saveEntityTelemetry(
             @ApiParam(value = ControllerConstants.ENTITY_TYPE_PARAM_DESCRIPTION, required = true, defaultValue = "DEVICE") @PathVariable("entityType") String entityType,
-            @NotNull @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @PathVariable("entityId") String entityIdStr,
+            @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @PathVariable("entityId") String entityIdStr,
             @ApiParam(value = ControllerConstants.TELEMETRY_SCOPE_DESCRIPTION, required = true, allowableValues = "ANY") @PathVariable("scope") String scope,
-            @NotNull @ApiParam(value = ControllerConstants.TELEMETRY_JSON_REQUEST_DESCRIPTION, required = true) @RequestBody String requestBody) throws EchoiotException {
+            @ApiParam(value = ControllerConstants.TELEMETRY_JSON_REQUEST_DESCRIPTION, required = true) @RequestBody String requestBody) throws EchoiotException {
         try {
             EntityId entityId = EntityIdFactory.getByTypeAndId(entityType, entityIdStr);
             return saveTelemetry(getTenantId(), entityId, requestBody, 0L);
@@ -414,10 +413,10 @@ public class TelemetryController extends BaseController {
     @ResponseBody
     public DeferredResult<ResponseEntity> saveEntityTelemetryWithTTL(
             @ApiParam(value = ControllerConstants.ENTITY_TYPE_PARAM_DESCRIPTION, required = true, defaultValue = "DEVICE") @PathVariable("entityType") String entityType,
-            @NotNull @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @PathVariable("entityId") String entityIdStr,
+            @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @PathVariable("entityId") String entityIdStr,
             @ApiParam(value = ControllerConstants.TELEMETRY_SCOPE_DESCRIPTION, required = true, allowableValues = "ANY") @PathVariable("scope") String scope,
             @ApiParam(value = "A long value representing TTL (Time to Live) parameter.", required = true) @PathVariable("ttl") Long ttl,
-            @NotNull @ApiParam(value = ControllerConstants.TELEMETRY_JSON_REQUEST_DESCRIPTION, required = true) @RequestBody String requestBody) throws EchoiotException {
+            @ApiParam(value = ControllerConstants.TELEMETRY_JSON_REQUEST_DESCRIPTION, required = true) @RequestBody String requestBody) throws EchoiotException {
         try {
             EntityId entityId = EntityIdFactory.getByTypeAndId(entityType, entityIdStr);
             return saveTelemetry(getTenantId(), entityId, requestBody, ttl);
@@ -446,8 +445,8 @@ public class TelemetryController extends BaseController {
     @ResponseBody
     public DeferredResult<ResponseEntity> deleteEntityTimeseries(
             @ApiParam(value = ControllerConstants.ENTITY_TYPE_PARAM_DESCRIPTION, required = true, defaultValue = "DEVICE") @PathVariable("entityType") String entityType,
-            @NotNull @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @PathVariable("entityId") String entityIdStr,
-            @NotNull @ApiParam(value = ControllerConstants.TELEMETRY_KEYS_DESCRIPTION, required = true) @RequestParam(name = "keys") String keysStr,
+            @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @PathVariable("entityId") String entityIdStr,
+            @ApiParam(value = ControllerConstants.TELEMETRY_KEYS_DESCRIPTION, required = true) @RequestParam(name = "keys") String keysStr,
             @ApiParam(value = "A boolean value to specify if should be deleted all data for selected keys or only data that are in the selected time range.")
             @RequestParam(name = "deleteAllDataForKeys", defaultValue = "false") boolean deleteAllDataForKeys,
             @ApiParam(value = "A long value representing the start timestamp of removal time range in milliseconds.")
@@ -464,7 +463,7 @@ public class TelemetryController extends BaseController {
         }
     }
 
-    private DeferredResult<ResponseEntity> deleteTimeseries(@NotNull EntityId entityIdStr, @NotNull String keysStr, boolean deleteAllDataForKeys,
+    private DeferredResult<ResponseEntity> deleteTimeseries(EntityId entityIdStr, String keysStr, boolean deleteAllDataForKeys,
                                                             @org.jetbrains.annotations.Nullable Long startTs, @org.jetbrains.annotations.Nullable Long endTs, boolean rewriteLatestIfDeleted) throws EchoiotException {
         @org.jetbrains.annotations.Nullable List<String> keys = toKeysList(keysStr);
         if (keys.isEmpty()) {
@@ -487,7 +486,7 @@ public class TelemetryController extends BaseController {
         }
 
         return accessValidator.validateEntityAndCallback(user, Operation.WRITE_TELEMETRY, entityIdStr, (result, tenantId, entityId) -> {
-            @NotNull List<DeleteTsKvQuery> deleteTsKvQueries = new ArrayList<>();
+            List<DeleteTsKvQuery> deleteTsKvQueries = new ArrayList<>();
             for (String key : keys) {
                 deleteTsKvQueries.add(new BaseDeleteTsKvQuery(key, deleteFromTs, deleteToTs, rewriteLatestIfDeleted));
             }
@@ -523,9 +522,9 @@ public class TelemetryController extends BaseController {
     @RequestMapping(value = "/{deviceId}/{scope}", method = RequestMethod.DELETE)
     @ResponseBody
     public DeferredResult<ResponseEntity> deleteDeviceAttributes(
-            @NotNull @ApiParam(value = ControllerConstants.DEVICE_ID_PARAM_DESCRIPTION, required = true) @PathVariable(ControllerConstants.DEVICE_ID) String deviceIdStr,
+            @ApiParam(value = ControllerConstants.DEVICE_ID_PARAM_DESCRIPTION, required = true) @PathVariable(ControllerConstants.DEVICE_ID) String deviceIdStr,
             @ApiParam(value = ControllerConstants.ATTRIBUTES_SCOPE_DESCRIPTION, allowableValues = ControllerConstants.ATTRIBUTES_SCOPE_ALLOWED_VALUES, required = true) @PathVariable("scope") String scope,
-            @NotNull @ApiParam(value = ControllerConstants.ATTRIBUTES_KEYS_DESCRIPTION, required = true) @RequestParam(name = "keys") String keysStr) throws EchoiotException {
+            @ApiParam(value = ControllerConstants.ATTRIBUTES_KEYS_DESCRIPTION, required = true) @RequestParam(name = "keys") String keysStr) throws EchoiotException {
         try {
             EntityId entityId = EntityIdFactory.getByTypeAndUuid(EntityType.DEVICE, deviceIdStr);
             return deleteAttributes(entityId, scope, keysStr);
@@ -551,9 +550,9 @@ public class TelemetryController extends BaseController {
     @ResponseBody
     public DeferredResult<ResponseEntity> deleteEntityAttributes(
             @ApiParam(value = ControllerConstants.ENTITY_TYPE_PARAM_DESCRIPTION, required = true, defaultValue = "DEVICE") @PathVariable("entityType") String entityType,
-            @NotNull @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @PathVariable("entityId") String entityIdStr,
+            @ApiParam(value = ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION, required = true) @PathVariable("entityId") String entityIdStr,
             @ApiParam(value = ControllerConstants.ATTRIBUTES_SCOPE_DESCRIPTION, required = true, allowableValues = ControllerConstants.ATTRIBUTES_SCOPE_ALLOWED_VALUES) @PathVariable("scope") String scope,
-            @NotNull @ApiParam(value = ControllerConstants.ATTRIBUTES_KEYS_DESCRIPTION, required = true) @RequestParam(name = "keys") String keysStr) throws EchoiotException {
+            @ApiParam(value = ControllerConstants.ATTRIBUTES_KEYS_DESCRIPTION, required = true) @RequestParam(name = "keys") String keysStr) throws EchoiotException {
         try {
             EntityId entityId = EntityIdFactory.getByTypeAndId(entityType, entityIdStr);
             return deleteAttributes(entityId, scope, keysStr);
@@ -562,7 +561,7 @@ public class TelemetryController extends BaseController {
         }
     }
 
-    private DeferredResult<ResponseEntity> deleteAttributes(@NotNull EntityId entityIdSrc, String scope, @NotNull String keysStr) throws EchoiotException {
+    private DeferredResult<ResponseEntity> deleteAttributes(EntityId entityIdSrc, String scope, String keysStr) throws EchoiotException {
         @org.jetbrains.annotations.Nullable List<String> keys = toKeysList(keysStr);
         if (keys.isEmpty()) {
             return getImmediateDeferredResult("Empty keys: " + keysStr, HttpStatus.BAD_REQUEST);
@@ -578,7 +577,7 @@ public class TelemetryController extends BaseController {
                     public void onSuccess(@Nullable Void tmp) {
                         logAttributesDeleted(user, entityId, scope, keys, null);
                         if (entityIdSrc.getEntityType().equals(EntityType.DEVICE)) {
-                            @NotNull DeviceId deviceId = new DeviceId(entityId.getId());
+                            DeviceId deviceId = new DeviceId(entityId.getId());
                             tbClusterService.pushMsgToCore(DeviceAttributesEventNotificationMsg.onDelete(
                                     user.getTenantId(), deviceId, scope, keys), null);
                         }
@@ -597,17 +596,17 @@ public class TelemetryController extends BaseController {
         }
     }
 
-    private DeferredResult<ResponseEntity> saveAttributes(TenantId srcTenantId, @NotNull EntityId entityIdSrc, String scope, @NotNull JsonNode json) throws EchoiotException {
+    private DeferredResult<ResponseEntity> saveAttributes(TenantId srcTenantId, EntityId entityIdSrc, String scope, JsonNode json) throws EchoiotException {
         if (!DataConstants.SERVER_SCOPE.equals(scope) && !DataConstants.SHARED_SCOPE.equals(scope)) {
             return getImmediateDeferredResult("Invalid scope: " + scope, HttpStatus.BAD_REQUEST);
         }
         if (json.isObject()) {
-            @NotNull List<AttributeKvEntry> attributes = extractRequestAttributes(json);
+            List<AttributeKvEntry> attributes = extractRequestAttributes(json);
             attributes.forEach(ConstraintValidator::validateFields);
             if (attributes.isEmpty()) {
                 return getImmediateDeferredResult("No attributes data found in request body!", HttpStatus.BAD_REQUEST);
             }
-            for (@NotNull AttributeKvEntry attributeKvEntry : attributes) {
+            for (AttributeKvEntry attributeKvEntry : attributes) {
                 if (attributeKvEntry.getKey().isEmpty() || attributeKvEntry.getKey().trim().length() == 0) {
                     return getImmediateDeferredResult("Key cannot be empty or contains only spaces", HttpStatus.BAD_REQUEST);
                 }
@@ -633,7 +632,7 @@ public class TelemetryController extends BaseController {
         }
     }
 
-    private DeferredResult<ResponseEntity> saveTelemetry(TenantId curTenantId, @NotNull EntityId entityIdSrc, @NotNull String requestBody, long ttl) throws EchoiotException {
+    private DeferredResult<ResponseEntity> saveTelemetry(TenantId curTenantId, EntityId entityIdSrc, String requestBody, long ttl) throws EchoiotException {
         Map<Long, List<KvEntry>> telemetryRequest;
         JsonElement telemetryJson;
         try {
@@ -646,8 +645,8 @@ public class TelemetryController extends BaseController {
         } catch (Exception e) {
             return getImmediateDeferredResult("Unable to parse timeseries payload. Invalid JSON body: " + e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        @NotNull List<TsKvEntry> entries = new ArrayList<>();
-        for (@NotNull Map.Entry<Long, List<KvEntry>> entry : telemetryRequest.entrySet()) {
+        List<TsKvEntry> entries = new ArrayList<>();
+        for (Map.Entry<Long, List<KvEntry>> entry : telemetryRequest.entrySet()) {
             for (KvEntry kv : entry.getValue()) {
                 entries.add(new BasicTsKvEntry(entry.getKey(), kv));
             }
@@ -678,7 +677,7 @@ public class TelemetryController extends BaseController {
         });
     }
 
-    private void getLatestTimeseriesValuesCallback(@Nullable DeferredResult<ResponseEntity> result, @NotNull SecurityUser user, EntityId entityId, @NotNull String keys, Boolean useStrictDataTypes) {
+    private void getLatestTimeseriesValuesCallback(@Nullable DeferredResult<ResponseEntity> result, SecurityUser user, EntityId entityId, String keys, Boolean useStrictDataTypes) {
         ListenableFuture<List<TsKvEntry>> future;
         if (StringUtils.isEmpty(keys)) {
             future = tsService.findAllLatest(user.getTenantId(), entityId);
@@ -688,9 +687,9 @@ public class TelemetryController extends BaseController {
         Futures.addCallback(future, getTsKvListCallback(result, useStrictDataTypes), MoreExecutors.directExecutor());
     }
 
-    private void getAttributeValuesCallback(@Nullable DeferredResult<ResponseEntity> result, @NotNull SecurityUser user, EntityId entityId, String scope, @NotNull String keys) {
+    private void getAttributeValuesCallback(@Nullable DeferredResult<ResponseEntity> result, SecurityUser user, EntityId entityId, String scope, String keys) {
         @org.jetbrains.annotations.Nullable List<String> keyList = toKeysList(keys);
-        @NotNull FutureCallback<List<AttributeKvEntry>> callback = getAttributeValuesToResponseCallback(result, user, scope, entityId, keyList);
+        FutureCallback<List<AttributeKvEntry>> callback = getAttributeValuesToResponseCallback(result, user, scope, entityId, keyList);
         if (!StringUtils.isEmpty(scope)) {
             if (keyList != null && !keyList.isEmpty()) {
                 Futures.addCallback(attributesService.find(user.getTenantId(), entityId, scope, keyList), callback, MoreExecutors.directExecutor());
@@ -698,7 +697,7 @@ public class TelemetryController extends BaseController {
                 Futures.addCallback(attributesService.findAll(user.getTenantId(), entityId, scope), callback, MoreExecutors.directExecutor());
             }
         } else {
-            @NotNull List<ListenableFuture<List<AttributeKvEntry>>> futures = new ArrayList<>();
+            List<ListenableFuture<List<AttributeKvEntry>>> futures = new ArrayList<>();
             for (String tmpScope : DataConstants.allScopes()) {
                 if (keyList != null && !keyList.isEmpty()) {
                     futures.add(attributesService.find(user.getTenantId(), entityId, tmpScope, keyList));
@@ -707,7 +706,7 @@ public class TelemetryController extends BaseController {
                 }
             }
 
-            @NotNull ListenableFuture<List<AttributeKvEntry>> future = mergeAllAttributesFutures(futures);
+            ListenableFuture<List<AttributeKvEntry>> future = mergeAllAttributesFutures(futures);
 
             Futures.addCallback(future, callback, MoreExecutors.directExecutor());
         }
@@ -718,22 +717,21 @@ public class TelemetryController extends BaseController {
     }
 
     private void getAttributeKeysCallback(@Nullable DeferredResult<ResponseEntity> result, TenantId tenantId, EntityId entityId) {
-        @NotNull List<ListenableFuture<List<AttributeKvEntry>>> futures = new ArrayList<>();
+        List<ListenableFuture<List<AttributeKvEntry>>> futures = new ArrayList<>();
         for (String scope : DataConstants.allScopes()) {
             futures.add(attributesService.findAll(tenantId, entityId, scope));
         }
 
-        @NotNull ListenableFuture<List<AttributeKvEntry>> future = mergeAllAttributesFutures(futures);
+        ListenableFuture<List<AttributeKvEntry>> future = mergeAllAttributesFutures(futures);
 
         Futures.addCallback(future, getAttributeKeysToResponseCallback(result), MoreExecutors.directExecutor());
     }
 
-    @NotNull
-    private FutureCallback<List<TsKvEntry>> getTsKeysToResponseCallback(@NotNull final DeferredResult<ResponseEntity> response) {
+    private FutureCallback<List<TsKvEntry>> getTsKeysToResponseCallback(final DeferredResult<ResponseEntity> response) {
         return new FutureCallback<>() {
             @Override
-            public void onSuccess(@NotNull List<TsKvEntry> values) {
-                @NotNull List<String> keys = values.stream().map(KvEntry::getKey).collect(Collectors.toList());
+            public void onSuccess(List<TsKvEntry> values) {
+                List<String> keys = values.stream().map(KvEntry::getKey).collect(Collectors.toList());
                 response.setResult(new ResponseEntity<>(keys, HttpStatus.OK));
             }
 
@@ -745,13 +743,12 @@ public class TelemetryController extends BaseController {
         };
     }
 
-    @NotNull
-    private FutureCallback<List<AttributeKvEntry>> getAttributeKeysToResponseCallback(@NotNull final DeferredResult<ResponseEntity> response) {
+    private FutureCallback<List<AttributeKvEntry>> getAttributeKeysToResponseCallback(final DeferredResult<ResponseEntity> response) {
         return new FutureCallback<List<AttributeKvEntry>>() {
 
             @Override
-            public void onSuccess(@NotNull List<AttributeKvEntry> attributes) {
-                @NotNull List<String> keys = attributes.stream().map(KvEntry::getKey).collect(Collectors.toList());
+            public void onSuccess(List<AttributeKvEntry> attributes) {
+                List<String> keys = attributes.stream().map(KvEntry::getKey).collect(Collectors.toList());
                 response.setResult(new ResponseEntity<>(keys, HttpStatus.OK));
             }
 
@@ -763,14 +760,13 @@ public class TelemetryController extends BaseController {
         };
     }
 
-    @NotNull
-    private FutureCallback<List<AttributeKvEntry>> getAttributeValuesToResponseCallback(@NotNull final DeferredResult<ResponseEntity> response,
-                                                                                        @NotNull final SecurityUser user, final String scope,
+    private FutureCallback<List<AttributeKvEntry>> getAttributeValuesToResponseCallback(final DeferredResult<ResponseEntity> response,
+                                                                                        final SecurityUser user, final String scope,
                                                                                         final EntityId entityId, final List<String> keyList) {
         return new FutureCallback<>() {
             @Override
-            public void onSuccess(@NotNull List<AttributeKvEntry> attributes) {
-                @NotNull List<AttributeData> values = attributes.stream().map(attribute ->
+            public void onSuccess(List<AttributeKvEntry> attributes) {
+                List<AttributeData> values = attributes.stream().map(attribute ->
                         new AttributeData(attribute.getLastUpdateTs(), attribute.getKey(), getKvValue(attribute))
                                                                              ).collect(Collectors.toList());
                 logAttributesRead(user, entityId, scope, keyList, null);
@@ -786,13 +782,12 @@ public class TelemetryController extends BaseController {
         };
     }
 
-    @NotNull
-    private FutureCallback<List<TsKvEntry>> getTsKvListCallback(@NotNull final DeferredResult<ResponseEntity> response, Boolean useStrictDataTypes) {
+    private FutureCallback<List<TsKvEntry>> getTsKvListCallback(final DeferredResult<ResponseEntity> response, Boolean useStrictDataTypes) {
         return new FutureCallback<>() {
             @Override
-            public void onSuccess(@NotNull List<TsKvEntry> data) {
-                @NotNull Map<String, List<TsData>> result = new LinkedHashMap<>();
-                for (@NotNull TsKvEntry entry : data) {
+            public void onSuccess(List<TsKvEntry> data) {
+                Map<String, List<TsData>> result = new LinkedHashMap<>();
+                for (TsKvEntry entry : data) {
                     Object value = useStrictDataTypes ? getKvValue(entry) : entry.getValueAsString();
                     result.computeIfAbsent(entry.getKey(), k -> new ArrayList<>()).add(new TsData(entry.getTs(), value));
                 }
@@ -807,37 +802,36 @@ public class TelemetryController extends BaseController {
         };
     }
 
-    private void logTimeseriesDeleted(@NotNull SecurityUser user, EntityId entityId, List<String> keys, long startTs, long endTs, Throwable e) {
+    private void logTimeseriesDeleted(SecurityUser user, EntityId entityId, List<String> keys, long startTs, long endTs, Throwable e) {
         notificationEntityService.logEntityAction(user.getTenantId(), entityId, ActionType.TIMESERIES_DELETED, user,
                                                   toException(e), keys, startTs, endTs);
     }
 
-    private void logTelemetryUpdated(@NotNull SecurityUser user, EntityId entityId, List<TsKvEntry> telemetry, Throwable e) {
+    private void logTelemetryUpdated(SecurityUser user, EntityId entityId, List<TsKvEntry> telemetry, Throwable e) {
         notificationEntityService.logEntityAction(user.getTenantId(), entityId, ActionType.TIMESERIES_UPDATED, user,
                 toException(e), telemetry);
     }
 
-    private void logAttributesDeleted(@NotNull SecurityUser user, EntityId entityId, String scope, List<String> keys, Throwable e) {
+    private void logAttributesDeleted(SecurityUser user, EntityId entityId, String scope, List<String> keys, Throwable e) {
         notificationEntityService.logEntityAction(user.getTenantId(), (UUIDBased & EntityId) entityId,
                 ActionType.ATTRIBUTES_DELETED, user, toException(e), scope, keys);
     }
 
-    private void logAttributesUpdated(@NotNull SecurityUser user, EntityId entityId, String scope, List<AttributeKvEntry> attributes, Throwable e) {
+    private void logAttributesUpdated(SecurityUser user, EntityId entityId, String scope, List<AttributeKvEntry> attributes, Throwable e) {
         notificationEntityService.logEntityAction(user.getTenantId(), entityId, ActionType.ATTRIBUTES_UPDATED, user,
                 toException(e), scope, attributes);
     }
 
 
-    private void logAttributesRead(@NotNull SecurityUser user, EntityId entityId, String scope, List<String> keys, Throwable e) {
+    private void logAttributesRead(SecurityUser user, EntityId entityId, String scope, List<String> keys, Throwable e) {
         notificationEntityService.logEntityAction(user.getTenantId(), entityId, ActionType.ATTRIBUTES_READ, user,
                 toException(e), scope, keys);
     }
 
-    @NotNull
-    private ListenableFuture<List<AttributeKvEntry>> mergeAllAttributesFutures(@NotNull List<ListenableFuture<List<AttributeKvEntry>>> futures) {
+    private ListenableFuture<List<AttributeKvEntry>> mergeAllAttributesFutures(List<ListenableFuture<List<AttributeKvEntry>>> futures) {
         return Futures.transform(Futures.successfulAsList(futures),
                 (Function<? super List<List<AttributeKvEntry>>, ? extends List<AttributeKvEntry>>) input -> {
-                    @NotNull List<AttributeKvEntry> tmp = new ArrayList<>();
+                    List<AttributeKvEntry> tmp = new ArrayList<>();
                     if (input != null) {
                         input.forEach(tmp::addAll);
                     }
@@ -846,7 +840,7 @@ public class TelemetryController extends BaseController {
     }
 
     @org.jetbrains.annotations.Nullable
-    private List<String> toKeysList(@NotNull String keys) {
+    private List<String> toKeysList(String keys) {
         @org.jetbrains.annotations.Nullable List<String> keyList = null;
         if (!StringUtils.isEmpty(keys)) {
             keyList = Arrays.asList(keys.split(","));
@@ -854,17 +848,15 @@ public class TelemetryController extends BaseController {
         return keyList;
     }
 
-    @NotNull
-    private DeferredResult<ResponseEntity> getImmediateDeferredResult(String message, @NotNull HttpStatus status) {
-        @NotNull DeferredResult<ResponseEntity> result = new DeferredResult<>();
+    private DeferredResult<ResponseEntity> getImmediateDeferredResult(String message, HttpStatus status) {
+        DeferredResult<ResponseEntity> result = new DeferredResult<>();
         result.setResult(new ResponseEntity<>(message, status));
         return result;
     }
 
-    @NotNull
-    private List<AttributeKvEntry> extractRequestAttributes(@NotNull JsonNode jsonNode) {
+    private List<AttributeKvEntry> extractRequestAttributes(JsonNode jsonNode) {
         long ts = System.currentTimeMillis();
-        @NotNull List<AttributeKvEntry> attributes = new ArrayList<>();
+        List<AttributeKvEntry> attributes = new ArrayList<>();
         jsonNode.fields().forEachRemaining(entry -> {
             String key = entry.getKey();
             JsonNode value = entry.getValue();
@@ -909,7 +901,7 @@ public class TelemetryController extends BaseController {
         }
     }
 
-    private Object getKvValue(@NotNull KvEntry entry) {
+    private Object getKvValue(KvEntry entry) {
         if (entry.getDataType() == DataType.JSON) {
             return toJsonNode(entry.getJsonValue().get());
         }

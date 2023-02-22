@@ -4,7 +4,6 @@ import com.google.common.util.concurrent.SettableFuture;
 import lombok.Getter;
 import lombok.Setter;
 import org.echoiot.server.common.data.id.TenantId;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 import java.util.concurrent.ScheduledFuture;
@@ -13,10 +12,8 @@ import java.util.concurrent.ScheduledFuture;
 public class PendingGitRequest<T> {
 
     private final long createdTime;
-    @NotNull
     private final UUID requestId;
     private final TenantId tenantId;
-    @NotNull
     private final SettableFuture<T> future;
     @Setter
     private ScheduledFuture<?> timeoutTask;

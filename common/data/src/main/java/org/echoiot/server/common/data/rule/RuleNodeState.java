@@ -5,7 +5,6 @@ import org.echoiot.server.common.data.BaseData;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.id.RuleNodeId;
 import org.echoiot.server.common.data.id.RuleNodeStateId;
-import org.jetbrains.annotations.NotNull;
 
 @Data
 public class RuleNodeState extends BaseData<RuleNodeStateId> {
@@ -22,7 +21,7 @@ public class RuleNodeState extends BaseData<RuleNodeStateId> {
         super(id);
     }
 
-    public RuleNodeState(@NotNull RuleNodeState event) {
+    public RuleNodeState(RuleNodeState event) {
         super(event);
     }
 }

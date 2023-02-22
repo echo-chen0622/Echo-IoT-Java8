@@ -14,7 +14,6 @@ import org.echoiot.server.dao.entityview.EntityViewService;
 import org.echoiot.server.dao.exception.DataValidationException;
 import org.echoiot.server.dao.relation.RelationService;
 import org.hibernate.exception.ConstraintViolationException;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 
@@ -63,7 +62,6 @@ public abstract class AbstractEntityService {
         alarmService.deleteEntityAlarmRelations(tenantId, entityId);
     }
 
-    @NotNull
     protected static Optional<ConstraintViolationException> extractConstraintViolationException(Exception t) {
         if (t instanceof ConstraintViolationException) {
             return Optional.of((ConstraintViolationException) t);
@@ -78,17 +76,17 @@ public abstract class AbstractEntityService {
         checkConstraintViolation(t, Collections.singletonMap(constraintName, constraintMessage));
     }
 
-    public static final void checkConstraintViolation(Exception t, @NotNull String constraintName1, @NotNull String constraintMessage1, @NotNull String constraintName2, @NotNull String constraintMessage2) {
+    public static final void checkConstraintViolation(Exception t, String constraintName1, String constraintMessage1, String constraintName2, String constraintMessage2) {
         checkConstraintViolation(t, Map.of(constraintName1, constraintMessage1, constraintName2, constraintMessage2));
     }
 
-    public static final void checkConstraintViolation(Exception t, @NotNull Map<String, String> constraints) {
-        @NotNull var exOpt = extractConstraintViolationException(t);
+    public static final void checkConstraintViolation(Exception t, Map<String, String> constraints) {
+        var exOpt = extractConstraintViolationException(t);
         if (exOpt.isPresent()) {
-            @NotNull var ex = exOpt.get();
+            var ex = exOpt.get();
             if (StringUtils.isNotEmpty(ex.getConstraintName())) {
                 var constraintName = ex.getConstraintName();
-                for (@NotNull var constraintMessage : constraints.entrySet()) {
+                for (var constraintMessage : constraints.entrySet()) {
                     if (constraintName.equals(constraintMessage.getKey())) {
                         throw new DataValidationException(constraintMessage.getValue());
                     }
@@ -101,7 +99,7 @@ public abstract class AbstractEntityService {
         List<EntityView> entityViews = entityViewService.findEntityViewsByTenantIdAndEntityId(tenantId, entityId);
         if (entityViews != null && !entityViews.isEmpty()) {
             EntityView entityView = entityViews.get(0);
-            @NotNull Boolean relationExists = relationService.checkRelation(
+            Boolean relationExists = relationService.checkRelation(
                     tenantId, edgeId, entityView.getId(),
                     EntityRelation.CONTAINS_TYPE, RelationTypeGroup.EDGE
                                                                            );

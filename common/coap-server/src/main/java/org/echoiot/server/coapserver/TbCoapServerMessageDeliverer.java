@@ -6,7 +6,6 @@ import org.eclipse.californium.core.network.Exchange;
 import org.eclipse.californium.core.server.DelivererException;
 import org.eclipse.californium.core.server.ServerMessageDeliverer;
 import org.eclipse.californium.core.server.resources.Resource;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.util.CollectionUtils;
 
@@ -20,12 +19,12 @@ public class TbCoapServerMessageDeliverer extends ServerMessageDeliverer {
     }
 
     @Override
-    protected Resource findResource(@NotNull Exchange exchange) throws DelivererException {
+    protected Resource findResource(Exchange exchange) throws DelivererException {
         validateUriPath(exchange);
         return findResource(exchange.getRequest().getOptions().getUriPath());
     }
 
-    private void validateUriPath(@NotNull Exchange exchange) {
+    private void validateUriPath(Exchange exchange) {
         OptionSet options = exchange.getRequest().getOptions();
         List<String> uriPathList = options.getUriPath();
         @Nullable String path = toPath(uriPathList);
@@ -36,9 +35,9 @@ public class TbCoapServerMessageDeliverer extends ServerMessageDeliverer {
     }
 
     @Nullable
-    private String toPath(@NotNull List<String> list) {
+    private String toPath(List<String> list) {
         if (!CollectionUtils.isEmpty(list) && list.size() == 1) {
-            @NotNull final String slash = "/";
+            final String slash = "/";
             String path = list.get(0);
             if (path.startsWith(slash)) {
                 path = path.substring(slash.length());

@@ -11,7 +11,6 @@ import org.echoiot.server.queue.discovery.TbServiceInfoProvider;
 import org.echoiot.server.queue.kafka.*;
 import org.echoiot.server.queue.settings.TbQueueCoreSettings;
 import org.echoiot.server.queue.settings.TbQueueVersionControlSettings;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Component;
 
@@ -27,19 +26,16 @@ public class KafkaTbVersionControlQueueFactory implements TbVersionControlQueueF
     private final TbQueueVersionControlSettings vcSettings;
     private final TbKafkaConsumerStatsService consumerStatsService;
 
-    @NotNull
     private final TbQueueAdmin coreAdmin;
-    @NotNull
     private final TbQueueAdmin vcAdmin;
-    @NotNull
     private final TbQueueAdmin notificationAdmin;
 
-    public KafkaTbVersionControlQueueFactory(@NotNull TbKafkaSettings kafkaSettings,
+    public KafkaTbVersionControlQueueFactory(TbKafkaSettings kafkaSettings,
                                              TbServiceInfoProvider serviceInfoProvider,
                                              TbQueueCoreSettings coreSettings,
                                              TbQueueVersionControlSettings vcSettings,
                                              TbKafkaConsumerStatsService consumerStatsService,
-                                             @NotNull TbKafkaTopicConfigs kafkaTopicConfigs) {
+                                             TbKafkaTopicConfigs kafkaTopicConfigs) {
         this.kafkaSettings = kafkaSettings;
         this.serviceInfoProvider = serviceInfoProvider;
         this.coreSettings = coreSettings;

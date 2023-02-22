@@ -1,7 +1,6 @@
 package org.echoiot.server.service.security.permission;
 
 import org.echoiot.server.common.data.EntityType;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -43,14 +42,12 @@ public enum PerResource {
         this.entityType = entityType;
     }
 
-    @NotNull
     public Optional<EntityType> getEntityType() {
         return Optional.ofNullable(entityType);
     }
 
-    @NotNull
-    public static PerResource of(@NotNull EntityType entityType) {
-        for (@NotNull PerResource perResource : PerResource.values()) {
+    public static PerResource of(EntityType entityType) {
+        for (PerResource perResource : PerResource.values()) {
             if (perResource.getEntityType().orElse(null) == entityType) {
                 return perResource;
             }

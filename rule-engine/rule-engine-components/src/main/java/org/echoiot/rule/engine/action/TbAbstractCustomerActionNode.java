@@ -17,7 +17,6 @@ import org.echoiot.server.common.data.Customer;
 import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.dao.customer.CustomerService;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -34,7 +33,7 @@ public abstract class TbAbstractCustomerActionNode<C extends TbAbstractCustomerA
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
         this.config = loadCustomerNodeActionConfig(configuration);
-        @NotNull CacheBuilder<Object, Object> cacheBuilder = CacheBuilder.newBuilder();
+        CacheBuilder<Object, Object> cacheBuilder = CacheBuilder.newBuilder();
         if (this.config.getCustomerCacheExpiration() > 0) {
             cacheBuilder.expireAfterWrite(this.config.getCustomerCacheExpiration(), TimeUnit.SECONDS);
         }
@@ -47,14 +46,13 @@ public abstract class TbAbstractCustomerActionNode<C extends TbAbstractCustomerA
     protected abstract C loadCustomerNodeActionConfig(TbNodeConfiguration configuration) throws TbNodeException;
 
     @Override
-    public void onMsg(@NotNull TbContext ctx, @NotNull TbMsg msg) {
+    public void onMsg(TbContext ctx, TbMsg msg) {
         withCallback(processCustomerAction(ctx, msg),
                 m -> ctx.tellSuccess(msg),
                 t -> ctx.tellFailure(msg, t), ctx.getDbCallbackExecutor());
     }
 
-    @NotNull
-    private ListenableFuture<Void> processCustomerAction(@NotNull TbContext ctx, @NotNull TbMsg msg) {
+    private ListenableFuture<Void> processCustomerAction(TbContext ctx, TbMsg msg) {
         ListenableFuture<CustomerId> customerIdFeature = getCustomer(ctx, msg);
         return Futures.transform(customerIdFeature, customerId -> {
                     doProcessCustomerAction(ctx, msg, customerId);
@@ -65,11 +63,11 @@ public abstract class TbAbstractCustomerActionNode<C extends TbAbstractCustomerA
 
     protected abstract void doProcessCustomerAction(TbContext ctx, TbMsg msg, CustomerId customerId);
 
-    protected ListenableFuture<CustomerId> getCustomer(@NotNull TbContext ctx, @NotNull TbMsg msg) {
+    protected ListenableFuture<CustomerId> getCustomer(TbContext ctx, TbMsg msg) {
         String customerTitle = TbNodeUtils.processPattern(this.config.getCustomerNamePattern(), msg);
-        @NotNull CustomerKey key = new CustomerKey(customerTitle);
+        CustomerKey key = new CustomerKey(customerTitle);
         return ctx.getDbCallbackExecutor().executeAsync(() -> {
-            @NotNull Optional<CustomerId> customerId = customerIdCache.get(key);
+            Optional<CustomerId> customerId = customerIdCache.get(key);
             if (!customerId.isPresent()) {
                 throw new RuntimeException("No customer found with name '" + key.getCustomerTitle() + "'.");
             }
@@ -100,16 +98,15 @@ public abstract class TbAbstractCustomerActionNode<C extends TbAbstractCustomerA
             this.createIfNotExists = createIfNotExists;
         }
 
-        @NotNull
-        @Override
-        public Optional<CustomerId> load(@NotNull CustomerKey key) {
+            @Override
+        public Optional<CustomerId> load(CustomerKey key) {
             CustomerService service = ctx.getCustomerService();
             Optional<Customer> customerOptional =
                     service.findCustomerByTenantIdAndTitle(ctx.getTenantId(), key.getCustomerTitle());
             if (customerOptional.isPresent()) {
                 return Optional.of(customerOptional.get().getId());
             } else if (createIfNotExists) {
-                @NotNull Customer newCustomer = new Customer();
+                Customer newCustomer = new Customer();
                 newCustomer.setTitle(key.getCustomerTitle());
                 newCustomer.setTenantId(ctx.getTenantId());
                 Customer savedCustomer = service.saveCustomer(newCustomer);

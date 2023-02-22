@@ -11,7 +11,6 @@ import org.echoiot.server.common.data.ota.ChecksumAlgorithm;
 import org.echoiot.server.dao.ota.OtaPackageService;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.entitiy.AbstractTbEntityService;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.nio.ByteBuffer;
@@ -22,13 +21,11 @@ import java.nio.ByteBuffer;
 @Slf4j
 public class DefaultTbOtaPackageService extends AbstractTbEntityService implements TbOtaPackageService {
 
-    @NotNull
     private final OtaPackageService otaPackageService;
 
-    @NotNull
     @Override
-    public OtaPackageInfo save(@NotNull SaveOtaPackageInfoRequest saveOtaPackageInfoRequest, User user) throws EchoiotException {
-        @NotNull ActionType actionType = saveOtaPackageInfoRequest.getId() == null ? ActionType.ADDED : ActionType.UPDATED;
+    public OtaPackageInfo save(SaveOtaPackageInfoRequest saveOtaPackageInfoRequest, User user) throws EchoiotException {
+        ActionType actionType = saveOtaPackageInfoRequest.getId() == null ? ActionType.ADDED : ActionType.UPDATED;
         TenantId tenantId = saveOtaPackageInfoRequest.getTenantId();
         try {
             OtaPackageInfo savedOtaPackageInfo = otaPackageService.saveOtaPackageInfo(new OtaPackageInfo(saveOtaPackageInfoRequest), saveOtaPackageInfoRequest.isUsesUrl());
@@ -45,17 +42,16 @@ public class DefaultTbOtaPackageService extends AbstractTbEntityService implemen
         }
     }
 
-    @NotNull
     @Override
-    public OtaPackageInfo saveOtaPackageData(@NotNull OtaPackageInfo otaPackageInfo, String checksum, ChecksumAlgorithm checksumAlgorithm,
-                                             @NotNull byte[] data, String filename, String contentType, User user) throws EchoiotException {
+    public OtaPackageInfo saveOtaPackageData(OtaPackageInfo otaPackageInfo, String checksum, ChecksumAlgorithm checksumAlgorithm,
+                                             byte[] data, String filename, String contentType, User user) throws EchoiotException {
         TenantId tenantId = otaPackageInfo.getTenantId();
         OtaPackageId otaPackageId = otaPackageInfo.getId();
         try {
             if (StringUtils.isEmpty(checksum)) {
                 checksum = otaPackageService.generateChecksum(checksumAlgorithm, ByteBuffer.wrap(data));
             }
-            @NotNull OtaPackage otaPackage = new OtaPackage(otaPackageId);
+            OtaPackage otaPackage = new OtaPackage(otaPackageId);
             otaPackage.setCreatedTime(otaPackageInfo.getCreatedTime());
             otaPackage.setTenantId(tenantId);
             otaPackage.setDeviceProfileId(otaPackageInfo.getDeviceProfileId());
@@ -82,7 +78,7 @@ public class DefaultTbOtaPackageService extends AbstractTbEntityService implemen
     }
 
     @Override
-    public void delete(@NotNull OtaPackageInfo otaPackageInfo, User user) throws EchoiotException {
+    public void delete(OtaPackageInfo otaPackageInfo, User user) throws EchoiotException {
         TenantId tenantId = otaPackageInfo.getTenantId();
         OtaPackageId otaPackageId = otaPackageInfo.getId();
         try {

@@ -10,7 +10,6 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.echoiot.common.util.AzureIotHubUtil;
 import org.echoiot.rule.engine.credentials.CertPemCredentials;
 import org.echoiot.rule.engine.credentials.CredentialsType;
-import org.jetbrains.annotations.NotNull;
 
 import java.security.Security;
 
@@ -20,7 +19,6 @@ import java.security.Security;
 public class AzureIotHubSasCredentials extends CertPemCredentials {
     private String sasKey;
 
-    @NotNull
     @Override
     public SslContext initSslContext() {
         try {
@@ -38,7 +36,6 @@ public class AzureIotHubSasCredentials extends CertPemCredentials {
         }
     }
 
-    @NotNull
     @Override
     public CredentialsType getType() {
         return CredentialsType.SAS;

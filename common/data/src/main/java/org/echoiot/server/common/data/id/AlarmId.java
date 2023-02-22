@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.echoiot.server.common.data.EntityType;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
@@ -19,12 +18,10 @@ public class AlarmId extends UUIDBased implements EntityId {
         super(id);
     }
 
-    @NotNull
-    public static AlarmId fromString(@NotNull String alarmId) {
+    public static AlarmId fromString(String alarmId) {
         return new AlarmId(UUID.fromString(alarmId));
     }
 
-    @NotNull
     @ApiModelProperty(position = 2, required = true, value = "string", example = "ALARM", allowableValues = "ALARM")
     @Override
     public EntityType getEntityType() {

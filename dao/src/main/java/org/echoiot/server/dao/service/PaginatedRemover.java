@@ -4,14 +4,13 @@ import org.echoiot.server.common.data.id.IdBased;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
-import org.jetbrains.annotations.NotNull;
 
 public abstract class PaginatedRemover<I, D extends IdBased<?>> {
 
     private static final int DEFAULT_LIMIT = 100;
 
     public void removeEntities(TenantId tenantId, I id) {
-        @NotNull PageLink pageLink = new PageLink(DEFAULT_LIMIT);
+        PageLink pageLink = new PageLink(DEFAULT_LIMIT);
         boolean hasNext = true;
         while (hasNext) {
             PageData<D> entities = findEntities(tenantId, id, pageLink);

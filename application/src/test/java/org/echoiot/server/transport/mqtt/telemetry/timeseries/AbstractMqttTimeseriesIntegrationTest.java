@@ -9,7 +9,6 @@ import org.echoiot.server.transport.mqtt.AbstractMqttIntegrationTest;
 import org.echoiot.server.transport.mqtt.MqttTestCallback;
 import org.echoiot.server.transport.mqtt.MqttTestClient;
 import org.echoiot.server.transport.mqtt.MqttTestConfigProperties;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,46 +41,46 @@ public abstract class AbstractMqttTimeseriesIntegrationTest extends AbstractMqtt
 
     @Test
     public void testPushTelemetry() throws Exception {
-        @NotNull List<String> expectedKeys = Arrays.asList("key1", "key2", "key3", "key4", "key5");
+        List<String> expectedKeys = Arrays.asList("key1", "key2", "key3", "key4", "key5");
         processJsonPayloadTelemetryTest(DEVICE_TELEMETRY_TOPIC, expectedKeys, PAYLOAD_VALUES_STR.getBytes(), false);
     }
 
     @Test
     public void testPushTelemetryWithTs() throws Exception {
-        @NotNull String payloadStr = "{\"ts\": 10000, \"values\": " + PAYLOAD_VALUES_STR + "}";
-        @NotNull List<String> expectedKeys = Arrays.asList("key1", "key2", "key3", "key4", "key5");
+        String payloadStr = "{\"ts\": 10000, \"values\": " + PAYLOAD_VALUES_STR + "}";
+        List<String> expectedKeys = Arrays.asList("key1", "key2", "key3", "key4", "key5");
         processJsonPayloadTelemetryTest(DEVICE_TELEMETRY_TOPIC, expectedKeys, payloadStr.getBytes(), true);
     }
 
     @Test
     public void testPushTelemetryOnShortTopic() throws Exception {
-        @NotNull List<String> expectedKeys = Arrays.asList("key1", "key2", "key3", "key4", "key5");
+        List<String> expectedKeys = Arrays.asList("key1", "key2", "key3", "key4", "key5");
         processJsonPayloadTelemetryTest(DEVICE_TELEMETRY_SHORT_TOPIC, expectedKeys, PAYLOAD_VALUES_STR.getBytes(), false);
     }
 
     @Test
     public void testPushTelemetryOnShortJsonTopic() throws Exception {
-        @NotNull List<String> expectedKeys = Arrays.asList("key1", "key2", "key3", "key4", "key5");
+        List<String> expectedKeys = Arrays.asList("key1", "key2", "key3", "key4", "key5");
         processJsonPayloadTelemetryTest(DEVICE_TELEMETRY_SHORT_JSON_TOPIC, expectedKeys, PAYLOAD_VALUES_STR.getBytes(), false);
     }
 
     @Test
     public void testPushTelemetryGateway() throws Exception {
-        @NotNull List<String> expectedKeys = Arrays.asList("key1", "key2", "key3", "key4", "key5");
-        @NotNull String deviceName1 = "Device A";
-        @NotNull String deviceName2 = "Device B";
-        @NotNull String payload = getGatewayTelemetryJsonPayload(deviceName1, deviceName2, "10000", "20000");
+        List<String> expectedKeys = Arrays.asList("key1", "key2", "key3", "key4", "key5");
+        String deviceName1 = "Device A";
+        String deviceName2 = "Device B";
+        String payload = getGatewayTelemetryJsonPayload(deviceName1, deviceName2, "10000", "20000");
         processGatewayTelemetryTest(GATEWAY_TELEMETRY_TOPIC, expectedKeys, payload.getBytes(), deviceName1, deviceName2);
     }
 
     @Test
     public void testGatewayConnect() throws Exception {
-        @NotNull String payload = "{\"device\":\"Device A\"}";
-        @NotNull MqttTestClient client = new MqttTestClient();
+        String payload = "{\"device\":\"Device A\"}";
+        MqttTestClient client = new MqttTestClient();
         client.connectAndWait(gatewayAccessToken);
         client.publish(GATEWAY_CONNECT_TOPIC, payload.getBytes());
 
-        @NotNull String deviceName = "Device A";
+        String deviceName = "Device A";
 
         Device device = doExecuteWithRetriesAndInterval(() -> doGet("/api/tenant/devices?deviceName=" + deviceName, Device.class),
             20,
@@ -91,12 +90,12 @@ public abstract class AbstractMqttTimeseriesIntegrationTest extends AbstractMqtt
         client.disconnect();
     }
 
-    protected void processJsonPayloadTelemetryTest(String topic, @NotNull List<String> expectedKeys, byte[] payload, boolean withTs) throws Exception {
+    protected void processJsonPayloadTelemetryTest(String topic, List<String> expectedKeys, byte[] payload, boolean withTs) throws Exception {
         processTelemetryTest(topic, expectedKeys, payload, withTs, false);
     }
 
-    protected void processTelemetryTest(String topic, @NotNull List<String> expectedKeys, byte[] payload, boolean withTs, boolean presenceFieldsTest) throws Exception {
-        @NotNull MqttTestClient client = new MqttTestClient();
+    protected void processTelemetryTest(String topic, List<String> expectedKeys, byte[] payload, boolean withTs, boolean presenceFieldsTest) throws Exception {
+        MqttTestClient client = new MqttTestClient();
         client.connectAndWait(accessToken);
         client.publishAndWait(topic, payload);
         client.disconnect();
@@ -106,8 +105,8 @@ public abstract class AbstractMqttTimeseriesIntegrationTest extends AbstractMqtt
         @Nullable List<String> actualKeys = getActualKeysList(deviceId, expectedKeys);
         assertNotNull(actualKeys);
 
-        @NotNull Set<String> actualKeySet = new HashSet<>(actualKeys);
-        @NotNull Set<String> expectedKeySet = new HashSet<>(expectedKeys);
+        Set<String> actualKeySet = new HashSet<>(actualKeys);
+        Set<String> expectedKeySet = new HashSet<>(expectedKeys);
 
         assertEquals(expectedKeySet, actualKeySet);
 
@@ -156,8 +155,8 @@ public abstract class AbstractMqttTimeseriesIntegrationTest extends AbstractMqtt
         }
     }
 
-    protected void processGatewayTelemetryTest(String topic, @NotNull List<String> expectedKeys, byte[] payload, String firstDeviceName, String secondDeviceName) throws Exception {
-        @NotNull MqttTestClient client = new MqttTestClient();
+    protected void processGatewayTelemetryTest(String topic, List<String> expectedKeys, byte[] payload, String firstDeviceName, String secondDeviceName) throws Exception {
+        MqttTestClient client = new MqttTestClient();
         client.connectAndWait(gatewayAccessToken);
         client.publishAndWait(topic, payload);
         client.disconnect();
@@ -175,18 +174,18 @@ public abstract class AbstractMqttTimeseriesIntegrationTest extends AbstractMqtt
         assertNotNull(secondDevice);
 
         @Nullable List<String> firstDeviceActualKeys = getActualKeysList(firstDevice.getId(), expectedKeys);
-        @NotNull Set<String> firstDeviceActualKeySet = new HashSet<>(firstDeviceActualKeys);
+        Set<String> firstDeviceActualKeySet = new HashSet<>(firstDeviceActualKeys);
 
         @Nullable List<String> secondDeviceActualKeys = getActualKeysList(secondDevice.getId(), expectedKeys);
-        @NotNull Set<String> secondDeviceActualKeySet = new HashSet<>(secondDeviceActualKeys);
+        Set<String> secondDeviceActualKeySet = new HashSet<>(secondDeviceActualKeys);
 
-        @NotNull Set<String> expectedKeySet = new HashSet<>(expectedKeys);
+        Set<String> expectedKeySet = new HashSet<>(expectedKeys);
 
         assertEquals(expectedKeySet, firstDeviceActualKeySet);
         assertEquals(expectedKeySet, secondDeviceActualKeySet);
 
-        @NotNull String getTelemetryValuesUrlFirstDevice = getTelemetryValuesUrl(firstDevice.getId(), firstDeviceActualKeySet);
-        @NotNull String getTelemetryValuesUrlSecondDevice = getTelemetryValuesUrl(firstDevice.getId(), secondDeviceActualKeySet);
+        String getTelemetryValuesUrlFirstDevice = getTelemetryValuesUrl(firstDevice.getId(), firstDeviceActualKeySet);
+        String getTelemetryValuesUrlSecondDevice = getTelemetryValuesUrl(firstDevice.getId(), secondDeviceActualKeySet);
 
         Map<String, List<Map<String, Object>>> firstDeviceValues = doGetAsyncTyped(getTelemetryValuesUrlFirstDevice, new TypeReference<>() {});
         Map<String, List<Map<String, Object>>> secondDeviceValues = doGetAsyncTyped(getTelemetryValuesUrlSecondDevice, new TypeReference<>() {});
@@ -196,7 +195,7 @@ public abstract class AbstractMqttTimeseriesIntegrationTest extends AbstractMqtt
     }
 
     @Nullable
-    private List<String> getActualKeysList(DeviceId deviceId, @NotNull List<String> expectedKeys) throws Exception {
+    private List<String> getActualKeysList(DeviceId deviceId, List<String> expectedKeys) throws Exception {
         long start = System.currentTimeMillis();
         long end = System.currentTimeMillis() + 3000;
 
@@ -212,19 +211,17 @@ public abstract class AbstractMqttTimeseriesIntegrationTest extends AbstractMqtt
         return actualKeys;
     }
 
-    @NotNull
     protected String getGatewayTelemetryJsonPayload(String deviceA, String deviceB, String firstTsValue, String secondTsValue) {
-        @NotNull String payload = "[{\"ts\": " + firstTsValue + ", \"values\": " + PAYLOAD_VALUES_STR + "}, " +
+        String payload = "[{\"ts\": " + firstTsValue + ", \"values\": " + PAYLOAD_VALUES_STR + "}, " +
                                   "{\"ts\": " + secondTsValue + ", \"values\": " + PAYLOAD_VALUES_STR + "}]";
         return "{\"" + deviceA + "\": " + payload + ",  \"" + deviceB + "\": " + payload + "}";
     }
 
-    @NotNull
-    private String getTelemetryValuesUrl(DeviceId deviceId, @NotNull Set<String> actualKeySet) {
+    private String getTelemetryValuesUrl(DeviceId deviceId, Set<String> actualKeySet) {
         return "/api/plugins/telemetry/DEVICE/" + deviceId + "/values/timeseries?startTs=0&endTs=25000&keys=" + String.join(",", actualKeySet);
     }
 
-    private void assertGatewayDeviceData(@NotNull Map<String, List<Map<String, Object>>> deviceValues, @NotNull List<String> expectedKeys) {
+    private void assertGatewayDeviceData(Map<String, List<Map<String, Object>>> deviceValues, List<String> expectedKeys) {
 
         assertEquals(2, deviceValues.get(expectedKeys.get(0)).size());
         assertEquals(2, deviceValues.get(expectedKeys.get(1)).size());
@@ -240,8 +237,8 @@ public abstract class AbstractMqttTimeseriesIntegrationTest extends AbstractMqtt
 
     }
 
-    private void assertValues(@NotNull Map<String, List<Map<String, Object>>> deviceValues, int arrayIndex) {
-        for (@NotNull Map.Entry<String, List<Map<String, Object>>> entry : deviceValues.entrySet()) {
+    private void assertValues(Map<String, List<Map<String, Object>>> deviceValues, int arrayIndex) {
+        for (Map.Entry<String, List<Map<String, Object>>> entry : deviceValues.entrySet()) {
             String key = entry.getKey();
             List<Map<String, Object>> tsKv = entry.getValue();
             String value = (String) tsKv.get(arrayIndex).get("value");
@@ -265,8 +262,8 @@ public abstract class AbstractMqttTimeseriesIntegrationTest extends AbstractMqtt
         }
     }
 
-    private void assertExplicitProtoFieldValues(@NotNull Map<String, List<Map<String, Object>>> deviceValues) {
-        for (@NotNull Map.Entry<String, List<Map<String, Object>>> entry : deviceValues.entrySet()) {
+    private void assertExplicitProtoFieldValues(Map<String, List<Map<String, Object>>> deviceValues) {
+        for (Map.Entry<String, List<Map<String, Object>>> entry : deviceValues.entrySet()) {
             String key = entry.getKey();
             List<Map<String, Object>> tsKv = entry.getValue();
             String value = (String) tsKv.get(0).get("value");
@@ -290,7 +287,7 @@ public abstract class AbstractMqttTimeseriesIntegrationTest extends AbstractMqtt
         }
     }
 
-    private void assertTs(@NotNull Map<String, List<Map<String, Object>>> deviceValues, @NotNull List<String> expectedKeys, int ts, int arrayIndex) {
+    private void assertTs(Map<String, List<Map<String, Object>>> deviceValues, List<String> expectedKeys, int ts, int arrayIndex) {
         assertEquals(ts, deviceValues.get(expectedKeys.get(0)).get(arrayIndex).get("ts"));
         assertEquals(ts, deviceValues.get(expectedKeys.get(1)).get(arrayIndex).get("ts"));
         assertEquals(ts, deviceValues.get(expectedKeys.get(2)).get(arrayIndex).get("ts"));
@@ -300,12 +297,12 @@ public abstract class AbstractMqttTimeseriesIntegrationTest extends AbstractMqtt
 
     //    @Test - Unstable
     public void testMqttQoSLevel() throws Exception {
-        @NotNull MqttTestClient client = new MqttTestClient();
-        @NotNull MqttTestCallback callback = new MqttTestCallback();
+        MqttTestClient client = new MqttTestClient();
+        MqttTestCallback callback = new MqttTestCallback();
         client.setCallback(callback);
         client.connectAndWait(accessToken);
         client.subscribe(DEVICE_ATTRIBUTES_TOPIC, MqttQoS.AT_MOST_ONCE);
-        @NotNull String payload = "{\"key\":\"uniqueValue\"}";
+        String payload = "{\"key\":\"uniqueValue\"}";
 //        TODO 3.1: we need to acknowledge subscription only after it is processed by device actor and not when the message is pushed to queue.
 //        MqttClient -> SUB REQUEST -> Transport -> Kafka -> Device Actor (subscribed)
 //        MqttClient <- SUB_ACK <- Transport

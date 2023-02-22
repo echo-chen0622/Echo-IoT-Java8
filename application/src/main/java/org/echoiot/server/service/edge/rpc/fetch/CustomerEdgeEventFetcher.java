@@ -10,7 +10,6 @@ import org.echoiot.server.common.data.edge.EdgeEventType;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.PageLink;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -26,10 +25,9 @@ public class CustomerEdgeEventFetcher implements EdgeEventFetcher {
         return null;
     }
 
-    @NotNull
     @Override
-    public PageData<EdgeEvent> fetchEdgeEvents(TenantId tenantId, @NotNull Edge edge, PageLink pageLink) {
-        @NotNull List<EdgeEvent> result = new ArrayList<>();
+    public PageData<EdgeEvent> fetchEdgeEvents(TenantId tenantId, Edge edge, PageLink pageLink) {
+        List<EdgeEvent> result = new ArrayList<>();
         result.add(EdgeUtils.constructEdgeEvent(edge.getTenantId(), edge.getId(),
                                                 EdgeEventType.CUSTOMER, EdgeEventActionType.ADDED, edge.getCustomerId(), null));
         // @voba - returns PageData object to be in sync with other fetchers

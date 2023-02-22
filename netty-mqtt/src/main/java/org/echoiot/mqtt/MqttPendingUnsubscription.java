@@ -3,7 +3,6 @@ package org.echoiot.mqtt;
 import io.netty.channel.EventLoop;
 import io.netty.handler.codec.mqtt.MqttUnsubscribeMessage;
 import io.netty.util.concurrent.Promise;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
@@ -12,7 +11,6 @@ final class MqttPendingUnsubscription{
     private final Promise<Void> future;
     private final String topic;
 
-    @NotNull
     private final RetransmissionHandler<MqttUnsubscribeMessage> retransmissionHandler;
 
     MqttPendingUnsubscription(Promise<Void> future, String topic, MqttUnsubscribeMessage unsubscribeMessage, PendingOperation operation) {
@@ -31,7 +29,7 @@ final class MqttPendingUnsubscription{
         return topic;
     }
 
-    void startRetransmissionTimer(@NotNull EventLoop eventLoop, @NotNull Consumer<Object> sendPacket) {
+    void startRetransmissionTimer(EventLoop eventLoop, Consumer<Object> sendPacket) {
         this.retransmissionHandler.setHandle((fixedHeader, originalMessage) ->
                 sendPacket.accept(new MqttUnsubscribeMessage(fixedHeader, originalMessage.variableHeader(), originalMessage.payload())));
         this.retransmissionHandler.start(eventLoop);

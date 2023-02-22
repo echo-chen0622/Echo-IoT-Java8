@@ -6,7 +6,6 @@ import org.eclipse.leshan.client.servers.ServerIdentity;
 import org.eclipse.leshan.core.model.ObjectModel;
 import org.eclipse.leshan.core.response.ExecuteResponse;
 import org.eclipse.leshan.core.response.ReadResponse;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.security.auth.Destroyable;
@@ -32,7 +31,7 @@ public class LwM2mTemperatureSensor extends BaseInstanceEnabler implements Destr
 
     }
 
-    public LwM2mTemperatureSensor(@NotNull ScheduledExecutorService executorService, @Nullable Integer id) {
+    public LwM2mTemperatureSensor(ScheduledExecutorService executorService, @Nullable Integer id) {
         try {
             if (id != null) this.setId(id);
         executorService.scheduleWithFixedDelay(this::adjustTemperature, 2000, 2000, TimeUnit.MILLISECONDS);
@@ -70,7 +69,7 @@ public class LwM2mTemperatureSensor extends BaseInstanceEnabler implements Destr
     }
 
     private double getTwoDigitValue(double value) {
-        @NotNull BigDecimal toBeTruncated = BigDecimal.valueOf(value);
+        BigDecimal toBeTruncated = BigDecimal.valueOf(value);
         return toBeTruncated.setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
 

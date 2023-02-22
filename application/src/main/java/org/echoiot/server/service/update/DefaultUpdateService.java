@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.echoiot.common.util.EchoiotThreadFactory;
 import org.echoiot.server.common.data.UpdateMessage;
 import org.echoiot.server.queue.util.TbCoreComponent;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -71,12 +70,11 @@ public class DefaultUpdateService implements UpdateService {
         }
     }
 
-    @NotNull
     private UUID parseInstanceId() throws IOException {
         @Nullable UUID result = null;
-        @NotNull Path instanceIdPath = Paths.get(INSTANCE_ID_FILE);
+        Path instanceIdPath = Paths.get(INSTANCE_ID_FILE);
         if (instanceIdPath.toFile().exists()) {
-            @NotNull byte[] data = Files.readAllBytes(instanceIdPath);
+            byte[] data = Files.readAllBytes(instanceIdPath);
             if (data != null && data.length > 0) {
                 try {
                     result = UUID.fromString(new String(data));
@@ -104,7 +102,6 @@ public class DefaultUpdateService implements UpdateService {
         }
     }
 
-    @NotNull
     Runnable checkUpdatesRunnable = () -> {
         try {
             log.trace("Executing check update method for instanceId [{}], platform [{}] and version [{}]", instanceId, platform, version);

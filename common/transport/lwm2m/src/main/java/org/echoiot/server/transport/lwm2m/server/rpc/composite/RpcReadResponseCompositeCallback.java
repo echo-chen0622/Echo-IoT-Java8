@@ -7,7 +7,6 @@ import org.echoiot.server.transport.lwm2m.server.downlink.DownlinkRequestCallbac
 import org.echoiot.server.transport.lwm2m.server.rpc.RpcLwM2MDownlinkCallback;
 import org.eclipse.leshan.core.request.LwM2mRequest;
 import org.eclipse.leshan.core.response.ReadCompositeResponse;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
@@ -20,7 +19,7 @@ public class RpcReadResponseCompositeCallback<R extends LwM2mRequest<T>, T exten
     }
 
     @Override
-    protected Optional<String> serializeSuccessfulResponse(@NotNull T response) {
+    protected Optional<String> serializeSuccessfulResponse(T response) {
         return contentToString(response.getContent());
     }
 }

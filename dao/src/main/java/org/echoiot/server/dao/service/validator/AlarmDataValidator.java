@@ -7,18 +7,16 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.dao.exception.DataValidationException;
 import org.echoiot.server.dao.service.DataValidator;
 import org.echoiot.server.dao.tenant.TenantService;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 @Component
 @AllArgsConstructor
 public class AlarmDataValidator extends DataValidator<Alarm> {
 
-    @NotNull
     private final TenantService tenantService;
 
     @Override
-    protected void validateDataImpl(TenantId tenantId, @NotNull Alarm alarm) {
+    protected void validateDataImpl(TenantId tenantId, Alarm alarm) {
         if (StringUtils.isEmpty(alarm.getType())) {
             throw new DataValidationException("Alarm type should be specified!");
         }

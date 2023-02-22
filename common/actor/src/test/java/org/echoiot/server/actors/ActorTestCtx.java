@@ -2,7 +2,6 @@ package org.echoiot.server.actors;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -13,10 +12,8 @@ import java.util.concurrent.atomic.AtomicLong;
 public class ActorTestCtx {
 
     private volatile CountDownLatch latch;
-    @NotNull
     private final AtomicInteger invocationCount;
     private final int expectedInvocationCount;
-    @NotNull
     private final AtomicLong actual;
 
     public void clear() {

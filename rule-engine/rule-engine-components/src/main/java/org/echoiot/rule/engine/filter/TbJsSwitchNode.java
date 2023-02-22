@@ -10,7 +10,6 @@ import org.echoiot.rule.engine.api.util.TbNodeUtils;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.data.script.ScriptLanguage;
 import org.echoiot.server.common.msg.TbMsg;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
@@ -34,14 +33,14 @@ public class TbJsSwitchNode implements TbNode {
     private ScriptEngine scriptEngine;
 
     @Override
-    public void init(@NotNull TbContext ctx, @NotNull TbNodeConfiguration configuration) throws TbNodeException {
+    public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
         this.config = TbNodeUtils.convert(configuration, TbJsSwitchNodeConfiguration.class);
         this.scriptEngine = ctx.createScriptEngine(config.getScriptLang(),
                 ScriptLanguage.TBEL.equals(config.getScriptLang()) ? config.getTbelScript() : config.getJsScript());
     }
 
     @Override
-    public void onMsg(@NotNull TbContext ctx, TbMsg msg) {
+    public void onMsg(TbContext ctx, TbMsg msg) {
         ctx.logJsEvalRequest();
         Futures.addCallback(scriptEngine.executeSwitchAsync(msg), new FutureCallback<>() {
             @Override
@@ -58,7 +57,7 @@ public class TbJsSwitchNode implements TbNode {
         }, MoreExecutors.directExecutor()); //usually runs in a callbackExecutor
     }
 
-    private void processSwitch(@NotNull TbContext ctx, TbMsg msg, Set<String> nextRelations) {
+    private void processSwitch(TbContext ctx, TbMsg msg, Set<String> nextRelations) {
         ctx.tellNext(msg, nextRelations);
     }
 

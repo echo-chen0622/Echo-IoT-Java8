@@ -1,7 +1,6 @@
 package org.echoiot.common.util;
 
 import cn.hutool.core.util.ArrayUtil;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
@@ -20,8 +19,7 @@ public class ApplicationUtil {
      *
      * @param args
      */
-    @NotNull
-    public static String[] updateArguments(@NotNull String[] args, String defaultSpringConfigParam) {
+    public static String[] updateArguments(String[] args, String defaultSpringConfigParam) {
         // 如果没有设置配置文件名称，则设置默认的配置文件名称
         if (Arrays.stream(args).noneMatch(arg -> arg.startsWith(SPRING_CONFIG_NAME_KEY))) {
             // 使数组长度加 1，然后把配置文件名称放到最后一个位置

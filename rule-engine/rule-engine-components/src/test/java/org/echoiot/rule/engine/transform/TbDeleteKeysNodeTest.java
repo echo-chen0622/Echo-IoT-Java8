@@ -11,7 +11,6 @@ import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.TbMsgMetaData;
 import org.echoiot.server.common.msg.queue.TbMsgCallback;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -56,17 +55,17 @@ public class TbDeleteKeysNodeTest {
 
     @Test
     void givenDefaultConfig_whenVerify_thenOK() {
-        @NotNull TbDeleteKeysNodeConfiguration defaultConfig = new TbDeleteKeysNodeConfiguration().defaultConfiguration();
+        TbDeleteKeysNodeConfiguration defaultConfig = new TbDeleteKeysNodeConfiguration().defaultConfiguration();
         assertThat(defaultConfig.getKeys()).isEqualTo(Collections.emptySet());
         assertThat(defaultConfig.isFromMetadata()).isEqualTo(false);
     }
 
     @Test
     void givenMsgFromMetadata_whenOnMsg_thenVerifyOutput() throws Exception {
-        @NotNull String data = "{}";
+        String data = "{}";
         node.onMsg(ctx, getTbMsg(deviceId, data));
 
-        @NotNull ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
         verify(ctx, times(1)).tellSuccess(newMsgCaptor.capture());
         verify(ctx, never()).tellFailure(any(), any());
 
@@ -84,10 +83,10 @@ public class TbDeleteKeysNodeTest {
         nodeConfiguration = new TbNodeConfiguration(mapper.valueToTree(config));
         node.init(ctx, nodeConfiguration);
 
-        @NotNull String data = "{\"Voltage\":22.5,\"TempDataValue\":10.5}";
+        String data = "{\"Voltage\":22.5,\"TempDataValue\":10.5}";
         node.onMsg(ctx, getTbMsg(deviceId, data));
 
-        @NotNull ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
         verify(ctx, times(1)).tellSuccess(newMsgCaptor.capture());
         verify(ctx, never()).tellFailure(any(), any());
 
@@ -101,14 +100,14 @@ public class TbDeleteKeysNodeTest {
 
     @Test
     void givenEmptyKeys_whenOnMsg_thenVerifyOutput() throws Exception {
-        @NotNull TbDeleteKeysNodeConfiguration defaultConfig = new TbDeleteKeysNodeConfiguration().defaultConfiguration();
+        TbDeleteKeysNodeConfiguration defaultConfig = new TbDeleteKeysNodeConfiguration().defaultConfiguration();
         nodeConfiguration = new TbNodeConfiguration(mapper.valueToTree(defaultConfig));
         node.init(ctx, nodeConfiguration);
 
-        @NotNull String data = "{\"Voltage\":220,\"Humidity\":56}";
+        String data = "{\"Voltage\":220,\"Humidity\":56}";
         node.onMsg(ctx, getTbMsg(deviceId, data));
 
-        @NotNull ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
         verify(ctx, times(1)).tellSuccess(newMsgCaptor.capture());
         verify(ctx, never()).tellFailure(any(), any());
 
@@ -118,9 +117,8 @@ public class TbDeleteKeysNodeTest {
         assertThat(newMsg.getData()).isEqualTo(data);
     }
 
-    @NotNull
     private TbMsg getTbMsg(EntityId entityId, String data) {
-        @NotNull final Map<String, String> mdMap = Map.of(
+        final Map<String, String> mdMap = Map.of(
                 "TestKey_1", "Test",
                 "country", "US",
                 "voltageDataValue", "220",

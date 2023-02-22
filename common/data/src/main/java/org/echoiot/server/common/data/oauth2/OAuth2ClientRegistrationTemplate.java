@@ -10,7 +10,6 @@ import org.echoiot.server.common.data.HasName;
 import org.echoiot.server.common.data.SearchTextBasedWithAdditionalInfo;
 import org.echoiot.server.common.data.id.OAuth2ClientRegistrationTemplateId;
 import org.echoiot.server.common.data.validation.Length;
-import org.jetbrains.annotations.NotNull;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -60,7 +59,7 @@ public class OAuth2ClientRegistrationTemplate extends SearchTextBasedWithAdditio
     @ApiModelProperty(value = "Help link for OAuth2 provider")
     private String helpLink;
 
-    public OAuth2ClientRegistrationTemplate(@NotNull OAuth2ClientRegistrationTemplate clientRegistrationTemplate) {
+    public OAuth2ClientRegistrationTemplate(OAuth2ClientRegistrationTemplate clientRegistrationTemplate) {
         super(clientRegistrationTemplate);
         this.providerId = clientRegistrationTemplate.providerId;
         this.mapperConfig = clientRegistrationTemplate.mapperConfig;

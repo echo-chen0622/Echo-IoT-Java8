@@ -12,7 +12,6 @@ import org.echoiot.server.common.data.id.CustomerId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.validation.Length;
 import org.echoiot.server.common.data.validation.NoXss;
-import org.jetbrains.annotations.NotNull;
 
 @EqualsAndHashCode(callSuper = true)
 public class Customer extends ContactBased<CustomerId> implements HasTenantId, ExportableEntity<CustomerId> {
@@ -37,7 +36,7 @@ public class Customer extends ContactBased<CustomerId> implements HasTenantId, E
         super(id);
     }
 
-    public Customer(@NotNull Customer customer) {
+    public Customer(Customer customer) {
         super(customer);
         this.tenantId = customer.getTenantId();
         this.title = customer.getTitle();
@@ -138,7 +137,6 @@ public class Customer extends ContactBased<CustomerId> implements HasTenantId, E
         return false;
     }
 
-    @NotNull
     @JsonIgnore
     public ShortCustomerInfo toShortCustomerInfo() {
         return new ShortCustomerInfo(id, title, isPublic());
@@ -156,7 +154,6 @@ public class Customer extends ContactBased<CustomerId> implements HasTenantId, E
         return getTitle();
     }
 
-    @NotNull
     @Override
     public String toString() {
         String builder = "Customer [title=" +

@@ -15,7 +15,6 @@ import org.eclipse.leshan.core.model.ResourceModel;
 import org.eclipse.leshan.core.node.*;
 import org.eclipse.leshan.core.util.datatype.ULong;
 import org.eclipse.leshan.server.redis.serialization.RegistrationSerDes;
-import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -25,27 +24,27 @@ public class LwM2MClientSerDes {
     public static final String VALUE = "value";
 
     @SneakyThrows
-    public static byte[] serialize(@NotNull LwM2mClient client) {
-        @NotNull JsonObject o = Json.object();
+    public static byte[] serialize(LwM2mClient client) {
+        JsonObject o = Json.object();
         o.add("nodeId", client.getNodeId());
         o.add("endpoint", client.getEndpoint());
 
-        @NotNull JsonObject resources = Json.object();
+        JsonObject resources = Json.object();
         client.getResources().forEach((k, v) -> {
-            @NotNull JsonObject resourceValue = Json.object();
+            JsonObject resourceValue = Json.object();
             resourceValue.add("lwM2mResource", serialize(v.getLwM2mResource()));
             resourceValue.add("resourceModel", serialize(v.getResourceModel()));
             resources.add(k, resourceValue);
         });
         o.add("resources", resources);
-        @NotNull JsonObject sharedAttributes = Json.object();
+        JsonObject sharedAttributes = Json.object();
 
-        for (@NotNull Map.Entry<String, TransportProtos.TsKvProto> entry : client.getSharedAttributes().entrySet()) {
+        for (Map.Entry<String, TransportProtos.TsKvProto> entry : client.getSharedAttributes().entrySet()) {
             sharedAttributes.add(entry.getKey(), JsonFormat.printer().print(entry.getValue()));
         }
 
         o.add("sharedAttributes", sharedAttributes);
-        @NotNull JsonObject keyTsLatestMap = Json.object();
+        JsonObject keyTsLatestMap = Json.object();
         client.getKeyTsLatestMap().forEach((k, v) -> {
             keyTsLatestMap.add(k, v.get());
         });
@@ -83,7 +82,7 @@ public class LwM2MClientSerDes {
         o.add("asleep", client.isAsleep());
         o.add("lastUplinkTime", client.getLastUplinkTime());
 
-        @NotNull Field firstEdrxDownlink = LwM2mClient.class.getDeclaredField("firstEdrxDownlink");
+        Field firstEdrxDownlink = LwM2mClient.class.getDeclaredField("firstEdrxDownlink");
         firstEdrxDownlink.setAccessible(true);
         o.add("firstEdrxDownlink", (boolean) firstEdrxDownlink.get(client));
         o.add("retryAttempts", client.getRetryAttempts().get());
@@ -95,16 +94,15 @@ public class LwM2MClientSerDes {
         return o.toString().getBytes();
     }
 
-    @NotNull
-    private static JsonObject serialize(@NotNull LwM2mResource resource) {
-        @NotNull JsonObject o = Json.object();
+    private static JsonObject serialize(LwM2mResource resource) {
+        JsonObject o = Json.object();
         o.add("id", resource.getId());
         o.add("type", resource.getType().toString());
         if (resource.isMultiInstances()) {
             o.add("multiInstances", true);
-            @NotNull JsonObject instances = Json.object();
+            JsonObject instances = Json.object();
             resource.getInstances().forEach((id, in) -> {
-                @NotNull JsonObject instance = Json.object();
+                JsonObject instance = Json.object();
                 instance.add("id", in.getId());
                 addValue(instance, in.getType(), in.getValue());
                 instances.add(id.toString(), instance);
@@ -118,13 +116,12 @@ public class LwM2MClientSerDes {
         return o;
     }
 
-    @NotNull
-    private static LwM2mResource parseLwM2mResource(@NotNull JsonObject o) {
+    private static LwM2mResource parseLwM2mResource(JsonObject o) {
         boolean multiInstances = o.get("multiInstances").asBoolean();
         int id = o.get("id").asInt();
-        @NotNull ResourceModel.Type type = ResourceModel.Type.valueOf(o.get("type").asString());
+        ResourceModel.Type type = ResourceModel.Type.valueOf(o.get("type").asString());
         if (multiInstances) {
-            @NotNull Map<Integer, Object> instances = new HashMap<>();
+            Map<Integer, Object> instances = new HashMap<>();
             o.get("instances").asObject().forEach(entry -> {
                 instances.put(Integer.valueOf(entry.getName()), parseValue(type, entry.getValue()));
             });
@@ -134,7 +131,7 @@ public class LwM2MClientSerDes {
         }
     }
 
-    private static Object parseValue(@NotNull ResourceModel.Type type, @NotNull JsonValue value) {
+    private static Object parseValue(ResourceModel.Type type, JsonValue value) {
         switch (type) {
             case INTEGER:
                 return value.asLong();
@@ -157,9 +154,8 @@ public class LwM2MClientSerDes {
         }
     }
 
-    @NotNull
-    private static JsonObject serialize(@NotNull ResourceModel resourceModel) {
-        @NotNull JsonObject o = Json.object();
+    private static JsonObject serialize(ResourceModel resourceModel) {
+        JsonObject o = Json.object();
         o.add("id", resourceModel.id);
         o.add("name", resourceModel.name);
         o.add("operations", resourceModel.operations.toString());
@@ -172,21 +168,20 @@ public class LwM2MClientSerDes {
         return o;
     }
 
-    @NotNull
-    private static ResourceModel parseResourceModel(@NotNull JsonObject o) {
-        @NotNull Integer id = o.get("id").asInt();
+    private static ResourceModel parseResourceModel(JsonObject o) {
+        Integer id = o.get("id").asInt();
         String name = o.get("name").asString();
-        @NotNull ResourceModel.Operations operations = ResourceModel.Operations.valueOf(o.get("operations").asString());
-        @NotNull Boolean multiple = o.get("multiple").asBoolean();
-        @NotNull Boolean mandatory = o.get("mandatory").asBoolean();
-        @NotNull ResourceModel.Type type = ResourceModel.Type.valueOf(o.get("type").asString());
+        ResourceModel.Operations operations = ResourceModel.Operations.valueOf(o.get("operations").asString());
+        Boolean multiple = o.get("multiple").asBoolean();
+        Boolean mandatory = o.get("mandatory").asBoolean();
+        ResourceModel.Type type = ResourceModel.Type.valueOf(o.get("type").asString());
         String rangeEnumeration = o.get("rangeEnumeration").asString();
         String units = o.get("units").asString();
         String description = o.get("description").asString();
         return new ResourceModel(id, name, operations, multiple, mandatory, type, rangeEnumeration, units, description);
     }
 
-    private static void addValue(@NotNull JsonObject o, @NotNull ResourceModel.Type type, @NotNull Object value) {
+    private static void addValue(JsonObject o, ResourceModel.Type type, Object value) {
         switch (type) {
             case INTEGER:
                 o.add(VALUE, (Long) value);
@@ -217,21 +212,20 @@ public class LwM2MClientSerDes {
         }
     }
 
-    @NotNull
     @SneakyThrows
-    public static LwM2mClient deserialize(@NotNull byte[] data) {
+    public static LwM2mClient deserialize(byte[] data) {
         JsonObject o = Json.parse(new String(data)).asObject();
-        @NotNull LwM2mClient lwM2mClient = new LwM2mClient(o.get("nodeId").asString(), o.get("endpoint").asString());
+        LwM2mClient lwM2mClient = new LwM2mClient(o.get("nodeId").asString(), o.get("endpoint").asString());
 
         o.get("resources").asObject().forEach(entry -> {
             JsonObject resource = entry.getValue().asObject();
-            @NotNull LwM2mResource lwM2mResource = parseLwM2mResource(resource.get("lwM2mResource").asObject());
-            @NotNull ResourceModel resourceModel = parseResourceModel(resource.get("resourceModel").asObject());
-            @NotNull ResourceValue resourceValue = new ResourceValue(lwM2mResource, resourceModel);
+            LwM2mResource lwM2mResource = parseLwM2mResource(resource.get("lwM2mResource").asObject());
+            ResourceModel resourceModel = parseResourceModel(resource.get("resourceModel").asObject());
+            ResourceValue resourceValue = new ResourceValue(lwM2mResource, resourceModel);
             lwM2mClient.getResources().put(entry.getName(), resourceValue);
         });
 
-        for (@NotNull JsonObject.Member entry : o.get("sharedAttributes").asObject()) {
+        for (JsonObject.Member entry : o.get("sharedAttributes").asObject()) {
             TransportProtos.TsKvProto.Builder builder = TransportProtos.TsKvProto.newBuilder();
             JsonFormat.parser().merge(entry.getValue().asString(), builder);
             lwM2mClient.getSharedAttributes().put(entry.getName(), builder.build());
@@ -243,63 +237,63 @@ public class LwM2MClientSerDes {
 
         lwM2mClient.setState(LwM2MClientState.valueOf(o.get("state").asString()));
 
-        @NotNull Class<LwM2mClient> lwM2mClientClass = LwM2mClient.class;
+        Class<LwM2mClient> lwM2mClientClass = LwM2mClient.class;
 
         JsonValue session = o.get("session");
         if (session != null) {
             TransportProtos.SessionInfoProto.Builder builder = TransportProtos.SessionInfoProto.newBuilder();
             JsonFormat.parser().merge(session.asString(), builder);
 
-            @NotNull Field sessionField = lwM2mClientClass.getDeclaredField("session");
+            Field sessionField = lwM2mClientClass.getDeclaredField("session");
             sessionField.setAccessible(true);
             sessionField.set(lwM2mClient, builder.build());
         }
 
         JsonValue tenantId = o.get("tenantId");
         if (tenantId != null) {
-            @NotNull Field tenantIdField = lwM2mClientClass.getDeclaredField("tenantId");
+            Field tenantIdField = lwM2mClientClass.getDeclaredField("tenantId");
             tenantIdField.setAccessible(true);
             tenantIdField.set(lwM2mClient, new TenantId(UUID.fromString(tenantId.asString())));
         }
 
         JsonValue deviceId = o.get("deviceId");
         if (tenantId != null) {
-            @NotNull Field deviceIdField = lwM2mClientClass.getDeclaredField("deviceId");
+            Field deviceIdField = lwM2mClientClass.getDeclaredField("deviceId");
             deviceIdField.setAccessible(true);
             deviceIdField.set(lwM2mClient, UUID.fromString(deviceId.asString()));
         }
 
         JsonValue profileId = o.get("profileId");
         if (tenantId != null) {
-            @NotNull Field profileIdField = lwM2mClientClass.getDeclaredField("profileId");
+            Field profileIdField = lwM2mClientClass.getDeclaredField("profileId");
             profileIdField.setAccessible(true);
             profileIdField.set(lwM2mClient, UUID.fromString(profileId.asString()));
         }
 
         JsonValue powerMode = o.get("powerMode");
         if (powerMode != null) {
-            @NotNull Field powerModeField = lwM2mClientClass.getDeclaredField("powerMode");
+            Field powerModeField = lwM2mClientClass.getDeclaredField("powerMode");
             powerModeField.setAccessible(true);
             powerModeField.set(lwM2mClient, PowerMode.valueOf(powerMode.asString()));
         }
 
         JsonValue edrxCycle = o.get("edrxCycle");
         if (edrxCycle != null) {
-            @NotNull Field edrxCycleField = lwM2mClientClass.getDeclaredField("edrxCycle");
+            Field edrxCycleField = lwM2mClientClass.getDeclaredField("edrxCycle");
             edrxCycleField.setAccessible(true);
             edrxCycleField.set(lwM2mClient, edrxCycle.asLong());
         }
 
         JsonValue psmActivityTimer = o.get("psmActivityTimer");
         if (psmActivityTimer != null) {
-            @NotNull Field psmActivityTimerField = lwM2mClientClass.getDeclaredField("psmActivityTimer");
+            Field psmActivityTimerField = lwM2mClientClass.getDeclaredField("psmActivityTimer");
             psmActivityTimerField.setAccessible(true);
             psmActivityTimerField.set(lwM2mClient, psmActivityTimer.asLong());
         }
 
         JsonValue pagingTransmissionWindow = o.get("pagingTransmissionWindow");
         if (pagingTransmissionWindow != null) {
-            @NotNull Field pagingTransmissionWindowField = lwM2mClientClass.getDeclaredField("pagingTransmissionWindow");
+            Field pagingTransmissionWindowField = lwM2mClientClass.getDeclaredField("pagingTransmissionWindow");
             pagingTransmissionWindowField.setAccessible(true);
             pagingTransmissionWindowField.set(lwM2mClient, pagingTransmissionWindow.asLong());
         }
@@ -311,11 +305,11 @@ public class LwM2MClientSerDes {
 
         lwM2mClient.setAsleep(o.get("asleep").asBoolean());
 
-        @NotNull Field lastUplinkTimeField = lwM2mClientClass.getDeclaredField("lastUplinkTime");
+        Field lastUplinkTimeField = lwM2mClientClass.getDeclaredField("lastUplinkTime");
         lastUplinkTimeField.setAccessible(true);
         lastUplinkTimeField.setLong(lwM2mClient, o.get("lastUplinkTime").asLong());
 
-        @NotNull Field firstEdrxDownlinkField = lwM2mClientClass.getDeclaredField("firstEdrxDownlink");
+        Field firstEdrxDownlinkField = lwM2mClientClass.getDeclaredField("firstEdrxDownlink");
         firstEdrxDownlinkField.setAccessible(true);
         firstEdrxDownlinkField.setBoolean(lwM2mClient, o.get("firstEdrxDownlink").asBoolean());
 

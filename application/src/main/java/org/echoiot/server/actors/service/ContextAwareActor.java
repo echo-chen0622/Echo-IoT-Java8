@@ -5,7 +5,6 @@ import org.echoiot.server.actors.AbstractTbActor;
 import org.echoiot.server.actors.ActorSystemContext;
 import org.echoiot.server.actors.ProcessFailureStrategy;
 import org.echoiot.server.common.msg.TbActorMsg;
-import org.jetbrains.annotations.NotNull;
 
 @Slf4j
 public abstract class ContextAwareActor extends AbstractTbActor {
@@ -38,7 +37,6 @@ public abstract class ContextAwareActor extends AbstractTbActor {
         return doProcessFailure(t);
     }
 
-    @NotNull
     protected ProcessFailureStrategy doProcessFailure(Throwable t) {
         if (t instanceof Error) {
             return ProcessFailureStrategy.stop();

@@ -8,7 +8,6 @@ import org.echoiot.server.common.data.id.DashboardId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.validation.Length;
 import org.echoiot.server.common.data.validation.NoXss;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.validation.Valid;
@@ -38,7 +37,7 @@ public class DashboardInfo extends SearchTextBased<DashboardId> implements HasNa
         super(id);
     }
 
-    public DashboardInfo(@NotNull DashboardInfo dashboardInfo) {
+    public DashboardInfo(DashboardInfo dashboardInfo) {
         super(dashboardInfo);
         this.tenantId = dashboardInfo.getTenantId();
         this.title = dashboardInfo.getTitle();
@@ -124,7 +123,7 @@ public class DashboardInfo extends SearchTextBased<DashboardId> implements HasNa
     @Nullable
     public ShortCustomerInfo getAssignedCustomerInfo(CustomerId customerId) {
         if (this.assignedCustomers != null) {
-            for (@NotNull ShortCustomerInfo customerInfo : this.assignedCustomers) {
+            for (ShortCustomerInfo customerInfo : this.assignedCustomers) {
                 if (customerInfo.getCustomerId().equals(customerId)) {
                     return customerInfo;
                 }
@@ -133,8 +132,8 @@ public class DashboardInfo extends SearchTextBased<DashboardId> implements HasNa
         return null;
     }
 
-    public boolean addAssignedCustomer(@NotNull Customer customer) {
-        @NotNull ShortCustomerInfo customerInfo = customer.toShortCustomerInfo();
+    public boolean addAssignedCustomer(Customer customer) {
+        ShortCustomerInfo customerInfo = customer.toShortCustomerInfo();
         if (this.assignedCustomers != null && this.assignedCustomers.contains(customerInfo)) {
             return false;
         } else {
@@ -146,8 +145,8 @@ public class DashboardInfo extends SearchTextBased<DashboardId> implements HasNa
         }
     }
 
-    public boolean updateAssignedCustomer(@NotNull Customer customer) {
-        @NotNull ShortCustomerInfo customerInfo = customer.toShortCustomerInfo();
+    public boolean updateAssignedCustomer(Customer customer) {
+        ShortCustomerInfo customerInfo = customer.toShortCustomerInfo();
         if (this.assignedCustomers != null && this.assignedCustomers.contains(customerInfo)) {
             this.assignedCustomers.remove(customerInfo);
             this.assignedCustomers.add(customerInfo);
@@ -157,8 +156,8 @@ public class DashboardInfo extends SearchTextBased<DashboardId> implements HasNa
         }
     }
 
-    public boolean removeAssignedCustomer(@NotNull Customer customer) {
-        @NotNull ShortCustomerInfo customerInfo = customer.toShortCustomerInfo();
+    public boolean removeAssignedCustomer(Customer customer) {
+        ShortCustomerInfo customerInfo = customer.toShortCustomerInfo();
         if (this.assignedCustomers != null && this.assignedCustomers.contains(customerInfo)) {
             this.assignedCustomers.remove(customerInfo);
             return true;
@@ -193,7 +192,7 @@ public class DashboardInfo extends SearchTextBased<DashboardId> implements HasNa
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-        @NotNull DashboardInfo that = (DashboardInfo) o;
+        DashboardInfo that = (DashboardInfo) o;
         return mobileHide == that.mobileHide
                 && Objects.equals(tenantId, that.tenantId)
                 && Objects.equals(title, that.title)

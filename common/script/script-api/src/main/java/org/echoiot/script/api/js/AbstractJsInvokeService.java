@@ -10,7 +10,6 @@ import org.echoiot.script.api.ScriptType;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.stats.TbApiUsageReportClient;
 import org.echoiot.server.common.stats.TbApiUsageStateClient;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.util.Map;
@@ -45,17 +44,16 @@ public abstract class AbstractJsInvokeService extends AbstractScriptInvokeServic
         return scriptInfoMap.containsKey(scriptId);
     }
 
-    @NotNull
     @Override
     protected JsScriptExecutionTask doInvokeFunction(UUID scriptId, Object[] args) {
         return new JsScriptExecutionTask(doInvokeFunction(scriptId, scriptInfoMap.get(scriptId), args));
     }
 
     @Override
-    protected ListenableFuture<UUID> doEvalScript(@NotNull TenantId tenantId, ScriptType scriptType, @NotNull String scriptBody, @NotNull UUID scriptId, String[] argNames) {
-        @NotNull String scriptHash = hash(tenantId, scriptBody);
+    protected ListenableFuture<UUID> doEvalScript(TenantId tenantId, ScriptType scriptType, String scriptBody, UUID scriptId, String[] argNames) {
+        String scriptHash = hash(tenantId, scriptBody);
         String functionName = constructFunctionName(scriptId, scriptHash);
-        @NotNull String jsScript = generateJsScript(scriptType, functionName, scriptBody, argNames);
+        String jsScript = generateJsScript(scriptType, functionName, scriptBody, argNames);
         return doEval(scriptId, new JsScriptInfo(scriptHash, functionName), jsScript);
     }
 
@@ -70,7 +68,6 @@ public abstract class AbstractJsInvokeService extends AbstractScriptInvokeServic
 
     protected abstract void doRelease(UUID scriptId, JsScriptInfo scriptInfo) throws Exception;
 
-    @NotNull
     private String generateJsScript(ScriptType scriptType, String functionName, String scriptBody, String... argNames) {
         if (scriptType == ScriptType.RULE_NODE_SCRIPT) {
             return RuleNodeScriptFactory.generateRuleNodeScript(functionName, scriptBody, argNames);
@@ -78,12 +75,11 @@ public abstract class AbstractJsInvokeService extends AbstractScriptInvokeServic
         throw new RuntimeException("No script factory implemented for scriptType: " + scriptType);
     }
 
-    protected String constructFunctionName(@NotNull UUID scriptId, String scriptHash) {
+    protected String constructFunctionName(UUID scriptId, String scriptHash) {
         return "invokeInternal_" + scriptId.toString().replace('-', '_');
     }
 
-    @NotNull
-    protected String hash(@NotNull TenantId tenantId, @NotNull String scriptBody) {
+    protected String hash(TenantId tenantId, String scriptBody) {
         return Hashing.murmur3_128().newHasher()
                 .putLong(tenantId.getId().getMostSignificantBits())
                 .putLong(tenantId.getId().getLeastSignificantBits())

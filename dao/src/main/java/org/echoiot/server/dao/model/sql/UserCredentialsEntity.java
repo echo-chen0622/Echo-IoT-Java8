@@ -8,7 +8,6 @@ import org.echoiot.server.common.data.security.UserCredentials;
 import org.echoiot.server.dao.model.BaseEntity;
 import org.echoiot.server.dao.model.BaseSqlEntity;
 import org.echoiot.server.dao.model.ModelConstants;
-import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -40,7 +39,7 @@ public final class UserCredentialsEntity extends BaseSqlEntity<UserCredentials> 
         super();
     }
 
-    public UserCredentialsEntity(@NotNull UserCredentials userCredentials) {
+    public UserCredentialsEntity(UserCredentials userCredentials) {
         if (userCredentials.getId() != null) {
             this.setUuid(userCredentials.getId().getId());
         }
@@ -54,10 +53,9 @@ public final class UserCredentialsEntity extends BaseSqlEntity<UserCredentials> 
         this.resetToken = userCredentials.getResetToken();
     }
 
-    @NotNull
     @Override
     public UserCredentials toData() {
-        @NotNull UserCredentials userCredentials = new UserCredentials(new UserCredentialsId(this.getUuid()));
+        UserCredentials userCredentials = new UserCredentials(new UserCredentialsId(this.getUuid()));
         userCredentials.setCreatedTime(createdTime);
         if (userId != null) {
             userCredentials.setUserId(new UserId(userId));

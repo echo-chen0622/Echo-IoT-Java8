@@ -13,7 +13,6 @@ import org.echoiot.server.dao.model.SearchTextEntity;
 import org.echoiot.server.dao.util.mapping.JsonStringType;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
-import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
 
@@ -51,7 +50,7 @@ public class ComponentDescriptorEntity extends BaseSqlEntity<ComponentDescriptor
     public ComponentDescriptorEntity() {
     }
 
-    public ComponentDescriptorEntity(@NotNull ComponentDescriptor component) {
+    public ComponentDescriptorEntity(ComponentDescriptor component) {
         if (component.getId() != null) {
             this.setUuid(component.getId().getId());
         }
@@ -65,10 +64,9 @@ public class ComponentDescriptorEntity extends BaseSqlEntity<ComponentDescriptor
         this.searchText = component.getName();
     }
 
-    @NotNull
     @Override
     public ComponentDescriptor toData() {
-        @NotNull ComponentDescriptor data = new ComponentDescriptor(new ComponentDescriptorId(this.getUuid()));
+        ComponentDescriptor data = new ComponentDescriptor(new ComponentDescriptorId(this.getUuid()));
         data.setCreatedTime(createdTime);
         data.setType(type);
         data.setScope(scope);

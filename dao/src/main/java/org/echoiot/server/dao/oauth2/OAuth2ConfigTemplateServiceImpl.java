@@ -10,7 +10,6 @@ import org.echoiot.server.dao.exception.DataValidationException;
 import org.echoiot.server.dao.service.DataValidator;
 import org.echoiot.server.dao.service.Validator;
 import org.hibernate.exception.ConstraintViolationException;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
@@ -27,9 +26,7 @@ public class OAuth2ConfigTemplateServiceImpl extends AbstractEntityService imple
     private static final String INCORRECT_CLIENT_REGISTRATION_TEMPLATE_ID = "Incorrect clientRegistrationTemplateId ";
     private static final String INCORRECT_CLIENT_REGISTRATION_PROVIDER_ID = "Incorrect clientRegistrationProviderId ";
 
-    @NotNull
     private final OAuth2ClientRegistrationTemplateDao clientRegistrationTemplateDao;
-    @NotNull
     private final DataValidator<OAuth2ClientRegistrationTemplate> clientRegistrationTemplateValidator;
 
     @Override
@@ -58,7 +55,7 @@ public class OAuth2ConfigTemplateServiceImpl extends AbstractEntityService imple
     }
 
     @Override
-    public OAuth2ClientRegistrationTemplate findClientRegistrationTemplateById(@NotNull OAuth2ClientRegistrationTemplateId templateId) {
+    public OAuth2ClientRegistrationTemplate findClientRegistrationTemplateById(OAuth2ClientRegistrationTemplateId templateId) {
         log.trace("Executing findClientRegistrationTemplateById [{}]", templateId);
         validateId(templateId, INCORRECT_CLIENT_REGISTRATION_TEMPLATE_ID + templateId);
         return clientRegistrationTemplateDao.findById(TenantId.SYS_TENANT_ID, templateId.getId());
@@ -71,7 +68,7 @@ public class OAuth2ConfigTemplateServiceImpl extends AbstractEntityService imple
     }
 
     @Override
-    public void deleteClientRegistrationTemplateById(@NotNull OAuth2ClientRegistrationTemplateId templateId) {
+    public void deleteClientRegistrationTemplateById(OAuth2ClientRegistrationTemplateId templateId) {
         log.trace("Executing deleteClientRegistrationTemplateById [{}]", templateId);
         validateId(templateId, INCORRECT_CLIENT_REGISTRATION_TEMPLATE_ID + templateId);
         clientRegistrationTemplateDao.removeById(TenantId.SYS_TENANT_ID, templateId.getId());

@@ -33,7 +33,6 @@ import org.eclipse.californium.elements.config.Configuration;
 import org.eclipse.leshan.client.californium.LeshanClient;
 import org.eclipse.leshan.client.object.Security;
 import org.eclipse.leshan.core.ResponseCode;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -93,7 +92,6 @@ public abstract class AbstractLwM2MIntegrationTest extends AbstractTransportInte
     public static final String URI_BS = COAP + hostBs + ":" + portBs;
     public static final String SECURE_URI_BS = COAPS + hostBs + ":" + securityPortBs;
     public static final Configuration COAP_CONFIG = new Configuration().set(COAP_PORT, port).set(COAP_SECURE_PORT, securityPort);
-    @NotNull
     public static Configuration COAP_CONFIG_BS = new Configuration().set(COAP_PORT, portBs).set(COAP_SECURE_PORT, securityPortBs);
     public static final Security SECURITY_NO_SEC = noSec(URI, shortServerId);
     public static final Security SECURITY_NO_SEC_BS = noSecBootstap(URI_BS);
@@ -176,23 +174,23 @@ public abstract class AbstractLwM2MIntegrationTest extends AbstractTransportInte
         }
     }
 
-    public void basicTestConnectionObserveTelemetry(@NotNull Security security,
+    public void basicTestConnectionObserveTelemetry(Security security,
                                                     LwM2MDeviceCredentials deviceCredentials,
-                                                    @NotNull Configuration coapConfig,
+                                                    Configuration coapConfig,
                                                     String endpoint) throws Exception {
-        @NotNull Lwm2mDeviceProfileTransportConfiguration transportConfiguration = getTransportConfiguration(OBSERVE_ATTRIBUTES_WITH_PARAMS, getBootstrapServerCredentialsNoSec(NONE));
+        Lwm2mDeviceProfileTransportConfiguration transportConfiguration = getTransportConfiguration(OBSERVE_ATTRIBUTES_WITH_PARAMS, getBootstrapServerCredentialsNoSec(NONE));
         createDeviceProfile(transportConfiguration);
-        @NotNull Device device = createDevice(deviceCredentials, endpoint);
+        Device device = createDevice(deviceCredentials, endpoint);
 
-        @NotNull SingleEntityFilter sef = new SingleEntityFilter();
+        SingleEntityFilter sef = new SingleEntityFilter();
         sef.setSingleEntity(device.getId());
-        @NotNull LatestValueCmd latestCmd = new LatestValueCmd();
+        LatestValueCmd latestCmd = new LatestValueCmd();
         latestCmd.setKeys(Collections.singletonList(new EntityKey(EntityKeyType.TIME_SERIES, "batteryLevel")));
-        @NotNull EntityDataQuery edq = new EntityDataQuery(sef, new EntityDataPageLink(1, 0, null, null),
+        EntityDataQuery edq = new EntityDataQuery(sef, new EntityDataPageLink(1, 0, null, null),
                                                            Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
 
-        @NotNull EntityDataCmd cmd = new EntityDataCmd(1, edq, null, latestCmd, null);
-        @NotNull TelemetryPluginCmdsWrapper wrapper = new TelemetryPluginCmdsWrapper();
+        EntityDataCmd cmd = new EntityDataCmd(1, edq, null, latestCmd, null);
+        TelemetryPluginCmdsWrapper wrapper = new TelemetryPluginCmdsWrapper();
         wrapper.setEntityDataCmds(Collections.singletonList(cmd));
 
         getWsClient().send(mapper.writeValueAsString(wrapper));
@@ -227,7 +225,7 @@ public abstract class AbstractLwM2MIntegrationTest extends AbstractTransportInte
         deviceProfile.setProvisionType(DeviceProfileProvisionType.DISABLED);
         deviceProfile.setDescription(deviceProfile.getName());
 
-        @NotNull DeviceProfileData deviceProfileData = new DeviceProfileData();
+        DeviceProfileData deviceProfileData = new DeviceProfileData();
         deviceProfileData.setConfiguration(new DefaultDeviceProfileConfiguration());
         deviceProfileData.setProvisionConfiguration(new DisabledDeviceProfileProvisionConfiguration(null));
         deviceProfileData.setTransportConfiguration(transportConfiguration);
@@ -237,7 +235,6 @@ public abstract class AbstractLwM2MIntegrationTest extends AbstractTransportInte
         Assert.assertNotNull(deviceProfile);
     }
 
-    @NotNull
     protected Device createDevice(LwM2MDeviceCredentials credentials, String endpoint) throws Exception {
         Device device = new Device();
         device.setName(endpoint);
@@ -255,9 +252,8 @@ public abstract class AbstractLwM2MIntegrationTest extends AbstractTransportInte
         return device;
     }
 
-    @NotNull
     public NoSecClientCredential createNoSecClientCredentials(String endpoint) {
-        @NotNull NoSecClientCredential clientCredentials = new NoSecClientCredential();
+        NoSecClientCredential clientCredentials = new NoSecClientCredential();
         clientCredentials.setEndpoint(endpoint);
         return clientCredentials;
     }
@@ -266,7 +262,7 @@ public abstract class AbstractLwM2MIntegrationTest extends AbstractTransportInte
         this.resources = resources;
     }
 
-    public void createNewClient(@NotNull Security security, @NotNull Configuration coapConfig, boolean isRpc, String endpoint, boolean isBootstrap, Security securityBs) throws Exception {
+    public void createNewClient(Security security, Configuration coapConfig, boolean isRpc, String endpoint, boolean isBootstrap, Security securityBs) throws Exception {
         this.clientDestroy();
         lwM2MTestClient = new LwM2MTestClient(this.executor, endpoint);
         int clientPort = SocketUtils.findAvailableUdpPort();
@@ -285,9 +281,8 @@ public abstract class AbstractLwM2MIntegrationTest extends AbstractTransportInte
         }
     }
 
-    @NotNull
     protected Lwm2mDeviceProfileTransportConfiguration getTransportConfiguration(String observeAttr, List<LwM2MBootstrapServerCredential> bootstrapServerCredentials) {
-        @NotNull Lwm2mDeviceProfileTransportConfiguration transportConfiguration = new Lwm2mDeviceProfileTransportConfiguration();
+        Lwm2mDeviceProfileTransportConfiguration transportConfiguration = new Lwm2mDeviceProfileTransportConfiguration();
         @Nullable TelemetryMappingConfiguration observeAttrConfiguration = JacksonUtil.fromString(observeAttr, TelemetryMappingConfiguration.class);
         @Nullable OtherConfiguration clientLwM2mSettings = JacksonUtil.fromString(CLIENT_LWM2M_SETTINGS, OtherConfiguration.class);
         transportConfiguration.setBootstrapServerUpdateEnable(true);
@@ -297,9 +292,8 @@ public abstract class AbstractLwM2MIntegrationTest extends AbstractTransportInte
         return transportConfiguration;
     }
 
-    @NotNull
-    protected List<LwM2MBootstrapServerCredential> getBootstrapServerCredentialsNoSec(@NotNull LwM2MProfileBootstrapConfigType bootstrapConfigType) {
-        @NotNull List<LwM2MBootstrapServerCredential> bootstrap = new ArrayList<>();
+    protected List<LwM2MBootstrapServerCredential> getBootstrapServerCredentialsNoSec(LwM2MProfileBootstrapConfigType bootstrapConfigType) {
+        List<LwM2MBootstrapServerCredential> bootstrap = new ArrayList<>();
         switch (bootstrapConfigType) {
             case BOTH:
                 bootstrap.add(getBootstrapServerCredentialNoSec(false));
@@ -316,9 +310,8 @@ public abstract class AbstractLwM2MIntegrationTest extends AbstractTransportInte
         return bootstrap;
     }
 
-    @NotNull
     private AbstractLwM2MBootstrapServerCredential getBootstrapServerCredentialNoSec(boolean isBootstrap) {
-        @NotNull AbstractLwM2MBootstrapServerCredential bootstrapServerCredential = new NoSecLwM2MBootstrapServerCredential();
+        AbstractLwM2MBootstrapServerCredential bootstrapServerCredential = new NoSecLwM2MBootstrapServerCredential();
         bootstrapServerCredential.setServerPublicKey("");
         bootstrapServerCredential.setShortServerId(isBootstrap ? shortServerIdBs : shortServerId);
         bootstrapServerCredential.setBootstrapServerIs(isBootstrap);
@@ -327,12 +320,11 @@ public abstract class AbstractLwM2MIntegrationTest extends AbstractTransportInte
         return bootstrapServerCredential;
     }
 
-    @NotNull
     protected LwM2MDeviceCredentials getDeviceCredentialsNoSec(LwM2MClientCredential clientCredentials) {
-        @NotNull LwM2MDeviceCredentials credentials = new LwM2MDeviceCredentials();
+        LwM2MDeviceCredentials credentials = new LwM2MDeviceCredentials();
         credentials.setClient(clientCredentials);
-        @NotNull LwM2MBootstrapClientCredentials bootstrapCredentials = new LwM2MBootstrapClientCredentials();
-        @NotNull NoSecBootstrapClientCredential serverCredentials = new NoSecBootstrapClientCredential();
+        LwM2MBootstrapClientCredentials bootstrapCredentials = new LwM2MBootstrapClientCredentials();
+        NoSecBootstrapClientCredential serverCredentials = new NoSecBootstrapClientCredential();
         bootstrapCredentials.setBootstrapServer(serverCredentials);
         bootstrapCredentials.setLwm2mServer(serverCredentials);
         credentials.setBootstrap(bootstrapCredentials);
@@ -348,7 +340,7 @@ public abstract class AbstractLwM2MIntegrationTest extends AbstractTransportInte
     @Nullable
     private static String isServerPortsAvailable() {
         for (int port : SERVERS_PORT_NUMBERS) {
-            try (@NotNull ServerSocket serverSocket = new ServerSocket(port)) {
+            try (ServerSocket serverSocket = new ServerSocket(port)) {
                 serverSocket.close();
                 Assert.assertTrue(serverSocket.isClosed());
             } catch (IOException e) {
@@ -359,7 +351,7 @@ public abstract class AbstractLwM2MIntegrationTest extends AbstractTransportInte
         return null;
     }
 
-    private static void awaitClientDestroy(@NotNull LeshanClient leshanClient) {
+    private static void awaitClientDestroy(LeshanClient leshanClient) {
         await("Destroy LeshanClient: delete All is registered Servers.")
                 .atMost(DEFAULT_WAIT_TIMEOUT_SECONDS, TimeUnit.SECONDS)
                 .until(() -> leshanClient.getRegisteredServers().size() == 0);

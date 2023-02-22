@@ -11,7 +11,6 @@ import org.echoiot.server.common.data.TransportPayloadType;
 import org.echoiot.server.common.data.device.profile.*;
 import org.echoiot.server.dao.service.DaoSqlTest;
 import org.echoiot.server.transport.coap.CoapTestConfigProperties;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -41,12 +40,12 @@ public class CoapAttributesProtoIntegrationTest extends CoapAttributesIntegratio
         DynamicMessage.Builder nestedJsonObjectBuilder = attributesSchema.newMessageBuilder("PostAttributes.JsonObject.NestedJsonObject");
         Descriptors.Descriptor nestedJsonObjectBuilderDescriptor = nestedJsonObjectBuilder.getDescriptorForType();
         assertNotNull(nestedJsonObjectBuilderDescriptor);
-        @NotNull DynamicMessage nestedJsonObject = nestedJsonObjectBuilder.setField(nestedJsonObjectBuilderDescriptor.findFieldByName("key"), "value").build();
+        DynamicMessage nestedJsonObject = nestedJsonObjectBuilder.setField(nestedJsonObjectBuilderDescriptor.findFieldByName("key"), "value").build();
 
         DynamicMessage.Builder jsonObjectBuilder = attributesSchema.newMessageBuilder("PostAttributes.JsonObject");
         Descriptors.Descriptor jsonObjectBuilderDescriptor = jsonObjectBuilder.getDescriptorForType();
         assertNotNull(jsonObjectBuilderDescriptor);
-        @NotNull DynamicMessage jsonObject = jsonObjectBuilder
+        DynamicMessage jsonObject = jsonObjectBuilder
                 .setField(jsonObjectBuilderDescriptor.findFieldByName("someNumber"), 42)
                 .addRepeatedField(jsonObjectBuilderDescriptor.findFieldByName("someArray"), 1)
                 .addRepeatedField(jsonObjectBuilderDescriptor.findFieldByName("someArray"), 2)
@@ -57,7 +56,7 @@ public class CoapAttributesProtoIntegrationTest extends CoapAttributesIntegratio
         DynamicMessage.Builder postAttributesBuilder = attributesSchema.newMessageBuilder("PostAttributes");
         Descriptors.Descriptor postAttributesMsgDescriptor = postAttributesBuilder.getDescriptorForType();
         assertNotNull(postAttributesMsgDescriptor);
-        @NotNull DynamicMessage postAttributesMsg = postAttributesBuilder
+        DynamicMessage postAttributesMsg = postAttributesBuilder
                 .setField(postAttributesMsgDescriptor.findFieldByName("key1"), "value1")
                 .setField(postAttributesMsgDescriptor.findFieldByName("key2"), true)
                 .setField(postAttributesMsgDescriptor.findFieldByName("key3"), 3.0)
@@ -73,12 +72,12 @@ public class CoapAttributesProtoIntegrationTest extends CoapAttributesIntegratio
         DynamicMessage.Builder nestedJsonObjectBuilder = attributesSchema.newMessageBuilder("PostAttributes.JsonObject.NestedJsonObject");
         Descriptors.Descriptor nestedJsonObjectBuilderDescriptor = nestedJsonObjectBuilder.getDescriptorForType();
         assertNotNull(nestedJsonObjectBuilderDescriptor);
-        @NotNull DynamicMessage nestedJsonObject = nestedJsonObjectBuilder.setField(nestedJsonObjectBuilderDescriptor.findFieldByName("key"), "value").build();
+        DynamicMessage nestedJsonObject = nestedJsonObjectBuilder.setField(nestedJsonObjectBuilderDescriptor.findFieldByName("key"), "value").build();
 
         DynamicMessage.Builder jsonObjectBuilder = attributesSchema.newMessageBuilder("PostAttributes.JsonObject");
         Descriptors.Descriptor jsonObjectBuilderDescriptor = jsonObjectBuilder.getDescriptorForType();
         assertNotNull(jsonObjectBuilderDescriptor);
-        @NotNull DynamicMessage jsonObject = jsonObjectBuilder
+        DynamicMessage jsonObject = jsonObjectBuilder
                 .addRepeatedField(jsonObjectBuilderDescriptor.findFieldByName("someArray"), 1)
                 .addRepeatedField(jsonObjectBuilderDescriptor.findFieldByName("someArray"), 2)
                 .addRepeatedField(jsonObjectBuilderDescriptor.findFieldByName("someArray"), 3)
@@ -88,7 +87,7 @@ public class CoapAttributesProtoIntegrationTest extends CoapAttributesIntegratio
         DynamicMessage.Builder postAttributesBuilder = attributesSchema.newMessageBuilder("PostAttributes");
         Descriptors.Descriptor postAttributesMsgDescriptor = postAttributesBuilder.getDescriptorForType();
         assertNotNull(postAttributesMsgDescriptor);
-        @NotNull DynamicMessage postAttributesMsg = postAttributesBuilder
+        DynamicMessage postAttributesMsg = postAttributesBuilder
                 .setField(postAttributesMsgDescriptor.findFieldByName("key1"), "")
                 .setField(postAttributesMsgDescriptor.findFieldByName("key5"), jsonObject)
                 .build();
@@ -98,15 +97,15 @@ public class CoapAttributesProtoIntegrationTest extends CoapAttributesIntegratio
     private DynamicSchema getDynamicSchema() {
         DeviceProfileTransportConfiguration transportConfiguration = deviceProfile.getProfileData().getTransportConfiguration();
         assertTrue(transportConfiguration instanceof CoapDeviceProfileTransportConfiguration);
-        @NotNull CoapDeviceProfileTransportConfiguration coapTransportConfiguration = (CoapDeviceProfileTransportConfiguration) transportConfiguration;
-        @NotNull CoapDeviceTypeConfiguration coapDeviceTypeConfiguration = coapTransportConfiguration.getCoapDeviceTypeConfiguration();
+        CoapDeviceProfileTransportConfiguration coapTransportConfiguration = (CoapDeviceProfileTransportConfiguration) transportConfiguration;
+        CoapDeviceTypeConfiguration coapDeviceTypeConfiguration = coapTransportConfiguration.getCoapDeviceTypeConfiguration();
         assertTrue(coapDeviceTypeConfiguration instanceof DefaultCoapDeviceTypeConfiguration);
-        @NotNull DefaultCoapDeviceTypeConfiguration defaultCoapDeviceTypeConfiguration = (DefaultCoapDeviceTypeConfiguration) coapDeviceTypeConfiguration;
-        @NotNull TransportPayloadTypeConfiguration transportPayloadTypeConfiguration = defaultCoapDeviceTypeConfiguration.getTransportPayloadTypeConfiguration();
+        DefaultCoapDeviceTypeConfiguration defaultCoapDeviceTypeConfiguration = (DefaultCoapDeviceTypeConfiguration) coapDeviceTypeConfiguration;
+        TransportPayloadTypeConfiguration transportPayloadTypeConfiguration = defaultCoapDeviceTypeConfiguration.getTransportPayloadTypeConfiguration();
         assertTrue(transportPayloadTypeConfiguration instanceof ProtoTransportPayloadConfiguration);
-        @NotNull ProtoTransportPayloadConfiguration protoTransportPayloadConfiguration = (ProtoTransportPayloadConfiguration) transportPayloadTypeConfiguration;
+        ProtoTransportPayloadConfiguration protoTransportPayloadConfiguration = (ProtoTransportPayloadConfiguration) transportPayloadTypeConfiguration;
         String deviceAttributesProtoSchema = protoTransportPayloadConfiguration.getDeviceAttributesProtoSchema();
-        @NotNull ProtoFileElement protoFileElement = DynamicProtoUtils.getProtoFileElement(deviceAttributesProtoSchema);
+        ProtoFileElement protoFileElement = DynamicProtoUtils.getProtoFileElement(deviceAttributesProtoSchema);
         return DynamicProtoUtils.getDynamicSchema(protoFileElement, ProtoTransportPayloadConfiguration.ATTRIBUTES_PROTO_SCHEMA);
     }
 

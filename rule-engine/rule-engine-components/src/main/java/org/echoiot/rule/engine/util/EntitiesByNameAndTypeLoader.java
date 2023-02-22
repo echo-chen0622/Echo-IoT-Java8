@@ -4,7 +4,6 @@ import org.echoiot.rule.engine.api.TbContext;
 import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.SearchTextBasedWithAdditionalInfo;
 import org.echoiot.server.common.data.id.EntityId;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -17,7 +16,7 @@ public class EntitiesByNameAndTypeLoader {
             EntityType.EDGE,
             EntityType.USER);
 
-    public static EntityId findEntityId(@NotNull TbContext ctx, @NotNull EntityType entityType, String entityName) {
+    public static EntityId findEntityId(TbContext ctx, EntityType entityType, String entityName) {
         SearchTextBasedWithAdditionalInfo<? extends EntityId> targetEntity;
         switch (entityType) {
             case DEVICE:
@@ -44,7 +43,7 @@ public class EntitiesByNameAndTypeLoader {
         return targetEntity.getId();
     }
 
-    public static void checkEntityType(@NotNull EntityType entityType) {
+    public static void checkEntityType(EntityType entityType) {
         if (!AVAILABLE_ENTITY_TYPES.contains(entityType)) {
             throw new IllegalStateException("Unexpected entity type " + entityType.name());
         }

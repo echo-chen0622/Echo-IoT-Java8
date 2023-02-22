@@ -18,7 +18,6 @@ import org.echoiot.server.service.security.auth.mfa.TwoFactorAuthService;
 import org.echoiot.server.service.security.model.SecurityUser;
 import org.echoiot.server.service.security.model.UserPrincipal;
 import org.echoiot.server.service.security.system.SystemSecurityService;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
@@ -51,9 +50,8 @@ public class RestAuthenticationProvider implements AuthenticationProvider {
         this.twoFactorAuthService = twoFactorAuthService;
     }
 
-    @NotNull
     @Override
-    public Authentication authenticate(@NotNull Authentication authentication) throws AuthenticationException {
+    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         Assert.notNull(authentication, "No authentication data provided");
 
         Object principal = authentication.getPrincipal();
@@ -61,7 +59,7 @@ public class RestAuthenticationProvider implements AuthenticationProvider {
             throw new BadCredentialsException("Authentication Failed. Bad user principal.");
         }
 
-        @NotNull UserPrincipal userPrincipal =  (UserPrincipal) principal;
+        UserPrincipal userPrincipal =  (UserPrincipal) principal;
         SecurityUser securityUser;
         if (userPrincipal.getType() == UserPrincipal.Type.USER_NAME) {
             String username = userPrincipal.getValue();
@@ -80,8 +78,7 @@ public class RestAuthenticationProvider implements AuthenticationProvider {
         return new UsernamePasswordAuthenticationToken(securityUser, null, securityUser.getAuthorities());
     }
 
-    @NotNull
-    private SecurityUser authenticateByUsernameAndPassword(@NotNull Authentication authentication, UserPrincipal userPrincipal, String username, String password) {
+    private SecurityUser authenticateByUsernameAndPassword(Authentication authentication, UserPrincipal userPrincipal, String username, String password) {
         User user = userService.findUserByEmail(TenantId.SYS_TENANT_ID, username);
         if (user == null) {
             throw new UsernameNotFoundException("User not found: " + username);
@@ -111,8 +108,7 @@ public class RestAuthenticationProvider implements AuthenticationProvider {
         }
     }
 
-    @NotNull
-    private SecurityUser authenticateByPublicId(UserPrincipal userPrincipal, @NotNull String publicId) {
+    private SecurityUser authenticateByPublicId(UserPrincipal userPrincipal, String publicId) {
         CustomerId customerId;
         try {
             customerId = new CustomerId(UUID.fromString(publicId));
@@ -126,7 +122,7 @@ public class RestAuthenticationProvider implements AuthenticationProvider {
         if (!publicCustomer.isPublic()) {
             throw new BadCredentialsException("Authentication Failed. Public Id is not valid.");
         }
-        @NotNull User user = new User(new UserId(EntityId.NULL_UUID));
+        User user = new User(new UserId(EntityId.NULL_UUID));
         user.setTenantId(publicCustomer.getTenantId());
         user.setCustomerId(publicCustomer.getId());
         user.setEmail(publicId);
@@ -138,7 +134,7 @@ public class RestAuthenticationProvider implements AuthenticationProvider {
     }
 
     @Override
-    public boolean supports(@NotNull Class<?> authentication) {
+    public boolean supports(Class<?> authentication) {
         return (UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication));
     }
 

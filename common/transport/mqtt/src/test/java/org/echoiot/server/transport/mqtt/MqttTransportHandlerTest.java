@@ -8,7 +8,6 @@ import io.netty.handler.codec.mqtt.*;
 import io.netty.handler.ssl.SslHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.echoiot.common.util.EchoiotThreadFactory;
-import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,7 +50,6 @@ public class MqttTransportHandlerTest {
     @Mock
     ChannelHandlerContext ctx;
 
-    @NotNull
     AtomicInteger packedId = new AtomicInteger();
     ExecutorService executor;
     MqttTransportHandler handler;
@@ -71,25 +69,23 @@ public class MqttTransportHandlerTest {
         }
     }
 
-    @NotNull
     MqttConnectMessage getMqttConnectMessage() {
-        @NotNull MqttFixedHeader mqttFixedHeader = new MqttFixedHeader(MqttMessageType.CONNECT, true, MqttQoS.AT_LEAST_ONCE, false, 123);
-        @NotNull MqttConnectVariableHeader variableHeader = new MqttConnectVariableHeader("device", packedId.incrementAndGet(), true, true, true, 1, true, false, 60);
-        @NotNull MqttConnectPayload payload = new MqttConnectPayload("clientId", "topic", "message".getBytes(StandardCharsets.UTF_8), "username", "password".getBytes(StandardCharsets.UTF_8));
+        MqttFixedHeader mqttFixedHeader = new MqttFixedHeader(MqttMessageType.CONNECT, true, MqttQoS.AT_LEAST_ONCE, false, 123);
+        MqttConnectVariableHeader variableHeader = new MqttConnectVariableHeader("device", packedId.incrementAndGet(), true, true, true, 1, true, false, 60);
+        MqttConnectPayload payload = new MqttConnectPayload("clientId", "topic", "message".getBytes(StandardCharsets.UTF_8), "username", "password".getBytes(StandardCharsets.UTF_8));
         return new MqttConnectMessage(mqttFixedHeader, variableHeader, payload);
     }
 
-    @NotNull
     MqttPublishMessage getMqttPublishMessage() {
-        @NotNull MqttFixedHeader mqttFixedHeader = new MqttFixedHeader(MqttMessageType.PUBLISH, true, MqttQoS.AT_LEAST_ONCE, false, 123);
-        @NotNull MqttPublishVariableHeader variableHeader = new MqttPublishVariableHeader("v1/gateway/telemetry", packedId.incrementAndGet());
-        @NotNull ByteBuf payload = new EmptyByteBuf(new PooledByteBufAllocator());
+        MqttFixedHeader mqttFixedHeader = new MqttFixedHeader(MqttMessageType.PUBLISH, true, MqttQoS.AT_LEAST_ONCE, false, 123);
+        MqttPublishVariableHeader variableHeader = new MqttPublishVariableHeader("v1/gateway/telemetry", packedId.incrementAndGet());
+        ByteBuf payload = new EmptyByteBuf(new PooledByteBufAllocator());
         return new MqttPublishMessage(mqttFixedHeader, variableHeader, payload);
     }
 
     @Test
     public void givenMqttConnectMessage_whenProcessMqttMsg_thenProcessConnect() {
-        @NotNull MqttConnectMessage msg = getMqttConnectMessage();
+        MqttConnectMessage msg = getMqttConnectMessage();
         willDoNothing().given(handler).processConnect(ctx, msg);
 
         handler.channelRead(ctx, msg);
@@ -102,7 +98,7 @@ public class MqttTransportHandlerTest {
 
     @Test
     public void givenQueueLimit_whenEnqueueRegularSessionMsgOverLimit_thenOK() {
-        @NotNull List<MqttPublishMessage> messages = Stream.generate(this::getMqttPublishMessage).limit(MSG_QUEUE_LIMIT).collect(Collectors.toList());
+        List<MqttPublishMessage> messages = Stream.generate(this::getMqttPublishMessage).limit(MSG_QUEUE_LIMIT).collect(Collectors.toList());
         messages.forEach(msg -> handler.enqueueRegularSessionMsg(ctx, msg));
         assertThat(handler.deviceSessionCtx.getMsgQueueSize(), is(MSG_QUEUE_LIMIT));
         assertThat(handler.deviceSessionCtx.getMsgQueueSnapshot(), contains(messages.toArray()));
@@ -112,7 +108,7 @@ public class MqttTransportHandlerTest {
     public void givenQueueLimit_whenEnqueueRegularSessionMsgOverLimit_thenCtxClose() {
         final int limit = MSG_QUEUE_LIMIT + 1;
         willDoNothing().given(handler).processMsgQueue(ctx);
-        @NotNull List<MqttPublishMessage> messages = Stream.generate(this::getMqttPublishMessage).limit(limit).collect(Collectors.toList());
+        List<MqttPublishMessage> messages = Stream.generate(this::getMqttPublishMessage).limit(limit).collect(Collectors.toList());
 
         messages.forEach((msg) -> handler.enqueueRegularSessionMsg(ctx, msg));
 
@@ -126,7 +122,7 @@ public class MqttTransportHandlerTest {
     public void givenMqttConnectMessageAndPublishImmediately_whenProcessMqttMsg_thenEnqueueRegularSessionMsg() {
         givenMqttConnectMessage_whenProcessMqttMsg_thenProcessConnect();
 
-        @NotNull List<MqttPublishMessage> messages = Stream.generate(this::getMqttPublishMessage).limit(MSG_QUEUE_LIMIT).collect(Collectors.toList());
+        List<MqttPublishMessage> messages = Stream.generate(this::getMqttPublishMessage).limit(MSG_QUEUE_LIMIT).collect(Collectors.toList());
 
         messages.forEach((msg) -> handler.channelRead(ctx, msg));
 
@@ -147,14 +143,14 @@ public class MqttTransportHandlerTest {
         //given
         assertThat(handler.deviceSessionCtx.isConnected(), is(false));
         assertThat(MSG_QUEUE_LIMIT, greaterThan(2));
-        @NotNull List<MqttPublishMessage> messages = Stream.generate(this::getMqttPublishMessage).limit(MSG_QUEUE_LIMIT).collect(Collectors.toList());
+        List<MqttPublishMessage> messages = Stream.generate(this::getMqttPublishMessage).limit(MSG_QUEUE_LIMIT).collect(Collectors.toList());
         messages.forEach((msg) -> handler.enqueueRegularSessionMsg(ctx, msg));
         willDoNothing().given(handler).processRegularSessionMsg(any(), any());
         executor = Executors.newCachedThreadPool(EchoiotThreadFactory.forName(getClass().getName()));
 
-        @NotNull CountDownLatch readyLatch = new CountDownLatch(MSG_QUEUE_LIMIT);
-        @NotNull CountDownLatch startLatch = new CountDownLatch(1);
-        @NotNull CountDownLatch finishLatch = new CountDownLatch(MSG_QUEUE_LIMIT);
+        CountDownLatch readyLatch = new CountDownLatch(MSG_QUEUE_LIMIT);
+        CountDownLatch startLatch = new CountDownLatch(1);
+        CountDownLatch finishLatch = new CountDownLatch(MSG_QUEUE_LIMIT);
 
         Stream.iterate(0, i -> i + 1).limit(MSG_QUEUE_LIMIT).forEach(x ->
                 executor.submit(() -> {

@@ -18,7 +18,6 @@ import org.echoiot.server.common.data.security.Authority;
 import org.echoiot.server.common.data.tenant.profile.DefaultTenantProfileConfiguration;
 import org.echoiot.server.common.data.tenant.profile.TenantProfileData;
 import org.echoiot.server.common.data.tenant.profile.TenantProfileQueueConfiguration;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.junit.After;
 import org.junit.Assert;
@@ -65,7 +64,7 @@ public abstract class BaseTenantControllerTest extends AbstractControllerTest {
     @Test
     public void testSaveTenant() throws Exception {
         loginSysAdmin();
-        @NotNull Tenant tenant = new Tenant();
+        Tenant tenant = new Tenant();
         tenant.setTitle("My tenant");
 
         Mockito.reset(tbClusterService);
@@ -94,7 +93,7 @@ public abstract class BaseTenantControllerTest extends AbstractControllerTest {
     @Test
     public void testSaveTenantWithViolationOfValidation() throws Exception {
         loginSysAdmin();
-        @NotNull Tenant tenant = new Tenant();
+        Tenant tenant = new Tenant();
         tenant.setTitle(StringUtils.randomAlphanumeric(300));
 
         Mockito.reset(tbClusterService);
@@ -109,7 +108,7 @@ public abstract class BaseTenantControllerTest extends AbstractControllerTest {
     @Test
     public void testFindTenantById() throws Exception {
         loginSysAdmin();
-        @NotNull Tenant tenant = new Tenant();
+        Tenant tenant = new Tenant();
         tenant.setTitle("My tenant");
         Tenant savedTenant = doPost("/api/tenant", tenant, Tenant.class);
         Tenant foundTenant = doGet("/api/tenant/" + savedTenant.getId().getId().toString(), Tenant.class);
@@ -122,7 +121,7 @@ public abstract class BaseTenantControllerTest extends AbstractControllerTest {
     @Test
     public void testFindTenantInfoById() throws Exception {
         loginSysAdmin();
-        @NotNull Tenant tenant = new Tenant();
+        Tenant tenant = new Tenant();
         tenant.setTitle("My tenant");
         Tenant savedTenant = doPost("/api/tenant", tenant, Tenant.class);
         TenantInfo foundTenant = doGet("/api/tenant/info/" + savedTenant.getId().getId().toString(), TenantInfo.class);
@@ -138,7 +137,7 @@ public abstract class BaseTenantControllerTest extends AbstractControllerTest {
 
         Mockito.reset(tbClusterService);
 
-        @NotNull Tenant tenant = new Tenant();
+        Tenant tenant = new Tenant();
         doPost("/api/tenant", tenant)
                 .andExpect(status().isBadRequest())
                 .andExpect(statusReason(containsString("Tenant title " + msgErrorShouldBeSpecified)));
@@ -152,7 +151,7 @@ public abstract class BaseTenantControllerTest extends AbstractControllerTest {
 
         Mockito.reset(tbClusterService);
 
-        @NotNull Tenant tenant = new Tenant();
+        Tenant tenant = new Tenant();
         tenant.setTitle("My tenant");
         tenant.setEmail("invalid@mail");
         doPost("/api/tenant", tenant)
@@ -165,7 +164,7 @@ public abstract class BaseTenantControllerTest extends AbstractControllerTest {
     @Test
     public void testDeleteTenant() throws Exception {
         loginSysAdmin();
-        @NotNull Tenant tenant = new Tenant();
+        Tenant tenant = new Tenant();
         tenant.setTitle("My tenant");
         Tenant savedTenant = doPost("/api/tenant", tenant, Tenant.class);
 
@@ -180,7 +179,7 @@ public abstract class BaseTenantControllerTest extends AbstractControllerTest {
     @Test
     public void testFindTenants() throws Exception {
         loginSysAdmin();
-        @NotNull List<Tenant> tenants = new ArrayList<>();
+        List<Tenant> tenants = new ArrayList<>();
         PageLink pageLink = new PageLink(17);
         PageData<Tenant> pageData = doGetTypedWithPageLink("/api/tenants?", PAGE_DATA_TENANT_TYPE_REF, pageLink);
         Assert.assertFalse(pageData.hasNext());
@@ -190,9 +189,9 @@ public abstract class BaseTenantControllerTest extends AbstractControllerTest {
         Mockito.reset(tbClusterService);
 
         int cntEntity = 56;
-        @NotNull List<ListenableFuture<Tenant>> createFutures = new ArrayList<>(56);
+        List<ListenableFuture<Tenant>> createFutures = new ArrayList<>(56);
         for (int i = 0; i < cntEntity; i++) {
-            @NotNull Tenant tenant = new Tenant();
+            Tenant tenant = new Tenant();
             tenant.setTitle("Tenant" + i);
             createFutures.add(executor.submit(() ->
                     doPost("/api/tenant", tenant, Tenant.class)));
@@ -201,7 +200,7 @@ public abstract class BaseTenantControllerTest extends AbstractControllerTest {
 
         testBroadcastEntityStateChangeEventTimeManyTimeTenant(new Tenant(), ComponentLifecycleEvent.CREATED, cntEntity);
 
-        @NotNull List<Tenant> loadedTenants = new ArrayList<>();
+        List<Tenant> loadedTenants = new ArrayList<>();
         pageLink = new PageLink(17);
         do {
             pageData = doGetTypedWithPageLink("/api/tenants?", PAGE_DATA_TENANT_TYPE_REF, pageLink);
@@ -230,12 +229,12 @@ public abstract class BaseTenantControllerTest extends AbstractControllerTest {
         log.debug("login sys admin");
         loginSysAdmin();
         log.debug("test started");
-        @NotNull String title1 = "Tenant title 1";
-        @NotNull List<ListenableFuture<Tenant>> createFutures = new ArrayList<>(134);
+        String title1 = "Tenant title 1";
+        List<ListenableFuture<Tenant>> createFutures = new ArrayList<>(134);
         for (int i = 0; i < 134; i++) {
-            @NotNull Tenant tenant = new Tenant();
-            @NotNull String suffix = StringUtils.randomAlphanumeric((int) (5 + Math.random() * 10));
-            @NotNull String title = title1 + suffix;
+            Tenant tenant = new Tenant();
+            String suffix = StringUtils.randomAlphanumeric((int) (5 + Math.random() * 10));
+            String title = title1 + suffix;
             title = i % 2 == 0 ? title.toLowerCase() : title.toUpperCase();
             tenant.setTitle(title);
             createFutures.add(executor.submit(() ->
@@ -245,12 +244,12 @@ public abstract class BaseTenantControllerTest extends AbstractControllerTest {
         List<Tenant> tenantsTitle1 = Futures.allAsList(createFutures).get(TIMEOUT, TimeUnit.SECONDS);
         log.debug("saved '{}', qty {}", title1, tenantsTitle1.size());
 
-        @NotNull String title2 = "Tenant title 2";
+        String title2 = "Tenant title 2";
         createFutures = new ArrayList<>(127);
         for (int i = 0; i < 127; i++) {
-            @NotNull Tenant tenant = new Tenant();
-            @NotNull String suffix = StringUtils.randomAlphanumeric((int) (5 + Math.random() * 10));
-            @NotNull String title = title2 + suffix;
+            Tenant tenant = new Tenant();
+            String suffix = StringUtils.randomAlphanumeric((int) (5 + Math.random() * 10));
+            String title = title2 + suffix;
             title = i % 2 == 0 ? title.toLowerCase() : title.toUpperCase();
             tenant.setTitle(title);
             createFutures.add(executor.submit(() ->
@@ -260,7 +259,7 @@ public abstract class BaseTenantControllerTest extends AbstractControllerTest {
         List<Tenant> tenantsTitle2 = Futures.allAsList(createFutures).get(TIMEOUT, TimeUnit.SECONDS);
         log.debug("saved '{}', qty {}", title2, tenantsTitle2.size());
 
-        @NotNull List<Tenant> loadedTenantsTitle1 = new ArrayList<>(134);
+        List<Tenant> loadedTenantsTitle1 = new ArrayList<>(134);
         PageLink pageLink = new PageLink(15, 0, title1);
         @Nullable PageData<Tenant> pageData = null;
         do {
@@ -276,7 +275,7 @@ public abstract class BaseTenantControllerTest extends AbstractControllerTest {
         assertThat(tenantsTitle1).as(title1).containsExactlyInAnyOrderElementsOf(loadedTenantsTitle1);
         log.debug("asserted");
 
-        @NotNull List<Tenant> loadedTenantsTitle2 = new ArrayList<>(127);
+        List<Tenant> loadedTenantsTitle2 = new ArrayList<>(127);
         pageLink = new PageLink(4, 0, title2);
         do {
             pageData = doGetTypedWithPageLink("/api/tenants?", PAGE_DATA_TENANT_TYPE_REF, pageLink);
@@ -314,23 +313,23 @@ public abstract class BaseTenantControllerTest extends AbstractControllerTest {
     @Test
     public void testFindTenantInfos() throws Exception {
         loginSysAdmin();
-        @NotNull List<TenantInfo> tenants = new ArrayList<>();
+        List<TenantInfo> tenants = new ArrayList<>();
         PageLink pageLink = new PageLink(17);
         PageData<TenantInfo> pageData = doGetTypedWithPageLink("/api/tenantInfos?", PAGE_DATA_TENANT_INFO_TYPE_REF, pageLink);
         Assert.assertFalse(pageData.hasNext());
         Assert.assertEquals(1, pageData.getData().size());
         tenants.addAll(pageData.getData());
 
-        @NotNull List<ListenableFuture<TenantInfo>> createFutures = new ArrayList<>(56);
+        List<ListenableFuture<TenantInfo>> createFutures = new ArrayList<>(56);
         for (int i = 0; i < 56; i++) {
-            @NotNull Tenant tenant = new Tenant();
+            Tenant tenant = new Tenant();
             tenant.setTitle("Tenant" + i);
             createFutures.add(executor.submit(() ->
                     new TenantInfo(doPost("/api/tenant", tenant, Tenant.class), "Default")));
         }
         tenants.addAll(Futures.allAsList(createFutures).get(TIMEOUT, TimeUnit.SECONDS));
 
-        @NotNull List<TenantInfo> loadedTenants = new ArrayList<>();
+        List<TenantInfo> loadedTenants = new ArrayList<>();
         pageLink = new PageLink(17);
         do {
             pageData = doGetTypedWithPageLink("/api/tenantInfos?", PAGE_DATA_TENANT_INFO_TYPE_REF, pageLink);
@@ -352,10 +351,9 @@ public abstract class BaseTenantControllerTest extends AbstractControllerTest {
         Assert.assertEquals(1, pageData.getData().size());
     }
 
-    @NotNull
-    ListenableFuture<List<ResultActions>> deleteTenantsAsync(String urlTemplate, @NotNull List<Tenant> tenants) {
-        @NotNull List<ListenableFuture<ResultActions>> futures = new ArrayList<>(tenants.size());
-        for (@NotNull Tenant device : tenants) {
+    ListenableFuture<List<ResultActions>> deleteTenantsAsync(String urlTemplate, List<Tenant> tenants) {
+        List<ListenableFuture<ResultActions>> futures = new ArrayList<>(tenants.size());
+        for (Tenant device : tenants) {
             futures.add(executor.submit(() ->
                     doDelete(urlTemplate + device.getId().getId())
                             .andExpect(status().isOk())));
@@ -366,12 +364,12 @@ public abstract class BaseTenantControllerTest extends AbstractControllerTest {
     @Test
     public void testUpdateQueueConfigForIsolatedTenant() throws Exception {
         Comparator<Queue> queueComparator = Comparator.comparing(Queue::getName);
-        @NotNull final String username = "isolatedtenant@echoiot.org";
-        @NotNull final String password = "123456";
+        final String username = "isolatedtenant@echoiot.org";
+        final String password = "123456";
         loginSysAdmin();
 
         List<Queue> sysAdminQueues;
-        @NotNull PageLink pageLink = new PageLink(10);
+        PageLink pageLink = new PageLink(10);
         PageData<Queue> pageData;
         pageData = doGetTypedWithPageLink("/api/queues?serviceType=TB_RULE_ENGINE&", new TypeReference<>() {
         }, pageLink);
@@ -381,7 +379,7 @@ public abstract class BaseTenantControllerTest extends AbstractControllerTest {
         tenant.setTitle("Isolated tenant");
         tenant = doPost("/api/tenant", tenant, Tenant.class);
 
-        @NotNull User tenantUser = new User();
+        User tenantUser = new User();
         tenantUser.setAuthority(Authority.TENANT_ADMIN);
         tenantUser.setTenantId(tenant.getId());
         tenantUser.setEmail(username);
@@ -399,7 +397,7 @@ public abstract class BaseTenantControllerTest extends AbstractControllerTest {
 
         TenantProfile tenantProfile = new TenantProfile();
         tenantProfile.setName("isolated-tb-rule-engine");
-        @NotNull TenantProfileData tenantProfileData = new TenantProfileData();
+        TenantProfileData tenantProfileData = new TenantProfileData();
         tenantProfileData.setConfiguration(new DefaultTenantProfileConfiguration());
         tenantProfile.setProfileData(tenantProfileData);
         tenantProfile.setIsolatedTbRuleEngine(true);
@@ -418,7 +416,7 @@ public abstract class BaseTenantControllerTest extends AbstractControllerTest {
 
         Assert.assertEquals(2, foundTenantQueues.size());
 
-        @NotNull List<Queue> queuesFromConfig = getQueuesFromConfig(tenantProfile.getProfileData().getQueueConfiguration(), foundTenantQueues);
+        List<Queue> queuesFromConfig = getQueuesFromConfig(tenantProfile.getProfileData().getQueueConfiguration(), foundTenantQueues);
         queuesFromConfig.sort(queueComparator);
         foundTenantQueues.sort(queueComparator);
 
@@ -428,7 +426,7 @@ public abstract class BaseTenantControllerTest extends AbstractControllerTest {
 
         TenantProfile tenantProfile2 = new TenantProfile();
         tenantProfile2.setName("isolated-tb-rule-engine2");
-        @NotNull TenantProfileData tenantProfileData2 = new TenantProfileData();
+        TenantProfileData tenantProfileData2 = new TenantProfileData();
         tenantProfileData2.setConfiguration(new DefaultTenantProfileConfiguration());
         tenantProfile2.setProfileData(tenantProfileData2);
         tenantProfile2.setIsolatedTbRuleEngine(true);
@@ -483,7 +481,7 @@ public abstract class BaseTenantControllerTest extends AbstractControllerTest {
         doPost("/api/tenant", tenant, Tenant.class);
 
         login(username, password);
-        for (@NotNull Queue queue : foundTenantQueues) {
+        for (Queue queue : foundTenantQueues) {
             doGet("/api/queues/" + queue.getId())
                     .andExpect(status().isNotFound())
                     .andExpect(statusReason(containsString(msgErrorNotFound)));
@@ -493,19 +491,19 @@ public abstract class BaseTenantControllerTest extends AbstractControllerTest {
         doDelete("/api/tenant/" + tenant.getId().getId().toString()).andExpect(status().isOk());
     }
 
-    private void addQueueConfig(@NotNull TenantProfile tenantProfile, @NotNull String queueName) {
-        @NotNull TenantProfileQueueConfiguration queueConfiguration = new TenantProfileQueueConfiguration();
+    private void addQueueConfig(TenantProfile tenantProfile, String queueName) {
+        TenantProfileQueueConfiguration queueConfiguration = new TenantProfileQueueConfiguration();
         queueConfiguration.setName(queueName);
         queueConfiguration.setTopic("tb_rule_engine." + queueName.toLowerCase());
         queueConfiguration.setPollInterval(25);
         queueConfiguration.setPartitions(1 + new Random().nextInt(99));
         queueConfiguration.setConsumerPerPartition(true);
         queueConfiguration.setPackProcessingTimeout(2000);
-        @NotNull SubmitStrategy submitStrategy = new SubmitStrategy();
+        SubmitStrategy submitStrategy = new SubmitStrategy();
         submitStrategy.setType(SubmitStrategyType.BURST);
         submitStrategy.setBatchSize(1000);
         queueConfiguration.setSubmitStrategy(submitStrategy);
-        @NotNull ProcessingStrategy processingStrategy = new ProcessingStrategy();
+        ProcessingStrategy processingStrategy = new ProcessingStrategy();
         processingStrategy.setType(ProcessingStrategyType.SKIP_ALL_FAILURES);
         processingStrategy.setRetries(3);
         processingStrategy.setFailurePercentage(0);
@@ -523,18 +521,17 @@ public abstract class BaseTenantControllerTest extends AbstractControllerTest {
         tenantProfile.setProfileData(profileData);
     }
 
-    @NotNull
-    private List<Queue> getQueuesFromConfig(@NotNull List<TenantProfileQueueConfiguration> queueConfiguration, @NotNull List<Queue> queues) {
-        @NotNull List<Queue> result = new ArrayList<>();
-        @NotNull Map<String, Queue> queueMap = new HashMap<>();
-        for (@NotNull Queue queue : queues) {
+    private List<Queue> getQueuesFromConfig(List<TenantProfileQueueConfiguration> queueConfiguration, List<Queue> queues) {
+        List<Queue> result = new ArrayList<>();
+        Map<String, Queue> queueMap = new HashMap<>();
+        for (Queue queue : queues) {
             queueMap.put(queue.getName(), queue);
         }
 
-        for (@NotNull TenantProfileQueueConfiguration config : queueConfiguration) {
+        for (TenantProfileQueueConfiguration config : queueConfiguration) {
             Queue queue = queueMap.get(config.getName());
             if (queue != null) {
-                @NotNull Queue expectedQueue = new Queue(queue.getTenantId(), config);
+                Queue expectedQueue = new Queue(queue.getTenantId(), config);
                 expectedQueue.setId(queue.getId());
                 expectedQueue.setCreatedTime(queue.getCreatedTime());
                 result.add(queue);
@@ -543,8 +540,8 @@ public abstract class BaseTenantControllerTest extends AbstractControllerTest {
         return result;
     }
 
-    private void testBroadcastEntityStateChangeEventTimeManyTimeTenant(@NotNull Tenant tenant, ComponentLifecycleEvent event, int cntTime) {
-        @NotNull ArgumentMatcher<Tenant> matcherTenant = cntTime == 1 ? argument -> argument.equals(tenant) :
+    private void testBroadcastEntityStateChangeEventTimeManyTimeTenant(Tenant tenant, ComponentLifecycleEvent event, int cntTime) {
+        ArgumentMatcher<Tenant> matcherTenant = cntTime == 1 ? argument -> argument.equals(tenant) :
                 argument -> argument.getClass().equals(Tenant.class);
         if (ComponentLifecycleEvent.DELETED.equals(event)) {
             Mockito.verify(tbClusterService, times( cntTime)).onTenantDelete(Mockito.argThat(matcherTenant),

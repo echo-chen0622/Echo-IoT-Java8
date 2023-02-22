@@ -10,7 +10,6 @@ import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.id.*;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.msg.TbMsg;
-import org.jetbrains.annotations.NotNull;
 
 @Slf4j
 @RuleNode(
@@ -32,16 +31,16 @@ public class TbAssignToCustomerNode extends TbAbstractCustomerActionNode<TbAssig
     }
 
     @Override
-    protected TbAssignToCustomerNodeConfiguration loadCustomerNodeActionConfig(@NotNull TbNodeConfiguration configuration) throws TbNodeException {
+    protected TbAssignToCustomerNodeConfiguration loadCustomerNodeActionConfig(TbNodeConfiguration configuration) throws TbNodeException {
         return TbNodeUtils.convert(configuration, TbAssignToCustomerNodeConfiguration.class);
     }
 
     @Override
-    protected void doProcessCustomerAction(@NotNull TbContext ctx, @NotNull TbMsg msg, CustomerId customerId) {
+    protected void doProcessCustomerAction(TbContext ctx, TbMsg msg, CustomerId customerId) {
         processAssign(ctx, msg, customerId);
     }
 
-    private void processAssign(@NotNull TbContext ctx, @NotNull TbMsg msg, CustomerId customerId) {
+    private void processAssign(TbContext ctx, TbMsg msg, CustomerId customerId) {
         EntityType originatorType = msg.getOriginator().getEntityType();
         switch (originatorType) {
             case DEVICE:
@@ -66,23 +65,23 @@ public class TbAssignToCustomerNode extends TbAbstractCustomerActionNode<TbAssig
         }
     }
 
-    private void processAssignAsset(@NotNull TbContext ctx, @NotNull TbMsg msg, CustomerId customerId) {
+    private void processAssignAsset(TbContext ctx, TbMsg msg, CustomerId customerId) {
         ctx.getAssetService().assignAssetToCustomer(ctx.getTenantId(), new AssetId(msg.getOriginator().getId()), customerId);
     }
 
-    private void processAssignDevice(@NotNull TbContext ctx, @NotNull TbMsg msg, CustomerId customerId) {
+    private void processAssignDevice(TbContext ctx, TbMsg msg, CustomerId customerId) {
         ctx.getDeviceService().assignDeviceToCustomer(ctx.getTenantId(), new DeviceId(msg.getOriginator().getId()), customerId);
     }
 
-    private void processAssignEntityView(@NotNull TbContext ctx, @NotNull TbMsg msg, CustomerId customerId) {
+    private void processAssignEntityView(TbContext ctx, TbMsg msg, CustomerId customerId) {
         ctx.getEntityViewService().assignEntityViewToCustomer(ctx.getTenantId(), new EntityViewId(msg.getOriginator().getId()), customerId);
     }
 
-    private void processAssignEdge(@NotNull TbContext ctx, @NotNull TbMsg msg, CustomerId customerId) {
+    private void processAssignEdge(TbContext ctx, TbMsg msg, CustomerId customerId) {
         ctx.getEdgeService().assignEdgeToCustomer(ctx.getTenantId(), new EdgeId(msg.getOriginator().getId()), customerId);
     }
 
-    private void processAssignDashboard(@NotNull TbContext ctx, @NotNull TbMsg msg, CustomerId customerId) {
+    private void processAssignDashboard(TbContext ctx, TbMsg msg, CustomerId customerId) {
         ctx.getDashboardService().assignDashboardToCustomer(ctx.getTenantId(), new DashboardId(msg.getOriginator().getId()), customerId);
     }
 

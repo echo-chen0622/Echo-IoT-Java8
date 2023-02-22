@@ -5,7 +5,6 @@ import org.echoiot.rule.engine.api.*;
 import org.echoiot.rule.engine.api.util.TbNodeUtils;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.msg.TbMsg;
-import org.jetbrains.annotations.NotNull;
 
 @Slf4j
 public abstract class TbAbstractTypeSwitchNode implements TbNode {
@@ -13,12 +12,12 @@ public abstract class TbAbstractTypeSwitchNode implements TbNode {
     private EmptyNodeConfiguration config;
 
     @Override
-    public void init(TbContext ctx, @NotNull TbNodeConfiguration configuration) throws TbNodeException {
+    public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
         this.config = TbNodeUtils.convert(configuration, EmptyNodeConfiguration.class);
     }
 
     @Override
-    public void onMsg(@NotNull TbContext ctx, @NotNull TbMsg msg) throws TbNodeException {
+    public void onMsg(TbContext ctx, TbMsg msg) throws TbNodeException {
         ctx.tellNext(msg, getRelationType(ctx, msg.getOriginator()));
     }
 

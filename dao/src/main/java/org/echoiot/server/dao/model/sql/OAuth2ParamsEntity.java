@@ -8,7 +8,6 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.oauth2.OAuth2Params;
 import org.echoiot.server.dao.model.BaseSqlEntity;
 import org.echoiot.server.dao.model.ModelConstants;
-import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -28,7 +27,7 @@ public class OAuth2ParamsEntity extends BaseSqlEntity<OAuth2Params> {
     @Column(name = ModelConstants.OAUTH2_PARAMS_TENANT_ID_PROPERTY)
     private UUID tenantId;
 
-    public OAuth2ParamsEntity(@NotNull OAuth2Params oauth2Params) {
+    public OAuth2ParamsEntity(OAuth2Params oauth2Params) {
         if (oauth2Params.getId() != null) {
             this.setUuid(oauth2Params.getUuidId());
         }
@@ -39,10 +38,9 @@ public class OAuth2ParamsEntity extends BaseSqlEntity<OAuth2Params> {
         }
     }
 
-    @NotNull
     @Override
     public OAuth2Params toData() {
-        @NotNull OAuth2Params oauth2Params = new OAuth2Params();
+        OAuth2Params oauth2Params = new OAuth2Params();
         oauth2Params.setId(new OAuth2ParamsId(id));
         oauth2Params.setCreatedTime(createdTime);
         oauth2Params.setTenantId(TenantId.fromUUID(tenantId));

@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 import org.echoiot.server.common.data.event.Event;
 import org.echoiot.server.dao.model.BaseEntity;
 import org.echoiot.server.dao.model.ModelConstants;
-import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
@@ -51,7 +50,7 @@ public abstract class EventEntity<T extends Event> implements BaseEntity<T> {
         this.ts = ts;
     }
 
-    public EventEntity(@NotNull Event event) {
+    public EventEntity(Event event) {
         this.id = event.getId().getId();
         this.tenantId = event.getTenantId().getId();
         this.entityId = event.getEntityId();

@@ -25,7 +25,6 @@ import org.echoiot.server.dao.edge.EdgeService;
 import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.edge.rpc.processor.*;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -114,7 +113,7 @@ public class DefaultEdgeNotificationService implements EdgeNotificationService {
     }
 
     @Override
-    public Edge setEdgeRootRuleChain(TenantId tenantId, @NotNull Edge edge, RuleChainId ruleChainId) throws Exception {
+    public Edge setEdgeRootRuleChain(TenantId tenantId, Edge edge, RuleChainId ruleChainId) throws Exception {
         edge.setRootRuleChainId(ruleChainId);
         Edge savedEdge = edgeService.saveEdge(edge);
         ObjectNode isRootBody = JacksonUtil.OBJECT_MAPPER.createObjectNode();
@@ -123,7 +122,6 @@ public class DefaultEdgeNotificationService implements EdgeNotificationService {
         return savedEdge;
     }
 
-    @NotNull
     private ListenableFuture<Void> saveEdgeEvent(TenantId tenantId,
                                                  EdgeId edgeId,
                                                  EdgeEventType type,
@@ -133,7 +131,7 @@ public class DefaultEdgeNotificationService implements EdgeNotificationService {
         log.debug("Pushing edge event to edge queue. tenantId [{}], edgeId [{}], type [{}], action[{}], entityId [{}], body [{}]",
                 tenantId, edgeId, type, action, entityId, body);
 
-        @NotNull EdgeEvent edgeEvent = EdgeUtils.constructEdgeEvent(tenantId, edgeId, type, action, entityId, body);
+        EdgeEvent edgeEvent = EdgeUtils.constructEdgeEvent(tenantId, edgeId, type, action, entityId, body);
 
         return Futures.transform(edgeEventService.saveAsync(edgeEvent), unused -> {
             clusterService.onEdgeEventUpdate(tenantId, edgeId);
@@ -142,11 +140,11 @@ public class DefaultEdgeNotificationService implements EdgeNotificationService {
     }
 
     @Override
-    public void pushNotificationToEdge(@NotNull TransportProtos.EdgeNotificationMsgProto edgeNotificationMsg, @NotNull TbCallback callback) {
+    public void pushNotificationToEdge(TransportProtos.EdgeNotificationMsgProto edgeNotificationMsg, TbCallback callback) {
         log.debug("Pushing notification to edge {}", edgeNotificationMsg);
         try {
-            @NotNull TenantId tenantId = TenantId.fromUUID(new UUID(edgeNotificationMsg.getTenantIdMSB(), edgeNotificationMsg.getTenantIdLSB()));
-            @NotNull EdgeEventType type = EdgeEventType.valueOf(edgeNotificationMsg.getType());
+            TenantId tenantId = TenantId.fromUUID(new UUID(edgeNotificationMsg.getTenantIdMSB(), edgeNotificationMsg.getTenantIdLSB()));
+            EdgeEventType type = EdgeEventType.valueOf(edgeNotificationMsg.getType());
             ListenableFuture<Void> future;
             switch (type) {
                 case EDGE:
@@ -217,7 +215,7 @@ public class DefaultEdgeNotificationService implements EdgeNotificationService {
         }
     }
 
-    private void callBackFailure(TransportProtos.EdgeNotificationMsgProto edgeNotificationMsg, @NotNull TbCallback callback, Throwable throwable) {
+    private void callBackFailure(TransportProtos.EdgeNotificationMsgProto edgeNotificationMsg, TbCallback callback, Throwable throwable) {
         log.error("Can't push to edge updates, edgeNotificationMsg [{}]", edgeNotificationMsg, throwable);
         callback.onFailure(throwable);
     }

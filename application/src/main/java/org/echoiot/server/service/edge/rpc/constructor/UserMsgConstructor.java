@@ -8,15 +8,13 @@ import org.echoiot.server.gen.edge.v1.UpdateMsgType;
 import org.echoiot.server.gen.edge.v1.UserCredentialsUpdateMsg;
 import org.echoiot.server.gen.edge.v1.UserUpdateMsg;
 import org.echoiot.server.queue.util.TbCoreComponent;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 @Component
 @TbCoreComponent
 public class UserMsgConstructor {
 
-    @NotNull
-    public UserUpdateMsg constructUserUpdatedMsg(UpdateMsgType msgType, @NotNull User user) {
+    public UserUpdateMsg constructUserUpdatedMsg(UpdateMsgType msgType, User user) {
         UserUpdateMsg.Builder builder = UserUpdateMsg.newBuilder()
                 .setMsgType(msgType)
                 .setIdMSB(user.getId().getId().getMostSignificantBits())
@@ -39,16 +37,14 @@ public class UserMsgConstructor {
         return builder.build();
     }
 
-    @NotNull
-    public UserUpdateMsg constructUserDeleteMsg(@NotNull UserId userId) {
+    public UserUpdateMsg constructUserDeleteMsg(UserId userId) {
         return UserUpdateMsg.newBuilder()
                 .setMsgType(UpdateMsgType.ENTITY_DELETED_RPC_MESSAGE)
                 .setIdMSB(userId.getId().getMostSignificantBits())
                 .setIdLSB(userId.getId().getLeastSignificantBits()).build();
     }
 
-    @NotNull
-    public UserCredentialsUpdateMsg constructUserCredentialsUpdatedMsg(@NotNull UserCredentials userCredentials) {
+    public UserCredentialsUpdateMsg constructUserCredentialsUpdatedMsg(UserCredentials userCredentials) {
         UserCredentialsUpdateMsg.Builder builder = UserCredentialsUpdateMsg.newBuilder()
                 .setUserIdMSB(userCredentials.getUserId().getId().getMostSignificantBits())
                 .setUserIdLSB(userCredentials.getUserId().getId().getLeastSignificantBits())

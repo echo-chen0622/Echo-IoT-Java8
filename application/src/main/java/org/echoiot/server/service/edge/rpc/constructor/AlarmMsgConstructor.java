@@ -12,7 +12,6 @@ import org.echoiot.server.dao.entityview.EntityViewService;
 import org.echoiot.server.gen.edge.v1.AlarmUpdateMsg;
 import org.echoiot.server.gen.edge.v1.UpdateMsgType;
 import org.echoiot.server.queue.util.TbCoreComponent;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -31,8 +30,7 @@ public class AlarmMsgConstructor {
     @Resource
     private EntityViewService entityViewService;
 
-    @NotNull
-    public AlarmUpdateMsg constructAlarmUpdatedMsg(TenantId tenantId, UpdateMsgType msgType, @NotNull Alarm alarm) {
+    public AlarmUpdateMsg constructAlarmUpdatedMsg(TenantId tenantId, UpdateMsgType msgType, Alarm alarm) {
         @Nullable String entityName = null;
         switch (alarm.getOriginator().getEntityType()) {
             case DEVICE:
@@ -45,7 +43,7 @@ public class AlarmMsgConstructor {
                 entityName = entityViewService.findEntityViewById(tenantId, new EntityViewId(alarm.getOriginator().getId())).getName();
                 break;
         }
-        @NotNull AlarmUpdateMsg.Builder builder = AlarmUpdateMsg.newBuilder()
+        AlarmUpdateMsg.Builder builder = AlarmUpdateMsg.newBuilder()
                                                                 .setMsgType(msgType)
                                                                 .setIdMSB(alarm.getId().getId().getMostSignificantBits())
                                                                 .setIdLSB(alarm.getId().getId().getLeastSignificantBits())

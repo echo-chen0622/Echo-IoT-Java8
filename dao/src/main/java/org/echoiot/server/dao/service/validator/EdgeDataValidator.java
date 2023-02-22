@@ -12,18 +12,14 @@ import org.echoiot.server.dao.exception.DataValidationException;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.service.DataValidator;
 import org.echoiot.server.dao.tenant.TenantService;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 @Component
 @AllArgsConstructor
 public class EdgeDataValidator extends DataValidator<Edge> {
 
-    @NotNull
     private final EdgeDao edgeDao;
-    @NotNull
     private final TenantService tenantService;
-    @NotNull
     private final CustomerDao customerDao;
 
     @Override
@@ -31,12 +27,12 @@ public class EdgeDataValidator extends DataValidator<Edge> {
     }
 
     @Override
-    protected Edge validateUpdate(TenantId tenantId, @NotNull Edge edge) {
+    protected Edge validateUpdate(TenantId tenantId, Edge edge) {
         return edgeDao.findById(edge.getTenantId(), edge.getId().getId());
     }
 
     @Override
-    protected void validateDataImpl(TenantId tenantId, @NotNull Edge edge) {
+    protected void validateDataImpl(TenantId tenantId, Edge edge) {
         if (StringUtils.isEmpty(edge.getType())) {
             throw new DataValidationException("Edge type should be specified!");
         }

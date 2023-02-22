@@ -5,7 +5,6 @@ import lombok.Data;
 import org.echoiot.rule.engine.api.NodeConfiguration;
 import org.echoiot.rule.engine.credentials.AnonymousCredentials;
 import org.echoiot.rule.engine.credentials.ClientCredentials;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
@@ -35,10 +34,9 @@ public class TbRestApiCallNodeConfiguration implements NodeConfiguration<TbRestA
     private ClientCredentials credentials;
     private boolean ignoreRequestBody;
 
-    @NotNull
     @Override
     public TbRestApiCallNodeConfiguration defaultConfiguration() {
-        @NotNull TbRestApiCallNodeConfiguration configuration = new TbRestApiCallNodeConfiguration();
+        TbRestApiCallNodeConfiguration configuration = new TbRestApiCallNodeConfiguration();
         configuration.setRestEndpointUrlPattern("http://localhost/api");
         configuration.setRequestMethod("POST");
         configuration.setHeaders(Collections.singletonMap(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE));
@@ -53,7 +51,6 @@ public class TbRestApiCallNodeConfiguration implements NodeConfiguration<TbRestA
         return configuration;
     }
 
-    @NotNull
     public ClientCredentials getCredentials() {
         if (this.credentials == null) {
             return new AnonymousCredentials();

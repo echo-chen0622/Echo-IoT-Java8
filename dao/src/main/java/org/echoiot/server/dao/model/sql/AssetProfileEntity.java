@@ -10,7 +10,6 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.dao.model.BaseSqlEntity;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.model.SearchTextEntity;
-import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -57,7 +56,7 @@ public final class AssetProfileEntity extends BaseSqlEntity<AssetProfile> implem
         super();
     }
 
-    public AssetProfileEntity(@NotNull AssetProfile assetProfile) {
+    public AssetProfileEntity(AssetProfile assetProfile) {
         if (assetProfile.getId() != null) {
             this.setUuid(assetProfile.getId().getId());
         }
@@ -95,10 +94,9 @@ public final class AssetProfileEntity extends BaseSqlEntity<AssetProfile> implem
         return searchText;
     }
 
-    @NotNull
     @Override
     public AssetProfile toData() {
-        @NotNull AssetProfile assetProfile = new AssetProfile(new AssetProfileId(this.getUuid()));
+        AssetProfile assetProfile = new AssetProfile(new AssetProfileId(this.getUuid()));
         assetProfile.setCreatedTime(createdTime);
         if (tenantId != null) {
             assetProfile.setTenantId(TenantId.fromUUID(tenantId));

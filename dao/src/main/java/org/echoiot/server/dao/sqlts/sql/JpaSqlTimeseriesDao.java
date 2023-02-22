@@ -14,7 +14,6 @@ import org.echoiot.server.dao.timeseries.SqlPartition;
 import org.echoiot.server.dao.timeseries.SqlTsPartitionDate;
 import org.echoiot.server.dao.util.SqlTsDao;
 import org.hibernate.exception.ConstraintViolationException;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
@@ -64,14 +63,13 @@ public class JpaSqlTimeseriesDao extends AbstractChunkedAggregationTimeseriesDao
         }
     }
 
-    @NotNull
     @Override
-    public ListenableFuture<Integer> save(TenantId tenantId, @NotNull EntityId entityId, @NotNull TsKvEntry tsKvEntry, long ttl) {
+    public ListenableFuture<Integer> save(TenantId tenantId, EntityId entityId, TsKvEntry tsKvEntry, long ttl) {
         int dataPointDays = getDataPointDays(tsKvEntry, computeTtl(ttl));
         savePartitionIfNotExist(tsKvEntry.getTs());
         String strKey = tsKvEntry.getKey();
         Integer keyId = getOrSaveKeyId(strKey);
-        @NotNull TsKvEntity entity = new TsKvEntity();
+        TsKvEntity entity = new TsKvEntity();
         entity.setEntityId(entityId.getId());
         entity.setTs(tsKvEntry.getTs());
         entity.setKey(keyId);
@@ -111,20 +109,20 @@ public class JpaSqlTimeseriesDao extends AbstractChunkedAggregationTimeseriesDao
 
     private void savePartitionIfNotExist(long ts) {
         if (!tsFormat.equals(SqlTsPartitionDate.INDEFINITE) && ts >= 0) {
-            @NotNull LocalDateTime time = LocalDateTime.ofInstant(Instant.ofEpochMilli(ts), ZoneOffset.UTC);
+            LocalDateTime time = LocalDateTime.ofInstant(Instant.ofEpochMilli(ts), ZoneOffset.UTC);
             LocalDateTime localDateTimeStart = tsFormat.trancateTo(time);
             long partitionStartTs = toMills(localDateTimeStart);
             if (partitions.get(partitionStartTs) == null) {
                 LocalDateTime localDateTimeEnd = tsFormat.plusTo(localDateTimeStart);
                 long partitionEndTs = toMills(localDateTimeEnd);
-                @NotNull ZonedDateTime zonedDateTime = localDateTimeStart.atZone(ZoneOffset.UTC);
-                @NotNull String partitionDate = zonedDateTime.format(DateTimeFormatter.ofPattern(tsFormat.getPattern()));
+                ZonedDateTime zonedDateTime = localDateTimeStart.atZone(ZoneOffset.UTC);
+                String partitionDate = zonedDateTime.format(DateTimeFormatter.ofPattern(tsFormat.getPattern()));
                 savePartition(new SqlPartition(SqlPartition.TS_KV, partitionStartTs, partitionEndTs, partitionDate));
             }
         }
     }
 
-    private void savePartition(@NotNull SqlPartition sqlPartition) {
+    private void savePartition(SqlPartition sqlPartition) {
         if (!partitions.containsKey(sqlPartition.getStart())) {
             partitionCreationLock.lock();
             try {
@@ -146,7 +144,7 @@ public class JpaSqlTimeseriesDao extends AbstractChunkedAggregationTimeseriesDao
         }
     }
 
-    private static long toMills(@NotNull LocalDateTime time) {
+    private static long toMills(LocalDateTime time) {
         return time.toInstant(ZoneOffset.UTC).toEpochMilli();
     }
 }

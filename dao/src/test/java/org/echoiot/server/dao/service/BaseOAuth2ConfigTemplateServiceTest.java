@@ -6,7 +6,6 @@ import org.echoiot.server.common.data.oauth2.OAuth2ClientRegistrationTemplate;
 import org.echoiot.server.common.data.oauth2.OAuth2MapperConfig;
 import org.echoiot.server.dao.exception.DataValidationException;
 import org.echoiot.server.dao.oauth2.OAuth2ConfigTemplateService;
-import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -38,15 +37,15 @@ public abstract class BaseOAuth2ConfigTemplateServiceTest extends AbstractServic
 
     @Test(expected = DataValidationException.class)
     public void testSaveDuplicateProviderId() {
-        @NotNull OAuth2ClientRegistrationTemplate first = validClientRegistrationTemplate("providerId");
-        @NotNull OAuth2ClientRegistrationTemplate second = validClientRegistrationTemplate("providerId");
+        OAuth2ClientRegistrationTemplate first = validClientRegistrationTemplate("providerId");
+        OAuth2ClientRegistrationTemplate second = validClientRegistrationTemplate("providerId");
         oAuth2ConfigTemplateService.saveClientRegistrationTemplate(first);
         oAuth2ConfigTemplateService.saveClientRegistrationTemplate(second);
     }
 
     @Test
     public void testCreateNewTemplate() {
-        @NotNull OAuth2ClientRegistrationTemplate clientRegistrationTemplate = validClientRegistrationTemplate(UUID.randomUUID().toString());
+        OAuth2ClientRegistrationTemplate clientRegistrationTemplate = validClientRegistrationTemplate(UUID.randomUUID().toString());
         OAuth2ClientRegistrationTemplate savedClientRegistrationTemplate = oAuth2ConfigTemplateService.saveClientRegistrationTemplate(clientRegistrationTemplate);
 
         Assert.assertNotNull(savedClientRegistrationTemplate);
@@ -58,7 +57,7 @@ public abstract class BaseOAuth2ConfigTemplateServiceTest extends AbstractServic
 
     @Test
     public void testFindTemplate() {
-        @NotNull OAuth2ClientRegistrationTemplate clientRegistrationTemplate = validClientRegistrationTemplate(UUID.randomUUID().toString());
+        OAuth2ClientRegistrationTemplate clientRegistrationTemplate = validClientRegistrationTemplate(UUID.randomUUID().toString());
         OAuth2ClientRegistrationTemplate savedClientRegistrationTemplate = oAuth2ConfigTemplateService.saveClientRegistrationTemplate(clientRegistrationTemplate);
 
         OAuth2ClientRegistrationTemplate foundClientRegistrationTemplate = oAuth2ConfigTemplateService.findClientRegistrationTemplateById(savedClientRegistrationTemplate.getId());
@@ -88,9 +87,8 @@ public abstract class BaseOAuth2ConfigTemplateServiceTest extends AbstractServic
         Assert.assertNull(oAuth2ConfigTemplateService.findClientRegistrationTemplateById(saved.getId()));
     }
 
-    @NotNull
     private OAuth2ClientRegistrationTemplate validClientRegistrationTemplate(String providerId) {
-        @NotNull OAuth2ClientRegistrationTemplate clientRegistrationTemplate = new OAuth2ClientRegistrationTemplate();
+        OAuth2ClientRegistrationTemplate clientRegistrationTemplate = new OAuth2ClientRegistrationTemplate();
         clientRegistrationTemplate.setProviderId(providerId);
         clientRegistrationTemplate.setAdditionalInfo(mapper.createObjectNode().put(UUID.randomUUID().toString(), UUID.randomUUID().toString()));
         clientRegistrationTemplate.setMapperConfig(OAuth2MapperConfig.builder()

@@ -10,7 +10,6 @@ import org.echoiot.server.common.data.id.EdgeId;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.plugin.ComponentLifecycleEvent;
 import org.echoiot.server.service.entitiy.AbstractTbEntityService;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
@@ -20,10 +19,9 @@ import java.util.List;
 @AllArgsConstructor
 public class DefaultTbCustomerService extends AbstractTbEntityService implements TbCustomerService {
 
-    @NotNull
     @Override
-    public Customer save(@NotNull Customer customer, User user) throws Exception {
-        @NotNull ActionType actionType = customer.getId() == null ? ActionType.ADDED : ActionType.UPDATED;
+    public Customer save(Customer customer, User user) throws Exception {
+        ActionType actionType = customer.getId() == null ? ActionType.ADDED : ActionType.UPDATED;
         TenantId tenantId = customer.getTenantId();
         try {
             Customer savedCustomer = checkNotNull(customerService.saveCustomer(customer));
@@ -37,7 +35,7 @@ public class DefaultTbCustomerService extends AbstractTbEntityService implements
     }
 
     @Override
-    public void delete(@NotNull Customer customer, User user) {
+    public void delete(Customer customer, User user) {
         TenantId tenantId = customer.getTenantId();
         CustomerId customerId = customer.getId();
         try {

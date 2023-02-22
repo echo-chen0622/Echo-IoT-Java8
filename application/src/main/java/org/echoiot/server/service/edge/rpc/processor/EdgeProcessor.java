@@ -19,7 +19,6 @@ import org.echoiot.server.gen.edge.v1.DownlinkMsg;
 import org.echoiot.server.gen.edge.v1.EdgeConfiguration;
 import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.queue.util.TbCoreComponent;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -33,8 +32,8 @@ import java.util.UUID;
 public class EdgeProcessor extends BaseEdgeProcessor {
 
     @Nullable
-    public DownlinkMsg convertEdgeEventToDownlink(@NotNull EdgeEvent edgeEvent) {
-        @NotNull EdgeId edgeId = new EdgeId(edgeEvent.getEntityId());
+    public DownlinkMsg convertEdgeEventToDownlink(EdgeEvent edgeEvent) {
+        EdgeId edgeId = new EdgeId(edgeEvent.getEntityId());
         @Nullable DownlinkMsg downlinkMsg = null;
         switch (edgeEvent.getAction()) {
             case ASSIGNED_TO_CUSTOMER:
@@ -53,11 +52,10 @@ public class EdgeProcessor extends BaseEdgeProcessor {
         return downlinkMsg;
     }
 
-    @NotNull
-    public ListenableFuture<Void> processEdgeNotification(TenantId tenantId, @NotNull TransportProtos.EdgeNotificationMsgProto edgeNotificationMsg) {
+    public ListenableFuture<Void> processEdgeNotification(TenantId tenantId, TransportProtos.EdgeNotificationMsgProto edgeNotificationMsg) {
         try {
-            @NotNull EdgeEventActionType actionType = EdgeEventActionType.valueOf(edgeNotificationMsg.getAction());
-            @NotNull EdgeId edgeId = new EdgeId(new UUID(edgeNotificationMsg.getEntityIdMSB(), edgeNotificationMsg.getEntityIdLSB()));
+            EdgeEventActionType actionType = EdgeEventActionType.valueOf(edgeNotificationMsg.getAction());
+            EdgeId edgeId = new EdgeId(new UUID(edgeNotificationMsg.getEntityIdMSB(), edgeNotificationMsg.getEntityIdLSB()));
             switch (actionType) {
                 case ASSIGNED_TO_CUSTOMER:
                     CustomerId customerId = JacksonUtil.OBJECT_MAPPER.readValue(edgeNotificationMsg.getBody(), CustomerId.class);
@@ -65,7 +63,7 @@ public class EdgeProcessor extends BaseEdgeProcessor {
                     if (edge == null || customerId.isNullUid()) {
                         return Futures.immediateFuture(null);
                     }
-                    @NotNull List<ListenableFuture<Void>> futures = new ArrayList<>();
+                    List<ListenableFuture<Void>> futures = new ArrayList<>();
                     futures.add(saveEdgeEvent(edge.getTenantId(), edge.getId(), EdgeEventType.CUSTOMER, EdgeEventActionType.ADDED, customerId, null));
                     futures.add(saveEdgeEvent(edge.getTenantId(), edge.getId(), EdgeEventType.EDGE, EdgeEventActionType.ASSIGNED_TO_CUSTOMER, edgeId, null));
                     PageLink pageLink = new PageLink(DEFAULT_PAGE_SIZE);
@@ -74,7 +72,7 @@ public class EdgeProcessor extends BaseEdgeProcessor {
                         pageData = userService.findCustomerUsers(tenantId, customerId, pageLink);
                         if (pageData != null && pageData.getData() != null && !pageData.getData().isEmpty()) {
                             log.trace("[{}] [{}] user(s) are going to be added to edge.", edge.getId(), pageData.getData().size());
-                            for (@NotNull User user : pageData.getData()) {
+                            for (User user : pageData.getData()) {
                                 futures.add(saveEdgeEvent(edge.getTenantId(), edge.getId(), EdgeEventType.USER, EdgeEventActionType.ADDED, user.getId(), null));
                             }
                             if (pageData.hasNext()) {

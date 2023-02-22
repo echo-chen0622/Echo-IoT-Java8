@@ -17,7 +17,6 @@ import org.echoiot.server.dao.sql.TbSqlBlockingQueueParams;
 import org.echoiot.server.dao.sql.TbSqlBlockingQueueWrapper;
 import org.echoiot.server.dao.sqlts.insert.sql.SqlPartitioningRepository;
 import org.echoiot.server.dao.util.SqlDao;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -98,7 +97,7 @@ public class JpaBaseEventDao implements EventDao {
                 .statsNamePrefix("events")
                 .batchSortEnabled(batchSortEnabled)
                 .build();
-        @NotNull Function<Event, Integer> hashcodeFunction = entity -> Objects.hash(super.hashCode(), entity.getTenantId(), entity.getEntityId());
+        Function<Event, Integer> hashcodeFunction = entity -> Objects.hash(super.hashCode(), entity.getTenantId(), entity.getEntityId());
         queue = new TbSqlBlockingQueueWrapper<>(params, hashcodeFunction, batchThreads, statsFactory);
         queue.init(logExecutor, v -> eventInsertRepository.save(v), Comparator.comparing(Event::getCreatedTime));
         repositories.put(EventType.LC_EVENT, lcEventRepository);
@@ -116,10 +115,10 @@ public class JpaBaseEventDao implements EventDao {
     }
 
     @Override
-    public ListenableFuture<Void> saveAsync(@NotNull Event event) {
+    public ListenableFuture<Void> saveAsync(Event event) {
         log.debug("Save event [{}] ", event);
         if (event.getId() == null) {
-            @NotNull UUID timeBased = Uuids.timeBased();
+            UUID timeBased = Uuids.timeBased();
             event.setId(new EventId(timeBased));
             event.setCreatedTime(Uuids.unixTimestamp(timeBased));
         } else if (event.getCreatedTime() == 0L) {
@@ -135,14 +134,13 @@ public class JpaBaseEventDao implements EventDao {
         return queue.add(event);
     }
 
-    @NotNull
     @Override
-    public PageData<? extends Event> findEvents(UUID tenantId, UUID entityId, EventType eventType, @NotNull TimePageLink pageLink) {
+    public PageData<? extends Event> findEvents(UUID tenantId, UUID entityId, EventType eventType, TimePageLink pageLink) {
         return DaoUtil.toPageData(getEventRepository(eventType).findEvents(tenantId, entityId, pageLink.getStartTime(), pageLink.getEndTime(), DaoUtil.toPageable(pageLink, EventEntity.eventColumnMap)));
     }
 
     @Override
-    public PageData<? extends Event> findEventByFilter(UUID tenantId, UUID entityId, @NotNull EventFilter eventFilter, @NotNull TimePageLink pageLink) {
+    public PageData<? extends Event> findEventByFilter(UUID tenantId, UUID entityId, EventFilter eventFilter, TimePageLink pageLink) {
         if (eventFilter.isNotEmpty()) {
             switch (eventFilter.getEventType()) {
                 case DEBUG_RULE_NODE:
@@ -172,7 +170,7 @@ public class JpaBaseEventDao implements EventDao {
     }
 
     @Override
-    public void removeEvents(UUID tenantId, UUID entityId, @NotNull EventFilter eventFilter, Long startTime, Long endTime) {
+    public void removeEvents(UUID tenantId, UUID entityId, EventFilter eventFilter, Long startTime, Long endTime) {
         if (eventFilter.isNotEmpty()) {
             switch (eventFilter.getEventType()) {
                 case DEBUG_RULE_NODE:
@@ -203,8 +201,7 @@ public class JpaBaseEventDao implements EventDao {
         eventCleanupRepository.migrateEvents(regularEventTs, debugEventTs);
     }
 
-    @NotNull
-    private PageData<? extends Event> findEventByFilter(UUID tenantId, UUID entityId, @NotNull RuleChainDebugEventFilter eventFilter, @NotNull TimePageLink pageLink) {
+    private PageData<? extends Event> findEventByFilter(UUID tenantId, UUID entityId, RuleChainDebugEventFilter eventFilter, TimePageLink pageLink) {
         return DaoUtil.toPageData(
                 ruleChainDebugEventRepository.findEvents(
                         tenantId,
@@ -218,8 +215,7 @@ public class JpaBaseEventDao implements EventDao {
                         DaoUtil.toPageable(pageLink, EventEntity.eventColumnMap)));
     }
 
-    @NotNull
-    private PageData<? extends Event> findEventByFilter(UUID tenantId, UUID entityId, @NotNull RuleNodeDebugEventFilter eventFilter, @NotNull TimePageLink pageLink) {
+    private PageData<? extends Event> findEventByFilter(UUID tenantId, UUID entityId, RuleNodeDebugEventFilter eventFilter, TimePageLink pageLink) {
         parseUUID(eventFilter.getEntityId(), "Entity Id");
         parseUUID(eventFilter.getMsgId(), "Message Id");
         return DaoUtil.toPageData(
@@ -242,8 +238,7 @@ public class JpaBaseEventDao implements EventDao {
                         DaoUtil.toPageable(pageLink, EventEntity.eventColumnMap)));
     }
 
-    @NotNull
-    private PageData<? extends Event> findEventByFilter(UUID tenantId, UUID entityId, @NotNull ErrorEventFilter eventFilter, @NotNull TimePageLink pageLink) {
+    private PageData<? extends Event> findEventByFilter(UUID tenantId, UUID entityId, ErrorEventFilter eventFilter, TimePageLink pageLink) {
         return DaoUtil.toPageData(
                 errorEventRepository.findEvents(
                         tenantId,
@@ -257,8 +252,7 @@ public class JpaBaseEventDao implements EventDao {
         );
     }
 
-    @NotNull
-    private PageData<? extends Event> findEventByFilter(UUID tenantId, UUID entityId, @NotNull LifeCycleEventFilter eventFilter, @NotNull TimePageLink pageLink) {
+    private PageData<? extends Event> findEventByFilter(UUID tenantId, UUID entityId, LifeCycleEventFilter eventFilter, TimePageLink pageLink) {
         boolean statusFilterEnabled = !StringUtils.isEmpty(eventFilter.getStatus());
         boolean statusFilter = statusFilterEnabled && eventFilter.getStatus().equalsIgnoreCase("Success");
         return DaoUtil.toPageData(
@@ -276,8 +270,7 @@ public class JpaBaseEventDao implements EventDao {
         );
     }
 
-    @NotNull
-    private PageData<? extends Event> findEventByFilter(UUID tenantId, UUID entityId, @NotNull StatisticsEventFilter eventFilter, @NotNull TimePageLink pageLink) {
+    private PageData<? extends Event> findEventByFilter(UUID tenantId, UUID entityId, StatisticsEventFilter eventFilter, TimePageLink pageLink) {
         return DaoUtil.toPageData(
                 statsEventRepository.findEvents(
                         tenantId,
@@ -293,7 +286,7 @@ public class JpaBaseEventDao implements EventDao {
         );
     }
 
-    private void removeEventsByFilter(UUID tenantId, UUID entityId, @NotNull RuleChainDebugEventFilter eventFilter, Long startTime, Long endTime) {
+    private void removeEventsByFilter(UUID tenantId, UUID entityId, RuleChainDebugEventFilter eventFilter, Long startTime, Long endTime) {
         ruleChainDebugEventRepository.removeEvents(
                 tenantId,
                 entityId,
@@ -305,7 +298,7 @@ public class JpaBaseEventDao implements EventDao {
                 eventFilter.getErrorStr());
     }
 
-    private void removeEventsByFilter(UUID tenantId, UUID entityId, @NotNull RuleNodeDebugEventFilter eventFilter, Long startTime, Long endTime) {
+    private void removeEventsByFilter(UUID tenantId, UUID entityId, RuleNodeDebugEventFilter eventFilter, Long startTime, Long endTime) {
         parseUUID(eventFilter.getEntityId(), "Entity Id");
         parseUUID(eventFilter.getMsgId(), "Message Id");
         ruleNodeDebugEventRepository.removeEvents(
@@ -326,7 +319,7 @@ public class JpaBaseEventDao implements EventDao {
                 eventFilter.getErrorStr());
     }
 
-    private void removeEventsByFilter(UUID tenantId, UUID entityId, @NotNull ErrorEventFilter eventFilter, Long startTime, Long endTime) {
+    private void removeEventsByFilter(UUID tenantId, UUID entityId, ErrorEventFilter eventFilter, Long startTime, Long endTime) {
         errorEventRepository.removeEvents(
                 tenantId,
                 entityId,
@@ -338,7 +331,7 @@ public class JpaBaseEventDao implements EventDao {
 
     }
 
-    private void removeEventsByFilter(UUID tenantId, UUID entityId, @NotNull LifeCycleEventFilter eventFilter, Long startTime, Long endTime) {
+    private void removeEventsByFilter(UUID tenantId, UUID entityId, LifeCycleEventFilter eventFilter, Long startTime, Long endTime) {
         boolean statusFilterEnabled = !StringUtils.isEmpty(eventFilter.getStatus());
         boolean statusFilter = statusFilterEnabled && eventFilter.getStatus().equalsIgnoreCase("Success");
         lcEventRepository.removeEvents(
@@ -353,7 +346,7 @@ public class JpaBaseEventDao implements EventDao {
                 eventFilter.getErrorStr());
     }
 
-    private void removeEventsByFilter(UUID tenantId, UUID entityId, @NotNull StatisticsEventFilter eventFilter, Long startTime, Long endTime) {
+    private void removeEventsByFilter(UUID tenantId, UUID entityId, StatisticsEventFilter eventFilter, Long startTime, Long endTime) {
         statsEventRepository.removeEvents(
                 tenantId,
                 entityId,
@@ -393,14 +386,14 @@ public class JpaBaseEventDao implements EventDao {
     }
 
     private void cleanupPartitionsCache(long expTime, boolean isDebug) {
-        for (@NotNull EventType eventType : EventType.values()) {
+        for (EventType eventType : EventType.values()) {
             if (eventType.isDebug() == isDebug) {
                 partitioningRepository.cleanupPartitionsCache(eventType.getTable(), expTime, partitionConfiguration.getPartitionSizeInMs(eventType));
             }
         }
     }
 
-    private void parseUUID(@NotNull String src, String paramName) {
+    private void parseUUID(String src, String paramName) {
         if (!StringUtils.isEmpty(src)) {
             try {
                 UUID.fromString(src);
@@ -410,7 +403,6 @@ public class JpaBaseEventDao implements EventDao {
         }
     }
 
-    @NotNull
     private EventRepository<? extends EventEntity<?>, ?> getEventRepository(EventType eventType) {
         var repository = repositories.get(eventType);
         if (repository == null) {

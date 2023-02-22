@@ -29,7 +29,6 @@ import org.echoiot.server.service.security.auth.rest.RestAuthenticationDetails;
 import org.echoiot.server.service.security.exception.UserPasswordExpiredException;
 import org.echoiot.server.service.security.model.SecurityUser;
 import org.echoiot.server.utils.MiscUtils;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.passay.*;
 import org.springframework.cache.annotation.CacheEvict;
@@ -112,7 +111,7 @@ public class DefaultSystemSecurityService implements SystemSecurityService {
     }
 
     @Override
-    public void validateUserCredentials(TenantId tenantId, @NotNull UserCredentials userCredentials, String username, String password) throws AuthenticationException {
+    public void validateUserCredentials(TenantId tenantId, UserCredentials userCredentials, String username, String password) throws AuthenticationException {
         if (!encoder.matches(password, userCredentials.getPassword())) {
             int failedLoginAttempts = userService.increaseFailedLoginAttempts(tenantId, userCredentials.getUserId());
             SecuritySettings securitySettings = self.getSecuritySettings(tenantId);
@@ -143,7 +142,7 @@ public class DefaultSystemSecurityService implements SystemSecurityService {
     }
 
     @Override
-    public void validateTwoFaVerification(@NotNull SecurityUser securityUser, boolean verificationSuccess, @NotNull PlatformTwoFaSettings twoFaSettings) {
+    public void validateTwoFaVerification(SecurityUser securityUser, boolean verificationSuccess, PlatformTwoFaSettings twoFaSettings) {
         TenantId tenantId = securityUser.getTenantId();
         UserId userId = securityUser.getId();
 
@@ -181,7 +180,7 @@ public class DefaultSystemSecurityService implements SystemSecurityService {
         SecuritySettings securitySettings = self.getSecuritySettings(tenantId);
         UserPasswordPolicy passwordPolicy = securitySettings.getPasswordPolicy();
 
-        @NotNull List<Rule> passwordRules = new ArrayList<>();
+        List<Rule> passwordRules = new ArrayList<>();
         passwordRules.add(new LengthRule(passwordPolicy.getMinimumLength(), Integer.MAX_VALUE));
         if (isPositiveInteger(passwordPolicy.getMinimumUppercaseLetters())) {
             passwordRules.add(new CharacterRule(EnglishCharacterData.UpperCase, passwordPolicy.getMinimumUppercaseLetters()));
@@ -198,11 +197,11 @@ public class DefaultSystemSecurityService implements SystemSecurityService {
         if (passwordPolicy.getAllowWhitespaces() != null && !passwordPolicy.getAllowWhitespaces()) {
             passwordRules.add(new WhitespaceRule());
         }
-        @NotNull PasswordValidator validator = new PasswordValidator(passwordRules);
-        @NotNull PasswordData passwordData = new PasswordData(password);
+        PasswordValidator validator = new PasswordValidator(passwordRules);
+        PasswordData passwordData = new PasswordData(password);
         RuleResult result = validator.validate(passwordData);
         if (!result.isValid()) {
-            @NotNull String message = String.join("\n", validator.getMessages(result));
+            String message = String.join("\n", validator.getMessages(result));
             throw new DataValidationException(message);
         }
 
@@ -213,7 +212,7 @@ public class DefaultSystemSecurityService implements SystemSecurityService {
             if (additionalInfo instanceof ObjectNode && additionalInfo.has(UserServiceImpl.USER_PASSWORD_HISTORY)) {
                 JsonNode userPasswordHistoryJson = additionalInfo.get(UserServiceImpl.USER_PASSWORD_HISTORY);
                 @Nullable Map<String, String> userPasswordHistoryMap = JacksonUtil.convertValue(userPasswordHistoryJson, new TypeReference<>() {});
-                for (@NotNull Map.Entry<String, String> entry : userPasswordHistoryMap.entrySet()) {
+                for (Map.Entry<String, String> entry : userPasswordHistoryMap.entrySet()) {
                     if (encoder.matches(password, entry.getValue()) && Long.parseLong(entry.getKey()) > passwordReuseFrequencyTs) {
                         throw new DataValidationException("Password was already used for the last " + passwordPolicy.getPasswordReuseFrequencyDays() + " days");
                     }
@@ -224,7 +223,7 @@ public class DefaultSystemSecurityService implements SystemSecurityService {
     }
 
     @Override
-    public String getBaseUrl(TenantId tenantId, CustomerId customerId, @NotNull HttpServletRequest httpServletRequest) {
+    public String getBaseUrl(TenantId tenantId, CustomerId customerId, HttpServletRequest httpServletRequest) {
         @Nullable String baseUrl = null;
         AdminSettings generalSettings = adminSettingsService.findAdminSettingsByKey(TenantId.SYS_TENANT_ID, "general");
 
@@ -242,21 +241,21 @@ public class DefaultSystemSecurityService implements SystemSecurityService {
     }
 
     @Override
-    public void logLoginAction(@NotNull User user, Object authenticationDetails, ActionType actionType, Exception e) {
+    public void logLoginAction(User user, Object authenticationDetails, ActionType actionType, Exception e) {
         logLoginAction(user, authenticationDetails, actionType, null, e);
     }
 
     @Override
-    public void logLoginAction(@NotNull User user, Object authenticationDetails, ActionType actionType, String provider, @Nullable Exception e) {
+    public void logLoginAction(User user, Object authenticationDetails, ActionType actionType, String provider, @Nullable Exception e) {
         String clientAddress = "Unknown";
         String browser = "Unknown";
         String os = "Unknown";
         String device = "Unknown";
         if (authenticationDetails instanceof RestAuthenticationDetails) {
-            @NotNull RestAuthenticationDetails details = (RestAuthenticationDetails) authenticationDetails;
+            RestAuthenticationDetails details = (RestAuthenticationDetails) authenticationDetails;
             clientAddress = details.getClientAddress();
             if (details.getUserAgent() != null) {
-                @NotNull Client userAgent = details.getUserAgent();
+                Client userAgent = details.getUserAgent();
                 if (userAgent.userAgent != null) {
                     browser = userAgent.userAgent.family;
                     if (userAgent.userAgent.major != null) {

@@ -2,7 +2,6 @@ package org.echoiot.server.cache;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.cache.CacheManager;
 
@@ -14,9 +13,7 @@ import java.util.concurrent.locks.ReentrantLock;
 @RequiredArgsConstructor
 public abstract class CaffeineTbTransactionalCache<K extends Serializable, V extends Serializable> implements TbTransactionalCache<K, V> {
 
-    @NotNull
     private final CacheManager cacheManager;
-    @NotNull
     @Getter
     private final String cacheName;
 
@@ -26,12 +23,12 @@ public abstract class CaffeineTbTransactionalCache<K extends Serializable, V ext
 
     @Nullable
     @Override
-    public TbCacheValueWrapper<V> get(@NotNull K key) {
+    public TbCacheValueWrapper<V> get(K key) {
         return SimpleTbCacheValueWrapper.wrap(cacheManager.getCache(cacheName).get(key));
     }
 
     @Override
-    public void put(@NotNull K key, V value) {
+    public void put(K key, V value) {
         lock.lock();
         try {
             failAllTransactionsByKey(key);
@@ -42,7 +39,7 @@ public abstract class CaffeineTbTransactionalCache<K extends Serializable, V ext
     }
 
     @Override
-    public void putIfAbsent(@NotNull K key, V value) {
+    public void putIfAbsent(K key, V value) {
         lock.lock();
         try {
             failAllTransactionsByKey(key);
@@ -53,7 +50,7 @@ public abstract class CaffeineTbTransactionalCache<K extends Serializable, V ext
     }
 
     @Override
-    public void evict(@NotNull K key) {
+    public void evict(K key) {
         lock.lock();
         try {
             failAllTransactionsByKey(key);
@@ -64,7 +61,7 @@ public abstract class CaffeineTbTransactionalCache<K extends Serializable, V ext
     }
 
     @Override
-    public void evict(@NotNull Collection<K> keys) {
+    public void evict(Collection<K> keys) {
         lock.lock();
         try {
             keys.forEach(key -> {
@@ -77,7 +74,7 @@ public abstract class CaffeineTbTransactionalCache<K extends Serializable, V ext
     }
 
     @Override
-    public void evictOrPut(@NotNull K key, V value) {
+    public void evictOrPut(K key, V value) {
         //No need to put the value in case of Caffeine, because evict will cancel concurrent transaction used to "get" the missing value from cache.
         evict(key);
     }
@@ -88,23 +85,22 @@ public abstract class CaffeineTbTransactionalCache<K extends Serializable, V ext
     }
 
     @Override
-    public TbCacheTransaction<K, V> newTransactionForKeys(@NotNull List<K> keys) {
+    public TbCacheTransaction<K, V> newTransactionForKeys(List<K> keys) {
         return newTransaction(keys);
     }
 
-    void doPutIfAbsent(@NotNull Object key, Object value) {
+    void doPutIfAbsent(Object key, Object value) {
         cacheManager.getCache(cacheName).putIfAbsent(key, value);
     }
 
-    void doEvict(@NotNull K key) {
+    void doEvict(K key) {
         cacheManager.getCache(cacheName).evict(key);
     }
 
-    @NotNull
-    TbCacheTransaction<K, V> newTransaction(@NotNull List<K> keys) {
+    TbCacheTransaction<K, V> newTransaction(List<K> keys) {
         lock.lock();
         try {
-            @NotNull var transaction = new CaffeineTbCacheTransaction<>(this, keys);
+            var transaction = new CaffeineTbCacheTransaction<>(this, keys);
             var transactionId = transaction.getId();
             for (K key : keys) {
                 objectTransactions.computeIfAbsent(key, k -> new HashSet<>()).add(transactionId);
@@ -116,7 +112,7 @@ public abstract class CaffeineTbTransactionalCache<K extends Serializable, V ext
         }
     }
 
-    public boolean commit(@Nullable UUID trId, @NotNull Map<Object, Object> pendingPuts) {
+    public boolean commit(@Nullable UUID trId, Map<Object, Object> pendingPuts) {
         lock.lock();
         try {
             var tr = transactions.get(trId);

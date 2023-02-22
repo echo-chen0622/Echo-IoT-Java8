@@ -11,7 +11,6 @@ import org.echoiot.rule.engine.util.EntitiesRelatedDeviceIdAsyncLoader;
 import org.echoiot.server.common.data.id.DeviceId;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.msg.TbMsg;
-import org.jetbrains.annotations.NotNull;
 
 @Slf4j
 @RuleNode(type = ComponentType.ENRICHMENT,
@@ -27,13 +26,12 @@ import org.jetbrains.annotations.NotNull;
 public class TbGetDeviceAttrNode extends TbAbstractGetAttributesNode<TbGetDeviceAttrNodeConfiguration, DeviceId> {
 
     @Override
-    protected TbGetDeviceAttrNodeConfiguration loadGetAttributesNodeConfig(@NotNull TbNodeConfiguration configuration) throws TbNodeException {
+    protected TbGetDeviceAttrNodeConfiguration loadGetAttributesNodeConfig(TbNodeConfiguration configuration) throws TbNodeException {
         return TbNodeUtils.convert(configuration, TbGetDeviceAttrNodeConfiguration.class);
     }
 
-    @NotNull
     @Override
-    protected ListenableFuture<DeviceId> findEntityIdAsync(@NotNull TbContext ctx, @NotNull TbMsg msg) {
+    protected ListenableFuture<DeviceId> findEntityIdAsync(TbContext ctx, TbMsg msg) {
         return EntitiesRelatedDeviceIdAsyncLoader.findDeviceAsync(ctx, msg.getOriginator(), config.getDeviceRelationsQuery());
     }
 

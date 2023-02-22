@@ -5,7 +5,6 @@ import org.echoiot.common.util.JacksonUtil;
 import org.echoiot.rule.engine.api.TbContext;
 import org.echoiot.rule.engine.api.TbNodeConfiguration;
 import org.echoiot.server.common.data.kv.Aggregation;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -29,7 +28,7 @@ public class TbGetTelemetryNodeTest {
         node = spy(new TbGetTelemetryNode());
         config = new TbGetTelemetryNodeConfiguration();
         config.setFetchMode("ALL");
-        @NotNull ObjectMapper mapper = JacksonUtil.OBJECT_MAPPER;
+        ObjectMapper mapper = JacksonUtil.OBJECT_MAPPER;
         nodeConfiguration = new TbNodeConfiguration(mapper.valueToTree(config));
         node.init(ctx, nodeConfiguration);
 
@@ -51,7 +50,7 @@ public class TbGetTelemetryNodeTest {
         assertThat(node.parseAggregationConfig("NONE"), is(Aggregation.NONE));
 
         //all possible values in future
-        for (@NotNull Aggregation aggEnum : Aggregation.values()) {
+        for (Aggregation aggEnum : Aggregation.values()) {
             assertThat(node.parseAggregationConfig(aggEnum.name()), is(aggEnum));
         }
     }

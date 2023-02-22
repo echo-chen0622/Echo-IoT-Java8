@@ -11,7 +11,6 @@ import org.echoiot.server.dao.service.DaoSqlTest;
 import org.echoiot.server.transport.mqtt.AbstractMqttIntegrationTest;
 import org.echoiot.server.transport.mqtt.MqttTestClient;
 import org.eclipse.paho.client.mqttv3.MqttSecurityException;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,7 +44,7 @@ public class BasicMqttCredentialsTest extends AbstractMqttIntegrationTest {
     public void before() throws Exception {
         loginTenantAdmin();
 
-        @NotNull BasicMqttCredentials credValue = new BasicMqttCredentials();
+        BasicMqttCredentials credValue = new BasicMqttCredentials();
         credValue.setClientId(CLIENT_ID);
         clientIdDevice = createDevice("clientIdDevice", credValue);
 
@@ -73,20 +72,20 @@ public class BasicMqttCredentialsTest extends AbstractMqttIntegrationTest {
     @Test
     public void testCorrectCredentials() throws Exception {
         // Check that correct devices receive telemetry
-        @NotNull MqttTestClient mqttTestClient1 = new MqttTestClient();
+        MqttTestClient mqttTestClient1 = new MqttTestClient();
         mqttTestClient1.connectAndWait(USER_NAME1);
 
-        @NotNull MqttTestClient mqttTestClient2 = new MqttTestClient(CLIENT_ID);
+        MqttTestClient mqttTestClient2 = new MqttTestClient(CLIENT_ID);
         mqttTestClient2.connectAndWait();
 
-        @NotNull MqttTestClient mqttTestClient3 = new MqttTestClient(CLIENT_ID);
+        MqttTestClient mqttTestClient3 = new MqttTestClient(CLIENT_ID);
         mqttTestClient3.connectAndWait(USER_NAME1);
 
-        @NotNull MqttTestClient mqttTestClient4 = new MqttTestClient(CLIENT_ID);
+        MqttTestClient mqttTestClient4 = new MqttTestClient(CLIENT_ID);
         mqttTestClient4.connectAndWait(USER_NAME2, PASSWORD);
 
         // Also correct. Random clientId and password, but matches access token
-        @NotNull MqttTestClient mqttTestClient5 = new MqttTestClient(StringUtils.randomAlphanumeric(10));
+        MqttTestClient mqttTestClient5 = new MqttTestClient(StringUtils.randomAlphanumeric(10));
         mqttTestClient5.connectAndWait(USER_NAME2, StringUtils.randomAlphanumeric(10));
 
         testTelemetryIsDelivered(accessTokenDevice, mqttTestClient1);
@@ -101,22 +100,22 @@ public class BasicMqttCredentialsTest extends AbstractMqttIntegrationTest {
     @Test(expected = MqttSecurityException.class)
     public void testCorrectClientIdAndUserNameButWrongPassword() throws Exception {
         // Not correct. Correct clientId and username, but wrong password
-        @NotNull MqttTestClient mqttTestClient = new MqttTestClient(CLIENT_ID);
+        MqttTestClient mqttTestClient = new MqttTestClient(CLIENT_ID);
         mqttTestClient.connectAndWait(USER_NAME3, "WRONG PASSWORD");
         testTelemetryIsNotDelivered(clientIdAndUserNameAndPasswordDevice3, mqttTestClient);
     }
 
-    private void testTelemetryIsDelivered(@NotNull Device device, @NotNull MqttTestClient client) throws Exception {
+    private void testTelemetryIsDelivered(Device device, MqttTestClient client) throws Exception {
         testTelemetryIsDelivered(device, client, true);
     }
 
-    private void testTelemetryIsNotDelivered(@NotNull Device device, @NotNull MqttTestClient client) throws Exception {
+    private void testTelemetryIsNotDelivered(Device device, MqttTestClient client) throws Exception {
         testTelemetryIsDelivered(device, client, false);
     }
 
-    private void testTelemetryIsDelivered(@NotNull Device device, @NotNull MqttTestClient client, boolean ok) throws Exception {
-        @NotNull String randomKey = StringUtils.randomAlphanumeric(10);
-        @NotNull List<String> expectedKeys = List.of(randomKey);
+    private void testTelemetryIsDelivered(Device device, MqttTestClient client, boolean ok) throws Exception {
+        String randomKey = StringUtils.randomAlphanumeric(10);
+        List<String> expectedKeys = List.of(randomKey);
         client.publishAndWait(DEVICE_TELEMETRY_TOPIC, JacksonUtil.toString(JacksonUtil.newObjectNode().put(randomKey, true)).getBytes());
 
         String deviceId = device.getId().getId().toString();
@@ -137,8 +136,8 @@ public class BasicMqttCredentialsTest extends AbstractMqttIntegrationTest {
         if (ok) {
             assertNotNull(actualKeys);
 
-            @NotNull Set<String> actualKeySet = new HashSet<>(actualKeys);
-            @NotNull Set<String> expectedKeySet = new HashSet<>(expectedKeys);
+            Set<String> actualKeySet = new HashSet<>(actualKeys);
+            Set<String> expectedKeySet = new HashSet<>(expectedKeys);
 
             assertEquals(expectedKeySet, actualKeySet);
         } else {
@@ -147,7 +146,6 @@ public class BasicMqttCredentialsTest extends AbstractMqttIntegrationTest {
         client.disconnect();
     }
 
-    @NotNull
     private Device createDevice(String deviceName, BasicMqttCredentials clientIdCredValue) throws Exception {
         Device device = new Device();
         device.setName(deviceName);
@@ -166,7 +164,6 @@ public class BasicMqttCredentialsTest extends AbstractMqttIntegrationTest {
         return device;
     }
 
-    @NotNull
     private Device createDevice(String deviceName, String accessToken) throws Exception {
         Device device = new Device();
         device.setName(deviceName);

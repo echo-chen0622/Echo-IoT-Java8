@@ -2,7 +2,6 @@ package org.echoiot.server.queue.common;
 
 import lombok.Data;
 import org.echoiot.server.queue.TbQueueMsg;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
@@ -10,13 +9,12 @@ import java.util.UUID;
 public class DefaultTbQueueMsg implements TbQueueMsg {
     private final UUID key;
     private final byte[] data;
-    @NotNull
     private final DefaultTbQueueMsgHeaders headers;
 
-    public DefaultTbQueueMsg(@NotNull TbQueueMsg msg) {
+    public DefaultTbQueueMsg(TbQueueMsg msg) {
         this.key = msg.getKey();
         this.data = msg.getData();
-        @NotNull DefaultTbQueueMsgHeaders headers = new DefaultTbQueueMsgHeaders();
+        DefaultTbQueueMsgHeaders headers = new DefaultTbQueueMsgHeaders();
         msg.getHeaders().getData().forEach(headers::put);
         this.headers = headers;
     }

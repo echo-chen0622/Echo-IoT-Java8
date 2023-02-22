@@ -9,7 +9,6 @@ import org.eclipse.leshan.core.node.LwM2mResource;
 import org.eclipse.leshan.core.response.ExecuteResponse;
 import org.eclipse.leshan.core.response.ReadResponse;
 import org.eclipse.leshan.core.response.WriteResponse;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.security.auth.Destroyable;
@@ -32,7 +31,7 @@ public class SwLwM2MDevice extends BaseInstanceEnabler implements Destroyable {
     private final AtomicInteger updateResult = new AtomicInteger(0);
 
     @Override
-    public ReadResponse read(@NotNull ServerIdentity identity, int resourceId) {
+    public ReadResponse read(ServerIdentity identity, int resourceId) {
         if (!identity.isSystem())
             log.info("Read on Device resource /{}/{}/{}", getModel().id, getId(), resourceId);
         switch (resourceId) {
@@ -92,12 +91,10 @@ public class SwLwM2MDevice extends BaseInstanceEnabler implements Destroyable {
         return updateResult.get();
     }
 
-    @NotNull
     private String getPkgName() {
         return "software";
     }
 
-    @NotNull
     private String getPkgVersion() {
         return "1.0.0";
     }

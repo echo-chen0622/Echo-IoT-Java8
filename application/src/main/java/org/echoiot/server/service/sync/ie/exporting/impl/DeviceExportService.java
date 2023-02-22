@@ -8,7 +8,6 @@ import org.echoiot.server.common.data.sync.ie.DeviceExportData;
 import org.echoiot.server.dao.device.DeviceCredentialsService;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.sync.vc.data.EntitiesExportCtx;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
@@ -18,11 +17,10 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class DeviceExportService extends BaseEntityExportService<DeviceId, Device, DeviceExportData> {
 
-    @NotNull
     private final DeviceCredentialsService deviceCredentialsService;
 
     @Override
-    protected void setRelatedEntities(@NotNull EntitiesExportCtx<?> ctx, @NotNull Device device, @NotNull DeviceExportData exportData) {
+    protected void setRelatedEntities(EntitiesExportCtx<?> ctx, Device device, DeviceExportData exportData) {
         device.setCustomerId(getExternalIdOrElseInternal(ctx, device.getCustomerId()));
         device.setDeviceProfileId(getExternalIdOrElseInternal(ctx, device.getDeviceProfileId()));
         if (ctx.getSettings().isExportCredentials()) {
@@ -33,13 +31,11 @@ public class DeviceExportService extends BaseEntityExportService<DeviceId, Devic
         }
     }
 
-    @NotNull
     @Override
     protected DeviceExportData newExportData() {
         return new DeviceExportData();
     }
 
-    @NotNull
     @Override
     public Set<EntityType> getSupportedEntityTypes() {
         return Set.of(EntityType.DEVICE);

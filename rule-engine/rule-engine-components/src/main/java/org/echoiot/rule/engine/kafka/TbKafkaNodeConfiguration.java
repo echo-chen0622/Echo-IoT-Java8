@@ -3,7 +3,6 @@ package org.echoiot.rule.engine.kafka;
 import lombok.Data;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.echoiot.rule.engine.api.NodeConfiguration;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.Map;
@@ -26,10 +25,9 @@ public class TbKafkaNodeConfiguration implements NodeConfiguration<TbKafkaNodeCo
     private boolean addMetadataKeyValuesAsKafkaHeaders;
     private String kafkaHeadersCharset;
 
-    @NotNull
     @Override
     public TbKafkaNodeConfiguration defaultConfiguration() {
-        @NotNull TbKafkaNodeConfiguration configuration = new TbKafkaNodeConfiguration();
+        TbKafkaNodeConfiguration configuration = new TbKafkaNodeConfiguration();
         configuration.setTopicPattern("my-topic");
         configuration.setBootstrapServers("localhost:9092");
         configuration.setRetries(0);

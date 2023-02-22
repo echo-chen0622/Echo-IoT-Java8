@@ -7,13 +7,11 @@ import org.echoiot.rule.engine.api.TbContext;
 import org.echoiot.rule.engine.api.TbNodeException;
 import org.echoiot.server.common.data.HasCustomerId;
 import org.echoiot.server.common.data.id.*;
-import org.jetbrains.annotations.NotNull;
 
 public class EntitiesCustomerIdAsyncLoader {
 
 
-    @NotNull
-    public static ListenableFuture<CustomerId> findEntityIdAsync(@NotNull TbContext ctx, @NotNull EntityId original) {
+    public static ListenableFuture<CustomerId> findEntityIdAsync(TbContext ctx, EntityId original) {
 
         switch (original.getEntityType()) {
             case CUSTOMER:
@@ -29,8 +27,7 @@ public class EntitiesCustomerIdAsyncLoader {
         }
     }
 
-    @NotNull
-    private static <T extends HasCustomerId> ListenableFuture<CustomerId> getCustomerAsync(@NotNull ListenableFuture<T> future) {
+    private static <T extends HasCustomerId> ListenableFuture<CustomerId> getCustomerAsync(ListenableFuture<T> future) {
         return Futures.transformAsync(future, in -> in != null ? Futures.immediateFuture(in.getCustomerId())
                 : Futures.immediateFuture(null), MoreExecutors.directExecutor());
     }

@@ -19,7 +19,6 @@ import org.echoiot.server.dao.entityview.EntityViewService;
 import org.echoiot.server.dao.timeseries.TimeseriesService;
 import org.echoiot.server.service.entitiy.AbstractTbEntityService;
 import org.echoiot.server.service.telemetry.TelemetrySubscriptionService;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ConcurrentReferenceHashMap;
 
@@ -34,21 +33,16 @@ import java.util.stream.Collectors;
 @Slf4j
 public class DefaultTbEntityViewService extends AbstractTbEntityService implements TbEntityViewService {
 
-    @NotNull
     private final EntityViewService entityViewService;
-    @NotNull
     private final AttributesService attributesService;
-    @NotNull
     private final TelemetrySubscriptionService tsSubService;
-    @NotNull
     private final TimeseriesService tsService;
 
     final Map<TenantId, Map<EntityId, List<EntityView>>> localCache = new ConcurrentHashMap<>();
 
-    @NotNull
     @Override
-    public EntityView save(@NotNull EntityView entityView, EntityView existingEntityView, @NotNull User user) throws Exception {
-        @NotNull ActionType actionType = entityView.getId() == null ? ActionType.ADDED : ActionType.UPDATED;
+    public EntityView save(EntityView entityView, EntityView existingEntityView, User user) throws Exception {
+        ActionType actionType = entityView.getId() == null ? ActionType.ADDED : ActionType.UPDATED;
         TenantId tenantId = entityView.getTenantId();
         try {
             EntityView savedEntityView = checkNotNull(entityViewService.saveEntityView(entityView));
@@ -67,8 +61,8 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
     }
 
     @Override
-    public void updateEntityViewAttributes(TenantId tenantId, @NotNull EntityView savedEntityView, @org.jetbrains.annotations.Nullable EntityView oldEntityView, User user) throws EchoiotException {
-        @NotNull List<ListenableFuture<?>> futures = new ArrayList<>();
+    public void updateEntityViewAttributes(TenantId tenantId, EntityView savedEntityView, @org.jetbrains.annotations.Nullable EntityView oldEntityView, User user) throws EchoiotException {
+        List<ListenableFuture<?>> futures = new ArrayList<>();
 
         if (oldEntityView != null) {
             if (oldEntityView.getKeys() != null && oldEntityView.getKeys().getAttributes() != null) {
@@ -76,7 +70,7 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
                 futures.add(deleteAttributesFromEntityView(oldEntityView, DataConstants.SERVER_SCOPE, oldEntityView.getKeys().getAttributes().getSs(), user));
                 futures.add(deleteAttributesFromEntityView(oldEntityView, DataConstants.SHARED_SCOPE, oldEntityView.getKeys().getAttributes().getSh(), user));
             }
-            @NotNull List<String> tsKeys = oldEntityView.getKeys() != null && oldEntityView.getKeys().getTimeseries() != null ?
+            List<String> tsKeys = oldEntityView.getKeys() != null && oldEntityView.getKeys().getTimeseries() != null ?
                     oldEntityView.getKeys().getTimeseries() : Collections.emptyList();
             futures.add(deleteLatestFromEntityView(oldEntityView, tsKeys, user));
         }
@@ -88,7 +82,7 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
             }
             futures.add(copyLatestFromEntityToEntityView(tenantId, savedEntityView));
         }
-        for (@NotNull ListenableFuture<?> future : futures) {
+        for (ListenableFuture<?> future : futures) {
             try {
                 future.get();
             } catch (InterruptedException | ExecutionException e) {
@@ -98,7 +92,7 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
     }
 
     @Override
-    public void delete(@NotNull EntityView entityView, User user) throws EchoiotException {
+    public void delete(EntityView entityView, User user) throws EchoiotException {
         TenantId tenantId = entityView.getTenantId();
         EntityViewId entityViewId = entityView.getId();
         try {
@@ -117,7 +111,7 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
     }
 
     @Override
-    public EntityView assignEntityViewToCustomer(TenantId tenantId, @NotNull EntityViewId entityViewId, @NotNull Customer customer, User user) throws EchoiotException {
+    public EntityView assignEntityViewToCustomer(TenantId tenantId, EntityViewId entityViewId, Customer customer, User user) throws EchoiotException {
         CustomerId customerId = customer.getId();
         try {
             EntityView savedEntityView = checkNotNull(entityViewService.assignEntityViewToCustomer(tenantId, entityViewId, customerId));
@@ -131,10 +125,9 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
         }
     }
 
-    @NotNull
     @Override
-    public EntityView assignEntityViewToPublicCustomer(TenantId tenantId, CustomerId customerId, @NotNull Customer publicCustomer,
-                                                       @NotNull EntityViewId entityViewId, User user) throws EchoiotException {
+    public EntityView assignEntityViewToPublicCustomer(TenantId tenantId, CustomerId customerId, Customer publicCustomer,
+                                                       EntityViewId entityViewId, User user) throws EchoiotException {
         try {
             EntityView savedEntityView = checkNotNull(entityViewService.assignEntityViewToCustomer(tenantId,
                     entityViewId, publicCustomer.getId()));
@@ -149,9 +142,8 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
         }
     }
 
-    @NotNull
     @Override
-    public EntityView assignEntityViewToEdge(TenantId tenantId, CustomerId customerId, @NotNull EntityViewId entityViewId, @NotNull Edge edge, User user) throws EchoiotException {
+    public EntityView assignEntityViewToEdge(TenantId tenantId, CustomerId customerId, EntityViewId entityViewId, Edge edge, User user) throws EchoiotException {
         EdgeId edgeId = edge.getId();
         try {
             EntityView savedEntityView = checkNotNull(entityViewService.assignEntityViewToEdge(tenantId, entityViewId, edgeId));
@@ -167,8 +159,8 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
     }
 
     @Override
-    public EntityView unassignEntityViewFromEdge(TenantId tenantId, CustomerId customerId, @NotNull EntityView entityView,
-                                                 @NotNull Edge edge, User user) throws EchoiotException {
+    public EntityView unassignEntityViewFromEdge(TenantId tenantId, CustomerId customerId, EntityView entityView,
+                                                 Edge edge, User user) throws EchoiotException {
         EntityViewId entityViewId = entityView.getId();
         EdgeId edgeId = edge.getId();
         try {
@@ -185,7 +177,7 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
     }
 
     @Override
-    public EntityView unassignEntityViewFromCustomer(TenantId tenantId, @NotNull EntityViewId entityViewId, @NotNull Customer customer, User user) throws EchoiotException {
+    public EntityView unassignEntityViewFromCustomer(TenantId tenantId, EntityViewId entityViewId, Customer customer, User user) throws EchoiotException {
         try {
             EntityView savedEntityView = checkNotNull(entityViewService.unassignEntityViewFromCustomer(tenantId, entityViewId));
             notificationEntityService.notifyAssignOrUnassignEntityToCustomer(tenantId, entityViewId, customer.getId(), savedEntityView,
@@ -198,10 +190,9 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
         }
     }
 
-    @NotNull
     @Override
     public ListenableFuture<List<EntityView>> findEntityViewsByTenantIdAndEntityIdAsync(TenantId tenantId, EntityId entityId) {
-        @NotNull Map<EntityId, List<EntityView>> localCacheByTenant = localCache.computeIfAbsent(tenantId, (k) -> new ConcurrentReferenceHashMap<>());
+        Map<EntityId, List<EntityView>> localCacheByTenant = localCache.computeIfAbsent(tenantId, (k) -> new ConcurrentReferenceHashMap<>());
         List<EntityView> fromLocalCache = localCacheByTenant.get(entityId);
         if (fromLocalCache != null) {
             return Futures.immediateFuture(fromLocalCache);
@@ -216,9 +207,9 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
     }
 
     @Override
-    public void onComponentLifecycleMsg(@NotNull ComponentLifecycleMsg componentLifecycleMsg) {
-        @NotNull Map<EntityId, List<EntityView>> localCacheByTenant = localCache.computeIfAbsent(componentLifecycleMsg.getTenantId(), (k) -> new ConcurrentReferenceHashMap<>());
-        @NotNull EntityViewId entityViewId = new EntityViewId(componentLifecycleMsg.getEntityId().getId());
+    public void onComponentLifecycleMsg(ComponentLifecycleMsg componentLifecycleMsg) {
+        Map<EntityId, List<EntityView>> localCacheByTenant = localCache.computeIfAbsent(componentLifecycleMsg.getTenantId(), (k) -> new ConcurrentReferenceHashMap<>());
+        EntityViewId entityViewId = new EntityViewId(componentLifecycleMsg.getEntityId().getId());
         deleteOldCacheValue(localCacheByTenant, entityViewId);
         if (componentLifecycleMsg.getEvent() != ComponentLifecycleEvent.DELETED) {
             EntityView entityView = entityViewService.findEntityViewById(componentLifecycleMsg.getTenantId(), entityViewId);
@@ -228,10 +219,10 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
         }
     }
 
-    private void deleteOldCacheValue(@NotNull Map<EntityId, List<EntityView>> localCacheByTenant, @NotNull EntityViewId entityViewId) {
-        for (@NotNull var entry : localCacheByTenant.entrySet()) {
+    private void deleteOldCacheValue(Map<EntityId, List<EntityView>> localCacheByTenant, EntityViewId entityViewId) {
+        for (var entry : localCacheByTenant.entrySet()) {
             @org.jetbrains.annotations.Nullable EntityView toDelete = null;
-            for (@NotNull EntityView view : entry.getValue()) {
+            for (EntityView view : entry.getValue()) {
                 if (entityViewId.equals(view.getId())) {
                     toDelete = view;
                     break;
@@ -244,8 +235,7 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
         }
     }
 
-    @NotNull
-    private ListenableFuture<List<Void>> copyAttributesFromEntityToEntityView(@NotNull EntityView entityView, String scope, @org.jetbrains.annotations.Nullable Collection<String> keys, User user) throws EchoiotException {
+    private ListenableFuture<List<Void>> copyAttributesFromEntityToEntityView(EntityView entityView, String scope, @org.jetbrains.annotations.Nullable Collection<String> keys, User user) throws EchoiotException {
         EntityViewId entityId = entityView.getId();
         if (keys != null && !keys.isEmpty()) {
             ListenableFuture<List<AttributeKvEntry>> getAttrFuture = attributesService.find(entityView.getTenantId(), entityView.getEntityId(), scope, keys);
@@ -290,10 +280,9 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
         }
     }
 
-    @NotNull
-    private ListenableFuture<List<Void>> copyLatestFromEntityToEntityView(TenantId tenantId, @NotNull EntityView entityView) {
+    private ListenableFuture<List<Void>> copyLatestFromEntityToEntityView(TenantId tenantId, EntityView entityView) {
         EntityViewId entityId = entityView.getId();
-        @NotNull List<String> keys = entityView.getKeys() != null && entityView.getKeys().getTimeseries() != null ?
+        List<String> keys = entityView.getKeys() != null && entityView.getKeys().getTimeseries() != null ?
                 entityView.getKeys().getTimeseries() : Collections.emptyList();
         long startTs = entityView.getStartTimeMs();
         long endTs = entityView.getEndTimeMs() == 0 ? Long.MAX_VALUE : entityView.getEndTimeMs();
@@ -304,8 +293,8 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
         } else {
             keysFuture = Futures.immediateFuture(keys);
         }
-        @NotNull ListenableFuture<List<TsKvEntry>> latestFuture = Futures.transformAsync(keysFuture, fetchKeys -> {
-            @NotNull List<ReadTsKvQuery> queries = fetchKeys.stream().filter(key -> !StringUtils.isBlank(key)).map(key -> new BaseReadTsKvQuery(key, startTs, endTs, 1, "DESC")).collect(Collectors.toList());
+        ListenableFuture<List<TsKvEntry>> latestFuture = Futures.transformAsync(keysFuture, fetchKeys -> {
+            List<ReadTsKvQuery> queries = fetchKeys.stream().filter(key -> !StringUtils.isBlank(key)).map(key -> new BaseReadTsKvQuery(key, startTs, endTs, 1, "DESC")).collect(Collectors.toList());
             if (!queries.isEmpty()) {
                 return tsService.findAll(tenantId, entityView.getEntityId(), queries);
             } else {
@@ -328,10 +317,9 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
         }, MoreExecutors.directExecutor());
     }
 
-    @NotNull
-    private ListenableFuture<Void> deleteAttributesFromEntityView(@NotNull EntityView entityView, String scope, @org.jetbrains.annotations.Nullable List<String> keys, User user) {
+    private ListenableFuture<Void> deleteAttributesFromEntityView(EntityView entityView, String scope, @org.jetbrains.annotations.Nullable List<String> keys, User user) {
         EntityViewId entityId = entityView.getId();
-        @NotNull SettableFuture<Void> resultFuture = SettableFuture.create();
+        SettableFuture<Void> resultFuture = SettableFuture.create();
         if (keys != null && !keys.isEmpty()) {
             tsSubService.deleteAndNotify(entityView.getTenantId(), entityId, scope, keys, new FutureCallback<Void>() {
                 @Override
@@ -360,10 +348,9 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
         return resultFuture;
     }
 
-    @NotNull
-    private ListenableFuture<Void> deleteLatestFromEntityView(@NotNull EntityView entityView, @org.jetbrains.annotations.Nullable List<String> keys, User user) {
+    private ListenableFuture<Void> deleteLatestFromEntityView(EntityView entityView, @org.jetbrains.annotations.Nullable List<String> keys, User user) {
         EntityViewId entityId = entityView.getId();
-        @NotNull SettableFuture<Void> resultFuture = SettableFuture.create();
+        SettableFuture<Void> resultFuture = SettableFuture.create();
         if (keys != null && !keys.isEmpty()) {
             tsSubService.deleteLatest(entityView.getTenantId(), entityId, keys, new FutureCallback<Void>() {
                 @Override

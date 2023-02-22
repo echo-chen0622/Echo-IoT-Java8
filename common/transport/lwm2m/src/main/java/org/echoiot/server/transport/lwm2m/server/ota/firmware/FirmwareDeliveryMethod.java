@@ -1,6 +1,5 @@
 package org.echoiot.server.transport.lwm2m.server.ota.firmware;
 
-import org.jetbrains.annotations.NotNull;
 
 public enum FirmwareDeliveryMethod {
     PULL(0, "Pull only"),
@@ -15,9 +14,8 @@ public enum FirmwareDeliveryMethod {
         this.type = type;
     }
 
-    @NotNull
     public static FirmwareDeliveryMethod fromStateFwByType(String type) {
-        for (@NotNull FirmwareDeliveryMethod to : FirmwareDeliveryMethod.values()) {
+        for (FirmwareDeliveryMethod to : FirmwareDeliveryMethod.values()) {
             if (to.type.equals(type)) {
                 return to;
             }
@@ -25,9 +23,8 @@ public enum FirmwareDeliveryMethod {
         throw new IllegalArgumentException(String.format("Unsupported FW delivery type  : %s", type));
     }
 
-    @NotNull
     public static FirmwareDeliveryMethod fromStateFwByCode(int code) {
-        for (@NotNull FirmwareDeliveryMethod to : FirmwareDeliveryMethod.values()) {
+        for (FirmwareDeliveryMethod to : FirmwareDeliveryMethod.values()) {
             if (to.code == code) {
                 return to;
             }

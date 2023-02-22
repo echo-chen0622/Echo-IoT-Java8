@@ -1,6 +1,5 @@
 package org.echoiot.server.common.data.kv;
 
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -16,13 +15,11 @@ public class StringDataEntry extends BasicKvEntry {
         this.value = value;
     }
 
-    @NotNull
     @Override
     public DataType getDataType() {
         return DataType.STRING;
     }
 
-    @NotNull
     @Override
     public Optional<String> getStrValue() {
         return Optional.ofNullable(value);
@@ -41,7 +38,7 @@ public class StringDataEntry extends BasicKvEntry {
             return false;
         if (!super.equals(o))
             return false;
-        @NotNull StringDataEntry that = (StringDataEntry) o;
+        StringDataEntry that = (StringDataEntry) o;
         return Objects.equals(value, that.value);
     }
 
@@ -50,7 +47,6 @@ public class StringDataEntry extends BasicKvEntry {
         return Objects.hash(super.hashCode(), value);
     }
 
-    @NotNull
     @Override
     public String toString() {
         return "StringDataEntry{" + "value='" + value + '\'' + "} " + super.toString();

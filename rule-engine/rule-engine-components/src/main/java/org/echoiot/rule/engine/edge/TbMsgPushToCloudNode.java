@@ -10,7 +10,6 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.data.rule.RuleChainType;
 import org.echoiot.server.common.msg.TbMsg;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -74,7 +73,6 @@ public class TbMsgPushToCloudNode extends AbstractTbMsgPushNode<TbMsgPushToCloud
         return null;
     }
 
-    @NotNull
     @Override
     protected Class<TbMsgPushToCloudNodeConfiguration> getConfigClazz() {
         return TbMsgPushToCloudNodeConfiguration.class;

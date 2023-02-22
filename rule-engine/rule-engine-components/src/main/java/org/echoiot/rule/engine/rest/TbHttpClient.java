@@ -25,7 +25,6 @@ import org.echoiot.rule.engine.credentials.CredentialsType;
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.TbMsgMetaData;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -71,7 +70,7 @@ public class TbHttpClient {
     private AsyncRestTemplate httpClient;
     private Deque<ListenableFuture<ResponseEntity<String>>> pendingFutures;
 
-    TbHttpClient(@NotNull TbRestApiCallNodeConfiguration config, EventLoopGroup eventLoopGroupShared) throws TbNodeException {
+    TbHttpClient(TbRestApiCallNodeConfiguration config, EventLoopGroup eventLoopGroupShared) throws TbNodeException {
         try {
             this.config = config;
             if (config.getMaxParallelRequestsCount() > 0) {
@@ -86,7 +85,7 @@ public class TbHttpClient {
                 String proxyPassword;
 
                 CloseableHttpAsyncClient asyncClient;
-                @NotNull HttpComponentsAsyncClientHttpRequestFactory requestFactory = new HttpComponentsAsyncClientHttpRequestFactory();
+                HttpComponentsAsyncClientHttpRequestFactory requestFactory = new HttpComponentsAsyncClientHttpRequestFactory();
 
                 if (config.isUseSystemProxyProperties()) {
                     checkSystemProxyProperties();
@@ -98,14 +97,13 @@ public class TbHttpClient {
 
                     if (useAuth(proxyUser, proxyPassword)) {
                         Authenticator.setDefault(new Authenticator() {
-                            @NotNull
-                            protected PasswordAuthentication getPasswordAuthentication() {
+                                                    protected PasswordAuthentication getPasswordAuthentication() {
                                 return new PasswordAuthentication(proxyUser, proxyPassword.toCharArray());
                             }
                         });
                     }
                 } else {
-                    @NotNull HttpAsyncClientBuilder httpAsyncClientBuilder = HttpAsyncClientBuilder.create()
+                    HttpAsyncClientBuilder httpAsyncClientBuilder = HttpAsyncClientBuilder.create()
                                                                                                    .setSSLHostnameVerifier(new DefaultHostnameVerifier())
                                                                                                    .setSSLContext(SSLContext.getDefault())
                                                                                                    .setProxy(new HttpHost(config.getProxyHost(), config.getProxyPort(), config.getProxyScheme()));
@@ -114,7 +112,7 @@ public class TbHttpClient {
                     proxyPassword = config.getProxyPassword();
 
                     if (useAuth(proxyUser, proxyPassword)) {
-                        @NotNull CredentialsProvider credsProvider = new BasicCredentialsProvider();
+                        CredentialsProvider credsProvider = new BasicCredentialsProvider();
                         credsProvider.setCredentials(
                                 new AuthScope(config.getProxyHost(), config.getProxyPort()),
                                 new UsernamePasswordCredentials(proxyUser, proxyPassword)
@@ -133,7 +131,7 @@ public class TbHttpClient {
                 }
                 httpClient = new AsyncRestTemplate();
             } else {
-                @NotNull Netty4ClientHttpRequestFactory nettyFactory = new Netty4ClientHttpRequestFactory(getSharedOrCreateEventLoopGroup(eventLoopGroupShared));
+                Netty4ClientHttpRequestFactory nettyFactory = new Netty4ClientHttpRequestFactory(getSharedOrCreateEventLoopGroup(eventLoopGroupShared));
                 nettyFactory.setSslContext(config.getCredentials().initSslContext());
                 nettyFactory.setReadTimeout(config.getReadTimeoutMs());
                 httpClient = new AsyncRestTemplate(nettyFactory);
@@ -143,7 +141,6 @@ public class TbHttpClient {
         }
     }
 
-    @NotNull
     EventLoopGroup getSharedOrCreateEventLoopGroup(@Nullable EventLoopGroup eventLoopGroupShared) {
         if (eventLoopGroupShared != null) {
             return eventLoopGroupShared;
@@ -171,10 +168,10 @@ public class TbHttpClient {
         }
     }
 
-    public void processMessage(@NotNull TbContext ctx, @NotNull TbMsg msg) {
+    public void processMessage(TbContext ctx, TbMsg msg) {
         String endpointUrl = TbNodeUtils.processPattern(config.getRestEndpointUrlPattern(), msg);
-        @NotNull HttpHeaders headers = prepareHeaders(msg);
-        @NotNull HttpMethod method = HttpMethod.valueOf(config.getRequestMethod());
+        HttpHeaders headers = prepareHeaders(msg);
+        HttpMethod method = HttpMethod.valueOf(config.getRequestMethod());
         HttpEntity<String> entity;
         if(HttpMethod.GET.equals(method) || HttpMethod.HEAD.equals(method) ||
             HttpMethod.OPTIONS.equals(method) || HttpMethod.TRACE.equals(method) ||
@@ -184,8 +181,8 @@ public class TbHttpClient {
             entity = new HttpEntity<>(msg.getData(), headers);
         }
 
-        @NotNull URI uri = buildEncodedUri(endpointUrl);
-        @NotNull ListenableFuture<ResponseEntity<String>> future = httpClient.exchange(
+        URI uri = buildEncodedUri(endpointUrl);
+        ListenableFuture<ResponseEntity<String>> future = httpClient.exchange(
                 uri, method, entity, String.class);
         future.addCallback(new ListenableFutureCallback<ResponseEntity<String>>() {
             @Override
@@ -195,7 +192,7 @@ public class TbHttpClient {
             }
 
             @Override
-            public void onSuccess(@NotNull ResponseEntity<String> responseEntity) {
+            public void onSuccess(ResponseEntity<String> responseEntity) {
                 if (responseEntity.getStatusCode().is2xxSuccessful()) {
                     TbMsg next = processResponse(ctx, msg, responseEntity);
                     ctx.tellSuccess(next);
@@ -210,8 +207,7 @@ public class TbHttpClient {
         }
     }
 
-    @NotNull
-    public URI buildEncodedUri(@NotNull String endpointUrl) {
+    public URI buildEncodedUri(String endpointUrl) {
         if (endpointUrl == null) {
             throw new RuntimeException("Url string cannot be null!");
         }
@@ -219,7 +215,7 @@ public class TbHttpClient {
             throw new RuntimeException("Url string cannot be empty!");
         }
 
-        @NotNull URI uri = UriComponentsBuilder.fromUriString(endpointUrl).build().encode().toUri();
+        URI uri = UriComponentsBuilder.fromUriString(endpointUrl).build().encode().toUri();
         if (uri.getScheme() == null || uri.getScheme().isEmpty()) {
             throw new RuntimeException("Transport scheme(protocol) must be provided!");
         }
@@ -233,7 +229,7 @@ public class TbHttpClient {
         return uri;
     }
 
-    private TbMsg processResponse(@NotNull TbContext ctx, @NotNull TbMsg origMsg, @NotNull ResponseEntity<String> response) {
+    private TbMsg processResponse(TbContext ctx, TbMsg origMsg, ResponseEntity<String> response) {
         TbMsgMetaData metaData = origMsg.getMetaData();
         metaData.putValue(STATUS, response.getStatusCode().name());
         metaData.putValue(STATUS_CODE, response.getStatusCode().value() + "");
@@ -243,7 +239,7 @@ public class TbHttpClient {
         return ctx.transformMsg(origMsg, origMsg.getType(), origMsg.getOriginator(), metaData, body);
     }
 
-    void headersToMetaData(@Nullable Map<String, List<String>> headers, @NotNull BiConsumer<String, String> consumer) {
+    void headersToMetaData(@Nullable Map<String, List<String>> headers, BiConsumer<String, String> consumer) {
         if (headers == null) {
             return;
         }
@@ -258,7 +254,7 @@ public class TbHttpClient {
         });
     }
 
-    private TbMsg processFailureResponse(@NotNull TbContext ctx, @NotNull TbMsg origMsg, @NotNull ResponseEntity<String> response) {
+    private TbMsg processFailureResponse(TbContext ctx, TbMsg origMsg, ResponseEntity<String> response) {
         TbMsgMetaData metaData = origMsg.getMetaData();
         metaData.putValue(STATUS, response.getStatusCode().name());
         metaData.putValue(STATUS_CODE, response.getStatusCode().value() + "");
@@ -268,11 +264,11 @@ public class TbHttpClient {
         return ctx.transformMsg(origMsg, origMsg.getType(), origMsg.getOriginator(), metaData, origMsg.getData());
     }
 
-    private TbMsg processException(@NotNull TbContext ctx, @NotNull TbMsg origMsg, @NotNull Throwable e) {
+    private TbMsg processException(TbContext ctx, TbMsg origMsg, Throwable e) {
         TbMsgMetaData metaData = origMsg.getMetaData();
         metaData.putValue(ERROR, e.getClass() + ": " + e.getMessage());
         if (e instanceof RestClientResponseException) {
-            @NotNull RestClientResponseException restClientResponseException = (RestClientResponseException) e;
+            RestClientResponseException restClientResponseException = (RestClientResponseException) e;
             metaData.putValue(STATUS, restClientResponseException.getStatusText());
             metaData.putValue(STATUS_CODE, restClientResponseException.getRawStatusCode() + "");
             metaData.putValue(ERROR_BODY, restClientResponseException.getResponseBodyAsString());
@@ -280,15 +276,14 @@ public class TbHttpClient {
         return ctx.transformMsg(origMsg, origMsg.getType(), origMsg.getOriginator(), metaData, origMsg.getData());
     }
 
-    @NotNull
-    private HttpHeaders prepareHeaders(@NotNull TbMsg msg) {
-        @NotNull HttpHeaders headers = new HttpHeaders();
+    private HttpHeaders prepareHeaders(TbMsg msg) {
+        HttpHeaders headers = new HttpHeaders();
         config.getHeaders().forEach((k, v) -> headers.add(TbNodeUtils.processPattern(k, msg), TbNodeUtils.processPattern(v, msg)));
         ClientCredentials credentials = config.getCredentials();
         if (CredentialsType.BASIC == credentials.getType()) {
-            @NotNull BasicCredentials basicCredentials = (BasicCredentials) credentials;
-            @NotNull String authString = basicCredentials.getUsername() + ":" + basicCredentials.getPassword();
-            @NotNull String encodedAuthString = new String(Base64.encodeBase64(authString.getBytes(StandardCharsets.UTF_8)));
+            BasicCredentials basicCredentials = (BasicCredentials) credentials;
+            String authString = basicCredentials.getUsername() + ":" + basicCredentials.getPassword();
+            String encodedAuthString = new String(Base64.encodeBase64(authString.getBytes(StandardCharsets.UTF_8)));
             headers.add("Authorization", "Basic " + encodedAuthString);
         }
         return headers;

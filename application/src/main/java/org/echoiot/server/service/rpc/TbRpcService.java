@@ -16,7 +16,6 @@ import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.TbMsgMetaData;
 import org.echoiot.server.dao.rpc.RpcService;
 import org.echoiot.server.queue.util.TbCoreComponent;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
@@ -25,12 +24,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 public class TbRpcService {
-    @NotNull
     private final RpcService rpcService;
-    @NotNull
     private final TbClusterService tbClusterService;
 
-    @NotNull
     public Rpc save(TenantId tenantId, Rpc rpc) {
         Rpc saved = rpcService.save(rpc);
         pushRpcMsgToRuleEngine(tenantId, saved);
@@ -51,8 +47,8 @@ public class TbRpcService {
         }
     }
 
-    private void pushRpcMsgToRuleEngine(TenantId tenantId, @NotNull Rpc rpc) {
-        @NotNull TbMsg msg = TbMsg.newMsg("RPC_" + rpc.getStatus().name(), rpc.getDeviceId(), TbMsgMetaData.EMPTY, JacksonUtil.toString(rpc));
+    private void pushRpcMsgToRuleEngine(TenantId tenantId, Rpc rpc) {
+        TbMsg msg = TbMsg.newMsg("RPC_" + rpc.getStatus().name(), rpc.getDeviceId(), TbMsgMetaData.EMPTY, JacksonUtil.toString(rpc));
         tbClusterService.pushMsgToRuleEngine(tenantId, rpc.getDeviceId(), msg, null);
     }
 

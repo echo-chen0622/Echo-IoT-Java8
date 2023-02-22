@@ -1,7 +1,6 @@
 package org.echoiot.server.dao.sql;
 
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.annotation.Resource;
@@ -22,7 +21,7 @@ public abstract class JpaAbstractDaoListeningExecutorService {
     @Resource
     protected JdbcTemplate jdbcTemplate;
 
-    protected void printWarnings(@NotNull Statement statement) throws SQLException {
+    protected void printWarnings(Statement statement) throws SQLException {
         SQLWarning warnings = statement.getWarnings();
         if (warnings != null) {
             log.debug("{}", warnings.getMessage());

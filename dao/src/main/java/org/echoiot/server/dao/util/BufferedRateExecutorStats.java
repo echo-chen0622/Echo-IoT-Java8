@@ -7,7 +7,6 @@ import org.echoiot.server.common.stats.DefaultCounter;
 import org.echoiot.server.common.stats.StatsCounter;
 import org.echoiot.server.common.stats.StatsFactory;
 import org.echoiot.server.common.stats.StatsType;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +41,7 @@ public class BufferedRateExecutorStats {
     private final StatsCounter totalRejected;
     private final StatsCounter totalRateLimited;
 
-    public BufferedRateExecutorStats(@NotNull StatsFactory statsFactory) {
+    public BufferedRateExecutorStats(StatsFactory statsFactory) {
         this.statsFactory = statsFactory;
 
         String key = StatsType.RATE_EXECUTOR.getName();
@@ -67,7 +66,7 @@ public class BufferedRateExecutorStats {
     public void incrementRateLimitedTenant(TenantId tenantId){
         rateLimitedTenants.computeIfAbsent(tenantId,
                 tId -> {
-                    @NotNull String key = StatsType.RATE_EXECUTOR.getName() + ".tenant";
+                    String key = StatsType.RATE_EXECUTOR.getName() + ".tenant";
                     return statsFactory.createDefaultCounter(key, TENANT_ID_TAG, tId.toString());
                 }
         )

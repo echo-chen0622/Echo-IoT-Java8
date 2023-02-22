@@ -4,7 +4,6 @@ import org.echoiot.server.dao.model.sqlts.timescale.ts.TimescaleTsKvEntity;
 import org.echoiot.server.dao.sqlts.insert.AbstractInsertRepository;
 import org.echoiot.server.dao.sqlts.insert.InsertTsRepository;
 import org.echoiot.server.dao.util.TimescaleDBTsDao;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +23,7 @@ public class TimescaleInsertTsRepository extends AbstractInsertRepository implem
                     "ON CONFLICT (entity_id, key, ts) DO UPDATE SET bool_v = ?, str_v = ?, long_v = ?, dbl_v = ?, json_v = cast(? AS json);";
 
     @Override
-    public void saveOrUpdate(@NotNull List<TimescaleTsKvEntity> entities) {
+    public void saveOrUpdate(List<TimescaleTsKvEntity> entities) {
         jdbcTemplate.batchUpdate(INSERT_OR_UPDATE, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {

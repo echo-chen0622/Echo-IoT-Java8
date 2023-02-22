@@ -6,7 +6,6 @@ import org.echoiot.rule.engine.api.sms.exception.SmsException;
 import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.sms.config.SmppSmsProviderConfiguration;
 import org.echoiot.server.service.sms.AbstractSmsSender;
-import org.jetbrains.annotations.NotNull;
 import org.smpp.*;
 import org.smpp.pdu.*;
 
@@ -19,7 +18,7 @@ public class SmppSmsSender extends AbstractSmsSender {
 
     protected Session smppSession;
 
-    public SmppSmsSender(@NotNull SmppSmsProviderConfiguration config) {
+    public SmppSmsSender(SmppSmsProviderConfiguration config) {
         if (config.getBindType() == null) {
             config.setBindType(SmppSmsProviderConfiguration.SmppBindType.TX);
         }
@@ -46,11 +45,11 @@ public class SmppSmsSender extends AbstractSmsSender {
 
 
     @Override
-    public int sendSms(@NotNull String numberTo, @NotNull String message) throws SmsException {
+    public int sendSms(String numberTo, String message) throws SmsException {
         try {
             checkSmppSession();
 
-            @NotNull SubmitSM request = new SubmitSM();
+            SubmitSM request = new SubmitSM();
             if (StringUtils.isNotEmpty(config.getServiceType())) {
                 request.setServiceType(config.getServiceType());
             }
@@ -83,11 +82,10 @@ public class SmppSmsSender extends AbstractSmsSender {
         }
     }
 
-    @NotNull
     protected Session initSmppSession() {
         try {
-            @NotNull Connection connection = new TCPIPConnection(config.getHost(), config.getPort());
-            @NotNull Session session = new Session(connection);
+            Connection connection = new TCPIPConnection(config.getHost(), config.getPort());
+            Session session = new Session(connection);
 
             BindRequest bindRequest;
             switch (config.getBindType()) {
@@ -140,7 +138,7 @@ public class SmppSmsSender extends AbstractSmsSender {
         }
     }
 
-    private String prepareNumber(@NotNull String number) {
+    private String prepareNumber(String number) {
         if (config.getDestinationTon() == Data.GSM_TON_INTERNATIONAL) {
             return StringUtils.removeStart(number, "+");
         }

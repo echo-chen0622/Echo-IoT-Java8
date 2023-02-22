@@ -6,7 +6,6 @@ import org.echoiot.server.common.data.device.profile.AlarmConditionFilterKey;
 import org.echoiot.server.common.data.device.profile.AlarmConditionKeyType;
 import org.echoiot.server.common.data.query.EntityKey;
 import org.echoiot.server.common.data.query.EntityKeyType;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
@@ -26,13 +25,11 @@ class DataSnapshot {
         this.keys = entityKeysToFetch;
     }
 
-    @NotNull
-    static AlarmConditionFilterKey toConditionKey(@NotNull EntityKey key) {
+    static AlarmConditionFilterKey toConditionKey(EntityKey key) {
         return new AlarmConditionFilterKey(toConditionKeyType(key.getType()), key.getKey());
     }
 
-    @NotNull
-    static AlarmConditionKeyType toConditionKeyType(@NotNull EntityKeyType keyType) {
+    static AlarmConditionKeyType toConditionKeyType(EntityKeyType keyType) {
         switch (keyType) {
             case ATTRIBUTE:
             case SERVER_ATTRIBUTE:
@@ -48,7 +45,7 @@ class DataSnapshot {
         }
     }
 
-    void removeValue(@NotNull EntityKey key) {
+    void removeValue(EntityKey key) {
         values.remove(toConditionKey(key));
     }
 

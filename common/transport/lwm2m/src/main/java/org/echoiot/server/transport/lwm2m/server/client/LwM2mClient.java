@@ -26,7 +26,6 @@ import org.eclipse.leshan.core.request.ContentFormat;
 import org.eclipse.leshan.core.request.WriteRequest.Mode;
 import org.eclipse.leshan.server.model.LwM2mModelProvider;
 import org.eclipse.leshan.server.registration.Registration;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -53,16 +52,12 @@ public class LwM2mClient {
     @Getter
     private final String endpoint;
 
-    @NotNull
     private final Lock lock;
 
-    @NotNull
     @Getter
     private final Map<String, ResourceValue> resources;
-    @NotNull
     @Getter
     private final Map<String, TsKvProto> sharedAttributes;
-    @NotNull
     @Getter
     private final ConcurrentMap<String, AtomicLong> keyTsLatestMap;
 
@@ -104,7 +99,6 @@ public class LwM2mClient {
     private Set<ContentFormat> clientSupportContentFormats;
     @Getter
     private ContentFormat defaultContentFormat;
-    @NotNull
     @Getter
     private final AtomicInteger retryAttempts;
 
@@ -127,7 +121,7 @@ public class LwM2mClient {
         this.retryAttempts = new AtomicInteger(0);
     }
 
-    public void init(@NotNull ValidateDeviceCredentialsResponse credentials, @NotNull UUID sessionId) {
+    public void init(ValidateDeviceCredentialsResponse credentials, UUID sessionId) {
         this.session = createSession(nodeId, sessionId, credentials);
         this.tenantId = TenantId.fromUUID(new UUID(session.getTenantIdMSB(), session.getTenantIdLSB()));
         this.deviceId = new UUID(session.getDeviceIdMSB(), session.getDeviceIdLSB());
@@ -138,7 +132,7 @@ public class LwM2mClient {
         this.pagingTransmissionWindow = credentials.getDeviceInfo().getPagingTransmissionWindow();
     }
 
-    public void setRegistration(@NotNull Registration registration) {
+    public void setRegistration(Registration registration) {
         this.registration = registration;
         this.clientSupportContentFormats = clientSupportContentFormat(registration);
         this.defaultContentFormat = calculateDefaultContentFormat(registration);
@@ -152,7 +146,7 @@ public class LwM2mClient {
         lock.unlock();
     }
 
-    public void onDeviceUpdate(@NotNull Device device, @NotNull Optional<DeviceProfile> deviceProfileOpt) {
+    public void onDeviceUpdate(Device device, Optional<DeviceProfile> deviceProfileOpt) {
         SessionInfoProto.Builder builder = SessionInfoProto.newBuilder().mergeFrom(session);
         this.deviceId = device.getUuidId();
         builder.setDeviceIdMSB(deviceId.getMostSignificantBits());
@@ -167,13 +161,13 @@ public class LwM2mClient {
         this.pagingTransmissionWindow = transportConfiguration.getPagingTransmissionWindow();
     }
 
-    public void onDeviceProfileUpdate(@NotNull DeviceProfile deviceProfile) {
+    public void onDeviceProfileUpdate(DeviceProfile deviceProfile) {
         SessionInfoProto.Builder builder = SessionInfoProto.newBuilder().mergeFrom(session);
         updateSession(deviceProfile, builder);
         this.session = builder.build();
     }
 
-    private void updateSession(@NotNull DeviceProfile deviceProfile, @NotNull SessionInfoProto.Builder builder) {
+    private void updateSession(DeviceProfile deviceProfile, SessionInfoProto.Builder builder) {
         this.profileId = deviceProfile.getUuidId();
         builder.setDeviceProfileIdMSB(profileId.getMostSignificantBits());
         builder.setDeviceProfileIdLSB(profileId.getLeastSignificantBits());
@@ -181,7 +175,7 @@ public class LwM2mClient {
     }
 
     public void refreshSessionId(String nodeId) {
-        @NotNull UUID newId = UUID.randomUUID();
+        UUID newId = UUID.randomUUID();
         SessionInfoProto.Builder builder = SessionInfoProto.newBuilder().mergeFrom(session);
         builder.setNodeId(nodeId);
         builder.setSessionIdMSB(newId.getMostSignificantBits());
@@ -189,7 +183,7 @@ public class LwM2mClient {
         this.session = builder.build();
     }
 
-    private SessionInfoProto createSession(String nodeId, @NotNull UUID sessionId, @NotNull ValidateDeviceCredentialsResponse msg) {
+    private SessionInfoProto createSession(String nodeId, UUID sessionId, ValidateDeviceCredentialsResponse msg) {
         return SessionInfoProto.newBuilder()
                 .setNodeId(nodeId)
                 .setSessionIdMSB(sessionId.getMostSignificantBits())
@@ -207,12 +201,12 @@ public class LwM2mClient {
                 .build();
     }
 
-    public boolean saveResourceValue(String pathRezIdVer, LwM2mResource resource, @NotNull LwM2mModelProvider modelProvider, Mode mode) {
+    public boolean saveResourceValue(String pathRezIdVer, LwM2mResource resource, LwM2mModelProvider modelProvider, Mode mode) {
         if (this.resources.get(pathRezIdVer) != null && this.resources.get(pathRezIdVer).getResourceModel() != null) {
             this.resources.get(pathRezIdVer).updateLwM2mResource(resource, mode);
             return true;
         } else {
-            @NotNull LwM2mPath pathIds = new LwM2mPath(fromVersionedIdToObjectId(pathRezIdVer));
+            LwM2mPath pathIds = new LwM2mPath(fromVersionedIdToObjectId(pathRezIdVer));
             ResourceModel resourceModel = modelProvider.getObjectModel(registration).getResourceModel(pathIds.getObjectId(), pathIds.getResourceId());
             if (resourceModel != null) {
                 this.resources.put(pathRezIdVer, new ResourceValue(resource, resourceModel));
@@ -224,7 +218,7 @@ public class LwM2mClient {
     }
 
     @Nullable
-    public Object getResourceValue(@Nullable String pathRezIdVer, @NotNull String pathRezId) {
+    public Object getResourceValue(@Nullable String pathRezIdVer, String pathRezId) {
         @Nullable String pathRez = pathRezIdVer == null ? convertObjectIdToVersionedId(pathRezId, this.registration) : pathRezIdVer;
         if (this.resources.get(pathRez) != null) {
             return this.resources.get(pathRez).getLwM2mResource().getValue();
@@ -233,7 +227,7 @@ public class LwM2mClient {
     }
 
     @Nullable
-    public Object getResourceNameByRezId(@Nullable String pathRezIdVer, @NotNull String pathRezId) {
+    public Object getResourceNameByRezId(@Nullable String pathRezIdVer, String pathRezId) {
         @Nullable String pathRez = pathRezIdVer == null ? convertObjectIdToVersionedId(pathRezId, this.registration) : pathRezIdVer;
         if (this.resources.get(pathRez) != null) {
             return this.resources.get(pathRez).getResourceModel().name;
@@ -242,10 +236,10 @@ public class LwM2mClient {
     }
 
     @Nullable
-    public String getRezIdByResourceNameAndObjectInstanceId(@NotNull String resourceName, String pathObjectInstanceIdVer, @NotNull LwM2mModelProvider modelProvider) {
-        @NotNull LwM2mPath pathIds = new LwM2mPath(fromVersionedIdToObjectId(pathObjectInstanceIdVer));
+    public String getRezIdByResourceNameAndObjectInstanceId(String resourceName, String pathObjectInstanceIdVer, LwM2mModelProvider modelProvider) {
+        LwM2mPath pathIds = new LwM2mPath(fromVersionedIdToObjectId(pathObjectInstanceIdVer));
         if (pathIds.isObjectInstance()) {
-            @NotNull Set<Integer> rezIds = modelProvider.getObjectModel(registration)
+            Set<Integer> rezIds = modelProvider.getObjectModel(registration)
                                                         .getObjectModel(pathIds.getObjectId()).resources.entrySet()
                     .stream()
                     .filter(map -> resourceName.equals(map.getValue().name))
@@ -257,15 +251,15 @@ public class LwM2mClient {
     }
 
     @Nullable
-    public ResourceModel getResourceModel(@NotNull String pathIdVer, @NotNull LwM2mModelProvider modelProvider) {
-        @NotNull LwM2mPath pathIds = new LwM2mPath(fromVersionedIdToObjectId(pathIdVer));
+    public ResourceModel getResourceModel(String pathIdVer, LwM2mModelProvider modelProvider) {
+        LwM2mPath pathIds = new LwM2mPath(fromVersionedIdToObjectId(pathIdVer));
         String verSupportedObject = registration.getSupportedObject().get(pathIds.getObjectId());
         @Nullable String verRez = getVerFromPathIdVerOrId(pathIdVer);
         return verRez != null && verRez.equals(verSupportedObject) ? modelProvider.getObjectModel(registration)
                 .getResourceModel(pathIds.getObjectId(), pathIds.getResourceId()) : null;
     }
 
-    public boolean isResourceMultiInstances(@NotNull String pathIdVer, @NotNull LwM2mModelProvider modelProvider) {
+    public boolean isResourceMultiInstances(String pathIdVer, LwM2mModelProvider modelProvider) {
         @Nullable var resourceModel = getResourceModel(pathIdVer, modelProvider);
         if (resourceModel != null && resourceModel.multiple != null) {
             return resourceModel.multiple;
@@ -275,9 +269,9 @@ public class LwM2mClient {
     }
 
     @Nullable
-    public ObjectModel getObjectModel(@NotNull String pathIdVer, @NotNull LwM2mModelProvider modelProvider) {
+    public ObjectModel getObjectModel(String pathIdVer, LwM2mModelProvider modelProvider) {
         try {
-            @NotNull LwM2mPath pathIds = new LwM2mPath(fromVersionedIdToObjectId(pathIdVer));
+            LwM2mPath pathIds = new LwM2mPath(fromVersionedIdToObjectId(pathIdVer));
             String verSupportedObject = registration.getSupportedObject().get(pathIds.getObjectId());
             @Nullable String verRez = getVerFromPathIdVerOrId(pathIdVer);
             return verRez != null && verRez.equals(verSupportedObject) ? modelProvider.getObjectModel(registration)
@@ -295,11 +289,10 @@ public class LwM2mClient {
     }
 
 
-    @NotNull
-    public Collection<LwM2mResource> getNewResourceForInstance(String pathRezIdVer, @NotNull Object params, @NotNull LwM2mModelProvider modelProvider,
-                                                               @NotNull LwM2mValueConverter converter) {
-        @NotNull LwM2mPath pathIds = new LwM2mPath(fromVersionedIdToObjectId(pathRezIdVer));
-        @NotNull Collection<LwM2mResource> resources = ConcurrentHashMap.newKeySet();
+    public Collection<LwM2mResource> getNewResourceForInstance(String pathRezIdVer, Object params, LwM2mModelProvider modelProvider,
+                                                               LwM2mValueConverter converter) {
+        LwM2mPath pathIds = new LwM2mPath(fromVersionedIdToObjectId(pathRezIdVer));
+        Collection<LwM2mResource> resources = ConcurrentHashMap.newKeySet();
         Map<Integer, ResourceModel> resourceModels = modelProvider.getObjectModel(registration)
                 .getObjectModel(pathIds.getObjectId()).resources;
         resourceModels.forEach((resId, resourceModel) -> {
@@ -316,22 +309,21 @@ public class LwM2mClient {
      * The instance must have all the resources that have the property
      * <Mandatory>Mandatory</Mandatory>
      */
-    @NotNull
-    public Collection<LwM2mResource> getNewResourcesForInstance(String pathRezIdVer, Object params, @NotNull LwM2mModelProvider modelProvider,
-                                                                @NotNull LwM2mValueConverter converter) {
-        @NotNull LwM2mPath pathIds = new LwM2mPath(fromVersionedIdToObjectId(pathRezIdVer));
-        @NotNull Collection<LwM2mResource> resources = ConcurrentHashMap.newKeySet();
+    public Collection<LwM2mResource> getNewResourcesForInstance(String pathRezIdVer, Object params, LwM2mModelProvider modelProvider,
+                                                                LwM2mValueConverter converter) {
+        LwM2mPath pathIds = new LwM2mPath(fromVersionedIdToObjectId(pathRezIdVer));
+        Collection<LwM2mResource> resources = ConcurrentHashMap.newKeySet();
         Map<Integer, ResourceModel> resourceModels = modelProvider.getObjectModel(registration)
                 .getObjectModel(pathIds.getObjectId()).resources;
         if (params instanceof Map && ((Map) params).size() > 0) {
-            @NotNull Map paramsMap = (Map) params;
+            Map paramsMap = (Map) params;
             resourceModels.forEach((resourceId, resourceModel) -> {
                 if (paramsMap.containsKey(String.valueOf(resourceId))) {
                     Object value = paramsMap.get((String.valueOf(resourceId)));
                     LwM2mResource resource;
                     if (resourceModel.multiple) {
                         try {
-                            @NotNull Map<Integer, Object> values = convertMultiResourceValuesFromRpcBody(value, resourceModel.type, pathRezIdVer);
+                            Map<Integer, Object> values = convertMultiResourceValuesFromRpcBody(value, resourceModel.type, pathRezIdVer);
                             resource = LwM2mMultipleResource.newResource(resourceId, values, resourceModel.type);
                         } catch (Exception e) {
                             throw new IllegalArgumentException("Resource id=" + resourceId + ", class = " +
@@ -359,8 +351,8 @@ public class LwM2mClient {
         return resources;
     }
 
-    public String isValidObjectVersion(@NotNull String path) {
-        @NotNull LwM2mPath pathIds = new LwM2mPath(fromVersionedIdToObjectId(path));
+    public String isValidObjectVersion(String path) {
+        LwM2mPath pathIds = new LwM2mPath(fromVersionedIdToObjectId(path));
         String verSupportedObject = registration.getSupportedObject().get(pathIds.getObjectId());
         if (verSupportedObject == null) {
             return String.format("Specified object id %s absent in the list supported objects of the client or is security object!", pathIds.getObjectId());
@@ -377,10 +369,10 @@ public class LwM2mClient {
      * @param pathIdVer     == "3_1.0"
      * @param modelProvider -
      */
-    public void deleteResources(@NotNull String pathIdVer, @NotNull LwM2mModelProvider modelProvider) {
-        @NotNull Set<String> key = getKeysEqualsIdVer(pathIdVer);
+    public void deleteResources(String pathIdVer, LwM2mModelProvider modelProvider) {
+        Set<String> key = getKeysEqualsIdVer(pathIdVer);
         key.forEach(pathRez -> {
-            @NotNull LwM2mPath pathIds = new LwM2mPath(fromVersionedIdToObjectId(pathRez));
+            LwM2mPath pathIds = new LwM2mPath(fromVersionedIdToObjectId(pathRez));
             ResourceModel resourceModel = modelProvider.getObjectModel(registration).getResourceModel(pathIds.getObjectId(), pathIds.getResourceId());
             if (resourceModel != null) {
                 this.resources.get(pathRez).setResourceModel(resourceModel);
@@ -394,19 +386,18 @@ public class LwM2mClient {
      * @param idVer         -
      * @param modelProvider -
      */
-    public void updateResourceModel(@NotNull String idVer, @NotNull LwM2mModelProvider modelProvider) {
-        @NotNull Set<String> key = getKeysEqualsIdVer(idVer);
+    public void updateResourceModel(String idVer, LwM2mModelProvider modelProvider) {
+        Set<String> key = getKeysEqualsIdVer(idVer);
         key.forEach(k -> this.saveResourceModel(k, modelProvider));
     }
 
-    private void saveResourceModel(String pathRez, @NotNull LwM2mModelProvider modelProvider) {
-        @NotNull LwM2mPath pathIds = new LwM2mPath(fromVersionedIdToObjectId(pathRez));
+    private void saveResourceModel(String pathRez, LwM2mModelProvider modelProvider) {
+        LwM2mPath pathIds = new LwM2mPath(fromVersionedIdToObjectId(pathRez));
         ResourceModel resourceModel = modelProvider.getObjectModel(registration).getResourceModel(pathIds.getObjectId(), pathIds.getResourceId());
         this.resources.get(pathRez).setResourceModel(resourceModel);
     }
 
-    @NotNull
-    private Set<String> getKeysEqualsIdVer(@NotNull String idVer) {
+    private Set<String> getKeysEqualsIdVer(String idVer) {
         return this.resources.keySet()
                 .stream()
                 .filter(e -> idVer.equals(e.split(LWM2M_SEPARATOR_PATH)[1]))
@@ -421,16 +412,15 @@ public class LwM2mClient {
         }
     }
 
-    @NotNull
-    private static Set<ContentFormat> clientSupportContentFormat(@NotNull Registration registration) {
-        @NotNull Set<ContentFormat> contentFormats = new HashSet<>();
+    private static Set<ContentFormat> clientSupportContentFormat(Registration registration) {
+        Set<ContentFormat> contentFormats = new HashSet<>();
         contentFormats.add(ContentFormat.DEFAULT);
         LinkParamValue ct = Arrays.stream(registration.getObjectLinks())
                 .filter(link -> link.getUriReference().equals("/"))
                 .findFirst()
                 .map(link -> link.getLinkParams().get("ct")).orElse(null);
         if (ct != null) {
-            @NotNull Set<ContentFormat> codes = Stream.of(ct.getUnquoted().replaceAll("\"", "").split(" ", -1))
+            Set<ContentFormat> codes = Stream.of(ct.getUnquoted().replaceAll("\"", "").split(" ", -1))
                                                       .map(String::trim)
                                                       .map(Integer::parseInt)
                                                       .map(ContentFormat::fromCode)

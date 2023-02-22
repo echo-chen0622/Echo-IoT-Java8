@@ -12,7 +12,6 @@ import org.echoiot.server.dao.model.sql.QueueEntity;
 import org.echoiot.server.dao.queue.QueueDao;
 import org.echoiot.server.dao.sql.JpaAbstractDao;
 import org.echoiot.server.dao.util.SqlDao;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
@@ -29,7 +28,6 @@ public class JpaQueueDao extends JpaAbstractDao<QueueEntity, Queue> implements Q
     @Resource
     private QueueRepository queueRepository;
 
-    @NotNull
     @Override
     protected Class<QueueEntity> getEntityClass() {
         return QueueEntity.class;
@@ -41,36 +39,35 @@ public class JpaQueueDao extends JpaAbstractDao<QueueEntity, Queue> implements Q
     }
 
     @Override
-    public Queue findQueueByTenantIdAndTopic(@NotNull TenantId tenantId, String topic) {
+    public Queue findQueueByTenantIdAndTopic(TenantId tenantId, String topic) {
         return DaoUtil.getData(queueRepository.findByTenantIdAndTopic(tenantId.getId(), topic));
     }
 
     @Override
-    public Queue findQueueByTenantIdAndName(@NotNull TenantId tenantId, String name) {
+    public Queue findQueueByTenantIdAndName(TenantId tenantId, String name) {
         return DaoUtil.getData(queueRepository.findByTenantIdAndName(tenantId.getId(), name));
     }
 
     @Override
-    public List<Queue> findAllByTenantId(@NotNull TenantId tenantId) {
+    public List<Queue> findAllByTenantId(TenantId tenantId) {
         List<QueueEntity> entities = queueRepository.findByTenantId(tenantId.getId());
         return DaoUtil.convertDataList(entities);
     }
 
     @Override
     public List<Queue> findAllMainQueues() {
-        @NotNull List<QueueEntity> entities = Lists.newArrayList(queueRepository.findAllByName(DataConstants.MAIN_QUEUE_NAME));
+        List<QueueEntity> entities = Lists.newArrayList(queueRepository.findAllByName(DataConstants.MAIN_QUEUE_NAME));
         return DaoUtil.convertDataList(entities);
     }
 
     @Override
     public List<Queue> findAllQueues() {
-        @NotNull List<QueueEntity> entities = Lists.newArrayList(queueRepository.findAll());
+        List<QueueEntity> entities = Lists.newArrayList(queueRepository.findAll());
         return DaoUtil.convertDataList(entities);
     }
 
-    @NotNull
     @Override
-    public PageData<Queue> findQueuesByTenantId(@NotNull TenantId tenantId, @NotNull PageLink pageLink) {
+    public PageData<Queue> findQueuesByTenantId(TenantId tenantId, PageLink pageLink) {
         return DaoUtil.toPageData(queueRepository
                 .findByTenantId(tenantId.getId(), Objects.toString(pageLink.getTextSearch(), ""), DaoUtil.toPageable(pageLink)));
     }

@@ -28,7 +28,6 @@ import org.echoiot.server.dao.device.provision.ProvisionRequest;
 import org.echoiot.server.dao.entity.EntityService;
 import org.echoiot.server.dao.service.DataValidator;
 import org.echoiot.server.dao.service.Validator;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
@@ -66,7 +65,7 @@ public class AuditLogServiceImpl implements AuditLogService {
     private DataValidator<AuditLog> auditLogValidator;
 
     @Override
-    public PageData<AuditLog> findAuditLogsByTenantIdAndCustomerId(@NotNull TenantId tenantId, CustomerId customerId, List<ActionType> actionTypes, TimePageLink pageLink) {
+    public PageData<AuditLog> findAuditLogsByTenantIdAndCustomerId(TenantId tenantId, CustomerId customerId, List<ActionType> actionTypes, TimePageLink pageLink) {
         log.trace("Executing findAuditLogsByTenantIdAndCustomerId [{}], [{}], [{}]", tenantId, customerId, pageLink);
         validateId(tenantId, INCORRECT_TENANT_ID + tenantId);
         validateId(customerId, "Incorrect customerId " + customerId);
@@ -74,7 +73,7 @@ public class AuditLogServiceImpl implements AuditLogService {
     }
 
     @Override
-    public PageData<AuditLog> findAuditLogsByTenantIdAndUserId(@NotNull TenantId tenantId, UserId userId, List<ActionType> actionTypes, TimePageLink pageLink) {
+    public PageData<AuditLog> findAuditLogsByTenantIdAndUserId(TenantId tenantId, UserId userId, List<ActionType> actionTypes, TimePageLink pageLink) {
         log.trace("Executing findAuditLogsByTenantIdAndUserId [{}], [{}], [{}]", tenantId, userId, pageLink);
         validateId(tenantId, INCORRECT_TENANT_ID + tenantId);
         validateId(userId, "Incorrect userId" + userId);
@@ -82,7 +81,7 @@ public class AuditLogServiceImpl implements AuditLogService {
     }
 
     @Override
-    public PageData<AuditLog> findAuditLogsByTenantIdAndEntityId(@NotNull TenantId tenantId, EntityId entityId, List<ActionType> actionTypes, TimePageLink pageLink) {
+    public PageData<AuditLog> findAuditLogsByTenantIdAndEntityId(TenantId tenantId, EntityId entityId, List<ActionType> actionTypes, TimePageLink pageLink) {
         log.trace("Executing findAuditLogsByTenantIdAndEntityId [{}], [{}], [{}]", tenantId, entityId, pageLink);
         validateId(tenantId, INCORRECT_TENANT_ID + tenantId);
         Validator.validateEntityId(entityId, INCORRECT_TENANT_ID + entityId);
@@ -90,7 +89,7 @@ public class AuditLogServiceImpl implements AuditLogService {
     }
 
     @Override
-    public PageData<AuditLog> findAuditLogsByTenantId(@NotNull TenantId tenantId, List<ActionType> actionTypes, TimePageLink pageLink) {
+    public PageData<AuditLog> findAuditLogsByTenantId(TenantId tenantId, List<ActionType> actionTypes, TimePageLink pageLink) {
         log.trace("Executing findAuditLogs [{}]", pageLink);
         validateId(tenantId, INCORRECT_TENANT_ID + tenantId);
         return auditLogDao.findAuditLogsByTenantId(tenantId.getId(), actionTypes, pageLink);
@@ -99,11 +98,11 @@ public class AuditLogServiceImpl implements AuditLogService {
     @Nullable
     @Override
     public <E extends HasName, I extends EntityId> ListenableFuture<List<Void>>
-    logEntityAction(TenantId tenantId, CustomerId customerId, UserId userId, String userName, @NotNull I entityId, @Nullable E entity,
-                    @NotNull ActionType actionType, @Nullable Exception e, Object... additionalInfo) {
+    logEntityAction(TenantId tenantId, CustomerId customerId, UserId userId, String userName, I entityId, @Nullable E entity,
+                    ActionType actionType, @Nullable Exception e, Object... additionalInfo) {
         if (canLog(entityId.getEntityType(), actionType)) {
             JsonNode actionData = constructActionData(entityId, entity, actionType, additionalInfo);
-            @NotNull ActionStatus actionStatus = ActionStatus.SUCCESS;
+            ActionStatus actionStatus = ActionStatus.SUCCESS;
             String failureDetails = "";
             String entityName = "";
             if (entity != null) {
@@ -140,8 +139,8 @@ public class AuditLogServiceImpl implements AuditLogService {
         }
     }
 
-    private <E extends HasName, I extends EntityId> JsonNode constructActionData(@NotNull I entityId, @Nullable E entity,
-                                                                                 @NotNull ActionType actionType,
+    private <E extends HasName, I extends EntityId> JsonNode constructActionData(I entityId, @Nullable E entity,
+                                                                                 ActionType actionType,
                                                                                  Object... additionalInfo) {
         ObjectNode actionData = JacksonUtil.newObjectNode();
         switch (actionType) {
@@ -181,7 +180,7 @@ public class AuditLogServiceImpl implements AuditLogService {
                 actionData.put("scope", scope);
                 ObjectNode attrsNode = JacksonUtil.newObjectNode();
                 if (attributes != null) {
-                    for (@NotNull AttributeKvEntry attr : attributes) {
+                    for (AttributeKvEntry attr : attributes) {
                         attrsNode.put(attr.getKey(), attr.getValueAsString());
                     }
                 }
@@ -305,12 +304,12 @@ public class AuditLogServiceImpl implements AuditLogService {
         return actionData;
     }
 
-    private <T> T extractParameter(@NotNull Class<T> clazz, Object... additionalInfo) {
+    private <T> T extractParameter(Class<T> clazz, Object... additionalInfo) {
         return extractParameter(clazz, 0, additionalInfo);
     }
 
     @Nullable
-    private <T> T extractParameter(@NotNull Class<T> clazz, int index, @Nullable Object... additionalInfo) {
+    private <T> T extractParameter(Class<T> clazz, int index, @Nullable Object... additionalInfo) {
         @Nullable T result = null;
         if (additionalInfo != null && additionalInfo.length > index) {
             Object paramObject = additionalInfo[index];
@@ -321,17 +320,16 @@ public class AuditLogServiceImpl implements AuditLogService {
         return result;
     }
 
-    private String getFailureStack(@NotNull Exception e) {
-        @NotNull StringWriter sw = new StringWriter();
+    private String getFailureStack(Exception e) {
+        StringWriter sw = new StringWriter();
         e.printStackTrace(new PrintWriter(sw));
         return sw.toString();
     }
 
-    private boolean canLog(EntityType entityType, @NotNull ActionType actionType) {
+    private boolean canLog(EntityType entityType, ActionType actionType) {
         return auditLogLevelFilter.logEnabled(entityType, actionType);
     }
 
-    @NotNull
     private AuditLog createAuditLogEntry(TenantId tenantId,
                                          EntityId entityId,
                                          String entityName,
@@ -342,8 +340,8 @@ public class AuditLogServiceImpl implements AuditLogService {
                                          JsonNode actionData,
                                          ActionStatus actionStatus,
                                          String actionFailureDetails) {
-        @NotNull AuditLog result = new AuditLog();
-        @NotNull UUID id = Uuids.timeBased();
+        AuditLog result = new AuditLog();
+        UUID id = Uuids.timeBased();
         result.setId(new AuditLogId(id));
         result.setCreatedTime(Uuids.unixTimestamp(id));
         result.setTenantId(tenantId);
@@ -359,7 +357,6 @@ public class AuditLogServiceImpl implements AuditLogService {
         return result;
     }
 
-    @NotNull
     private ListenableFuture<List<Void>> logAction(TenantId tenantId,
                                                    EntityId entityId,
                                                    String entityName,
@@ -370,7 +367,7 @@ public class AuditLogServiceImpl implements AuditLogService {
                                                    JsonNode actionData,
                                                    ActionStatus actionStatus,
                                                    String actionFailureDetails) {
-        @NotNull AuditLog auditLogEntry = createAuditLogEntry(tenantId, entityId, entityName, customerId, userId, userName,
+        AuditLog auditLogEntry = createAuditLogEntry(tenantId, entityId, entityName, customerId, userId, userName,
                                                               actionType, actionData, actionStatus, actionFailureDetails);
         log.trace("Executing logAction [{}]", auditLogEntry);
         try {
@@ -382,7 +379,7 @@ public class AuditLogServiceImpl implements AuditLogService {
                 return Futures.immediateFailedFuture(e);
             }
         }
-        @NotNull List<ListenableFuture<Void>> futures = Lists.newArrayListWithExpectedSize(INSERTS_PER_ENTRY);
+        List<ListenableFuture<Void>> futures = Lists.newArrayListWithExpectedSize(INSERTS_PER_ENTRY);
         futures.add(auditLogDao.saveByTenantId(auditLogEntry));
 
         auditLogSink.logAction(auditLogEntry);

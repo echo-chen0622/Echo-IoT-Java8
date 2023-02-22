@@ -16,7 +16,6 @@ import org.echoiot.server.dao.util.mapping.JsonStringType;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.persistence.Column;
@@ -75,7 +74,7 @@ public abstract class AbstractDeviceEntity<T extends Device> extends BaseSqlEnti
         super();
     }
 
-    public AbstractDeviceEntity(@NotNull Device device) {
+    public AbstractDeviceEntity(Device device) {
         if (device.getId() != null) {
             this.setUuid(device.getUuidId());
         }
@@ -105,7 +104,7 @@ public abstract class AbstractDeviceEntity<T extends Device> extends BaseSqlEnti
         }
     }
 
-    public AbstractDeviceEntity(@NotNull DeviceEntity deviceEntity) {
+    public AbstractDeviceEntity(DeviceEntity deviceEntity) {
         this.setId(deviceEntity.getId());
         this.setCreatedTime(deviceEntity.getCreatedTime());
         this.tenantId = deviceEntity.getTenantId();
@@ -132,9 +131,8 @@ public abstract class AbstractDeviceEntity<T extends Device> extends BaseSqlEnti
         this.searchText = searchText;
     }
 
-    @NotNull
     protected Device toDevice() {
-        @NotNull Device device = new Device(new DeviceId(getUuid()));
+        Device device = new Device(new DeviceId(getUuid()));
         device.setCreatedTime(createdTime);
         if (tenantId != null) {
             device.setTenantId(TenantId.fromUUID(tenantId));

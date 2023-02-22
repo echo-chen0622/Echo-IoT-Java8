@@ -20,7 +20,6 @@ import org.echoiot.server.common.data.tenant.profile.TenantProfileData;
 import org.echoiot.server.common.data.widget.WidgetsBundle;
 import org.echoiot.server.dao.exception.DataValidationException;
 import org.echoiot.server.dao.tenant.TenantDao;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.junit.Assert;
 import org.junit.Test;
@@ -54,7 +53,7 @@ public abstract class BaseTenantServiceTest extends AbstractServiceTest {
 
     @Test
     public void testSaveTenant() {
-        @NotNull Tenant tenant = new Tenant();
+        Tenant tenant = new Tenant();
         tenant.setTitle("My tenant");
         Tenant savedTenant = tenantService.saveTenant(tenant);
         Assert.assertNotNull(savedTenant);
@@ -72,7 +71,7 @@ public abstract class BaseTenantServiceTest extends AbstractServiceTest {
 
     @Test
     public void testFindTenantById() {
-        @NotNull Tenant tenant = new Tenant();
+        Tenant tenant = new Tenant();
         tenant.setTitle("My tenant");
         Tenant savedTenant = tenantService.saveTenant(tenant);
         Tenant foundTenant = tenantService.findTenantById(savedTenant.getId());
@@ -83,7 +82,7 @@ public abstract class BaseTenantServiceTest extends AbstractServiceTest {
 
     @Test
     public void testFindTenantInfoById() {
-        @NotNull Tenant tenant = new Tenant();
+        Tenant tenant = new Tenant();
         tenant.setTitle("My tenant");
         Tenant savedTenant = tenantService.saveTenant(tenant);
         TenantInfo foundTenant = tenantService.findTenantInfoById(savedTenant.getId());
@@ -94,13 +93,13 @@ public abstract class BaseTenantServiceTest extends AbstractServiceTest {
 
     @Test(expected = DataValidationException.class)
     public void testSaveTenantWithEmptyTitle() {
-        @NotNull Tenant tenant = new Tenant();
+        Tenant tenant = new Tenant();
         tenantService.saveTenant(tenant);
     }
 
     @Test(expected = DataValidationException.class)
     public void testSaveTenantWithInvalidEmail() {
-        @NotNull Tenant tenant = new Tenant();
+        Tenant tenant = new Tenant();
         tenant.setTitle("My tenant");
         tenant.setEmail("invalid@mail");
         tenantService.saveTenant(tenant);
@@ -108,7 +107,7 @@ public abstract class BaseTenantServiceTest extends AbstractServiceTest {
 
     @Test
     public void testDeleteTenant() {
-        @NotNull Tenant tenant = new Tenant();
+        Tenant tenant = new Tenant();
         tenant.setTitle("My tenant");
         Tenant savedTenant = tenantService.saveTenant(tenant);
         tenantService.deleteTenant(savedTenant.getId());
@@ -118,7 +117,7 @@ public abstract class BaseTenantServiceTest extends AbstractServiceTest {
 
     @Test
     public void testFindTenants() {
-        @NotNull List<Tenant> tenants = new ArrayList<>();
+        List<Tenant> tenants = new ArrayList<>();
         PageLink pageLink = new PageLink(17);
         PageData<Tenant> pageData = tenantService.findTenants(pageLink);
         Assert.assertFalse(pageData.hasNext());
@@ -126,12 +125,12 @@ public abstract class BaseTenantServiceTest extends AbstractServiceTest {
         tenants.addAll(pageData.getData());
 
         for (int i = 0; i < 156; i++) {
-            @NotNull Tenant tenant = new Tenant();
+            Tenant tenant = new Tenant();
             tenant.setTitle("Tenant" + i);
             tenants.add(tenantService.saveTenant(tenant));
         }
 
-        @NotNull List<Tenant> loadedTenants = new ArrayList<>();
+        List<Tenant> loadedTenants = new ArrayList<>();
         pageLink = new PageLink(17);
         do {
             pageData = tenantService.findTenants(pageLink);
@@ -146,7 +145,7 @@ public abstract class BaseTenantServiceTest extends AbstractServiceTest {
 
         Assert.assertEquals(tenants, loadedTenants);
 
-        for (@NotNull Tenant tenant : loadedTenants) {
+        for (Tenant tenant : loadedTenants) {
             tenantService.deleteTenant(tenant.getId());
         }
 
@@ -159,28 +158,28 @@ public abstract class BaseTenantServiceTest extends AbstractServiceTest {
 
     @Test
     public void testFindTenantsByTitle() {
-        @NotNull String title1 = "Tenant title 1";
-        @NotNull List<Tenant> tenantsTitle1 = new ArrayList<>();
+        String title1 = "Tenant title 1";
+        List<Tenant> tenantsTitle1 = new ArrayList<>();
         for (int i = 0; i < 134; i++) {
-            @NotNull Tenant tenant = new Tenant();
-            @NotNull String suffix = StringUtils.randomAlphanumeric((int) (Math.random() * 15));
-            @NotNull String title = title1 + suffix;
+            Tenant tenant = new Tenant();
+            String suffix = StringUtils.randomAlphanumeric((int) (Math.random() * 15));
+            String title = title1 + suffix;
             title = i % 2 == 0 ? title.toLowerCase() : title.toUpperCase();
             tenant.setTitle(title);
             tenantsTitle1.add(tenantService.saveTenant(tenant));
         }
-        @NotNull String title2 = "Tenant title 2";
-        @NotNull List<Tenant> tenantsTitle2 = new ArrayList<>();
+        String title2 = "Tenant title 2";
+        List<Tenant> tenantsTitle2 = new ArrayList<>();
         for (int i = 0; i < 127; i++) {
-            @NotNull Tenant tenant = new Tenant();
-            @NotNull String suffix = StringUtils.randomAlphanumeric((int) (Math.random() * 15));
-            @NotNull String title = title2 + suffix;
+            Tenant tenant = new Tenant();
+            String suffix = StringUtils.randomAlphanumeric((int) (Math.random() * 15));
+            String title = title2 + suffix;
             title = i % 2 == 0 ? title.toLowerCase() : title.toUpperCase();
             tenant.setTitle(title);
             tenantsTitle2.add(tenantService.saveTenant(tenant));
         }
 
-        @NotNull List<Tenant> loadedTenantsTitle1 = new ArrayList<>();
+        List<Tenant> loadedTenantsTitle1 = new ArrayList<>();
         PageLink pageLink = new PageLink(15, 0, title1);
         @Nullable PageData<Tenant> pageData = null;
         do {
@@ -196,7 +195,7 @@ public abstract class BaseTenantServiceTest extends AbstractServiceTest {
 
         Assert.assertEquals(tenantsTitle1, loadedTenantsTitle1);
 
-        @NotNull List<Tenant> loadedTenantsTitle2 = new ArrayList<>();
+        List<Tenant> loadedTenantsTitle2 = new ArrayList<>();
         pageLink = new PageLink(4, 0, title2);
         do {
             pageData = tenantService.findTenants(pageLink);
@@ -211,7 +210,7 @@ public abstract class BaseTenantServiceTest extends AbstractServiceTest {
 
         Assert.assertEquals(tenantsTitle2, loadedTenantsTitle2);
 
-        for (@NotNull Tenant tenant : loadedTenantsTitle1) {
+        for (Tenant tenant : loadedTenantsTitle1) {
             tenantService.deleteTenant(tenant.getId());
         }
 
@@ -220,7 +219,7 @@ public abstract class BaseTenantServiceTest extends AbstractServiceTest {
         Assert.assertFalse(pageData.hasNext());
         Assert.assertEquals(0, pageData.getData().size());
 
-        for (@NotNull Tenant tenant : loadedTenantsTitle2) {
+        for (Tenant tenant : loadedTenantsTitle2) {
             tenantService.deleteTenant(tenant.getId());
         }
 
@@ -233,7 +232,7 @@ public abstract class BaseTenantServiceTest extends AbstractServiceTest {
     @Test
     public void testFindTenantInfos() {
 
-        @NotNull List<TenantInfo> tenants = new ArrayList<>();
+        List<TenantInfo> tenants = new ArrayList<>();
         PageLink pageLink = new PageLink(17);
         PageData<TenantInfo> pageData = tenantService.findTenantInfos(pageLink);
         Assert.assertFalse(pageData.hasNext());
@@ -241,12 +240,12 @@ public abstract class BaseTenantServiceTest extends AbstractServiceTest {
         tenants.addAll(pageData.getData());
 
         for (int i = 0; i < 156; i++) {
-            @NotNull Tenant tenant = new Tenant();
+            Tenant tenant = new Tenant();
             tenant.setTitle("Tenant" + i);
             tenants.add(new TenantInfo(tenantService.saveTenant(tenant), "Default"));
         }
 
-        @NotNull List<TenantInfo> loadedTenants = new ArrayList<>();
+        List<TenantInfo> loadedTenants = new ArrayList<>();
         pageLink = new PageLink(17);
         do {
             pageData = tenantService.findTenantInfos(pageLink);
@@ -261,7 +260,7 @@ public abstract class BaseTenantServiceTest extends AbstractServiceTest {
 
         Assert.assertEquals(tenants, loadedTenants);
 
-        for (@NotNull TenantInfo tenant : loadedTenants) {
+        for (TenantInfo tenant : loadedTenants) {
             tenantService.deleteTenant(tenant.getId());
         }
 
@@ -274,16 +273,16 @@ public abstract class BaseTenantServiceTest extends AbstractServiceTest {
 
     @Test(expected = DataValidationException.class)
     public void testSaveTenantWithIsolatedProfileInMonolithSetup() {
-        @NotNull TenantProfile tenantProfile = new TenantProfile();
+        TenantProfile tenantProfile = new TenantProfile();
         tenantProfile.setName("Isolated Tenant Profile");
-        @NotNull TenantProfileData profileData = new TenantProfileData();
+        TenantProfileData profileData = new TenantProfileData();
         profileData.setConfiguration(new DefaultTenantProfileConfiguration());
         tenantProfile.setProfileData(profileData);
         tenantProfile.setDefault(false);
         tenantProfile.setIsolatedTbRuleEngine(true);
         TenantProfile isolatedTenantProfile = tenantProfileService.saveTenantProfile(TenantId.SYS_TENANT_ID, tenantProfile);
 
-        @NotNull Tenant tenant = new Tenant();
+        Tenant tenant = new Tenant();
         tenant.setTitle("Tenant");
         tenant.setTenantProfileId(isolatedTenantProfile.getId());
         tenantService.saveTenant(tenant);
@@ -291,7 +290,7 @@ public abstract class BaseTenantServiceTest extends AbstractServiceTest {
 
     @Test
     public void testGettingTenantAddingItToCache() {
-        @NotNull Tenant tenant = new Tenant();
+        Tenant tenant = new Tenant();
         tenant.setTitle("My tenant");
         Tenant savedTenant = tenantService.saveTenant(tenant);
 
@@ -315,7 +314,7 @@ public abstract class BaseTenantServiceTest extends AbstractServiceTest {
 
     @Test
     public void testExistsTenantAddingResultToCache() {
-        @NotNull Tenant tenant = new Tenant();
+        Tenant tenant = new Tenant();
         tenant.setTitle("My tenant");
         Tenant savedTenant = tenantService.saveTenant(tenant);
 
@@ -340,7 +339,7 @@ public abstract class BaseTenantServiceTest extends AbstractServiceTest {
 
     @Test
     public void testUpdatingExistingTenantEvictCache() {
-        @NotNull Tenant tenant = new Tenant();
+        Tenant tenant = new Tenant();
         tenant.setTitle("My tenant");
         Tenant savedTenant = tenantService.saveTenant(tenant);
 
@@ -367,7 +366,7 @@ public abstract class BaseTenantServiceTest extends AbstractServiceTest {
 
     @Test
     public void testRemovingTenantEvictCache() {
-        @NotNull Tenant tenant = new Tenant();
+        Tenant tenant = new Tenant();
         tenant.setTitle("My tenant");
         Tenant savedTenant = tenantService.saveTenant(tenant);
 
@@ -432,84 +431,84 @@ public abstract class BaseTenantServiceTest extends AbstractServiceTest {
         tenantProfileService.deleteTenantProfile(TenantId.SYS_TENANT_ID, profile.getId());
     }
 
-    private void assertOtaPackageIsDeleted(@NotNull Tenant tenant, @NotNull OtaPackage otaPackage) {
+    private void assertOtaPackageIsDeleted(Tenant tenant, OtaPackage otaPackage) {
         assertThat(otaPackageService.findOtaPackageById(tenant.getId(), otaPackage.getId()))
                 .as("otaPackage").isNull();
-        @NotNull PageLink pageLinkOta = new PageLink(1);
+        PageLink pageLinkOta = new PageLink(1);
         PageData<OtaPackageInfo> pageDataOta = otaPackageService.findTenantOtaPackagesByTenantId(tenant.getId(), pageLinkOta);
         Assert.assertEquals(0, pageDataOta.getTotalElements());
     }
 
-    private void assertResourceIsDeleted(@NotNull Tenant tenant, @NotNull TbResource resource) {
+    private void assertResourceIsDeleted(Tenant tenant, TbResource resource) {
         assertThat(resourceService.findResourceById(tenant.getId(), resource.getId()))
                 .as("resource").isNull();
-        @NotNull PageLink pageLinkResources = new PageLink(1);
+        PageLink pageLinkResources = new PageLink(1);
         PageData<TbResourceInfo> tenantResources =
                 resourceService.findAllTenantResourcesByTenantId(tenant.getId(), pageLinkResources);
         Assert.assertEquals(0, tenantResources.getTotalElements());
     }
 
-    private void assertUserIsDeleted(@NotNull Tenant tenant, @NotNull User user) {
+    private void assertUserIsDeleted(Tenant tenant, User user) {
         assertThat(userService.findUserById(tenant.getId(), user.getId()))
                 .as("user").isNull();
-        @NotNull PageLink pageLinkUsers = new PageLink(1);
+        PageLink pageLinkUsers = new PageLink(1);
         PageData<User> users =
                 userService.findUsersByTenantId(tenant.getId(), pageLinkUsers);
         Assert.assertEquals(0, users.getTotalElements());
     }
 
-    private void assertTenantAdminIsDeleted(@NotNull Tenant savedTenant) {
-        @NotNull PageLink pageLinkTenantAdmins = new PageLink(1);
+    private void assertTenantAdminIsDeleted(Tenant savedTenant) {
+        PageLink pageLinkTenantAdmins = new PageLink(1);
         PageData<User> tenantAdmins =
                 userService.findTenantAdmins(savedTenant.getId(), pageLinkTenantAdmins);
         Assert.assertEquals(0, tenantAdmins.getTotalElements());
     }
 
-    private void assertEdgeIsDeleted(@NotNull Tenant tenant, @NotNull Edge edge) {
+    private void assertEdgeIsDeleted(Tenant tenant, Edge edge) {
         assertThat(edgeService.findEdgeById(tenant.getId(), edge.getId()))
                 .as("edge").isNull();
-        @NotNull PageLink pageLinkEdges = new PageLink(1);
+        PageLink pageLinkEdges = new PageLink(1);
         PageData<Edge> edges = edgeService.findEdgesByTenantId(tenant.getId(), pageLinkEdges);
         Assert.assertEquals(0, edges.getTotalElements());
     }
 
-    private void assertDashboardIsDeleted(@NotNull Tenant tenant, @NotNull Dashboard dashboard) {
+    private void assertDashboardIsDeleted(Tenant tenant, Dashboard dashboard) {
         assertThat(dashboardService.findDashboardById(tenant.getId(), dashboard.getId()))
                 .as("dashboard").isNull();
-        @NotNull PageLink pageLinkDashboards = new PageLink(1);
+        PageLink pageLinkDashboards = new PageLink(1);
         PageData<DashboardInfo> dashboards =
                 dashboardService.findDashboardsByTenantId(tenant.getId(), pageLinkDashboards);
         Assert.assertEquals(0, dashboards.getTotalElements());
     }
 
-    private void assertDeviceProfileIsDeleted(@NotNull Tenant tenant, @NotNull DeviceProfile deviceProfile) {
+    private void assertDeviceProfileIsDeleted(Tenant tenant, DeviceProfile deviceProfile) {
         assertThat(deviceProfileService.findDeviceProfileById(tenant.getId(), deviceProfile.getId()))
                 .as("deviceProfile").isNull();
-        @NotNull PageLink pageLinkDeviceProfiles = new PageLink(1);
+        PageLink pageLinkDeviceProfiles = new PageLink(1);
         PageData<DeviceProfile> profiles =
                 deviceProfileService.findDeviceProfiles(tenant.getId(), pageLinkDeviceProfiles);
         Assert.assertEquals(0, profiles.getTotalElements());
     }
 
-    private void assertDeviceIsDeleted(@NotNull Tenant tenant, @NotNull Device device) {
+    private void assertDeviceIsDeleted(Tenant tenant, Device device) {
         assertThat(deviceService.findDeviceById(tenant.getId(), device.getId()))
                 .as("device").isNull();
-        @NotNull PageLink pageLinkDevices = new PageLink(1);
+        PageLink pageLinkDevices = new PageLink(1);
         PageData<Device> devices =
                 deviceService.findDevicesByTenantId(tenant.getId(), pageLinkDevices);
         Assert.assertEquals(0, devices.getTotalElements());
     }
 
-    private void assertAssetIsDeleted(@NotNull Tenant tenant, @NotNull Asset asset) {
+    private void assertAssetIsDeleted(Tenant tenant, Asset asset) {
         assertThat(assetService.findAssetById(tenant.getId(), asset.getId()))
                 .as("asset").isNull();
-        @NotNull PageLink pageLinkAssets = new PageLink(1);
+        PageLink pageLinkAssets = new PageLink(1);
         PageData<Asset> assets =
                 assetService.findAssetsByTenantId(tenant.getId(), pageLinkAssets);
         Assert.assertEquals(0, assets.getTotalElements());
     }
 
-    private void assertEntityViewIsDeleted(@NotNull Tenant tenant, @NotNull Device device, @NotNull EntityView entityView) {
+    private void assertEntityViewIsDeleted(Tenant tenant, Device device, EntityView entityView) {
         assertThat(entityViewService.findEntityViewById(tenant.getId(), entityView.getId()))
                 .as("entityView").isNull();
         List<EntityView> entityViews =
@@ -517,7 +516,7 @@ public abstract class BaseTenantServiceTest extends AbstractServiceTest {
         Assert.assertTrue(entityViews.isEmpty());
     }
 
-    private void assertWidgetsBundleIsDeleted(@NotNull Tenant tenant, @NotNull WidgetsBundle widgetsBundle) {
+    private void assertWidgetsBundleIsDeleted(Tenant tenant, WidgetsBundle widgetsBundle) {
         assertThat(widgetsBundleService.findWidgetsBundleById(tenant.getId(), widgetsBundle.getId()))
                 .as("widgetBundle").isNull();
         List<WidgetsBundle> widgetsBundlesByTenantId =
@@ -525,17 +524,17 @@ public abstract class BaseTenantServiceTest extends AbstractServiceTest {
         Assert.assertTrue(widgetsBundlesByTenantId.isEmpty());
     }
 
-    private void assertCustomerIsDeleted(@NotNull Tenant tenant, @NotNull Customer customer) {
+    private void assertCustomerIsDeleted(Tenant tenant, Customer customer) {
         assertThat(customerService.findCustomerById(tenant.getId(), customer.getId()))
                 .as("customer").isNull();
-        @NotNull PageLink pageLinkCustomer = new PageLink(1);
+        PageLink pageLinkCustomer = new PageLink(1);
         PageData<Customer> pageDataCustomer = customerService
                 .findCustomersByTenantId(tenant.getId(), pageLinkCustomer);
         Assert.assertEquals(0, pageDataCustomer.getTotalElements());
     }
 
-    private Rpc createAndSaveRpcFor(@NotNull Tenant tenant, @NotNull Device device) {
-        @NotNull Rpc rpc = new Rpc();
+    private Rpc createAndSaveRpcFor(Tenant tenant, Device device) {
+        Rpc rpc = new Rpc();
         rpc.setTenantId(tenant.getId());
         rpc.setDeviceId(device.getId());
         rpc.setStatus(RpcStatus.QUEUED);
@@ -543,8 +542,8 @@ public abstract class BaseTenantServiceTest extends AbstractServiceTest {
         return rpcService.save(rpc);
     }
 
-    private TbResource createAndSaveResourceFor(@NotNull Tenant tenant) {
-        @NotNull TbResource resource = new TbResource();
+    private TbResource createAndSaveResourceFor(Tenant tenant) {
+        TbResource resource = new TbResource();
         resource.setTenantId(tenant.getId());
         resource.setTitle("Test resource");
         resource.setResourceType(ResourceType.LWM2M_MODEL);
@@ -554,36 +553,36 @@ public abstract class BaseTenantServiceTest extends AbstractServiceTest {
         return resourceService.saveResource(resource);
     }
 
-    private OtaPackage createAndSaveOtaPackageFor(@NotNull Tenant tenant, @NotNull DeviceProfile deviceProfile) {
+    private OtaPackage createAndSaveOtaPackageFor(Tenant tenant, DeviceProfile deviceProfile) {
         return otaPackageService.saveOtaPackage(
                 BaseOtaPackageServiceTest.createFirmware(
                         tenant.getId(), "2", deviceProfile.getId())
         );
     }
 
-    private Edge createAndSaveEdgeFor(@NotNull Tenant tenant) {
-        @NotNull Edge edge = constructEdge(tenant.getId(), "Test edge", "Simple");
+    private Edge createAndSaveEdgeFor(Tenant tenant) {
+        Edge edge = constructEdge(tenant.getId(), "Test edge", "Simple");
         return edgeService.saveEdge(edge);
     }
 
-    private RuleChain createAndSaveRuleChainFor(@NotNull Tenant tenant) {
-        @NotNull RuleChain ruleChain = new RuleChain();
+    private RuleChain createAndSaveRuleChainFor(Tenant tenant) {
+        RuleChain ruleChain = new RuleChain();
         ruleChain.setTenantId(tenant.getId());
         ruleChain.setName("Test rule chain");
         ruleChain.setType(RuleChainType.CORE);
         return ruleChainService.saveRuleChain(ruleChain);
     }
 
-    private Dashboard createAndSaveDashboardFor(@NotNull Tenant tenant, @NotNull Customer customer) {
-        @NotNull Dashboard dashboard = new Dashboard();
+    private Dashboard createAndSaveDashboardFor(Tenant tenant, Customer customer) {
+        Dashboard dashboard = new Dashboard();
         dashboard.setTenantId(tenant.getId());
         dashboard.setTitle("Test dashboard");
         dashboard.setAssignedCustomers(Set.of(customer.toShortCustomerInfo()));
         return dashboardService.saveDashboard(dashboard);
     }
 
-    private Asset createAndSaveAssetFor(@NotNull Tenant tenant, @NotNull Customer customer) {
-        @NotNull Asset asset = new Asset();
+    private Asset createAndSaveAssetFor(Tenant tenant, Customer customer) {
+        Asset asset = new Asset();
         asset.setTenantId(tenant.getId());
         asset.setCustomerId(customer.getId());
         asset.setType("Test asset type");
@@ -592,8 +591,8 @@ public abstract class BaseTenantServiceTest extends AbstractServiceTest {
         return assetService.saveAsset(asset);
     }
 
-    private EntityView createAndSaveEntityViewFor(@NotNull Tenant tenant, @NotNull Customer customer, @NotNull Device device) {
-        @NotNull EntityView entityView = new EntityView();
+    private EntityView createAndSaveEntityViewFor(Tenant tenant, Customer customer, Device device) {
+        EntityView entityView = new EntityView();
         entityView.setEntityId(device.getId());
         entityView.setTenantId(tenant.getId());
         entityView.setCustomerId(customer.getId());
@@ -604,8 +603,8 @@ public abstract class BaseTenantServiceTest extends AbstractServiceTest {
         return entityViewService.saveEntityView(entityView);
     }
 
-    private Device createAndSaveDeviceFor(@NotNull Tenant tenant, @NotNull Customer customer, @NotNull DeviceProfile deviceProfile) {
-        @NotNull Device device = new Device();
+    private Device createAndSaveDeviceFor(Tenant tenant, Customer customer, DeviceProfile deviceProfile) {
+        Device device = new Device();
         device.setCustomerId(customer.getId());
         device.setTenantId(tenant.getId());
         device.setType("Test type");
@@ -615,20 +614,20 @@ public abstract class BaseTenantServiceTest extends AbstractServiceTest {
         return deviceService.saveDevice(device);
     }
 
-    private DeviceProfile createAndSaveDeviceProfileWithProfileDataFor(@NotNull Tenant tenant) {
-        @NotNull DeviceProfile deviceProfile = new DeviceProfile();
+    private DeviceProfile createAndSaveDeviceProfileWithProfileDataFor(Tenant tenant) {
+        DeviceProfile deviceProfile = new DeviceProfile();
         deviceProfile.setTenantId(tenant.getId());
         deviceProfile.setTransportType(DeviceTransportType.MQTT);
         deviceProfile.setName("Test device profile");
         deviceProfile.setType(DeviceProfileType.DEFAULT);
-        @NotNull DeviceProfileData profileData = new DeviceProfileData();
+        DeviceProfileData profileData = new DeviceProfileData();
         profileData.setTransportConfiguration(new MqttDeviceProfileTransportConfiguration());
         deviceProfile.setProfileData(profileData);
         return deviceProfileService.saveDeviceProfile(deviceProfile);
     }
 
-    private WidgetsBundle createAndSaveWidgetBundleFor(@NotNull Tenant tenant) {
-        @NotNull WidgetsBundle widgetsBundle = new WidgetsBundle();
+    private WidgetsBundle createAndSaveWidgetBundleFor(Tenant tenant) {
+        WidgetsBundle widgetsBundle = new WidgetsBundle();
         widgetsBundle.setTenantId(tenant.getId());
         widgetsBundle.setTitle("Test widgets bundle");
         widgetsBundle.setAlias("TestWidgetsBundle");
@@ -636,16 +635,16 @@ public abstract class BaseTenantServiceTest extends AbstractServiceTest {
         return widgetsBundleService.saveWidgetsBundle(widgetsBundle);
     }
 
-    private Customer createAndSaveCustomerFor(@NotNull Tenant tenant) {
-        @NotNull Customer customer = new Customer();
+    private Customer createAndSaveCustomerFor(Tenant tenant) {
+        Customer customer = new Customer();
         customer.setTitle("Test customer");
         customer.setTenantId(tenant.getId());
         customer.setEmail("testCustomer@test.com");
         return customerService.saveCustomer(customer);
     }
 
-    private User createAndSaveUserFor(@NotNull Tenant tenant) {
-        @NotNull User user = new User();
+    private User createAndSaveUserFor(Tenant tenant) {
+        User user = new User();
         user.setAuthority(Authority.TENANT_ADMIN);
         user.setEmail("tenantAdmin@test.com");
         user.setFirstName("tenantAdmin");
@@ -654,15 +653,15 @@ public abstract class BaseTenantServiceTest extends AbstractServiceTest {
         return userService.saveUser(user);
     }
 
-    private Tenant createAndSaveTenant(@NotNull TenantProfile tenantProfile) {
-        @NotNull Tenant tenant = new Tenant();
+    private Tenant createAndSaveTenant(TenantProfile tenantProfile) {
+        Tenant tenant = new Tenant();
         tenant.setTitle("My tenant");
         tenant.setTenantProfileId(tenantProfile.getId());
         return tenantService.saveTenant(tenant);
     }
 
     private TenantProfile createAndSaveTenantProfile() {
-        @NotNull TenantProfile tenantProfile = new TenantProfile();
+        TenantProfile tenantProfile = new TenantProfile();
         tenantProfile.setName("Test tenant profile");
         return tenantProfileService.saveTenantProfile(TenantId.SYS_TENANT_ID, tenantProfile);
     }

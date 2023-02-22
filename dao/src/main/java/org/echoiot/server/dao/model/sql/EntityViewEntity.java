@@ -6,7 +6,6 @@ import org.echoiot.server.common.data.EntityView;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.util.mapping.JsonStringType;
 import org.hibernate.annotations.TypeDef;
-import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -22,7 +21,7 @@ public class EntityViewEntity extends AbstractEntityViewEntity<EntityView> {
         super();
     }
 
-    public EntityViewEntity(@NotNull EntityView entityView) {
+    public EntityViewEntity(EntityView entityView) {
         super(entityView);
     }
 

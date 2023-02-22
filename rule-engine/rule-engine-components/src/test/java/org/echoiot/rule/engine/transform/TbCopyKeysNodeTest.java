@@ -56,17 +56,17 @@ public class TbCopyKeysNodeTest {
 
     @Test
     void givenDefaultConfig_whenVerify_thenOK() {
-        @NotNull TbCopyKeysNodeConfiguration defaultConfig = new TbCopyKeysNodeConfiguration().defaultConfiguration();
+        TbCopyKeysNodeConfiguration defaultConfig = new TbCopyKeysNodeConfiguration().defaultConfiguration();
         assertThat(defaultConfig.getKeys()).isEqualTo(Collections.emptySet());
         assertThat(defaultConfig.isFromMetadata()).isEqualTo(false);
     }
 
     @Test
     void givenMsgFromMetadata_whenOnMsg_thenVerifyOutput() throws Exception {
-        @NotNull String data = "{}";
+        String data = "{}";
         node.onMsg(ctx, getTbMsg(deviceId, data));
 
-        @NotNull ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
         verify(ctx, times(1)).tellSuccess(newMsgCaptor.capture());
         verify(ctx, never()).tellFailure(any(), any());
 
@@ -84,10 +84,10 @@ public class TbCopyKeysNodeTest {
         nodeConfiguration = new TbNodeConfiguration(mapper.valueToTree(config));
         node.init(ctx, nodeConfiguration);
 
-        @NotNull String data = "{\"DigitData\":22.5,\"TempDataValue\":10.5}";
+        String data = "{\"DigitData\":22.5,\"TempDataValue\":10.5}";
         node.onMsg(ctx, getTbMsg(deviceId, data));
 
-        @NotNull ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
         verify(ctx, times(1)).tellSuccess(newMsgCaptor.capture());
         verify(ctx, never()).tellFailure(any(), any());
 
@@ -101,15 +101,15 @@ public class TbCopyKeysNodeTest {
 
     @Test
     void givenEmptyKeys_whenOnMsg_thenVerifyOutput() throws Exception {
-        @NotNull TbCopyKeysNodeConfiguration defaultConfig = new TbCopyKeysNodeConfiguration().defaultConfiguration();
+        TbCopyKeysNodeConfiguration defaultConfig = new TbCopyKeysNodeConfiguration().defaultConfiguration();
         nodeConfiguration = new TbNodeConfiguration(mapper.valueToTree(defaultConfig));
         node.init(ctx, nodeConfiguration);
 
-        @NotNull String data = "{\"DigitData\":22.5,\"TempDataValue\":10.5}";
-        @NotNull TbMsg msg = getTbMsg(deviceId, data);
+        String data = "{\"DigitData\":22.5,\"TempDataValue\":10.5}";
+        TbMsg msg = getTbMsg(deviceId, data);
         node.onMsg(ctx, msg);
 
-        @NotNull ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
         verify(ctx, times(1)).tellSuccess(newMsgCaptor.capture());
         verify(ctx, never()).tellFailure(any(), any());
 
@@ -121,11 +121,11 @@ public class TbCopyKeysNodeTest {
 
     @Test
     void givenMsgDataNotJSONObject_whenOnMsg_thenTVerifyOutput() throws Exception {
-        @NotNull String data = "[]";
-        @NotNull TbMsg msg = getTbMsg(deviceId, data);
+        String data = "[]";
+        TbMsg msg = getTbMsg(deviceId, data);
         node.onMsg(ctx, msg);
 
-        @NotNull ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
         verify(ctx, times(1)).tellSuccess(newMsgCaptor.capture());
         verify(ctx, never()).tellFailure(any(), any());
 
@@ -135,9 +135,8 @@ public class TbCopyKeysNodeTest {
         assertThat(newMsg).isSameAs(msg);
     }
 
-    @NotNull
-    private TbMsg getTbMsg(EntityId entityId, String data) {
-        @NotNull final Map<String, String> mdMap = Map.of(
+    private @NotNull TbMsg getTbMsg(EntityId entityId, String data) {
+        final Map<String, String> mdMap = Map.of(
                 "TestKey_1", "Test",
                 "country", "US",
                 "voltageDataValue", "220",

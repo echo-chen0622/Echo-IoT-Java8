@@ -7,7 +7,6 @@ import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.gen.edge.v1.CustomerUpdateMsg;
 import org.echoiot.server.gen.edge.v1.EdgeConfiguration;
 import org.echoiot.server.gen.edge.v1.UpdateMsgType;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -20,7 +19,7 @@ abstract public class BaseEdgeTest extends AbstractEdgeTest {
     public void testEdge_assignToCustomer_unassignFromCustomer() throws Exception {
         // assign edge to customer
         edgeImitator.expectMessageAmount(1);
-        @NotNull Customer customer = new Customer();
+        Customer customer = new Customer();
         customer.setTitle("Edge Customer");
         Customer savedCustomer = doPost("/api/customer", customer, Customer.class);
         Assert.assertFalse(edgeImitator.waitForMessages(1));
@@ -30,14 +29,14 @@ abstract public class BaseEdgeTest extends AbstractEdgeTest {
         doPost("/api/customer/" + savedCustomer.getUuidId()
                 + "/edge/" + edge.getUuidId(), Edge.class);
         Assert.assertTrue(edgeImitator.waitForMessages());
-        @NotNull Optional<EdgeConfiguration> edgeConfigurationOpt = edgeImitator.findMessageByType(EdgeConfiguration.class);
+        Optional<EdgeConfiguration> edgeConfigurationOpt = edgeImitator.findMessageByType(EdgeConfiguration.class);
         Assert.assertTrue(edgeConfigurationOpt.isPresent());
-        @NotNull EdgeConfiguration edgeConfiguration = edgeConfigurationOpt.get();
+        EdgeConfiguration edgeConfiguration = edgeConfigurationOpt.get();
         Assert.assertEquals(savedCustomer.getUuidId().getMostSignificantBits(), edgeConfiguration.getCustomerIdMSB());
         Assert.assertEquals(savedCustomer.getUuidId().getLeastSignificantBits(), edgeConfiguration.getCustomerIdLSB());
-        @NotNull Optional<CustomerUpdateMsg> customerUpdateOpt = edgeImitator.findMessageByType(CustomerUpdateMsg.class);
+        Optional<CustomerUpdateMsg> customerUpdateOpt = edgeImitator.findMessageByType(CustomerUpdateMsg.class);
         Assert.assertTrue(customerUpdateOpt.isPresent());
-        @NotNull CustomerUpdateMsg customerUpdateMsg = customerUpdateOpt.get();
+        CustomerUpdateMsg customerUpdateMsg = customerUpdateOpt.get();
         Assert.assertEquals(UpdateMsgType.ENTITY_CREATED_RPC_MESSAGE, customerUpdateMsg.getMsgType());
         Assert.assertEquals(savedCustomer.getUuidId().getMostSignificantBits(), customerUpdateMsg.getIdMSB());
         Assert.assertEquals(savedCustomer.getUuidId().getLeastSignificantBits(), customerUpdateMsg.getIdLSB());

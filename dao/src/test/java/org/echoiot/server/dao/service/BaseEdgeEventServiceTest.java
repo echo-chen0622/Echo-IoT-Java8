@@ -10,7 +10,6 @@ import org.echoiot.server.common.data.id.*;
 import org.echoiot.server.common.data.page.PageData;
 import org.echoiot.server.common.data.page.SortOrder;
 import org.echoiot.server.common.data.page.TimePageLink;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.junit.Assert;
 import org.junit.Before;
@@ -42,10 +41,10 @@ public abstract class BaseEdgeEventServiceTest extends AbstractServiceTest {
 
     @Test
     public void saveEdgeEvent() throws Exception {
-        @NotNull EdgeId edgeId = new EdgeId(Uuids.timeBased());
-        @NotNull DeviceId deviceId = new DeviceId(Uuids.timeBased());
-        @NotNull TenantId tenantId = new TenantId(Uuids.timeBased());
-        @NotNull EdgeEvent edgeEvent = generateEdgeEvent(tenantId, edgeId, deviceId, EdgeEventActionType.ADDED);
+        EdgeId edgeId = new EdgeId(Uuids.timeBased());
+        DeviceId deviceId = new DeviceId(Uuids.timeBased());
+        TenantId tenantId = new TenantId(Uuids.timeBased());
+        EdgeEvent edgeEvent = generateEdgeEvent(tenantId, edgeId, deviceId, EdgeEventActionType.ADDED);
         edgeEventService.saveAsync(edgeEvent).get();
 
         PageData<EdgeEvent> edgeEvents = edgeEventService.findEdgeEvents(tenantId, edgeId, new TimePageLink(1), false);
@@ -60,12 +59,11 @@ public abstract class BaseEdgeEventServiceTest extends AbstractServiceTest {
         Assert.assertEquals(saved.getBody(), edgeEvent.getBody());
     }
 
-    @NotNull
-    protected EdgeEvent generateEdgeEvent(@Nullable TenantId tenantId, EdgeId edgeId, @NotNull EntityId entityId, EdgeEventActionType edgeEventAction) throws IOException {
+    protected EdgeEvent generateEdgeEvent(@Nullable TenantId tenantId, EdgeId edgeId, EntityId entityId, EdgeEventActionType edgeEventAction) throws IOException {
         if (tenantId == null) {
             tenantId = TenantId.fromUUID(Uuids.timeBased());
         }
-        @NotNull EdgeEvent edgeEvent = new EdgeEvent();
+        EdgeEvent edgeEvent = new EdgeEvent();
         edgeEvent.setTenantId(tenantId);
         edgeEvent.setEdgeId(edgeId);
         edgeEvent.setEntityId(entityId.getId());
@@ -77,11 +75,11 @@ public abstract class BaseEdgeEventServiceTest extends AbstractServiceTest {
 
     @Test
     public void findEdgeEventsByTimeDescOrder() throws Exception {
-        @NotNull EdgeId edgeId = new EdgeId(Uuids.timeBased());
-        @NotNull DeviceId deviceId = new DeviceId(Uuids.timeBased());
+        EdgeId edgeId = new EdgeId(Uuids.timeBased());
+        DeviceId deviceId = new DeviceId(Uuids.timeBased());
         TenantId tenantId = TenantId.fromUUID(Uuids.timeBased());
 
-        @NotNull List<ListenableFuture<Void>> futures = new ArrayList<>();
+        List<ListenableFuture<Void>> futures = new ArrayList<>();
         futures.add(saveEdgeEventWithProvidedTime(timeBeforeStartTime, edgeId, deviceId, tenantId));
         futures.add(saveEdgeEventWithProvidedTime(eventTime, edgeId, deviceId, tenantId));
         futures.add(saveEdgeEventWithProvidedTime(eventTime + 1, edgeId, deviceId, tenantId));
@@ -90,7 +88,7 @@ public abstract class BaseEdgeEventServiceTest extends AbstractServiceTest {
 
         Futures.allAsList(futures).get();
 
-        @NotNull TimePageLink pageLink = new TimePageLink(2, 0, "", new SortOrder("createdTime", SortOrder.Direction.DESC), startTime, endTime);
+        TimePageLink pageLink = new TimePageLink(2, 0, "", new SortOrder("createdTime", SortOrder.Direction.DESC), startTime, endTime);
         PageData<EdgeEvent> edgeEvents = edgeEventService.findEdgeEvents(tenantId, edgeId, pageLink, true);
 
         Assert.assertNotNull(edgeEvents.getData());
@@ -112,12 +110,12 @@ public abstract class BaseEdgeEventServiceTest extends AbstractServiceTest {
 
     @Test
     public void findEdgeEventsWithTsUpdateAndWithout() throws Exception {
-        @NotNull EdgeId edgeId = new EdgeId(Uuids.timeBased());
-        @NotNull DeviceId deviceId = new DeviceId(Uuids.timeBased());
+        EdgeId edgeId = new EdgeId(Uuids.timeBased());
+        DeviceId deviceId = new DeviceId(Uuids.timeBased());
         TenantId tenantId = TenantId.fromUUID(Uuids.timeBased());
-        @NotNull TimePageLink pageLink = new TimePageLink(1, 0, null, new SortOrder("createdTime", SortOrder.Direction.ASC));
+        TimePageLink pageLink = new TimePageLink(1, 0, null, new SortOrder("createdTime", SortOrder.Direction.ASC));
 
-        @NotNull EdgeEvent edgeEventWithTsUpdate = generateEdgeEvent(tenantId, edgeId, deviceId, EdgeEventActionType.TIMESERIES_UPDATED);
+        EdgeEvent edgeEventWithTsUpdate = generateEdgeEvent(tenantId, edgeId, deviceId, EdgeEventActionType.TIMESERIES_UPDATED);
         edgeEventService.saveAsync(edgeEventWithTsUpdate).get();
 
         PageData<EdgeEvent> allEdgeEvents = edgeEventService.findEdgeEvents(tenantId, edgeId, pageLink, true);
@@ -130,8 +128,8 @@ public abstract class BaseEdgeEventServiceTest extends AbstractServiceTest {
         Assert.assertTrue(edgeEventsWithoutTsUpdate.getData().isEmpty());
     }
 
-    private ListenableFuture<Void> saveEdgeEventWithProvidedTime(long time, EdgeId edgeId, @NotNull EntityId entityId, TenantId tenantId) throws Exception {
-        @NotNull EdgeEvent edgeEvent = generateEdgeEvent(tenantId, edgeId, entityId, EdgeEventActionType.ADDED);
+    private ListenableFuture<Void> saveEdgeEventWithProvidedTime(long time, EdgeId edgeId, EntityId entityId, TenantId tenantId) throws Exception {
+        EdgeEvent edgeEvent = generateEdgeEvent(tenantId, edgeId, entityId, EdgeEventActionType.ADDED);
         edgeEvent.setId(new EdgeEventId(Uuids.startOf(time)));
         return edgeEventService.saveAsync(edgeEvent);
     }

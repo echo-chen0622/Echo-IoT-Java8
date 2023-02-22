@@ -13,7 +13,6 @@ import org.echoiot.server.dao.util.NoSqlTsDao;
 import org.echoiot.server.dao.util.SqlTsLatestDao;
 import org.echoiot.server.service.install.InstallScripts;
 import org.hibernate.exception.ConstraintViolationException;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
@@ -74,10 +73,10 @@ public class CassandraTsLatestToSqlMigrateService implements TsLatestMigrateServ
     public void migrate() throws Exception {
         log.info("Performing migration of latest timeseries data from cassandra to SQL database ...");
         try (Connection conn = DriverManager.getConnection(dbUrl, dbUserName, dbPassword)) {
-            @NotNull Path schemaUpdateFile = Paths.get(installScripts.getDataDir(), "upgrade", "3.0.1", "schema_ts_latest.sql");
+            Path schemaUpdateFile = Paths.get(installScripts.getDataDir(), "upgrade", "3.0.1", "schema_ts_latest.sql");
             loadSql(schemaUpdateFile, conn);
             conn.setAutoCommit(false);
-            for (@NotNull CassandraToSqlTable table : tables) {
+            for (CassandraToSqlTable table : tables) {
                 table.migrateToSql(cluster.getSession(), conn);
             }
         } catch (Exception e) {
@@ -99,7 +98,7 @@ public class CassandraTsLatestToSqlMigrateService implements TsLatestMigrateServ
     ) {
 
         @Override
-        protected void batchInsert(@NotNull List<CassandraToSqlColumnData[]> batchData, Connection conn) {
+        protected void batchInsert(List<CassandraToSqlColumnData[]> batchData, Connection conn) {
             insertLatestTsRepository.saveOrUpdate(batchData.stream().map(data -> getTsKvLatestEntity(data)).collect(Collectors.toList()));
         }
 
@@ -109,9 +108,8 @@ public class CassandraTsLatestToSqlMigrateService implements TsLatestMigrateServ
         }
     });
 
-    @NotNull
-    private TsKvLatestEntity getTsKvLatestEntity(@NotNull CassandraToSqlColumnData[] data) {
-        @NotNull TsKvLatestEntity latestEntity = new TsKvLatestEntity();
+    private TsKvLatestEntity getTsKvLatestEntity(CassandraToSqlColumnData[] data) {
+        TsKvLatestEntity latestEntity = new TsKvLatestEntity();
         latestEntity.setEntityId(UUIDConverter.fromString(data[0].getValue()));
         latestEntity.setKey(getOrSaveKeyId(data[1].getValue()));
         latestEntity.setTs(Long.parseLong(data[2].getValue()));
@@ -164,8 +162,7 @@ public class CassandraTsLatestToSqlMigrateService implements TsLatestMigrateServ
         return latestEntity;
     }
 
-    @NotNull
-    protected Integer getOrSaveKeyId(@NotNull String strKey) {
+    protected Integer getOrSaveKeyId(String strKey) {
         if (strKey.length() > MAX_KEY_LENGTH) {
             log.warn("[ts_kv_latest] Value size [{}] exceeds maximum size [{}] of column [key] and will be truncated!",
                     strKey.length(), MAX_KEY_LENGTH);
@@ -182,10 +179,10 @@ public class CassandraTsLatestToSqlMigrateService implements TsLatestMigrateServ
                 try {
                     tsKvDictionaryOptional = dictionaryRepository.findById(new TsKvDictionaryCompositeKey(strKey));
                     if (!tsKvDictionaryOptional.isPresent()) {
-                        @NotNull TsKvDictionary tsKvDictionary = new TsKvDictionary();
+                        TsKvDictionary tsKvDictionary = new TsKvDictionary();
                         tsKvDictionary.setKey(strKey);
                         try {
-                            @NotNull TsKvDictionary saved = dictionaryRepository.save(tsKvDictionary);
+                            TsKvDictionary saved = dictionaryRepository.save(tsKvDictionary);
                             tsKvDictionaryMap.put(saved.getKey(), saved.getKeyId());
                             keyId = saved.getKeyId();
                         } catch (ConstraintViolationException e) {
@@ -208,8 +205,8 @@ public class CassandraTsLatestToSqlMigrateService implements TsLatestMigrateServ
         return keyId;
     }
 
-    private void loadSql(@NotNull Path sqlFile, @NotNull Connection conn) throws Exception {
-        @NotNull String sql = new String(Files.readAllBytes(sqlFile), StandardCharsets.UTF_8);
+    private void loadSql(Path sqlFile, Connection conn) throws Exception {
+        String sql = new String(Files.readAllBytes(sqlFile), StandardCharsets.UTF_8);
         conn.createStatement().execute(sql); //NOSONAR, ignoring because method used to execute echoiot database upgrade script
         Thread.sleep(5000);
     }

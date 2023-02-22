@@ -17,7 +17,6 @@ import org.echoiot.server.dao.service.DaoSqlTest;
 import org.echoiot.server.transport.coap.AbstractCoapIntegrationTest;
 import org.echoiot.server.transport.coap.CoapTestClient;
 import org.echoiot.server.transport.coap.CoapTestConfigProperties;
-import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
@@ -120,7 +119,7 @@ public class CoapProvisionJsonDeviceTest extends AbstractCoapIntegrationTest {
                 .provisionSecret("testProvisionSecret")
                 .build();
         processBeforeTest(configProperties);
-        @NotNull String requestCredentials = ",\"credentialsType\": \"ACCESS_TOKEN\",\"token\": \"test_token\"";
+        String requestCredentials = ",\"credentialsType\": \"ACCESS_TOKEN\",\"token\": \"test_token\"";
         JsonNode response = JacksonUtil.fromBytes(createCoapClientAndPublish(requestCredentials));
         Assert.assertTrue(response.hasNonNull("credentialsType"));
         Assert.assertTrue(response.hasNonNull("status"));
@@ -148,7 +147,7 @@ public class CoapProvisionJsonDeviceTest extends AbstractCoapIntegrationTest {
                 .provisionSecret("testProvisionSecret")
                 .build();
         processBeforeTest(configProperties);
-        @NotNull String requestCredentials = ",\"credentialsType\": \"X509_CERTIFICATE\",\"hash\": \"testHash\"";
+        String requestCredentials = ",\"credentialsType\": \"X509_CERTIFICATE\",\"hash\": \"testHash\"";
         JsonNode response = JacksonUtil.fromBytes(createCoapClientAndPublish(requestCredentials));
         Assert.assertTrue(response.hasNonNull("credentialsType"));
         Assert.assertTrue(response.hasNonNull("status"));
@@ -162,7 +161,7 @@ public class CoapProvisionJsonDeviceTest extends AbstractCoapIntegrationTest {
         Assert.assertEquals(deviceCredentials.getCredentialsType().name(), response.get("credentialsType").asText());
         Assert.assertEquals(deviceCredentials.getCredentialsType().name(), "X509_CERTIFICATE");
 
-        @NotNull String cert = EncryptionUtil.certTrimNewLines(deviceCredentials.getCredentialsValue());
+        String cert = EncryptionUtil.certTrimNewLines(deviceCredentials.getCredentialsValue());
         String sha3Hash = EncryptionUtil.getSha3Hash(cert);
 
         Assert.assertEquals(deviceCredentials.getCredentialsId(), sha3Hash);
@@ -213,12 +212,11 @@ public class CoapProvisionJsonDeviceTest extends AbstractCoapIntegrationTest {
     }
 
     private byte[] createCoapClientAndPublish(String deviceCredentials) throws Exception {
-        @NotNull String provisionRequestMsg = createTestProvisionMessage(deviceCredentials);
+        String provisionRequestMsg = createTestProvisionMessage(deviceCredentials);
         client = new CoapTestClient(accessToken, FeatureType.PROVISION);
         return client.postMethod(provisionRequestMsg.getBytes()).getPayload();
     }
 
-    @NotNull
     private String createTestProvisionMessage(String deviceCredentials) {
         return "{\"deviceName\":\"Test Provision device\",\"provisionDeviceKey\":\"testProvisionKey\", \"provisionDeviceSecret\":\"testProvisionSecret\"" + deviceCredentials + "}";
     }

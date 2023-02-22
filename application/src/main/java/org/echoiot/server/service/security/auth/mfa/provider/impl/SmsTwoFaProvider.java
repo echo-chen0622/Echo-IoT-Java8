@@ -11,7 +11,6 @@ import org.echoiot.server.common.data.security.model.mfa.provider.SmsTwoFaProvid
 import org.echoiot.server.common.data.security.model.mfa.provider.TwoFaProviderType;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.security.model.SecurityUser;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 
@@ -23,21 +22,20 @@ public class SmsTwoFaProvider extends OtpBasedTwoFaProvider<SmsTwoFaProviderConf
 
     private final SmsService smsService;
 
-    public SmsTwoFaProvider(@NotNull CacheManager cacheManager, SmsService smsService) {
+    public SmsTwoFaProvider(CacheManager cacheManager, SmsService smsService) {
         super(cacheManager);
         this.smsService = smsService;
     }
 
 
-    @NotNull
     @Override
     public SmsTwoFaAccountConfig generateNewAccountConfig(User user, SmsTwoFaProviderConfig providerConfig) {
         return new SmsTwoFaAccountConfig();
     }
 
     @Override
-    protected void sendVerificationCode(@NotNull SecurityUser user, @NotNull String verificationCode, @NotNull SmsTwoFaProviderConfig providerConfig, @NotNull SmsTwoFaAccountConfig accountConfig) throws EchoiotException {
-        @NotNull Map<String, String> messageData = Map.of(
+    protected void sendVerificationCode(SecurityUser user, String verificationCode, SmsTwoFaProviderConfig providerConfig, SmsTwoFaAccountConfig accountConfig) throws EchoiotException {
+        Map<String, String> messageData = Map.of(
                 "code", verificationCode,
                 "userEmail", user.getEmail()
                                                          );
@@ -55,7 +53,6 @@ public class SmsTwoFaProvider extends OtpBasedTwoFaProvider<SmsTwoFaProviderConf
     }
 
 
-    @NotNull
     @Override
     public TwoFaProviderType getType() {
         return TwoFaProviderType.SMS;

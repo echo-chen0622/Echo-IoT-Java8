@@ -12,7 +12,6 @@ import org.echoiot.server.common.data.page.TimePageLink;
 import org.echoiot.server.dao.edge.EdgeEventService;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.security.permission.Operation;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -39,7 +38,7 @@ public class EdgeEventController extends BaseController {
     @RequestMapping(value = "/edge/{edgeId}/events", method = RequestMethod.GET)
     @ResponseBody
     public PageData<EdgeEvent> getEdgeEvents(
-            @NotNull @ApiParam(value = EDGE_ID_PARAM_DESCRIPTION, required = true)
+            @ApiParam(value = EDGE_ID_PARAM_DESCRIPTION, required = true)
             @PathVariable(EDGE_ID) String strEdgeId,
             @ApiParam(value = PAGE_SIZE_DESCRIPTION, required = true)
             @RequestParam int pageSize,
@@ -49,7 +48,7 @@ public class EdgeEventController extends BaseController {
             @RequestParam(required = false) String textSearch,
             @ApiParam(value = SORT_PROPERTY_DESCRIPTION, allowableValues = EDGE_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
-            @NotNull @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
+            @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortOrder,
             @ApiParam(value = "Timestamp. Edge events with creation time before it won't be queried")
             @RequestParam(required = false) Long startTime,
@@ -58,9 +57,9 @@ public class EdgeEventController extends BaseController {
         checkParameter(EDGE_ID, strEdgeId);
         try {
             TenantId tenantId = getCurrentUser().getTenantId();
-            @NotNull EdgeId edgeId = new EdgeId(toUUID(strEdgeId));
+            EdgeId edgeId = new EdgeId(toUUID(strEdgeId));
             checkEdgeId(edgeId, Operation.READ);
-            @NotNull TimePageLink pageLink = createTimePageLink(pageSize, page, textSearch, sortProperty, sortOrder, startTime, endTime);
+            TimePageLink pageLink = createTimePageLink(pageSize, page, textSearch, sortProperty, sortOrder, startTime, endTime);
             return checkNotNull(edgeEventService.findEdgeEvents(tenantId, edgeId, pageLink, false));
         } catch (Exception e) {
             throw handleException(e);

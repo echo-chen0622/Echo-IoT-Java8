@@ -1,6 +1,5 @@
 package org.echoiot.server.common.transport.config.ssl;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
@@ -19,7 +18,6 @@ import java.security.KeyStore;
 @ConditionalOnExpression("'${spring.main.web-environment:true}'=='true' && '${server.ssl.enabled:false}'=='true'")
 public class SslCredentialsWebServerCustomizer implements WebServerFactoryCustomizer<ConfigurableServletWebServerFactory> {
 
-    @NotNull
     @Bean
     @ConfigurationProperties(prefix = "server.ssl.credentials")
     public SslCredentialsConfig httpServerSslCredentials() {
@@ -36,7 +34,7 @@ public class SslCredentialsWebServerCustomizer implements WebServerFactoryCustom
     }
 
     @Override
-    public void customize(@NotNull ConfigurableServletWebServerFactory factory) {
+    public void customize(ConfigurableServletWebServerFactory factory) {
         SslCredentials sslCredentials = this.httpServerSslCredentialsConfig.getCredentials();
         Ssl ssl = serverProperties.getSsl();
         ssl.setKeyAlias(sslCredentials.getKeyAlias());

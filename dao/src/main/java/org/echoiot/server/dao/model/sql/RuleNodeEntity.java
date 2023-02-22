@@ -13,7 +13,6 @@ import org.echoiot.server.dao.model.SearchTextEntity;
 import org.echoiot.server.dao.util.mapping.JsonStringType;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
-import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -56,7 +55,7 @@ public class RuleNodeEntity extends BaseSqlEntity<RuleNode> implements SearchTex
     public RuleNodeEntity() {
     }
 
-    public RuleNodeEntity(@NotNull RuleNode ruleNode) {
+    public RuleNodeEntity(RuleNode ruleNode) {
         if (ruleNode.getId() != null) {
             this.setUuid(ruleNode.getUuidId());
         }
@@ -85,10 +84,9 @@ public class RuleNodeEntity extends BaseSqlEntity<RuleNode> implements SearchTex
         this.searchText = searchText;
     }
 
-    @NotNull
     @Override
     public RuleNode toData() {
-        @NotNull RuleNode ruleNode = new RuleNode(new RuleNodeId(this.getUuid()));
+        RuleNode ruleNode = new RuleNode(new RuleNodeId(this.getUuid()));
         ruleNode.setCreatedTime(createdTime);
         if (ruleChainId != null) {
             ruleNode.setRuleChainId(new RuleChainId(ruleChainId));

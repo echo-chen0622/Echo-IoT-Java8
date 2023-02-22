@@ -23,7 +23,6 @@ import org.echoiot.server.dao.queue.QueueService;
 import org.echoiot.server.dao.rule.RuleChainService;
 import org.echoiot.server.dao.tenant.TenantService;
 import org.eclipse.leshan.core.util.SecurityUtil;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -61,7 +60,7 @@ public class DeviceProfileDataValidator extends AbstractHasOtaPackageValidator<D
     private DashboardService dashboardService;
 
     @Override
-    protected void validateDataImpl(TenantId tenantId, @NotNull DeviceProfile deviceProfile) {
+    protected void validateDataImpl(TenantId tenantId, DeviceProfile deviceProfile) {
         if (StringUtils.isEmpty(deviceProfile.getName())) {
             throw new DataValidationException("Device profile name should be specified!");
         }
@@ -96,7 +95,7 @@ public class DeviceProfileDataValidator extends AbstractHasOtaPackageValidator<D
         DeviceProfileTransportConfiguration transportConfiguration = deviceProfile.getProfileData().getTransportConfiguration();
         transportConfiguration.validate();
         if (transportConfiguration instanceof MqttDeviceProfileTransportConfiguration) {
-            @NotNull MqttDeviceProfileTransportConfiguration mqttTransportConfiguration = (MqttDeviceProfileTransportConfiguration) transportConfiguration;
+            MqttDeviceProfileTransportConfiguration mqttTransportConfiguration = (MqttDeviceProfileTransportConfiguration) transportConfiguration;
             if (mqttTransportConfiguration.getTransportPayloadTypeConfiguration() instanceof ProtoTransportPayloadConfiguration) {
                 ProtoTransportPayloadConfiguration protoTransportPayloadConfiguration =
                         (ProtoTransportPayloadConfiguration) mqttTransportConfiguration.getTransportPayloadTypeConfiguration();
@@ -105,13 +104,13 @@ public class DeviceProfileDataValidator extends AbstractHasOtaPackageValidator<D
                 validateRpcRequestDynamicMessageFields(protoTransportPayloadConfiguration);
             }
         } else if (transportConfiguration instanceof CoapDeviceProfileTransportConfiguration) {
-            @NotNull CoapDeviceProfileTransportConfiguration coapDeviceProfileTransportConfiguration = (CoapDeviceProfileTransportConfiguration) transportConfiguration;
+            CoapDeviceProfileTransportConfiguration coapDeviceProfileTransportConfiguration = (CoapDeviceProfileTransportConfiguration) transportConfiguration;
             CoapDeviceTypeConfiguration coapDeviceTypeConfiguration = coapDeviceProfileTransportConfiguration.getCoapDeviceTypeConfiguration();
             if (coapDeviceTypeConfiguration instanceof DefaultCoapDeviceTypeConfiguration) {
-                @NotNull DefaultCoapDeviceTypeConfiguration defaultCoapDeviceTypeConfiguration = (DefaultCoapDeviceTypeConfiguration) coapDeviceTypeConfiguration;
+                DefaultCoapDeviceTypeConfiguration defaultCoapDeviceTypeConfiguration = (DefaultCoapDeviceTypeConfiguration) coapDeviceTypeConfiguration;
                 TransportPayloadTypeConfiguration transportPayloadTypeConfiguration = defaultCoapDeviceTypeConfiguration.getTransportPayloadTypeConfiguration();
                 if (transportPayloadTypeConfiguration instanceof ProtoTransportPayloadConfiguration) {
-                    @NotNull ProtoTransportPayloadConfiguration protoTransportPayloadConfiguration = (ProtoTransportPayloadConfiguration) transportPayloadTypeConfiguration;
+                    ProtoTransportPayloadConfiguration protoTransportPayloadConfiguration = (ProtoTransportPayloadConfiguration) transportPayloadTypeConfiguration;
                     validateProtoSchemas(protoTransportPayloadConfiguration);
                     validateTelemetryDynamicMessageFields(protoTransportPayloadConfiguration);
                     validateRpcRequestDynamicMessageFields(protoTransportPayloadConfiguration);
@@ -122,7 +121,7 @@ public class DeviceProfileDataValidator extends AbstractHasOtaPackageValidator<D
             if (lwM2MBootstrapServersConfigurations != null) {
                 validateLwm2mServersConfigOfBootstrapForClient(lwM2MBootstrapServersConfigurations,
                         ((Lwm2mDeviceProfileTransportConfiguration) transportConfiguration).isBootstrapServerUpdateEnable());
-                for (@NotNull LwM2MBootstrapServerCredential bootstrapServerCredential : lwM2MBootstrapServersConfigurations) {
+                for (LwM2MBootstrapServerCredential bootstrapServerCredential : lwM2MBootstrapServersConfigurations) {
                     validateLwm2mServersCredentialOfBootstrapForClient(bootstrapServerCredential);
                 }
             }
@@ -131,8 +130,8 @@ public class DeviceProfileDataValidator extends AbstractHasOtaPackageValidator<D
         List<DeviceProfileAlarm> profileAlarms = deviceProfile.getProfileData().getAlarms();
 
         if (!CollectionUtils.isEmpty(profileAlarms)) {
-            @NotNull Set<String> alarmTypes = new HashSet<>();
-            for (@NotNull DeviceProfileAlarm alarm : profileAlarms) {
+            Set<String> alarmTypes = new HashSet<>();
+            for (DeviceProfileAlarm alarm : profileAlarms) {
                 String alarmType = alarm.getAlarmType();
                 if (StringUtils.isEmpty(alarmType)) {
                     throw new DataValidationException("Alarm rule type should be specified!");
@@ -166,9 +165,8 @@ public class DeviceProfileDataValidator extends AbstractHasOtaPackageValidator<D
         validateOtaPackage(tenantId, deviceProfile, deviceProfile.getId());
     }
 
-    @NotNull
     @Override
-    protected DeviceProfile validateUpdate(TenantId tenantId, @NotNull DeviceProfile deviceProfile) {
+    protected DeviceProfile validateUpdate(TenantId tenantId, DeviceProfile deviceProfile) {
         DeviceProfile old = deviceProfileDao.findById(deviceProfile.getTenantId(), deviceProfile.getId().getId());
         if (old == null) {
             throw new DataValidationException("Can't update non existing device profile!");
@@ -190,7 +188,7 @@ public class DeviceProfileDataValidator extends AbstractHasOtaPackageValidator<D
         return old;
     }
 
-    private void validateProtoSchemas(@NotNull ProtoTransportPayloadConfiguration protoTransportPayloadTypeConfiguration) {
+    private void validateProtoSchemas(ProtoTransportPayloadConfiguration protoTransportPayloadTypeConfiguration) {
         try {
             DynamicProtoUtils.validateProtoSchema(protoTransportPayloadTypeConfiguration.getDeviceAttributesProtoSchema(), ATTRIBUTES_PROTO_SCHEMA, EXCEPTION_PREFIX);
             DynamicProtoUtils.validateProtoSchema(protoTransportPayloadTypeConfiguration.getDeviceTelemetryProtoSchema(), TELEMETRY_PROTO_SCHEMA, EXCEPTION_PREFIX);
@@ -202,13 +200,13 @@ public class DeviceProfileDataValidator extends AbstractHasOtaPackageValidator<D
     }
 
 
-    private void validateTelemetryDynamicMessageFields(@NotNull ProtoTransportPayloadConfiguration protoTransportPayloadTypeConfiguration) {
+    private void validateTelemetryDynamicMessageFields(ProtoTransportPayloadConfiguration protoTransportPayloadTypeConfiguration) {
         String deviceTelemetryProtoSchema = protoTransportPayloadTypeConfiguration.getDeviceTelemetryProtoSchema();
         Descriptors.Descriptor telemetryDynamicMessageDescriptor = protoTransportPayloadTypeConfiguration.getTelemetryDynamicMessageDescriptor(deviceTelemetryProtoSchema);
         if (telemetryDynamicMessageDescriptor == null) {
             throw new DataValidationException(DynamicProtoUtils.invalidSchemaProvidedMessage(TELEMETRY_PROTO_SCHEMA, EXCEPTION_PREFIX) + " Failed to get telemetryDynamicMessageDescriptor!");
         } else {
-            @NotNull List<Descriptors.FieldDescriptor> fields = telemetryDynamicMessageDescriptor.getFields();
+            List<Descriptors.FieldDescriptor> fields = telemetryDynamicMessageDescriptor.getFields();
             if (CollectionUtils.isEmpty(fields)) {
                 throw new DataValidationException(DynamicProtoUtils.invalidSchemaProvidedMessage(TELEMETRY_PROTO_SCHEMA, EXCEPTION_PREFIX) + " " + telemetryDynamicMessageDescriptor.getName() + " fields is empty!");
             } else if (fields.size() == 2) {
@@ -229,7 +227,7 @@ public class DeviceProfileDataValidator extends AbstractHasOtaPackageValidator<D
         }
     }
 
-    private void validateRpcRequestDynamicMessageFields(@NotNull ProtoTransportPayloadConfiguration protoTransportPayloadTypeConfiguration) {
+    private void validateRpcRequestDynamicMessageFields(ProtoTransportPayloadConfiguration protoTransportPayloadTypeConfiguration) {
         DynamicMessage.Builder rpcRequestDynamicMessageBuilder = protoTransportPayloadTypeConfiguration.getRpcRequestDynamicMessageBuilder(protoTransportPayloadTypeConfiguration.getDeviceRpcRequestProtoSchema());
         Descriptors.Descriptor rpcRequestDynamicMessageDescriptor = rpcRequestDynamicMessageBuilder.getDescriptorForType();
         if (rpcRequestDynamicMessageDescriptor == null) {
@@ -271,22 +269,22 @@ public class DeviceProfileDataValidator extends AbstractHasOtaPackageValidator<D
         }
     }
 
-    private void validateLwm2mServersConfigOfBootstrapForClient(@NotNull List<LwM2MBootstrapServerCredential> lwM2MBootstrapServersConfigurations, boolean isBootstrapServerUpdateEnable) {
-        @NotNull Set<String> uris = new HashSet<>();
-        @NotNull Set<Integer> shortServerIds = new HashSet<>();
+    private void validateLwm2mServersConfigOfBootstrapForClient(List<LwM2MBootstrapServerCredential> lwM2MBootstrapServersConfigurations, boolean isBootstrapServerUpdateEnable) {
+        Set<String> uris = new HashSet<>();
+        Set<Integer> shortServerIds = new HashSet<>();
         for (LwM2MBootstrapServerCredential bootstrapServerCredential : lwM2MBootstrapServersConfigurations) {
             AbstractLwM2MBootstrapServerCredential serverConfig = (AbstractLwM2MBootstrapServerCredential) bootstrapServerCredential;
             if (!isBootstrapServerUpdateEnable && serverConfig.isBootstrapServerIs()) {
                 throw new DeviceCredentialsValidationException("Bootstrap config must not include \"Bootstrap Server\". \"Include Bootstrap Server updates\" is " + isBootstrapServerUpdateEnable + ".");
             }
-            @NotNull String server = serverConfig.isBootstrapServerIs() ? "Bootstrap Server" : "LwM2M Server" + " shortServerId: " + serverConfig.getShortServerId() + ":";
+            String server = serverConfig.isBootstrapServerIs() ? "Bootstrap Server" : "LwM2M Server" + " shortServerId: " + serverConfig.getShortServerId() + ":";
             if (serverConfig.getShortServerId() < 1 || serverConfig.getShortServerId() > 65534) {
                 throw new DeviceCredentialsValidationException(server + " ShortServerId must not be less than 1 and more than 65534!");
             }
             if (!shortServerIds.add(serverConfig.getShortServerId())) {
                 throw new DeviceCredentialsValidationException(server + " \"Short server Id\" value = " + serverConfig.getShortServerId() + ". This value must be a unique value for all servers!");
             }
-            @NotNull String uri = serverConfig.getHost() + ":" + serverConfig.getPort();
+            String uri = serverConfig.getHost() + ":" + serverConfig.getPort();
             if (!uris.add(uri)) {
                 throw new DeviceCredentialsValidationException(server + " \"Host + port\" value = " + uri + ". This value must be a unique value for all servers!");
             }
@@ -302,20 +300,20 @@ public class DeviceProfileDataValidator extends AbstractHasOtaPackageValidator<D
         }
     }
 
-    private void validateLwm2mServersCredentialOfBootstrapForClient(@NotNull LwM2MBootstrapServerCredential bootstrapServerConfig) {
+    private void validateLwm2mServersCredentialOfBootstrapForClient(LwM2MBootstrapServerCredential bootstrapServerConfig) {
         String server;
         switch (bootstrapServerConfig.getSecurityMode()) {
             case NO_SEC:
             case PSK:
                 break;
             case RPK:
-                @NotNull RPKLwM2MBootstrapServerCredential rpkServerCredentials = (RPKLwM2MBootstrapServerCredential) bootstrapServerConfig;
+                RPKLwM2MBootstrapServerCredential rpkServerCredentials = (RPKLwM2MBootstrapServerCredential) bootstrapServerConfig;
                 server = rpkServerCredentials.isBootstrapServerIs() ? "Bootstrap Server" : "LwM2M Server";
                 if (StringUtils.isEmpty(rpkServerCredentials.getServerPublicKey())) {
                     throw new DeviceCredentialsValidationException(server + " RPK public key must be specified!");
                 }
                 try {
-                    @NotNull String pubkRpkSever = EncryptionUtil.pubkTrimNewLines(rpkServerCredentials.getServerPublicKey());
+                    String pubkRpkSever = EncryptionUtil.pubkTrimNewLines(rpkServerCredentials.getServerPublicKey());
                     rpkServerCredentials.setServerPublicKey(pubkRpkSever);
                     SecurityUtil.publicKey.decode(rpkServerCredentials.getDecodedCServerPublicKey());
                 } catch (Exception e) {
@@ -323,14 +321,14 @@ public class DeviceProfileDataValidator extends AbstractHasOtaPackageValidator<D
                 }
                 break;
             case X509:
-                @NotNull X509LwM2MBootstrapServerCredential x509ServerCredentials = (X509LwM2MBootstrapServerCredential) bootstrapServerConfig;
+                X509LwM2MBootstrapServerCredential x509ServerCredentials = (X509LwM2MBootstrapServerCredential) bootstrapServerConfig;
                 server = x509ServerCredentials.isBootstrapServerIs() ? "Bootstrap Server" : "LwM2M Server";
                 if (StringUtils.isEmpty(x509ServerCredentials.getServerPublicKey())) {
                     throw new DeviceCredentialsValidationException(server + " X509 certificate must be specified!");
                 }
 
                 try {
-                    @NotNull String certServer = EncryptionUtil.certTrimNewLines(x509ServerCredentials.getServerPublicKey());
+                    String certServer = EncryptionUtil.certTrimNewLines(x509ServerCredentials.getServerPublicKey());
                     x509ServerCredentials.setServerPublicKey(certServer);
                     SecurityUtil.certificate.decode(x509ServerCredentials.getDecodedCServerPublicKey());
                 } catch (Exception e) {

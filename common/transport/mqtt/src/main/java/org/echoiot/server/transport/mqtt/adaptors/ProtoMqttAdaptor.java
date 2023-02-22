@@ -19,7 +19,6 @@ import org.echoiot.server.gen.transport.TransportApiProtos;
 import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.transport.mqtt.session.DeviceSessionCtx;
 import org.echoiot.server.transport.mqtt.session.MqttDeviceAwareSessionContext;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -29,10 +28,10 @@ import java.util.Optional;
 public class ProtoMqttAdaptor implements MqttTransportAdaptor {
 
     @Override
-    public TransportProtos.PostTelemetryMsg convertToPostTelemetry(MqttDeviceAwareSessionContext ctx, @NotNull MqttPublishMessage inbound) throws AdaptorException {
+    public TransportProtos.PostTelemetryMsg convertToPostTelemetry(MqttDeviceAwareSessionContext ctx, MqttPublishMessage inbound) throws AdaptorException {
         DeviceSessionCtx deviceSessionCtx = (DeviceSessionCtx) ctx;
-        @NotNull byte[] bytes = toBytes(inbound.payload());
-        @NotNull Descriptors.Descriptor telemetryDynamicMsgDescriptor = ProtoConverter.validateDescriptor(deviceSessionCtx.getTelemetryDynamicMsgDescriptor());
+        byte[] bytes = toBytes(inbound.payload());
+        Descriptors.Descriptor telemetryDynamicMsgDescriptor = ProtoConverter.validateDescriptor(deviceSessionCtx.getTelemetryDynamicMsgDescriptor());
         try {
             return JsonConverter.convertToTelemetryProto(new JsonParser().parse(ProtoConverter.dynamicMsgToJson(bytes, telemetryDynamicMsgDescriptor)));
         } catch (Exception e) {
@@ -42,10 +41,10 @@ public class ProtoMqttAdaptor implements MqttTransportAdaptor {
     }
 
     @Override
-    public TransportProtos.PostAttributeMsg convertToPostAttributes(MqttDeviceAwareSessionContext ctx, @NotNull MqttPublishMessage inbound) throws AdaptorException {
+    public TransportProtos.PostAttributeMsg convertToPostAttributes(MqttDeviceAwareSessionContext ctx, MqttPublishMessage inbound) throws AdaptorException {
         DeviceSessionCtx deviceSessionCtx = (DeviceSessionCtx) ctx;
-        @NotNull byte[] bytes = toBytes(inbound.payload());
-        @NotNull Descriptors.Descriptor attributesDynamicMessageDescriptor = ProtoConverter.validateDescriptor(deviceSessionCtx.getAttributesDynamicMessageDescriptor());
+        byte[] bytes = toBytes(inbound.payload());
+        Descriptors.Descriptor attributesDynamicMessageDescriptor = ProtoConverter.validateDescriptor(deviceSessionCtx.getAttributesDynamicMessageDescriptor());
         try {
             return JsonConverter.convertToAttributesProto(new JsonParser().parse(ProtoConverter.dynamicMsgToJson(bytes, attributesDynamicMessageDescriptor)));
         } catch (Exception e) {
@@ -55,8 +54,8 @@ public class ProtoMqttAdaptor implements MqttTransportAdaptor {
     }
 
     @Override
-    public TransportProtos.ClaimDeviceMsg convertToClaimDevice(@NotNull MqttDeviceAwareSessionContext ctx, @NotNull MqttPublishMessage inbound) throws AdaptorException {
-        @NotNull byte[] bytes = toBytes(inbound.payload());
+    public TransportProtos.ClaimDeviceMsg convertToClaimDevice(MqttDeviceAwareSessionContext ctx, MqttPublishMessage inbound) throws AdaptorException {
+        byte[] bytes = toBytes(inbound.payload());
         try {
             return ProtoConverter.convertToClaimDeviceProto(ctx.getDeviceId(), bytes);
         } catch (InvalidProtocolBufferException e) {
@@ -66,8 +65,8 @@ public class ProtoMqttAdaptor implements MqttTransportAdaptor {
     }
 
     @Override
-    public TransportProtos.GetAttributeRequestMsg convertToGetAttributes(MqttDeviceAwareSessionContext ctx, @NotNull MqttPublishMessage inbound, @NotNull String topicBase) throws AdaptorException {
-        @NotNull byte[] bytes = toBytes(inbound.payload());
+    public TransportProtos.GetAttributeRequestMsg convertToGetAttributes(MqttDeviceAwareSessionContext ctx, MqttPublishMessage inbound, String topicBase) throws AdaptorException {
+        byte[] bytes = toBytes(inbound.payload());
         String topicName = inbound.variableHeader().topicName();
         try {
             int requestId = getRequestId(topicName, topicBase);
@@ -79,11 +78,11 @@ public class ProtoMqttAdaptor implements MqttTransportAdaptor {
     }
 
     @Override
-    public TransportProtos.ToDeviceRpcResponseMsg convertToDeviceRpcResponse(MqttDeviceAwareSessionContext ctx, @NotNull MqttPublishMessage mqttMsg, @NotNull String topicBase) throws AdaptorException {
+    public TransportProtos.ToDeviceRpcResponseMsg convertToDeviceRpcResponse(MqttDeviceAwareSessionContext ctx, MqttPublishMessage mqttMsg, String topicBase) throws AdaptorException {
         DeviceSessionCtx deviceSessionCtx = (DeviceSessionCtx) ctx;
         String topicName = mqttMsg.variableHeader().topicName();
-        @NotNull byte[] bytes = toBytes(mqttMsg.payload());
-        @NotNull Descriptors.Descriptor rpcResponseDynamicMessageDescriptor = ProtoConverter.validateDescriptor(deviceSessionCtx.getRpcResponseDynamicMessageDescriptor());
+        byte[] bytes = toBytes(mqttMsg.payload());
+        Descriptors.Descriptor rpcResponseDynamicMessageDescriptor = ProtoConverter.validateDescriptor(deviceSessionCtx.getRpcResponseDynamicMessageDescriptor());
         try {
             int requestId = getRequestId(topicName, topicBase);
             JsonElement response = new JsonParser().parse(ProtoConverter.dynamicMsgToJson(bytes, rpcResponseDynamicMessageDescriptor));
@@ -95,8 +94,8 @@ public class ProtoMqttAdaptor implements MqttTransportAdaptor {
     }
 
     @Override
-    public TransportProtos.ToServerRpcRequestMsg convertToServerRpcRequest(MqttDeviceAwareSessionContext ctx, @NotNull MqttPublishMessage mqttMsg, @NotNull String topicBase) throws AdaptorException {
-        @NotNull byte[] bytes = toBytes(mqttMsg.payload());
+    public TransportProtos.ToServerRpcRequestMsg convertToServerRpcRequest(MqttDeviceAwareSessionContext ctx, MqttPublishMessage mqttMsg, String topicBase) throws AdaptorException {
+        byte[] bytes = toBytes(mqttMsg.payload());
         String topicName = mqttMsg.variableHeader().topicName();
         try {
             int requestId = getRequestId(topicName, topicBase);
@@ -108,8 +107,8 @@ public class ProtoMqttAdaptor implements MqttTransportAdaptor {
     }
 
     @Override
-    public TransportProtos.ProvisionDeviceRequestMsg convertToProvisionRequestMsg(MqttDeviceAwareSessionContext ctx, @NotNull MqttPublishMessage mqttMsg) throws AdaptorException {
-        @NotNull byte[] bytes = toBytes(mqttMsg.payload());
+    public TransportProtos.ProvisionDeviceRequestMsg convertToProvisionRequestMsg(MqttDeviceAwareSessionContext ctx, MqttPublishMessage mqttMsg) throws AdaptorException {
+        byte[] bytes = toBytes(mqttMsg.payload());
         try {
             return ProtoConverter.convertToProvisionRequestMsg(bytes);
         } catch (InvalidProtocolBufferException ex) {
@@ -118,9 +117,8 @@ public class ProtoMqttAdaptor implements MqttTransportAdaptor {
         }
     }
 
-    @NotNull
     @Override
-    public Optional<MqttMessage> convertToPublish(@NotNull MqttDeviceAwareSessionContext ctx, @NotNull TransportProtos.GetAttributeResponseMsg responseMsg, String topicBase) throws AdaptorException {
+    public Optional<MqttMessage> convertToPublish(MqttDeviceAwareSessionContext ctx, TransportProtos.GetAttributeResponseMsg responseMsg, String topicBase) throws AdaptorException {
         if (!StringUtils.isEmpty(responseMsg.getError())) {
             throw new AdaptorException(responseMsg.getError());
         } else {
@@ -132,9 +130,8 @@ public class ProtoMqttAdaptor implements MqttTransportAdaptor {
         }
     }
 
-    @NotNull
     @Override
-    public Optional<MqttMessage> convertToPublish(@NotNull MqttDeviceAwareSessionContext ctx, @NotNull TransportProtos.ToDeviceRpcRequestMsg rpcRequest, String topicBase) throws AdaptorException {
+    public Optional<MqttMessage> convertToPublish(MqttDeviceAwareSessionContext ctx, TransportProtos.ToDeviceRpcRequestMsg rpcRequest, String topicBase) throws AdaptorException {
         DeviceSessionCtx deviceSessionCtx = (DeviceSessionCtx) ctx;
         DynamicMessage.Builder rpcRequestDynamicMessageBuilder = deviceSessionCtx.getRpcRequestDynamicMessageBuilder();
         if (rpcRequestDynamicMessageBuilder == null) {
@@ -144,33 +141,28 @@ public class ProtoMqttAdaptor implements MqttTransportAdaptor {
         }
     }
 
-    @NotNull
     @Override
-    public Optional<MqttMessage> convertToPublish(@NotNull MqttDeviceAwareSessionContext ctx, @NotNull TransportProtos.ToServerRpcResponseMsg rpcResponse, String topicBase) {
+    public Optional<MqttMessage> convertToPublish(MqttDeviceAwareSessionContext ctx, TransportProtos.ToServerRpcResponseMsg rpcResponse, String topicBase) {
         return Optional.of(createMqttPublishMsg(ctx, topicBase + rpcResponse.getRequestId(), rpcResponse.toByteArray()));
     }
 
-    @NotNull
     @Override
-    public Optional<MqttMessage> convertToPublish(@NotNull MqttDeviceAwareSessionContext ctx, @NotNull TransportProtos.AttributeUpdateNotificationMsg notificationMsg, String topic) {
+    public Optional<MqttMessage> convertToPublish(MqttDeviceAwareSessionContext ctx, TransportProtos.AttributeUpdateNotificationMsg notificationMsg, String topic) {
         return Optional.of(createMqttPublishMsg(ctx, topic, notificationMsg.toByteArray()));
     }
 
-    @NotNull
     @Override
-    public Optional<MqttMessage> convertToPublish(@NotNull MqttDeviceAwareSessionContext ctx, @NotNull TransportProtos.ProvisionDeviceResponseMsg provisionResponse) {
+    public Optional<MqttMessage> convertToPublish(MqttDeviceAwareSessionContext ctx, TransportProtos.ProvisionDeviceResponseMsg provisionResponse) {
         return Optional.of(createMqttPublishMsg(ctx, MqttTopics.DEVICE_PROVISION_RESPONSE_TOPIC, provisionResponse.toByteArray()));
     }
 
-    @NotNull
     @Override
-    public Optional<MqttMessage> convertToPublish(@NotNull MqttDeviceAwareSessionContext ctx, byte[] firmwareChunk, String requestId, int chunk, @NotNull OtaPackageType firmwareType) throws AdaptorException {
+    public Optional<MqttMessage> convertToPublish(MqttDeviceAwareSessionContext ctx, byte[] firmwareChunk, String requestId, int chunk, OtaPackageType firmwareType) throws AdaptorException {
         return Optional.of(createMqttPublishMsg(ctx, String.format(MqttTopics.DEVICE_SOFTWARE_FIRMWARE_RESPONSES_TOPIC_FORMAT, firmwareType.getKeyPrefix(), requestId, chunk), firmwareChunk));
     }
 
-    @NotNull
     @Override
-    public Optional<MqttMessage> convertToGatewayPublish(@NotNull MqttDeviceAwareSessionContext ctx, String deviceName, @NotNull TransportProtos.GetAttributeResponseMsg responseMsg) throws AdaptorException {
+    public Optional<MqttMessage> convertToGatewayPublish(MqttDeviceAwareSessionContext ctx, String deviceName, TransportProtos.GetAttributeResponseMsg responseMsg) throws AdaptorException {
         if (!StringUtils.isEmpty(responseMsg.getError())) {
             throw new AdaptorException(responseMsg.getError());
         } else {
@@ -182,9 +174,8 @@ public class ProtoMqttAdaptor implements MqttTransportAdaptor {
         }
     }
 
-    @NotNull
     @Override
-    public Optional<MqttMessage> convertToGatewayPublish(@NotNull MqttDeviceAwareSessionContext ctx, String deviceName, TransportProtos.AttributeUpdateNotificationMsg notificationMsg) {
+    public Optional<MqttMessage> convertToGatewayPublish(MqttDeviceAwareSessionContext ctx, String deviceName, TransportProtos.AttributeUpdateNotificationMsg notificationMsg) {
         TransportApiProtos.GatewayAttributeUpdateNotificationMsg.Builder builder = TransportApiProtos.GatewayAttributeUpdateNotificationMsg.newBuilder();
         builder.setDeviceName(deviceName);
         builder.setNotificationMsg(notificationMsg);
@@ -192,9 +183,8 @@ public class ProtoMqttAdaptor implements MqttTransportAdaptor {
         return Optional.of(createMqttPublishMsg(ctx, MqttTopics.GATEWAY_ATTRIBUTES_TOPIC, payloadBytes));
     }
 
-    @NotNull
     @Override
-    public Optional<MqttMessage> convertToGatewayPublish(@NotNull MqttDeviceAwareSessionContext ctx, String deviceName, TransportProtos.ToDeviceRpcRequestMsg rpcRequest) {
+    public Optional<MqttMessage> convertToGatewayPublish(MqttDeviceAwareSessionContext ctx, String deviceName, TransportProtos.ToDeviceRpcRequestMsg rpcRequest) {
         TransportApiProtos.GatewayDeviceRpcRequestMsg.Builder builder = TransportApiProtos.GatewayDeviceRpcRequestMsg.newBuilder();
         builder.setDeviceName(deviceName);
         builder.setRpcRequestMsg(rpcRequest);
@@ -202,14 +192,14 @@ public class ProtoMqttAdaptor implements MqttTransportAdaptor {
         return Optional.of(createMqttPublishMsg(ctx, MqttTopics.GATEWAY_RPC_TOPIC, payloadBytes));
     }
 
-    public static byte[] toBytes(@NotNull ByteBuf inbound) {
-        @NotNull byte[] bytes = new byte[inbound.readableBytes()];
+    public static byte[] toBytes(ByteBuf inbound) {
+        byte[] bytes = new byte[inbound.readableBytes()];
         int readerIndex = inbound.readerIndex();
         inbound.getBytes(readerIndex, bytes);
         return bytes;
     }
 
-    private int getRequestId(@NotNull String topicName, @NotNull String topic) {
+    private int getRequestId(String topicName, String topic) {
         return Integer.parseInt(topicName.substring(topic.length()));
     }
 }

@@ -18,7 +18,6 @@ import org.echoiot.server.dao.model.SearchTextEntity;
 import org.echoiot.server.dao.util.mapping.JsonStringType;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
-import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -71,7 +70,7 @@ public final class DashboardEntity extends BaseSqlEntity<Dashboard> implements S
         super();
     }
 
-    public DashboardEntity(@NotNull Dashboard dashboard) {
+    public DashboardEntity(Dashboard dashboard) {
         if (dashboard.getId() != null) {
             this.setUuid(dashboard.getId().getId());
         }
@@ -106,10 +105,9 @@ public final class DashboardEntity extends BaseSqlEntity<Dashboard> implements S
         this.searchText = searchText;
     }
 
-    @NotNull
     @Override
     public Dashboard toData() {
-        @NotNull Dashboard dashboard = new Dashboard(new DashboardId(this.getUuid()));
+        Dashboard dashboard = new Dashboard(new DashboardId(this.getUuid()));
         dashboard.setCreatedTime(this.getCreatedTime());
         if (tenantId != null) {
             dashboard.setTenantId(TenantId.fromUUID(tenantId));

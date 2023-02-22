@@ -8,7 +8,6 @@ import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.transport.snmp.AuthenticationProtocol;
 import org.echoiot.server.common.data.transport.snmp.PrivacyProtocol;
 import org.echoiot.server.common.data.transport.snmp.SnmpProtocolVersion;
-import org.jetbrains.annotations.NotNull;
 
 @Data
 @ToString(of = {"host", "port", "protocolVersion"})
@@ -41,7 +40,6 @@ public class SnmpDeviceTransportConfiguration implements DeviceTransportConfigur
         this.community = "public";
     }
 
-    @NotNull
     @Override
     public DeviceTransportType getType() {
         return DeviceTransportType.SNMP;

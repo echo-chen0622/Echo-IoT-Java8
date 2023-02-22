@@ -9,7 +9,6 @@ import org.echoiot.script.api.tbel.TbelScript;
 import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.controller.AbstractControllerTest;
 import org.echoiot.server.dao.service.DaoSqlTest;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
@@ -71,7 +70,7 @@ class TbelInvokeServiceTest extends AbstractControllerTest {
 
     @Test
     void givenTooBigScriptForEval_thenReturnError() {
-        @NotNull String hugeScript = "var a = 'qwertyqwertywertyqwabababerqwertyqwertywertyqwabababerqwertyqwertywertyqwabababerqwertyqwertywertyqwabababerqwertyqwertywertyqwabababer'; return {a: a};";
+        String hugeScript = "var a = 'qwertyqwertywertyqwabababerqwertyqwertywertyqwabababerqwertyqwertywertyqwabababerqwertyqwertywertyqwabababerqwertyqwertywertyqwabababer'; return {a: a};";
 
         assertThatThrownBy(() -> {
             evalScript(hugeScript);
@@ -80,8 +79,8 @@ class TbelInvokeServiceTest extends AbstractControllerTest {
 
     @Test
     void givenTooBigScriptInputArgs_thenReturnErrorAndReportScriptExecutionError() throws Exception {
-        @NotNull String script = "return { msg: msg };";
-        @NotNull String hugeMsg = "{\"input\":\"123456781234349\"}";
+        String script = "return { msg: msg };";
+        String hugeMsg = "{\"input\":\"123456781234349\"}";
         UUID scriptId = evalScript(script);
 
         for (int i = 0; i < maxJsErrors; i++) {
@@ -94,7 +93,7 @@ class TbelInvokeServiceTest extends AbstractControllerTest {
 
     @Test
     void whenScriptInvocationResultIsTooBig_thenReturnErrorAndReportScriptExecutionError() throws Exception {
-        @NotNull String script = "var s = 'a'; for(int i=0; i<50; i++){ s +='a';} return { s: s};";
+        String script = "var s = 'a'; for(int i=0; i<50; i++){ s +='a';} return { s: s};";
         UUID scriptId = evalScript(script);
 
         for (int i = 0; i < maxJsErrors; i++) {
@@ -107,8 +106,8 @@ class TbelInvokeServiceTest extends AbstractControllerTest {
 
     @Test
     void givenScriptsWithSameBody_thenCompileAndCacheOnlyOnce() throws Exception {
-        @NotNull String script = "return msg.temperature > 20;";
-        @NotNull List<UUID> scriptsIds = new ArrayList<>();
+        String script = "return msg.temperature > 20;";
+        List<UUID> scriptsIds = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
             UUID scriptId = evalScript(script);
             scriptsIds.add(scriptId);
@@ -127,8 +126,8 @@ class TbelInvokeServiceTest extends AbstractControllerTest {
 
     @Test
     public void whenReleasingScript_thenCheckForScriptHashUsages() throws Exception {
-        @NotNull String script = "return msg.temperature > 20;";
-        @NotNull List<UUID> scriptsIds = new ArrayList<>();
+        String script = "return msg.temperature > 20;";
+        List<UUID> scriptsIds = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             UUID scriptId = evalScript(script);
             scriptsIds.add(scriptId);
@@ -158,9 +157,9 @@ class TbelInvokeServiceTest extends AbstractControllerTest {
         Map<UUID, String> scriptIdToHash = getFieldValue(invokeService, "scriptIdToHash");
         Cache<String, Serializable> compiledScriptsCache = getFieldValue(invokeService, "compiledScriptsCache");
 
-        @NotNull List<UUID> scriptsIds = new ArrayList<>();
+        List<UUID> scriptsIds = new ArrayList<>();
         for (int i = 0; i < 110; i++) { // tbel.compiled_scripts_cache_size = 100
-            @NotNull String script = "return msg.temperature > " + i;
+            String script = "return msg.temperature > " + i;
             UUID scriptId = evalScript(script);
             scriptsIds.add(scriptId);
 
@@ -169,7 +168,7 @@ class TbelInvokeServiceTest extends AbstractControllerTest {
             }
         }
 
-        @NotNull ConcurrentMap<String, Serializable> cache = compiledScriptsCache.asMap();
+        ConcurrentMap<String, Serializable> cache = compiledScriptsCache.asMap();
 
         for (int i = 0; i < 10; i++) { // iterating rarely used scripts
             UUID scriptId = scriptsIds.get(i);

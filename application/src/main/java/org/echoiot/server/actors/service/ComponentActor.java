@@ -12,7 +12,6 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.plugin.ComponentLifecycleEvent;
 import org.echoiot.server.common.msg.plugin.ComponentLifecycleMsg;
 import org.echoiot.server.common.msg.queue.PartitionChangeMsg;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Andrew Shvayka
@@ -82,7 +81,7 @@ public abstract class ComponentActor<T extends EntityId, P extends ComponentMsgP
         }
     }
 
-    protected void onComponentLifecycleMsg(@NotNull ComponentLifecycleMsg msg) {
+    protected void onComponentLifecycleMsg(ComponentLifecycleMsg msg) {
         log.debug("[{}][{}][{}] onComponentLifecycleMsg: [{}]", tenantId, id, id.getEntityType(), msg.getEvent());
         try {
             switch (msg.getEvent()) {
@@ -162,11 +161,11 @@ public abstract class ComponentActor<T extends EntityId, P extends ComponentMsgP
         }
     }
 
-    private void logLifecycleEvent(@NotNull ComponentLifecycleEvent event) {
+    private void logLifecycleEvent(ComponentLifecycleEvent event) {
         logLifecycleEvent(event, null);
     }
 
-    private void logLifecycleEvent(@NotNull ComponentLifecycleEvent event, Exception e) {
+    private void logLifecycleEvent(ComponentLifecycleEvent event, Exception e) {
         systemContext.persistLifecycleEvent(tenantId, id, event, e);
     }
 

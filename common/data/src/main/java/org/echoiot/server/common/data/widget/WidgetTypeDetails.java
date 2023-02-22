@@ -6,7 +6,6 @@ import lombok.Data;
 import org.echoiot.server.common.data.id.WidgetTypeId;
 import org.echoiot.server.common.data.validation.Length;
 import org.echoiot.server.common.data.validation.NoXss;
-import org.jetbrains.annotations.NotNull;
 
 @Data
 @JsonPropertyOrder({ "alias", "name", "image", "description", "descriptor" })
@@ -32,7 +31,7 @@ public class WidgetTypeDetails extends WidgetType {
         super(baseWidgetType);
     }
 
-    public WidgetTypeDetails(@NotNull WidgetTypeDetails widgetTypeDetails) {
+    public WidgetTypeDetails(WidgetTypeDetails widgetTypeDetails) {
         super(widgetTypeDetails);
         this.image = widgetTypeDetails.getImage();
         this.description = widgetTypeDetails.getDescription();

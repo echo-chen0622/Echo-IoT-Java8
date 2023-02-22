@@ -13,7 +13,6 @@ import org.echoiot.mqtt.MqttClient;
 import org.echoiot.mqtt.MqttClientConfig;
 import org.echoiot.mqtt.MqttConnectResult;
 import org.echoiot.mqtt.integration.server.MqttServer;
-import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -64,7 +63,7 @@ public class MqttIntegrationTest {
         this.mqttClient = initClient();
 
         log.warn("Sending publish messages...");
-        @NotNull CountDownLatch latch = new CountDownLatch(3);
+        CountDownLatch latch = new CountDownLatch(3);
         for (int i = 0; i < 3; i++) {
             Future<Void> pubFuture = publishMsg();
             pubFuture.addListener(future -> latch.countDown());
@@ -75,7 +74,7 @@ public class MqttIntegrationTest {
         Assert.assertTrue(awaitResult);
 
         //when
-        @NotNull CountDownLatch keepAliveLatch = new CountDownLatch(1);
+        CountDownLatch keepAliveLatch = new CountDownLatch(1);
 
         log.warn("Starting idle period...");
         boolean keepaliveAwaitResult = keepAliveLatch.await(5, TimeUnit.SECONDS);
@@ -99,15 +98,14 @@ public class MqttIntegrationTest {
                 MqttQoS.AT_LEAST_ONCE);
     }
 
-    @NotNull
     private MqttClient initClient() throws Exception {
-        @NotNull MqttClientConfig config = new MqttClientConfig();
+        MqttClientConfig config = new MqttClientConfig();
         config.setTimeoutSeconds(KEEPALIVE_TIMEOUT_SECONDS);
-        @NotNull MqttClient client = MqttClient.create(config, null);
+        MqttClient client = MqttClient.create(config, null);
         client.setEventLoop(this.eventLoopGroup);
         Future<MqttConnectResult> connectFuture = client.connect(MQTT_HOST, this.mqttServer.getMqttPort());
 
-        @NotNull String hostPort = MQTT_HOST + ":" + this.mqttServer.getMqttPort();
+        String hostPort = MQTT_HOST + ":" + this.mqttServer.getMqttPort();
         MqttConnectResult result;
         try {
             result = connectFuture.get(10, TimeUnit.SECONDS);

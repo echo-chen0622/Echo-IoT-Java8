@@ -2,7 +2,6 @@ package org.echoiot.server.common.data.kv;
 
 import lombok.ToString;
 import org.echoiot.server.common.data.query.TsValue;
-import org.jetbrains.annotations.NotNull;
 
 @ToString
 public class AggTsKvEntry extends BasicTsKvEntry {
@@ -16,7 +15,6 @@ public class AggTsKvEntry extends BasicTsKvEntry {
         this.count = count;
     }
 
-    @NotNull
     @Override
     public TsValue toTsValue() {
         return new TsValue(ts, getValueAsString(), count);

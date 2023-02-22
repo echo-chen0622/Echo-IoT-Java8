@@ -13,7 +13,6 @@ import org.echoiot.server.dao.entityview.EntityViewService;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.entitiy.entityview.TbEntityViewService;
 import org.echoiot.server.service.sync.vc.data.EntitiesImportCtx;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -25,7 +24,6 @@ import javax.annotation.Resource;
 @RequiredArgsConstructor
 public class EntityViewImportService extends BaseEntityImportService<EntityViewId, EntityView, EntityExportData<EntityView>> {
 
-    @NotNull
     private final EntityViewService entityViewService;
 
     @Lazy
@@ -33,14 +31,13 @@ public class EntityViewImportService extends BaseEntityImportService<EntityViewI
     private TbEntityViewService tbEntityViewService;
 
     @Override
-    protected void setOwner(TenantId tenantId, @NotNull EntityView entityView, @NotNull IdProvider idProvider) {
+    protected void setOwner(TenantId tenantId, EntityView entityView, IdProvider idProvider) {
         entityView.setTenantId(tenantId);
         entityView.setCustomerId(idProvider.getInternalId(entityView.getCustomerId()));
     }
 
-    @NotNull
     @Override
-    protected EntityView prepare(EntitiesImportCtx ctx, @NotNull EntityView entityView, EntityView old, EntityExportData<EntityView> exportData, @NotNull IdProvider idProvider) {
+    protected EntityView prepare(EntitiesImportCtx ctx, EntityView entityView, EntityView old, EntityExportData<EntityView> exportData, IdProvider idProvider) {
         entityView.setEntityId(idProvider.getInternalId(entityView.getEntityId()));
         return entityView;
     }
@@ -51,28 +48,26 @@ public class EntityViewImportService extends BaseEntityImportService<EntityViewI
     }
 
     @Override
-    protected void onEntitySaved(@NotNull User user, @NotNull EntityView savedEntityView, @Nullable EntityView oldEntityView) throws EchoiotException {
+    protected void onEntitySaved(User user, EntityView savedEntityView, @Nullable EntityView oldEntityView) throws EchoiotException {
         tbEntityViewService.updateEntityViewAttributes(user.getTenantId(), savedEntityView, oldEntityView, user);
         super.onEntitySaved(user, savedEntityView, oldEntityView);
         clusterService.broadcastEntityStateChangeEvent(savedEntityView.getTenantId(), savedEntityView.getId(),
                 oldEntityView == null ? ComponentLifecycleEvent.CREATED : ComponentLifecycleEvent.UPDATED);
     }
 
-    @NotNull
     @Override
-    protected EntityView deepCopy(@NotNull EntityView entityView) {
+    protected EntityView deepCopy(EntityView entityView) {
         return new EntityView(entityView);
     }
 
     @Override
-    protected void cleanupForComparison(@NotNull EntityView e) {
+    protected void cleanupForComparison(EntityView e) {
         super.cleanupForComparison(e);
         if (e.getCustomerId() != null && e.getCustomerId().isNullUid()) {
             e.setCustomerId(null);
         }
     }
 
-    @NotNull
     @Override
     public EntityType getEntityType() {
         return EntityType.ENTITY_VIEW;

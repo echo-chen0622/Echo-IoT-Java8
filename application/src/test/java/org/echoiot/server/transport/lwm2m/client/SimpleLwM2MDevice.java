@@ -10,7 +10,6 @@ import org.eclipse.leshan.core.node.LwM2mResource;
 import org.eclipse.leshan.core.response.ExecuteResponse;
 import org.eclipse.leshan.core.response.ReadResponse;
 import org.eclipse.leshan.core.response.WriteResponse;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.text.SimpleDateFormat;
@@ -32,7 +31,7 @@ public class SimpleLwM2MDevice extends BaseInstanceEnabler implements Destroyabl
     public SimpleLwM2MDevice() {
     }
 
-    public SimpleLwM2MDevice(@NotNull ScheduledExecutorService executorService) {
+    public SimpleLwM2MDevice(ScheduledExecutorService executorService) {
         try {
             executorService.scheduleWithFixedDelay(() -> {
                         fireResourceChange(9);
@@ -46,7 +45,7 @@ public class SimpleLwM2MDevice extends BaseInstanceEnabler implements Destroyabl
 
 
     @Override
-    public ReadResponse read(@NotNull ServerIdentity identity, int resourceId) {
+    public ReadResponse read(ServerIdentity identity, int resourceId) {
         if (!identity.isSystem())
             log.info("Read on Device resource /{}/{}/{}", getModel().id, getId(), resourceId);
         switch (resourceId) {
@@ -63,7 +62,7 @@ public class SimpleLwM2MDevice extends BaseInstanceEnabler implements Destroyabl
             case 10:
                 return ReadResponse.success(resourceId, getMemoryFree());
             case 11:
-                @NotNull Map<Integer, Long> errorCodes = new HashMap<>();
+                Map<Integer, Long> errorCodes = new HashMap<>();
                 errorCodes.put(0, getErrorCode());
                 return ReadResponse.success(resourceId, errorCodes, ResourceModel.Type.INTEGER);
             case 14:
@@ -87,7 +86,6 @@ public class SimpleLwM2MDevice extends BaseInstanceEnabler implements Destroyabl
         }
     }
 
-    @NotNull
     @Override
     public ExecuteResponse execute(ServerIdentity identity, int resourceId, @Nullable String params) {
         @Nullable String withParams = null;
@@ -99,7 +97,7 @@ public class SimpleLwM2MDevice extends BaseInstanceEnabler implements Destroyabl
     }
 
     @Override
-    public WriteResponse write(ServerIdentity identity, boolean replace, int resourceId, @NotNull LwM2mResource value) {
+    public WriteResponse write(ServerIdentity identity, boolean replace, int resourceId, LwM2mResource value) {
         log.info("Write on Device resource /{}/{}/{}", getModel().id, getId(), resourceId);
 
         switch (resourceId) {
@@ -118,22 +116,18 @@ public class SimpleLwM2MDevice extends BaseInstanceEnabler implements Destroyabl
         }
     }
 
-    @NotNull
     private String getManufacturer() {
         return "Echoiot Demo Lwm2mDevice";
     }
 
-    @NotNull
     private String getModelNumber() {
         return "Model 500";
     }
 
-    @NotNull
     private String getSerialNumber() {
         return "Echoiot-500-000-0001";
     }
 
-    @NotNull
     private String getFirmwareVersion() {
         return "1.0.2";
     }
@@ -171,22 +165,18 @@ public class SimpleLwM2MDevice extends BaseInstanceEnabler implements Destroyabl
         timeZone = t;
     }
 
-    @NotNull
     private String getSupportedBinding() {
         return "U";
     }
 
-    @NotNull
     private String getDeviceType() {
         return "Demo";
     }
 
-    @NotNull
     private String getHardwareVersion() {
         return "1.0.1";
     }
 
-    @NotNull
     private String getSoftwareVersion() {
         return "1.0.2";
     }

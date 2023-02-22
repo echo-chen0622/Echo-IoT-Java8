@@ -14,7 +14,6 @@ import org.echoiot.server.common.data.script.ScriptLanguage;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.TbMsgDataType;
 import org.echoiot.server.common.msg.TbMsgMetaData;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -70,9 +69,8 @@ public class TbAlarmNodeTest {
     @Before
     public void before() {
         dbExecutor = new ListeningExecutor() {
-            @NotNull
-            @Override
-            public <T> ListenableFuture<T> executeAsync(@NotNull Callable<T> task) {
+                    @Override
+            public <T> ListenableFuture<T> executeAsync(Callable<T> task) {
                 try {
                     return Futures.immediateFuture(task.call());
                 } catch (Exception e) {
@@ -81,7 +79,7 @@ public class TbAlarmNodeTest {
             }
 
             @Override
-            public void execute(@NotNull Runnable command) {
+            public void execute(Runnable command) {
                 command.run();
             }
         };
@@ -91,7 +89,7 @@ public class TbAlarmNodeTest {
     public void newAlarmCanBeCreated() throws ScriptException, IOException {
         initWithCreateAlarmScript();
         metaData.putValue("key", "value");
-        @NotNull TbMsg msg = TbMsg.newMsg("USER", originator, metaData, TbMsgDataType.JSON, rawJson, ruleChainId, ruleNodeId);
+        TbMsg msg = TbMsg.newMsg("USER", originator, metaData, TbMsgDataType.JSON, rawJson, ruleChainId, ruleNodeId);
 
         when(detailsJs.executeJsonAsync(msg)).thenReturn(Futures.immediateFuture(null));
         when(alarmService.findLatestByOriginatorAndType(tenantId, originator, "SomeType")).thenReturn(Futures.immediateFuture(null));
@@ -103,11 +101,11 @@ public class TbAlarmNodeTest {
         successCaptor.getValue().run();
         verify(ctx).tellNext(any(), eq("Created"));
 
-        @NotNull ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
-        @NotNull ArgumentCaptor<String> typeCaptor = ArgumentCaptor.forClass(String.class);
-        @NotNull ArgumentCaptor<EntityId> originatorCaptor = ArgumentCaptor.forClass(EntityId.class);
-        @NotNull ArgumentCaptor<TbMsgMetaData> metadataCaptor = ArgumentCaptor.forClass(TbMsgMetaData.class);
-        @NotNull ArgumentCaptor<String> dataCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        ArgumentCaptor<String> typeCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<EntityId> originatorCaptor = ArgumentCaptor.forClass(EntityId.class);
+        ArgumentCaptor<TbMsgMetaData> metadataCaptor = ArgumentCaptor.forClass(TbMsgMetaData.class);
+        ArgumentCaptor<String> dataCaptor = ArgumentCaptor.forClass(String.class);
         verify(ctx).transformMsg(msgCaptor.capture(), typeCaptor.capture(), originatorCaptor.capture(), metadataCaptor.capture(), dataCaptor.capture());
 
         assertEquals("ALARM", typeCaptor.getValue());
@@ -136,7 +134,7 @@ public class TbAlarmNodeTest {
     public void buildDetailsThrowsException() throws ScriptException, IOException {
         initWithCreateAlarmScript();
         metaData.putValue("key", "value");
-        @NotNull TbMsg msg = TbMsg.newMsg("USER", originator, metaData, TbMsgDataType.JSON, rawJson, ruleChainId, ruleNodeId);
+        TbMsg msg = TbMsg.newMsg("USER", originator, metaData, TbMsgDataType.JSON, rawJson, ruleChainId, ruleNodeId);
 
         when(detailsJs.executeJsonAsync(msg)).thenReturn(Futures.immediateFailedFuture(new NotImplementedException("message")));
         when(alarmService.findLatestByOriginatorAndType(tenantId, originator, "SomeType")).thenReturn(Futures.immediateFuture(null));
@@ -159,7 +157,7 @@ public class TbAlarmNodeTest {
     public void ifAlarmClearedCreateNew() throws ScriptException, IOException {
         initWithCreateAlarmScript();
         metaData.putValue("key", "value");
-        @NotNull TbMsg msg = TbMsg.newMsg("USER", originator, metaData, TbMsgDataType.JSON, rawJson, ruleChainId, ruleNodeId);
+        TbMsg msg = TbMsg.newMsg("USER", originator, metaData, TbMsgDataType.JSON, rawJson, ruleChainId, ruleNodeId);
         long ts = msg.getTs();
         Alarm clearedAlarm = Alarm.builder().status(CLEARED_ACK).build();
 
@@ -174,11 +172,11 @@ public class TbAlarmNodeTest {
         successCaptor.getValue().run();
         verify(ctx).tellNext(any(), eq("Created"));
 
-        @NotNull ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
-        @NotNull ArgumentCaptor<String> typeCaptor = ArgumentCaptor.forClass(String.class);
-        @NotNull ArgumentCaptor<EntityId> originatorCaptor = ArgumentCaptor.forClass(EntityId.class);
-        @NotNull ArgumentCaptor<TbMsgMetaData> metadataCaptor = ArgumentCaptor.forClass(TbMsgMetaData.class);
-        @NotNull ArgumentCaptor<String> dataCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        ArgumentCaptor<String> typeCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<EntityId> originatorCaptor = ArgumentCaptor.forClass(EntityId.class);
+        ArgumentCaptor<TbMsgMetaData> metadataCaptor = ArgumentCaptor.forClass(TbMsgMetaData.class);
+        ArgumentCaptor<String> dataCaptor = ArgumentCaptor.forClass(String.class);
         verify(ctx).transformMsg(msgCaptor.capture(), typeCaptor.capture(), originatorCaptor.capture(), metadataCaptor.capture(), dataCaptor.capture());
 
         assertEquals("ALARM", typeCaptor.getValue());
@@ -208,7 +206,7 @@ public class TbAlarmNodeTest {
     public void alarmCanBeUpdated() throws ScriptException, IOException {
         initWithCreateAlarmScript();
         metaData.putValue("key", "value");
-        @NotNull TbMsg msg = TbMsg.newMsg("USER", originator, metaData, TbMsgDataType.JSON, rawJson, ruleChainId, ruleNodeId);
+        TbMsg msg = TbMsg.newMsg("USER", originator, metaData, TbMsgDataType.JSON, rawJson, ruleChainId, ruleNodeId);
 
         long oldEndDate = System.currentTimeMillis();
         Alarm activeAlarm = Alarm.builder().type("SomeType").tenantId(tenantId).originator(originator).status(ACTIVE_UNACK).severity(WARNING).endTs(oldEndDate).build();
@@ -224,11 +222,11 @@ public class TbAlarmNodeTest {
         successCaptor.getValue().run();
         verify(ctx).tellNext(any(), eq("Updated"));
 
-        @NotNull ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
-        @NotNull ArgumentCaptor<String> typeCaptor = ArgumentCaptor.forClass(String.class);
-        @NotNull ArgumentCaptor<EntityId> originatorCaptor = ArgumentCaptor.forClass(EntityId.class);
-        @NotNull ArgumentCaptor<TbMsgMetaData> metadataCaptor = ArgumentCaptor.forClass(TbMsgMetaData.class);
-        @NotNull ArgumentCaptor<String> dataCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        ArgumentCaptor<String> typeCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<EntityId> originatorCaptor = ArgumentCaptor.forClass(EntityId.class);
+        ArgumentCaptor<TbMsgMetaData> metadataCaptor = ArgumentCaptor.forClass(TbMsgMetaData.class);
+        ArgumentCaptor<String> dataCaptor = ArgumentCaptor.forClass(String.class);
         verify(ctx).transformMsg(msgCaptor.capture(), typeCaptor.capture(), originatorCaptor.capture(), metadataCaptor.capture(), dataCaptor.capture());
 
         assertEquals("ALARM", typeCaptor.getValue());
@@ -257,7 +255,7 @@ public class TbAlarmNodeTest {
     public void alarmCanBeCleared() throws ScriptException, IOException {
         initWithClearAlarmScript();
         metaData.putValue("key", "value");
-        @NotNull TbMsg msg = TbMsg.newMsg("USER", originator, metaData, TbMsgDataType.JSON, rawJson, ruleChainId, ruleNodeId);
+        TbMsg msg = TbMsg.newMsg("USER", originator, metaData, TbMsgDataType.JSON, rawJson, ruleChainId, ruleNodeId);
 
         long oldEndDate = System.currentTimeMillis();
         Alarm activeAlarm = Alarm.builder().type("SomeType").tenantId(tenantId).originator(originator).status(ACTIVE_UNACK).severity(WARNING).endTs(oldEndDate).build();
@@ -275,11 +273,11 @@ public class TbAlarmNodeTest {
         successCaptor.getValue().run();
         verify(ctx).tellNext(any(), eq("Cleared"));
 
-        @NotNull ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
-        @NotNull ArgumentCaptor<String> typeCaptor = ArgumentCaptor.forClass(String.class);
-        @NotNull ArgumentCaptor<EntityId> originatorCaptor = ArgumentCaptor.forClass(EntityId.class);
-        @NotNull ArgumentCaptor<TbMsgMetaData> metadataCaptor = ArgumentCaptor.forClass(TbMsgMetaData.class);
-        @NotNull ArgumentCaptor<String> dataCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        ArgumentCaptor<String> typeCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<EntityId> originatorCaptor = ArgumentCaptor.forClass(EntityId.class);
+        ArgumentCaptor<TbMsgMetaData> metadataCaptor = ArgumentCaptor.forClass(TbMsgMetaData.class);
+        ArgumentCaptor<String> dataCaptor = ArgumentCaptor.forClass(String.class);
         verify(ctx).transformMsg(msgCaptor.capture(), typeCaptor.capture(), originatorCaptor.capture(), metadataCaptor.capture(), dataCaptor.capture());
 
         assertEquals("ALARM", typeCaptor.getValue());
@@ -307,10 +305,10 @@ public class TbAlarmNodeTest {
     public void alarmCanBeClearedWithAlarmOriginator() throws ScriptException, IOException {
         initWithClearAlarmScript();
         metaData.putValue("key", "value");
-        @NotNull TbMsg msg = TbMsg.newMsg("USER", alarmOriginator, metaData, TbMsgDataType.JSON, rawJson, ruleChainId, ruleNodeId);
+        TbMsg msg = TbMsg.newMsg("USER", alarmOriginator, metaData, TbMsgDataType.JSON, rawJson, ruleChainId, ruleNodeId);
 
         long oldEndDate = System.currentTimeMillis();
-        @NotNull AlarmId id = new AlarmId(alarmOriginator.getId());
+        AlarmId id = new AlarmId(alarmOriginator.getId());
         Alarm activeAlarm = Alarm.builder().type("SomeType").tenantId(tenantId).originator(originator).status(ACTIVE_UNACK).severity(WARNING).endTs(oldEndDate).build();
         activeAlarm.setId(id);
 
@@ -325,11 +323,11 @@ public class TbAlarmNodeTest {
         successCaptor.getValue().run();
         verify(ctx).tellNext(any(), eq("Cleared"));
 
-        @NotNull ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
-        @NotNull ArgumentCaptor<String> typeCaptor = ArgumentCaptor.forClass(String.class);
-        @NotNull ArgumentCaptor<EntityId> originatorCaptor = ArgumentCaptor.forClass(EntityId.class);
-        @NotNull ArgumentCaptor<TbMsgMetaData> metadataCaptor = ArgumentCaptor.forClass(TbMsgMetaData.class);
-        @NotNull ArgumentCaptor<String> dataCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        ArgumentCaptor<String> typeCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<EntityId> originatorCaptor = ArgumentCaptor.forClass(EntityId.class);
+        ArgumentCaptor<TbMsgMetaData> metadataCaptor = ArgumentCaptor.forClass(TbMsgMetaData.class);
+        ArgumentCaptor<String> dataCaptor = ArgumentCaptor.forClass(String.class);
         verify(ctx).transformMsg(msgCaptor.capture(), typeCaptor.capture(), originatorCaptor.capture(), metadataCaptor.capture(), dataCaptor.capture());
 
         assertEquals("ALARM", typeCaptor.getValue());
@@ -356,15 +354,15 @@ public class TbAlarmNodeTest {
 
     @Test
     public void testCreateAlarmWithDynamicSeverityFromMessageBody() throws Exception {
-        @NotNull TbCreateAlarmNodeConfiguration config = new TbCreateAlarmNodeConfiguration();
+        TbCreateAlarmNodeConfiguration config = new TbCreateAlarmNodeConfiguration();
         config.setPropagate(true);
         config.setSeverity("$[alarmSeverity]");
         config.setAlarmType("SomeType");
         config.setScriptLang(ScriptLanguage.JS);
         config.setAlarmDetailsBuildJs("DETAILS");
         config.setDynamicSeverity(true);
-        @NotNull ObjectMapper mapper = new ObjectMapper();
-        @NotNull TbNodeConfiguration nodeConfiguration = new TbNodeConfiguration(mapper.valueToTree(config));
+        ObjectMapper mapper = new ObjectMapper();
+        TbNodeConfiguration nodeConfiguration = new TbNodeConfiguration(mapper.valueToTree(config));
 
         when(ctx.createScriptEngine(ScriptLanguage.JS, "DETAILS")).thenReturn(detailsJs);
 
@@ -375,9 +373,9 @@ public class TbAlarmNodeTest {
         node = new TbCreateAlarmNode();
         node.init(ctx, nodeConfiguration);
 
-        @NotNull String rawJson = "{\"alarmSeverity\": \"WARNING\", \"passed\": 5}";
+        String rawJson = "{\"alarmSeverity\": \"WARNING\", \"passed\": 5}";
         metaData.putValue("key", "value");
-        @NotNull TbMsg msg = TbMsg.newMsg("USER", originator, metaData, TbMsgDataType.JSON, rawJson, ruleChainId, ruleNodeId);
+        TbMsg msg = TbMsg.newMsg("USER", originator, metaData, TbMsgDataType.JSON, rawJson, ruleChainId, ruleNodeId);
         long ts = msg.getTs();
         when(detailsJs.executeJsonAsync(msg)).thenReturn(Futures.immediateFuture(null));
         when(alarmService.findLatestByOriginatorAndType(tenantId, originator, "SomeType")).thenReturn(Futures.immediateFuture(null));
@@ -389,11 +387,11 @@ public class TbAlarmNodeTest {
         successCaptor.getValue().run();
         verify(ctx).tellNext(any(), eq("Created"));
 
-        @NotNull ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
-        @NotNull ArgumentCaptor<String> typeCaptor = ArgumentCaptor.forClass(String.class);
-        @NotNull ArgumentCaptor<EntityId> originatorCaptor = ArgumentCaptor.forClass(EntityId.class);
-        @NotNull ArgumentCaptor<TbMsgMetaData> metadataCaptor = ArgumentCaptor.forClass(TbMsgMetaData.class);
-        @NotNull ArgumentCaptor<String> dataCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        ArgumentCaptor<String> typeCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<EntityId> originatorCaptor = ArgumentCaptor.forClass(EntityId.class);
+        ArgumentCaptor<TbMsgMetaData> metadataCaptor = ArgumentCaptor.forClass(TbMsgMetaData.class);
+        ArgumentCaptor<String> dataCaptor = ArgumentCaptor.forClass(String.class);
         verify(ctx).transformMsg(msgCaptor.capture(), typeCaptor.capture(), originatorCaptor.capture(), metadataCaptor.capture(), dataCaptor.capture());
 
         assertEquals("ALARM", typeCaptor.getValue());
@@ -420,15 +418,15 @@ public class TbAlarmNodeTest {
 
     @Test
     public void testCreateAlarmWithDynamicSeverityFromMetadata() throws Exception {
-        @NotNull TbCreateAlarmNodeConfiguration config = new TbCreateAlarmNodeConfiguration();
+        TbCreateAlarmNodeConfiguration config = new TbCreateAlarmNodeConfiguration();
         config.setPropagate(true);
         config.setScriptLang(ScriptLanguage.JS);
         config.setSeverity("${alarmSeverity}");
         config.setAlarmType("SomeType");
         config.setAlarmDetailsBuildJs("DETAILS");
         config.setDynamicSeverity(true);
-        @NotNull ObjectMapper mapper = new ObjectMapper();
-        @NotNull TbNodeConfiguration nodeConfiguration = new TbNodeConfiguration(mapper.valueToTree(config));
+        ObjectMapper mapper = new ObjectMapper();
+        TbNodeConfiguration nodeConfiguration = new TbNodeConfiguration(mapper.valueToTree(config));
 
         when(ctx.createScriptEngine(ScriptLanguage.JS, "DETAILS")).thenReturn(detailsJs);
 
@@ -440,7 +438,7 @@ public class TbAlarmNodeTest {
         node.init(ctx, nodeConfiguration);
 
         metaData.putValue("alarmSeverity", "WARNING");
-        @NotNull TbMsg msg = TbMsg.newMsg("USER", originator, metaData, TbMsgDataType.JSON, rawJson, ruleChainId, ruleNodeId);
+        TbMsg msg = TbMsg.newMsg("USER", originator, metaData, TbMsgDataType.JSON, rawJson, ruleChainId, ruleNodeId);
         long ts = msg.getTs();
 
         when(detailsJs.executeJsonAsync(msg)).thenReturn(Futures.immediateFuture(null));
@@ -453,11 +451,11 @@ public class TbAlarmNodeTest {
         successCaptor.getValue().run();
         verify(ctx).tellNext(any(), eq("Created"));
 
-        @NotNull ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
-        @NotNull ArgumentCaptor<String> typeCaptor = ArgumentCaptor.forClass(String.class);
-        @NotNull ArgumentCaptor<EntityId> originatorCaptor = ArgumentCaptor.forClass(EntityId.class);
-        @NotNull ArgumentCaptor<TbMsgMetaData> metadataCaptor = ArgumentCaptor.forClass(TbMsgMetaData.class);
-        @NotNull ArgumentCaptor<String> dataCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        ArgumentCaptor<String> typeCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<EntityId> originatorCaptor = ArgumentCaptor.forClass(EntityId.class);
+        ArgumentCaptor<TbMsgMetaData> metadataCaptor = ArgumentCaptor.forClass(TbMsgMetaData.class);
+        ArgumentCaptor<String> dataCaptor = ArgumentCaptor.forClass(String.class);
         verify(ctx).transformMsg(msgCaptor.capture(), typeCaptor.capture(), originatorCaptor.capture(), metadataCaptor.capture(), dataCaptor.capture());
 
         assertEquals("ALARM", typeCaptor.getValue());
@@ -484,15 +482,15 @@ public class TbAlarmNodeTest {
     @Test
     public void testCreateAlarmsWithPropagationToTenantWithDynamicTypes() throws Exception{
         for (int i = 0; i < 10; i++) {
-            @NotNull var config = new TbCreateAlarmNodeConfiguration();
+            var config = new TbCreateAlarmNodeConfiguration();
             config.setPropagateToTenant(true);
             config.setSeverity(CRITICAL.name());
             config.setAlarmType("SomeType" + i);
             config.setScriptLang(ScriptLanguage.JS);
             config.setAlarmDetailsBuildJs("DETAILS");
             config.setDynamicSeverity(true);
-            @NotNull ObjectMapper mapper = new ObjectMapper();
-            @NotNull TbNodeConfiguration nodeConfiguration = new TbNodeConfiguration(mapper.valueToTree(config));
+            ObjectMapper mapper = new ObjectMapper();
+            TbNodeConfiguration nodeConfiguration = new TbNodeConfiguration(mapper.valueToTree(config));
 
             when(ctx.createScriptEngine(ScriptLanguage.JS, "DETAILS")).thenReturn(detailsJs);
 
@@ -504,7 +502,7 @@ public class TbAlarmNodeTest {
             node.init(ctx, nodeConfiguration);
 
             metaData.putValue("key", "value");
-            @NotNull TbMsg msg = TbMsg.newMsg("USER", originator, metaData, TbMsgDataType.JSON, rawJson, ruleChainId, ruleNodeId);
+            TbMsg msg = TbMsg.newMsg("USER", originator, metaData, TbMsgDataType.JSON, rawJson, ruleChainId, ruleNodeId);
 
             when(detailsJs.executeJsonAsync(msg)).thenReturn(Futures.immediateFuture(null));
             when(alarmService.findLatestByOriginatorAndType(tenantId, originator, "SomeType" + i)).thenReturn(Futures.immediateFuture(null));
@@ -516,11 +514,11 @@ public class TbAlarmNodeTest {
             successCaptor.getValue().run();
             verify(ctx, atMost(10)).tellNext(any(), eq("Created"));
 
-            @NotNull ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
-            @NotNull ArgumentCaptor<String> typeCaptor = ArgumentCaptor.forClass(String.class);
-            @NotNull ArgumentCaptor<EntityId> originatorCaptor = ArgumentCaptor.forClass(EntityId.class);
-            @NotNull ArgumentCaptor<TbMsgMetaData> metadataCaptor = ArgumentCaptor.forClass(TbMsgMetaData.class);
-            @NotNull ArgumentCaptor<String> dataCaptor = ArgumentCaptor.forClass(String.class);
+            ArgumentCaptor<TbMsg> msgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+            ArgumentCaptor<String> typeCaptor = ArgumentCaptor.forClass(String.class);
+            ArgumentCaptor<EntityId> originatorCaptor = ArgumentCaptor.forClass(EntityId.class);
+            ArgumentCaptor<TbMsgMetaData> metadataCaptor = ArgumentCaptor.forClass(TbMsgMetaData.class);
+            ArgumentCaptor<String> dataCaptor = ArgumentCaptor.forClass(String.class);
             verify(ctx, atMost(10)).transformMsg(msgCaptor.capture(), typeCaptor.capture(), originatorCaptor.capture(), metadataCaptor.capture(), dataCaptor.capture());
 
             assertEquals("ALARM", typeCaptor.getValue());
@@ -548,14 +546,14 @@ public class TbAlarmNodeTest {
 
     private void initWithCreateAlarmScript() {
         try {
-            @NotNull TbCreateAlarmNodeConfiguration config = new TbCreateAlarmNodeConfiguration();
+            TbCreateAlarmNodeConfiguration config = new TbCreateAlarmNodeConfiguration();
             config.setPropagate(true);
             config.setSeverity(CRITICAL.name());
             config.setAlarmType("SomeType");
             config.setScriptLang(ScriptLanguage.JS);
             config.setAlarmDetailsBuildJs("DETAILS");
-            @NotNull ObjectMapper mapper = new ObjectMapper();
-            @NotNull TbNodeConfiguration nodeConfiguration = new TbNodeConfiguration(mapper.valueToTree(config));
+            ObjectMapper mapper = new ObjectMapper();
+            TbNodeConfiguration nodeConfiguration = new TbNodeConfiguration(mapper.valueToTree(config));
 
             when(ctx.createScriptEngine(ScriptLanguage.JS, "DETAILS")).thenReturn(detailsJs);
 
@@ -572,12 +570,12 @@ public class TbAlarmNodeTest {
 
     private void initWithClearAlarmScript() {
         try {
-            @NotNull TbClearAlarmNodeConfiguration config = new TbClearAlarmNodeConfiguration();
+            TbClearAlarmNodeConfiguration config = new TbClearAlarmNodeConfiguration();
             config.setAlarmType("SomeType");
             config.setScriptLang(ScriptLanguage.JS);
             config.setAlarmDetailsBuildJs("DETAILS");
-            @NotNull ObjectMapper mapper = new ObjectMapper();
-            @NotNull TbNodeConfiguration nodeConfiguration = new TbNodeConfiguration(mapper.valueToTree(config));
+            ObjectMapper mapper = new ObjectMapper();
+            TbNodeConfiguration nodeConfiguration = new TbNodeConfiguration(mapper.valueToTree(config));
 
             when(ctx.createScriptEngine(ScriptLanguage.JS, "DETAILS")).thenReturn(detailsJs);
 
@@ -593,7 +591,7 @@ public class TbAlarmNodeTest {
     }
 
     private void verifyError(TbMsg msg, String message, Class expectedClass) {
-        @NotNull ArgumentCaptor<Throwable> captor = ArgumentCaptor.forClass(Throwable.class);
+        ArgumentCaptor<Throwable> captor = ArgumentCaptor.forClass(Throwable.class);
         verify(ctx).tellFailure(same(msg), captor.capture());
 
         Throwable value = captor.getValue();

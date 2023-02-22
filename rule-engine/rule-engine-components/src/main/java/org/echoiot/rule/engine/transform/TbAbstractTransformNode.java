@@ -8,7 +8,6 @@ import org.echoiot.rule.engine.api.util.TbNodeUtils;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.queue.RuleEngineException;
 import org.echoiot.server.common.msg.queue.TbMsgCallback;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -25,23 +24,23 @@ public abstract class TbAbstractTransformNode implements TbNode {
     private TbTransformNodeConfiguration config;
 
     @Override
-    public void init(TbContext context, @NotNull TbNodeConfiguration configuration) throws TbNodeException {
+    public void init(TbContext context, TbNodeConfiguration configuration) throws TbNodeException {
         this.config = TbNodeUtils.convert(configuration, TbTransformNodeConfiguration.class);
     }
 
     @Override
-    public void onMsg(@NotNull TbContext ctx, TbMsg msg) {
+    public void onMsg(TbContext ctx, TbMsg msg) {
         withCallback(transform(ctx, msg),
                 m -> transformSuccess(ctx, msg, m),
                 t -> transformFailure(ctx, msg, t),
                 MoreExecutors.directExecutor());
     }
 
-    protected void transformFailure(@NotNull TbContext ctx, TbMsg msg, Throwable t) {
+    protected void transformFailure(TbContext ctx, TbMsg msg, Throwable t) {
         ctx.tellFailure(msg, t);
     }
 
-    protected void transformSuccess(@NotNull TbContext ctx, TbMsg msg, @Nullable TbMsg m) {
+    protected void transformSuccess(TbContext ctx, TbMsg msg, @Nullable TbMsg m) {
         if (m != null) {
             ctx.tellSuccess(m);
         } else {
@@ -49,12 +48,12 @@ public abstract class TbAbstractTransformNode implements TbNode {
         }
     }
 
-    protected void transformSuccess(@NotNull TbContext ctx, TbMsg msg, @Nullable List<TbMsg> msgs) {
+    protected void transformSuccess(TbContext ctx, TbMsg msg, @Nullable List<TbMsg> msgs) {
         if (msgs != null && !msgs.isEmpty()) {
             if (msgs.size() == 1) {
                 ctx.tellSuccess(msgs.get(0));
             } else {
-                @NotNull TbMsgCallbackWrapper wrapper = new MultipleTbMsgsCallbackWrapper(msgs.size(), new TbMsgCallback() {
+                TbMsgCallbackWrapper wrapper = new MultipleTbMsgsCallbackWrapper(msgs.size(), new TbMsgCallback() {
                     @Override
                     public void onSuccess() {
                         ctx.ack(msg);

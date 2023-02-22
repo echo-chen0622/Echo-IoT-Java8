@@ -12,7 +12,6 @@ import org.echoiot.server.common.data.alarm.Alarm;
 import org.echoiot.server.common.data.alarm.AlarmStatus;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.msg.TbMsg;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -32,12 +31,12 @@ public class TbCheckAlarmStatusNode implements TbNode {
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Override
-    public void init(TbContext tbContext, @NotNull TbNodeConfiguration configuration) throws TbNodeException {
+    public void init(TbContext tbContext, TbNodeConfiguration configuration) throws TbNodeException {
         this.config = TbNodeUtils.convert(configuration, TbCheckAlarmStatusNodeConfig.class);
     }
 
     @Override
-    public void onMsg(@NotNull TbContext ctx, @NotNull TbMsg msg) throws TbNodeException {
+    public void onMsg(TbContext ctx, TbMsg msg) throws TbNodeException {
         try {
             Alarm alarm = mapper.readValue(msg.getData(), Alarm.class);
 

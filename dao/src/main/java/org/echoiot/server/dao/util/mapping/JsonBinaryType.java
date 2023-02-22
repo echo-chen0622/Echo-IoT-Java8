@@ -2,7 +2,6 @@ package org.echoiot.server.dao.util.mapping;
 
 import org.hibernate.type.AbstractSingleColumnStandardBasicType;
 import org.hibernate.usertype.DynamicParameterizedType;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Properties;
 
@@ -15,7 +14,6 @@ public class JsonBinaryType extends AbstractSingleColumnStandardBasicType<Object
         );
     }
 
-    @NotNull
     public String getName() {
         return "jsonb";
     }
@@ -26,7 +24,7 @@ public class JsonBinaryType extends AbstractSingleColumnStandardBasicType<Object
     }
 
     @Override
-    public void setParameterValues(@NotNull Properties parameters) {
+    public void setParameterValues(Properties parameters) {
         ((JsonTypeDescriptor) getJavaTypeDescriptor())
                 .setParameterValues(parameters);
     }

@@ -15,7 +15,6 @@ import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.service.DataValidator;
 import org.echoiot.server.dao.tenant.TbTenantProfileCache;
 import org.echoiot.server.dao.tenant.TenantService;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
@@ -39,7 +38,7 @@ public class AssetDataValidator extends DataValidator<Asset> {
     private TbTenantProfileCache tenantProfileCache;
 
     @Override
-    protected void validateCreate(TenantId tenantId, @NotNull Asset asset) {
+    protected void validateCreate(TenantId tenantId, Asset asset) {
         DefaultTenantProfileConfiguration profileConfiguration =
                 (DefaultTenantProfileConfiguration) tenantProfileCache.get(tenantId).getProfileData().getConfiguration();
         if (!BaseAssetService.TB_SERVICE_QUEUE.equals(asset.getType())) {
@@ -48,9 +47,8 @@ public class AssetDataValidator extends DataValidator<Asset> {
         }
     }
 
-    @NotNull
     @Override
-    protected Asset validateUpdate(TenantId tenantId, @NotNull Asset asset) {
+    protected Asset validateUpdate(TenantId tenantId, Asset asset) {
         Asset old = assetDao.findById(asset.getTenantId(), asset.getId().getId());
         if (old == null) {
             throw new DataValidationException("Can't update non existing asset!");
@@ -59,7 +57,7 @@ public class AssetDataValidator extends DataValidator<Asset> {
     }
 
     @Override
-    protected void validateDataImpl(TenantId tenantId, @NotNull Asset asset) {
+    protected void validateDataImpl(TenantId tenantId, Asset asset) {
         if (StringUtils.isEmpty(asset.getName())) {
             throw new DataValidationException("Asset name should be specified!");
         }

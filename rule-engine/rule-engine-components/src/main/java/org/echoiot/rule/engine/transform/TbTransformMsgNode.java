@@ -6,7 +6,6 @@ import org.echoiot.rule.engine.api.util.TbNodeUtils;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.data.script.ScriptLanguage;
 import org.echoiot.server.common.msg.TbMsg;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -31,7 +30,7 @@ public class TbTransformMsgNode extends TbAbstractTransformNode {
     private ScriptEngine scriptEngine;
 
     @Override
-    public void init(@NotNull TbContext ctx, @NotNull TbNodeConfiguration configuration) throws TbNodeException {
+    public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
         this.config = TbNodeUtils.convert(configuration, TbTransformMsgNodeConfiguration.class);
         scriptEngine = ctx.createScriptEngine(config.getScriptLang(),
                 ScriptLanguage.TBEL.equals(config.getScriptLang()) ? config.getTbelScript() : config.getJsScript());
@@ -39,19 +38,19 @@ public class TbTransformMsgNode extends TbAbstractTransformNode {
     }
 
     @Override
-    protected ListenableFuture<List<TbMsg>> transform(@NotNull TbContext ctx, TbMsg msg) {
+    protected ListenableFuture<List<TbMsg>> transform(TbContext ctx, TbMsg msg) {
         ctx.logJsEvalRequest();
         return scriptEngine.executeUpdateAsync(msg);
     }
 
     @Override
-    protected void transformSuccess(@NotNull TbContext ctx, TbMsg msg, TbMsg m) {
+    protected void transformSuccess(TbContext ctx, TbMsg msg, TbMsg m) {
         ctx.logJsEvalResponse();
         super.transformSuccess(ctx, msg, m);
     }
 
     @Override
-    protected void transformFailure(@NotNull TbContext ctx, TbMsg msg, Throwable t) {
+    protected void transformFailure(TbContext ctx, TbMsg msg, Throwable t) {
         ctx.logJsEvalFailure();
         super.transformFailure(ctx, msg, t);
     }

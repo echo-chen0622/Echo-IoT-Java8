@@ -4,7 +4,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.echoiot.server.common.data.id.RuleChainId;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +31,7 @@ public class RuleChainMetaData {
     private List<RuleChainConnectionInfo> ruleChainConnections;
 
     public void addConnectionInfo(int fromIndex, int toIndex, String type) {
-        @NotNull NodeConnectionInfo connectionInfo = new NodeConnectionInfo();
+        NodeConnectionInfo connectionInfo = new NodeConnectionInfo();
         connectionInfo.setFromIndex(fromIndex);
         connectionInfo.setToIndex(toIndex);
         connectionInfo.setType(type);

@@ -24,7 +24,6 @@ import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.service.executors.DbCallbackExecutorService;
 import org.echoiot.server.service.sync.vc.EntitiesVersionControlService;
 import org.echoiot.server.service.telemetry.AlarmSubscriptionService;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -58,12 +57,11 @@ public abstract class AbstractTbEntityService {
     @Autowired(required = false)
     private EntitiesVersionControlService vcService;
 
-    @NotNull
     protected ListenableFuture<Void> removeAlarmsByEntityId(TenantId tenantId, EntityId entityId) {
         ListenableFuture<PageData<AlarmInfo>> alarmsFuture =
                 alarmService.findAlarms(tenantId, new AlarmQuery(entityId, new TimePageLink(Integer.MAX_VALUE), null, null, false));
 
-        @NotNull ListenableFuture<List<AlarmId>> alarmIdsFuture = Futures.transform(alarmsFuture, page ->
+        ListenableFuture<List<AlarmId>> alarmIdsFuture = Futures.transform(alarmsFuture, page ->
                 page.getData().stream().map(AlarmInfo::getId).collect(Collectors.toList()), dbExecutor);
 
         return Futures.transform(alarmIdsFuture, ids -> {
@@ -72,24 +70,22 @@ public abstract class AbstractTbEntityService {
         }, dbExecutor);
     }
 
-    protected <T> T checkNotNull(@NotNull T reference) throws EchoiotException {
+    protected <T> T checkNotNull(T reference) throws EchoiotException {
         return checkNotNull(reference, "Requested item wasn't found!");
     }
 
-    @NotNull
-    protected <T> T checkNotNull(@NotNull T reference, String notFoundMessage) throws EchoiotException {
+    protected <T> T checkNotNull(T reference, String notFoundMessage) throws EchoiotException {
         if (reference == null) {
             throw new EchoiotException(notFoundMessage, EchoiotErrorCode.ITEM_NOT_FOUND);
         }
         return reference;
     }
 
-    protected <T> T checkNotNull(@NotNull Optional<T> reference) throws EchoiotException {
+    protected <T> T checkNotNull(Optional<T> reference) throws EchoiotException {
         return checkNotNull(reference, "Requested item wasn't found!");
     }
 
-    @NotNull
-    protected <T> T checkNotNull(@NotNull Optional<T> reference, String notFoundMessage) throws EchoiotException {
+    protected <T> T checkNotNull(Optional<T> reference, String notFoundMessage) throws EchoiotException {
         if (reference.isPresent()) {
             return reference.get();
         } else {
@@ -97,7 +93,7 @@ public abstract class AbstractTbEntityService {
         }
     }
 
-    protected <I extends EntityId> I emptyId(@NotNull EntityType entityType) {
+    protected <I extends EntityId> I emptyId(EntityType entityType) {
         return (I) EntityIdFactory.getByTypeAndUuid(entityType, ModelConstants.NULL_UUID);
     }
 

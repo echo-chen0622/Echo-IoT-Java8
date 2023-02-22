@@ -15,7 +15,6 @@ import org.echoiot.server.common.data.alarm.AlarmStatus;
 import org.echoiot.server.common.data.id.AlarmId;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.msg.TbMsg;
-import org.jetbrains.annotations.NotNull;
 
 @Slf4j
 @RuleNode(
@@ -36,13 +35,12 @@ import org.jetbrains.annotations.NotNull;
 public class TbClearAlarmNode extends TbAbstractAlarmNode<TbClearAlarmNodeConfiguration> {
 
     @Override
-    protected TbClearAlarmNodeConfiguration loadAlarmNodeConfig(@NotNull TbNodeConfiguration configuration) throws TbNodeException {
+    protected TbClearAlarmNodeConfiguration loadAlarmNodeConfig(TbNodeConfiguration configuration) throws TbNodeException {
         return TbNodeUtils.convert(configuration, TbClearAlarmNodeConfiguration.class);
     }
 
-    @NotNull
     @Override
-    protected ListenableFuture<TbAlarmResult> processAlarm(@NotNull TbContext ctx, @NotNull TbMsg msg) {
+    protected ListenableFuture<TbAlarmResult> processAlarm(TbContext ctx, TbMsg msg) {
         String alarmType = TbNodeUtils.processPattern(this.config.getAlarmType(), msg);
         ListenableFuture<Alarm> alarmFuture;
         if (msg.getOriginator().getEntityType().equals(EntityType.ALARM)) {
@@ -58,8 +56,7 @@ public class TbClearAlarmNode extends TbAbstractAlarmNode<TbClearAlarmNodeConfig
         }, ctx.getDbCallbackExecutor());
     }
 
-    @NotNull
-    private ListenableFuture<TbAlarmResult> clearAlarm(@NotNull TbContext ctx, TbMsg msg, @NotNull Alarm alarm) {
+    private ListenableFuture<TbAlarmResult> clearAlarm(TbContext ctx, TbMsg msg, Alarm alarm) {
         ctx.logJsEvalRequest();
         ListenableFuture<JsonNode> asyncDetails = buildAlarmDetails(ctx, msg, alarm.getDetails());
         return Futures.transformAsync(asyncDetails, details -> {

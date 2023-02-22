@@ -7,16 +7,14 @@ import org.echoiot.server.common.data.widget.WidgetTypeDetails;
 import org.echoiot.server.gen.edge.v1.UpdateMsgType;
 import org.echoiot.server.gen.edge.v1.WidgetTypeUpdateMsg;
 import org.echoiot.server.queue.util.TbCoreComponent;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 @Component
 @TbCoreComponent
 public class WidgetTypeMsgConstructor {
 
-    @NotNull
-    public WidgetTypeUpdateMsg constructWidgetTypeUpdateMsg(UpdateMsgType msgType, @NotNull WidgetTypeDetails widgetTypeDetails) {
-        @NotNull WidgetTypeUpdateMsg.Builder builder = WidgetTypeUpdateMsg.newBuilder()
+    public WidgetTypeUpdateMsg constructWidgetTypeUpdateMsg(UpdateMsgType msgType, WidgetTypeDetails widgetTypeDetails) {
+        WidgetTypeUpdateMsg.Builder builder = WidgetTypeUpdateMsg.newBuilder()
                                                                           .setMsgType(msgType)
                                                                           .setIdMSB(widgetTypeDetails.getId().getId().getMostSignificantBits())
                                                                           .setIdLSB(widgetTypeDetails.getId().getId().getLeastSignificantBits());
@@ -44,8 +42,7 @@ public class WidgetTypeMsgConstructor {
         return builder.build();
     }
 
-    @NotNull
-    public WidgetTypeUpdateMsg constructWidgetTypeDeleteMsg(@NotNull WidgetTypeId widgetTypeId) {
+    public WidgetTypeUpdateMsg constructWidgetTypeDeleteMsg(WidgetTypeId widgetTypeId) {
         return WidgetTypeUpdateMsg.newBuilder()
                 .setMsgType(UpdateMsgType.ENTITY_DELETED_RPC_MESSAGE)
                 .setIdMSB(widgetTypeId.getId().getMostSignificantBits())

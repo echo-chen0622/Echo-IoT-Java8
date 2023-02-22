@@ -3,7 +3,6 @@ package org.echoiot.server.service.security.auth.jwt;
 import org.echoiot.server.service.security.auth.JwtAuthenticationToken;
 import org.echoiot.server.service.security.auth.jwt.extractor.TokenExtractor;
 import org.echoiot.server.service.security.model.token.RawAccessJwtToken;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -25,7 +24,7 @@ public class JwtTokenAuthenticationProcessingFilter extends AbstractAuthenticati
 
     @Autowired
     public JwtTokenAuthenticationProcessingFilter(AuthenticationFailureHandler failureHandler,
-                                                  TokenExtractor tokenExtractor, @NotNull RequestMatcher matcher) {
+                                                  TokenExtractor tokenExtractor, RequestMatcher matcher) {
         super(matcher);
         this.failureHandler = failureHandler;
         this.tokenExtractor = tokenExtractor;
@@ -34,12 +33,12 @@ public class JwtTokenAuthenticationProcessingFilter extends AbstractAuthenticati
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException, IOException, ServletException {
-        @NotNull RawAccessJwtToken token = new RawAccessJwtToken(tokenExtractor.extract(request));
+        RawAccessJwtToken token = new RawAccessJwtToken(tokenExtractor.extract(request));
         return getAuthenticationManager().authenticate(new JwtAuthenticationToken(token));
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, @NotNull FilterChain chain,
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
                                             Authentication authResult) throws IOException, ServletException {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authResult);

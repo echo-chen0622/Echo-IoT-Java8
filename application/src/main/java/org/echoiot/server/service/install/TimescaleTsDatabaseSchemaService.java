@@ -19,6 +19,11 @@ public class TimescaleTsDatabaseSchemaService extends SqlAbstractDatabaseSchemaS
         super("schema-timescale.sql", null);
     }
 
+    /**
+     * 创建数据库
+     *
+     * @throws Exception
+     */
     @Override
     public void createDatabaseSchema() throws Exception {
         super.createDatabaseSchema();

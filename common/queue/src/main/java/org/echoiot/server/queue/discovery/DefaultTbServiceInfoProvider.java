@@ -7,7 +7,6 @@ import org.echoiot.server.common.data.TbTransportService;
 import org.echoiot.server.common.msg.queue.ServiceType;
 import org.echoiot.server.gen.transport.TransportProtos.ServiceInfo;
 import org.echoiot.server.queue.util.AfterContextReady;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -71,7 +70,6 @@ public class DefaultTbServiceInfoProvider implements TbServiceInfoProvider {
                 .build();
     }
 
-    @NotNull
     private Collection<TbTransportService> getTransportServices() {
         return applicationContext.getBeansOfType(TbTransportService.class).values();
     }

@@ -1,7 +1,6 @@
 package org.echoiot.server.service.install.migrate;
 
 import lombok.Data;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Data
@@ -20,10 +19,9 @@ public class CassandraToSqlColumnData {
         return ++constraintCounter;
     }
 
-    @NotNull
-    public String getNextConstraintStringValue(@NotNull CassandraToSqlColumn column) {
+    public String getNextConstraintStringValue(CassandraToSqlColumn column) {
         int counter = this.nextContraintCounter();
-        @NotNull String newValue = this.originalValue + counter;
+        String newValue = this.originalValue + counter;
         int overflow = newValue.length() - column.getSize();
         if (overflow > 0) {
             newValue = this.originalValue.substring(0, this.originalValue.length()-overflow) + counter;
@@ -31,11 +29,10 @@ public class CassandraToSqlColumnData {
         return newValue;
     }
 
-    @NotNull
-    public String getNextConstraintEmailValue(@NotNull CassandraToSqlColumn column) {
+    public String getNextConstraintEmailValue(CassandraToSqlColumn column) {
         int counter = this.nextContraintCounter();
-        @NotNull String[] emailValues = this.originalValue.split("@");
-        @NotNull String newValue = emailValues[0] + "+" + counter + "@" + emailValues[1];
+        String[] emailValues = this.originalValue.split("@");
+        String newValue = emailValues[0] + "+" + counter + "@" + emailValues[1];
         int overflow = newValue.length() - column.getSize();
         if (overflow > 0) {
             newValue = emailValues[0].substring(0, emailValues[0].length()-overflow) + "+" + counter + "@" + emailValues[1];

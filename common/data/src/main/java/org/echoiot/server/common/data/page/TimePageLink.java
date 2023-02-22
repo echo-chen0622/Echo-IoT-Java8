@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.data.domain.Sort;
 
@@ -20,7 +19,7 @@ public class TimePageLink extends PageLink {
     private final Long startTime;
     private final Long endTime;
 
-    public TimePageLink(@NotNull PageLink pageLink, Long startTime, Long endTime) {
+    public TimePageLink(PageLink pageLink, Long startTime, Long endTime) {
         super(pageLink);
         this.startTime = startTime;
         this.endTime = endTime;
@@ -48,7 +47,6 @@ public class TimePageLink extends PageLink {
         this.endTime = endTime;
     }
 
-    @NotNull
     @JsonIgnore
     public TimePageLink nextPageLink() {
         return new TimePageLink(this.getPageSize(), this.getPage()+1, this.getTextSearch(), this.getSortOrder(),
@@ -56,7 +54,7 @@ public class TimePageLink extends PageLink {
     }
 
     @Override
-    public Sort toSort(@Nullable SortOrder sortOrder, @NotNull Map<String,String> columnMap) {
+    public Sort toSort(@Nullable SortOrder sortOrder, Map<String,String> columnMap) {
         if (sortOrder == null) {
             return super.toSort(sortOrder, columnMap);
         } else {
@@ -65,15 +63,15 @@ public class TimePageLink extends PageLink {
     }
 
     @Override
-    public Sort toSort(@NotNull List<SortOrder> sortOrders, @NotNull Map<String,String> columnMap) {
+    public Sort toSort(List<SortOrder> sortOrders, Map<String,String> columnMap) {
         if (!isDefaultSortOrderAvailable(sortOrders)) {
             sortOrders.add(new SortOrder(DEFAULT_SORT_PROPERTY, SortOrder.Direction.ASC));
         }
         return super.toSort(sortOrders, columnMap);
     }
 
-    private boolean isDefaultSortOrderAvailable(@NotNull List<SortOrder> sortOrders) {
-        for (@NotNull SortOrder sortOrder : sortOrders) {
+    private boolean isDefaultSortOrderAvailable(List<SortOrder> sortOrders) {
+        for (SortOrder sortOrder : sortOrders) {
             if (DEFAULT_SORT_PROPERTY.equals(sortOrder.getProperty())) {
                 return true;
             }

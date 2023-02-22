@@ -9,7 +9,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.echoiot.server.common.data.id.EntityId;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
@@ -24,7 +23,7 @@ public class EntityFieldsData {
     private static final ObjectMapper mapper = new ObjectMapper();
 
     static {
-        @NotNull SimpleModule entityFieldsModule = new SimpleModule("EntityFieldsModule", new Version(1, 0, 0, null, null, null));
+        SimpleModule entityFieldsModule = new SimpleModule("EntityFieldsModule", new Version(1, 0, 0, null, null, null));
         entityFieldsModule.addSerializer(EntityId.class, new EntityIdFieldSerializer());
         mapper.disable(MapperFeature.USE_ANNOTATIONS);
         mapper.registerModule(entityFieldsModule);
@@ -36,13 +35,13 @@ public class EntityFieldsData {
         fieldsData = mapper.valueToTree(data);
     }
 
-    public String getFieldValue(@NotNull String field) {
+    public String getFieldValue(String field) {
         return getFieldValue(field, false);
     }
 
     @Nullable
-    public String getFieldValue(@NotNull String field, boolean ignoreNullStrings) {
-        @NotNull String[] fieldsTree = field.split("\\.");
+    public String getFieldValue(String field, boolean ignoreNullStrings) {
+        String[] fieldsTree = field.split("\\.");
         @Nullable JsonNode current = fieldsData;
         for (String key : fieldsTree) {
             if (current.has(key)) {
@@ -73,7 +72,7 @@ public class EntityFieldsData {
     private static class EntityIdFieldSerializer extends JsonSerializer<EntityId> {
 
         @Override
-        public void serialize(@NotNull EntityId value, @NotNull JsonGenerator gen, SerializerProvider serializers) throws IOException {
+        public void serialize(EntityId value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
             gen.writeObject(value.getId());
         }
     }

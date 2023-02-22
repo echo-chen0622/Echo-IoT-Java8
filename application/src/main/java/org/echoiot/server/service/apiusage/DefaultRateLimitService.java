@@ -6,7 +6,6 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.common.data.tenant.profile.DefaultTenantProfileConfiguration;
 import org.echoiot.server.common.msg.tools.TbRateLimits;
 import org.echoiot.server.dao.tenant.TbTenantProfileCache;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -17,7 +16,6 @@ import java.util.function.Function;
 @RequiredArgsConstructor
 public class DefaultRateLimitService implements RateLimitService {
 
-    @NotNull
     private final TbTenantProfileCache tenantProfileCache;
 
     private final Map<String, Map<TenantId, TbRateLimits>> rateLimits = new ConcurrentHashMap<>();
@@ -32,7 +30,7 @@ public class DefaultRateLimitService implements RateLimitService {
         return checkLimit(tenantId, "entityImport", DefaultTenantProfileConfiguration::getTenantEntityImportRateLimit);
     }
 
-    private boolean checkLimit(TenantId tenantId, String rateLimitsKey, @NotNull Function<DefaultTenantProfileConfiguration, String> rateLimitConfigExtractor) {
+    private boolean checkLimit(TenantId tenantId, String rateLimitsKey, Function<DefaultTenantProfileConfiguration, String> rateLimitConfigExtractor) {
         String rateLimitConfig = tenantProfileCache.get(tenantId).getProfileConfiguration()
                 .map(rateLimitConfigExtractor).orElse(null);
 

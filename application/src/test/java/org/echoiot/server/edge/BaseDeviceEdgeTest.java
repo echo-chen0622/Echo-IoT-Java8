@@ -26,7 +26,6 @@ import org.echoiot.server.gen.edge.v1.*;
 import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.transport.mqtt.MqttTestCallback;
 import org.echoiot.server.transport.mqtt.MqttTestClient;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.test.context.TestPropertySource;
@@ -53,7 +52,7 @@ abstract public class BaseDeviceEdgeTest extends AbstractEdgeTest {
         Assert.assertTrue(edgeImitator.waitForMessages());
         AbstractMessage latestMessage = edgeImitator.getLatestMessage();
         Assert.assertTrue(latestMessage instanceof DeviceUpdateMsg);
-        @NotNull DeviceUpdateMsg deviceUpdateMsg = (DeviceUpdateMsg) latestMessage;
+        DeviceUpdateMsg deviceUpdateMsg = (DeviceUpdateMsg) latestMessage;
         Assert.assertEquals(UpdateMsgType.ENTITY_DELETED_RPC_MESSAGE, deviceUpdateMsg.getMsgType());
         Assert.assertEquals(savedDevice.getUuidId().getMostSignificantBits(), deviceUpdateMsg.getIdMSB());
         Assert.assertEquals(savedDevice.getUuidId().getLeastSignificantBits(), deviceUpdateMsg.getIdLSB());
@@ -70,7 +69,7 @@ abstract public class BaseDeviceEdgeTest extends AbstractEdgeTest {
         doPost("/api/edge/" + edge.getUuidId()
                 + "/device/" + savedDevice.getUuidId(), Device.class);
         Assert.assertTrue(edgeImitator.waitForMessages());
-        @NotNull Optional<DeviceUpdateMsg> deviceUpdateMsgOpt = edgeImitator.findMessageByType(DeviceUpdateMsg.class);
+        Optional<DeviceUpdateMsg> deviceUpdateMsgOpt = edgeImitator.findMessageByType(DeviceUpdateMsg.class);
         Assert.assertTrue(deviceUpdateMsgOpt.isPresent());
         deviceUpdateMsg = deviceUpdateMsgOpt.get();
         Assert.assertEquals(UpdateMsgType.ENTITY_CREATED_RPC_MESSAGE, deviceUpdateMsg.getMsgType());
@@ -79,15 +78,15 @@ abstract public class BaseDeviceEdgeTest extends AbstractEdgeTest {
         Assert.assertEquals(savedDevice.getName(), deviceUpdateMsg.getName());
         Assert.assertEquals(savedDevice.getType(), deviceUpdateMsg.getType());
 
-        @NotNull Optional<DeviceProfileUpdateMsg> deviceProfileUpdateMsgOpt = edgeImitator.findMessageByType(DeviceProfileUpdateMsg.class);
+        Optional<DeviceProfileUpdateMsg> deviceProfileUpdateMsgOpt = edgeImitator.findMessageByType(DeviceProfileUpdateMsg.class);
         Assert.assertTrue(deviceProfileUpdateMsgOpt.isPresent());
-        @NotNull DeviceProfileUpdateMsg deviceProfileUpdateMsg = deviceProfileUpdateMsgOpt.get();
+        DeviceProfileUpdateMsg deviceProfileUpdateMsg = deviceProfileUpdateMsgOpt.get();
         Assert.assertEquals(UpdateMsgType.ENTITY_CREATED_RPC_MESSAGE, deviceProfileUpdateMsg.getMsgType());
         Assert.assertEquals(savedDevice.getDeviceProfileId().getId().getMostSignificantBits(), deviceProfileUpdateMsg.getIdMSB());
         Assert.assertEquals(savedDevice.getDeviceProfileId().getId().getLeastSignificantBits(), deviceProfileUpdateMsg.getIdLSB());
 
         // assign device #2 to customer
-        @NotNull Customer customer = new Customer();
+        Customer customer = new Customer();
         customer.setTitle("Edge Customer");
         Customer savedCustomer = doPost("/api/customer", customer, Customer.class);
         edgeImitator.expectMessageAmount(2);
@@ -135,7 +134,7 @@ abstract public class BaseDeviceEdgeTest extends AbstractEdgeTest {
     @Test
     public void testUpdateDeviceCredentials() throws Exception {
         // create device and assign to edge; update device
-        @NotNull Device savedDevice = saveDeviceOnCloudAndVerifyDeliveryToEdge();
+        Device savedDevice = saveDeviceOnCloudAndVerifyDeliveryToEdge();
 
         // update device credentials - ACCESS_TOKEN
         edgeImitator.expectMessageAmount(1);
@@ -149,7 +148,7 @@ abstract public class BaseDeviceEdgeTest extends AbstractEdgeTest {
         Assert.assertTrue(edgeImitator.waitForMessages());
         AbstractMessage latestMessage = edgeImitator.getLatestMessage();
         Assert.assertTrue(latestMessage instanceof DeviceCredentialsUpdateMsg);
-        @NotNull DeviceCredentialsUpdateMsg deviceCredentialsUpdateMsg = (DeviceCredentialsUpdateMsg) latestMessage;
+        DeviceCredentialsUpdateMsg deviceCredentialsUpdateMsg = (DeviceCredentialsUpdateMsg) latestMessage;
         Assert.assertEquals(deviceCredentials.getCredentialsType().name(), deviceCredentialsUpdateMsg.getCredentialsType());
         Assert.assertEquals(deviceCredentials.getCredentialsId(), deviceCredentialsUpdateMsg.getCredentialsId());
         Assert.assertFalse(deviceCredentialsUpdateMsg.hasCredentialsValue());
@@ -184,7 +183,7 @@ abstract public class BaseDeviceEdgeTest extends AbstractEdgeTest {
 
         loginTenantAdmin();
 
-        @NotNull UUID uuid = Uuids.timeBased();
+        UUID uuid = Uuids.timeBased();
 
         UplinkMsg.Builder uplinkMsgBuilder = UplinkMsg.newBuilder();
         DeviceUpdateMsg.Builder deviceUpdateMsgBuilder = DeviceUpdateMsg.newBuilder();
@@ -207,7 +206,7 @@ abstract public class BaseDeviceEdgeTest extends AbstractEdgeTest {
 
     @Test
     public void testSendDeviceRpcResponseToCloud() throws Exception {
-        @NotNull Device device = findDeviceByName("Edge Device 1");
+        Device device = findDeviceByName("Edge Device 1");
 
         UplinkMsg.Builder uplinkMsgBuilder = UplinkMsg.newBuilder();
         DeviceRpcCallMsg.Builder deviceRpcCallResponseBuilder = DeviceRpcCallMsg.newBuilder();
@@ -233,7 +232,7 @@ abstract public class BaseDeviceEdgeTest extends AbstractEdgeTest {
 
     @Test
     public void testSendDeviceCredentialsUpdateToCloud() throws Exception {
-        @NotNull Device device = findDeviceByName("Edge Device 1");
+        Device device = findDeviceByName("Edge Device 1");
 
         UplinkMsg.Builder uplinkMsgBuilder = UplinkMsg.newBuilder();
         DeviceCredentialsUpdateMsg.Builder deviceCredentialsUpdateMsgBuilder = DeviceCredentialsUpdateMsg.newBuilder();
@@ -253,7 +252,7 @@ abstract public class BaseDeviceEdgeTest extends AbstractEdgeTest {
 
     @Test
     public void testSendDeviceCredentialsRequestToCloud() throws Exception {
-        @NotNull Device device = findDeviceByName("Edge Device 1");
+        Device device = findDeviceByName("Edge Device 1");
 
         DeviceCredentials deviceCredentials = doGet("/api/device/" + device.getUuidId() + "/credentials", DeviceCredentials.class);
 
@@ -274,7 +273,7 @@ abstract public class BaseDeviceEdgeTest extends AbstractEdgeTest {
 
         AbstractMessage latestMessage = edgeImitator.getLatestMessage();
         Assert.assertTrue(latestMessage instanceof DeviceCredentialsUpdateMsg);
-        @NotNull DeviceCredentialsUpdateMsg deviceCredentialsUpdateMsg = (DeviceCredentialsUpdateMsg) latestMessage;
+        DeviceCredentialsUpdateMsg deviceCredentialsUpdateMsg = (DeviceCredentialsUpdateMsg) latestMessage;
         Assert.assertEquals(deviceCredentialsUpdateMsg.getDeviceIdMSB(), device.getUuidId().getMostSignificantBits());
         Assert.assertEquals(deviceCredentialsUpdateMsg.getDeviceIdLSB(), device.getUuidId().getLeastSignificantBits());
         Assert.assertEquals(deviceCredentialsUpdateMsg.getCredentialsType(), deviceCredentials.getCredentialsType().name());
@@ -283,7 +282,7 @@ abstract public class BaseDeviceEdgeTest extends AbstractEdgeTest {
 
     @Test
     public void testSendAttributesRequestToCloud() throws Exception {
-        @NotNull Device device = findDeviceByName("Edge Device 1");
+        Device device = findDeviceByName("Edge Device 1");
         sendAttributesRequestAndVerify(device, DataConstants.SERVER_SCOPE, "{\"key1\":\"value1\"}",
                 "key1", "value1");
         sendAttributesRequestAndVerify(device, DataConstants.SERVER_SCOPE, "{\"inactivityTimeout\":3600000}",
@@ -318,13 +317,13 @@ abstract public class BaseDeviceEdgeTest extends AbstractEdgeTest {
 
     @Test
     public void testSendTelemetryToCloud() throws Exception {
-        @NotNull Device device = saveDeviceOnCloudAndVerifyDeliveryToEdge();
+        Device device = saveDeviceOnCloudAndVerifyDeliveryToEdge();
 
         edgeImitator.expectResponsesAmount(2);
 
-        @NotNull JsonObject data = new JsonObject();
-        @NotNull String timeseriesKey = "key";
-        @NotNull String timeseriesValue = "25";
+        JsonObject data = new JsonObject();
+        String timeseriesKey = "key";
+        String timeseriesValue = "25";
         data.addProperty(timeseriesKey, timeseriesValue);
         UplinkMsg.Builder uplinkMsgBuilder = UplinkMsg.newBuilder();
         EntityDataProto.Builder entityDataBuilder = EntityDataProto.newBuilder();
@@ -338,9 +337,9 @@ abstract public class BaseDeviceEdgeTest extends AbstractEdgeTest {
         testAutoGeneratedCodeByProtobuf(uplinkMsgBuilder);
         edgeImitator.sendUplinkMsg(uplinkMsgBuilder.build());
 
-        @NotNull JsonObject attributesData = new JsonObject();
-        @NotNull String attributesKey = "test_attr";
-        @NotNull String attributesValue = "test_value";
+        JsonObject attributesData = new JsonObject();
+        String attributesKey = "test_attr";
+        String attributesValue = "test_value";
         attributesData.addProperty(attributesKey, attributesValue);
         UplinkMsg.Builder uplinkMsgBuilder2 = UplinkMsg.newBuilder();
         EntityDataProto.Builder entityDataBuilder2 = EntityDataProto.newBuilder();
@@ -364,19 +363,19 @@ abstract public class BaseDeviceEdgeTest extends AbstractEdgeTest {
         Assert.assertEquals(1, timeseries.get(timeseriesKey).size());
         Assert.assertEquals(timeseriesValue, timeseries.get(timeseriesKey).get(0).get("value"));
 
-        @NotNull String attributeValuesUrl = "/api/plugins/telemetry/DEVICE/" + device.getId() + "/values/attributes/" + DataConstants.SERVER_SCOPE;
+        String attributeValuesUrl = "/api/plugins/telemetry/DEVICE/" + device.getId() + "/values/attributes/" + DataConstants.SERVER_SCOPE;
         List<Map<String, String>> attributes = doGetAsyncTyped(attributeValuesUrl, new TypeReference<>() {});
 
         Assert.assertEquals(3, attributes.size());
 
-        @NotNull Optional<Map<String, String>> activeAttributeOpt = getAttributeByKey("active", attributes);
+        Optional<Map<String, String>> activeAttributeOpt = getAttributeByKey("active", attributes);
         Assert.assertTrue(activeAttributeOpt.isPresent());
-        @NotNull Map<String, String> activeAttribute = activeAttributeOpt.get();
+        Map<String, String> activeAttribute = activeAttributeOpt.get();
         Assert.assertEquals("true", activeAttribute.get("value"));
 
-        @NotNull Optional<Map<String, String>> customAttributeOpt = getAttributeByKey(attributesKey, attributes);
+        Optional<Map<String, String>> customAttributeOpt = getAttributeByKey(attributesKey, attributes);
         Assert.assertTrue(customAttributeOpt.isPresent());
-        @NotNull Map<String, String> customAttribute = customAttributeOpt.get();
+        Map<String, String> customAttribute = customAttributeOpt.get();
         Assert.assertEquals(attributesValue, customAttribute.get("value"));
 
         doDelete("/api/plugins/telemetry/DEVICE/" + device.getId().getId() + "/SERVER_SCOPE?keys=" + attributesKey, String.class);
@@ -384,10 +383,10 @@ abstract public class BaseDeviceEdgeTest extends AbstractEdgeTest {
 
     @Test
     public void testSendDeviceToCloudWithNameThatAlreadyExistsOnCloud() throws Exception {
-        @NotNull String deviceOnCloudName = StringUtils.randomAlphanumeric(15);
+        String deviceOnCloudName = StringUtils.randomAlphanumeric(15);
         Device deviceOnCloud = saveDevice(deviceOnCloudName, "Default");
 
-        @NotNull UUID uuid = Uuids.timeBased();
+        UUID uuid = Uuids.timeBased();
 
         UplinkMsg.Builder uplinkMsgBuilder = UplinkMsg.newBuilder();
         DeviceUpdateMsg.Builder deviceUpdateMsgBuilder = DeviceUpdateMsg.newBuilder();
@@ -408,13 +407,13 @@ abstract public class BaseDeviceEdgeTest extends AbstractEdgeTest {
         Assert.assertTrue(edgeImitator.waitForResponses());
         Assert.assertTrue(edgeImitator.waitForMessages());
 
-        @NotNull Optional<DeviceUpdateMsg> deviceUpdateMsgOpt = edgeImitator.findMessageByType(DeviceUpdateMsg.class);
+        Optional<DeviceUpdateMsg> deviceUpdateMsgOpt = edgeImitator.findMessageByType(DeviceUpdateMsg.class);
         Assert.assertTrue(deviceUpdateMsgOpt.isPresent());
-        @NotNull DeviceUpdateMsg latestDeviceUpdateMsg = deviceUpdateMsgOpt.get();
+        DeviceUpdateMsg latestDeviceUpdateMsg = deviceUpdateMsgOpt.get();
         Assert.assertNotEquals(deviceOnCloudName, latestDeviceUpdateMsg.getName());
         Assert.assertEquals(deviceOnCloudName, latestDeviceUpdateMsg.getConflictName());
 
-        @NotNull UUID newDeviceId = new UUID(latestDeviceUpdateMsg.getIdMSB(), latestDeviceUpdateMsg.getIdLSB());
+        UUID newDeviceId = new UUID(latestDeviceUpdateMsg.getIdMSB(), latestDeviceUpdateMsg.getIdLSB());
 
         Assert.assertNotEquals(deviceOnCloud.getId().getId(), newDeviceId);
 
@@ -422,9 +421,9 @@ abstract public class BaseDeviceEdgeTest extends AbstractEdgeTest {
         Assert.assertNotNull(device);
         Assert.assertNotEquals(deviceOnCloudName, device.getName());
 
-        @NotNull Optional<DeviceCredentialsRequestMsg> deviceCredentialsUpdateMsgOpt = edgeImitator.findMessageByType(DeviceCredentialsRequestMsg.class);
+        Optional<DeviceCredentialsRequestMsg> deviceCredentialsUpdateMsgOpt = edgeImitator.findMessageByType(DeviceCredentialsRequestMsg.class);
         Assert.assertTrue(deviceCredentialsUpdateMsgOpt.isPresent());
-        @NotNull DeviceCredentialsRequestMsg latestDeviceCredentialsRequestMsg = deviceCredentialsUpdateMsgOpt.get();
+        DeviceCredentialsRequestMsg latestDeviceCredentialsRequestMsg = deviceCredentialsUpdateMsgOpt.get();
         Assert.assertEquals(uuid.getMostSignificantBits(), latestDeviceCredentialsRequestMsg.getDeviceIdMSB());
         Assert.assertEquals(uuid.getLeastSignificantBits(), latestDeviceCredentialsRequestMsg.getDeviceIdLSB());
 
@@ -437,7 +436,7 @@ abstract public class BaseDeviceEdgeTest extends AbstractEdgeTest {
 
     @Test
     public void testSendDeviceToCloud() throws Exception {
-        @NotNull UUID uuid = Uuids.timeBased();
+        UUID uuid = Uuids.timeBased();
 
         UplinkMsg.Builder uplinkMsgBuilder = UplinkMsg.newBuilder();
         DeviceUpdateMsg.Builder deviceUpdateMsgBuilder = DeviceUpdateMsg.newBuilder();
@@ -458,11 +457,11 @@ abstract public class BaseDeviceEdgeTest extends AbstractEdgeTest {
 
         AbstractMessage latestMessage = edgeImitator.getLatestMessage();
         Assert.assertTrue(latestMessage instanceof DeviceCredentialsRequestMsg);
-        @NotNull DeviceCredentialsRequestMsg latestDeviceCredentialsRequestMsg = (DeviceCredentialsRequestMsg) latestMessage;
+        DeviceCredentialsRequestMsg latestDeviceCredentialsRequestMsg = (DeviceCredentialsRequestMsg) latestMessage;
         Assert.assertEquals(uuid.getMostSignificantBits(), latestDeviceCredentialsRequestMsg.getDeviceIdMSB());
         Assert.assertEquals(uuid.getLeastSignificantBits(), latestDeviceCredentialsRequestMsg.getDeviceIdLSB());
 
-        @NotNull UUID newDeviceId = new UUID(latestDeviceCredentialsRequestMsg.getDeviceIdMSB(), latestDeviceCredentialsRequestMsg.getDeviceIdLSB());
+        UUID newDeviceId = new UUID(latestDeviceCredentialsRequestMsg.getDeviceIdMSB(), latestDeviceCredentialsRequestMsg.getDeviceIdLSB());
 
         Device device = doGet("/api/device/" + newDeviceId, Device.class);
         Assert.assertNotNull(device);
@@ -471,7 +470,7 @@ abstract public class BaseDeviceEdgeTest extends AbstractEdgeTest {
 
     @Test
     public void testRpcCall() throws Exception {
-        @NotNull Device device = findDeviceByName("Edge Device 1");
+        Device device = findDeviceByName("Edge Device 1");
 
         ObjectNode body = mapper.createObjectNode();
         body.put("requestId", new Random().nextInt());
@@ -483,7 +482,7 @@ abstract public class BaseDeviceEdgeTest extends AbstractEdgeTest {
         body.put("persisted", true);
         body.put("retries", 2);
 
-        @NotNull EdgeEvent edgeEvent = constructEdgeEvent(tenantId, edge.getId(), EdgeEventActionType.RPC_CALL,
+        EdgeEvent edgeEvent = constructEdgeEvent(tenantId, edge.getId(), EdgeEventActionType.RPC_CALL,
                                                           device.getId().getId(), EdgeEventType.DEVICE, body);
         edgeImitator.expectMessageAmount(1);
         edgeEventService.saveAsync(edgeEvent).get();
@@ -492,14 +491,14 @@ abstract public class BaseDeviceEdgeTest extends AbstractEdgeTest {
 
         AbstractMessage latestMessage = edgeImitator.getLatestMessage();
         Assert.assertTrue(latestMessage instanceof DeviceRpcCallMsg);
-        @NotNull DeviceRpcCallMsg latestDeviceRpcCallMsg = (DeviceRpcCallMsg) latestMessage;
+        DeviceRpcCallMsg latestDeviceRpcCallMsg = (DeviceRpcCallMsg) latestMessage;
         Assert.assertEquals("test_method", latestDeviceRpcCallMsg.getRequestMsg().getMethod());
         Assert.assertTrue(latestDeviceRpcCallMsg.getPersisted());
         Assert.assertEquals(2, latestDeviceRpcCallMsg.getRetries());
     }
 
-    private void sendAttributesRequestAndVerify(@NotNull Device device, String scope, String attributesDataStr, String expectedKey,
-                                                @NotNull String expectedValue) throws Exception {
+    private void sendAttributesRequestAndVerify(Device device, String scope, String attributesDataStr, String expectedKey,
+                                                String expectedValue) throws Exception {
         JsonNode attributesData = mapper.readTree(attributesDataStr);
 
         doPost("/api/plugins/telemetry/DEVICE/" + device.getUuidId() + "/attributes/" + scope,
@@ -509,7 +508,7 @@ abstract public class BaseDeviceEdgeTest extends AbstractEdgeTest {
         Awaitility.await()
                 .atMost(10, TimeUnit.SECONDS)
                 .until(() -> {
-                    @NotNull String urlTemplate = "/api/plugins/telemetry/DEVICE/" + device.getId() + "/keys/attributes/" + scope;
+                    String urlTemplate = "/api/plugins/telemetry/DEVICE/" + device.getId() + "/keys/attributes/" + scope;
                     List<String> actualKeys = doGetAsyncTyped(urlTemplate, new TypeReference<>() {});
                     return actualKeys != null && !actualKeys.isEmpty() && actualKeys.contains(expectedKey);
                 });
@@ -532,17 +531,17 @@ abstract public class BaseDeviceEdgeTest extends AbstractEdgeTest {
 
         AbstractMessage latestMessage = edgeImitator.getLatestMessage();
         Assert.assertTrue(latestMessage instanceof EntityDataProto);
-        @NotNull EntityDataProto latestEntityDataMsg = (EntityDataProto) latestMessage;
+        EntityDataProto latestEntityDataMsg = (EntityDataProto) latestMessage;
         Assert.assertEquals(device.getUuidId().getMostSignificantBits(), latestEntityDataMsg.getEntityIdMSB());
         Assert.assertEquals(device.getUuidId().getLeastSignificantBits(), latestEntityDataMsg.getEntityIdLSB());
         Assert.assertEquals(device.getId().getEntityType().name(), latestEntityDataMsg.getEntityType());
         Assert.assertEquals(scope, latestEntityDataMsg.getPostAttributeScope());
         Assert.assertTrue(latestEntityDataMsg.hasAttributesUpdatedMsg());
 
-        @NotNull TransportProtos.PostAttributeMsg attributesUpdatedMsg = latestEntityDataMsg.getAttributesUpdatedMsg();
+        TransportProtos.PostAttributeMsg attributesUpdatedMsg = latestEntityDataMsg.getAttributesUpdatedMsg();
 
         boolean found = false;
-        for (@NotNull TransportProtos.KeyValueProto keyValueProto : attributesUpdatedMsg.getKvList()) {
+        for (TransportProtos.KeyValueProto keyValueProto : attributesUpdatedMsg.getKvList()) {
             if (keyValueProto.getKey().equals(expectedKey)) {
                 Assert.assertEquals(expectedKey, keyValueProto.getKey());
                 switch (keyValueProto.getType()) {
@@ -561,33 +560,32 @@ abstract public class BaseDeviceEdgeTest extends AbstractEdgeTest {
         Assert.assertTrue("Expected key and value must be found", found);
     }
 
-    @NotNull
-    private Optional<Map<String, String>> getAttributeByKey(String key, @NotNull List<Map<String, String>> attributes) {
+    private Optional<Map<String, String>> getAttributeByKey(String key, List<Map<String, String>> attributes) {
         return attributes.stream().filter(kv -> kv.get("key").equals(key)).findFirst();
     }
 
-    private Map<String, List<Map<String, String>>> loadDeviceTimeseries(@NotNull Device device, String timeseriesKey) throws Exception {
+    private Map<String, List<Map<String, String>>> loadDeviceTimeseries(Device device, String timeseriesKey) throws Exception {
         return doGetAsyncTyped("/api/plugins/telemetry/DEVICE/" + device.getUuidId() + "/values/timeseries?keys=" + timeseriesKey,
                 new TypeReference<>() {});
     }
 
     @Test
     public void sendUpdateSharedAttributeToCloudAndValidateDeviceSubscription() throws Exception {
-        @NotNull Device device = saveDeviceOnCloudAndVerifyDeliveryToEdge();
+        Device device = saveDeviceOnCloudAndVerifyDeliveryToEdge();
 
         DeviceCredentials deviceCredentials = doGet("/api/device/" + device.getUuidId() + "/credentials", DeviceCredentials.class);
 
-        @NotNull MqttTestClient client = new MqttTestClient();
+        MqttTestClient client = new MqttTestClient();
         client.connectAndWait(deviceCredentials.getCredentialsId());
-        @NotNull MqttTestCallback onUpdateCallback = new MqttTestCallback();
+        MqttTestCallback onUpdateCallback = new MqttTestCallback();
         client.setCallback(onUpdateCallback);
         client.subscribeAndWait("v1/devices/me/attributes", MqttQoS.AT_MOST_ONCE);
 
         edgeImitator.expectResponsesAmount(1);
 
-        @NotNull JsonObject attributesData = new JsonObject();
-        @NotNull String attrKey = "sharedAttrName";
-        @NotNull String attrValue = "sharedAttrValue";
+        JsonObject attributesData = new JsonObject();
+        String attrKey = "sharedAttrName";
+        String attrValue = "sharedAttrValue";
         attributesData.addProperty(attrKey, attrValue);
         UplinkMsg.Builder uplinkMsgBuilder = UplinkMsg.newBuilder();
         EntityDataProto.Builder entityDataBuilder = EntityDataProto.newBuilder();

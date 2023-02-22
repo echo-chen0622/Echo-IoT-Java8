@@ -16,7 +16,6 @@ import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.sync.ie.exporting.EntityExportService;
 import org.echoiot.server.service.sync.ie.exporting.ExportableEntitiesService;
 import org.echoiot.server.service.sync.vc.data.EntitiesExportCtx;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Primary;
@@ -40,9 +39,8 @@ public class DefaultEntityExportService<I extends EntityId, E extends Exportable
     @Resource
     private AttributesService attributesService;
 
-    @NotNull
     @Override
-    public final D getExportData(@NotNull EntitiesExportCtx<?> ctx, @NotNull I entityId) throws EchoiotException {
+    public final D getExportData(EntitiesExportCtx<?> ctx, I entityId) throws EchoiotException {
         D exportData = newExportData();
 
         E entity = exportableEntitiesService.findEntityByTenantIdAndId(ctx.getTenantId(), entityId);
@@ -62,10 +60,10 @@ public class DefaultEntityExportService<I extends EntityId, E extends Exportable
         return exportData;
     }
 
-    protected void setAdditionalExportData(@NotNull EntitiesExportCtx<?> ctx, @NotNull E entity, @NotNull D exportData) throws EchoiotException {
+    protected void setAdditionalExportData(EntitiesExportCtx<?> ctx, E entity, D exportData) throws EchoiotException {
         var exportSettings = ctx.getSettings();
         if (exportSettings.isExportRelations()) {
-            @NotNull List<EntityRelation> relations = exportRelations(ctx, entity);
+            List<EntityRelation> relations = exportRelations(ctx, entity);
             relations.forEach(relation -> {
                 relation.setFrom(getExternalIdOrElseInternal(ctx, relation.getFrom()));
                 relation.setTo(getExternalIdOrElseInternal(ctx, relation.getTo()));
@@ -73,14 +71,13 @@ public class DefaultEntityExportService<I extends EntityId, E extends Exportable
             exportData.setRelations(relations);
         }
         if (exportSettings.isExportAttributes()) {
-            @NotNull Map<String, List<AttributeExportData>> attributes = exportAttributes(ctx, entity);
+            Map<String, List<AttributeExportData>> attributes = exportAttributes(ctx, entity);
             exportData.setAttributes(attributes);
         }
     }
 
-    @NotNull
-    private List<EntityRelation> exportRelations(@NotNull EntitiesExportCtx<?> ctx, @NotNull E entity) throws EchoiotException {
-        @NotNull List<EntityRelation> relations = new ArrayList<>();
+    private List<EntityRelation> exportRelations(EntitiesExportCtx<?> ctx, E entity) throws EchoiotException {
+        List<EntityRelation> relations = new ArrayList<>();
 
         List<EntityRelation> inboundRelations = relationDao.findAllByTo(ctx.getTenantId(), entity.getId(), RelationTypeGroup.COMMON);
         relations.addAll(inboundRelations);
@@ -90,20 +87,19 @@ public class DefaultEntityExportService<I extends EntityId, E extends Exportable
         return relations;
     }
 
-    @NotNull
-    private Map<String, List<AttributeExportData>> exportAttributes(@NotNull EntitiesExportCtx<?> ctx, @NotNull E entity) throws EchoiotException {
+    private Map<String, List<AttributeExportData>> exportAttributes(EntitiesExportCtx<?> ctx, E entity) throws EchoiotException {
         List<String> scopes;
         if (entity.getId().getEntityType() == EntityType.DEVICE) {
             scopes = List.of(DataConstants.SERVER_SCOPE, DataConstants.SHARED_SCOPE);
         } else {
             scopes = Collections.singletonList(DataConstants.SERVER_SCOPE);
         }
-        @NotNull Map<String, List<AttributeExportData>> attributes = new LinkedHashMap<>();
+        Map<String, List<AttributeExportData>> attributes = new LinkedHashMap<>();
         scopes.forEach(scope -> {
             try {
                 attributes.put(scope, attributesService.findAll(ctx.getTenantId(), entity.getId(), scope).get().stream()
                         .map(attribute -> {
-                            @NotNull AttributeExportData attributeExportData = new AttributeExportData();
+                            AttributeExportData attributeExportData = new AttributeExportData();
                             attributeExportData.setKey(attribute.getKey());
                             attributeExportData.setLastUpdateTs(attribute.getLastUpdateTs());
                             attributeExportData.setStrValue(attribute.getStrValue().orElse(null));
@@ -122,7 +118,7 @@ public class DefaultEntityExportService<I extends EntityId, E extends Exportable
     }
 
     @Nullable
-    protected <ID extends EntityId> ID getExternalIdOrElseInternal(@NotNull EntitiesExportCtx<?> ctx, @Nullable ID internalId) {
+    protected <ID extends EntityId> ID getExternalIdOrElseInternal(EntitiesExportCtx<?> ctx, @Nullable ID internalId) {
         if (internalId == null || internalId.isNullUid()) return internalId;
         var result = ctx.getExternalId(internalId);
         if (result == null) {
@@ -133,8 +129,8 @@ public class DefaultEntityExportService<I extends EntityId, E extends Exportable
         return result;
     }
 
-    protected UUID getExternalIdOrElseInternalByUuid(@NotNull EntitiesExportCtx<?> ctx, UUID internalUuid) {
-        for (@NotNull EntityType entityType : EntityType.values()) {
+    protected UUID getExternalIdOrElseInternalByUuid(EntitiesExportCtx<?> ctx, UUID internalUuid) {
+        for (EntityType entityType : EntityType.values()) {
             EntityId internalId;
             try {
                 internalId = EntityIdFactory.getByTypeAndUuid(entityType, internalUuid);
@@ -146,7 +142,7 @@ public class DefaultEntityExportService<I extends EntityId, E extends Exportable
                 return externalId.getId();
             }
         }
-        for (@NotNull EntityType entityType : EntityType.values()) {
+        for (EntityType entityType : EntityType.values()) {
             EntityId internalId;
             try {
                 internalId = EntityIdFactory.getByTypeAndUuid(entityType, internalUuid);

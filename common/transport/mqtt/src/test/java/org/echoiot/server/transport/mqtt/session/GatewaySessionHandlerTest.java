@@ -1,6 +1,5 @@
 package org.echoiot.server.transport.mqtt.session;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.junit.Test;
 
@@ -19,7 +18,7 @@ public class GatewaySessionHandlerTest {
 
     @Test
     public void givenWeakHashMap_WhenGC_thenMapIsEmpty() {
-        @NotNull WeakHashMap<String, Lock> map = new WeakHashMap<>();
+        WeakHashMap<String, Lock> map = new WeakHashMap<>();
 
         @Nullable String deviceName = "device"; //constants are static and doesn't affected by GC, so use new instead
         map.put(deviceName, new ReentrantLock());
@@ -36,7 +35,7 @@ public class GatewaySessionHandlerTest {
         GatewaySessionHandler gsh = mock(GatewaySessionHandler.class);
         willCallRealMethod().given(gsh).createWeakMap();
 
-        @NotNull ConcurrentMap<String, Lock> map = gsh.createWeakMap();
+        ConcurrentMap<String, Lock> map = gsh.createWeakMap();
         map.put("device", new ReentrantLock());
         assertTrue(map.containsKey("device"));
 

@@ -21,7 +21,6 @@ import org.echoiot.server.common.data.page.PageLink;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.data.rule.RuleChainType;
 import org.echoiot.server.common.msg.TbMsg;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,11 +62,10 @@ public class TbMsgPushToEdgeNode extends AbstractTbMsgPushNode<TbMsgPushToEdgeNo
 
     static final int DEFAULT_PAGE_SIZE = 100;
 
-    @NotNull
     @Override
     EdgeEvent buildEvent(TenantId tenantId, EdgeEventActionType eventAction, UUID entityId,
                          EdgeEventType eventType, JsonNode entityBody) {
-        @NotNull EdgeEvent edgeEvent = new EdgeEvent();
+        EdgeEvent edgeEvent = new EdgeEvent();
         edgeEvent.setTenantId(tenantId);
         edgeEvent.setAction(eventAction);
         edgeEvent.setEntityId(entityId);
@@ -78,36 +76,33 @@ public class TbMsgPushToEdgeNode extends AbstractTbMsgPushNode<TbMsgPushToEdgeNo
 
     @org.jetbrains.annotations.Nullable
     @Override
-    EdgeEventType getEventTypeByEntityType(@NotNull EntityType entityType) {
+    EdgeEventType getEventTypeByEntityType(EntityType entityType) {
         return EdgeUtils.getEdgeEventTypeByEntityType(entityType);
     }
 
-    @NotNull
     @Override
     EdgeEventType getAlarmEventType() {
         return EdgeEventType.ALARM;
     }
 
-    @NotNull
     @Override
     String getIgnoredMessageSource() {
         return DataConstants.EDGE_MSG_SOURCE;
     }
 
-    @NotNull
     @Override
     protected Class<TbMsgPushToEdgeNodeConfiguration> getConfigClazz() {
         return TbMsgPushToEdgeNodeConfiguration.class;
     }
 
     @Override
-    protected void processMsg(@NotNull TbContext ctx, @NotNull TbMsg msg) {
+    protected void processMsg(TbContext ctx, TbMsg msg) {
         try {
             if (EntityType.EDGE.equals(msg.getOriginator().getEntityType())) {
                 EdgeEvent edgeEvent = buildEvent(msg, ctx);
-                @NotNull EdgeId edgeId = new EdgeId(msg.getOriginator().getId());
-                @NotNull ListenableFuture<Void> future = notifyEdge(ctx, edgeEvent, edgeId);
-                @NotNull FutureCallback<Void> futureCallback = new FutureCallback<>() {
+                EdgeId edgeId = new EdgeId(msg.getOriginator().getId());
+                ListenableFuture<Void> future = notifyEdge(ctx, edgeEvent, edgeId);
+                FutureCallback<Void> futureCallback = new FutureCallback<>() {
                     @Override
                     public void onSuccess(@Nullable Void result) {
                         ctx.tellSuccess(msg);
@@ -122,7 +117,7 @@ public class TbMsgPushToEdgeNode extends AbstractTbMsgPushNode<TbMsgPushToEdgeNo
             } else {
                 PageLink pageLink = new PageLink(DEFAULT_PAGE_SIZE);
                 PageData<EdgeId> pageData;
-                @NotNull List<ListenableFuture<Void>> futures = new ArrayList<>();
+                List<ListenableFuture<Void>> futures = new ArrayList<>();
                 do {
                     pageData = ctx.getEdgeService().findRelatedEdgeIdsByEntityId(ctx.getTenantId(), msg.getOriginator(), pageLink);
                     if (pageData != null && pageData.getData() != null && !pageData.getData().isEmpty()) {
@@ -159,8 +154,7 @@ public class TbMsgPushToEdgeNode extends AbstractTbMsgPushNode<TbMsgPushToEdgeNo
         }
     }
 
-    @NotNull
-    private ListenableFuture<Void> notifyEdge(@NotNull TbContext ctx, @NotNull EdgeEvent edgeEvent, EdgeId edgeId) {
+    private ListenableFuture<Void> notifyEdge(TbContext ctx, EdgeEvent edgeEvent, EdgeId edgeId) {
         edgeEvent.setEdgeId(edgeId);
         ListenableFuture<Void> future = ctx.getEdgeEventService().saveAsync(edgeEvent);
         return Futures.transform(future, result -> {

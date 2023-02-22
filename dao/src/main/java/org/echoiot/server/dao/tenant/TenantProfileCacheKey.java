@@ -2,7 +2,6 @@ package org.echoiot.server.dao.tenant;
 
 import lombok.Data;
 import org.echoiot.server.common.data.id.TenantProfileId;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 
@@ -19,12 +18,10 @@ public class TenantProfileCacheKey implements Serializable {
         this.defaultProfile = defaultProfile;
     }
 
-    @NotNull
     public static TenantProfileCacheKey fromId(TenantProfileId id) {
         return new TenantProfileCacheKey(id, false);
     }
 
-    @NotNull
     public static TenantProfileCacheKey defaultProfile() {
         return new TenantProfileCacheKey(null, true);
     }

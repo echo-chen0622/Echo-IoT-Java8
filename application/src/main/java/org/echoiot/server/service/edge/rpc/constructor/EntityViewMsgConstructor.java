@@ -7,15 +7,13 @@ import org.echoiot.server.gen.edge.v1.EdgeEntityType;
 import org.echoiot.server.gen.edge.v1.EntityViewUpdateMsg;
 import org.echoiot.server.gen.edge.v1.UpdateMsgType;
 import org.echoiot.server.queue.util.TbCoreComponent;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 @Component
 @TbCoreComponent
 public class EntityViewMsgConstructor {
 
-    @NotNull
-    public EntityViewUpdateMsg constructEntityViewUpdatedMsg(UpdateMsgType msgType, @NotNull EntityView entityView) {
+    public EntityViewUpdateMsg constructEntityViewUpdatedMsg(UpdateMsgType msgType, EntityView entityView) {
         EdgeEntityType entityType;
         switch (entityView.getEntityId().getEntityType()) {
             case DEVICE:
@@ -46,8 +44,7 @@ public class EntityViewMsgConstructor {
         return builder.build();
     }
 
-    @NotNull
-    public EntityViewUpdateMsg constructEntityViewDeleteMsg(@NotNull EntityViewId entityViewId) {
+    public EntityViewUpdateMsg constructEntityViewDeleteMsg(EntityViewId entityViewId) {
         return EntityViewUpdateMsg.newBuilder()
                 .setMsgType(UpdateMsgType.ENTITY_DELETED_RPC_MESSAGE)
                 .setIdMSB(entityViewId.getId().getMostSignificantBits())

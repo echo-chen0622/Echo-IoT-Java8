@@ -3,7 +3,6 @@ package org.echoiot.server.common.data;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.echoiot.server.common.data.id.EntityViewId;
-import org.jetbrains.annotations.NotNull;
 
 @Data
 public class EntityViewInfo extends EntityView {
@@ -21,7 +20,7 @@ public class EntityViewInfo extends EntityView {
         super(entityViewId);
     }
 
-    public EntityViewInfo(@NotNull EntityView entityView, String customerTitle, boolean customerIsPublic) {
+    public EntityViewInfo(EntityView entityView, String customerTitle, boolean customerIsPublic) {
         super(entityView);
         this.customerTitle = customerTitle;
         this.customerIsPublic = customerIsPublic;

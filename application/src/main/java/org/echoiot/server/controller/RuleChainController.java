@@ -38,7 +38,6 @@ import org.echoiot.server.service.script.RuleNodeJsScriptEngine;
 import org.echoiot.server.service.script.RuleNodeTbelScriptEngine;
 import org.echoiot.server.service.security.permission.Operation;
 import org.echoiot.server.service.security.permission.PerResource;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -117,11 +116,11 @@ public class RuleChainController extends BaseController {
     @RequestMapping(value = "/ruleChain/{ruleChainId}", method = RequestMethod.GET)
     @ResponseBody
     public RuleChain getRuleChainById(
-            @NotNull @ApiParam(value = RULE_CHAIN_ID_PARAM_DESCRIPTION)
+            @ApiParam(value = RULE_CHAIN_ID_PARAM_DESCRIPTION)
             @PathVariable(RULE_CHAIN_ID) String strRuleChainId) throws EchoiotException {
         checkParameter(RULE_CHAIN_ID, strRuleChainId);
         try {
-            @NotNull RuleChainId ruleChainId = new RuleChainId(toUUID(strRuleChainId));
+            RuleChainId ruleChainId = new RuleChainId(toUUID(strRuleChainId));
             return checkRuleChain(ruleChainId, Operation.READ);
         } catch (Exception e) {
             throw handleException(e);
@@ -135,11 +134,11 @@ public class RuleChainController extends BaseController {
     @RequestMapping(value = "/ruleChain/{ruleChainId}/output/labels", method = RequestMethod.GET)
     @ResponseBody
     public Set<String> getRuleChainOutputLabels(
-            @NotNull @ApiParam(value = RULE_CHAIN_ID_PARAM_DESCRIPTION)
+            @ApiParam(value = RULE_CHAIN_ID_PARAM_DESCRIPTION)
             @PathVariable(RULE_CHAIN_ID) String strRuleChainId) throws EchoiotException {
         checkParameter(RULE_CHAIN_ID, strRuleChainId);
         try {
-            @NotNull RuleChainId ruleChainId = new RuleChainId(toUUID(strRuleChainId));
+            RuleChainId ruleChainId = new RuleChainId(toUUID(strRuleChainId));
             checkRuleChain(ruleChainId, Operation.READ);
             return tbRuleChainService.getRuleChainOutputLabels(getTenantId(), ruleChainId);
         } catch (Exception e) {
@@ -154,11 +153,11 @@ public class RuleChainController extends BaseController {
     @RequestMapping(value = "/ruleChain/{ruleChainId}/output/labels/usage", method = RequestMethod.GET)
     @ResponseBody
     public List<RuleChainOutputLabelsUsage> getRuleChainOutputLabelsUsage(
-            @NotNull @ApiParam(value = RULE_CHAIN_ID_PARAM_DESCRIPTION)
+            @ApiParam(value = RULE_CHAIN_ID_PARAM_DESCRIPTION)
             @PathVariable(RULE_CHAIN_ID) String strRuleChainId) throws EchoiotException {
         checkParameter(RULE_CHAIN_ID, strRuleChainId);
         try {
-            @NotNull RuleChainId ruleChainId = new RuleChainId(toUUID(strRuleChainId));
+            RuleChainId ruleChainId = new RuleChainId(toUUID(strRuleChainId));
             checkRuleChain(ruleChainId, Operation.READ);
             return tbRuleChainService.getOutputLabelUsage(getCurrentUser().getTenantId(), ruleChainId);
         } catch (Exception e) {
@@ -172,11 +171,11 @@ public class RuleChainController extends BaseController {
     @RequestMapping(value = "/ruleChain/{ruleChainId}/metadata", method = RequestMethod.GET)
     @ResponseBody
     public RuleChainMetaData getRuleChainMetaData(
-            @NotNull @ApiParam(value = RULE_CHAIN_ID_PARAM_DESCRIPTION)
+            @ApiParam(value = RULE_CHAIN_ID_PARAM_DESCRIPTION)
             @PathVariable(RULE_CHAIN_ID) String strRuleChainId) throws EchoiotException {
         checkParameter(RULE_CHAIN_ID, strRuleChainId);
         try {
-            @NotNull RuleChainId ruleChainId = new RuleChainId(toUUID(strRuleChainId));
+            RuleChainId ruleChainId = new RuleChainId(toUUID(strRuleChainId));
             checkRuleChain(ruleChainId, Operation.READ);
             return ruleChainService.loadRuleChainMetaData(getTenantId(), ruleChainId);
         } catch (Exception e) {
@@ -196,7 +195,7 @@ public class RuleChainController extends BaseController {
     @RequestMapping(value = "/ruleChain", method = RequestMethod.POST)
     @ResponseBody
     public RuleChain saveRuleChain(
-            @NotNull @ApiParam(value = "A JSON value representing the rule chain.")
+            @ApiParam(value = "A JSON value representing the rule chain.")
             @RequestBody RuleChain ruleChain) throws Exception {
         ruleChain.setTenantId(getCurrentUser().getTenantId());
         checkEntity(ruleChain.getId(), ruleChain, PerResource.RULE_CHAIN);
@@ -210,7 +209,7 @@ public class RuleChainController extends BaseController {
     @RequestMapping(value = "/ruleChain/device/default", method = RequestMethod.POST)
     @ResponseBody
     public RuleChain saveRuleChain(
-            @NotNull @ApiParam(value = "A JSON value representing the request.")
+            @ApiParam(value = "A JSON value representing the request.")
             @RequestBody DefaultRuleChainCreateRequest request) throws Exception {
         checkNotNull(request);
         checkParameter(request.getName(), "name");
@@ -223,10 +222,10 @@ public class RuleChainController extends BaseController {
     @RequestMapping(value = "/ruleChain/{ruleChainId}/root", method = RequestMethod.POST)
     @ResponseBody
     public RuleChain setRootRuleChain(
-            @NotNull @ApiParam(value = RULE_CHAIN_ID_PARAM_DESCRIPTION)
+            @ApiParam(value = RULE_CHAIN_ID_PARAM_DESCRIPTION)
             @PathVariable(RULE_CHAIN_ID) String strRuleChainId) throws EchoiotException {
         checkParameter(RULE_CHAIN_ID, strRuleChainId);
-        @NotNull RuleChainId ruleChainId = new RuleChainId(toUUID(strRuleChainId));
+        RuleChainId ruleChainId = new RuleChainId(toUUID(strRuleChainId));
         RuleChain ruleChain = checkRuleChain(ruleChainId, Operation.WRITE);
         return tbRuleChainService.setRootRuleChain(getTenantId(), ruleChain, getCurrentUser());
     }
@@ -237,14 +236,14 @@ public class RuleChainController extends BaseController {
     @RequestMapping(value = "/ruleChain/metadata", method = RequestMethod.POST)
     @ResponseBody
     public RuleChainMetaData saveRuleChainMetaData(
-            @NotNull @ApiParam(value = "A JSON value representing the rule chain metadata.")
+            @ApiParam(value = "A JSON value representing the rule chain metadata.")
             @RequestBody RuleChainMetaData ruleChainMetaData,
             @ApiParam(value = "Update related rule nodes.")
             @RequestParam(value = "updateRelated", required = false, defaultValue = "true") boolean updateRelated
     ) throws Exception {
         TenantId tenantId = getTenantId();
         if (debugPerTenantEnabled) {
-            @NotNull ConcurrentMap<TenantId, DebugTbRateLimits> debugPerTenantLimits = actorContext.getDebugPerTenantLimits();
+            ConcurrentMap<TenantId, DebugTbRateLimits> debugPerTenantLimits = actorContext.getDebugPerTenantLimits();
             DebugTbRateLimits debugTbRateLimits = debugPerTenantLimits.getOrDefault(tenantId, null);
             if (debugTbRateLimits != null) {
                 debugPerTenantLimits.remove(tenantId, debugTbRateLimits);
@@ -271,12 +270,12 @@ public class RuleChainController extends BaseController {
             @RequestParam(required = false) String textSearch,
             @ApiParam(value = SORT_PROPERTY_DESCRIPTION, allowableValues = RULE_CHAIN_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
-            @NotNull @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
+            @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortOrder) throws EchoiotException {
         try {
             TenantId tenantId = getCurrentUser().getTenantId();
-            @NotNull PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
-            @NotNull RuleChainType type = RuleChainType.CORE;
+            PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
+            RuleChainType type = RuleChainType.CORE;
             if (typeStr != null && typeStr.trim().length() > 0) {
                 type = RuleChainType.valueOf(typeStr);
             }
@@ -293,10 +292,10 @@ public class RuleChainController extends BaseController {
     @RequestMapping(value = "/ruleChain/{ruleChainId}", method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.OK)
     public void deleteRuleChain(
-            @NotNull @ApiParam(value = RULE_CHAIN_ID_PARAM_DESCRIPTION)
+            @ApiParam(value = RULE_CHAIN_ID_PARAM_DESCRIPTION)
             @PathVariable(RULE_CHAIN_ID) String strRuleChainId) throws EchoiotException {
         checkParameter(RULE_CHAIN_ID, strRuleChainId);
-        @NotNull RuleChainId ruleChainId = new RuleChainId(toUUID(strRuleChainId));
+        RuleChainId ruleChainId = new RuleChainId(toUUID(strRuleChainId));
         RuleChain ruleChain = checkRuleChain(ruleChainId, Operation.DELETE);
         tbRuleChainService.delete(ruleChain, getCurrentUser());
     }
@@ -309,17 +308,17 @@ public class RuleChainController extends BaseController {
     @RequestMapping(value = "/ruleNode/{ruleNodeId}/debugIn", method = RequestMethod.GET)
     @ResponseBody
     public JsonNode getLatestRuleNodeDebugInput(
-            @NotNull @ApiParam(value = RULE_NODE_ID_PARAM_DESCRIPTION)
+            @ApiParam(value = RULE_NODE_ID_PARAM_DESCRIPTION)
             @PathVariable(RULE_NODE_ID) String strRuleNodeId) throws EchoiotException {
         checkParameter(RULE_NODE_ID, strRuleNodeId);
         try {
-            @NotNull RuleNodeId ruleNodeId = new RuleNodeId(toUUID(strRuleNodeId));
+            RuleNodeId ruleNodeId = new RuleNodeId(toUUID(strRuleNodeId));
             checkRuleNode(ruleNodeId, Operation.READ);
             TenantId tenantId = getCurrentUser().getTenantId();
             @Nullable List<EventInfo> events = eventService.findLatestEvents(tenantId, ruleNodeId, EventType.DEBUG_RULE_NODE, 2);
             @Nullable JsonNode result = null;
             if (events != null) {
-                for (@NotNull EventInfo event : events) {
+                for (EventInfo event : events) {
                     JsonNode body = event.getBody();
                     if (body.has("type") && body.get("type").asText().equals("IN")) {
                         result = body;
@@ -333,7 +332,6 @@ public class RuleChainController extends BaseController {
         }
     }
 
-    @NotNull
     @ApiOperation(value = "Is TBEL script executor enabled",
             notes = "Returns 'True' if the TBEL script execution is enabled" + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
@@ -343,7 +341,6 @@ public class RuleChainController extends BaseController {
         return tbelEnabled;
     }
 
-    @NotNull
     @ApiOperation(value = "Test Script function",
             notes = TEST_SCRIPT_FUNCTION + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
@@ -352,7 +349,7 @@ public class RuleChainController extends BaseController {
     public JsonNode testScript(
             @Nullable @ApiParam(value = "Script language: JS or TBEL")
             @RequestParam(required = false) ScriptLanguage scriptLang,
-            @NotNull @ApiParam(value = "Test JS request. See API call description above.")
+            @ApiParam(value = "Test JS request. See API call description above.")
             @RequestBody JsonNode inputParams) throws EchoiotException {
         try {
             String script = inputParams.get("script").asText();
@@ -380,7 +377,7 @@ public class RuleChainController extends BaseController {
                     }
                     engine = new RuleNodeTbelScriptEngine(getTenantId(), tbelInvokeService, script, argNames);
                 }
-                @NotNull TbMsg inMsg = TbMsg.newMsg(msgType, null, new TbMsgMetaData(metadata), TbMsgDataType.JSON, data);
+                TbMsg inMsg = TbMsg.newMsg(msgType, null, new TbMsgMetaData(metadata), TbMsgDataType.JSON, data);
                 switch (scriptType) {
                     case "update":
                         output = msgToOutput(engine.executeUpdateAsync(inMsg).get(TIMEOUT, TimeUnit.SECONDS));
@@ -432,14 +429,13 @@ public class RuleChainController extends BaseController {
             @RequestParam("limit") int limit) throws EchoiotException {
         try {
             TenantId tenantId = getCurrentUser().getTenantId();
-            @NotNull PageLink pageLink = new PageLink(limit);
+            PageLink pageLink = new PageLink(limit);
             return checkNotNull(ruleChainService.exportTenantRuleChains(tenantId, pageLink));
         } catch (Exception e) {
             throw handleException(e);
         }
     }
 
-    @NotNull
     @ApiOperation(value = "Import Rule Chains", notes = "Imports all tenant rule chains as one JSON." + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
     @RequestMapping(value = "/ruleChains/import", method = RequestMethod.POST)
@@ -452,7 +448,7 @@ public class RuleChainController extends BaseController {
         try {
             TenantId tenantId = getCurrentUser().getTenantId();
             List<RuleChainImportResult> importResults = ruleChainService.importTenantRuleChains(tenantId, ruleChainData, overwrite);
-            for (@NotNull RuleChainImportResult importResult : importResults) {
+            for (RuleChainImportResult importResult : importResults) {
                 if (importResult.getError() == null) {
                     tbClusterService.broadcastEntityStateChangeEvent(importResult.getTenantId(), importResult.getRuleChainId(),
                             importResult.isUpdated() ? ComponentLifecycleEvent.UPDATED : ComponentLifecycleEvent.CREATED);
@@ -464,17 +460,17 @@ public class RuleChainController extends BaseController {
         }
     }
 
-    private String msgToOutput(@NotNull TbMsg msg) throws Exception {
-        @NotNull JsonNode resultNode = convertMsgToOut(msg);
+    private String msgToOutput(TbMsg msg) throws Exception {
+        JsonNode resultNode = convertMsgToOut(msg);
         return objectMapper.writeValueAsString(resultNode);
     }
 
-    private String msgToOutput(@NotNull List<TbMsg> msgs) throws Exception {
+    private String msgToOutput(List<TbMsg> msgs) throws Exception {
         JsonNode resultNode;
         if (msgs.size() > 1) {
             resultNode = objectMapper.createArrayNode();
-            for (@NotNull TbMsg msg : msgs) {
-                @NotNull JsonNode convertedData = convertMsgToOut(msg);
+            for (TbMsg msg : msgs) {
+                JsonNode convertedData = convertMsgToOut(msg);
                 ((ArrayNode) resultNode).add(convertedData);
             }
         } else {
@@ -483,8 +479,7 @@ public class RuleChainController extends BaseController {
         return objectMapper.writeValueAsString(resultNode);
     }
 
-    @NotNull
-    private JsonNode convertMsgToOut(@NotNull TbMsg msg) throws Exception {
+    private JsonNode convertMsgToOut(TbMsg msg) throws Exception {
         ObjectNode msgData = objectMapper.createObjectNode();
         if (!StringUtils.isEmpty(msg.getData())) {
             msgData.set("msg", objectMapper.readTree(msg.getData()));
@@ -506,14 +501,14 @@ public class RuleChainController extends BaseController {
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
     @RequestMapping(value = "/edge/{edgeId}/ruleChain/{ruleChainId}", method = RequestMethod.POST)
     @ResponseBody
-    public RuleChain assignRuleChainToEdge(@NotNull @PathVariable("edgeId") String strEdgeId,
-                                           @NotNull @PathVariable(RULE_CHAIN_ID) String strRuleChainId) throws EchoiotException {
+    public RuleChain assignRuleChainToEdge(@PathVariable("edgeId") String strEdgeId,
+                                           @PathVariable(RULE_CHAIN_ID) String strRuleChainId) throws EchoiotException {
         checkParameter("edgeId", strEdgeId);
         checkParameter(RULE_CHAIN_ID, strRuleChainId);
-        @NotNull EdgeId edgeId = new EdgeId(toUUID(strEdgeId));
+        EdgeId edgeId = new EdgeId(toUUID(strEdgeId));
         Edge edge = checkEdgeId(edgeId, Operation.WRITE);
 
-        @NotNull RuleChainId ruleChainId = new RuleChainId(toUUID(strRuleChainId));
+        RuleChainId ruleChainId = new RuleChainId(toUUID(strRuleChainId));
         RuleChain ruleChain = checkRuleChain(ruleChainId, Operation.READ);
 
         return tbRuleChainService.assignRuleChainToEdge(getTenantId(), ruleChain, edge, getCurrentUser());
@@ -529,13 +524,13 @@ public class RuleChainController extends BaseController {
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
     @RequestMapping(value = "/edge/{edgeId}/ruleChain/{ruleChainId}", method = RequestMethod.DELETE)
     @ResponseBody
-    public RuleChain unassignRuleChainFromEdge(@NotNull @PathVariable("edgeId") String strEdgeId,
-                                               @NotNull @PathVariable(RULE_CHAIN_ID) String strRuleChainId) throws EchoiotException {
+    public RuleChain unassignRuleChainFromEdge(@PathVariable("edgeId") String strEdgeId,
+                                               @PathVariable(RULE_CHAIN_ID) String strRuleChainId) throws EchoiotException {
         checkParameter("edgeId", strEdgeId);
         checkParameter(RULE_CHAIN_ID, strRuleChainId);
-        @NotNull EdgeId edgeId = new EdgeId(toUUID(strEdgeId));
+        EdgeId edgeId = new EdgeId(toUUID(strEdgeId));
         Edge edge = checkEdgeId(edgeId, Operation.WRITE);
-        @NotNull RuleChainId ruleChainId = new RuleChainId(toUUID(strRuleChainId));
+        RuleChainId ruleChainId = new RuleChainId(toUUID(strRuleChainId));
         RuleChain ruleChain = checkRuleChain(ruleChainId, Operation.READ);
 
         return tbRuleChainService.unassignRuleChainFromEdge(getTenantId(), ruleChain, edge, getCurrentUser());
@@ -547,7 +542,7 @@ public class RuleChainController extends BaseController {
     @RequestMapping(value = "/edge/{edgeId}/ruleChains", params = {"pageSize", "page"}, method = RequestMethod.GET)
     @ResponseBody
     public PageData<RuleChain> getEdgeRuleChains(
-            @NotNull @ApiParam(value = EDGE_ID_PARAM_DESCRIPTION, required = true)
+            @ApiParam(value = EDGE_ID_PARAM_DESCRIPTION, required = true)
             @PathVariable(EDGE_ID) String strEdgeId,
             @ApiParam(value = PAGE_SIZE_DESCRIPTION, required = true)
             @RequestParam int pageSize,
@@ -557,14 +552,14 @@ public class RuleChainController extends BaseController {
             @RequestParam(required = false) String textSearch,
             @ApiParam(value = SORT_PROPERTY_DESCRIPTION, allowableValues = RULE_CHAIN_SORT_PROPERTY_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortProperty,
-            @NotNull @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
+            @ApiParam(value = SORT_ORDER_DESCRIPTION, allowableValues = SORT_ORDER_ALLOWABLE_VALUES)
             @RequestParam(required = false) String sortOrder) throws EchoiotException {
         checkParameter(EDGE_ID, strEdgeId);
         try {
             TenantId tenantId = getCurrentUser().getTenantId();
-            @NotNull EdgeId edgeId = new EdgeId(toUUID(strEdgeId));
+            EdgeId edgeId = new EdgeId(toUUID(strEdgeId));
             checkEdgeId(edgeId, Operation.READ);
-            @NotNull PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
+            PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
             return checkNotNull(ruleChainService.findRuleChainsByTenantIdAndEdgeId(tenantId, edgeId, pageLink));
         } catch (Exception e) {
             throw handleException(e);
@@ -577,10 +572,10 @@ public class RuleChainController extends BaseController {
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN')")
     @RequestMapping(value = "/ruleChain/{ruleChainId}/edgeTemplateRoot", method = RequestMethod.POST)
     @ResponseBody
-    public RuleChain setEdgeTemplateRootRuleChain(@NotNull @ApiParam(value = RULE_CHAIN_ID_PARAM_DESCRIPTION)
+    public RuleChain setEdgeTemplateRootRuleChain(@ApiParam(value = RULE_CHAIN_ID_PARAM_DESCRIPTION)
                                                   @PathVariable(RULE_CHAIN_ID) String strRuleChainId) throws EchoiotException {
         checkParameter(RULE_CHAIN_ID, strRuleChainId);
-        @NotNull RuleChainId ruleChainId = new RuleChainId(toUUID(strRuleChainId));
+        RuleChainId ruleChainId = new RuleChainId(toUUID(strRuleChainId));
         RuleChain ruleChain = checkRuleChain(ruleChainId, Operation.WRITE);
         return tbRuleChainService.setEdgeTemplateRootRuleChain(getTenantId(), ruleChain, getCurrentUser());
     }
@@ -591,10 +586,10 @@ public class RuleChainController extends BaseController {
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
     @RequestMapping(value = "/ruleChain/{ruleChainId}/autoAssignToEdge", method = RequestMethod.POST)
     @ResponseBody
-    public RuleChain setAutoAssignToEdgeRuleChain(@NotNull @ApiParam(value = RULE_CHAIN_ID_PARAM_DESCRIPTION)
+    public RuleChain setAutoAssignToEdgeRuleChain(@ApiParam(value = RULE_CHAIN_ID_PARAM_DESCRIPTION)
                                                   @PathVariable(RULE_CHAIN_ID) String strRuleChainId) throws EchoiotException {
         checkParameter(RULE_CHAIN_ID, strRuleChainId);
-        @NotNull RuleChainId ruleChainId = new RuleChainId(toUUID(strRuleChainId));
+        RuleChainId ruleChainId = new RuleChainId(toUUID(strRuleChainId));
         RuleChain ruleChain = checkRuleChain(ruleChainId, Operation.WRITE);
         return tbRuleChainService.setAutoAssignToEdgeRuleChain(getTenantId(), ruleChain, getCurrentUser());
     }
@@ -605,10 +600,10 @@ public class RuleChainController extends BaseController {
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
     @RequestMapping(value = "/ruleChain/{ruleChainId}/autoAssignToEdge", method = RequestMethod.DELETE)
     @ResponseBody
-    public RuleChain unsetAutoAssignToEdgeRuleChain(@NotNull @ApiParam(value = RULE_CHAIN_ID_PARAM_DESCRIPTION)
+    public RuleChain unsetAutoAssignToEdgeRuleChain(@ApiParam(value = RULE_CHAIN_ID_PARAM_DESCRIPTION)
                                                     @PathVariable(RULE_CHAIN_ID) String strRuleChainId) throws EchoiotException {
         checkParameter(RULE_CHAIN_ID, strRuleChainId);
-        @NotNull RuleChainId ruleChainId = new RuleChainId(toUUID(strRuleChainId));
+        RuleChainId ruleChainId = new RuleChainId(toUUID(strRuleChainId));
         RuleChain ruleChain = checkRuleChain(ruleChainId, Operation.WRITE);
         return tbRuleChainService.unsetAutoAssignToEdgeRuleChain(getTenantId(), ruleChain, getCurrentUser());
     }
@@ -622,8 +617,8 @@ public class RuleChainController extends BaseController {
     public List<RuleChain> getAutoAssignToEdgeRuleChains() throws EchoiotException {
         try {
             TenantId tenantId = getCurrentUser().getTenantId();
-            @NotNull List<RuleChain> result = new ArrayList<>();
-            @NotNull PageDataIterableByTenant<RuleChain> autoAssignRuleChainsIterator =
+            List<RuleChain> result = new ArrayList<>();
+            PageDataIterableByTenant<RuleChain> autoAssignRuleChainsIterator =
                     new PageDataIterableByTenant<>(ruleChainService::findAutoAssignToEdgeRuleChainsByTenantId, tenantId, DEFAULT_PAGE_SIZE);
             for (RuleChain ruleChain : autoAssignRuleChainsIterator) {
                 result.add(ruleChain);

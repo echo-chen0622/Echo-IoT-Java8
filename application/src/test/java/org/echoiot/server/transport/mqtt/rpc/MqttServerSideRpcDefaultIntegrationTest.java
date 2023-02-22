@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.echoiot.server.dao.service.DaoSqlTest;
 import org.echoiot.server.service.security.AccessValidator;
 import org.echoiot.server.transport.mqtt.MqttTestConfigProperties;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,7 +27,7 @@ public class MqttServerSideRpcDefaultIntegrationTest extends AbstractMqttServerS
 
     @Test
     public void testServerMqttOneWayRpcDeviceOffline() throws Exception {
-        @NotNull String setGpioRequest = "{\"method\":\"setGpio\",\"params\":{\"pin\": \"24\",\"value\": 1},\"timeout\": 6000}";
+        String setGpioRequest = "{\"method\":\"setGpio\",\"params\":{\"pin\": \"24\",\"value\": 1},\"timeout\": 6000}";
         String deviceId = savedDevice.getId().getId().toString();
 
         doPostAsync("/api/rpc/oneway/" + deviceId, setGpioRequest, String.class, status().is(504),
@@ -37,7 +36,7 @@ public class MqttServerSideRpcDefaultIntegrationTest extends AbstractMqttServerS
 
     @Test
     public void testServerMqttOneWayRpcDeviceDoesNotExist() throws Exception {
-        @NotNull String setGpioRequest = "{\"method\":\"setGpio\",\"params\":{\"pin\": \"25\",\"value\": 1}}";
+        String setGpioRequest = "{\"method\":\"setGpio\",\"params\":{\"pin\": \"25\",\"value\": 1}}";
         String nonExistentDeviceId = Uuids.timeBased().toString();
 
         String result = doPostAsync("/api/rpc/oneway/" + nonExistentDeviceId, setGpioRequest, String.class,
@@ -47,7 +46,7 @@ public class MqttServerSideRpcDefaultIntegrationTest extends AbstractMqttServerS
 
     @Test
     public void testServerMqttTwoWayRpcDeviceOffline() throws Exception {
-        @NotNull String setGpioRequest = "{\"method\":\"setGpio\",\"params\":{\"pin\": \"27\",\"value\": 1},\"timeout\": 6000}";
+        String setGpioRequest = "{\"method\":\"setGpio\",\"params\":{\"pin\": \"27\",\"value\": 1},\"timeout\": 6000}";
         String deviceId = savedDevice.getId().getId().toString();
 
         doPostAsync("/api/rpc/twoway/" + deviceId, setGpioRequest, String.class, status().is(504),
@@ -56,7 +55,7 @@ public class MqttServerSideRpcDefaultIntegrationTest extends AbstractMqttServerS
 
     @Test
     public void testServerMqttTwoWayRpcDeviceDoesNotExist() throws Exception {
-        @NotNull String setGpioRequest = "{\"method\":\"setGpio\",\"params\":{\"pin\": \"28\",\"value\": 1}}";
+        String setGpioRequest = "{\"method\":\"setGpio\",\"params\":{\"pin\": \"28\",\"value\": 1}}";
         String nonExistentDeviceId = Uuids.timeBased().toString();
 
         String result = doPostAsync("/api/rpc/twoway/" + nonExistentDeviceId, setGpioRequest, String.class,

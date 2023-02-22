@@ -8,7 +8,6 @@ import org.echoiot.rule.engine.api.TbNodeException;
 import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.data.plugin.ComponentType;
-import org.jetbrains.annotations.NotNull;
 
 @Slf4j
 @RuleNode(
@@ -22,9 +21,8 @@ import org.jetbrains.annotations.NotNull;
         configDirective = "tbNodeEmptyConfig")
 public class TbOriginatorTypeSwitchNode extends TbAbstractTypeSwitchNode {
 
-    @NotNull
     @Override
-    protected String getRelationType(TbContext ctx, @NotNull EntityId originator) throws TbNodeException {
+    protected String getRelationType(TbContext ctx, EntityId originator) throws TbNodeException {
         String relationType;
         EntityType originatorType = originator.getEntityType();
         switch (originatorType) {

@@ -1,6 +1,5 @@
 package org.echoiot.common.util;
 
-import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -12,10 +11,8 @@ public class EchoiotThreadFactory implements ThreadFactory {
     private static final AtomicInteger poolNumber = new AtomicInteger(1);
     private final ThreadGroup group;
     private final AtomicInteger threadNumber = new AtomicInteger(1);
-    @NotNull
     private final String namePrefix;
 
-    @NotNull
     public static EchoiotThreadFactory forName(String name) {
         return new EchoiotThreadFactory(name);
     }
@@ -29,10 +26,9 @@ public class EchoiotThreadFactory implements ThreadFactory {
                 "-thread-";
     }
 
-    @NotNull
     @Override
     public Thread newThread(Runnable r) {
-        @NotNull Thread t = new Thread(group, r,
+        Thread t = new Thread(group, r,
                 namePrefix + threadNumber.getAndIncrement(),
                                        0);
         if (t.isDaemon())

@@ -4,13 +4,11 @@ import lombok.Builder;
 import org.echoiot.server.transport.lwm2m.server.LwM2MOperationType;
 import org.eclipse.leshan.core.request.ContentFormat;
 import org.eclipse.leshan.core.response.ObserveResponse;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
 public class TbLwM2MObserveRequest extends AbstractTbLwM2MTargetedDownlinkRequest<ObserveResponse> implements HasContentFormat {
 
-    @NotNull
     private final Optional<ContentFormat> requestContentFormat;
 
     @Builder
@@ -19,7 +17,6 @@ public class TbLwM2MObserveRequest extends AbstractTbLwM2MTargetedDownlinkReques
         this.requestContentFormat = Optional.ofNullable(requestContentFormat);
     }
 
-    @NotNull
     @Override
     public LwM2MOperationType getType() {
         return LwM2MOperationType.OBSERVE;

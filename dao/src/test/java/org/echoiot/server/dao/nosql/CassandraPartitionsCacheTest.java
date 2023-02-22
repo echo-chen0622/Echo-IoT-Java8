@@ -10,7 +10,6 @@ import org.echoiot.server.common.data.id.TenantId;
 import org.echoiot.server.dao.cassandra.CassandraCluster;
 import org.echoiot.server.dao.cassandra.guava.GuavaSession;
 import org.echoiot.server.dao.timeseries.CassandraBaseTimeseriesDao;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -76,7 +75,7 @@ public class CassandraPartitionsCacheTest {
     public void testPartitionSave() throws Exception {
         cassandraBaseTimeseriesDao.init();
 
-        @NotNull UUID id = UUID.randomUUID();
+        UUID id = UUID.randomUUID();
         TenantId tenantId = TenantId.fromUUID(id);
         long tsKvEntryTs = System.currentTimeMillis();
 

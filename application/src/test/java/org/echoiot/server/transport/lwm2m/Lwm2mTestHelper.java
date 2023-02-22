@@ -1,6 +1,5 @@
 package org.echoiot.server.transport.lwm2m;
 
-import org.jetbrains.annotations.NotNull;
 
 public class Lwm2mTestHelper {
 
@@ -64,9 +63,8 @@ public class Lwm2mTestHelper {
             this.type = type;
         }
 
-        @NotNull
-        public static LwM2MClientState fromLwM2MClientStateByType(String type) {
-            for (@NotNull LwM2MClientState to : LwM2MClientState.values()) {
+            public static LwM2MClientState fromLwM2MClientStateByType(String type) {
+            for (LwM2MClientState to : LwM2MClientState.values()) {
                 if (to.type.equals(type)) {
                     return to;
                 }
@@ -74,9 +72,8 @@ public class Lwm2mTestHelper {
             throw new IllegalArgumentException(String.format("Unsupported Client State type  : %s", type));
         }
 
-        @NotNull
-        public static LwM2MClientState fromLwM2MClientStateByCode(int code) {
-            for (@NotNull LwM2MClientState to : LwM2MClientState.values()) {
+            public static LwM2MClientState fromLwM2MClientStateByCode(int code) {
+            for (LwM2MClientState to : LwM2MClientState.values()) {
                 if (to.code == code) {
                     return to;
                 }
@@ -100,9 +97,8 @@ public class Lwm2mTestHelper {
             this.type = type;
         }
 
-        @NotNull
-        public static LwM2MProfileBootstrapConfigType fromLwM2MBootstrapConfigByType(String type) {
-            for (@NotNull LwM2MProfileBootstrapConfigType to : LwM2MProfileBootstrapConfigType.values()) {
+            public static LwM2MProfileBootstrapConfigType fromLwM2MBootstrapConfigByType(String type) {
+            for (LwM2MProfileBootstrapConfigType to : LwM2MProfileBootstrapConfigType.values()) {
                 if (to.type.equals(type)) {
                     return to;
                 }
@@ -110,9 +106,8 @@ public class Lwm2mTestHelper {
             throw new IllegalArgumentException(String.format("Unsupported Profile Bootstrap Config type  : %s", type));
         }
 
-        @NotNull
-        public static LwM2MProfileBootstrapConfigType fromLwM2MBootstrapConfigByCode(int code) {
-            for (@NotNull LwM2MProfileBootstrapConfigType to : LwM2MProfileBootstrapConfigType.values()) {
+            public static LwM2MProfileBootstrapConfigType fromLwM2MBootstrapConfigByCode(int code) {
+            for (LwM2MProfileBootstrapConfigType to : LwM2MProfileBootstrapConfigType.values()) {
                 if (to.code == code) {
                     return to;
                 }

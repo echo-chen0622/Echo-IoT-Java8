@@ -1,7 +1,6 @@
 package org.echoiot.server.transport.lwm2m.server.store;
 
 import org.echoiot.server.transport.lwm2m.server.client.LwM2mClient;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
@@ -14,7 +13,6 @@ public class TbDummyLwM2MClientStore implements TbLwM2MClientStore {
         return null;
     }
 
-    @NotNull
     @Override
     public Set<LwM2mClient> getAll() {
         return Collections.emptySet();

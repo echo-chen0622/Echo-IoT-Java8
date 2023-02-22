@@ -10,7 +10,6 @@ import org.echoiot.server.common.data.plugin.ComponentLifecycleEvent;
 import org.echoiot.server.common.msg.MsgType;
 import org.echoiot.server.common.msg.aware.TenantAwareMsg;
 import org.echoiot.server.common.msg.cluster.ToAllNodesMsg;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
@@ -32,12 +31,10 @@ public class ComponentLifecycleMsg implements TenantAwareMsg, ToAllNodesMsg {
         this.event = event;
     }
 
-    @NotNull
     public Optional<RuleChainId> getRuleChainId() {
         return entityId.getEntityType() == EntityType.RULE_CHAIN ? Optional.of((RuleChainId) entityId) : Optional.empty();
     }
 
-    @NotNull
     @Override
     public MsgType getMsgType() {
         return MsgType.COMPONENT_LIFE_CYCLE_MSG;

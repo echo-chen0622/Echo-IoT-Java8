@@ -15,7 +15,6 @@ import org.echoiot.server.dao.AbstractJpaDaoTest;
 import org.echoiot.server.dao.model.ModelConstants;
 import org.echoiot.server.dao.service.AbstractServiceTest;
 import org.echoiot.server.dao.user.UserDao;
-import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -61,15 +60,15 @@ public class JpaUserDaoTest extends AbstractJpaDaoTest {
 
     @Test
     public void testFindByEmail() throws JsonProcessingException {
-        @NotNull User user = new User();
+        User user = new User();
         user.setId(new UserId(UUID.randomUUID()));
         user.setTenantId(TenantId.fromUUID(UUID.randomUUID()));
         user.setCustomerId(new CustomerId(UUID.randomUUID()));
         user.setEmail("user@echoiot.org");
         user.setFirstName("Jackson");
         user.setLastName("Roberts");
-        @NotNull ObjectMapper mapper = new ObjectMapper();
-        @NotNull String additionalInfo = "{\"key\":\"value-100\"}";
+        ObjectMapper mapper = new ObjectMapper();
+        String additionalInfo = "{\"key\":\"value-100\"}";
         JsonNode jsonNode = mapper.readTree(additionalInfo);
         user.setAdditionalInfo(jsonNode);
         userDao.save(AbstractServiceTest.SYSTEM_TENANT_ID, user);
@@ -119,8 +118,8 @@ public class JpaUserDaoTest extends AbstractJpaDaoTest {
     }
 
     private void saveUser(UUID tenantId, UUID customerId) {
-        @NotNull User user = new User();
-        @NotNull UUID id = Uuids.timeBased();
+        User user = new User();
+        UUID id = Uuids.timeBased();
         user.setId(new UserId(id));
         user.setTenantId(TenantId.fromUUID(tenantId));
         user.setCustomerId(new CustomerId(customerId));
@@ -130,7 +129,7 @@ public class JpaUserDaoTest extends AbstractJpaDaoTest {
             user.setAuthority(Authority.CUSTOMER_USER);
         }
         String idString = id.toString();
-        @NotNull String email = idString.substring(0, idString.indexOf('-')) + "@echoiot.org";
+        String email = idString.substring(0, idString.indexOf('-')) + "@echoiot.org";
         user.setEmail(email);
         userDao.save(AbstractServiceTest.SYSTEM_TENANT_ID, user);
     }
@@ -138,7 +137,7 @@ public class JpaUserDaoTest extends AbstractJpaDaoTest {
     private void delete30TenantAdminsAnd60CustomerUsers(UUID tenantId, UUID customerId) {
         List<User> data = userDao.findCustomerUsers(tenantId, customerId, new PageLink(60)).getData();
         data.addAll(userDao.findTenantAdmins(tenantId, new PageLink(30)).getData());
-        for (@NotNull User user : data) {
+        for (User user : data) {
             userDao.removeById(user.getTenantId(), user.getUuidId());
         }
     }

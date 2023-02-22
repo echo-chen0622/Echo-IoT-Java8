@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.echoiot.server.common.data.asset.AssetInfo;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -28,7 +27,7 @@ public class AssetInfoEntity extends AbstractAssetEntity<AssetInfo> {
         super();
     }
 
-    public AssetInfoEntity(@NotNull AssetEntity assetEntity,
+    public AssetInfoEntity(AssetEntity assetEntity,
                            String customerTitle,
                            @Nullable Object customerAdditionalInfo,
                            String assetProfileName) {
@@ -42,7 +41,6 @@ public class AssetInfoEntity extends AbstractAssetEntity<AssetInfo> {
         this.assetProfileName = assetProfileName;
     }
 
-    @NotNull
     @Override
     public AssetInfo toData() {
         return new AssetInfo(super.toAsset(), customerTitle, customerIsPublic, assetProfileName);

@@ -1,7 +1,6 @@
 package org.echoiot.server.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -40,7 +39,6 @@ public abstract class AbstractControllerTest extends AbstractNotifyEntityTest {
 
     private TbTestWebSocketClient wsClient; // lazy
 
-    @NotNull
     public TbTestWebSocketClient getWsClient() {
         if (wsClient == null) {
             synchronized (this) {
@@ -68,9 +66,8 @@ public abstract class AbstractControllerTest extends AbstractNotifyEntityTest {
         }
     }
 
-    @NotNull
     private TbTestWebSocketClient buildAndConnectWebSocketClient() throws URISyntaxException, InterruptedException {
-        @NotNull TbTestWebSocketClient wsClient = new TbTestWebSocketClient(new URI(WS_URL + wsPort + "/api/ws/plugins/telemetry?token=" + token));
+        TbTestWebSocketClient wsClient = new TbTestWebSocketClient(new URI(WS_URL + wsPort + "/api/ws/plugins/telemetry?token=" + token));
         assertThat(wsClient.connectBlocking(TIMEOUT, TimeUnit.SECONDS)).isTrue();
         return wsClient;
     }

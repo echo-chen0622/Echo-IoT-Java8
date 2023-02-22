@@ -14,7 +14,6 @@ import org.echoiot.server.common.transport.profile.TenantProfileUpdateResult;
 import org.echoiot.server.gen.transport.TransportProtos;
 import org.echoiot.server.queue.util.DataDecodingEncodingService;
 import org.echoiot.server.queue.util.TbTransportComponent;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -59,16 +58,15 @@ public class DefaultTransportTenantProfileCache implements TransportTenantProfil
     }
 
     @Override
-    public TenantProfile get(@NotNull TenantId tenantId) {
+    public TenantProfile get(TenantId tenantId) {
         return getTenantProfile(tenantId);
     }
 
-    @NotNull
     @Override
-    public TenantProfileUpdateResult put(@NotNull ByteString profileBody) {
+    public TenantProfileUpdateResult put(ByteString profileBody) {
         Optional<TenantProfile> profileOpt = dataDecodingEncodingService.decode(profileBody.toByteArray());
         if (profileOpt.isPresent()) {
-            @NotNull TenantProfile newProfile = profileOpt.get();
+            TenantProfile newProfile = profileOpt.get();
             log.trace("[{}] put: {}", newProfile.getId(), newProfile);
             Set<TenantId> affectedTenants = tenantProfileIds.get(newProfile.getId());
             return new TenantProfileUpdateResult(newProfile, affectedTenants != null ? affectedTenants : Collections.emptySet());
@@ -103,8 +101,7 @@ public class DefaultTransportTenantProfileCache implements TransportTenantProfil
         return tenants;
     }
 
-    @NotNull
-    private TenantProfile getTenantProfile(@NotNull TenantId tenantId) {
+    private TenantProfile getTenantProfile(TenantId tenantId) {
         @Nullable TenantProfile profile = null;
         TenantProfileId tenantProfileId = tenantIds.get(tenantId);
         if (tenantProfileId != null) {

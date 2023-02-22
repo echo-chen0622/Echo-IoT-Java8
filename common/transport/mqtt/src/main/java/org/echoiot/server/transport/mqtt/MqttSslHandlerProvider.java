@@ -12,7 +12,6 @@ import org.echoiot.server.common.transport.config.ssl.SslCredentials;
 import org.echoiot.server.common.transport.config.ssl.SslCredentialsConfig;
 import org.echoiot.server.common.transport.util.SslUtil;
 import org.echoiot.server.gen.transport.TransportProtos;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -42,7 +41,6 @@ public class MqttSslHandlerProvider {
     @Resource
     private TransportService transportService;
 
-    @NotNull
     @Bean
     @ConfigurationProperties(prefix = "transport.mqtt.ssl.credentials")
     public SslCredentialsConfig mqttSslCredentials() {
@@ -54,7 +52,6 @@ public class MqttSslHandlerProvider {
 
     private SSLContext sslContext;
 
-    @NotNull
     public SslHandler getSslHandler() {
         if (sslContext == null) {
             sslContext = createSslContext();
@@ -69,7 +66,6 @@ public class MqttSslHandlerProvider {
         return new SslHandler(sslEngine);
     }
 
-    @NotNull
     private SSLContext createSslContext() {
         try {
             SslCredentials sslCredentials = this.mqttSslCredentialsConfig.getCredentials();
@@ -77,12 +73,12 @@ public class MqttSslHandlerProvider {
             KeyManagerFactory kmf = sslCredentials.createKeyManagerFactory();
 
             KeyManager[] km = kmf.getKeyManagers();
-            @NotNull TrustManager x509wrapped = getX509TrustManager(tmFactory);
-            @NotNull TrustManager[] tm = {x509wrapped};
+            TrustManager x509wrapped = getX509TrustManager(tmFactory);
+            TrustManager[] tm = {x509wrapped};
             if (StringUtils.isEmpty(sslProtocol)) {
                 sslProtocol = "TLS";
             }
-            @NotNull SSLContext sslContext = SSLContext.getInstance(sslProtocol);
+            SSLContext sslContext = SSLContext.getInstance(sslProtocol);
             sslContext.init(km, tm, null);
             return sslContext;
         } catch (Exception e) {
@@ -91,8 +87,7 @@ public class MqttSslHandlerProvider {
         }
     }
 
-    @NotNull
-    private TrustManager getX509TrustManager(@NotNull TrustManagerFactory tmf) throws Exception {
+    private TrustManager getX509TrustManager(TrustManagerFactory tmf) throws Exception {
         @Nullable X509TrustManager x509Tm = null;
         for (TrustManager tm : tmf.getTrustManagers()) {
             if (tm instanceof X509TrustManager) {
@@ -125,19 +120,19 @@ public class MqttSslHandlerProvider {
         }
 
         @Override
-        public void checkClientTrusted(@NotNull X509Certificate[] chain,
+        public void checkClientTrusted(X509Certificate[] chain,
                                        String authType) throws CertificateException {
             @Nullable String credentialsBody = null;
-            for (@NotNull X509Certificate cert : chain) {
+            for (X509Certificate cert : chain) {
                 try {
-                    @NotNull String strCert = SslUtil.getCertificateString(cert);
+                    String strCert = SslUtil.getCertificateString(cert);
                     String sha3Hash = EncryptionUtil.getSha3Hash(strCert);
-                    @NotNull final String[] credentialsBodyHolder = new String[1];
-                    @NotNull CountDownLatch latch = new CountDownLatch(1);
+                    final String[] credentialsBodyHolder = new String[1];
+                    CountDownLatch latch = new CountDownLatch(1);
                     transportService.process(DeviceTransportType.MQTT, TransportProtos.ValidateDeviceX509CertRequestMsg.newBuilder().setHash(sha3Hash).build(),
                                              new TransportServiceCallback<ValidateDeviceCredentialsResponse>() {
                                 @Override
-                                public void onSuccess(@NotNull ValidateDeviceCredentialsResponse msg) {
+                                public void onSuccess(ValidateDeviceCredentialsResponse msg) {
                                     if (!StringUtils.isEmpty(msg.getCredentials())) {
                                         credentialsBodyHolder[0] = msg.getCredentials();
                                     }
@@ -145,7 +140,7 @@ public class MqttSslHandlerProvider {
                                 }
 
                                 @Override
-                                public void onError(@NotNull Throwable e) {
+                                public void onError(Throwable e) {
                                     log.error(e.getMessage(), e);
                                     latch.countDown();
                                 }

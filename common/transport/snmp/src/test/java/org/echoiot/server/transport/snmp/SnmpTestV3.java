@@ -1,6 +1,5 @@
 package org.echoiot.server.transport.snmp;
 
-import org.jetbrains.annotations.NotNull;
 import org.snmp4j.CommandResponderEvent;
 import org.snmp4j.agent.CommandProcessor;
 import org.snmp4j.mp.MPv3;
@@ -12,7 +11,7 @@ import java.util.Scanner;
 
 public class SnmpTestV3 {
     public static void main(String[] args) throws IOException {
-        @NotNull SnmpDeviceSimulatorV3 device = new SnmpDeviceSimulatorV3(new CommandProcessor(new OctetString(MPv3.createLocalEngineID())) {
+        SnmpDeviceSimulatorV3 device = new SnmpDeviceSimulatorV3(new CommandProcessor(new OctetString(MPv3.createLocalEngineID())) {
             @Override
             public void processPdu(CommandResponderEvent event) {
                 System.out.println("event: " + event);

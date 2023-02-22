@@ -2,7 +2,6 @@ package org.echoiot.server.service.sync.vc;
 
 import lombok.Data;
 import org.echoiot.server.common.data.id.TenantId;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 import java.util.UUID;
@@ -23,7 +22,7 @@ public class PendingCommit {
 
     private Map<String, String[]> chunkedMsgs;
 
-    public PendingCommit(TenantId tenantId, String nodeId, @NotNull UUID txId, String branch, String versionName, String authorName, String authorEmail) {
+    public PendingCommit(TenantId tenantId, String nodeId, UUID txId, String branch, String versionName, String authorName, String authorEmail) {
         this.tenantId = tenantId;
         this.nodeId = nodeId;
         this.txId = txId;
@@ -34,7 +33,6 @@ public class PendingCommit {
         this.workingBranch = txId.toString();
     }
 
-    @NotNull
     public Map<String, String[]> getChunkedMsgs() {
         if (chunkedMsgs == null) {
             chunkedMsgs = new ConcurrentHashMap<>();

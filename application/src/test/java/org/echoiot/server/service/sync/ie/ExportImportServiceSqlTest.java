@@ -26,7 +26,6 @@ import org.echoiot.server.dao.device.DeviceCredentialsService;
 import org.echoiot.server.dao.service.DaoSqlTest;
 import org.echoiot.server.service.action.EntityActionService;
 import org.echoiot.server.service.ota.OtaPackageStateService;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -221,7 +220,7 @@ public class ExportImportServiceSqlTest extends BaseExportImportServiceTest {
         Asset asset2 = createAsset(tenantId1, null, assetProfile.getId(), "Asset 2");
         Dashboard dashboard = createDashboard(tenantId1, null, "Dashboard 1");
 
-        @NotNull String entityAliases = "{\n" +
+        String entityAliases = "{\n" +
                                         "\t\"23c4185d-1497-9457-30b2-6d91e69a5b2c\": {\n" +
                                         "\t\t\"alias\": \"assets\",\n" +
                                         "\t\t\"filter\": {\n" +
@@ -253,7 +252,7 @@ public class ExportImportServiceSqlTest extends BaseExportImportServiceTest {
         Asset importedAsset2 = importEntity(tenantAdmin2, asset2ExportData).getSavedEntity();
         Dashboard importedDashboard = importEntity(tenantAdmin2, dashboardExportData).getSavedEntity();
 
-        @NotNull Set<String> entityAliasEntitiesIds = Streams.stream(importedDashboard.getConfiguration()
+        Set<String> entityAliasEntitiesIds = Streams.stream(importedDashboard.getConfiguration()
                                                                                       .get("entityAliases").elements().next().get("filter").get("entityList").elements())
                                                              .map(JsonNode::asText).collect(Collectors.toSet());
         assertThat(entityAliasEntitiesIds).doesNotContain(asset1.getId().toString(), asset2.getId().toString());
@@ -419,7 +418,7 @@ public class ExportImportServiceSqlTest extends BaseExportImportServiceTest {
 
 
     @SuppressWarnings("rawTypes")
-    private static EntityExportData getAndClone(@NotNull Map<EntityType, EntityExportData> map, EntityType entityType) {
+    private static EntityExportData getAndClone(Map<EntityType, EntityExportData> map, EntityType entityType) {
         return JacksonUtil.clone(map.get(entityType));
     }
 
@@ -434,7 +433,7 @@ public class ExportImportServiceSqlTest extends BaseExportImportServiceTest {
         DeviceProfile deviceProfile = createDeviceProfile(tenantId1, ruleChain.getId(), dashboard.getId(), "Device profile 1");
         Device device = createDevice(tenantId1, null, deviceProfile.getId(), "Device 1");
 
-        @NotNull Map<EntityType, EntityExportData> entitiesExportData = Stream.of(customer.getId(), asset.getId(), device.getId(),
+        Map<EntityType, EntityExportData> entitiesExportData = Stream.of(customer.getId(), asset.getId(), device.getId(),
                                                                                   ruleChain.getId(), dashboard.getId(), assetProfile.getId(), deviceProfile.getId())
                                                                               .map(entityId -> {
                     try {
@@ -533,7 +532,7 @@ public class ExportImportServiceSqlTest extends BaseExportImportServiceTest {
         Device device = createDevice(tenantId1, customer.getId(), deviceProfile.getId(), "Device 1");
         EntityView entityView = createEntityView(tenantId1, customer.getId(), device.getId(), "Entity view 1");
 
-        @NotNull Map<EntityId, EntityId> ids = new HashMap<>();
+        Map<EntityId, EntityId> ids = new HashMap<>();
         for (EntityId entityId : List.of(customer.getId(), ruleChain.getId(), dashboard.getId(), assetProfile.getId(), asset.getId(),
                 deviceProfile.getId(), device.getId(), entityView.getId(), ruleChain.getId(), dashboard.getId())) {
             EntityExportData exportData = exportEntity(getSecurityUser(tenantAdmin1), entityId);

@@ -12,7 +12,6 @@ import org.echoiot.server.common.data.id.EntityId;
 import org.echoiot.server.common.msg.TbMsg;
 import org.echoiot.server.common.msg.TbMsgMetaData;
 import org.echoiot.server.common.msg.queue.TbMsgCallback;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -55,31 +54,31 @@ public class TbSplitArrayMsgNodeTest {
 
     @Test
     void givenFewMsg_whenOnMsg_thenVerifyOutput() throws Exception {
-        @NotNull String data = "[{\"Attribute_1\":22.5,\"Attribute_2\":10.3}, {\"Attribute_1\":1,\"Attribute_2\":2}]";
+        String data = "[{\"Attribute_1\":22.5,\"Attribute_2\":10.3}, {\"Attribute_1\":1,\"Attribute_2\":2}]";
         VerifyOutputMsg(data);
     }
 
     @Test
     void givenOneMsg_whenOnMsg_thenVerifyOutput() throws Exception {
-        @NotNull String data = "[{\"Attribute_1\":22.5,\"Attribute_2\":10.3}]";
+        String data = "[{\"Attribute_1\":22.5,\"Attribute_2\":10.3}]";
         VerifyOutputMsg(data);
     }
 
     @Test
     void givenZeroMsg_whenOnMsg_thenVerifyOutput() throws Exception {
-        @NotNull String data = "[]";
+        String data = "[]";
         VerifyOutputMsg(data);
     }
 
     @Test
     void givenNoArrayMsg_whenOnMsg_thenFailure() throws Exception {
-        @NotNull String data = "{\"Attribute_1\":22.5,\"Attribute_2\":10.3}";
+        String data = "{\"Attribute_1\":22.5,\"Attribute_2\":10.3}";
         JsonNode dataNode = JacksonUtil.toJsonNode(data);
-        @NotNull TbMsg msg = getTbMsg(deviceId, dataNode.toString());
+        TbMsg msg = getTbMsg(deviceId, dataNode.toString());
         node.onMsg(ctx, msg);
 
-        @NotNull ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
-        @NotNull ArgumentCaptor<Exception> exceptionCaptor = ArgumentCaptor.forClass(Exception.class);
+        ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+        ArgumentCaptor<Exception> exceptionCaptor = ArgumentCaptor.forClass(Exception.class);
         verify(ctx, never()).tellSuccess(any());
         verify(ctx, times(1)).tellFailure(newMsgCaptor.capture(), exceptionCaptor.capture());
 
@@ -93,27 +92,26 @@ public class TbSplitArrayMsgNodeTest {
 
     private void VerifyOutputMsg(String data) throws Exception {
         JsonNode dataNode = JacksonUtil.toJsonNode(data);
-        @NotNull TbMsg tbMsg = getTbMsg(deviceId, dataNode.toString());
+        TbMsg tbMsg = getTbMsg(deviceId, dataNode.toString());
         node.onMsg(ctx, tbMsg);
 
         if (dataNode.size() > 1) {
-            @NotNull ArgumentCaptor<Runnable> successCaptor = ArgumentCaptor.forClass(Runnable.class);
-            @NotNull ArgumentCaptor<Consumer<Throwable>> failureCaptor = ArgumentCaptor.forClass(Consumer.class);
+            ArgumentCaptor<Runnable> successCaptor = ArgumentCaptor.forClass(Runnable.class);
+            ArgumentCaptor<Consumer<Throwable>> failureCaptor = ArgumentCaptor.forClass(Consumer.class);
             verify(ctx, times(dataNode.size())).enqueueForTellNext(any(), anyString(), successCaptor.capture(), failureCaptor.capture());
-            for (@NotNull Runnable valueCaptor : successCaptor.getAllValues()) {
+            for (Runnable valueCaptor : successCaptor.getAllValues()) {
                 valueCaptor.run();
             }
             verify(ctx, times(1)).ack(tbMsg);
         } else {
-            @NotNull ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
+            ArgumentCaptor<TbMsg> newMsgCaptor = ArgumentCaptor.forClass(TbMsg.class);
             verify(ctx, times(dataNode.size())).tellSuccess(newMsgCaptor.capture());
         }
         verify(ctx, never()).tellFailure(any(), any());
     }
 
-    @NotNull
     private TbMsg getTbMsg(EntityId entityId, String data) {
-        @NotNull Map<String, String> mdMap = Map.of(
+        Map<String, String> mdMap = Map.of(
                 "country", "US",
                 "city", "NY"
                                                    );

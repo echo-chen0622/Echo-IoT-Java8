@@ -9,7 +9,6 @@ import org.echoiot.server.common.data.kv.KvEntry;
 import org.echoiot.server.common.data.kv.TsKvEntry;
 import org.echoiot.server.common.data.ota.OtaPackageUpdateStatus;
 import org.echoiot.server.transport.lwm2m.ota.AbstractOtaLwM2MIntegrationTest;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -85,10 +84,10 @@ public class OtaLwM2MIntegrationTest extends AbstractOtaLwM2MIntegrationTest {
         assertThat(savedDevice).as("saved device").isNotNull();
         assertThat(getDeviceFromAPI(device.getId().getId())).as("fetched device").isEqualTo(savedDevice);
 
-        @NotNull List<TsKvEntry> ts = toTimeseries(doGetAsyncTyped("/api/plugins/telemetry/DEVICE/" +
+        List<TsKvEntry> ts = toTimeseries(doGetAsyncTyped("/api/plugins/telemetry/DEVICE/" +
                                                                    savedDevice.getId().getId() + "/values/timeseries?keys=fw_state", new TypeReference<>() {}));
-        @NotNull List<OtaPackageUpdateStatus> statuses = ts.stream().map(KvEntry::getValueAsString).map(OtaPackageUpdateStatus::valueOf).collect(Collectors.toList());
-        @NotNull List<OtaPackageUpdateStatus> expectedStatuses = Collections.singletonList(FAILED);
+        List<OtaPackageUpdateStatus> statuses = ts.stream().map(KvEntry::getValueAsString).map(OtaPackageUpdateStatus::valueOf).collect(Collectors.toList());
+        List<OtaPackageUpdateStatus> expectedStatuses = Collections.singletonList(FAILED);
 
         Assert.assertEquals(expectedStatuses, statuses);
     }
@@ -153,16 +152,15 @@ public class OtaLwM2MIntegrationTest extends AbstractOtaLwM2MIntegrationTest {
         return device;
     }
 
-    @NotNull
     private List<TsKvEntry> getSwStateTelemetryFromAPI(UUID deviceId) throws Exception {
-        @NotNull final List<TsKvEntry> tsKvEntries = toTimeseries(doGetAsyncTyped("/api/plugins/telemetry/DEVICE/" + deviceId + "/values/timeseries?orderBy=ASC&keys=sw_state&startTs=0&endTs=" + System.currentTimeMillis(), new TypeReference<>() {
+        final List<TsKvEntry> tsKvEntries = toTimeseries(doGetAsyncTyped("/api/plugins/telemetry/DEVICE/" + deviceId + "/values/timeseries?orderBy=ASC&keys=sw_state&startTs=0&endTs=" + System.currentTimeMillis(), new TypeReference<>() {
         }));
         log.warn("Fetched telemetry by API for deviceId {}, list size {}, tsKvEntries {}", deviceId, tsKvEntries.size(), tsKvEntries);
         return tsKvEntries;
     }
 
-    private boolean predicateForStatuses(@NotNull List<TsKvEntry> ts) {
-        @NotNull List<OtaPackageUpdateStatus> statuses = ts.stream().sorted(Comparator
+    private boolean predicateForStatuses(List<TsKvEntry> ts) {
+        List<OtaPackageUpdateStatus> statuses = ts.stream().sorted(Comparator
                 .comparingLong(TsKvEntry::getTs)).map(KvEntry::getValueAsString)
                                                            .map(OtaPackageUpdateStatus::valueOf)
                                                            .collect(Collectors.toList());

@@ -17,7 +17,6 @@ import org.echoiot.server.dao.model.SearchTextEntity;
 import org.echoiot.server.dao.util.mapping.JsonBinaryType;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.persistence.*;
@@ -90,7 +89,7 @@ public final class DeviceProfileEntity extends BaseSqlEntity<DeviceProfile> impl
         super();
     }
 
-    public DeviceProfileEntity(@NotNull DeviceProfile deviceProfile) {
+    public DeviceProfileEntity(DeviceProfile deviceProfile) {
         if (deviceProfile.getId() != null) {
             this.setUuid(deviceProfile.getId().getId());
         }
@@ -139,10 +138,9 @@ public final class DeviceProfileEntity extends BaseSqlEntity<DeviceProfile> impl
         return searchText;
     }
 
-    @NotNull
     @Override
     public DeviceProfile toData() {
-        @NotNull DeviceProfile deviceProfile = new DeviceProfile(new DeviceProfileId(this.getUuid()));
+        DeviceProfile deviceProfile = new DeviceProfile(new DeviceProfileId(this.getUuid()));
         deviceProfile.setCreatedTime(createdTime);
         if (tenantId != null) {
             deviceProfile.setTenantId(TenantId.fromUUID(tenantId));

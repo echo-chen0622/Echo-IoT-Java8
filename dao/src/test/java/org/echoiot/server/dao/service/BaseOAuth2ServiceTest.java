@@ -5,7 +5,6 @@ import org.echoiot.server.common.data.StringUtils;
 import org.echoiot.server.common.data.oauth2.*;
 import org.echoiot.server.dao.exception.DataValidationException;
 import org.echoiot.server.dao.oauth2.OAuth2Service;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.junit.After;
 import org.junit.Assert;
@@ -39,7 +38,7 @@ public abstract class BaseOAuth2ServiceTest extends AbstractServiceTest {
 
     @Test(expected = DataValidationException.class)
     public void testSaveHttpAndMixedDomainsTogether() {
-        @NotNull OAuth2Info oAuth2Info = new OAuth2Info(true, Lists.newArrayList(
+        OAuth2Info oAuth2Info = new OAuth2Info(true, Lists.newArrayList(
                 OAuth2ParamsInfo.builder()
                                 .domainInfos(Lists.newArrayList(
                                         OAuth2DomainInfo.builder().name("first-domain").scheme(SchemeType.HTTP).build(),
@@ -58,7 +57,7 @@ public abstract class BaseOAuth2ServiceTest extends AbstractServiceTest {
 
     @Test(expected = DataValidationException.class)
     public void testSaveHttpsAndMixedDomainsTogether() {
-        @NotNull OAuth2Info oAuth2Info = new OAuth2Info(true, Lists.newArrayList(
+        OAuth2Info oAuth2Info = new OAuth2Info(true, Lists.newArrayList(
                 OAuth2ParamsInfo.builder()
                         .domainInfos(Lists.newArrayList(
                                 OAuth2DomainInfo.builder().name("first-domain").scheme(SchemeType.HTTPS).build(),
@@ -77,7 +76,7 @@ public abstract class BaseOAuth2ServiceTest extends AbstractServiceTest {
 
     @Test
     public void testCreateAndFindParams() {
-        @NotNull OAuth2Info oAuth2Info = createDefaultOAuth2Info();
+        OAuth2Info oAuth2Info = createDefaultOAuth2Info();
         oAuth2Service.saveOAuth2Info(oAuth2Info);
         OAuth2Info foundOAuth2Info = oAuth2Service.findOAuth2Info();
         Assert.assertNotNull(foundOAuth2Info);
@@ -87,7 +86,7 @@ public abstract class BaseOAuth2ServiceTest extends AbstractServiceTest {
 
     @Test
     public void testDisableParams() {
-        @NotNull OAuth2Info oAuth2Info = createDefaultOAuth2Info();
+        OAuth2Info oAuth2Info = createDefaultOAuth2Info();
         oAuth2Info.setEnabled(true);
         oAuth2Service.saveOAuth2Info(oAuth2Info);
         OAuth2Info foundOAuth2Info = oAuth2Service.findOAuth2Info();
@@ -102,7 +101,7 @@ public abstract class BaseOAuth2ServiceTest extends AbstractServiceTest {
 
     @Test
     public void testClearDomainParams() {
-        @NotNull OAuth2Info oAuth2Info = createDefaultOAuth2Info();
+        OAuth2Info oAuth2Info = createDefaultOAuth2Info();
         oAuth2Service.saveOAuth2Info(oAuth2Info);
         OAuth2Info foundOAuth2Info = oAuth2Service.findOAuth2Info();
         Assert.assertNotNull(foundOAuth2Info);
@@ -116,13 +115,13 @@ public abstract class BaseOAuth2ServiceTest extends AbstractServiceTest {
 
     @Test
     public void testUpdateClientsParams() {
-        @NotNull OAuth2Info oAuth2Info = createDefaultOAuth2Info();
+        OAuth2Info oAuth2Info = createDefaultOAuth2Info();
         oAuth2Service.saveOAuth2Info(oAuth2Info);
         OAuth2Info foundOAuth2Info = oAuth2Service.findOAuth2Info();
         Assert.assertNotNull(foundOAuth2Info);
         Assert.assertEquals(oAuth2Info, foundOAuth2Info);
 
-        @NotNull OAuth2Info newOAuth2Info = new OAuth2Info(true, Lists.newArrayList(
+        OAuth2Info newOAuth2Info = new OAuth2Info(true, Lists.newArrayList(
                 OAuth2ParamsInfo.builder()
                         .domainInfos(Lists.newArrayList(
                                 OAuth2DomainInfo.builder().name("another-domain").scheme(SchemeType.HTTPS).build()
@@ -150,20 +149,20 @@ public abstract class BaseOAuth2ServiceTest extends AbstractServiceTest {
 
     @Test
     public void testGetOAuth2Clients() {
-        @NotNull List<OAuth2RegistrationInfo> firstGroup = Lists.newArrayList(
+        List<OAuth2RegistrationInfo> firstGroup = Lists.newArrayList(
                 validRegistrationInfo(),
                 validRegistrationInfo(),
                 validRegistrationInfo(),
                 validRegistrationInfo()
                                                                              );
-        @NotNull List<OAuth2RegistrationInfo> secondGroup = Lists.newArrayList(
+        List<OAuth2RegistrationInfo> secondGroup = Lists.newArrayList(
                 validRegistrationInfo(),
                 validRegistrationInfo()
                                                                               );
-        @NotNull List<OAuth2RegistrationInfo> thirdGroup = Lists.newArrayList(
+        List<OAuth2RegistrationInfo> thirdGroup = Lists.newArrayList(
                 validRegistrationInfo()
                                                                              );
-        @NotNull OAuth2Info oAuth2Info = new OAuth2Info(true, Lists.newArrayList(
+        OAuth2Info oAuth2Info = new OAuth2Info(true, Lists.newArrayList(
                 OAuth2ParamsInfo.builder()
                         .domainInfos(Lists.newArrayList(
                                 OAuth2DomainInfo.builder().name("first-domain").scheme(SchemeType.HTTP).build(),
@@ -196,15 +195,15 @@ public abstract class BaseOAuth2ServiceTest extends AbstractServiceTest {
         Assert.assertNotNull(foundOAuth2Info);
         Assert.assertEquals(oAuth2Info, foundOAuth2Info);
 
-        @NotNull List<OAuth2ClientInfo> firstGroupClientInfos = firstGroup.stream()
+        List<OAuth2ClientInfo> firstGroupClientInfos = firstGroup.stream()
                                                                           .map(registrationInfo -> new OAuth2ClientInfo(
                         registrationInfo.getLoginButtonLabel(), registrationInfo.getLoginButtonIcon(), null))
                                                                           .collect(Collectors.toList());
-        @NotNull List<OAuth2ClientInfo> secondGroupClientInfos = secondGroup.stream()
+        List<OAuth2ClientInfo> secondGroupClientInfos = secondGroup.stream()
                                                                             .map(registrationInfo -> new OAuth2ClientInfo(
                         registrationInfo.getLoginButtonLabel(), registrationInfo.getLoginButtonIcon(), null))
                                                                             .collect(Collectors.toList());
-        @NotNull List<OAuth2ClientInfo> thirdGroupClientInfos = thirdGroup.stream()
+        List<OAuth2ClientInfo> thirdGroupClientInfos = thirdGroup.stream()
                                                                           .map(registrationInfo -> new OAuth2ClientInfo(
                         registrationInfo.getLoginButtonLabel(), registrationInfo.getLoginButtonIcon(), null))
                                                                           .collect(Collectors.toList());
@@ -281,13 +280,13 @@ public abstract class BaseOAuth2ServiceTest extends AbstractServiceTest {
 
     @Test
     public void testGetOAuth2ClientsForHttpAndHttps() {
-        @NotNull List<OAuth2RegistrationInfo> firstGroup = Lists.newArrayList(
+        List<OAuth2RegistrationInfo> firstGroup = Lists.newArrayList(
                 validRegistrationInfo(),
                 validRegistrationInfo(),
                 validRegistrationInfo(),
                 validRegistrationInfo()
                                                                              );
-        @NotNull OAuth2Info oAuth2Info = new OAuth2Info(true, Lists.newArrayList(
+        OAuth2Info oAuth2Info = new OAuth2Info(true, Lists.newArrayList(
                 OAuth2ParamsInfo.builder()
                         .domainInfos(Lists.newArrayList(
                                 OAuth2DomainInfo.builder().name("first-domain").scheme(SchemeType.HTTP).build(),
@@ -304,7 +303,7 @@ public abstract class BaseOAuth2ServiceTest extends AbstractServiceTest {
         Assert.assertNotNull(foundOAuth2Info);
         Assert.assertEquals(oAuth2Info, foundOAuth2Info);
 
-        @NotNull List<OAuth2ClientInfo> firstGroupClientInfos = firstGroup.stream()
+        List<OAuth2ClientInfo> firstGroupClientInfos = firstGroup.stream()
                                                                           .map(registrationInfo -> new OAuth2ClientInfo(
                         registrationInfo.getLoginButtonLabel(), registrationInfo.getLoginButtonIcon(), null))
                                                                           .collect(Collectors.toList());
@@ -332,7 +331,7 @@ public abstract class BaseOAuth2ServiceTest extends AbstractServiceTest {
 
     @Test
     public void testGetDisabledOAuth2Clients() {
-        @NotNull OAuth2Info oAuth2Info = new OAuth2Info(true, Lists.newArrayList(
+        OAuth2Info oAuth2Info = new OAuth2Info(true, Lists.newArrayList(
                 OAuth2ParamsInfo.builder()
                         .domainInfos(Lists.newArrayList(
                                 OAuth2DomainInfo.builder().name("first-domain").scheme(SchemeType.HTTP).build(),
@@ -371,7 +370,7 @@ public abstract class BaseOAuth2ServiceTest extends AbstractServiceTest {
 
     @Test
     public void testFindAllRegistrations() {
-        @NotNull OAuth2Info oAuth2Info = new OAuth2Info(true, Lists.newArrayList(
+        OAuth2Info oAuth2Info = new OAuth2Info(true, Lists.newArrayList(
                 OAuth2ParamsInfo.builder()
                         .domainInfos(Lists.newArrayList(
                                 OAuth2DomainInfo.builder().name("first-domain").scheme(SchemeType.HTTP).build(),
@@ -420,7 +419,7 @@ public abstract class BaseOAuth2ServiceTest extends AbstractServiceTest {
 
     @Test
     public void testFindRegistrationById() {
-        @NotNull OAuth2Info oAuth2Info = new OAuth2Info(true, Lists.newArrayList(
+        OAuth2Info oAuth2Info = new OAuth2Info(true, Lists.newArrayList(
                 OAuth2ParamsInfo.builder()
                         .domainInfos(Lists.newArrayList(
                                 OAuth2DomainInfo.builder().name("first-domain").scheme(SchemeType.HTTP).build(),
@@ -464,7 +463,7 @@ public abstract class BaseOAuth2ServiceTest extends AbstractServiceTest {
 
     @Test
     public void testFindAppSecret() {
-        @NotNull OAuth2Info oAuth2Info = new OAuth2Info(true, Lists.newArrayList(
+        OAuth2Info oAuth2Info = new OAuth2Info(true, Lists.newArrayList(
                 OAuth2ParamsInfo.builder()
                         .domainInfos(Lists.newArrayList(
                                 OAuth2DomainInfo.builder().name("first-domain").scheme(SchemeType.HTTP).build(),
@@ -500,8 +499,8 @@ public abstract class BaseOAuth2ServiceTest extends AbstractServiceTest {
 
         List<OAuth2ClientInfo> firstDomainHttpClients = oAuth2Service.getOAuth2Clients("http", "first-domain", "com.test.pkg1", null);
         Assert.assertEquals(3, firstDomainHttpClients.size());
-        for (@NotNull OAuth2ClientInfo clientInfo : firstDomainHttpClients) {
-            @NotNull String[] segments = clientInfo.getUrl().split("/");
+        for (OAuth2ClientInfo clientInfo : firstDomainHttpClients) {
+            String[] segments = clientInfo.getUrl().split("/");
             String registrationId = segments[segments.length-1];
             String appSecret = oAuth2Service.findAppSecret(UUID.fromString(registrationId), "com.test.pkg1");
             Assert.assertNotNull(appSecret);
@@ -516,7 +515,7 @@ public abstract class BaseOAuth2ServiceTest extends AbstractServiceTest {
 
     @Test
     public void testFindClientsByPackageAndPlatform() {
-        @NotNull OAuth2Info oAuth2Info = new OAuth2Info(true, Lists.newArrayList(
+        OAuth2Info oAuth2Info = new OAuth2Info(true, Lists.newArrayList(
                 OAuth2ParamsInfo.builder()
                         .domainInfos(Lists.newArrayList(
                                 OAuth2DomainInfo.builder().name("first-domain").scheme(SchemeType.HTTP).build(),
@@ -564,7 +563,6 @@ public abstract class BaseOAuth2ServiceTest extends AbstractServiceTest {
         Assert.assertTrue(pkg1IOSClients.stream().anyMatch(client -> client.getName().equals("GitHub")));
     }
 
-    @NotNull
     private OAuth2Info createDefaultOAuth2Info() {
         return new OAuth2Info(true, Lists.newArrayList(
                 OAuth2ParamsInfo.builder()

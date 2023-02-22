@@ -7,7 +7,6 @@ import org.echoiot.server.dao.tenant.TbTenantProfileCache;
 import org.echoiot.server.dao.tenant.TenantService;
 import org.echoiot.server.queue.discovery.TenantRoutingInfo;
 import org.echoiot.server.queue.discovery.TenantRoutingInfoService;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Service;
@@ -26,7 +25,6 @@ public class DefaultTenantRoutingInfoService implements TenantRoutingInfoService
         this.tenantProfileCache = tenantProfileCache;
     }
 
-    @NotNull
     @Override
     public TenantRoutingInfo getRoutingInfo(TenantId tenantId) {
         @Nullable TenantProfile tenantProfile = tenantProfileCache.get(tenantId);
