@@ -13,6 +13,7 @@ import org.echoiot.server.common.data.plugin.ComponentDescriptor;
 import org.echoiot.server.common.data.plugin.ComponentType;
 import org.echoiot.server.common.data.rule.RuleChainType;
 import org.echoiot.server.dao.component.ComponentDescriptorService;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -160,7 +161,7 @@ public class AnnotationComponentDiscoveryService implements ComponentDiscoverySe
         return scannedComponent;
     }
 
-    private NodeDefinition prepareNodeDefinition(RuleNode nodeAnnotation) throws Exception {
+    private @NotNull NodeDefinition prepareNodeDefinition(@NotNull RuleNode nodeAnnotation) throws Exception {
         NodeDefinition nodeDefinition = new NodeDefinition();
         nodeDefinition.setDetails(nodeAnnotation.nodeDetails());
         nodeDefinition.setDescription(nodeAnnotation.nodeDescription());
@@ -181,15 +182,15 @@ public class AnnotationComponentDiscoveryService implements ComponentDiscoverySe
         return nodeDefinition;
     }
 
-    private String[] getRelationTypesWithFailureRelation(RuleNode nodeAnnotation) {
+    private String @NotNull [] getRelationTypesWithFailureRelation(RuleNode nodeAnnotation) {
         List<String> relationTypes = new ArrayList<>(Arrays.asList(nodeAnnotation.relationTypes()));
         if (!relationTypes.contains(TbRelationTypes.FAILURE)) {
             relationTypes.add(TbRelationTypes.FAILURE);
         }
-        return relationTypes.toArray(new String[relationTypes.size()]);
+        return relationTypes.toArray(new String[0]);
     }
 
-    private Set<BeanDefinition> getBeanDefinitions(Class<? extends Annotation> componentType) {
+    private @NotNull Set<BeanDefinition> getBeanDefinitions(Class<? extends Annotation> componentType) {
         ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false);
         scanner.addIncludeFilter(new AnnotationTypeFilter(componentType));
         Set<BeanDefinition> defs = new HashSet<>();
