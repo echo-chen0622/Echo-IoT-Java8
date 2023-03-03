@@ -9,7 +9,7 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
- * @author Andrew Shvayka
+ * @author Echo
  */
 public interface ComponentDiscoveryService {
 

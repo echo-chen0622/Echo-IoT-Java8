@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.Set;
 
 @Data
-public class TbCopyKeysNodeConfiguration implements NodeConfiguration<TbCopyKeysNodeConfiguration> {
+public class TbCopyKeysNodeConfiguration implements NodeConfiguration {
 
     private boolean fromMetadata;
     private Set<String> keys;

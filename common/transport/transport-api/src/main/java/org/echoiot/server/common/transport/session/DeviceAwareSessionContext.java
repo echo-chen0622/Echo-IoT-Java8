@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * @author Andrew Shvayka
+ * @author Echo
  */
 @Data
 public abstract class DeviceAwareSessionContext implements SessionContext {

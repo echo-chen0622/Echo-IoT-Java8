@@ -8,7 +8,7 @@ import org.echoiot.server.common.data.relation.EntitySearchDirection;
  * Created by Echo on 19.01.18.
  */
 @Data
-public class TbCheckRelationNodeConfiguration implements NodeConfiguration<TbCheckRelationNodeConfiguration> {
+public class TbCheckRelationNodeConfiguration implements NodeConfiguration {
 
     private String direction;
     private String entityId;

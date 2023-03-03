@@ -14,7 +14,7 @@ import org.echoiot.server.common.msg.cluster.ToAllNodesMsg;
 import java.util.Optional;
 
 /**
- * @author Andrew Shvayka
+ * @author Echo
  */
 @ToString
 public class ComponentLifecycleMsg implements TenantAwareMsg, ToAllNodesMsg {

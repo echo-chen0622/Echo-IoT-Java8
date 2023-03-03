@@ -41,7 +41,7 @@ import java.util.function.Consumer;
 
 
 /**
- * @author Andrew Shvayka
+ * @author Echo
  */
 @RestController
 @ConditionalOnExpression("'${service.type:null}'=='tb-transport' || ('${service.type:null}'=='monolith' && '${transport.api_enabled:true}'=='true' && '${transport.http.enabled}'=='true')")

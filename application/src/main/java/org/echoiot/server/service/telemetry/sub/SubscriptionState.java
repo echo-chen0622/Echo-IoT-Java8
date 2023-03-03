@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * @author Andrew Shvayka
+ * @author Echo
  */
 @AllArgsConstructor
 public class SubscriptionState {

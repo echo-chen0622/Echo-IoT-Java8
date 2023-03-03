@@ -6,7 +6,7 @@ import org.echoiot.rule.engine.api.NodeConfiguration;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CalculateDeltaNodeConfiguration implements NodeConfiguration<CalculateDeltaNodeConfiguration> {
+public class CalculateDeltaNodeConfiguration implements NodeConfiguration {
     private String inputValueKey;
     private String outputValueKey;
     private boolean useCache;

@@ -5,7 +5,7 @@ import org.echoiot.rule.engine.api.NodeConfiguration;
 import org.echoiot.server.common.data.StringUtils;
 
 @Data
-public class TbSendRpcReplyNodeConfiguration implements NodeConfiguration<TbSendRpcReplyNodeConfiguration> {
+public class TbSendRpcReplyNodeConfiguration implements NodeConfiguration {
 
     public static final String SERVICE_ID = "serviceId";
     public static final String SESSION_ID = "sessionId";

@@ -34,7 +34,7 @@ import java.util.Collection;
 import java.util.Optional;
 
 /**
- * Created by Echo on 27.03.18.
+ * @author Echo
  */
 @Service
 @Slf4j

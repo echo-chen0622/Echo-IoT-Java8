@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.Map;
 
 @Data
-public class TbRabbitMqNodeConfiguration implements NodeConfiguration<TbRabbitMqNodeConfiguration> {
+public class TbRabbitMqNodeConfiguration implements NodeConfiguration {
 
     private String exchangeNamePattern;
     private String routingKeyPattern;

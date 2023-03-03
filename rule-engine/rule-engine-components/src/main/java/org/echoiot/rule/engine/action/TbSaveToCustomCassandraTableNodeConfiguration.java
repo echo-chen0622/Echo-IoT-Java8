@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Data
-public class TbSaveToCustomCassandraTableNodeConfiguration implements NodeConfiguration<TbSaveToCustomCassandraTableNodeConfiguration> {
+public class TbSaveToCustomCassandraTableNodeConfiguration implements NodeConfiguration {
 
 
     private String tableName;

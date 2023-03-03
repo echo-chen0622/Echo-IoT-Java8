@@ -6,7 +6,7 @@ import org.echoiot.rule.engine.api.NodeConfiguration;
 import java.util.Collections;
 
 @Data
-public class TbGetCustomerDetailsNodeConfiguration extends TbAbstractGetEntityDetailsNodeConfiguration implements NodeConfiguration<TbGetCustomerDetailsNodeConfiguration> {
+public class TbGetCustomerDetailsNodeConfiguration extends TbAbstractGetEntityDetailsNodeConfiguration implements NodeConfiguration {
 
 
     @Override

@@ -7,7 +7,7 @@ import org.echoiot.rule.engine.api.NodeConfiguration;
  * Created by Echo on 19.01.18.
  */
 @Data
-public class TbGpsGeofencingFilterNodeConfiguration implements NodeConfiguration<TbGpsGeofencingFilterNodeConfiguration> {
+public class TbGpsGeofencingFilterNodeConfiguration implements NodeConfiguration {
 
     private String latitudeKeyName;
     private String longitudeKeyName;

@@ -7,8 +7,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-import static org.echoiot.common.util.ApplicationUtil.SPRING_CONFIG_NAME_KEY;
-import static org.echoiot.common.util.ApplicationUtil.updateArguments;
+import static org.echoiot.common.util.SpringUtils.SPRING_CONFIG_NAME_KEY;
+import static org.echoiot.common.util.SpringUtils.updateArguments;
 
 @SpringBootConfiguration
 @EnableAsync

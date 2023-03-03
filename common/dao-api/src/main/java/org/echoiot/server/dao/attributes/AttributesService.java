@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * @author Andrew Shvayka
+ * @author Echo
  */
 public interface AttributesService {
 

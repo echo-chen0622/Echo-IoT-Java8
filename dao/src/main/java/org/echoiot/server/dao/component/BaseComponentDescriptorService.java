@@ -23,7 +23,9 @@ import javax.annotation.Resource;
 import java.util.Optional;
 
 /**
- * @author Andrew Shvayka
+ * 组件描述服务实现类
+ *
+ * @author Echo
  */
 @Service
 @Slf4j
@@ -35,9 +37,17 @@ public class BaseComponentDescriptorService implements ComponentDescriptorServic
     @Resource
     private DataValidator<ComponentDescriptor> componentValidator;
 
+    /**
+     * 保存组件
+     *
+     * @param tenantId  租户ID
+     * @param component 组件
+     */
     @Override
     public ComponentDescriptor saveComponent(TenantId tenantId, ComponentDescriptor component) {
+        // 校验组件
         componentValidator.validate(component, data -> TenantId.SYS_TENANT_ID);
+        // 保存组件
         Optional<ComponentDescriptor> result = componentDescriptorDao.saveIfNotExist(tenantId, component);
         return result.orElseGet(() -> componentDescriptorDao.findByClazz(tenantId, component.getClazz()));
     }
@@ -50,7 +60,7 @@ public class BaseComponentDescriptorService implements ComponentDescriptorServic
 
     @Override
     public ComponentDescriptor findByClazz(TenantId tenantId, String clazz) {
-        Validator.validateString(clazz, "Incorrect clazz for search request.");
+        Validator.validateString(clazz, "搜索请求的分类不正确");
         return componentDescriptorDao.findByClazz(tenantId, clazz);
     }
 

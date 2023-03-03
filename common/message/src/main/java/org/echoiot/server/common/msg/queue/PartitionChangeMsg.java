@@ -8,7 +8,7 @@ import org.echoiot.server.common.msg.TbActorMsg;
 import java.util.Set;
 
 /**
- * @author Andrew Shvayka
+ * @author Echo
  */
 @Data
 public final class PartitionChangeMsg implements TbActorMsg {

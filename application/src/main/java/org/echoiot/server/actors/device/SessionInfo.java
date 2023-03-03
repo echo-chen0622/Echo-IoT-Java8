@@ -4,7 +4,7 @@ import lombok.Data;
 import org.echoiot.server.gen.transport.TransportProtos.SessionType;
 
 /**
- * @author Andrew Shvayka
+ * @author Echo
  */
 @Data
 public class SessionInfo {

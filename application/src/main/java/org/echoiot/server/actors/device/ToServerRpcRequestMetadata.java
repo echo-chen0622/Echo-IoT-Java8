@@ -6,7 +6,7 @@ import org.echoiot.server.gen.transport.TransportProtos;
 import java.util.UUID;
 
 /**
- * @author Andrew Shvayka
+ * @author Echo
  */
 @Data
 public class ToServerRpcRequestMetadata {

@@ -96,9 +96,10 @@ public class UserServiceImpl extends AbstractEntityService implements UserServic
 
     @Override
     public User saveUser(User user) {
-        log.trace("Executing saveUser [{}]", user);
+        log.trace("执行保存用户 [{}]", user);
         userValidator.validate(user, User::getTenantId);
         if (!userLoginCaseSensitive) {
+            //不区分大小写登录的情况下，直接全小写存。
             user.setEmail(user.getEmail().toLowerCase());
         }
         User savedUser = userDao.save(user.getTenantId(), user);
@@ -340,8 +341,7 @@ public class UserServiceImpl extends AbstractEntityService implements UserServic
         JsonNode userPasswordHistoryJson;
         if (additionalInfo.has(USER_PASSWORD_HISTORY)) {
             userPasswordHistoryJson = additionalInfo.get(USER_PASSWORD_HISTORY);
-            userPasswordHistoryMap = JacksonUtil.convertValue(userPasswordHistoryJson, new TypeReference<>() {
-            });
+            userPasswordHistoryMap = JacksonUtil.convertValue(userPasswordHistoryJson, new TypeReference<>() {});
         }
         if (userPasswordHistoryMap != null) {
             userPasswordHistoryMap.put(Long.toString(System.currentTimeMillis()), userCredentials.getPassword());

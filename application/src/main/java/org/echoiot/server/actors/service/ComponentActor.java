@@ -14,7 +14,7 @@ import org.echoiot.server.common.msg.plugin.ComponentLifecycleMsg;
 import org.echoiot.server.common.msg.queue.PartitionChangeMsg;
 
 /**
- * @author Andrew Shvayka
+ * @author Echo
  */
 @Slf4j
 public abstract class ComponentActor<T extends EntityId, P extends ComponentMsgProcessor<T>> extends ContextAwareActor {

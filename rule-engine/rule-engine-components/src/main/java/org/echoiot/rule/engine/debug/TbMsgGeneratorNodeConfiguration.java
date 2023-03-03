@@ -6,7 +6,7 @@ import org.echoiot.server.common.data.EntityType;
 import org.echoiot.server.common.data.script.ScriptLanguage;
 
 @Data
-public class TbMsgGeneratorNodeConfiguration implements NodeConfiguration<TbMsgGeneratorNodeConfiguration> {
+public class TbMsgGeneratorNodeConfiguration implements NodeConfiguration {
 
     public static final int UNLIMITED_MSG_COUNT = 0;
     public static final String DEFAULT_SCRIPT = "var msg = { temp: 42, humidity: 77 };\n" +

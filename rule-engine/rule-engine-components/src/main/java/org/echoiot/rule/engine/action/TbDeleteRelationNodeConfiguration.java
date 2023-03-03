@@ -5,7 +5,7 @@ import org.echoiot.rule.engine.api.NodeConfiguration;
 import org.echoiot.server.common.data.relation.EntitySearchDirection;
 
 @Data
-public class TbDeleteRelationNodeConfiguration extends TbAbstractRelationActionNodeConfiguration implements NodeConfiguration<TbDeleteRelationNodeConfiguration> {
+public class TbDeleteRelationNodeConfiguration extends TbAbstractRelationActionNodeConfiguration implements NodeConfiguration {
 
     private boolean deleteForSingleEntity;
 

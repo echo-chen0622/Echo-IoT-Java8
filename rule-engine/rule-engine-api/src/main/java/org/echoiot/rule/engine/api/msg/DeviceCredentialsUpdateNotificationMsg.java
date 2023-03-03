@@ -8,7 +8,7 @@ import org.echoiot.server.common.msg.MsgType;
 import org.echoiot.server.common.msg.ToDeviceActorNotificationMsg;
 
 /**
- * @author Andrew Shvayka
+ * @author Echo
  */
 @Data
 public class DeviceCredentialsUpdateNotificationMsg implements ToDeviceActorNotificationMsg {

@@ -11,7 +11,7 @@ import org.echoiot.server.common.data.kv.TsKvEntry;
 import java.util.List;
 
 /**
- * @author Andrew Shvayka
+ * @author Echo
  */
 public interface TimeseriesDao {
 

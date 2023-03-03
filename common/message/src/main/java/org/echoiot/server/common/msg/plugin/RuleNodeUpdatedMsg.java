@@ -7,7 +7,7 @@ import org.echoiot.server.common.data.plugin.ComponentLifecycleEvent;
 import org.echoiot.server.common.msg.MsgType;
 
 /**
- * @author Andrew Shvayka
+ * @author Echo
  */
 @ToString
 public class RuleNodeUpdatedMsg extends ComponentLifecycleMsg {

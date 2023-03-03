@@ -4,7 +4,7 @@ import lombok.Data;
 import org.echoiot.rule.engine.api.NodeConfiguration;
 
 @Data
-public class TbSendRpcRequestNodeConfiguration implements NodeConfiguration<TbSendRpcRequestNodeConfiguration> {
+public class TbSendRpcRequestNodeConfiguration implements NodeConfiguration {
 
     private int timeoutInSeconds;
 

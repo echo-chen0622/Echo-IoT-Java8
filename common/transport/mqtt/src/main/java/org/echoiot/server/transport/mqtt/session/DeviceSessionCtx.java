@@ -35,7 +35,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 
 /**
- * @author Andrew Shvayka
+ * @author Echo
  */
 @Slf4j
 public class DeviceSessionCtx extends MqttDeviceAwareSessionContext {

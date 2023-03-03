@@ -4,7 +4,7 @@ import lombok.Data;
 import org.echoiot.rule.engine.api.NodeConfiguration;
 
 @Data
-public class TbMsgDeduplicationNodeConfiguration implements NodeConfiguration<TbMsgDeduplicationNodeConfiguration> {
+public class TbMsgDeduplicationNodeConfiguration implements NodeConfiguration {
 
     private int interval;
     private DeduplicationStrategy strategy;

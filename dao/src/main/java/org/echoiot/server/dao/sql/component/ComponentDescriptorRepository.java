@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.UUID;
 
 /**
- * Created by Valerii Sosliuk on 5/6/2017.
+ * @author Echo
  */
 public interface ComponentDescriptorRepository extends JpaRepository<ComponentDescriptorEntity, UUID> {
 

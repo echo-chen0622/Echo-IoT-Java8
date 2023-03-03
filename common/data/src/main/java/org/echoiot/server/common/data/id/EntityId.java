@@ -11,7 +11,7 @@ import java.io.Serializable;
 import java.util.UUID;
 
 /**
- * @author Andrew Shvayka
+ * @author Echo
  */
 
 @JsonDeserialize(using = EntityIdDeserializer.class)

@@ -5,7 +5,7 @@ import org.echoiot.rule.engine.api.NodeConfiguration;
 import org.echoiot.server.common.data.relation.EntitySearchDirection;
 
 @Data
-public class TbCreateRelationNodeConfiguration extends TbAbstractRelationActionNodeConfiguration implements NodeConfiguration<TbCreateRelationNodeConfiguration> {
+public class TbCreateRelationNodeConfiguration extends TbAbstractRelationActionNodeConfiguration implements NodeConfiguration {
 
     private boolean createEntityIfNotExists;
     private boolean changeOriginatorToRelatedEntity;

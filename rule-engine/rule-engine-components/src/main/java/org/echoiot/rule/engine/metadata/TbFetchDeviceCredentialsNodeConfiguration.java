@@ -6,7 +6,7 @@ import org.echoiot.rule.engine.api.NodeConfiguration;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class TbFetchDeviceCredentialsNodeConfiguration implements NodeConfiguration<TbFetchDeviceCredentialsNodeConfiguration> {
+public class TbFetchDeviceCredentialsNodeConfiguration implements NodeConfiguration {
 
     private boolean fetchToMetadata;
 

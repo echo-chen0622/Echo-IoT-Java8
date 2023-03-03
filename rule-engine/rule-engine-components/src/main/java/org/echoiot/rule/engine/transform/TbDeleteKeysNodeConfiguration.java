@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.Set;
 
 @Data
-public class TbDeleteKeysNodeConfiguration implements NodeConfiguration<TbDeleteKeysNodeConfiguration> {
+public class TbDeleteKeysNodeConfiguration implements NodeConfiguration {
 
     private boolean fromMetadata;
     private Set<String> keys;

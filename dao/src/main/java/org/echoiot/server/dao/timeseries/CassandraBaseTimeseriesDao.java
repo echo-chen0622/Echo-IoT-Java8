@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
 import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.literal;
 
 /**
- * @author Andrew Shvayka
+ * @author Echo
  */
 @SuppressWarnings("UnstableApiUsage")
 @Component

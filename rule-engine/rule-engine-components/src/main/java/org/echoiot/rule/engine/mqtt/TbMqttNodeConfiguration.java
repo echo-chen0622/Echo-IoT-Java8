@@ -6,7 +6,7 @@ import org.echoiot.rule.engine.credentials.AnonymousCredentials;
 import org.echoiot.rule.engine.credentials.ClientCredentials;
 
 @Data
-public class TbMqttNodeConfiguration implements NodeConfiguration<TbMqttNodeConfiguration> {
+public class TbMqttNodeConfiguration implements NodeConfiguration {
 
     private String topicPattern;
     private String host;

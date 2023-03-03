@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * @author Andrew Shvayka
+ * @author Echo
  */
 @TestPropertySource(properties = {
         "transport.http.enabled=true",

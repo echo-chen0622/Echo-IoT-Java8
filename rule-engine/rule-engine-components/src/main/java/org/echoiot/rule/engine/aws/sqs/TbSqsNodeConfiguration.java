@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.Map;
 
 @Data
-public class TbSqsNodeConfiguration implements NodeConfiguration<TbSqsNodeConfiguration> {
+public class TbSqsNodeConfiguration implements NodeConfiguration {
 
     private QueueType queueType;
     private String queueUrlPattern;

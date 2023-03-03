@@ -16,6 +16,13 @@ import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
 
+/**
+ * 组件描述实体，用于跟数据库做交互的。
+ * <p>
+ * 实际上，{@link ComponentDescriptor} 和 {@link ComponentDescriptorEntity} 字段几乎一样，
+ * 只是功能上有区别。{@link ComponentDescriptor} 是用于描述组件的实体，{@link ComponentDescriptorEntity} 是用于跟数据库做交互的。
+ * 这里，二者最好还是得有区分，因为从设计角度考虑，二者是不同的抽象。
+ */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -41,9 +48,6 @@ public class ComponentDescriptorEntity extends BaseSqlEntity<ComponentDescriptor
     @Column(name = ModelConstants.COMPONENT_DESCRIPTOR_CONFIGURATION_DESCRIPTOR_PROPERTY)
     private JsonNode configurationDescriptor;
 
-    @Column(name = ModelConstants.COMPONENT_DESCRIPTOR_ACTIONS_PROPERTY)
-    private String actions;
-
     @Column(name = ModelConstants.SEARCH_TEXT_PROPERTY)
     private String searchText;
 
@@ -55,7 +59,6 @@ public class ComponentDescriptorEntity extends BaseSqlEntity<ComponentDescriptor
             this.setUuid(component.getId().getId());
         }
         this.setCreatedTime(component.getCreatedTime());
-        this.actions = component.getActions();
         this.type = component.getType();
         this.scope = component.getScope();
         this.name = component.getName();
@@ -72,7 +75,6 @@ public class ComponentDescriptorEntity extends BaseSqlEntity<ComponentDescriptor
         data.setScope(scope);
         data.setName(this.getName());
         data.setClazz(this.getClazz());
-        data.setActions(this.getActions());
         data.setConfigurationDescriptor(configurationDescriptor);
         return data;
     }

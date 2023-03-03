@@ -12,7 +12,7 @@ import org.echoiot.server.transport.mqtt.session.MqttDeviceAwareSessionContext;
 import java.util.Optional;
 
 /**
- * @author Andrew Shvayka
+ * @author Echo
  */
 public interface MqttTransportAdaptor {
 

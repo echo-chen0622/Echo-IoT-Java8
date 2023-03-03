@@ -4,7 +4,7 @@ import lombok.Data;
 import org.echoiot.rule.engine.api.NodeConfiguration;
 
 @Data
-public class TbSnsNodeConfiguration implements NodeConfiguration<TbSnsNodeConfiguration> {
+public class TbSnsNodeConfiguration implements NodeConfiguration {
 
     private String topicArnPattern;
     private String accessKeyId;

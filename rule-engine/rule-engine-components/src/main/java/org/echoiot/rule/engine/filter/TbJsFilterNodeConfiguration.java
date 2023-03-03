@@ -5,7 +5,7 @@ import org.echoiot.rule.engine.api.NodeConfiguration;
 import org.echoiot.server.common.data.script.ScriptLanguage;
 
 @Data
-public class TbJsFilterNodeConfiguration implements NodeConfiguration<TbJsFilterNodeConfiguration> {
+public class TbJsFilterNodeConfiguration implements NodeConfiguration {
 
     private ScriptLanguage scriptLang;
     private String jsScript;

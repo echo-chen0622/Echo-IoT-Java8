@@ -4,7 +4,7 @@ import lombok.Data;
 import org.echoiot.server.service.rpc.ToDeviceRpcRequestActorMsg;
 
 /**
- * @author Andrew Shvayka
+ * @author Echo
  */
 @Data
 public class ToDeviceRpcRequestMetadata {

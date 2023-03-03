@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 /**
- * @author Andrew Shvayka
+ * @author Echo
  */
 public class DeviceAttributes {
 

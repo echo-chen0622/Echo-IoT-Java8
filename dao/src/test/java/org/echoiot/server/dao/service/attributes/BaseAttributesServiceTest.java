@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
- * @author Andrew Shvayka
+ * @author Echo
  */
 @Slf4j
 public abstract class BaseAttributesServiceTest extends AbstractServiceTest {

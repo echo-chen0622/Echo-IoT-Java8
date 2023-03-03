@@ -13,7 +13,7 @@ import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
-public class TbRestApiCallNodeConfiguration implements NodeConfiguration<TbRestApiCallNodeConfiguration> {
+public class TbRestApiCallNodeConfiguration implements NodeConfiguration {
 
     private String restEndpointUrlPattern;
     private String requestMethod;

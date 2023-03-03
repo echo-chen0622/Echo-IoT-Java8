@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Data
-public class TbMathNodeConfiguration implements NodeConfiguration<TbMathNodeConfiguration> {
+public class TbMathNodeConfiguration implements NodeConfiguration {
 
     private TbRuleNodeMathFunctionType operation;
     private List<TbMathArgument> arguments;

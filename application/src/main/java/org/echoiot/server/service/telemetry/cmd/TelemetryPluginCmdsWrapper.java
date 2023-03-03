@@ -9,7 +9,7 @@ import org.echoiot.server.service.telemetry.cmd.v2.*;
 import java.util.List;
 
 /**
- * @author Andrew Shvayka
+ * @author Echo
  */
 @Data
 public class TelemetryPluginCmdsWrapper {

@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.Map;
 
 @Data
-public class TbKafkaNodeConfiguration implements NodeConfiguration<TbKafkaNodeConfiguration> {
+public class TbKafkaNodeConfiguration implements NodeConfiguration {
 
     private String topicPattern;
     private String keyPattern;

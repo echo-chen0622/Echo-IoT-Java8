@@ -4,7 +4,7 @@ import lombok.Data;
 import org.echoiot.rule.engine.api.NodeConfiguration;
 
 @Data
-public class TbCheckpointNodeConfiguration implements NodeConfiguration<TbCheckpointNodeConfiguration> {
+public class TbCheckpointNodeConfiguration implements NodeConfiguration {
 
     private String queueName;
 

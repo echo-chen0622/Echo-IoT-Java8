@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Data
-public class TbGetOriginatorFieldsConfiguration implements NodeConfiguration<TbGetOriginatorFieldsConfiguration> {
+public class TbGetOriginatorFieldsConfiguration implements NodeConfiguration {
 
     private Map<String, String> fieldsMapping;
     private boolean ignoreNullStrings;

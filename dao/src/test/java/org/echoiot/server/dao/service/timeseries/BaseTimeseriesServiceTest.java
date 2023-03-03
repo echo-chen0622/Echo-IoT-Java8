@@ -28,7 +28,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 /**
- * @author Andrew Shvayka
+ * @author Echo
  */
 
 @Slf4j

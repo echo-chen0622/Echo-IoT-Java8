@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
  * Created by mshvayka on 04.09.18.
  */
 @Data
-public class TbGetTelemetryNodeConfiguration implements NodeConfiguration<TbGetTelemetryNodeConfiguration> {
+public class TbGetTelemetryNodeConfiguration implements NodeConfiguration {
 
     public static final String FETCH_MODE_FIRST = "FIRST";
     public static final String FETCH_MODE_LAST = "LAST";

@@ -6,7 +6,7 @@ import org.echoiot.rule.engine.api.NodeConfiguration;
 import java.util.Map;
 
 @Data
-public class TbRenameKeysNodeConfiguration implements NodeConfiguration<TbRenameKeysNodeConfiguration> {
+public class TbRenameKeysNodeConfiguration implements NodeConfiguration {
 
     private boolean fromMetadata;
     private Map<String, String> renameKeysMapping;

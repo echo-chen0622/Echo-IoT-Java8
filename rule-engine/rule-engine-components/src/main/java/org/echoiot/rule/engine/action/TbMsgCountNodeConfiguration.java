@@ -4,7 +4,7 @@ import lombok.Data;
 import org.echoiot.rule.engine.api.NodeConfiguration;
 
 @Data
-public class TbMsgCountNodeConfiguration implements NodeConfiguration<TbMsgCountNodeConfiguration> {
+public class TbMsgCountNodeConfiguration implements NodeConfiguration {
 
     private String telemetryPrefix;
     private int interval;

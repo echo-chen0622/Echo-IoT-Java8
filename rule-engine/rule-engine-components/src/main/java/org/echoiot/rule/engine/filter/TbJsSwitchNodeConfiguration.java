@@ -5,7 +5,7 @@ import org.echoiot.rule.engine.api.NodeConfiguration;
 import org.echoiot.server.common.data.script.ScriptLanguage;
 
 @Data
-public class TbJsSwitchNodeConfiguration implements NodeConfiguration<TbJsSwitchNodeConfiguration> {
+public class TbJsSwitchNodeConfiguration implements NodeConfiguration {
 
     private static final String DEFAULT_JS_SCRIPT = "function nextRelation(metadata, msg) {\n" +
             "    return ['one','nine'];\n" +

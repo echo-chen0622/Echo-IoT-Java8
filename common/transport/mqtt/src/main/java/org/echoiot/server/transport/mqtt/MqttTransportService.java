@@ -21,7 +21,7 @@ import javax.annotation.Resource;
 import java.net.InetSocketAddress;
 
 /**
- * @author Andrew Shvayka
+ * @author Echo
  */
 @Service("MqttTransportService")
 @ConditionalOnExpression("'${service.type:null}'=='tb-transport' || ('${service.type:null}'=='monolith' && '${transport.api_enabled:true}'=='true' && '${transport.mqtt.enabled}'=='true')")

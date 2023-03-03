@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @author Andrew Shvayka
+ * @author Echo
  */
 @ToString
 @AllArgsConstructor

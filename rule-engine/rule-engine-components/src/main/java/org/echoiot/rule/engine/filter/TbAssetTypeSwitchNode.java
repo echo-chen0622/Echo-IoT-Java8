@@ -19,8 +19,8 @@ import org.jetbrains.annotations.Nullable;
         customRelations = true,
         relationTypes = {},
         configClazz = EmptyNodeConfiguration.class,
-        nodeDescription = "Route incoming messages based on the name of the asset profile",
-        nodeDetails = "Route incoming messages based on the name of the asset profile. The asset profile name is case-sensitive",
+        nodeDescription = "根据资产配置文件的名称路由传入消息",
+        nodeDetails = "根据资产配置文件的名称路由传入消息。资产配置文件名称区分大小写",
         uiResources = {"static/rulenode/rulenode-core-config.js"},
         configDirective = "tbNodeEmptyConfig")
 public class TbAssetTypeSwitchNode extends TbAbstractTypeSwitchNode {

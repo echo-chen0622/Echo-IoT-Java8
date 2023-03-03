@@ -12,7 +12,7 @@ import org.echoiot.server.transport.mqtt.limits.ProxyIpFilter;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * @author Andrew Shvayka
+ * @author Echo
  */
 public class MqttTransportServerInitializer extends ChannelInitializer<SocketChannel> {
 

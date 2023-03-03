@@ -9,7 +9,7 @@ import org.echoiot.server.common.data.id.EventId;
 import org.echoiot.server.common.data.id.TenantId;
 
 /**
- * @author Andrew Shvayka
+ * @author Echo
  */
 @Data
 @ApiModel

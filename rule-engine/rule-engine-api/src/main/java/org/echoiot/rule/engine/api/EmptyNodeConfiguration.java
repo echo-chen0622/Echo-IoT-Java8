@@ -3,7 +3,7 @@ package org.echoiot.rule.engine.api;
 import lombok.Data;
 
 @Data
-public class EmptyNodeConfiguration implements NodeConfiguration<EmptyNodeConfiguration> {
+public class EmptyNodeConfiguration implements NodeConfiguration {
 
     private int version;
 

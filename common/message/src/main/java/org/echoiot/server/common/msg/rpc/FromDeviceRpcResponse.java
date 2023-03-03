@@ -10,7 +10,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * @author Andrew Shvayka
+ * @author Echo
  */
 @RequiredArgsConstructor
 @ToString

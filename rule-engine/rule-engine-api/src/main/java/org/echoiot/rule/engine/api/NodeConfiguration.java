@@ -1,7 +1,17 @@
 package org.echoiot.rule.engine.api;
 
-public interface NodeConfiguration<T extends NodeConfiguration> {
+/**
+ * 定义节点配置接口
+ *
+ * @author Echo
+ */
+public interface NodeConfiguration {
 
-    T defaultConfiguration();
+    /**
+     * 获取默认配置
+     *
+     * @return 默认配置
+     */
+    NodeConfiguration defaultConfiguration();
 
 }

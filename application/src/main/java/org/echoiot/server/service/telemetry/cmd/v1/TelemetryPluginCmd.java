@@ -1,7 +1,7 @@
 package org.echoiot.server.service.telemetry.cmd.v1;
 
 /**
- * @author Andrew Shvayka
+ * @author Echo
  */
 public interface TelemetryPluginCmd {
 

@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Data
-public class TbMsgDeleteAttributesNodeConfiguration implements NodeConfiguration<TbMsgDeleteAttributesNodeConfiguration> {
+public class TbMsgDeleteAttributesNodeConfiguration implements NodeConfiguration {
 
     private String scope;
     private List<String> keys;

@@ -70,7 +70,7 @@ public class EchoiotInstallService {
     /**
      * 执行安装或者升级程序
      */
-    @SuppressWarnings({"AlibabaSwitchStatement", "java:S128","java:S1192"})
+    @SuppressWarnings({"AlibabaSwitchStatement", "java:S128", "java:S1192"})
     public void performInstall() throws Exception {
         if (Boolean.TRUE.equals(isUpgrade)) {
             log.info("开始 Echoiot 升级 , 现版本: {} ...", upgradeFromVersion);
@@ -80,7 +80,7 @@ public class EchoiotInstallService {
 
             switch (upgradeFromVersion) {
                 case "1.0.0":
-                    log.info("Upgrading Echoiot from version 1.0.0 to 1.0.1 ...");
+                    log.info("Echoiot 从 1.0.0 版本升级到 1.0.1 ...");
                     /* 升级数据库 同时需要判断，是否需要升级实体、业务数据、时间序列数据等数据
                     if (databaseTsUpgradeService != null) {
                         databaseTsUpgradeService.upgradeDatabase("1.0.0");
@@ -88,10 +88,10 @@ public class EchoiotInstallService {
                     */
                 case "1.0.1":
                     //逐级升级，case不加break，但是切记，调用的执行方法，要每个 case加break
-                    log.info("Upgrading Echoiot from version 1.0.1 to 1.0.2 ...");
+                    log.info("Echoiot 从 1.0.1 版本升级到 1.0.2 ...");
                     break;
                 default:
-                    throw new RuntimeException("Unable to upgrade Echoiot, unsupported fromVersion: " + upgradeFromVersion);
+                    throw new RuntimeException("无法升级 Echoiot，不支持从版本: " + upgradeFromVersion + " 升级到当前版本！");
 
             }
             log.info("升级 Echoiot 成功！");
@@ -124,6 +124,7 @@ public class EchoiotInstallService {
             // 发现组件
             componentDiscoveryService.discoverComponents();
 
+            // 加载系统数据
             systemDataLoaderService.createSysAdmin();
             systemDataLoaderService.createDefaultTenantProfiles();
             systemDataLoaderService.createAdminSettings();

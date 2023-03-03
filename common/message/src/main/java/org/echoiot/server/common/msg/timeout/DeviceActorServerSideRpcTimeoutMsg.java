@@ -3,7 +3,7 @@ package org.echoiot.server.common.msg.timeout;
 import org.echoiot.server.common.msg.MsgType;
 
 /**
- * @author Andrew Shvayka
+ * @author Echo
  */
 public final class DeviceActorServerSideRpcTimeoutMsg extends TimeoutMsg<Integer> {
 

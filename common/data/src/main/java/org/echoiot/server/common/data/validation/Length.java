@@ -7,11 +7,14 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * 长度校验引擎
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 @Constraint(validatedBy = {})
 public @interface Length {
-    String message() default "length must be equal or less than {max}";
+    String message() default "长度必须等于或小于 {max}";
 
     String fieldName();
 

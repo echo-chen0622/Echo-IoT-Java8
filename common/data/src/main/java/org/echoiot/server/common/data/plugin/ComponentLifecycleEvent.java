@@ -3,7 +3,7 @@ package org.echoiot.server.common.data.plugin;
 import java.io.Serializable;
 
 /**
- * @author Andrew Shvayka
+ * @author Echo
  */
 public enum ComponentLifecycleEvent implements Serializable {
     CREATED, STARTED, ACTIVATED, SUSPENDED, UPDATED, STOPPED, DELETED

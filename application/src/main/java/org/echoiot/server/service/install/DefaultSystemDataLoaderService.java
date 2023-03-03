@@ -42,6 +42,7 @@ import org.echoiot.server.dao.timeseries.TimeseriesService;
 import org.echoiot.server.dao.user.UserService;
 import org.echoiot.server.dao.widget.WidgetsBundleService;
 import org.echoiot.server.service.security.auth.jwt.settings.JwtSettingsService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Lazy;
@@ -142,6 +143,10 @@ public class DefaultSystemDataLoaderService implements SystemDataLoaderService {
         }
     }
 
+    /**
+     * 创建系统管理员
+     * 写死，仅用于初始化系统
+     */
     @Override
     public void createSysAdmin() {
         createUser(Authority.SYS_ADMIN, null, null, "sysadmin@echoiot.org", "sysadmin");
@@ -268,11 +273,21 @@ public class DefaultSystemDataLoaderService implements SystemDataLoaderService {
         createDevice(demoTenant.getId(), customerB.getId(), defaultDeviceProfile.getId(), "Test Device B1", "B1_TEST_TOKEN", null);
         createDevice(demoTenant.getId(), customerC.getId(), defaultDeviceProfile.getId(), "Test Device C1", "C1_TEST_TOKEN", null);
 
-        createDevice(demoTenant.getId(), null, defaultDeviceProfile.getId(), "DHT11 Demo Device", "DHT11_DEMO_TOKEN", "Demo device that is used in sample " +
-                "applications that upload data from DHT11 temperature and humidity sensor");
+        createDevice(demoTenant.getId(),
+                     null,
+                     defaultDeviceProfile.getId(),
+                     "DHT11 Demo Device",
+                     "DHT11_DEMO_TOKEN",
+                     "Demo device that is used in sample " + "applications that upload data from DHT11 temperature and humidity sensor"
+                    );
 
-        createDevice(demoTenant.getId(), null, defaultDeviceProfile.getId(), "Raspberry Pi Demo Device", "RASPBERRY_PI_DEMO_TOKEN", "Demo device that is used in " +
-                "Raspberry Pi GPIO control sample application");
+        createDevice(demoTenant.getId(),
+                     null,
+                     defaultDeviceProfile.getId(),
+                     "Raspberry Pi Demo Device",
+                     "RASPBERRY_PI_DEMO_TOKEN",
+                     "Demo device that is used in " + "Raspberry Pi GPIO control sample application"
+                    );
 
         DeviceProfile thermostatDeviceProfile = new DeviceProfile();
         thermostatDeviceProfile.setTenantId(demoTenant.getId());
@@ -282,8 +297,7 @@ public class DefaultSystemDataLoaderService implements SystemDataLoaderService {
         thermostatDeviceProfile.setTransportType(DeviceTransportType.DEFAULT);
         thermostatDeviceProfile.setProvisionType(DeviceProfileProvisionType.DISABLED);
         thermostatDeviceProfile.setDescription("Thermostat device profile");
-        thermostatDeviceProfile.setDefaultRuleChainId(ruleChainService.findTenantRuleChainsByType(
-                demoTenant.getId(), RuleChainType.CORE, new PageLink(1, 0, "Thermostat")).getData().get(0).getId());
+        thermostatDeviceProfile.setDefaultRuleChainId(ruleChainService.findTenantRuleChainsByType(demoTenant.getId(), RuleChainType.CORE, new PageLink(1, 0, "Thermostat")).getData().get(0).getId());
 
         DeviceProfileData deviceProfileData = new DeviceProfileData();
         DefaultDeviceProfileConfiguration configuration = new DefaultDeviceProfileConfiguration();
@@ -314,9 +328,10 @@ public class DefaultSystemDataLoaderService implements SystemDataLoaderService {
         temperatureTimeseriesFilter.setValueType(EntityKeyValueType.NUMERIC);
         NumericFilterPredicate temperatureTimeseriesFilterPredicate = new NumericFilterPredicate();
         temperatureTimeseriesFilterPredicate.setOperation(NumericFilterPredicate.NumericOperation.GREATER);
-        FilterPredicateValue<Double> temperatureTimeseriesPredicateValue =
-                new FilterPredicateValue<>(25.0, null,
-                        new DynamicValue<>(DynamicValueSourceType.CURRENT_DEVICE, "temperatureAlarmThreshold"));
+        FilterPredicateValue<Double> temperatureTimeseriesPredicateValue = new FilterPredicateValue<>(25.0,
+                                                                                                      null,
+                                                                                                      new DynamicValue<>(DynamicValueSourceType.CURRENT_DEVICE, "temperatureAlarmThreshold")
+        );
         temperatureTimeseriesFilterPredicate.setValue(temperatureTimeseriesPredicateValue);
         temperatureTimeseriesFilter.setPredicate(temperatureTimeseriesFilterPredicate);
         temperatureCondition.setCondition(Arrays.asList(temperatureAlarmFlagAttributeFilter, temperatureTimeseriesFilter));
@@ -333,9 +348,10 @@ public class DefaultSystemDataLoaderService implements SystemDataLoaderService {
         clearTemperatureTimeseriesFilter.setValueType(EntityKeyValueType.NUMERIC);
         NumericFilterPredicate clearTemperatureTimeseriesFilterPredicate = new NumericFilterPredicate();
         clearTemperatureTimeseriesFilterPredicate.setOperation(NumericFilterPredicate.NumericOperation.LESS_OR_EQUAL);
-        FilterPredicateValue<Double> clearTemperatureTimeseriesPredicateValue =
-                new FilterPredicateValue<>(25.0, null,
-                        new DynamicValue<>(DynamicValueSourceType.CURRENT_DEVICE, "temperatureAlarmThreshold"));
+        FilterPredicateValue<Double> clearTemperatureTimeseriesPredicateValue = new FilterPredicateValue<>(25.0,
+                                                                                                           null,
+                                                                                                           new DynamicValue<>(DynamicValueSourceType.CURRENT_DEVICE, "temperatureAlarmThreshold")
+        );
 
         clearTemperatureTimeseriesFilterPredicate.setValue(clearTemperatureTimeseriesPredicateValue);
         clearTemperatureTimeseriesFilter.setPredicate(clearTemperatureTimeseriesFilterPredicate);
@@ -364,9 +380,7 @@ public class DefaultSystemDataLoaderService implements SystemDataLoaderService {
         humidityTimeseriesFilter.setValueType(EntityKeyValueType.NUMERIC);
         NumericFilterPredicate humidityTimeseriesFilterPredicate = new NumericFilterPredicate();
         humidityTimeseriesFilterPredicate.setOperation(NumericFilterPredicate.NumericOperation.LESS);
-        FilterPredicateValue<Double> humidityTimeseriesPredicateValue =
-                new FilterPredicateValue<>(60.0, null,
-                        new DynamicValue<>(DynamicValueSourceType.CURRENT_DEVICE, "humidityAlarmThreshold"));
+        FilterPredicateValue<Double> humidityTimeseriesPredicateValue = new FilterPredicateValue<>(60.0, null, new DynamicValue<>(DynamicValueSourceType.CURRENT_DEVICE, "humidityAlarmThreshold"));
         humidityTimeseriesFilterPredicate.setValue(humidityTimeseriesPredicateValue);
         humidityTimeseriesFilter.setPredicate(humidityTimeseriesFilterPredicate);
         humidityCondition.setCondition(Arrays.asList(humidityAlarmFlagAttributeFilter, humidityTimeseriesFilter));
@@ -384,9 +398,10 @@ public class DefaultSystemDataLoaderService implements SystemDataLoaderService {
         clearHumidityTimeseriesFilter.setValueType(EntityKeyValueType.NUMERIC);
         NumericFilterPredicate clearHumidityTimeseriesFilterPredicate = new NumericFilterPredicate();
         clearHumidityTimeseriesFilterPredicate.setOperation(NumericFilterPredicate.NumericOperation.GREATER_OR_EQUAL);
-        FilterPredicateValue<Double> clearHumidityTimeseriesPredicateValue =
-                new FilterPredicateValue<>(60.0, null,
-                        new DynamicValue<>(DynamicValueSourceType.CURRENT_DEVICE, "humidityAlarmThreshold"));
+        FilterPredicateValue<Double> clearHumidityTimeseriesPredicateValue = new FilterPredicateValue<>(60.0,
+                                                                                                        null,
+                                                                                                        new DynamicValue<>(DynamicValueSourceType.CURRENT_DEVICE, "humidityAlarmThreshold")
+        );
 
         clearHumidityTimeseriesFilterPredicate.setValue(clearHumidityTimeseriesPredicateValue);
         clearHumidityTimeseriesFilter.setPredicate(clearHumidityTimeseriesFilterPredicate);
@@ -402,21 +417,29 @@ public class DefaultSystemDataLoaderService implements SystemDataLoaderService {
         DeviceId t1Id = createDevice(demoTenant.getId(), null, savedThermostatDeviceProfile.getId(), "Thermostat T1", "T1_TEST_TOKEN", "Demo device for Thermostats dashboard").getId();
         DeviceId t2Id = createDevice(demoTenant.getId(), null, savedThermostatDeviceProfile.getId(), "Thermostat T2", "T2_TEST_TOKEN", "Demo device for Thermostats dashboard").getId();
 
-        attributesService.save(demoTenant.getId(), t1Id, DataConstants.SERVER_SCOPE,
-                Arrays.asList(new BaseAttributeKvEntry(System.currentTimeMillis(), new DoubleDataEntry("latitude", 37.3948)),
-                        new BaseAttributeKvEntry(System.currentTimeMillis(), new DoubleDataEntry("longitude", -122.1503)),
-                        new BaseAttributeKvEntry(System.currentTimeMillis(), new BooleanDataEntry("temperatureAlarmFlag", true)),
-                        new BaseAttributeKvEntry(System.currentTimeMillis(), new BooleanDataEntry("humidityAlarmFlag", true)),
-                        new BaseAttributeKvEntry(System.currentTimeMillis(), new LongDataEntry("temperatureAlarmThreshold", (long) 20)),
-                        new BaseAttributeKvEntry(System.currentTimeMillis(), new LongDataEntry("humidityAlarmThreshold", (long) 50))));
+        attributesService.save(demoTenant.getId(),
+                               t1Id,
+                               DataConstants.SERVER_SCOPE,
+                               Arrays.asList(new BaseAttributeKvEntry(System.currentTimeMillis(), new DoubleDataEntry("latitude", 37.3948)),
+                                             new BaseAttributeKvEntry(System.currentTimeMillis(), new DoubleDataEntry("longitude", -122.1503)),
+                                             new BaseAttributeKvEntry(System.currentTimeMillis(), new BooleanDataEntry("temperatureAlarmFlag", true)),
+                                             new BaseAttributeKvEntry(System.currentTimeMillis(), new BooleanDataEntry("humidityAlarmFlag", true)),
+                                             new BaseAttributeKvEntry(System.currentTimeMillis(), new LongDataEntry("temperatureAlarmThreshold", (long) 20)),
+                                             new BaseAttributeKvEntry(System.currentTimeMillis(), new LongDataEntry("humidityAlarmThreshold", (long) 50))
+                                            )
+                              );
 
-        attributesService.save(demoTenant.getId(), t2Id, DataConstants.SERVER_SCOPE,
-                Arrays.asList(new BaseAttributeKvEntry(System.currentTimeMillis(), new DoubleDataEntry("latitude", 37.493801)),
-                        new BaseAttributeKvEntry(System.currentTimeMillis(), new DoubleDataEntry("longitude", -121.948769)),
-                        new BaseAttributeKvEntry(System.currentTimeMillis(), new BooleanDataEntry("temperatureAlarmFlag", true)),
-                        new BaseAttributeKvEntry(System.currentTimeMillis(), new BooleanDataEntry("humidityAlarmFlag", true)),
-                        new BaseAttributeKvEntry(System.currentTimeMillis(), new LongDataEntry("temperatureAlarmThreshold", (long) 25)),
-                        new BaseAttributeKvEntry(System.currentTimeMillis(), new LongDataEntry("humidityAlarmThreshold", (long) 30))));
+        attributesService.save(demoTenant.getId(),
+                               t2Id,
+                               DataConstants.SERVER_SCOPE,
+                               Arrays.asList(new BaseAttributeKvEntry(System.currentTimeMillis(), new DoubleDataEntry("latitude", 37.493801)),
+                                             new BaseAttributeKvEntry(System.currentTimeMillis(), new DoubleDataEntry("longitude", -121.948769)),
+                                             new BaseAttributeKvEntry(System.currentTimeMillis(), new BooleanDataEntry("temperatureAlarmFlag", true)),
+                                             new BaseAttributeKvEntry(System.currentTimeMillis(), new BooleanDataEntry("humidityAlarmFlag", true)),
+                                             new BaseAttributeKvEntry(System.currentTimeMillis(), new LongDataEntry("temperatureAlarmThreshold", (long) 25)),
+                                             new BaseAttributeKvEntry(System.currentTimeMillis(), new LongDataEntry("humidityAlarmThreshold", (long) 30))
+                                            )
+                              );
 
         installScripts.loadDashboards(demoTenant.getId(), null);
     }
@@ -454,16 +477,23 @@ public class DefaultSystemDataLoaderService implements SystemDataLoaderService {
         installScripts.loadSystemWidgets();
     }
 
-    private User createUser(Authority authority,
-                            TenantId tenantId,
-                            CustomerId customerId,
-                            String email,
-                            String password) {
+    /**
+     * 创建用户
+     *
+     * @param authority  权柄（大角色）
+     * @param tenantId   租户ID
+     * @param customerId 客户ID
+     * @param email      邮箱
+     * @param password   密码
+     */
+    private @NotNull User createUser(Authority authority, TenantId tenantId, CustomerId customerId, String email, String password) {
+        // 构建用户实体
         User user = new User();
         user.setAuthority(authority);
         user.setEmail(email);
         user.setTenantId(tenantId);
         user.setCustomerId(customerId);
+        // 保存用户
         user = userService.saveUser(user);
         UserCredentials userCredentials = userService.findUserCredentialsByUserId(TenantId.SYS_TENANT_ID, user.getId());
         userCredentials.setPassword(passwordEncoder.encode(password));
@@ -473,12 +503,7 @@ public class DefaultSystemDataLoaderService implements SystemDataLoaderService {
         return user;
     }
 
-    private Device createDevice(TenantId tenantId,
-                                CustomerId customerId,
-                                DeviceProfileId deviceProfileId,
-                                String name,
-                                String accessToken,
-                                @org.jetbrains.annotations.Nullable String description) {
+    private Device createDevice(TenantId tenantId, CustomerId customerId, DeviceProfileId deviceProfileId, String name, String accessToken, @org.jetbrains.annotations.Nullable String description) {
         Device device = new Device();
         device.setTenantId(tenantId);
         device.setCustomerId(customerId);
@@ -499,15 +524,18 @@ public class DefaultSystemDataLoaderService implements SystemDataLoaderService {
 
     private void save(DeviceId deviceId, String key, boolean value) {
         if (persistActivityToTelemetry) {
-            ListenableFuture<Integer> saveFuture = tsService.save(
-                    TenantId.SYS_TENANT_ID,
-                    deviceId,
-                    Collections.singletonList(new BasicTsKvEntry(System.currentTimeMillis(), new BooleanDataEntry(key, value))), 0L);
+            ListenableFuture<Integer> saveFuture = tsService.save(TenantId.SYS_TENANT_ID,
+                                                                  deviceId,
+                                                                  Collections.singletonList(new BasicTsKvEntry(System.currentTimeMillis(), new BooleanDataEntry(key, value))),
+                                                                  0L
+                                                                 );
             addTsCallback(saveFuture, new TelemetrySaveCallback<>(deviceId, key, value));
         } else {
-            ListenableFuture<List<String>> saveFuture = attributesService.save(TenantId.SYS_TENANT_ID, deviceId, DataConstants.SERVER_SCOPE,
-                    Collections.singletonList(new BaseAttributeKvEntry(new BooleanDataEntry(key, value)
-                    , System.currentTimeMillis())));
+            ListenableFuture<List<String>> saveFuture = attributesService.save(TenantId.SYS_TENANT_ID,
+                                                                               deviceId,
+                                                                               DataConstants.SERVER_SCOPE,
+                                                                               Collections.singletonList(new BaseAttributeKvEntry(new BooleanDataEntry(key, value), System.currentTimeMillis()))
+                                                                              );
             addTsCallback(saveFuture, new TelemetrySaveCallback<>(deviceId, key, value));
         }
     }

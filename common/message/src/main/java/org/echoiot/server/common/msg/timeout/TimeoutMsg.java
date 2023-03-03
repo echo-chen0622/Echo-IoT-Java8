@@ -4,7 +4,7 @@ import lombok.Data;
 import org.echoiot.server.common.msg.TbActorMsg;
 
 /**
- * @author Andrew Shvayka
+ * @author Echo
  */
 @Data
 public abstract class TimeoutMsg<T> implements TbActorMsg {

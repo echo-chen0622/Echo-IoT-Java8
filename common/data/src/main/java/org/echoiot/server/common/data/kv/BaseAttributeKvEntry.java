@@ -6,7 +6,7 @@ import javax.validation.Valid;
 import java.util.Optional;
 
 /**
- * @author Andrew Shvayka
+ * @author Echo
  */
 public class BaseAttributeKvEntry implements AttributeKvEntry {
 

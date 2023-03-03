@@ -63,7 +63,7 @@ import java.util.stream.Collectors;
 
 
 /**
- * @author Andrew Shvayka
+ * @author Echo
  */
 @Slf4j
 class DeviceActorMessageProcessor extends AbstractContextAwareMsgProcessor {

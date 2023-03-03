@@ -7,8 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 
-import static org.echoiot.common.util.ApplicationUtil.SPRING_CONFIG_NAME_KEY;
-import static org.echoiot.common.util.ApplicationUtil.updateArguments;
+import static org.echoiot.common.util.SpringUtils.SPRING_CONFIG_NAME_KEY;
+import static org.echoiot.common.util.SpringUtils.updateArguments;
 
 /**
  * 初始化类，用来进行初始化操作，主要是创建数据库，以及初始化数据 demo。
@@ -42,6 +42,8 @@ public class EchoiotInstallApplication {
         ConfigurableApplicationContext context = application.run(updateArguments(args, DEFAULT_SPRING_CONFIG_PARAM));
         // 获取初始化类，并执行安装
         context.getBean(EchoiotInstallService.class).performInstall();
+        // 退出应用
+        SpringApplication.exit(context);
     }
 
 }

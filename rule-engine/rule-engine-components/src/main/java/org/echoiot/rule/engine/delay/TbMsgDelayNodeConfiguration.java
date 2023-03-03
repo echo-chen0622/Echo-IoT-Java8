@@ -4,7 +4,7 @@ import lombok.Data;
 import org.echoiot.rule.engine.api.NodeConfiguration;
 
 @Data
-public class TbMsgDelayNodeConfiguration implements NodeConfiguration<TbMsgDelayNodeConfiguration> {
+public class TbMsgDelayNodeConfiguration implements NodeConfiguration {
 
     private int periodInSeconds;
     private int maxPendingMsgs;

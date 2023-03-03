@@ -80,7 +80,7 @@ import java.util.stream.Collectors;
 import static org.echoiot.server.common.data.StringUtils.isEmpty;
 
 /**
- * @author Andrew Shvayka
+ * @author Echo
  */
 public class RestClient implements ClientHttpRequestInterceptor, Closeable {
     private static final String JWT_TOKEN_HEADER_PARAM = "X-Authorization";

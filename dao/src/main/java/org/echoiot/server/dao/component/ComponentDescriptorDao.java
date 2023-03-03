@@ -12,7 +12,7 @@ import org.echoiot.server.dao.Dao;
 import java.util.Optional;
 
 /**
- * @author Andrew Shvayka
+ * @author Echo
  */
 public interface ComponentDescriptorDao extends Dao<ComponentDescriptor> {
 

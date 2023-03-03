@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Data
-public class TbGetEntityAttrNodeConfiguration implements NodeConfiguration<TbGetEntityAttrNodeConfiguration> {
+public class TbGetEntityAttrNodeConfiguration implements NodeConfiguration {
 
     private Map<String, String> attrMapping;
     private boolean isTelemetry = false;

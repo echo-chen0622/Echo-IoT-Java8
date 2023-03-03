@@ -9,7 +9,7 @@ import java.nio.charset.StandardCharsets;
 
 
 /**
- * @author Andrew Shvayka
+ * @author Echo
  */
 public class MiscUtils {
 

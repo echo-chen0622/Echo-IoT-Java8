@@ -3,7 +3,7 @@ package org.echoiot.server.actors.device;
 import lombok.Data;
 
 /**
- * @author Andrew Shvayka
+ * @author Echo
  */
 @Data
 class SessionInfoMetaData {

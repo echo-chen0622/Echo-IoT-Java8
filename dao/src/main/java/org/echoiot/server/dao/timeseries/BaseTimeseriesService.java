@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 import static org.echoiot.server.common.data.StringUtils.isBlank;
 
 /**
- * @author Andrew Shvayka
+ * @author Echo
  */
 @SuppressWarnings("UnstableApiUsage")
 @Service

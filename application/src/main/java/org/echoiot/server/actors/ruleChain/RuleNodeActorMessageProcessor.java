@@ -20,7 +20,7 @@ import org.echoiot.server.common.stats.TbApiUsageReportClient;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * @author Andrew Shvayka
+ * @author Echo
  */
 public class RuleNodeActorMessageProcessor extends ComponentMsgProcessor<RuleNodeId> {
 

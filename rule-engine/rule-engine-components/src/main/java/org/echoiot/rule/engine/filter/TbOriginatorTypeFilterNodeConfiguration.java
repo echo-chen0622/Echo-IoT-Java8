@@ -7,7 +7,7 @@ import org.echoiot.server.common.data.EntityType;
 import java.util.List;
 
 @Data
-public class TbOriginatorTypeFilterNodeConfiguration implements NodeConfiguration<TbOriginatorTypeFilterNodeConfiguration> {
+public class TbOriginatorTypeFilterNodeConfiguration implements NodeConfiguration {
 
     private List<EntityType> originatorTypes;
 

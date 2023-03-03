@@ -10,7 +10,7 @@ import java.util.List;
  * Created by Echo on 19.01.18.
  */
 @Data
-public class TbGetAttributesNodeConfiguration implements NodeConfiguration<TbGetAttributesNodeConfiguration> {
+public class TbGetAttributesNodeConfiguration implements NodeConfiguration {
 
     private List<String> clientAttributeNames;
     private List<String> sharedAttributeNames;

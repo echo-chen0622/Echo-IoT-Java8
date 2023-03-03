@@ -7,10 +7,11 @@ import org.echoiot.server.dao.service.DaoSqlTest;
 import org.echoiot.server.transport.coap.CoapTestConfigProperties;
 import org.echoiot.server.transport.coap.CoapTransportResource;
 import org.echoiot.server.transport.coap.attributes.AbstractCoapAttributesIntegrationTest;
-import org.eclipse.californium.core.server.resources.Resource;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import javax.annotation.Resource;
 
 import static org.mockito.Mockito.spy;
 
@@ -28,7 +29,7 @@ public class CoapAttributesUpdatesIntegrationTest extends AbstractCoapAttributes
 
     @Before
     public void beforeTest() throws Exception {
-        Resource api = defaultCoapServerService.getCoapServer().getRoot().getChild("api");
+        org.eclipse.californium.core.server.resources.Resource api = defaultCoapServerService.getCoapServer().getRoot().getChild("api");
         coapTransportResource = spy( (CoapTransportResource) api.getChild("v1") );
         api.delete(api.getChild("v1") );
         api.add(coapTransportResource);

@@ -2,7 +2,7 @@ package org.echoiot.server.common.data;
 
 
 /**
- * @author Andrew Shvayka
+ * @author Echo
  */
 public class DataConstants {
 

@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Data
-public class TbCreateAlarmNodeConfiguration extends TbAbstractAlarmNodeConfiguration implements NodeConfiguration<TbCreateAlarmNodeConfiguration> {
+public class TbCreateAlarmNodeConfiguration extends TbAbstractAlarmNodeConfiguration implements NodeConfiguration {
 
     @NoXss
     private String severity;

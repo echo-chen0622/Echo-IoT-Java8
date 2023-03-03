@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Data
-public class TbCheckAlarmStatusNodeConfig implements NodeConfiguration<TbCheckAlarmStatusNodeConfig> {
+public class TbCheckAlarmStatusNodeConfig implements NodeConfiguration {
     private List<AlarmStatus> alarmStatusList;
 
     @Override

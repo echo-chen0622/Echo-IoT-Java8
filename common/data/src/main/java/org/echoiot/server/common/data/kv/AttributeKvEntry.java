@@ -1,7 +1,7 @@
 package org.echoiot.server.common.data.kv;
 
 /**
- * @author Andrew Shvayka
+ * @author Echo
  */
 public interface AttributeKvEntry extends KvEntry {
 

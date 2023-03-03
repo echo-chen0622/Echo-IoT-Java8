@@ -6,7 +6,7 @@ import org.echoiot.rule.engine.api.NodeConfiguration;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class TbDeviceProfileNodeConfiguration implements NodeConfiguration<TbDeviceProfileNodeConfiguration> {
+public class TbDeviceProfileNodeConfiguration implements NodeConfiguration {
 
     private boolean persistAlarmRulesState;
     private boolean fetchAlarmRulesStateOnStart;

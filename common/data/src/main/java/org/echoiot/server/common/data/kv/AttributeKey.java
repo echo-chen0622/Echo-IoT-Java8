@@ -5,7 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * @author Andrew Shvayka
+ * @author Echo
  */
 @Data
 public class AttributeKey implements Serializable {

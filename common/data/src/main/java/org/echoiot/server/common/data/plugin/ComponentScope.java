@@ -1,7 +1,7 @@
 package org.echoiot.server.common.data.plugin;
 
 /**
- * @author Andrew Shvayka
+ * @author Echo
  */
 public enum ComponentScope {
     SYSTEM, TENANT

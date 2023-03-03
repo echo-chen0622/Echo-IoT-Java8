@@ -4,7 +4,7 @@ import lombok.Data;
 import org.echoiot.rule.engine.api.NodeConfiguration;
 
 @Data
-public class TbMsgTimeseriesNodeConfiguration implements NodeConfiguration<TbMsgTimeseriesNodeConfiguration> {
+public class TbMsgTimeseriesNodeConfiguration implements NodeConfiguration {
 
     private long defaultTTL;
     private boolean skipLatestPersistence;

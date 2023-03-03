@@ -25,8 +25,7 @@ import java.util.UUID;
  * Created by Valerii Sosliuk on 5/6/2017.
  */
 @Component
-public class JpaBaseComponentDescriptorDao extends JpaAbstractSearchTextDao<ComponentDescriptorEntity, ComponentDescriptor>
-        implements ComponentDescriptorDao {
+public class JpaBaseComponentDescriptorDao extends JpaAbstractSearchTextDao<ComponentDescriptorEntity, ComponentDescriptor> implements ComponentDescriptorDao {
 
     @Resource
     private ComponentDescriptorRepository componentDescriptorRepository;
@@ -47,6 +46,7 @@ public class JpaBaseComponentDescriptorDao extends JpaAbstractSearchTextDao<Comp
     @Override
     public Optional<ComponentDescriptor> saveIfNotExist(TenantId tenantId, ComponentDescriptor component) {
         if (component.getId() == null) {
+            //新增
             UUID uuid = Uuids.timeBased();
             component.setId(new ComponentDescriptorId(uuid));
             component.setCreatedTime(Uuids.unixTimestamp(uuid));
@@ -71,21 +71,12 @@ public class JpaBaseComponentDescriptorDao extends JpaAbstractSearchTextDao<Comp
 
     @Override
     public PageData<ComponentDescriptor> findByTypeAndPageLink(TenantId tenantId, ComponentType type, PageLink pageLink) {
-        return DaoUtil.toPageData(componentDescriptorRepository
-                .findByType(
-                        type,
-                        Objects.toString(pageLink.getTextSearch(), ""),
-                        DaoUtil.toPageable(pageLink)));
+        return DaoUtil.toPageData(componentDescriptorRepository.findByType(type, Objects.toString(pageLink.getTextSearch(), ""), DaoUtil.toPageable(pageLink)));
     }
 
     @Override
     public PageData<ComponentDescriptor> findByScopeAndTypeAndPageLink(TenantId tenantId, ComponentScope scope, ComponentType type, PageLink pageLink) {
-        return DaoUtil.toPageData(componentDescriptorRepository
-                .findByScopeAndType(
-                        type,
-                        scope,
-                        Objects.toString(pageLink.getTextSearch(), ""),
-                        DaoUtil.toPageable(pageLink)));
+        return DaoUtil.toPageData(componentDescriptorRepository.findByScopeAndType(type, scope, Objects.toString(pageLink.getTextSearch(), ""), DaoUtil.toPageable(pageLink)));
     }
 
     @Override

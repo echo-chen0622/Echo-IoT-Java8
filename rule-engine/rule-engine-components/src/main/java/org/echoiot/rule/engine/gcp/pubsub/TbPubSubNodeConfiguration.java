@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.Map;
 
 @Data
-public class TbPubSubNodeConfiguration implements NodeConfiguration<TbPubSubNodeConfiguration> {
+public class TbPubSubNodeConfiguration implements NodeConfiguration {
 
     private String projectId;
     private String topicName;

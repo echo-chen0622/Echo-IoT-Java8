@@ -4,7 +4,7 @@ import lombok.NoArgsConstructor;
 import org.echoiot.server.service.telemetry.TelemetryFeature;
 
 /**
- * @author Andrew Shvayka
+ * @author Echo
  */
 @NoArgsConstructor
 public class AttributesSubscriptionCmd extends SubscriptionCmd {

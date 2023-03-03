@@ -5,7 +5,7 @@ import org.echoiot.rule.engine.api.NodeConfiguration;
 import org.echoiot.server.common.data.DataConstants;
 
 @Data
-public class BaseTbMsgPushNodeConfiguration implements NodeConfiguration<BaseTbMsgPushNodeConfiguration> {
+public class BaseTbMsgPushNodeConfiguration implements NodeConfiguration {
 
     private String scope;
 

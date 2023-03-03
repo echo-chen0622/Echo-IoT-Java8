@@ -5,7 +5,7 @@ import org.echoiot.server.common.msg.TbActorMsg;
 import java.io.Serializable;
 
 /**
- * @author Andrew Shvayka
+ * @author Echo
  */
 public interface ToAllNodesMsg extends Serializable, TbActorMsg {
 }
