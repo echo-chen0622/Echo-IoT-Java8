@@ -21,6 +21,7 @@ import org.echoiot.server.dao.widget.WidgetsBundleService;
 import org.echoiot.server.queue.util.TbCoreComponent;
 import org.echoiot.server.service.security.permission.AccessControlService;
 import org.jetbrains.annotations.Nullable;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -163,34 +164,25 @@ public class DefaultExportableEntitiesService implements ExportableEntitiesServi
         });
     }
 
-    @Resource
+    @Autowired
     private void setRemovers(CustomerService customerService, AssetService assetService, RuleChainService ruleChainService,
                              DashboardService dashboardService, DeviceProfileService deviceProfileService,
                              AssetProfileService assetProfileService, DeviceService deviceService, WidgetsBundleService widgetsBundleService) {
-        removers.put(EntityType.CUSTOMER, (tenantId, entityId) -> {
-            customerService.deleteCustomer(tenantId, (CustomerId) entityId);
-        });
-        removers.put(EntityType.ASSET, (tenantId, entityId) -> {
-            assetService.deleteAsset(tenantId, (AssetId) entityId);
-        });
-        removers.put(EntityType.RULE_CHAIN, (tenantId, entityId) -> {
-            ruleChainService.deleteRuleChainById(tenantId, (RuleChainId) entityId);
-        });
-        removers.put(EntityType.DASHBOARD, (tenantId, entityId) -> {
-            dashboardService.deleteDashboard(tenantId, (DashboardId) entityId);
-        });
-        removers.put(EntityType.DEVICE_PROFILE, (tenantId, entityId) -> {
-            deviceProfileService.deleteDeviceProfile(tenantId, (DeviceProfileId) entityId);
-        });
-        removers.put(EntityType.ASSET_PROFILE, (tenantId, entityId) -> {
-            assetProfileService.deleteAssetProfile(tenantId, (AssetProfileId) entityId);
-        });
-        removers.put(EntityType.DEVICE, (tenantId, entityId) -> {
-            deviceService.deleteDevice(tenantId, (DeviceId) entityId);
-        });
-        removers.put(EntityType.WIDGETS_BUNDLE, (tenantId, entityId) -> {
-            widgetsBundleService.deleteWidgetsBundle(tenantId, (WidgetsBundleId) entityId);
-        });
+        removers.put(EntityType.CUSTOMER, (tenantId, entityId) -> customerService.deleteCustomer(tenantId, (CustomerId) entityId));
+
+        removers.put(EntityType.ASSET, (tenantId, entityId) -> assetService.deleteAsset(tenantId, (AssetId) entityId));
+
+        removers.put(EntityType.RULE_CHAIN, (tenantId, entityId) -> ruleChainService.deleteRuleChainById(tenantId, (RuleChainId) entityId));
+
+        removers.put(EntityType.DASHBOARD, (tenantId, entityId) -> dashboardService.deleteDashboard(tenantId, (DashboardId) entityId));
+
+        removers.put(EntityType.DEVICE_PROFILE, (tenantId, entityId) -> deviceProfileService.deleteDeviceProfile(tenantId, (DeviceProfileId) entityId));
+
+        removers.put(EntityType.ASSET_PROFILE, (tenantId, entityId) -> assetProfileService.deleteAssetProfile(tenantId, (AssetProfileId) entityId));
+
+        removers.put(EntityType.DEVICE, (tenantId, entityId) -> deviceService.deleteDevice(tenantId, (DeviceId) entityId));
+
+        removers.put(EntityType.WIDGETS_BUNDLE, (tenantId, entityId) -> widgetsBundleService.deleteWidgetsBundle(tenantId, (WidgetsBundleId) entityId));
     }
 
 }

@@ -25,6 +25,7 @@ import org.echoiot.server.service.sync.ie.importing.impl.MissingEntityException;
 import org.echoiot.server.service.sync.vc.LoadEntityException;
 import org.echoiot.server.service.sync.vc.data.EntitiesExportCtx;
 import org.echoiot.server.service.sync.vc.data.EntitiesImportCtx;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -127,26 +128,18 @@ public class DefaultEntitiesExportImportService implements EntitiesExportImportS
         return (EntityImportService<I, E, D>) importService;
     }
 
-    @Resource
+    @Autowired
     private void setExportServices(DefaultEntityExportService<?, ?, ?> defaultExportService,
                                    Collection<BaseEntityExportService<?, ?, ?>> exportServices) {
         exportServices.stream()
                 .sorted(Comparator.comparing(exportService -> exportService.getSupportedEntityTypes().size(), Comparator.reverseOrder()))
-                .forEach(exportService -> {
-                    exportService.getSupportedEntityTypes().forEach(entityType -> {
-                        this.exportServices.put(entityType, exportService);
-                    });
-                });
-        SUPPORTED_ENTITY_TYPES.forEach(entityType -> {
-            this.exportServices.putIfAbsent(entityType, defaultExportService);
-        });
+                .forEach(exportService -> exportService.getSupportedEntityTypes().forEach(entityType -> this.exportServices.put(entityType, exportService)));
+        SUPPORTED_ENTITY_TYPES.forEach(entityType -> this.exportServices.putIfAbsent(entityType, defaultExportService));
     }
 
     @Resource
     private void setImportServices(Collection<EntityImportService<?, ?, ?>> importServices) {
-        importServices.forEach(entityImportService -> {
-            this.importServices.put(entityImportService.getEntityType(), entityImportService);
-        });
+        importServices.forEach(entityImportService -> this.importServices.put(entityImportService.getEntityType(), entityImportService));
     }
 
 }

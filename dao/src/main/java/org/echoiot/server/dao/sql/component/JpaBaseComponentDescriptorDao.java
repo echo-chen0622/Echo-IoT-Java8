@@ -59,6 +59,7 @@ public class JpaBaseComponentDescriptorDao extends JpaAbstractSearchTextDao<Comp
         return Optional.empty();
     }
 
+
     @Override
     public ComponentDescriptor findById(TenantId tenantId, ComponentDescriptorId componentId) {
         return findById(tenantId, componentId.getId());

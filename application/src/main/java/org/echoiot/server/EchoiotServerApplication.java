@@ -12,7 +12,7 @@ import static org.echoiot.common.util.SpringUtils.SPRING_CONFIG_NAME_KEY;
 @SpringBootConfiguration
 @EnableAsync
 @EnableScheduling
-@ComponentScan({"org.echoiot.server", "org.echoiot.script"})
+@ComponentScan({"org.echoiot.server", "org.echoiot.script"})// TODO 可以改成各包自己配置扫描
 public class EchoiotServerApplication {
 
     private static final String DEFAULT_SPRING_CONFIG_PARAM = SPRING_CONFIG_NAME_KEY + "=" + "echoiot";

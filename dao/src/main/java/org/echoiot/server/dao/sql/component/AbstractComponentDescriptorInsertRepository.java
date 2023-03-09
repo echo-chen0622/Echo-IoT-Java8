@@ -41,7 +41,7 @@ public abstract class AbstractComponentDescriptorInsertRepository implements Com
             //尝试用主键插入
             componentDescriptorEntity = processSaveOrUpdate(entity, insertOrUpdateOnPrimaryKeyConflict);
             transactionManager.commit(insertTransaction);
-        } catch (Throwable throwable) {
+        } catch (Exception throwable) {
             transactionManager.rollback(insertTransaction);
             if (throwable.getCause() instanceof ConstraintViolationException) {
                 log.trace("插入请求导致违反定义的完整性约束 {} 的组件描述符，其 ID 为 {}、名称 {} 和实体类型 {}", throwable.getMessage(), entity.getUuid(), entity.getName(), entity.getType());
@@ -50,7 +50,7 @@ public abstract class AbstractComponentDescriptorInsertRepository implements Com
                 try {
                     componentDescriptorEntity = processSaveOrUpdate(entity, insertOrUpdateOnUniqueKeyConflict);
                     transactionManager.commit(transaction);
-                } catch (Throwable th) {
+                } catch (Exception th) {
                     log.trace("无法执行 ID 为 {}、名称 {} 和实体类型 {} 的组件描述符的执行语句", entity.getUuid(), entity.getName(), entity.getType());
                     transactionManager.rollback(transaction);
                 }
