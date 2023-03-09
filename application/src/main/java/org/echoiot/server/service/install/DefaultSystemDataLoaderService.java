@@ -152,6 +152,11 @@ public class DefaultSystemDataLoaderService implements SystemDataLoaderService {
         createUser(Authority.SYS_ADMIN, null, null, "sysadmin@echoiot.org", "sysadmin");
     }
 
+    /**
+     * 创建默认租户配置文件
+     *
+     * @throws Exception
+     */
     @Override
     public void createDefaultTenantProfiles() throws Exception {
         tenantProfileService.findOrCreateDefaultTenantProfile(TenantId.SYS_TENANT_ID);
@@ -495,15 +500,17 @@ public class DefaultSystemDataLoaderService implements SystemDataLoaderService {
         user.setCustomerId(customerId);
         // 保存用户
         user = userService.saveUser(user);
+        // 用户凭据
         UserCredentials userCredentials = userService.findUserCredentialsByUserId(TenantId.SYS_TENANT_ID, user.getId());
         userCredentials.setPassword(passwordEncoder.encode(password));
         userCredentials.setEnabled(true);
         userCredentials.setActivateToken(null);
+        // 保存用户凭据
         userService.saveUserCredentials(TenantId.SYS_TENANT_ID, userCredentials);
         return user;
     }
 
-    private Device createDevice(TenantId tenantId, CustomerId customerId, DeviceProfileId deviceProfileId, String name, String accessToken, @org.jetbrains.annotations.Nullable String description) {
+    private @NotNull Device createDevice(TenantId tenantId, CustomerId customerId, DeviceProfileId deviceProfileId, String name, String accessToken, String description) {
         Device device = new Device();
         device.setTenantId(tenantId);
         device.setCustomerId(customerId);

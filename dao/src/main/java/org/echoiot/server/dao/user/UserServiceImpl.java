@@ -97,17 +97,22 @@ public class UserServiceImpl extends AbstractEntityService implements UserServic
     @Override
     public User saveUser(User user) {
         log.trace("执行保存用户 [{}]", user);
+        //校验用户
         userValidator.validate(user, User::getTenantId);
         if (!userLoginCaseSensitive) {
             //不区分大小写登录的情况下，直接全小写存。
             user.setEmail(user.getEmail().toLowerCase());
         }
+        // 保存用户
         User savedUser = userDao.save(user.getTenantId(), user);
         if (user.getId() == null) {
+            // 如果是新增用户，需要新增用户凭证
             UserCredentials userCredentials = new UserCredentials();
             userCredentials.setEnabled(false);
+            // 生成激活令牌
             userCredentials.setActivateToken(StringUtils.randomAlphanumeric(DEFAULT_TOKEN_LENGTH));
             userCredentials.setUserId(new UserId(savedUser.getUuidId()));
+            // 保存用户凭证
             saveUserCredentialsAndPasswordHistory(user.getTenantId(), userCredentials);
         }
         return savedUser;
@@ -323,8 +328,16 @@ public class UserServiceImpl extends AbstractEntityService implements UserServic
         return failedLoginAttempts;
     }
 
+    /**
+     * 保存用户凭证和密码历史
+     *
+     * @param tenantId
+     * @param userCredentials
+     */
     private UserCredentials saveUserCredentialsAndPasswordHistory(TenantId tenantId, UserCredentials userCredentials) {
+        // 保存用户凭证
         UserCredentials result = userCredentialsDao.save(tenantId, userCredentials);
+        // 保存密码历史
         User user = findUserById(tenantId, userCredentials.getUserId());
         if (userCredentials.getPassword() != null) {
             updatePasswordHistory(user, userCredentials);
@@ -332,6 +345,12 @@ public class UserServiceImpl extends AbstractEntityService implements UserServic
         return result;
     }
 
+    /**
+     * 更新密码历史
+     *
+     * @param user
+     * @param userCredentials
+     */
     private void updatePasswordHistory(User user, UserCredentials userCredentials) {
         JsonNode additionalInfo = user.getAdditionalInfo();
         if (!(additionalInfo instanceof ObjectNode)) {

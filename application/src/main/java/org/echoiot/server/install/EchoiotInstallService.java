@@ -126,7 +126,9 @@ public class EchoiotInstallService {
 
             // 加载系统数据
             systemDataLoaderService.createSysAdmin();
+            // 创建默认的租户
             systemDataLoaderService.createDefaultTenantProfiles();
+            // 创建默认的租户管理员设置
             systemDataLoaderService.createAdminSettings();
             systemDataLoaderService.createRandomJwtSettings();
             systemDataLoaderService.loadSystemWidgets();
