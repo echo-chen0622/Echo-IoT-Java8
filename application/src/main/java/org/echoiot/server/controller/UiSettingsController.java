@@ -24,7 +24,7 @@ public class UiSettingsController extends BaseController {
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/uiSettings/helpBaseUrl", method = RequestMethod.GET)
     @ResponseBody
-    public String getHelpBaseUrl() throws EchoiotException {
+    public String getHelpBaseUrl() {
         return helpBaseUrl;
     }
 

@@ -103,8 +103,7 @@ public class CassandraEntitiesToSqlMigrateService {
                 stringColumn("name"),
                 stringColumn("search_text"),
                 stringColumn("clazz"),
-                stringColumn("configuration_descriptor"),
-                stringColumn("actions")) {
+                stringColumn("configuration_descriptor")) {
             @Override
             protected boolean onConstraintViolation(List<CassandraToSqlColumnData[]> batchData,
                                                     CassandraToSqlColumnData[] data, String constraint) {

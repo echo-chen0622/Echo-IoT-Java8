@@ -359,7 +359,6 @@ public class ModelConstants {
     public static final String COMPONENT_DESCRIPTOR_NAME_PROPERTY = "name";
     public static final String COMPONENT_DESCRIPTOR_CLASS_PROPERTY = "clazz";
     public static final String COMPONENT_DESCRIPTOR_CONFIGURATION_DESCRIPTOR_PROPERTY = "configuration_descriptor";
-    public static final String COMPONENT_DESCRIPTOR_ACTIONS_PROPERTY = "actions";
 
     public static final String COMPONENT_DESCRIPTOR_BY_TYPE_AND_SEARCH_TEXT_COLUMN_FAMILY_NAME = "component_desc_by_type_search_text";
     public static final String COMPONENT_DESCRIPTOR_BY_SCOPE_TYPE_AND_SEARCH_TEXT_COLUMN_FAMILY_NAME = "component_desc_by_scope_type_search_text";

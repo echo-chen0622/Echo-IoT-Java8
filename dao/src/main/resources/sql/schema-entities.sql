@@ -106,7 +106,6 @@ CREATE TABLE IF NOT EXISTS attribute_kv (
 CREATE TABLE IF NOT EXISTS component_descriptor (
     id uuid NOT NULL CONSTRAINT component_descriptor_pkey PRIMARY KEY,
     created_time bigint NOT NULL,
-    actions varchar(255),
     clazz varchar UNIQUE,
     configuration_descriptor varchar,
     name varchar(255),
