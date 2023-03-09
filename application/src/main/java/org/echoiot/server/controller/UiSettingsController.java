@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api")
 public class UiSettingsController extends BaseController {
 
-    @Value("${ui.help.base-url}")
+    @Value("${ui.help.base-url:null}")
     private String helpBaseUrl;
 
     @ApiOperation(value = "Get UI help base url (getHelpBaseUrl)",
